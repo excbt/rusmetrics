@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+
+	<!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under the 
+		key "bySecond" into the logger context. This value will be available to all 
+		subsequent configuration elements. -->
+
+	<timestamp key="bySecond" datePattern="yyyy-MM-dd_HHmmss" />
+
+	<appender name="file" class="ch.qos.logback.core.FileAppender">
+		<!-- use the previously created timestamp to create a uniquely named log 
+			file -->
+		<file>log/log-${bySecond}.txt</file>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+	<!-- To enable JMX Management -->
+	<jmxConfigurator />
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+
+    <logger name="ru.excbt" level="trace"/>
+
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core" level="info" />
+	
+	<logger name="org.springframework.beans" level="info" />
+	
+	<logger name="org.springframework.context" level="info" />
+	
+	<logger name="org.hibernate.SQL" level="info" />
+	
+	<logger name="org.springframework.web" level="trace" />
+
+
+	<root level="info">
+		<appender-ref ref="console" />
+		<appender-ref ref="file" />
+	</root>
+
+
+</configuration>
