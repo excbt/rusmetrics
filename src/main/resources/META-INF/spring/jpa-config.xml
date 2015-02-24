@@ -49,20 +49,6 @@
 		<property name="persistenceUnitManager" ref="persistenceUnitManager" />
 		<property name="persistenceUnitName" value="nmk-p" />		
 		<!--  -->
-<!-- 		<property name="packagesToScan" value="ru.excbt.datafuse.nmk.data" /> -->
-<!-- 		<property name="dataSource" ref="dataSource" /> -->
-		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
-		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
-				<prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
-				<prop key="hibernate.temp.use_jdbc_metadata_defaults">${hibernate.temp.use_jdbc_metadata_defaults}</prop>
-			</props>
-		</property>
 	</bean>
 
 
@@ -84,5 +70,10 @@
 	<jpa:repositories base-package="ru.excbt.datafuse.nmk.data"
 		entity-manager-factory-ref="localEntityManagerFactory"
 		transaction-manager-ref="txManager" />
+
+	<context:annotation-config/>
+	
+	<context:component-scan base-package="ru.excbt.datafuse.nmk.data" />	
+
 
 </beans>

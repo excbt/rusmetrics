@@ -12,6 +12,7 @@
 	<properties>
 		<java-version>1.7</java-version>
 		<java-uuid-gen.version>3.1.4</java-uuid-gen.version>
+		<guava.version>18.0</guava.version>
 	</properties>
 
 	<parent>
@@ -76,6 +77,13 @@
 			<artifactId>hibernate-entitymanager</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
+
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -100,12 +108,18 @@
 		</dependency>
 
 
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+
 		<!-- @Inject -->
-<!-- 		<dependency> -->
-<!-- 			<groupId>javax.inject</groupId> -->
-<!-- 			<artifactId>javax.inject</artifactId> -->
-<!-- 			<version>1</version> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>javax.inject</groupId> -->
+		<!-- <artifactId>javax.inject</artifactId> -->
+		<!-- <version>1</version> -->
+		<!-- </dependency> -->
 
 
 		<!-- JSON -->
@@ -117,9 +131,18 @@
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-afterburner</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
 
 		<!-- Servlet -->
 
@@ -129,12 +152,12 @@
 			<scope>provided</scope>
 		</dependency>
 
-<!-- 		<dependency> -->
-<!-- 			<groupId>javax.servlet.jsp</groupId> -->
-<!-- 			<artifactId>jsp-api</artifactId> -->
-<!-- 			<version>2.1</version> -->
-<!-- 			<scope>provided</scope> -->
-<!-- 		</dependency> -->
+		<!-- <dependency> -->
+		<!-- <groupId>javax.servlet.jsp</groupId> -->
+		<!-- <artifactId>jsp-api</artifactId> -->
+		<!-- <version>2.1</version> -->
+		<!-- <scope>provided</scope> -->
+		<!-- </dependency> -->
 
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -151,7 +174,7 @@
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>tomcat-jdbc</artifactId>
-			<scope>provided</scope>			
+			<scope>provided</scope>
 		</dependency>
 
 
@@ -189,6 +212,11 @@
 			<version>1.9</version>
 		</dependency>
 
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
 
 		<!-- UUID generator -->
 		<dependency>
