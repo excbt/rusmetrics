@@ -1,0 +1,26 @@
+<table class="table table-condensed marginZero">
+	<tr>
+		<td class="col-md-4"><span class="prop-name-title">External
+				Id: </span> <span class="text-primary prop-highlight">{{ngModel.extId}}</span> <br>
+			<span class="prop-name-title">Terminal family name:</span>
+			{{ngModel.terminalFamily || ('MSG.NA' | translate) }} <br> <span
+			class="prop-name-title">Terminal Group: </span> {{ngModel.terminalGroup ||
+			('MSG.NA' | translate) }}</td>
+		<td class="td-separator"></td>
+		<td class="col-md-5">
+			<!-- Protocol span --> <span ng-show="ngModel.protocolName"> <span
+				class="prop-name-title">Protocol: </span> {{ngModel.protocolName}} <br>
+		</span> <!-- End of Protocol span -->  <!--  --> <span
+			class="prop-name-title">Description:</span> {{ngModel.description ||
+			('MSG.NA' | translate)}} <br>
+		<span class="prop-name-title">
+				ID:</span> {{ngModel.terminalId}} 
+		<span class="prop-name-title">
+				Import Date:</span> {{ngModel.importDate || ('MSG.NA' | translate) }} <br>
+			
+		</td>
+		<td class="td-separator"></td>
+		<td class="col-md-1">
+		</td>		
+	</tr>
+</table>

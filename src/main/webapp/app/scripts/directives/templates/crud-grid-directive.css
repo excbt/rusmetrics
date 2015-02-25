@@ -1,0 +1,20 @@
+﻿table.crud-grid th:hover:not(:first-child) {
+    cursor: pointer;
+}
+
+.filter {
+    padding-bottom: 10px;
+}
+
+.marginInfo10 {
+	margin-top: 10pt;
+	margin-bottom: 10pt;
+}
+
+.noMargin {
+	margin: 0 0 0 0;
+}
+
+.pagerFont {
+	font-size: medium;
+}

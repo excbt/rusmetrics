@@ -1,0 +1,263 @@
+<div ng-show="loading">{{captions.msgLoading}}</div>
+
+<!--Группировка-->
+        <div class="form-actions">
+            Группировки: 
+            <div ng-show="!bGroupByObject">
+                <button type="button" class="btn" ng-click="groupByObject()">по объектам</button>
+                <button type="button" class="btn">по типу</button>
+            </div>    
+            <div ng-show="bGroupByObject">
+                <button type="button" class="btn btn-primary">по объектам</button>
+                <button type="button" class="btn">по типу</button>
+                <span class="btn btn-default" ng-click="cancelGroup()"><i class="glyphicon glyphicon-remove"></i></span>
+            </div>
+            
+            
+            
+        </div>
+<!--Фильтр-->
+<div>
+    Фильтры:
+</div>
+<div>
+    <input type="checkbox" title="Показывать только новые еще не просмотренные записи" >Только новые</input>
+</div>
+<div class="input-group col-md-5 row filter marginBottom10">
+    
+    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+    <input type="text" class="form-control" ng-model="filter">
+    <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+</div>
+
+<table>
+  
+     <tr class="info" ng-show="!bGroupByObject">  
+         <td>
+             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
+                 <tr class="info">
+<!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
+                       <th ng-show="bGroupByObject" >
+                <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
+                        </th>
+
+                <!--       Шапка таблицы-->
+                        <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                            <div>
+                                {{column.header || column.name}}
+                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                            </div>
+                        </th>
+                </tr>     
+            </table>     
+        </td>          
+     </tr>
+    
+
+<!--      Фильтры по колонкам  -->
+<!--    <tr class="info" ng-show="!bGroupByObject">
+        <td ng-show="bGroupByObject" >
+            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>
+        </td>
+        <td ng-repeat="column in columns" ng-class="column.class">
+            <div>
+                <input type="text" class="form-control" ng-model="filterType">
+            </div>
+        </td>
+    </tr>    -->
+<!--    End фильтры по колонкам-->
+
+       
+    
+<!--  Постороение таблицы с данными  -->
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter">
+        <td><!--    <td> Уровень 1     -->
+            <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
+
+
+                <tr><!--    <tr> Уровень 3     -->
+<!-- этот столбец отображается, когда включена группировка -->
+            <td ng-show="bGroupByObject" class="col-md-1">
+                <div class="btn-toolbar"><i class="btn btn-default btn-small glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
+<!--                data-target="#showObjectDetailModal" data-toggle="modal"-->
+            </td>
+
+    <!--  Выводим данные в соответствующие столбцы таблицы  -->
+            <td ng-repeat="column in columns" ng-class="column.class" ng-switch on="object.editMode" >
+                <div ng-switch-default ng-switch on="!column.lookup">
+                    <span ng-switch-default>
+    <!--                    В зависимости от названия столца делаем соответствующую разметку-->
+                        <div ng-switch on="column.name">
+    <!--                        Если в столбце должна отображаться категория, то...-->
+                            <span ng-switch-when="noticeCat">
+    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+                                <div ng-switch on="object[column.name]">
+                                    <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
+                                    <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
+                                    <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
+                                    <span ng-switch-default>no define</span>
+                                </div>
+                            </span>
+                            <span ng-switch-when="critCount">
+                                <img height=16 width=16 src="images/crit.png"> {{object[column.name]}}
+                            </span> 
+                            <span ng-switch-when="warnCount">
+                                <img height=16 width=16 src="images/alert.png"> {{object[column.name]}}
+                            </span> 
+                            <span ng-switch-when="infoCount">
+                                <img height=16 width=16 src="images/info-icon.jpg"> {{object[column.name]}}
+                            </span> 
+                            <span ng-switch-when="commonCount">
+                                Всего: {{object[column.name]}}
+                            </span>
+
+    <!--                        По дефолту выводим содержимое данной ячейки-->
+                            <span ng-switch-default>
+                                    {{object[column.name]}}
+                            </span>
+                        </div>
+                    </span>
+                    <span ng-switch-when="false"> {{ getLookupValue(column.lookup, object[column.name]) }} </span>
+                </div>
+
+                <div ng-switch-when="true" ng-switch on="!column.lookup">
+                    <input ng-switch-default ng-model="object[column.name]" model-change-blur ng-disabled="column.autoincrement" class="form-control" />
+                    <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-model="object[column.name]" class="form-control"></select>
+                </div>
+                     
+            </td>
+                </tr><!--    </tr> Уровень 3     -->
+                <tr><!--    <tr> Уровень 3     -->
+                    
+                    
+                    <!--          Внутренняя(раскрывающая) таблица с данными    -->
+				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover" ng-show="object.showGroupDetails">
+                    <tr>
+                        <!--       Шапка таблицы-->
+                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
+                            <div>
+                                {{oldColumn.header || oldColumn.name}}
+                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
+                            </div>
+                        </th>
+                    </tr>
+                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
+                         <td ng-repeat="oldColumn in oldColumns">
+                             <div ng-switch on="oldColumn.name">
+    <!--                        Если в столбце должна отображаться категория, то...-->
+                            <span ng-switch-when="noticeCat">
+    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+                                <div ng-switch on="oldObject[oldColumn.name]">
+                                    <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
+                                    <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
+                                    <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
+                                    <span ng-switch-default>no define</span>
+                                </div>
+                            </span>                        
+    <!--                        По дефолту выводим содержимое данной ячейки-->
+                            <span ng-switch-default>
+                                    {{oldObject[oldColumn.name]}}
+<!--                                Раскрываем группировку-->
+                            </span>
+                        </div>
+                         </td>
+                     </tr>
+                    </table>
+<!--
+                    <table>
+                        <tr>
+                            <td ng-show="object.showGroupDetails">hello</td>
+                        </tr>
+                    </table>
+-->
+                
+                
+                </tr><!--    <tr> Уровень 3     -->
+
+                    
+            </table>  <!--    </table> Уровень 2     -->
+<!--    </td> Уровень 1     -->
+    </td>     
+    </tr>
+    <!--        End Построение таблицы с данными-->
+</table>
+
+<!-- Детали по группе-->
+<div id="showObjectDetailModal" class="modal fade" role="dialog"
+	aria-labelledby="showObjectDetailLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="showObjectDetailLabel">
+				{{currentObject.name}} 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="showObjectDetailForm" novalidate>
+
+                
+<!--            Таблица с данными    -->
+				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover">
+                    <tr>
+                        <!--       Шапка таблицы-->
+                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
+                            <div>
+                                {{oldColumn.header || oldColumn.name}}
+                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
+                            </div>
+                        </th>
+                    </tr>
+                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
+                         <td ng-repeat="oldColumn in oldColumns">
+                             <div ng-switch on="oldColumn.name">
+    <!--                        Если в столбце должна отображаться категория, то...-->
+                            <span ng-switch-when="noticeCat">
+    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+                                <div ng-switch on="oldObject[oldColumn.name]">
+                                    <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
+                                    <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
+                                    <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
+                                    <span ng-switch-default>no define</span>
+                                </div>
+                            </span>                        
+    <!--                        По дефолту выводим содержимое данной ячейки-->
+                            <span ng-switch-default>
+                                    {{oldObject[oldColumn.name]}}
+<!--                                Раскрываем группировку-->
+                            </span>
+                        </div>
+                         </td>
+                     </tr>
+                    </table>
+
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+	<!--					<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block"
+								ng-click="deleteObject(currentObject);"
+								value="Delete" />
+						</div>-->
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block" data-dismiss="modal"
+								ng-click="toogleShowGroupDetails(currentObject); exit('#currentObject')">
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+

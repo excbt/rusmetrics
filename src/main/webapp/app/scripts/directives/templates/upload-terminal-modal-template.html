@@ -1,0 +1,82 @@
+<!-- MODAL -->
+<div id="uploadTerminalModal" class="modal fade" role="dialog"
+	aria-labelledby="" aria-hidden="true" tabindex="-1">
+
+	<div class="modal-dialog modal-lg modal-dialog-center modal-content"
+		style="height: 40%">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">x</button>
+			<h3 class="modal-title">Upload Terminal</h3>
+		</div>
+		<!-- MODAL BODY -->
+		<div class="modal-body">
+			<div class="container">
+
+
+				<h3>Import file</h3>
+
+				<div>
+					<div ng-file-drop="onFileSelect($files)"
+						ng-file-drag-over-class="optional-css-class-name-or-function"
+						ng-show="dropSupported" class="well my-drop-zone">
+
+						<span ng-show="status=='empty'"> {{'MSG.DROP.FILES' | translate}} </span> 
+						<span ng-show="status!='empty'">
+							{{fileToUpload.name}} </span> <br>
+					</div>
+
+					<div ng-file-drop-available="dropSupported=true"
+						ng-show="!dropSupported">
+						HTML5 Drop File is not supported! Selected file: <span>
+							{{fileToUpload.name}} </span>
+					</div>
+				</div>
+
+				<div class="clearfix">
+					<span class="btn btn-primary btn-file"> Browse <input
+						type="file" id="inputFileModal" name="inputFileModal" ng-file-select="onFileSelect($files)">
+					</span>
+
+
+					<button class="btn btn-default" ng-click="init()">Reset</button>	
+					
+					<div class="pull-right">
+						<i class="fa fa-check-square-o fa-4x text-success" ng-show="status=='ok'"></i> 
+						<i class="fa fa-exclamation-circle fa-4x text-danger" ng-show="status=='error'"></i>
+						<i class="fa fa-arrow-circle-down fa-4x text-default" ng-show="status=='ready'"></i>
+						<i class="fa fa-question fa-4x text-info" ng-show="status=='empty'"></i>
+					</div>
+				</div>
+
+
+				<div class="clearfix">
+					<div></div>
+					<div class="pull-right" style="margin-top: 10px">
+						<button class="btn btn-success btn-xs" ng-click="doUploadFile()" 
+						         ng-disabled="status!='ready'">
+							<span class="fa fa-arrow-circle-down"></span> Do Upload
+						</button>
+
+						<button class="btn btn-warning btn-xs" ng-click="upload.abort()"
+								ng-disabled="!uploadingInProgres">
+							<span class="glyphicon glyphicon-ban-circle"></span> Cancel
+							Upload
+						</button>
+					</div>
+
+				</div>
+
+
+			</div>
+
+
+		</div>
+		<div class="modal-footer">
+			<div class="container">
+			<button class="btn btn-default" ng-click="exitModal('#uploadTerminalModal')">Close</button>			
+			</div>
+
+		</div>
+	</div>
+</div>
