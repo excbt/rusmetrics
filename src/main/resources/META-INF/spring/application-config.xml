@@ -12,6 +12,7 @@
          <context:component-scan
             base-package="org.springframework.samples.service"/>  -->
 	<import resource="jpa-config.xml" /> 
+	<import resource="security-config.xml" /> 
 
 
 	<context:annotation-config/>
