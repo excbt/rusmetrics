@@ -22,7 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:META-INF/spring/application-config.xml")
+@ContextConfiguration("classpath:META-INF/spring/app-config.xml")
 public class WebTest {
 
 	@Autowired
