@@ -1,0 +1,65 @@
+<h2>Уведомления</h2>
+
+<div crud-grid table=""
+	columns='[{"name":"noticeId", "header" : "ID", "class":"col-md-1", "autoincrement": "false"}, 
+	          {"name":"noticeCat", "header" : "Категория", "class":"col-md-1"},
+             {"name":"noticeType", "header" : "Тип", "class":"col-md-2"},
+             {"name":"noticeText", "header" : "Уведомление", "class":"col-md-3"},
+             {"name":"noticeDate", "header" : "Дата", "class":"col-md-2"},
+	          {"name":"noticeObject", "header" : "Объект", "class":"col-md-3"}]'
+	captions='{"loading":"loading", "totalElements":"totalElements"}'
+	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}'  
+     datasource='[
+    {
+      "noticeId": "1",
+      "noticeCat": "Критическая",
+      "noticeType": "Малая разница температур в контуре циркуляции",
+        "noticeText": "Разница температур ( dT=2,8C меньше заданной 3,0C).",
+        "noticeDate": "29.07.2014 09:00:00",
+        "noticeObject":"Ижевск, 30 лет Победы, 31"
+        
+    }
+                     ,{    "noticeId": "6",
+      "noticeCat": "Информация",
+      "noticeType": "Поступили показания",
+        "noticeText": "Поступили показания от прибора модель ТЭМ-106 №111223",
+        "noticeDate": "12.08.2014 00:00:00",
+        "noticeObject":"Могилев, Ленина, 1"
+                       
+    }
+    ,{
+      "noticeId": "2",
+      "noticeCat": "Критическая",
+      "noticeType": "Неполное время наработки",
+        "noticeText": "Время наработки за сутки 00:00:15",
+        "noticeDate": "12.07.2014 00:00:00",
+        "noticeObject":"Ижевск, 30 лет Победы, 31"
+        
+    }
+                    ,{
+      "noticeId": "3",
+      "noticeCat": "Предупреждение",
+      "noticeType": "Повышенный расход воды",
+        "noticeText": "Увеличен расход горячей воды на 10%",
+        "noticeDate": "12.08.2014 00:00:00",
+        "noticeObject":"Ижевск, 30 лет Победы, 31"
+                        
+    }
+                ,{    "noticeId": "4",
+      "noticeCat": "Информация",
+      "noticeType": "Поступили показания",
+        "noticeText": "Поступили показания от прибора модель ТЭМ-106 №101603",
+        "noticeDate": "12.08.2014 00:00:00",
+        "noticeObject":"Ижевск, 30 лет Победы, 31"
+                  
+    }
+                    ,{    "noticeId": "5",
+      "noticeCat": "Информация",
+      "noticeType": "Поступили показания",
+        "noticeText": "Поступили показания от прибора модель ТЭМ-106 №111222",
+        "noticeDate": "12.08.2014 00:00:00",
+        "noticeObject":"Могилев, Ленина, 1"
+                     
+    }
+    ]'
+     ></div>
