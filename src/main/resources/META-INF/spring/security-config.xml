@@ -17,6 +17,8 @@
 		<security:intercept-url pattern="/WEB-INF/**" access="denyAll" />
 		<security:intercept-url pattern="/app/**"
 			access="isAuthenticated()" />
+		<security:intercept-url pattern="/api/**"
+			access="permitAll" />
 
 		<security:form-login login-page="/login"
 			authentication-failure-url="/login?error=403" default-target-url="/app" />

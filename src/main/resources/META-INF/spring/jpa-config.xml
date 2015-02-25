@@ -22,14 +22,6 @@
 		p:url="${dataSource.url}" 
 		p:username="${dataSource.username}"
 		p:password="${dataSource.password}" 
-		p:initialSize="10" 
-		p:minIdle="10"
-		p:maxIdle="100" 
-		p:maxActive="100" 
-		p:maxWait="6000" 
-		p:jmxEnabled="true" 
-		p:timeBetweenEvictionRunsMillis="30000" 
-		p:testOnBorrow="true"
 		/>
 
 	<bean id="persistenceUnitManager"
