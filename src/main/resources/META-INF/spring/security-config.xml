@@ -19,7 +19,7 @@
 			access="isAuthenticated()" />
 
 		<security:form-login login-page="/login"
-			authentication-failure-url="/login?error=403" default-target-url="/app/index.html" />
+			authentication-failure-url="/login?error=403" default-target-url="/app" />
 
 		<security:logout invalidate-session="true"
 			logout-success-url="/login" logout-url="/logout" />
