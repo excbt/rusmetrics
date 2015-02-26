@@ -7,6 +7,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
 @Table(name="device_model")
@@ -29,6 +31,7 @@ public class DeviceModel extends IdEntity implements Serializable {
 	
 	
 	@Embedded
+	@JsonIgnore
 	private RowAudit rowAudit;
 
 
