@@ -26,9 +26,11 @@ public class DeviceModel extends IdEntity implements Serializable {
 	@Column(name="keyname")
 	private String keyname;
 
+	@Column(name="caption")
+	private String caption;
+
 	@Column(name="ex_code")
 	private String exCode;
-	
 	
 	@Embedded
 	@JsonIgnore
@@ -65,6 +67,14 @@ public class DeviceModel extends IdEntity implements Serializable {
 
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 	
 }

@@ -23,6 +23,9 @@ public class ContServiceType implements Serializable {
 	@Id
 	@Column(name = "keyname")
 	private String keyname;
+
+	@Column(name = "caption")
+	private String caption;
 	
 	@Column(name = "cont_service_type_name")
 	private String name;
@@ -86,6 +89,14 @@ public class ContServiceType implements Serializable {
 
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 	
 	
