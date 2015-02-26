@@ -12,24 +12,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 
 
 @Controller
-@RequestMapping(value = "/api/user")
-public class UserContObjectsController {
+@RequestMapping(value = "/api/subscr")
+public class SubscrContObjectsController {
 	
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(UserContObjectsController.class);
+			.getLogger(SubscrContObjectsController.class);
 	
 	@Autowired
 	private ContObjectService contObjectService;
+	
+	@Autowired
+	private SubscrUserService subscrUserService;
+	
 	
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
 		
-		List<ContObject> resultList = contObjectService.getUserContObjects();
+		List<ContObject> resultList = subscrUserService.findContObjects();
 		
 		return ResponseEntity.ok().body(resultList);
 	}

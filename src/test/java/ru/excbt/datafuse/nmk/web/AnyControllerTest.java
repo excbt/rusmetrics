@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.servlet.Filter;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,6 +48,10 @@ public class AnyControllerTest {
 				.addFilters(springSecurityFilterChain).build();
 	}
 	
+	@Test
+	public void testInit() {
+		checkNotNull(mockMvc);
+	}
 	
 	/**
 	 * 
