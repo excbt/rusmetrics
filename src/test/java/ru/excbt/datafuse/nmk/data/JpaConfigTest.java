@@ -20,7 +20,7 @@ public class JpaConfigTest {
 	
 	
 	@Test
-	public void entityManagerTest() {
+	public void entityManagerNotNull() {
 		assertNotNull(entityManager);
 	}
 	
