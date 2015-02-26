@@ -5,15 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
-
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,23 +13,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="cont_object")
-@SQLDelete(sql="UPDATE cont_object SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause="deleted <> 1")
-public class ContObject implements Serializable {
+public class ContObject extends IdEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@SequenceGenerator(name = "cont_object", sequenceName = "seq_global_id", allocationSize = 1)	
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cont_object")
-	@Column
-	private Long id;	
 	
-	@Version
-	private int version;	
 	
 	@Embedded
 	@JsonIgnore
@@ -61,21 +43,7 @@ public class ContObject implements Serializable {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 	public RowAudit getRowAudit() {
 		return rowAudit;

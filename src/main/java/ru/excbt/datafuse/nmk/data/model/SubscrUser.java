@@ -7,33 +7,23 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="subscr_user")
-public class SubscrUser implements Serializable {
+public class SubscrUser extends IdEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "subscr_user", sequenceName = "seq_global_id", allocationSize = 1)	
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscr_user")
-	@Column
-	private Long id;		
 	
 	@Column(name = "user_name")
 	private String userName;
@@ -48,9 +38,6 @@ public class SubscrUser implements Serializable {
 	private String password;
 	
 	
-	@Version
-	private int version;	
-	
 	@Embedded
 	@JsonIgnore
 	private RowAudit rowAudit;
@@ -62,14 +49,6 @@ public class SubscrUser implements Serializable {
     inverseJoinColumns=@JoinColumn(name="subscr_org_id"))
 	private Collection<SubscrOrg> subscrOrgs;	
 	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getUserName() {
 		return userName;
 	}
@@ -100,14 +79,6 @@ public class SubscrUser implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
 	}
 
 	public RowAudit getRowAudit() {

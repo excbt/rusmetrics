@@ -5,33 +5,20 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="device_model")
-@SQLDelete(sql="UPDATE device_model SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause="deleted <> 1")
-public class DeviceModel implements Serializable {
+public class DeviceModel extends IdEntity implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@SequenceGenerator(name = "device_model", sequenceName = "seq_global_id", allocationSize = 1)	
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "device_model")
-	@Column
-	private Long id;
 	
 	@Column(name="device_model_name")
 	private String modelName;
@@ -42,19 +29,11 @@ public class DeviceModel implements Serializable {
 	@Column(name="ex_code")
 	private String exCode;
 	
-	@Version
-	private int version;
 	
 	@Embedded
+	@JsonIgnore
 	private RowAudit rowAudit;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	public String getModelName() {
 		return modelName;

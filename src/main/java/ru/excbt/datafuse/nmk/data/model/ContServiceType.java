@@ -5,42 +5,48 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="organization")
-public class Organization extends IdEntity implements Serializable {
-	
-	
-	
+@Table(name="cont_service_type")
+public class ContServiceType implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
-	@Column(name="organization_name")
+	
+	@Id
+	@Column(name = "keyname")
+	private String keyname;
+	
+	@Column(name = "cont_service_type_name")
 	private String name;
 	
-	@Column(name="organization_full_name")
-	private String fullName;
+	@Column(name = "cont_service_type_comment")
+	private String comment;
 	
-	@Column(name="organization_full_address")
-	private String fullAddress;
-	
-	@Column(name="ex_code")
+	@Column(name = "ex_code")
 	private String exCode;
 	
-	@Column(name="ex_system")
-	private String exSystem;
-	
+	@Version
+	private int version;	
 	
 	@Embedded
 	@JsonIgnore
 	private RowAudit rowAudit;
 
+	public String getKeyname() {
+		return keyname;
+	}
+
+	public void setKeyname(String keyname) {
+		this.keyname = keyname;
+	}
 
 	public String getName() {
 		return name;
@@ -50,20 +56,12 @@ public class Organization extends IdEntity implements Serializable {
 		this.name = name;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getComment() {
+		return comment;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public String getExCode() {
@@ -74,12 +72,12 @@ public class Organization extends IdEntity implements Serializable {
 		this.exCode = exCode;
 	}
 
-	public String getExSystem() {
-		return exSystem;
+	public int getVersion() {
+		return version;
 	}
 
-	public void setExSystem(String exSystem) {
-		this.exSystem = exSystem;
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	public RowAudit getRowAudit() {
@@ -89,5 +87,7 @@ public class Organization extends IdEntity implements Serializable {
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
 	}
+	
+	
 	
 }

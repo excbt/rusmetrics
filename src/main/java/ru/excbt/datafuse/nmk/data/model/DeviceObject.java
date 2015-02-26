@@ -5,35 +5,35 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
-@Table(name="organization")
-public class Organization extends IdEntity implements Serializable {
-	
-	
-	
+@Table(name="device_object")
+public class DeviceObject extends IdEntity implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="organization_name")
-	private String name;
 	
-	@Column(name="organization_full_name")
-	private String fullName;
+	@OneToOne 
+	@JoinColumn(name = "device_model_id")
+	@JsonIgnore
+	private DeviceModel deviceModel;
 	
-	@Column(name="organization_full_address")
-	private String fullAddress;
+	@Column(name = "device_object_number")
+	private String number;
 	
-	@Column(name="ex_code")
+	@Column(name = "ex_code")
 	private String exCode;
-	
-	@Column(name="ex_system")
+
+	@Column(name = "ex_system")
 	private String exSystem;
 	
 	
@@ -42,28 +42,20 @@ public class Organization extends IdEntity implements Serializable {
 	private RowAudit rowAudit;
 
 
-	public String getName() {
-		return name;
+	public DeviceModel getDeviceModel() {
+		return deviceModel;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDeviceModel(DeviceModel deviceModel) {
+		this.deviceModel = deviceModel;
 	}
 
-	public String getFullName() {
-		return fullName;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	public String getExCode() {
@@ -88,6 +80,7 @@ public class Organization extends IdEntity implements Serializable {
 
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
-	}
+	}	
+	
 	
 }
