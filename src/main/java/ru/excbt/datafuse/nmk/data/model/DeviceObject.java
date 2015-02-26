@@ -24,7 +24,6 @@ public class DeviceObject extends IdEntity implements Serializable {
 	
 	@OneToOne 
 	@JoinColumn(name = "device_model_id")
-	@JsonIgnore
 	private DeviceModel deviceModel;
 	
 	@Column(name = "device_object_number")

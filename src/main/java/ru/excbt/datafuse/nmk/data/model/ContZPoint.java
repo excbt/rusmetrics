@@ -32,8 +32,10 @@ public class ContZPoint extends IdEntity implements Serializable {
 	@JsonIgnore
 	private ContObject contObject;
 
-	@Column(name="cont_service_type")
-	private String contServiceType;
+	
+	@OneToOne 
+	@JoinColumn(name = "cont_service_type")
+	private ContServiceType contServiceType;
 	
 	@Column(name="custom_service_name")
 	private String customServiceName;
@@ -67,15 +69,6 @@ public class ContZPoint extends IdEntity implements Serializable {
 		this.contObject = contObject;
 	}
 
-
-	public String getContServiceType() {
-		return contServiceType;
-	}
-
-
-	public void setContServiceType(String contServiceType) {
-		this.contServiceType = contServiceType;
-	}
 
 
 	public String getCustomServiceName() {
@@ -125,6 +118,16 @@ public class ContZPoint extends IdEntity implements Serializable {
 
 	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
 		this.deviceObjects = deviceObjects;
+	}
+
+
+	public ContServiceType getContServiceType() {
+		return contServiceType;
+	}
+
+
+	public void setContServiceType(ContServiceType contServiceType) {
+		this.contServiceType = contServiceType;
 	}	
 	
 	
