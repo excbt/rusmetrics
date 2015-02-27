@@ -17,12 +17,12 @@
             
         </div>
 <!--Фильтр-->
-<div ng-show="!bObject">
+<div ng-show="!bObject && !bGroupByObject">
     <div>
         Фильтры:
     </div>
     <div>
-        <input type="checkbox" title="Показывать только новые еще не просмотренные записи" >Только новые</input>
+        <input type="checkbox" title="Показывать только новые еще непросмотренные записи" ng-model="onlyNoRead">Непросмотренные</input>
     </div>
 </div>
 <div class="input-group col-md-5 row filter marginBottom10">
@@ -32,14 +32,21 @@
     <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
 </div>
 
-<table>
+<table class="table table-bordered table-condensed noMarginBottom">
   
-     <tr class="info" ng-show="!bGroupByObject">  
-         <td>
+     <tr class="info">
+         
+<!--         ng-show="!bGroupByObject">  -->
+<!--         отключить шапку для групп объектов-->
+         
+         
+         <td style="padding:0;">
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
                        <th ng-show="bGroupByObject || bObject" class="col-md-1">
+                          
+                           
                 <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
                            
                         </th>
@@ -84,8 +91,8 @@
        
     
 <!--  Постороение таблицы с данными  -->
-    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter">
-        <td><!--    <td> Уровень 1     -->
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-show="showRow(object)" >
+        <td style="padding:0;"><!--    <td> Уровень 1     -->
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
 
 
@@ -93,8 +100,7 @@
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
             <td ng-show="bGroupByObject || bObject" class="col-md-1">
                 <div ng-show="bGroupByObject" class="btn-toolbar"><i class="btn btn-default btn-sm glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
-<!--                data-target="#showObjectDetailModal" data-toggle="modal"-->
-                
+<!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
 <!--                Эта кнопка доступна, когда отображаются объекты-->
                 <div ng-show="bObject" class="btn-toolbar"><i class="btn btn-default btn-small glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i></div>
                 
@@ -131,7 +137,12 @@
 
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
+                                <div ng-show="!object.isRead"><b>
                                     {{object[column.name]}}
+                                    </b></div>
+                                <div ng-show="object.isRead">
+                                    {{object[column.name]}}
+                                    </div>
                             </span>
                         </div>
                     </span>
@@ -148,8 +159,12 @@
             <td ng-show="bObject" class="col-md-1"> 
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click=""></i>
-                        <i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i>
+                        <table>
+                            <tr>
+                                <td><i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click="" ></i> </td>
+                                <td><i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i></td>
+                            </tr>
+                        </table>    
                     </div>    
                 </div>
                 
@@ -168,6 +183,9 @@
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
                             </div>
                         </th>
+<!--                        Колонка для кнопок-->
+                        <th ng-show="bObject" class="col-md-1">
+                        </th
                     </tr>
                      <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
                          <td ng-repeat="oldColumn in oldColumns">
@@ -200,6 +218,21 @@
                             </span>
                         </div>
                          </td>
+                         
+                         <!-- Колонка для редактирования элементов                   -->
+                            <td ng-show="bObject" class="col-md-1"> 
+                                <div class="btn-toolbar">
+                                    <div class="btn-group">
+                                        <table>
+                                            <tr>
+                                                <td><i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click="" ></i> </td>
+                                                <td><i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i></td>
+                                            </tr>
+                                        </table>    
+                                    </div>    
+                                </div>
+
+                            </td>  
                      </tr>
                     </table>
 <!--
