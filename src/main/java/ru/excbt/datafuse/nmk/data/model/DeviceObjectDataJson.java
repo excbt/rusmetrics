@@ -49,6 +49,7 @@ public class DeviceObjectDataJson extends IdEntity implements Serializable {
 	
 	@OneToOne (fetch = FetchType.LAZY) 
 	@JoinColumn(name = "device_object_id")
+	@JsonIgnore
 	private DeviceObject deviceObject;
 	
 	@Column(name="time_detail_type")
