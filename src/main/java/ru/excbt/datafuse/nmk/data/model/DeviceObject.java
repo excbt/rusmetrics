@@ -5,7 +5,10 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -40,6 +43,13 @@ public class DeviceObject extends IdEntity implements Serializable {
 	@JsonIgnore
 	private RowAudit rowAudit;
 
+	@OneToOne 
+    @JoinTable(name="device_object_cont",
+    joinColumns=@JoinColumn(name="device_object_id"),
+    inverseJoinColumns=@JoinColumn(name="cont_object_id"))
+	@JsonIgnore
+	private ContObject contObject;
+	
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -79,6 +89,14 @@ public class DeviceObject extends IdEntity implements Serializable {
 
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
+	}
+
+	public ContObject getContObject() {
+		return contObject;
+	}
+
+	public void setContObject(ContObject contObject) {
+		this.contObject = contObject;
 	}	
 	
 	

@@ -12,60 +12,42 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+
 @Entity
-@Table(name = "device_data_type")
-public class DeviceDataType implements Serializable {
+@Table(name = "time_detail_type")
+public class TimeDetailType implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@Column(name = "keyname")
 	private String keyname;
-
+		
 	@Column(name = "caption")
 	private String caption;
-	
-	@Column(name = "device_data_type_name")
-	private String dataTypeName;
 
-	@Column(name = "device_data_type_comment")
-	private String dataTypeComment;
+	@Column(name = "time_detail_type_name")
+	private String name;
 
-	@Column(name = "ex_code")
-	private String exCode;
+	@Column(name = "time_detail_type_comment")
+	private String comment;
 	
 	@Version
 	private int version;	
 	
 	@Embedded
 	@JsonIgnore
-	private RowAudit rowAudit;	
-	
+	private RowAudit rowAudit;
+
 	public String getKeyname() {
 		return keyname;
 	}
 
 	public void setKeyname(String keyname) {
 		this.keyname = keyname;
-	}
-
-	public String getDataTypeName() {
-		return dataTypeName;
-	}
-
-	public void setDataTypeName(String dataTypeName) {
-		this.dataTypeName = dataTypeName;
-	}
-
-	public String getDataTypeComment() {
-		return dataTypeComment;
-	}
-
-	public void setDataTypeComment(String dataTypeComment) {
-		this.dataTypeComment = dataTypeComment;
 	}
 
 	public String getCaption() {
@@ -76,12 +58,20 @@ public class DeviceDataType implements Serializable {
 		this.caption = caption;
 	}
 
-	public String getExCode() {
-		return exCode;
+	public String getName() {
+		return name;
 	}
 
-	public void setExCode(String exCode) {
-		this.exCode = exCode;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 
 	public int getVersion() {
@@ -98,6 +88,6 @@ public class DeviceDataType implements Serializable {
 
 	public void setRowAudit(RowAudit rowAudit) {
 		this.rowAudit = rowAudit;
-	}
+	}		
 	
 }
