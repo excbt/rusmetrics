@@ -26,7 +26,8 @@ public class ContEvent extends IdEntity implements Serializable {
 
 	
 	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id")	
+	@JoinColumn(name = "cont_object_id")
+	@JsonIgnore
 	private ContObject contObject;
 	
 	@ManyToOne (fetch = FetchType.EAGER)

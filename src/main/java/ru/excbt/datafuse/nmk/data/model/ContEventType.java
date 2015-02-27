@@ -32,6 +32,46 @@ public class ContEventType extends IdEntity implements Serializable {
 	
 	@Embedded
 	@JsonIgnore
-	private RowAudit rowAudit;	
+	private RowAudit rowAudit;
+
+	public String getKeyname() {
+		return keyname;
+	}
+
+	public void setKeyname(String keyname) {
+		this.keyname = keyname;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public RowAudit getRowAudit() {
+		return rowAudit;
+	}
+
+	public void setRowAudit(RowAudit rowAudit) {
+		this.rowAudit = rowAudit;
+	}	
 	
 }

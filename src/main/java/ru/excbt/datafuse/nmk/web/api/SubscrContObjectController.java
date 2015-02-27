@@ -17,11 +17,11 @@ import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContObjectsController {
+public class SubscrContObjectController {
 	
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContObjectsController.class);
+			.getLogger(SubscrContObjectController.class);
 	
 	@Autowired
 	private ContObjectService contObjectService;
