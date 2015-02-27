@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -12,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 
-public class ContObjRepositoryTest extends RepositoryTest {
+public class ContObjectRepositoryTest extends RepositoryTest {
 
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(ContObjRepositoryTest.class);
+			.getLogger(ContObjectRepositoryTest.class);
 	
 	@Autowired
 	private ContObjectRepository contObjectRepository;
@@ -31,5 +32,18 @@ public class ContObjRepositoryTest extends RepositoryTest {
 		logger.info("Result count {}", res.size());
 		logger.info("Full Address {}", res.get(0).getFullAddress());
 	}
+
+	@Test
+	public void testFindContObjects() {
+		List<ContObject> contObjects = contObjectRepository.selectSubscrContObjects(729);
+		assertTrue(contObjects.size() > 0);
+		
+		logger.debug("find {} contObjects", contObjects.size());
+		
+		for (ContObject co : contObjects) {
+			logger.debug("contObject fullAddress: {}", co.getFullAddress());
+		}
+		
+	}	
 	
 }

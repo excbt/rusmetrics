@@ -28,7 +28,7 @@ public class ContObjectService {
 	
 	
 	@Transactional (readOnly = true)
-	public List<ContObject> getSubscrContObjects(long userId) {
+	private List<ContObject> getSubscrContObjects(long userId) {
 		
 		List<ContObject> result = null;
 		

@@ -34,7 +34,7 @@ public class SubscrContObjectsController {
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
 		
-		List<ContObject> resultList = subscrUserService.findContObjects();
+		List<ContObject> resultList = subscrUserService.selectSubscrContObjects();
 		
 		return ResponseEntity.ok().body(resultList);
 	}
