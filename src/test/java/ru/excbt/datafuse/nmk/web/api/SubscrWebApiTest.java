@@ -16,4 +16,9 @@ public class SubscrWebApiTest extends AnyControllerTest {
 		testJsonGet ("/api/subscr/contObjects/725/zpoints");
 	}
 
+	@Test
+	public void testSubscrContEvents() throws Exception {
+		testJsonGet ("/api/subscr/contObjects/725/events");
+	}
+
 }

@@ -20,11 +20,6 @@ public class ContObject extends IdEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-	
 	@Column(name="cont_object_name")
 	private String name;
 
@@ -43,7 +38,9 @@ public class ContObject extends IdEntity implements Serializable {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
-
+	@Embedded
+	@JsonIgnore
+	private RowAudit rowAudit;
 
 	public RowAudit getRowAudit() {
 		return rowAudit;

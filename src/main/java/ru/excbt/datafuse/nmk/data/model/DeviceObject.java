@@ -5,10 +5,9 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -43,7 +42,7 @@ public class DeviceObject extends IdEntity implements Serializable {
 	@JsonIgnore
 	private RowAudit rowAudit;
 
-	@OneToOne 
+	@ManyToOne 
     @JoinTable(name="device_object_cont",
     joinColumns=@JoinColumn(name="device_object_id"),
     inverseJoinColumns=@JoinColumn(name="cont_object_id"))
