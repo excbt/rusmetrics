@@ -80,7 +80,12 @@ angular.module('portalNMK').directive('crudGrid', function () {
                 $scope.loading = true;
                 $scope.filter = '';
                 $scope.filterType='';
-                $scope.bGroupByObject = false;
+                $scope.bGroupByObject = angular.fromJson($attrs.bgroup) || false;
+                $scope.bExtraMenu = angular.fromJson($attrs.bextramenu) || false; //признак дополнительного меню
+                $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
+                
+console.log("bGroup = "+$scope.bGroupByObject);
+console.log("bExtraMenu = "+$scope.bExtraMenu);                
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -186,6 +191,7 @@ angular.module('portalNMK').directive('crudGrid', function () {
 
                     crudGridDataFactory($scope.crudTableName).query(function (data) {
                         $scope.objects = data;
+                    
                         if (cb) cb();
                     });
                 };
@@ -329,6 +335,54 @@ angular.module('portalNMK').directive('crudGrid', function () {
                   //  $scope.selectedItem(curObject);
                 };
                 
+                $scope.zPointsByObject = [];
+                $scope.getZpointsDataByObject = function(table){
+                    
+console.log(table);                 
+                    crudGridDataFactory(table).query(function (data) {
+                        $scope.zPointsByObject = data;
+console.log("Data:");                
+console.log($scope.zPointsByObject); 
+                        
+                        
+                        for(var i=0;i<$scope.zPointsByObject.length;i++){
+                            var zpoint = {};
+                            zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
+                            zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
+                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+                            zpoint.zpointLastDataDate  = "27.02.2015";   
+                            
+                            $scope.oldObjects[i] = zpoint;
+                        
+console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
+                        }
+                        
+                        
+                    });
+                };
+                //for page "Objects"
+                $scope.zpoints = angular.fromJson($attrs.zpointdata);
+               
+                $scope.showObjectDetails = function(obj){
+                    $scope.oldObjects = [];
+                    var zps = angular.fromJson($attrs.zpointdata);
+                    var mas = [];
+//                    var masCount = 0;
+//                    for (var k=0;k<$scope.zpoints.length;k++){
+//                        if($scope.zpoints[k].zpointParent == obj.id){
+//                            mas[masCount]=$scope.zpoints[k];
+//                            masCount = masCount+1;
+//                        }
+//                    }
+                 //   $scope.oldObjects = mas;
+                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
+   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
+                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
+                    
+                    
+                  
+                }
                 
                 
                     

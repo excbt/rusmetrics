@@ -23,6 +23,7 @@
     <!-- Add your site or application content here -->
     
 <div id="wrap">
+<!--    Навигационная строка в верху страницы-->
     <div class="navbar navbar-inverse navbar-fixed-top">
 			<div id="navbar-container" class="container">
 				<div class="navbar-header">
@@ -47,8 +48,8 @@
                 
             <ul class="nav navbar-nav pull-right">
 				
-				<li><a href="#/"
-					title='Private office'><p
+				<li><a href="#/private/"
+					title='Private office' ng-click="showPrivateOfficeMenu=true"><p
 							class="displayInLine"> <b>Личный кабинет</b>
 				</p></a></li>			
 			
@@ -58,7 +59,8 @@
 						</p></a></li>
 			</ul>					
 			</div>
-		</div>    
+  </div>  
+<!--   энд оф Навигационная строка в верху страницы    -->
 
     <div class="container">
 
@@ -67,7 +69,8 @@
         <div class="col-xs-6 col-sm-2 well sidebar-offcanvas">
                         <nav class="sidebar-nav"
                             role="navigation">
-                            <div id="sidebar-entries" class="list-group">
+<!--                Основное меню            -->
+                            <div id="sidebar-entries" class="list-group" ng-show="!showPrivateOfficeMenu">
                                 <!-- Home -->
                                 <a class="list-group-item"
 
@@ -83,11 +86,24 @@
                                 <!-- Объекты -->
                                 <a class="list-group-item"
 
-                                    href="#/endpoints" data-toggle="offcanvas">Объекты</a>
+                                    href="#/objects_list" data-toggle="offcanvas">Объекты</a>
                                 <!-- Отчеты -->
                                 <a class="list-group-item"
 
-                                    href="#/endpoints" data-toggle="offcanvas">Отчеты</a>
+                                    href="#/" data-toggle="offcanvas">Отчеты</a>
+
+                            </div>
+<!--              Меню Личного кабинета              -->
+                            <div id="sidebar-entries" class="list-group" ng-show="showPrivateOfficeMenu">
+                                <!-- Home -->
+                                <a class="list-group-item"
+
+                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Home</a>
+                                <!-- Notices -->
+                                <a class="list-group-item"
+
+                                    href="#/objects_list/" data-toggle="offcanvas">Объекты</a>
+                                
 
                             </div>
                         </nav>  
@@ -160,6 +176,7 @@
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/controllers/notice.js"></script>
     <script src="scripts/controllers/operationlog.js"></script>
+    <script src="scripts/controllers/objects.js"></script>
       <!-- Directives -->
 <script src="scripts/directives/crud-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-data-factory.js"></script>

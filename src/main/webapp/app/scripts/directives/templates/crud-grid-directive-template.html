@@ -1,13 +1,13 @@
 <div ng-show="loading">{{captions.msgLoading}}</div>
 
 <!--Группировка-->
-        <div class="form-actions">
+        <div ng-show="!bObject" class="form-actions">
             Группировки: 
-            <div ng-show="!bGroupByObject">
+            <div ng-show="!bGroupByObject&&!bObject">
                 <button type="button" class="btn" ng-click="groupByObject()">по объектам</button>
                 <button type="button" class="btn">по типу</button>
             </div>    
-            <div ng-show="bGroupByObject">
+            <div ng-show="bGroupByObject&&!bObject">
                 <button type="button" class="btn btn-primary">по объектам</button>
                 <button type="button" class="btn">по типу</button>
                 <span class="btn btn-default" ng-click="cancelGroup()"><i class="glyphicon glyphicon-remove"></i></span>
@@ -17,11 +17,13 @@
             
         </div>
 <!--Фильтр-->
-<div>
-    Фильтры:
-</div>
-<div>
-    <input type="checkbox" title="Показывать только новые еще не просмотренные записи" >Только новые</input>
+<div ng-show="!bObject">
+    <div>
+        Фильтры:
+    </div>
+    <div>
+        <input type="checkbox" title="Показывать только новые еще не просмотренные записи" >Только новые</input>
+    </div>
 </div>
 <div class="input-group col-md-5 row filter marginBottom10">
     
@@ -37,8 +39,9 @@
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
-                       <th ng-show="bGroupByObject" >
+                       <th ng-show="bGroupByObject || bObject" class="col-md-1">
                 <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
+                           
                         </th>
 
                 <!--       Шапка таблицы-->
@@ -47,6 +50,17 @@
                                 {{column.header || column.name}}
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                             </div>
+                        </th>
+                     <th ng-show="bObject" class="col-md-1"> 
+<!--
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click=""></i>
+                        <i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i>
+                    </div>    
+                </div>
+-->
+                
                         </th>
                 </tr>     
             </table>     
@@ -76,10 +90,14 @@
 
 
                 <tr><!--    <tr> Уровень 3     -->
-<!-- этот столбец отображается, когда включена группировка -->
-            <td ng-show="bGroupByObject" class="col-md-1">
-                <div class="btn-toolbar"><i class="btn btn-default btn-small glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
+<!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
+            <td ng-show="bGroupByObject || bObject" class="col-md-1">
+                <div ng-show="bGroupByObject" class="btn-toolbar"><i class="btn btn-default btn-sm glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
 <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->
+                
+<!--                Эта кнопка доступна, когда отображаются объекты-->
+                <div ng-show="bObject" class="btn-toolbar"><i class="btn btn-default btn-small glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i></div>
+                
             </td>
 
     <!--  Выводим данные в соответствующие столбцы таблицы  -->
@@ -126,6 +144,16 @@
                 </div>
                      
             </td>
+<!-- Колонка для редактирования объектов                   -->
+            <td ng-show="bObject" class="col-md-1"> 
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click=""></i>
+                        <i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i>
+                    </div>    
+                </div>
+                
+            </td>        
                 </tr><!--    </tr> Уровень 3     -->
                 <tr><!--    <tr> Уровень 3     -->
                     
@@ -153,7 +181,18 @@
                                     <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
                                     <span ng-switch-default>no define</span>
                                 </div>
-                            </span>                        
+                            </span> 
+                            <span ng-switch-when="zpointType">
+    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+                                <div ng-switch on="oldObject[oldColumn.name]">
+                                    <span ng-switch-when="hw"><img height=16 width=16 src="images/gvs.png"></span>
+                                    <span ng-switch-when="heat"><img height=16 width=16 src="images/ts.png"></span>
+                                    <span ng-switch-when="HVS"><img height=16 width=16 src="images/hvs.png"></span>
+                                    <span ng-switch-when="GS"><img height=16 width=16 src="images/gaz.png"></span>
+                                    <span ng-switch-when="ES"><img height=16 width=16 src="images/es.png"></span>
+                                    <span ng-switch-default>no define</span>
+                                </div>
+                            </span>      
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
                                     {{oldObject[oldColumn.name]}}
@@ -181,6 +220,29 @@
     </tr>
     <!--        End Построение таблицы с данными-->
 </table>
+
+<!-- Нижняя полоса с описанием количества объектов и элементов учета-->
+<div ng-show="bObject" class="navbar navbar-default  navbar-fixed-bottom" style="margin-bottom:60px;">
+    <div id="navbar-container" class="container">
+        
+        		
+              <ul class="nav navbar-nav">
+				
+				<li><p
+							class="displayInLine"> <b>Общее количество объектов: {{objects.length}}</b>  
+				    </p>
+                </li>
+                <li><p
+							class="displayInLine"> <b> Общее количество приборов: {{0}}</b>
+				    </p>
+                </li>			
+			
+				
+			</ul>
+                
+					
+			</div>
+</div>
 
 <!-- Детали по группе-->
 <div id="showObjectDetailModal" class="modal fade" role="dialog"

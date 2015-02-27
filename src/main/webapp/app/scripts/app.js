@@ -35,6 +35,14 @@ angular
         templateUrl: 'views/operationlog.html',
         controller: 'OperationlogCtrl'
       })
+      .when('/private', {
+        templateUrl: 'views/private_office.html',
+        controller: 'ObjectsCtrl'
+      })
+      .when('/objects_list', {
+        templateUrl: 'views/objects_list.html',
+        controller: 'ObjectsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
