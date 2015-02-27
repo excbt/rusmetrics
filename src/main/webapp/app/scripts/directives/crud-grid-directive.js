@@ -313,11 +313,11 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                     
                     //4.
                     $scope.columns = [ 
-                                      {"name":"name", "header" : " ", "class":"col-md-3"}
-                                    ,{"name":"commonCount", "header" : " ", "class":"col-md-1"}
-                                    ,{"name":"critCount", "header" : " ", "class":"col-md-1"}
-                                    ,{"name":"warnCount", "header" : " ", "class":"col-md-1"}
-                                    ,{"name":"infoCount", "header" : " ", "class":"col-md-1"}
+                                      {"name":"name", "header" : "Объект", "class":"col-md-3"}
+                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-1"}
+                                    ,{"name":"critCount", "header" : "Критические", "class":"col-md-1"}
+                                    ,{"name":"warnCount", "header" : "Предупреждений", "class":"col-md-1"}
+                                    ,{"name":"infoCount", "header" : "Информативных", "class":"col-md-1"}
                     ];
                     $scope.objects = $scope.objectGroups;
                     
@@ -382,7 +382,23 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     
                     
                   
-                }
+                };
+                
+                //Фильтр "Только непросмотренные"
+                $scope.onlyNoRead = false;
+                $scope.showRow = function(obj){
+                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
+                        return true;
+                    };                                     
+                    if($scope.onlyNoRead){
+                        if($scope.onlyNoRead == !obj.isRead){
+                            return true;
+                        }else{
+                            return false;
+                        }
+                    };
+                    return true;
+                };
                 
                 
                     

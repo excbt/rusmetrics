@@ -17,12 +17,12 @@
             
         </div>
 <!--Фильтр-->
-<div ng-show="!bObject">
+<div ng-show="!bObject || !bGroupByObject">
     <div>
         Фильтры:
     </div>
     <div>
-        <input type="checkbox" title="Показывать только новые еще не просмотренные записи" >Только новые</input>
+        <input type="checkbox" title="Показывать только новые еще непросмотренные записи" ng-model="onlyNoRead">Непросмотренные</input>
     </div>
 </div>
 <div class="input-group col-md-5 row filter marginBottom10">
@@ -34,12 +34,18 @@
 
 <table>
   
-     <tr class="info" ng-show="!bGroupByObject">  
+     <tr class="info">
+         
+<!--         ng-show="!bGroupByObject">  -->
+<!--         отключить шапку для групп объектов-->
+         
+         
          <td>
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
                        <th ng-show="bGroupByObject || bObject" class="col-md-1">
+                           
                 <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
                            
                         </th>
@@ -84,7 +90,7 @@
        
     
 <!--  Постороение таблицы с данными  -->
-    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter">
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-show="showRow(object)" >
         <td><!--    <td> Уровень 1     -->
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
 
@@ -131,7 +137,12 @@
 
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
+                                <div ng-show="!object.isRead"><b>
                                     {{object[column.name]}}
+                                    </b></div>
+                                <div ng-show="object.isRead">
+                                    {{object[column.name]}}
+                                    </div>
                             </span>
                         </div>
                     </span>
@@ -200,6 +211,17 @@
                             </span>
                         </div>
                          </td>
+                         
+                         <!-- Колонка для редактирования элементов                   -->
+                            <td ng-show="bObject" class="col-md-1"> 
+                                <div class="btn-toolbar">
+                                    <div class="btn-group">
+                                        <i class="btn btn-default btn-sm glyphicon glyphicon-edit" ng-click=""></i>
+                                        <i class="btn btn-default btn-sm glyphicon glyphicon-list" ng-click=""></i>
+                                    </div>    
+                                </div>
+
+                            </td>  
                      </tr>
                     </table>
 <!--
