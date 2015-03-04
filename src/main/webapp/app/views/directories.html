@@ -1,0 +1,91 @@
+<h2>Справочники</h2>
+
+<div crud-grid table=""
+	columns='[
+
+	          {"name":"directName", "header" : "Наименование", "class":"col-md-3"},
+             {"name":"directDescription", "header" : "Описание", "class":"col-md-5"}
+           
+            ]'
+
+	captions='{"loading":"loading", "totalElements":"totalElements"}'
+	exprops='{"idColumnName":"id", "defaultOrderBy" : "directName"}'
+     
+     bgroup='true'
+     
+     bdirectories = 'true'
+     
+     bextramenu='true'
+     
+     bobject='false'
+
+     datasource='[
+    {
+      "id":"753",
+      "directName": "Справочник 1",
+      "directDescription": "Пример справочника"
+        
+        
+    }
+                     ,{    "id":"754",
+                 "directName": "Школы",
+      "directDescription": "Справочник содержит перечень школ"
+      
+                       
+    }
+                 
+                  ,{    "id":"755",
+                 "directName": "Муниципальные учреждения",
+      "directDescription": "Справочник содержит перечень всех муниципальных учреждений"
+      
+                       
+    }
+                  ,{    "id":"756",
+                 "directName": "Справочник 2",
+      "directDescription": " "
+      
+                       
+    }
+                  ,{    "id":"757",
+                 "directName": "Номенклатура",
+      "directDescription": "Тут могла быть ваша реклама"
+      
+                       
+    }
+    
+    ]'
+     
+     
+        zpointcolumns='[
+            
+            {"name":"zpointType", "header" : " ", "class":"col-md-1"},
+	          {"name":"zpointName", "header" : "Наименование", "class":"col-md-2"},
+             {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
+            {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
+           {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
+            ]'     
+          zpointdata='[
+    {
+      
+      "zpointId": "1",
+      "zpointType": "GVS",
+       "zpointName": "ГВС",
+      "zpointModel": "ТЭМ-106", 
+        "zpointNumber": "1066502",
+      "zpointLastDataDate": "25.02.2015",
+        "zpointParent": "754"              
+    }
+                     ,{
+      
+      "zpointId": "2",
+      "zpointType": "TS",
+       "zpointName": "TС",
+      "zpointModel": "ТЭМ-106", 
+        "zpointNumber": "1066502",
+      "zpointLastDataDate": "25.02.2015",
+        "zpointParent": "754"              
+    }
+    
+    ]'
+
+     ></div>

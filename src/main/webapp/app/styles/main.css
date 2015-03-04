@@ -114,6 +114,14 @@ body {
     margin-bottom: 0;
 }
 
+.noMargin {
+    margin : 0;
+}
+
 .marginBottom10 {
     margin-bottom: 10px;
+}
+
+.btn-toolbar {
+    width: 85px;
 }

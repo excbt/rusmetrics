@@ -314,7 +314,7 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                     //4.
                     $scope.columns = [ 
                                       {"name":"name", "header" : "Объект", "class":"col-md-3"}
-                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-1"}
+                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-2"}
                                     ,{"name":"critCount", "header" : "Критические", "class":"col-md-1"}
                                     ,{"name":"warnCount", "header" : "Предупреждений", "class":"col-md-1"}
                                     ,{"name":"infoCount", "header" : "Информативных", "class":"col-md-1"}
@@ -401,6 +401,8 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 };
                 
                 
+                //Directories
+                $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
                     
             }]
     };
