@@ -43,6 +43,10 @@ angular
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })
+      .when('/directories', {
+        templateUrl: 'views/directories.html',
+        controller: 'ObjectsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
