@@ -182,6 +182,11 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                 $scope.deleteObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
                 };
+                
+//                function delete for directory
+                $scope.deleteObject = function (tableName, objId) {
+                    crudGridDataFactory(tableName).delete({ id: objId }, successCallback, errorCallback);
+                };
 
                 $scope.updateObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
@@ -402,8 +407,65 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 
                 //Directories
+                $scope.paramsTableName = "table";
+                $scope.addParamMode = false;
                 $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+                
+                $scope.getCurDirParams = function(){
                     
+                    $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
+                    $scope.oldColumns = [ 
+                                      {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
+                                    ,{"name":"paramType"
+                                      ,"lookup":
+                                        {
+                                            "table": "rest/types",
+                                            "key": "typeId",
+                                            "value":"typeKeyname",
+                                            "orderBy": {"field": "typeKeyname", "asc": "true"}
+                                        }                                      
+                                      ,"header" : "Тип", "class":"col-md-2"}
+                                    ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
+                                    
+                    ];
+                };
+                
+                $scope.toggleAddParamMode = function(){
+                    $scope.addParamMode = !$scope.addParamMode;
+                };
+                
+                $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
+                    $scope.extraProp = {};
+                    $scope.currentObjectToDel = obj;
+                    $scope.extraProp.idColumnName = idColumnName;
+                    $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
+                };
+                
+                $scope.treedata =
+                    [
+                        { "label" : "Школы", "id" : "role1", "children" : [
+                            { "label" : "Школа1", "id" : "role11", "children" : [] },
+                            { "label" : "Школа2", "id" : "role12", "children" : [
+                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
+                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
+                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
+                                ]}
+                            ]}
+                        ]},
+                        { "label" : "Заводы", "id" : "role2", "children" : [] },
+                        { "label" : "Администрация", "id" : "role3", "children" : [] }
+                    ];
+                
+                $scope.showDetails = function(obj){
+                    if($scope.bdirectories){
+                        $scope.currentObject = obj;
+                        $('#showDirectoryStructModal').modal();
+                    }
+                };
+                
+                $scope.test = function(){
+                    $('#editDirValueModal').modal();
+                };
             }]
     };
 });

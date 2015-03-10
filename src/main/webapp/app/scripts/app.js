@@ -45,7 +45,7 @@ angular
       })
       .when('/directories', {
         templateUrl: 'views/directories.html',
-        controller: 'ObjectsCtrl'
+        controller: 'DirectoryCtrl'
       })
       .otherwise({
         redirectTo: '/'

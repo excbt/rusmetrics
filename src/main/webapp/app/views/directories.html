@@ -9,7 +9,7 @@
             ]'
 
 	captions='{"loading":"loading", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"id", "defaultOrderBy" : "directName"}'
+	exprops='{"idColumnName":"id", "defaultOrderBy" : "directName", "deleteConfirmationProp":"directName"}'
      
      bgroup='true'
      
@@ -24,32 +24,62 @@
       "id":"753",
       "directName": "Справочник 1",
       "directDescription": "Пример справочника"
-        
+      ,  "directParams":[
+                 {"paramName":"Параметр1"
+                    , "paramType":"Строка"
+                     
+                    , "paramDescription":"Пример параметра"}
+                 ,{"paramName":"Площадь", "paramType":"Число", "paramDescription":"Общая площадь объекта"}
+                 ,{"paramName":"Количество счетчиков", "paramType":"Integer", "paramDescription":"Количество счетчиков учета на объекте"}
+                 ]
         
     }
                      ,{    "id":"754",
                  "directName": "Школы",
       "directDescription": "Справочник содержит перечень школ"
-      
+      ,  "directParams":[
+                 {"paramName":"Параметр1"
+                    , "paramType":"Строка"
+                     
+                    , "paramDescription":"Пример параметра"}
+                 
+                 ]
                        
     }
                  
                   ,{    "id":"755",
                  "directName": "Муниципальные учреждения",
       "directDescription": "Справочник содержит перечень всех муниципальных учреждений"
-      
+      ,  "directParams":[
+                 {"paramName":"Площадь", "paramType":"Double", "paramDescription":"Общая площадь объекта"}
+                 ,{"paramName":"Количество счетчиков", "paramType":"Integer", "paramDescription":"Количество счетчиков учета на объекте"}
+                 ]
                        
     }
                   ,{    "id":"756",
                  "directName": "Справочник 2",
       "directDescription": " "
-      
+      ,  "directParams":[
+                 {"paramName":"Параметр1"
+                    , "paramType":"Строка"
+                     
+                    , "paramDescription":"Пример параметра"}
+                 ,{"paramName":"Площадь", "paramType":"Double", "paramDescription":"Общая площадь объекта"}
+                 ,{"paramName":"Количество счетчиков", "paramType":"Integer", "paramDescription":"Количество счетчиков учета на объекте"}
+                 ]
                        
     }
                   ,{    "id":"757",
                  "directName": "Номенклатура",
       "directDescription": "Тут могла быть ваша реклама"
-      
+      ,  "directParams":[
+                 {"paramName":"Параметр1"
+                    , "paramType":"Строка"
+                     
+                    , "paramDescription":"Пример параметра"}
+                 ,{"paramName":"Параметр2", "paramType":"Число", "paramDescription":"Общая площадь объекта"}
+                 ,{"paramName":"Параметр3", "paramType":"Число", "paramDescription":"Количество счетчиков учета на объекте"}
+                 ]
                        
     }
     
