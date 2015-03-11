@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="styles/main.css"/>
     <link rel="stylesheet" href="styles/angular.treeview.css"/>
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
+      <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
     <!-- endbuild -->
   </head>
   <body ng-app="portalNMK">
@@ -64,15 +65,15 @@
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
 
-    <div class="container">
+    <div class="container-fluid">
 
     <div class="row row-offcanvas row-offcanvas-left">    
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas">
+        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas" ng-show="!showPrivateOfficeMenu">
                         <nav class="sidebar-nav"
                             role="navigation">
 <!--                Основное меню            -->
-                            <div id="sidebar-entries" class="list-group" ng-show="!showPrivateOfficeMenu">
+                            <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
                                 <a class="list-group-item"
 
@@ -86,20 +87,24 @@
 
                                     href="#/operationlog/" data-toggle="offcanvas">Журнал операций</a>
                                 <!-- Объекты -->
+<!--
                                 <a class="list-group-item"
 
                                     href="#/objects_list" data-toggle="offcanvas">Объекты</a>
+-->
                                 <!-- Отчеты -->
                                 <a class="list-group-item"
 
                                     href="#/" data-toggle="offcanvas">Отчеты</a>
                                 
-                                 <!-- Справочники -->
-                                <a class="list-group-item"
-
-                                    href="#/directories/" data-toggle="offcanvas">Справочники</a>
+                                 
 
                             </div>
+                        </nav>            
+            </div>                
+         <div class="col-xs-6 col-sm-2 well well-bgc sidebar-offcanvas" ng-show="showPrivateOfficeMenu">        
+             <nav class="sidebar-nav"
+                            role="navigation">
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group" ng-show="showPrivateOfficeMenu">
                                 <!-- Home -->
@@ -110,7 +115,10 @@
                                 <a class="list-group-item"
 
                                     href="#/objects_list/" data-toggle="offcanvas">Объекты</a>
-                                
+                                <!-- Справочники -->
+                                <a class="list-group-item"
+
+                                    href="#/directories/" data-toggle="offcanvas">Справочники</a>
 
                             </div>
                         </nav>  
@@ -146,6 +154,7 @@
 
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+<!--
      <script>
        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -155,6 +164,7 @@
        ga('create', 'UA-XXXXX-X');
        ga('send', 'pageview');
     </script>
+-->
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -166,6 +176,7 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -174,6 +185,7 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script type="text/javascript" src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -190,6 +202,10 @@
 <script src="scripts/directives/crud-grid-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-paged-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-directive.js"></script>
+    <script src="scripts/directives/crud-grid-directive-operationlog.js"></script>
+    <script src="scripts/directives/crud-grid-directive-notice.js"></script>
+    <script src="scripts/directives/crud-grid-directive-objects.js"></script>
+    <script src="scripts/directives/crud-grid-directive-directories.js"></script>
 <script src="scripts/directives/crud-grid-paged-directive.js"></script>
     <script src="scripts/directives/tree-model.js"></script>
       
