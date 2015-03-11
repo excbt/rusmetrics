@@ -19,7 +19,6 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 @Transactional
 public class SubscrUserService {
 
-	private final static int TEST_USER_ID = 729;
 	
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
@@ -34,8 +33,8 @@ public class SubscrUserService {
 	private ContObjectRepository contEventObjectRepository;
 	
 	@Transactional(readOnly = true)
-	public List<ContObject> selectSubscrContObjects() {
-		List<ContObject> result = contEventObjectRepository.selectSubscrContObjects(TEST_USER_ID); 
+	public List<ContObject> selectSubscrContObjects(long userId) {
+		List<ContObject> result = contEventObjectRepository.selectSubscrContObjects(userId); 
 		return result;
 	}
 	
