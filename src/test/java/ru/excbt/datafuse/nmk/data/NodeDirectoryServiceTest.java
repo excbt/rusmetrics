@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import javax.persistence.EntityManagerFactory;
@@ -38,7 +39,7 @@ public class NodeDirectoryServiceTest extends JpaConfigTest {
 		NodeDirectory nd2 = nodeDirectoryService.save(nd);
 		assertNotNull(nd2);
 		
-		//assertEquals(nd.getChildNodes().size(), nd2.getChildNodes().size());
+		assertEquals(nd.getChildNodes().size(), nd2.getChildNodes().size());
 		
 		logger.info("Testing get root Node (nodeName={})", nd.getNodeName());
 		logger.info("Child Nodes {}", nd2.getChildNodes().size());

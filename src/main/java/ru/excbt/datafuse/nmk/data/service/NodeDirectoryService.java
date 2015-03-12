@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ public class NodeDirectoryService {
 	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
 	public NodeDirectory save(final NodeDirectory nodeDir) {
 		checkNotNull(nodeDir);
-		nodeDir.getRowAudit().setModifiedAt(DateTime.now());
 		NodeDirectory result = nodeDirectoryRepository.save(nodeDir); 
 		loadLazyChildNodes(result);
 		return result; 
@@ -32,7 +30,6 @@ public class NodeDirectoryService {
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void saveWithChildren(final NodeDirectory nodeDir) {
 		checkNotNull(nodeDir);
-		nodeDir.getRowAudit().setModifiedAt(DateTime.now());
 
 		NodeDirectory savedND = nodeDirectoryRepository.save(nodeDir);
 		if (nodeDir.getChildNodes() == null) {
