@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
@@ -21,7 +20,6 @@ public class SystemUser extends AbstractAuditableEntity<SystemUser, Long> {
 	 */
 	private static final long serialVersionUID = 8167917557955085535L;
 	
-	@Basic
 	@Column(name = "user_name")
 	private String userName;
 	
@@ -34,9 +32,7 @@ public class SystemUser extends AbstractAuditableEntity<SystemUser, Long> {
 	@Column(name = "password")
 	private String password;	
 	
-
     @Version
-    @Column
     private int version;
 
 
@@ -79,7 +75,5 @@ public class SystemUser extends AbstractAuditableEntity<SystemUser, Long> {
 	public void setPassword(final String password) {
 		this.password = password;
 	}
-	
-
 
 }

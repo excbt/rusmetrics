@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 @Entity
 @Table(name="node_directory_param")
 @EntityListeners({AuditingEntityListener.class})
-public class NodeDirectoryParam extends AbstractAuditableEntity<SystemUser,Long> {
+public class NodeDirectoryParam extends AbstractAuditableEntity<AuditUser,Long> {
 
     /**
 	 * 

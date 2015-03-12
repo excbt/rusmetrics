@@ -3,16 +3,16 @@ package ru.excbt.datafuse.nmk.data.auditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 
-import ru.excbt.datafuse.nmk.data.model.SystemUser;
-import ru.excbt.datafuse.nmk.data.service.CurrentUserService;
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.service.AuditUserService;
 
-public class AuditorAwareImpl implements AuditorAware<SystemUser> {
+public class AuditorAwareImpl implements AuditorAware<AuditUser> {
 
 	@Autowired
-	private CurrentUserService currentUserService;
+	private AuditUserService currentUserService;
 	
 	@Override
-	public SystemUser getCurrentAuditor() {
+	public AuditUser getCurrentAuditor() {
 		return currentUserService.getCurrentUser();
 	}
 
