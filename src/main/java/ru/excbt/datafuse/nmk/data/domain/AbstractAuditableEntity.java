@@ -13,6 +13,8 @@ import javax.persistence.TemporalType;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Auditable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * 
  * Inspired by org.springframework.data.jpa.domain.AbstractAuditable
@@ -39,18 +41,22 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	@ManyToOne
 	@JoinColumn(name = "created_by")	
+	@JsonIgnore
 	private U createdBy;
 
 	@Column(name = "created_date")	
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonIgnore
 	private Date createdDate;
 		
 	@ManyToOne
-	@JoinColumn(name = "last_modified_by")	
+	@JoinColumn(name = "last_modified_by")
+	@JsonIgnore
 	private U lastModifiedBy;
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "last_modified_date")	
+	@Column(name = "last_modified_date")
+	@JsonIgnore
 	private Date lastModifiedDate;
 	
 	

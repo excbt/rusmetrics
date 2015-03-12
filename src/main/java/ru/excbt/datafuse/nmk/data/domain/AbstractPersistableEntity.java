@@ -12,6 +12,8 @@ import javax.persistence.SequenceGenerator;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Inspired by org.springframework.data.jpa.domain.AbstractPersistable
  * 
@@ -56,6 +58,7 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 	 * @see org.springframework.data.domain.Persistable#isNew()
 	 */
 	@Override
+	@JsonIgnore
 	public boolean isNew() {
 		return null == getId();
 	}
