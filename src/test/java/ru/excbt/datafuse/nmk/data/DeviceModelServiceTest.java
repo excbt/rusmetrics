@@ -6,8 +6,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.domain.RowAudit;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.model.RowAudit;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 
 public class DeviceModelServiceTest extends JpaConfigTest {

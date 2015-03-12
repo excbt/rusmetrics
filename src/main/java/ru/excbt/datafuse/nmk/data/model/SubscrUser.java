@@ -12,6 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 

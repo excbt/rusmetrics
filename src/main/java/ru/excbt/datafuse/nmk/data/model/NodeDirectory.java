@@ -15,10 +15,15 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "node_directory")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NodeDirectory extends IdEntity implements Serializable {
 
 	/**
@@ -38,7 +43,7 @@ public class NodeDirectory extends IdEntity implements Serializable {
 	@Column(name = "node_comment")
 	private String nodeComment;
 
-	//@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.REMOVE})
+	//@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
 	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "parent_id")
 	@OrderColumn(name = "id")
