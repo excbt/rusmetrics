@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity

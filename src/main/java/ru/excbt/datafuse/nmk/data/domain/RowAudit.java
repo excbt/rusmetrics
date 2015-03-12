@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.domain;
 
 import java.util.Date;
 
