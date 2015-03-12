@@ -6,14 +6,14 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import ru.excbt.datafuse.nmk.data.auditor.AuditorAwareImpl;
-import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
 
 @Configuration
 @EnableJpaAuditing
 public class JpaAuditConfig {
 	
 	@Bean
-	public AuditorAware<SystemUser> auditorProvider() {
+	public AuditorAware<AuditUser> auditorProvider() {
 		return new AuditorAwareImpl();
 	}
 

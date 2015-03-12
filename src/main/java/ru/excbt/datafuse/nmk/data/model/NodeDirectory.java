@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "node_directory")
 @EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NodeDirectory extends AbstractAuditableEntity<SystemUser,Long> {
+public class NodeDirectory extends AbstractAuditableEntity<AuditUser,Long> {
 
 	/**
 	 * 
