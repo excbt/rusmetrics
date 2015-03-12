@@ -19,21 +19,21 @@ public class NodeDirectoryService {
 	@Autowired
 	private NodeDirectoryRepository nodeDirectoryRepository;
 
-	
 	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
 	public NodeDirectory save(final NodeDirectory nodeDir) {
 		checkNotNull(nodeDir);
 		nodeDir.getRowAudit().setModifiedAt(DateTime.now());
-		return nodeDirectoryRepository.save(nodeDir);
+		NodeDirectory result = nodeDirectoryRepository.save(nodeDir); 
+		loadLazyChildNodes(result);
+		return result; 
 	}
 
-	
 	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void saveWithChildren(final NodeDirectory nodeDir) {
 		checkNotNull(nodeDir);
 		nodeDir.getRowAudit().setModifiedAt(DateTime.now());
-		
+
 		NodeDirectory savedND = nodeDirectoryRepository.save(nodeDir);
 		if (nodeDir.getChildNodes() == null) {
 			return;
@@ -43,23 +43,43 @@ public class NodeDirectoryService {
 			saveWithChildren(nd);
 		}
 	}
-	
-	
+
 	@Transactional(readOnly = true)
 	public NodeDirectory getRootNode(long id) {
 		NodeDirectory result = nodeDirectoryRepository.findOne(id);
 		if (!result.isRoot()) {
-			throw new IllegalArgumentException("Argument id = " + id + " is not root element of Node Directory");
+			throw new IllegalArgumentException("Argument id = " + id
+					+ " is not root element of Node Directory");
 		}
+		loadLazyChildNodes(result);
+		return result;
+	}
+
+	@Transactional(readOnly = true)
+	public NodeDirectory findOne(long id) {
+		NodeDirectory result = nodeDirectoryRepository.findOne(id);
+		loadLazyChildNodes(result);
 		return result;
 	}
 
 	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
-	public void delete (final NodeDirectory nodeDirectory) {
+	public void delete(final NodeDirectory nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
 		nodeDirectoryRepository.delete(nodeDirectory.getId());
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param nodeDir
+	 */
+	private void loadLazyChildNodes(final NodeDirectory nodeDir) {
+		checkNotNull(nodeDir);
+		
+		for (NodeDirectory child : nodeDir.getChildNodes()) {
+			loadLazyChildNodes(child);
+		}
+
+	}
+
 }

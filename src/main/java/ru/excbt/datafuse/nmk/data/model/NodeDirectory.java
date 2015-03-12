@@ -44,7 +44,7 @@ public class NodeDirectory extends IdEntity implements Serializable {
 	private String nodeComment;
 
 	//@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "parent_id")
 	@OrderColumn(name = "id")
 	private Collection<NodeDirectory> childNodes = new ArrayList<>();
