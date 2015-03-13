@@ -7,19 +7,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.data.model.NodeDirectory;
-import ru.excbt.datafuse.nmk.data.service.NodeDirectoryService;
+import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 
 @Controller
-@RequestMapping(value = "/api/nodeDirectory")
-public class NodeDirectoryController {
+@RequestMapping(value = "/api/directoryNode")
+public class UDirectoryNodeController {
 
 	@Autowired
-	private NodeDirectoryService nodeDirectoryService;
+	private UDirectoryNodeService directoryNodeService;
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("id") long nodeDirectoryId) {
-		NodeDirectory result = nodeDirectoryService.getRootNode(nodeDirectoryId); 
+		UDirectoryNode result = directoryNodeService.getRootNode(nodeDirectoryId); 
 		return ResponseEntity.ok(result);
 	}		
 }

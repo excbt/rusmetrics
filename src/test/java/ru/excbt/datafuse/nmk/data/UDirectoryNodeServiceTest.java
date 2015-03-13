@@ -11,18 +11,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.model.NodeDirectory;
-import ru.excbt.datafuse.nmk.data.service.NodeDirectoryService;
+import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 
-public class NodeDirectoryServiceTest extends JpaConfigTest {
+public class UDirectoryNodeServiceTest extends JpaConfigTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(NodeDirectoryServiceTest.class);
+			.getLogger(UDirectoryNodeServiceTest.class);
 	
-	public static final long TEST_DIRECTORY_ID = 19748646;
+	public static final long TEST_DIRECTORY_NODE_ID = 19748646;
 	
 	@Autowired
-	private NodeDirectoryService nodeDirectoryService;
+	private UDirectoryNodeService nodeDirectoryService;
 
     @PersistenceUnit
     private EntityManagerFactory emf;	
@@ -31,12 +31,12 @@ public class NodeDirectoryServiceTest extends JpaConfigTest {
 	public void testGetNode() {
 		
 		
-		NodeDirectory nd = nodeDirectoryService.getRootNode(TEST_DIRECTORY_ID);
+		UDirectoryNode nd = nodeDirectoryService.getRootNode(TEST_DIRECTORY_NODE_ID);
 		assertNotNull(nd);
 		logger.info("Testing get root Node (nodeName={})", nd.getNodeName());
 		
 		logger.info("Testing save Node...");
-		NodeDirectory nd2 = nodeDirectoryService.save(nd);
+		UDirectoryNode nd2 = nodeDirectoryService.save(nd);
 		assertNotNull(nd2);
 		
 		assertEquals(nd.getChildNodes().size(), nd2.getChildNodes().size());
@@ -50,11 +50,11 @@ public class NodeDirectoryServiceTest extends JpaConfigTest {
 
 	@Test
 	public void testCreateSaveDelete() {
-		NodeDirectory nd = NodeDirectory.newInstance("Auto Test Node " + System.currentTimeMillis());
+		UDirectoryNode nd = UDirectoryNode.newInstance("Auto Test Node " + System.currentTimeMillis());
 		nd.setNodeCaption("Needed to be deleted");
 		
-		nd.getChildNodes().add(NodeDirectory.newInstance("child1"));
-		nd.getChildNodes().add(NodeDirectory.newInstance("child2"));
+		nd.getChildNodes().add(UDirectoryNode.newInstance("child1"));
+		nd.getChildNodes().add(UDirectoryNode.newInstance("child2"));
 		
 		nodeDirectoryService.save(nd);
 		nodeDirectoryService.delete(nd);

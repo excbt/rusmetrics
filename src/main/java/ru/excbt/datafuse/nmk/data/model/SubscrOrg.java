@@ -54,11 +54,11 @@ public class SubscrOrg extends IdEntity implements Serializable {
 	
 	
 	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_org_node_directory",
+    @JoinTable(name="subscr_org_directory",
     joinColumns=@JoinColumn(name="subscr_org_id"),
     inverseJoinColumns=@JoinColumn(name="directory_id"))
 	@JsonIgnore
-	private Collection<NodeDirectory> nodeDirectories;	
+	private Collection<UDirectory> directories;	
 
 	public String getRole() {
 		return role;
@@ -104,17 +104,18 @@ public class SubscrOrg extends IdEntity implements Serializable {
 		return contObjects;
 	}
 
-	public void setContObjects(Collection<ContObject> contObjects) {
+	public void setContObjects(final Collection<ContObject> contObjects) {
 		this.contObjects = contObjects;
 	}
 
-	public Collection<NodeDirectory> getNodeDirectories() {
-		return nodeDirectories;
+	public Collection<UDirectory> getDirectories() {
+		return directories;
 	}
 
-	public void setNodeDirectories(Collection<NodeDirectory> nodeDirectories) {
-		this.nodeDirectories = nodeDirectories;
+	public void setDirectories(Collection<UDirectory> directories) {
+		this.directories = directories;
 	}
+
 	
 	
 }

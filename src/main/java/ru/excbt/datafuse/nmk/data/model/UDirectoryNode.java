@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "node_directory")
 @EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NodeDirectory extends AbstractAuditableEntity<AuditUser,Long> {
+public class UDirectoryNode extends AbstractAuditableEntity<AuditUser,Long> {
 
 	/**
 	 * 
@@ -48,7 +48,7 @@ public class NodeDirectory extends AbstractAuditableEntity<AuditUser,Long> {
 	@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "parent_id")
 	@OrderColumn(name = "id")
-	private Collection<NodeDirectory> childNodes = new ArrayList<>();
+	private Collection<UDirectoryNode> childNodes = new ArrayList<>();
 
 	@Column(name = "parent_id")
 	private Long parentId;
@@ -59,8 +59,8 @@ public class NodeDirectory extends AbstractAuditableEntity<AuditUser,Long> {
 	 * @param name
 	 * @return
 	 */
-	public static NodeDirectory newInstance(String name) {
-		NodeDirectory result = new NodeDirectory();
+	public static UDirectoryNode newInstance(String name) {
+		UDirectoryNode result = new UDirectoryNode();
 		result.setNodeName(name);
 		return result;
 	}
@@ -105,11 +105,11 @@ public class NodeDirectory extends AbstractAuditableEntity<AuditUser,Long> {
 		return parentId == null;
 	}
 
-	public Collection<NodeDirectory> getChildNodes() {
+	public Collection<UDirectoryNode> getChildNodes() {
 		return childNodes;
 	}
 
-	public void setChildNodes(Collection<NodeDirectory> childNodes) {
+	public void setChildNodes(Collection<UDirectoryNode> childNodes) {
 		this.childNodes = childNodes;
 	}
 
