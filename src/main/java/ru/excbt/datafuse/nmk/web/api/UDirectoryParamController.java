@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.net.URI;
 import java.util.List;
@@ -39,11 +40,28 @@ public class UDirectoryParamController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "{directoryId}/param/list", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "{directoryId}/param", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(
 			@PathVariable("directoryId") long directoryId) {
 		List<UDirectoryParam> result = directoryParamService
 				.selectDirectoryParams(directoryId);
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @param directoryId
+	 * @return
+	 */
+	@RequestMapping(value = "{directoryId}/param/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOne(
+			@PathVariable("directoryId") long directoryId,
+			@PathVariable("id") long id) {
+		UDirectoryParam result = directoryParamService
+				.findOne(id);
+		
+		checkState(directoryId == result.getDirectory().getId());
+		
 		return ResponseEntity.ok(result);
 	}
 

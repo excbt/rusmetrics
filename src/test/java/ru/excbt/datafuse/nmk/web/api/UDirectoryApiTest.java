@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +25,7 @@ import com.jayway.jsonpath.JsonPath;
 
 public class UDirectoryApiTest extends AnyControllerTest {
 
+	public final static String DIRECTORY_URL_API = "/api/uDirectory";
 	public final static long TEST_DIRECTORY_ID = 19748782;
 	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;
 
@@ -38,16 +38,18 @@ public class UDirectoryApiTest extends AnyControllerTest {
 	@Autowired
 	private UDirectoryService directoryService;
 
+
 	@Test
-	@Ignore
-	public void testGetNodeDir() throws Exception {
-		testJsonGet("/api/nodeDirectory/19748646");
+	public void testParamsGetAll() throws Exception {
+		testJsonGet(String.format(DIRECTORY_URL_API + "/%d/param",
+				TEST_DIRECTORY_ID));
 	}
 
 	@Test
-	public void testParamsGet() throws Exception {
-		testJsonGet(String.format("/api/uDirectory/%d/param/list",
-				TEST_DIRECTORY_ID));
+	public void testParamsGetOne() throws Exception {
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
+				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);		
+		testJsonGet(urlStr);
 	}
 
 	@Test
@@ -62,7 +64,7 @@ public class UDirectoryApiTest extends AnyControllerTest {
 		
 		logger.info("Updated Directory Param Source JSON: {}", jsonBody);
 
-		String urlStr = String.format("/api/uDirectory/%d/param/%d",
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);
 
 		ResultActions resultActionsAll = mockMvc.perform(put(urlStr)
@@ -89,7 +91,7 @@ public class UDirectoryApiTest extends AnyControllerTest {
 		
 		logger.info("New Directory Param Source JSON: {}", jsonBody);
 		
-		String urlStr = String.format("/api/uDirectory/%d/param",
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param",
 				TEST_DIRECTORY_ID);
 		
 		ResultActions resultAction = mockMvc.perform(post(urlStr)
@@ -110,14 +112,18 @@ public class UDirectoryApiTest extends AnyControllerTest {
 
 		logger.info("Testing delete Param id: {}", createdId);		
 		
-		deleteParamAction (createdId);
+		internalDeleteParamAction (createdId);
 		
 	}
 	
-	
-	private void deleteParamAction(long id) throws Exception {
+	/**
+	 * 
+	 * @param id
+	 * @throws Exception
+	 */
+	private void internalDeleteParamAction(long id) throws Exception {
 		
-		String urlStr = String.format("/api/uDirectory/%d/param/%d",
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, id);
 		
 		
