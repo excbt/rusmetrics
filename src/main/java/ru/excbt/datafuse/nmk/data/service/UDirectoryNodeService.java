@@ -8,42 +8,42 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.NodeDirectory;
-import ru.excbt.datafuse.nmk.data.repository.NodeDirectoryRepository;
+import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 
 @Service
 @Transactional
-public class NodeDirectoryService {
+public class UDirectoryNodeService implements SecuredServiceRoles {
 
 	@Autowired
-	private NodeDirectoryRepository nodeDirectoryRepository;
+	private UDirectoryNodeRepository nodeDirectoryRepository;
 
-	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
-	public NodeDirectory save(final NodeDirectory nodeDir) {
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public UDirectoryNode save(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
-		NodeDirectory result = nodeDirectoryRepository.save(nodeDir); 
+		UDirectoryNode result = nodeDirectoryRepository.save(nodeDir); 
 		loadLazyChildNodes(result);
 		return result; 
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void saveWithChildren(final NodeDirectory nodeDir) {
+	public void saveWithChildren(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 
-		NodeDirectory savedND = nodeDirectoryRepository.save(nodeDir);
+		UDirectoryNode savedND = nodeDirectoryRepository.save(nodeDir);
 		if (nodeDir.getChildNodes() == null) {
 			return;
 		}
-		for (NodeDirectory nd : nodeDir.getChildNodes()) {
+		for (UDirectoryNode nd : nodeDir.getChildNodes()) {
 			nd.setParentId(savedND.getId());
 			saveWithChildren(nd);
 		}
 	}
 
 	@Transactional(readOnly = true)
-	public NodeDirectory getRootNode(long id) {
-		NodeDirectory result = nodeDirectoryRepository.findOne(id);
+	public UDirectoryNode getRootNode(long id) {
+		UDirectoryNode result = nodeDirectoryRepository.findOne(id);
 		if (!result.isRoot()) {
 			throw new IllegalArgumentException("Argument id = " + id
 					+ " is not root element of Node Directory");
@@ -53,14 +53,14 @@ public class NodeDirectoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public NodeDirectory findOne(long id) {
-		NodeDirectory result = nodeDirectoryRepository.findOne(id);
+	public UDirectoryNode findOne(long id) {
+		UDirectoryNode result = nodeDirectoryRepository.findOne(id);
 		loadLazyChildNodes(result);
 		return result;
 	}
 
-	@Secured({ "ROLE_ADMIN", "ROLE_SUBSCR_ADMIN" })
-	public void delete(final NodeDirectory nodeDirectory) {
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
 		nodeDirectoryRepository.delete(nodeDirectory.getId());
@@ -70,10 +70,10 @@ public class NodeDirectoryService {
 	 * 
 	 * @param nodeDir
 	 */
-	private void loadLazyChildNodes(final NodeDirectory nodeDir) {
+	public void loadLazyChildNodes(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 		
-		for (NodeDirectory child : nodeDir.getChildNodes()) {
+		for (UDirectoryNode child : nodeDir.getChildNodes()) {
 			loadLazyChildNodes(child);
 		}
 
