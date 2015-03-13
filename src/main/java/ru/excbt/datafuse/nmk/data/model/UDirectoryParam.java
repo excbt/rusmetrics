@@ -12,9 +12,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @Table(name="u_directory_param")
 @EntityListeners({AuditingEntityListener.class})
+@JsonIgnoreProperties (ignoreUnknown = true)
 public class UDirectoryParam extends AbstractAuditableEntity<AuditUser,Long> {
 
     /**
@@ -28,6 +32,7 @@ public class UDirectoryParam extends AbstractAuditableEntity<AuditUser,Long> {
 
     @ManyToOne
 	@JoinColumn(name = "directory_id")	
+    @JsonIgnore
 	private UDirectory directory;    
 
     @Column(name="param_type")
