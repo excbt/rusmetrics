@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -22,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "node_directory")
+@Table(name = "u_directory_node")
 @EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UDirectoryNode extends AbstractAuditableEntity<AuditUser,Long> {
@@ -53,6 +54,9 @@ public class UDirectoryNode extends AbstractAuditableEntity<AuditUser,Long> {
 	@Column(name = "parent_id")
 	private Long parentId;
 
+	@Version
+	private int version;
+	
 
 	/**
 	 * 
@@ -119,6 +123,16 @@ public class UDirectoryNode extends AbstractAuditableEntity<AuditUser,Long> {
 
 	public void setParentId(Long parentId) {
 		this.parentId = parentId;
+	}
+
+
+	public int getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }
