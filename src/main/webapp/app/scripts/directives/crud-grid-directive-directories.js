@@ -315,12 +315,12 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     });
                 };
                 //for page "Objects"
-                $scope.zpoints = angular.fromJson($attrs.zpointdata);
-               
-                $scope.showObjectDetails = function(obj){
-                    $scope.oldObjects = [];
-                    var zps = angular.fromJson($attrs.zpointdata);
-                    var mas = [];
+//                $scope.zpoints = angular.fromJson($attrs.zpointdata);
+//               
+//                $scope.showObjectDetails = function(obj){
+//                    $scope.oldObjects = [];
+//                    var zps = angular.fromJson($attrs.zpointdata);
+//                    var mas = [];
 //                    var masCount = 0;
 //                    for (var k=0;k<$scope.zpoints.length;k++){
 //                        if($scope.zpoints[k].zpointParent == obj.id){
@@ -328,30 +328,30 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 //                            masCount = masCount+1;
 //                        }
 //                    }
-                 //   $scope.oldObjects = mas;
-                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
-   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
-                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
-                    
-                    
-                  
-                };
+//                    $scope.oldObjects = mas;
+//                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
+//   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
+//                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
+//                    
+//                    
+//                  
+//                };
                 
                 //Фильтр "Только непросмотренные"
-                $scope.onlyNoRead = false;
-                $scope.showRow = function(obj){
-                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
-                        return true;
-                    };                                     
-                    if($scope.onlyNoRead){
-                        if($scope.onlyNoRead == !obj.isRead){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    };
-                    return true;
-                };
+//                $scope.onlyNoRead = false;
+//                $scope.showRow = function(obj){
+//                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
+//                        return true;
+//                    };                                     
+//                    if($scope.onlyNoRead){
+//                        if($scope.onlyNoRead == !obj.isRead){
+//                            return true;
+//                        }else{
+//                            return false;
+//                        }
+//                    };
+//                    return true;
+//                };
                 
                 
                 //Directories
@@ -389,30 +389,137 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
                 };
                 
-                $scope.treedata =
-                    [
-                        { "label" : "Школы", "id" : "role1", "children" : [
-                            { "label" : "Школа1", "id" : "role11", "children" : [] },
-                            { "label" : "Школа2", "id" : "role12", "children" : [
-                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
-                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
-                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
-                                ]}
-                            ]}
-                        ]},
-                        { "label" : "Заводы", "id" : "role2", "children" : [] },
-                        { "label" : "Администрация", "id" : "role3", "children" : [] }
-                    ];
+//                $scope.treedata =
+//                    [
+//                        { "label" : "Школы", "id" : "role1", "children" : [
+//                            { "label" : "Школа1", "id" : "role11", "children" : [] },
+//                            { "label" : "Школа2", "id" : "role12", "children" : [
+//                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
+//                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
+//                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
+//                                ]}
+//                            ]}
+//                        ]},
+//                        { "label" : "Заводы", "id" : "role2", "children" : [] },
+//                        { "label" : "Администрация", "id" : "role3", "children" : [] }
+//                    ];
+                
+                
+                $scope.list=[
+                  {
+                    "id": 1,
+                    "title": "Заводы",
+                    "items": []
+                  },
+                  {
+                    "id": 2,
+                    "title": "Школы",
+                    "items": [
+                      {
+                        "id": 21,
+                        "title": "Школа №1",
+                        "items": [
+                          {
+                            "id": 211,
+                            "title": "Корпус 1",
+                            "items": []
+                          },
+                          {
+                            "id": 212,
+                            "title": "Корпус 2",
+                            "items": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": 22,
+                        "title": "Школа №2",
+                        "items": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "title": "3. unicorn-zapper",
+                    "items": []
+                  },
+                  {
+                    "id": 4,
+                    "title": "4. romantic-transclusion",
+                    "items": []
+                  }
+                ];
                 
                 $scope.showDetails = function(obj){
-                    if($scope.bdirectories){
+                    
                         $scope.currentObject = obj;
                         $('#showDirectoryStructModal').modal();
-                    }
+                    
                 };
                 
                 $scope.test = function(){
                     $('#editDirValueModal').modal();
+                };
+                
+               
+                
+                $scope.selItem = {};
+
+                $scope.options = {
+                };
+                
+                $scope.remove = function(scope) {
+                  scope.remove();
+                };
+
+                $scope.toggle = function(scope) {
+                  scope.toggle();
+                };
+
+                $scope.moveLastToTheBegginig = function () {
+                  var a = $scope.data.pop();
+                  $scope.data.splice(0,0, a);
+                };
+
+                $scope.newSubItem = function(scope) {
+                  var nodeData = scope.$modelValue;
+                  nodeData.items.push({
+                    id: nodeData.id * 10 + nodeData.items.length,
+                    title: nodeData.title + '.' + (nodeData.items.length + 1),
+                    items: []
+                  });
+                };
+
+                var getRootNodesScope = function() {
+                  return angular.element(document.getElementById("tree-root")).scope();
+                };
+
+                $scope.collapseAll = function() {
+                  var scope = getRootNodesScope();
+                  scope.collapseAll();
+                };
+
+                $scope.expandAll = function() {
+                  var scope = getRootNodesScope();
+                  scope.expandAll();
+                };
+                
+                $scope.currentParent = {};
+                
+                $scope.openNode = function(scope){
+                    $scope.currentNode = scope.$modelValue;
+                    $scope.currentNodeScope = scope.$modelValue.$nodeScope;
+                    $scope.treeScope = scope;
+                    $scope.tree = {};
+                    $scope.tree.nodes = [];
+                    $scope.tree.nodes = scope.$nodes;
+                    $scope.currentParentScope = $scope.currentNode.$parentNodeScope;
+                    $scope.tree.element = scope.$element;
+                    $('#editDirValueModal').modal();
+                };
+                
+                $scope.showContextMenu = function(){
+                    $('.dropdown-toggle').dropdown();
                 };
             }]
     };
