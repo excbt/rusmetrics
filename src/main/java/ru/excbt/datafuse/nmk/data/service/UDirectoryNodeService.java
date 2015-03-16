@@ -16,12 +16,15 @@ import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 public class UDirectoryNodeService implements SecuredServiceRoles {
 
 	@Autowired
-	private UDirectoryNodeRepository nodeDirectoryRepository;
+	private UDirectoryNodeRepository directoryNodeRepository;
+	
+	@Autowired
+	private UDirectoryService directoryService;
 
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public UDirectoryNode save(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
-		UDirectoryNode result = nodeDirectoryRepository.save(nodeDir); 
+		UDirectoryNode result = directoryNodeRepository.save(nodeDir); 
 		loadLazyChildNodes(result);
 		return result; 
 	}
@@ -31,7 +34,7 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 	public void saveWithChildren(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 
-		UDirectoryNode savedND = nodeDirectoryRepository.save(nodeDir);
+		UDirectoryNode savedND = directoryNodeRepository.save(nodeDir);
 		if (nodeDir.getChildNodes() == null) {
 			return;
 		}
@@ -42,10 +45,15 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 	}
 
 	@Transactional(readOnly = true)
-	public UDirectoryNode getRootNode(long id) {
-		UDirectoryNode result = nodeDirectoryRepository.findOne(id);
+	public UDirectoryNode getRootNode(long nodeId) {
+		UDirectoryNode result = directoryNodeRepository.findOne(nodeId);
+		
+		if (result == null) {
+			return null;
+		}
+		
 		if (!result.isRoot()) {
-			throw new IllegalArgumentException("Argument id = " + id
+			throw new IllegalArgumentException("Argument id = " + nodeId
 					+ " is not root element of Node Directory");
 		}
 		loadLazyChildNodes(result);
@@ -54,7 +62,7 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 
 	@Transactional(readOnly = true)
 	public UDirectoryNode findOne(long id) {
-		UDirectoryNode result = nodeDirectoryRepository.findOne(id);
+		UDirectoryNode result = directoryNodeRepository.findOne(id);
 		loadLazyChildNodes(result);
 		return result;
 	}
@@ -63,7 +71,7 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
-		nodeDirectoryRepository.delete(nodeDirectory.getId());
+		directoryNodeRepository.delete(nodeDirectory.getId());
 	}
 
 	/**

@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -8,9 +7,9 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 public class UDirectoryNodeApiTest extends AnyControllerTest {
 
 	@Test
-	@Ignore
 	public void testGetNodeDir() throws Exception {
-		testJsonGet ("/api/u_directory/19748646");
+		testJsonGet(String.format(UDirectoryApiTestConst.DIRECTORY_URL_API
+				+ "/%d/node", UDirectoryApiTestConst.TEST_DIRECTORY_ID));
 	}
 
 }
