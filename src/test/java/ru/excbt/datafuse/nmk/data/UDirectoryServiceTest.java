@@ -46,15 +46,12 @@ public class UDirectoryServiceTest extends JpaConfigTest {
 		d.setDirectoryNode(nd);
 		
 		
-		
 		UDirectory savedD = directoryService.save(d);
 		
 		checkNotNull(savedD.getId());
 		
 		directoryService.delete(savedD.getId());
 		
-		//nodeDirectoryService.save(nd);
-		//nodeDirectoryService.delete(nd);
 	}
 		
 	

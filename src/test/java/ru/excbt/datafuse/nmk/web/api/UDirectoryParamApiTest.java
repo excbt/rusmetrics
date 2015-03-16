@@ -14,7 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.model.UDirectory;
+import ru.excbt.datafuse.nmk.data.constant.ParamType;
+import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -22,14 +23,14 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
-public class UDirectoryApiTest extends AnyControllerTest {
+public class UDirectoryParamApiTest extends AnyControllerTest {
 
 	public final static String DIRECTORY_URL_API = "/api/u_directory";
 	public final static long TEST_DIRECTORY_ID = 19748782;
 	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryApiTest.class);
+			.getLogger(UDirectoryParamApiTest.class);
 
 	@Autowired
 	private UDirectoryParamService directoryParamService;
@@ -39,32 +40,32 @@ public class UDirectoryApiTest extends AnyControllerTest {
 
 
 	@Test
-	public void testDirectoryGetAll() throws Exception {
-		testJsonGet(String.format(DIRECTORY_URL_API));
+	public void testParamsGetAll() throws Exception {
+		testJsonGet(String.format(DIRECTORY_URL_API + "/%d/param",
+				TEST_DIRECTORY_ID));
 	}
 
 	@Test
 	public void testParamsGetOne() throws Exception {
-		String urlStr = String.format(DIRECTORY_URL_API + "/%d",
-				TEST_DIRECTORY_ID);		
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
+				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);		
 		testJsonGet(urlStr);
 	}
 
 	@Test
-	public void testDirectoryUpdate() throws Exception {
+	public void testParamsUpdate() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		
-		
-		UDirectory d = directoryService.findOne(TEST_DIRECTORY_ID);
+		UDirectoryParam p = directoryParamService
+				.findOne(TEST_DIRECTORY_PARAM_ID);
 
-		d.setDirectoryDescription("TEST Param - Name " + System.currentTimeMillis());
+		p.setParamName("TEST Param - Name " + System.currentTimeMillis());
 		
-		String jsonBody = mapper.writeValueAsString(d);
+		String jsonBody = mapper.writeValueAsString(p);
 		
-		logger.info("Updated Directory Source JSON: {}", jsonBody);
+		logger.info("Updated Directory Param Source JSON: {}", jsonBody);
 
-		String urlStr = String.format(DIRECTORY_URL_API + "/%d",
-				TEST_DIRECTORY_ID);
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
+				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);
 
 		ResultActions resultActionsAll = mockMvc.perform(put(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -79,17 +80,19 @@ public class UDirectoryApiTest extends AnyControllerTest {
 
 	
 	@Test
-	public void testDirectoryCreateDelete() throws Exception {
+	public void testParamsCreateDelete() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		UDirectory d = new UDirectory();
+		UDirectoryParam p = new UDirectoryParam();
 		
-		d.setDirectoryName("TEST Param - Name " + System.currentTimeMillis());
+		p.setParamName("TEST Param - Name " + System.currentTimeMillis());
+		p.setParamType(ParamType.BOOLEAN.name());
 		
-		String jsonBody = mapper.writeValueAsString(d);
+		String jsonBody = mapper.writeValueAsString(p);
 		
 		logger.info("New Directory Param Source JSON: {}", jsonBody);
 		
-		String urlStr = String.format(DIRECTORY_URL_API);
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param",
+				TEST_DIRECTORY_ID);
 		
 		ResultActions resultAction = mockMvc.perform(post(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
@@ -120,8 +123,8 @@ public class UDirectoryApiTest extends AnyControllerTest {
 	 */
 	private void internalDeleteParamAction(long id) throws Exception {
 		
-		String urlStr = String.format(DIRECTORY_URL_API + "/%d",
-				id);
+		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
+				TEST_DIRECTORY_ID, id);
 		
 		
 		ResultActions deleteResultActions = mockMvc.perform(delete(urlStr)

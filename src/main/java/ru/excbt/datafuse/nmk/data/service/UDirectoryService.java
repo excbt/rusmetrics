@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrOrg;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
 
@@ -25,24 +26,34 @@ public class UDirectoryService implements SecuredServiceRoles {
 	@Autowired
 	private CurrentSubscrOrgService currentSubscrOrgService;
 
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public UDirectory findOne(final long id) {
 		if (!checkAvailableDirectory(id)) {
-			// long subscrOrgId = currentSubscrOrgService.getSubscrOrgId();
-			// throw new PersistenceException("SubscrOrgId: " + subscrOrgId +
-			// ". Directory with ID: " + id + " is not found");
 			return null;
 		}
 		UDirectory result = directoryRepository.findOne(id);
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public List<UDirectory> findAll() {
 		return directoryRepository.selectBySubscrOrg(currentSubscrOrgService
 				.getSubscrOrgId());
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public List<Long> selectAvailableDirectoryIds() {
 		long subscrOrgId = currentSubscrOrgService.getSubscrOrgId();
@@ -51,6 +62,11 @@ public class UDirectoryService implements SecuredServiceRoles {
 		return Collections.unmodifiableList(directoryIds);
 	}
 
+	/**
+	 * 
+	 * @param directoryId
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public boolean checkAvailableDirectory(long directoryId) {
 		long subscrOrgId = currentSubscrOrgService.getSubscrOrgId();
@@ -59,14 +75,20 @@ public class UDirectoryService implements SecuredServiceRoles {
 		return !res.isEmpty();
 	}
 
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
 	@Transactional
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public UDirectory save(final UDirectory entity) {
 		checkNotNull(entity);
-
-		long subscrOrgId = currentSubscrOrgService.getSubscrOrgId();
-
-
+		SubscrOrg currentSubscrOrg = currentSubscrOrgService.getSubscrOrg();
+		checkNotNull(currentSubscrOrg, "Empty current SubscrOrg");
+		
+		long subscrOrgId = currentSubscrOrg.getId();
+		
 
 		UDirectory recordToSave = null;
 		if (entity.isNew()) {
@@ -89,14 +111,17 @@ public class UDirectoryService implements SecuredServiceRoles {
 		recordToSave.setDirectoryDescription(entity.getDirectoryDescription());
 		recordToSave.setDirectoryName(entity.getDirectoryName());
 		recordToSave.setVersion(entity.getVersion());
-
-		//UDirectoryNode savedDirectoryNode = directoryNodeService.save(entity.getDirectoryNode());
-		//recordToSave.setDirectoryNode(savedDirectoryNode);
+		recordToSave.setSubscrOrg(currentSubscrOrg);
 		UDirectory savedRecord = directoryRepository.save(recordToSave);
 
 		return savedRecord;
 	}
 
+	
+	/**
+	 * 
+	 * @param directoryId
+	 */
 	@Transactional
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void delete(final long directoryId) {

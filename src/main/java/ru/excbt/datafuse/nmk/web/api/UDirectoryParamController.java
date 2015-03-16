@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 
 @Controller
-@RequestMapping(value = "/api/uDirectory/")
+@RequestMapping(value = "/api/u_directory/")
 public class UDirectoryParamController {
 
 	@Autowired
@@ -41,7 +41,7 @@ public class UDirectoryParamController {
 	 * @return
 	 */
 	@RequestMapping(value = "{directoryId}/param", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> listAll(
+	public ResponseEntity<?> getAll(
 			@PathVariable("directoryId") long directoryId) {
 		List<UDirectoryParam> result = directoryParamService
 				.selectDirectoryParams(directoryId);
