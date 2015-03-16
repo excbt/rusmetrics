@@ -3,13 +3,19 @@ package ru.excbt.datafuse.nmk.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="u_directory")
@@ -29,8 +35,20 @@ public class UDirectory extends AbstractAuditableEntity<AuditUser,Long>  {
 	
 	@OneToOne
 	@JoinColumn(name = "directory_node_id")
+	@JsonIgnore
 	private UDirectoryNode directoryNode;
 
+	
+	@ManyToOne (fetch = FetchType.LAZY)
+	@JoinTable(name="subscr_org_directory",
+    joinColumns=@JoinColumn(name="directory_id"),
+    inverseJoinColumns=@JoinColumn(name="subscr_org_id"))
+	@JsonIgnore
+	private SubscrOrg subscrOrg;
+	
+	@Version
+	private int version;
+	
 	public String getDirectoryName() {
 		return directoryName;
 	}
@@ -53,6 +71,22 @@ public class UDirectory extends AbstractAuditableEntity<AuditUser,Long>  {
 
 	public void setDirectoryNode(UDirectoryNode directoryNode) {
 		this.directoryNode = directoryNode;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public SubscrOrg getSubscrOrg() {
+		return subscrOrg;
+	}
+
+	public void setSubscrOrg(SubscrOrg subscrOrg) {
+		this.subscrOrg = subscrOrg;
 	}
 	
 }

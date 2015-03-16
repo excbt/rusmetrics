@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class NodeDirectoryApiTest extends AnyControllerTest {
+public class UDirectoryNodeApiTest extends AnyControllerTest {
 
 	@Test
 	public void testGetNodeDir() throws Exception {
-		testJsonGet ("/api/nodeDirectory/19748646");
+		testJsonGet ("/api/uDirectory/19748646");
 	}
 
 }

@@ -11,13 +11,13 @@ import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 
 @Controller
-@RequestMapping(value = "/api/directoryNode")
+@RequestMapping(value = "/api/uDirectory")
 public class UDirectoryNodeController {
 
 	@Autowired
 	private UDirectoryNodeService directoryNodeService;
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/node/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("id") long nodeDirectoryId) {
 		UDirectoryNode result = directoryNodeService.getRootNode(nodeDirectoryId); 
 		return ResponseEntity.ok(result);
