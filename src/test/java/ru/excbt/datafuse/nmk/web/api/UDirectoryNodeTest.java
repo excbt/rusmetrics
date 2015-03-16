@@ -1,10 +1,31 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.junit.Test;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class UDirectoryNodeTest extends AnyControllerTest {
+
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(UDirectoryNodeTest.class);
+	
+	@Autowired
+	private UDirectoryNodeService directoryNodeService;
 
 	@Test
 	public void testGetNodeDir() throws Exception {
@@ -12,4 +33,35 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 				+ "/%d/node", UDirectoryTestConst.TEST_DIRECTORY_ID));
 	}
 
+	@Test
+	public void testUpdate() throws Exception {
+		ObjectMapper mapper = new ObjectMapper();
+		UDirectoryNode directoryNode = directoryNodeService
+				.getRootNode(UDirectoryTestConst.TEST_DIRECTORY_NODE_ID);
+		
+		directoryNode.setNodeComment("Node comment " + System.currentTimeMillis());
+		
+		for (UDirectoryNode ch : directoryNode.getChildNodes()) {
+			ch.setNodeComment("Node comment " + System.currentTimeMillis());
+		}
+		
+		
+		String jsonContent = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(directoryNode);
+		
+		logger.info("Updated directoryNode JSON: {}", jsonContent);
+		
+		String urlStr = String.format(UDirectoryTestConst.DIRECTORY_URL_API
+				+ "/%d/node/%d", UDirectoryTestConst.TEST_DIRECTORY_ID, UDirectoryTestConst.TEST_DIRECTORY_NODE_ID);
+
+		ResultActions resultActionsAll = mockMvc.perform(put(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonContent)
+				.with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON));
+
+		resultActionsAll.andDo(MockMvcResultHandlers.print());
+
+		resultActionsAll.andExpect(status().isAccepted());		
+		
+	}
 }

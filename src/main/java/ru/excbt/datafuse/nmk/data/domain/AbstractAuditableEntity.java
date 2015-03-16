@@ -40,11 +40,11 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 	private static final long serialVersionUID = -4282498146105728631L;
 
 	@ManyToOne
-	@JoinColumn(name = "created_by")	
+	@JoinColumn(name = "created_by", updatable = false)	
 	@JsonIgnore
 	private U createdBy;
 
-	@Column(name = "created_date")	
+	@Column(name = "created_date", updatable = false)	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonIgnore
 	private Date createdDate;
@@ -103,7 +103,6 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 	 */
 	@Override	
 	public void setCreatedDate(final DateTime createdDate) {
-
 		this.createdDate = null == createdDate ? null : createdDate.toDate();
 	}
 

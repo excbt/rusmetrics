@@ -23,6 +23,9 @@ public class UDirectoryServiceTest extends JpaConfigTest {
 	@Autowired
 	private UDirectoryService directoryService;
 	
+	/**
+	 * 
+	 */
 	@Test
 	public void testAvailableDirectoriesIds() {
 		List<Long> ids = directoryService.selectAvailableDirectoryIds();
@@ -33,6 +36,9 @@ public class UDirectoryServiceTest extends JpaConfigTest {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testCreateSaveDelete() {
 		UDirectoryNode nd = UDirectoryNode.newInstance("Auto Test Node " + System.currentTimeMillis());
