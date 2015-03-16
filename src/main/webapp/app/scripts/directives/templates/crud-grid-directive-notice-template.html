@@ -247,6 +247,9 @@
 				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover" ng-show="object.showGroupDetails">
                     <tr>
                         <!--       Шапка таблицы-->
+                        <th>
+                        </th>
+                        
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
                             <div>
                                 {{oldColumn.header || oldColumn.name}}
@@ -258,6 +261,8 @@
                         </th>
                     </tr>
                      <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
+                         <td>
+                         </td>
                          <td ng-repeat="oldColumn in oldColumns">
                              <div ng-switch on="oldColumn.name">
     <!--                        Если в столбце должна отображаться категория, то...-->

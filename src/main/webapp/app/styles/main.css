@@ -15,15 +15,15 @@
 
 #wrap > .container {
     padding-top: 50px;
-    width: 1700px;
+/*    width: 1920px;*/
 }
 
 #navbar-container {
-    width: 1700px;
+    width: 1024px;
 }
 
 #div-main-area {
-    margin-left: 50pt;
+    margin-left: 10pt;
 }
 
 /* Space out content a bit */
@@ -31,6 +31,9 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
     font-size: 12px;
+}
+td, th {
+    text-align: center;
 }
 
 
@@ -66,7 +69,7 @@ body {
 /* Customize container */
 @media (min-width: 768px) {
   .container {
-    max-width: 1280px;
+    max-width: 1920px;
   }
 }
 .container-narrow > hr {
@@ -129,3 +132,109 @@ body {
 .well-bgc {
     background-color: cadetblue;
 }
+
+.showM {
+    display:inherit;
+}
+
+.hideM {
+    display:none;
+}
+
+.angular-ui-tree-handle {
+    background: #f8faff;
+    border: 1px solid #dae2ea;
+    color: #7c9eb2;
+    padding: 0 0;
+}
+
+.angular-ui-tree-handle:hover {
+    color: #438eb9;
+    background: #f4f6f7;
+    border-color: #dce2e8;
+}
+
+.angular-ui-tree-placeholder {
+    background: #f0f9ff;
+    border: 2px dashed #bed2db;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+
+.group-title {
+    background-color: #687074 !important;
+    color: #FFF !important;
+}
+
+.modal-scrollable-area1 {
+	height: 400px; overflow-y: scroll;	
+}
+
+.modal-position-right {
+/*    position: relative;*/
+/*    right: 0;*/
+}
+
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+    table {
+        table-layout: auto;
+    }
+    .row-offcanvas {
+        position: relative;
+        transition: all 0.25s ease-out;
+    }
+    .row-offcanvas-left .sidebar-offcanvas {
+        display:none;
+    }
+    .row-offcanvas-left.active .sidebar-offcanvas {
+        display:inherit;
+    }
+    .row-offcanvas-left.active .mainarea {
+        display:none;
+    }
+    .sidebar-offcanvas {
+        position: absolute;
+        top: 0;
+        width: 100%;
+    }
+}
+
+.col-sm-10-main {
+    width: 87%;
+}
+.menuWidth {
+    width: 200px;
+}
+
+
+/*Настройка главного окна*/
+mainTable {
+
+ margin-left: auto;
+ margin-right: auto;
+ border: 1px solid black;
+ width: 100%;
+ min-width: 5%;
+}
+
+.mainArea {
+ 
+/* border: 1px solid grey;*/
+ width: 100%;
+ }
+
+.button1 {
+ 
+/* border: 1px solid red;*/
+ width: 100%;
+}
+.fld {
+}
+.mainMenu111 {
+    width: 200px;
+}
+

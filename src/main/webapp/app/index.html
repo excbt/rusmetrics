@@ -13,7 +13,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
-    <link rel="stylesheet" href="styles/angular.treeview.css"/>
+<!--    <link rel="stylesheet" href="styles/angular.treeview.css"/>-->
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
       <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
     <!-- endbuild -->
@@ -64,12 +64,13 @@
 			</div>
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
-
-    <div class="container-fluid">
+    
+    <div class="container-fluid noMargin">
 
     <div class="row row-offcanvas row-offcanvas-left">    
+       
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas" ng-show="!showPrivateOfficeMenu">
+        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas menuWidth" ng-show="!showPrivateOfficeMenu">
                         <nav class="sidebar-nav"
                             role="navigation">
 <!--                Основное меню            -->
@@ -77,7 +78,7 @@
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas">Home</a>
+                                    href="#/" data-toggle="offcanvas">Главная</a>
                                 <!-- Notices -->
                                 <a class="list-group-item"
 
@@ -95,22 +96,27 @@
                                 <!-- Отчеты -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas">Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas">Отчеты</a>
                                 
-                                 
+                                 <!-- Test -->
+<!--
+                                <a class="list-group-item"
+
+                                    href="#/test/" data-toggle="offcanvas">Test</a>
+-->
 
                             </div>
                         </nav>            
             </div>                
-         <div class="col-xs-6 col-sm-2 well well-bgc sidebar-offcanvas" ng-show="showPrivateOfficeMenu">        
+         <div class="col-xs-6 col-sm-2 well well-bgc sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        
              <nav class="sidebar-nav"
                             role="navigation">
 <!--              Меню Личного кабинета              -->
-                            <div id="sidebar-entries" class="list-group" ng-show="showPrivateOfficeMenu">
+                            <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Home</a>
+                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Главная</a>
                                 <!-- Notices -->
                                 <a class="list-group-item"
 
@@ -123,11 +129,12 @@
                             </div>
                         </nav>  
             </div>
-       
+  
 <!--        <div ng-view="" ng-animate="{enter:'enter-animation'"></div>-->
-        <div id="div-main-area" class="col-xs-12 col-sm-8 well mainarea">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea">
 					<div id="main" ng-view></div>
         </div>
+
      </div>    
     </div>
 
@@ -176,7 +183,6 @@
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
@@ -185,7 +191,8 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script type="text/javascript" src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+<!--    <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>-->
+    <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -197,6 +204,7 @@
     <script src="scripts/controllers/directory.js"></script>
     <script src="scripts/controllers/operationlog.js"></script>
     <script src="scripts/controllers/objects.js"></script>
+    <script src="scripts/controllers/reports.js"></script>
       <!-- Directives -->
 <script src="scripts/directives/crud-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-data-factory.js"></script>
@@ -214,6 +222,9 @@
 <!--        <script src="include/javascript-include.html"></script>-->
         <!-- endbuild -->
     
-    <script src="vendor/toastr-2.1.0/toastr.js"></script>
+    <script src="bower_components/toastr/toastr.js"></script>
+    <script src="bower_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
+    
+    <script src="scripts/controllers/test.js"></script>
 </body>
 </html>

@@ -48,6 +48,14 @@ angular
         templateUrl: 'views/directories.html',
         controller: 'DirectoryCtrl'
       })
+    .when('/reports', {
+        templateUrl: 'views/reports.html',
+        controller: 'ReportsCtrl'
+      })
+    .when('/test', {
+        templateUrl: 'views/test.html',
+        controller: 'TestCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
