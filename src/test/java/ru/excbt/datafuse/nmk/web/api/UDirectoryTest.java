@@ -22,14 +22,13 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
-public class UDirectoryApiTest extends AnyControllerTest {
+public class UDirectoryTest extends AnyControllerTest {
 
 	public final static String DIRECTORY_URL_API = "/api/u_directory";
 	public final static long TEST_DIRECTORY_ID = 19748782;
-	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryApiTest.class);
+			.getLogger(UDirectoryTest.class);
 
 	@Autowired
 	private UDirectoryParamService directoryParamService;

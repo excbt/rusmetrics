@@ -37,6 +37,7 @@ public class UDirectoryService implements SecuredServiceRoles {
 			return null;
 		}
 		UDirectory result = directoryRepository.findOne(id);
+		result.getDirectoryNode();
 		return result;
 	}
 

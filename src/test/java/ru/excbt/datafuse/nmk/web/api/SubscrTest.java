@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class SubscrWebApiTest extends AnyControllerTest {
+public class SubscrTest extends AnyControllerTest {
 
 	@Test
 	public void testSubscrContObjects() throws Exception {
