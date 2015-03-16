@@ -20,10 +20,10 @@ import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
  * Comments :
  * 	 13.03.2015 - UDirectory upgrade all tests passed
  */
-public class UDirectoryRepositiryTest extends RepositoryTest {
+public class UDirectoryRepositoryTest extends RepositoryTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryRepositiryTest.class);
+			.getLogger(UDirectoryRepositoryTest.class);
 
 	
 	public final static long TEST_SUBSCR_ORG_ID = 728;
@@ -37,7 +37,7 @@ public class UDirectoryRepositiryTest extends RepositoryTest {
 		List<UDirectory> ddList = directoryRepository.selectBySubscrOrg(TEST_SUBSCR_ORG_ID);
 		assertTrue(ddList.size() > 0);
 		for (UDirectory d : ddList) {
-			logger.info("Found root node {}", d.getDirectoryNode().getNodeName());
+			logger.info("Found root node {}", d.getDirectoryName());
 		}		
 	}
 	
