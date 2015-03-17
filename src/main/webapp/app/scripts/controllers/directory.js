@@ -1,7 +1,7 @@
 'use strict'
 
 var app = angular.module('portalNMK');
-app.controller('DirectoryCtrl', function($scope){
+app.controller('DirectoryCtrl', function($scope, $resource){
 //    $scope.$watch( 'abc.currentNode', function( newObj, oldObj ) {
 //    if( $scope.abc && angular.isObject($scope.abc.currentNode) ) {
 //        console.log( 'Node Selected!!' );
@@ -12,4 +12,7 @@ app.controller('DirectoryCtrl', function($scope){
     $scope.clk = function(){
         alert("Hi");
     };
+    
+   
+		
 });

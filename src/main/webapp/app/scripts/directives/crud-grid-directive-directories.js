@@ -358,6 +358,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.paramsTableName = "table";
                 $scope.addParamMode = false;
                 $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+                //get params of current directory
                 $scope.getParams = function(table){
                          $scope.oldObjects = [];
                         crudGridDataFactory(table).query(function (data) {
@@ -366,6 +367,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                             });
                 };
                 
+                //get nodes of current directory
                 $scope.getCurDirNodes = function(){
                         $scope.list = [];
                         var table =$scope.crudTableName+"/"+$scope.currentObject.id+"/node";
