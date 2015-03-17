@@ -169,7 +169,7 @@ td, th {
 }
 
 .modal-scrollable-area1 {
-	height: 400px; overflow-y: scroll;	
+	height: 600px; overflow-y: scroll;	
 }
 
 .modal-position-right {
@@ -208,6 +208,10 @@ td, th {
 }
 .menuWidth {
     width: 200px;
+}
+
+.modalWindow_wide {
+    width: 1200px;
 }
 
 

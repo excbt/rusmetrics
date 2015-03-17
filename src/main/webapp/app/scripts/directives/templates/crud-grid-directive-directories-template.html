@@ -407,43 +407,63 @@
 <div id="showDirectoryStructModal" class="modal fade" role="dialog"
 	aria-labelledby="showDirectoryStructLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content modalWindow_wide">
 
 		<div class="modal-header">
 			<h3 id="showDirectoryStructLabel">
 				{{currentObject.directoryName}} 
 			</h3>
 		</div>
-		<div class="modal-body modal-scrollable-area1">
-            
-                <!-- Дерево справочника-->
-            
-            <script type="text/ng-template" id="items_renderer.html">
-                <div ui-tree-handle>
-                  <a class="btn btn-default btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></a>
-                  {{item.nodeName}}
-                  <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-trash"></span></a>
-                  <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="openNode(this)"><span class="glyphicon glyphicon-list"></span></a>
-                  <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                <div class="modal-body
+                            modal-scrollable-area1">
+
+                        <!-- Дерево справочника-->
+
+        <!--            Кнопки управления деревом: создать узел, редактировать узел, удалить дерево, -->
+                    <div>
+                        <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-click="newNode()" title="Добавить узел"></i>
+<!--                        <i class="pull-right btn btn-default btn-xs glyphicon glyphicon-trash" ng-click="removeTree()" title="Удалить дерево"></i>-->
+                    </div>
+
+                    <script type="text/ng-template" id="items_renderer.html">
+                        <div ui-tree-handle>
+                          <a class="btn btn-default btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></a>
+                          {{item.nodeName}}
+                          <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="remove(this)" ng-disabled="item.childNodes.length!=0"><span class="glyphicon glyphicon-trash"></span></a>
+                          <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="openNode(this)"><span class="glyphicon glyphicon-list"></span></a>
+                          <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
+                        </div>
+                        <ol ui-tree-nodes="options" ng-model="item.childNodes" ng-class="{hidden: collapsed}">
+                          <li ng-repeat="item in item.childNodes" ui-tree-node ng-include="'items_renderer.html'">
+                          </li>
+                        </ol>
+                      </script>
+                      <div ui-tree="options">
+                        <ol ui-tree-nodes ng-model="list" >
+                          <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer.html'"></li>
+                        </ol>
+                      </div>			
                 </div>
-                <ol ui-tree-nodes="options" ng-model="item.childNodes" ng-class="{hidden: collapsed}">
-                  <li ng-repeat="item in item.childNodes" ui-tree-node ng-include="'items_renderer.html'">
-                  </li>
-                </ol>
-              </script>
-              <div ui-tree="options">
-                <ol ui-tree-nodes ng-model="list" >
-                  <li ng-repeat="item in list" ui-tree-node ng-include="'items_renderer.html'"></li>
-                </ol>
-              </div>			
-		</div>
+                </div>
+                <div class="col-md-6">
+                    <div class="modal-body
+                            modal-scrollable-area1">
+                            <h3>JSon</h3>
+                            <pre class="code">{{ list | json }}</pre>
+                    </div>
+                </div>
+            </div>    
+        </div>    
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
 						<div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject(currentObject);"
+								ng-click="updateObject(list[0].id, list[0]);"
 								value="Сохранить" />
 						</div>
 
@@ -473,7 +493,8 @@
 		<div class="modal-header">
 			<h3 id="editDirValueLabel">
 				Атрибуты записи 
-                <input type=text ng-model="currentNode.title">
+                <input type=text ng-model="currentNode.nodeName">
+<!--
                 
                 dl=*{{currentNode.$parentNodeScope.title}}*
 
@@ -481,11 +502,12 @@
                 count = *{{tree.nodes.length}}*
                 element = *{{tree.element}}*
                  currentNodeScope = *{{currentNodeScope}}*
+-->
 
 			</h3>
             <h4>
 				Входит в: 
-                <input type=select ng-model="currentParent.title" >
+                <input type=select ng-model="currentParent.nodeName" >
 <!--                ng-options="currentParent.title as l.title for l in tree.nodes">-->
 			</h4>
 		</div>

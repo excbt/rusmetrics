@@ -103,6 +103,7 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
+                    $('#showDirectoryStructModal').modal('hide');
                     $scope.currentObject={};
                    // $docScope.$broadcast('lookupDataChange', [$attrs.table]);
                     $scope.getData(cb);
@@ -138,6 +139,13 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
 
                 $scope.updateObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
+                };
+//                  function Update for directory page                
+                $scope.updateObject = function (objId, object) {
+             	
+                	var tableName = $scope.crudTableName+"/"+String($scope.currentObject.id)+"/node";
+               	
+                    crudGridDataFactory(tableName).update({id: objId},object, successCallback, errorCallback);
                 };
 
                 $scope.getData = function (cb) {
@@ -376,6 +384,13 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                                 $scope.list[0] = data;
 
                             });
+                        if ($scope.list.length == 0){
+                            $scope.list[0] = {
+                                id: 1,
+                                nodeName: $scope.currentObject.directoryName,
+                                childNodes: []
+                            };
+                        };
                 };
                 
                 
@@ -428,50 +443,50 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 //                    ];
                 
                 
-//                $scope.list=[
-//                  {
-//                    "id": 1,
-//                    "nodeName": "Заводы",
-//                    "childNodes": []
-//                  },
-//                  {
-//                    "id": 2,
-//                    "title": "Школы",
-//                    "items": [
-//                      {
-//                        "id": 21,
-//                        "title": "Школа №1",
-//                        "items": [
-//                          {
-//                            "id": 211,
-//                            "title": "Корпус 1",
-//                            "items": []
-//                          },
-//                          {
-//                            "id": 212,
-//                            "title": "Корпус 2",
-//                            "items": []
-//                          }
-//                        ]
-//                      },
-//                      {
-//                        "id": 22,
-//                        "title": "Школа №2",
-//                        "items": []
-//                      }
-//                    ]
-//                  },
-//                  {
-//                    "id": 3,
-//                    "title": "3. unicorn-zapper",
-//                    "items": []
-//                  },
-//                  {
-//                    "id": 4,
-//                    "title": "4. romantic-transclusion",
-//                    "items": []
-//                  }
-//                ];
+                $scope.list=[
+                  {
+                    "id": 1,
+                    "nodeName": "Заводы",
+                    "childNodes": []
+                  },
+                  {
+                    "id": 2,
+                    "nodeName": "Школы",
+                    "childNodes": [
+                      {
+                        "id": 21,
+                        "nodeName": "Школа №1",
+                        "childNodes": [
+                          {
+                            "id": 211,
+                            "nodeName": "Корпус 1",
+                            "childNodes": []
+                          },
+                          {
+                            "id": 212,
+                            "nodeName": "Корпус 2",
+                            "childNodes": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": 22,
+                        "nodeName": "Школа №2",
+                        "childNodes": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "nodeName": "3. unicorn-zapper",
+                    "childNodes": []
+                  },
+                  {
+                    "id": 4,
+                    "nodeName": "4. romantic-transclusion",
+                    "childNodes": []
+                  }
+                ];
                 
                 $scope.showDetails = function(obj){
                     
@@ -506,10 +521,10 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 
                 $scope.newSubItem = function(scope) {
                   var nodeData = scope.$modelValue;
-                  nodeData.items.push({
-                    id: nodeData.id * 10 + nodeData.items.length,
-                    title: nodeData.title + '.' + (nodeData.items.length + 1),
-                    items: []
+                  nodeData.childNodes.push({
+                    id: nodeData.id * 10 + nodeData.childNodes.length,
+                    nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+                    childNodes: []
                   });
                 };
 
@@ -548,12 +563,35 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.crudGridDir = function(type) {
                     return $resource(type + '/:id', {id: '@id' 
                     }, {
-                        update: {method: 'PUT'},
-                        query: {method: 'GET', isArray: false},
-                        get: {method: 'GET'},
-                        delete: {method: 'DELETE'}
+                        
+                        query: {method: 'GET', isArray: false}
+                        
                     });
-			};
+			     };    
+                
+                $scope.newNode = function() {
+                    if ($scope.list.length == 0){
+                      $scope.list.push({
+                        id: 1,
+                        nodeName: $scope.currentObject.directoryName,
+                        childNodes: []
+                      });
+                    }else{
+                        var nodeData = $scope.list[0];
+                        nodeData.childNodes.push({
+                        id: nodeData.id * 10 + nodeData.childNodes.length,
+                        nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+                        childNodes: []
+                      });
+                    }
+                    
+                };
+                
+                $scope.removeTree = function(){
+                    $scope.list = [];
+                };
+                
+                
             }]
     };
 });
