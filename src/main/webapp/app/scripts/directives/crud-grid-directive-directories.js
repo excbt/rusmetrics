@@ -104,7 +104,7 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
                     $scope.currentObject={};
-                    $docScope.$broadcast('lookupDataChange', [$attrs.table]);
+                   // $docScope.$broadcast('lookupDataChange', [$attrs.table]);
                     $scope.getData(cb);
                     
                 };
@@ -355,6 +355,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 
                 //Directories
+                
                 $scope.paramsTableName = "table";
                 $scope.addParamMode = false;
                 $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
@@ -408,6 +409,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     $scope.currentObjectToDel = obj;
                     $scope.extraProp.idColumnName = idColumnName;
                     $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
+                    $scope.targetTableName = $scope.crudTableName+"/";
                 };
                 
 //                $scope.treedata =

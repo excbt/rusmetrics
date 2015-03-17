@@ -40,11 +40,11 @@ angular
         templateUrl: 'views/private_office.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/objects_list', {
+      .when('/private/objects_list', {
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/directories', {
+      .when('/private/directories', {
         templateUrl: 'views/directories.html',
         controller: 'DirectoryCtrl'
       })
