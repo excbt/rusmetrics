@@ -14,8 +14,8 @@ angular.module('portalNMK').directive('crudGridDirectories', function () {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$element', '$attrs', '$routeParams', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $element, $attrs, $routeParams, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
+            function ($scope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
                 $scope.objects = angular.fromJson($attrs.datasource); 
                 
                 $scope.lookups = [];
@@ -358,10 +358,29 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.paramsTableName = "table";
                 $scope.addParamMode = false;
                 $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+                $scope.getParams = function(table){
+                         $scope.oldObjects = [];
+                        crudGridDataFactory(table).query(function (data) {
+                                $scope.oldObjects = data;
+
+                            });
+                };
+                
+                $scope.getCurDirNodes = function(){
+                        $scope.list = [];
+                        var table =$scope.crudTableName+"/"+$scope.currentObject.id+"/node";
+                        $scope.crudGridDir(table).query(function (data) {
+                                $scope.list[0] = data;
+
+                            });
+                };
+                
                 
                 $scope.getCurDirParams = function(){
                     
                     $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
+                    
+                    $scope.getParams($scope.crudTableName+"/"+$scope.currentObject.id+"/param");
                     $scope.oldColumns = [ 
                                       {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
                                     ,{"name":"paramType"
@@ -405,50 +424,50 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 //                    ];
                 
                 
-                $scope.list=[
-                  {
-                    "id": 1,
-                    "title": "Заводы",
-                    "items": []
-                  },
-                  {
-                    "id": 2,
-                    "title": "Школы",
-                    "items": [
-                      {
-                        "id": 21,
-                        "title": "Школа №1",
-                        "items": [
-                          {
-                            "id": 211,
-                            "title": "Корпус 1",
-                            "items": []
-                          },
-                          {
-                            "id": 212,
-                            "title": "Корпус 2",
-                            "items": []
-                          }
-                        ]
-                      },
-                      {
-                        "id": 22,
-                        "title": "Школа №2",
-                        "items": []
-                      }
-                    ]
-                  },
-                  {
-                    "id": 3,
-                    "title": "3. unicorn-zapper",
-                    "items": []
-                  },
-                  {
-                    "id": 4,
-                    "title": "4. romantic-transclusion",
-                    "items": []
-                  }
-                ];
+//                $scope.list=[
+//                  {
+//                    "id": 1,
+//                    "nodeName": "Заводы",
+//                    "childNodes": []
+//                  },
+//                  {
+//                    "id": 2,
+//                    "title": "Школы",
+//                    "items": [
+//                      {
+//                        "id": 21,
+//                        "title": "Школа №1",
+//                        "items": [
+//                          {
+//                            "id": 211,
+//                            "title": "Корпус 1",
+//                            "items": []
+//                          },
+//                          {
+//                            "id": 212,
+//                            "title": "Корпус 2",
+//                            "items": []
+//                          }
+//                        ]
+//                      },
+//                      {
+//                        "id": 22,
+//                        "title": "Школа №2",
+//                        "items": []
+//                      }
+//                    ]
+//                  },
+//                  {
+//                    "id": 3,
+//                    "title": "3. unicorn-zapper",
+//                    "items": []
+//                  },
+//                  {
+//                    "id": 4,
+//                    "title": "4. romantic-transclusion",
+//                    "items": []
+//                  }
+//                ];
                 
                 $scope.showDetails = function(obj){
                     
@@ -521,6 +540,16 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.showContextMenu = function(){
                     $('.dropdown-toggle').dropdown();
                 };
+                
+                $scope.crudGridDir = function(type) {
+                    return $resource(type + '/:id', {id: '@id' 
+                    }, {
+                        update: {method: 'PUT'},
+                        query: {method: 'GET', isArray: false},
+                        get: {method: 'GET'},
+                        delete: {method: 'DELETE'}
+                    });
+			};
             }]
     };
 });
