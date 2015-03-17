@@ -1,11 +1,11 @@
 <div>Портал / Личный кабинет / Справочники<div>
 <h2>Справочники</h2>
 
-<div crud-grid-directories table=""
+<div crud-grid-directories table="'../api/u_directory'"
 	columns='[
 
-	          {"name":"directName", "header" : "Наименование", "class":"col-md-3"},
-             {"name":"directDescription", "header" : "Описание", "class":"col-md-5"}
+	          {"name":"directoryName", "header" : "Наименование", "class":"col-md-3"},
+             {"name":"directoryDescription", "header" : "Описание", "class":"col-md-5"}
            
             ]'
 
@@ -17,8 +17,8 @@
      datasource='[
     {
       "id":"753",
-      "directName": "Справочник 1",
-      "directDescription": "Пример справочника"
+      "directoryName": "Справочник 1",
+      "directoryDescription": "Пример справочника"
       ,  "directParams":[
                  {"paramName":"Параметр1"
                     , "paramType":"Строка"
@@ -30,8 +30,8 @@
         
     }
                      ,{    "id":"754",
-                 "directName": "Школы",
-      "directDescription": "Справочник содержит перечень школ"
+                 "directoryName": "Школы",
+      "directoryDescription": "Справочник содержит перечень школ"
       ,  "directParams":[
                  {"paramName":"Параметр1"
                     , "paramType":"Строка"
@@ -43,8 +43,8 @@
     }
                  
                   ,{    "id":"755",
-                 "directName": "Муниципальные учреждения",
-      "directDescription": "Справочник содержит перечень всех муниципальных учреждений"
+                 "directoryName": "Муниципальные учреждения",
+      "directoryDescription": "Справочник содержит перечень всех муниципальных учреждений"
       ,  "directParams":[
                  {"paramName":"Площадь", "paramType":"Double", "paramDescription":"Общая площадь объекта"}
                  ,{"paramName":"Количество счетчиков", "paramType":"Integer", "paramDescription":"Количество счетчиков учета на объекте"}
@@ -52,8 +52,8 @@
                        
     }
                   ,{    "id":"756",
-                 "directName": "Справочник 2",
-      "directDescription": " "
+                 "directoryName": "Справочник 2",
+      "directoryDescription": " "
       ,  "directParams":[
                  {"paramName":"Параметр1"
                     , "paramType":"Строка"
@@ -65,8 +65,8 @@
                        
     }
                   ,{    "id":"757",
-                 "directName": "Номенклатура",
-      "directDescription": "Тут могла быть ваша реклама"
+                 "directoryName": "Номенклатура",
+      "directoryDescription": "Тут могла быть ваша реклама"
       ,  "directParams":[
                  {"paramName":"Параметр1"
                     , "paramType":"Строка"

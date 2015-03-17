@@ -95,7 +95,7 @@
        
     
 <!--  Постороение таблицы с данными  -->
-    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-dblclick="showDetails(object)" oncontextmenu=" $('.dropdown-toggle').dropdown();return false">
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-dblclick="selectedItem(object);getCurDirNodes();showDetails(object)" oncontextmenu=" $('.dropdown-toggle').dropdown();return false">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
             
@@ -110,7 +110,7 @@
                                 <td ng-show="!object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="toggleEditMode(object)" title="Редактировать справочник"></i> </td>                           
                                 <td ng-show="object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditMode(object)" title="Сохранить справочник"></i> </td>
                                 <td ng-show="object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleEditMode(object)" ></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showDirectoryStructModal" data-toggle="modal" title="Открыть справочник"></i></td>
+                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object);getCurDirNodes()" data-target="#showDirectoryStructModal" data-toggle="modal" title="Открыть справочник"></i></td>
                                 
                             </tr>
                         </table>    
@@ -242,7 +242,7 @@
 
 		<div class="modal-header">
 			<h3 id="editDirectoryParamsLabel">
-				Параметры справочника "{{currentObject.directName}}" 
+				Параметры справочника "{{currentObject.directoryName}}" 
 			</h3>
 		</div>
 		<div class="modal-body">
@@ -411,7 +411,7 @@
 
 		<div class="modal-header">
 			<h3 id="showDirectoryStructLabel">
-				{{currentObject.directName}} 
+				{{currentObject.directoryName}} 
 			</h3>
 		</div>
 		<div class="modal-body modal-scrollable-area1">
@@ -421,13 +421,13 @@
             <script type="text/ng-template" id="items_renderer.html">
                 <div ui-tree-handle>
                   <a class="btn btn-default btn-xs" data-nodrag ng-click="toggle(this)"><span class="glyphicon" ng-class="{'glyphicon-chevron-right': collapsed, 'glyphicon-chevron-down': !collapsed}"></span></a>
-                  {{item.title}}
+                  {{item.nodeName}}
                   <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="remove(this)"><span class="glyphicon glyphicon-trash"></span></a>
                   <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="openNode(this)"><span class="glyphicon glyphicon-list"></span></a>
                   <a class="pull-right btn btn-default btn-xs" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span class="glyphicon glyphicon-plus"></span></a>
                 </div>
-                <ol ui-tree-nodes="options" ng-model="item.items" ng-class="{hidden: collapsed}">
-                  <li ng-repeat="item in item.items" ui-tree-node ng-include="'items_renderer.html'">
+                <ol ui-tree-nodes="options" ng-model="item.childNodes" ng-class="{hidden: collapsed}">
+                  <li ng-repeat="item in item.childNodes" ui-tree-node ng-include="'items_renderer.html'">
                   </li>
                 </ol>
               </script>
@@ -437,7 +437,7 @@
                 </ol>
               </div>
 
-
+            
 			
 		</div>
 		<div class="modal-footer">
