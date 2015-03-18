@@ -78,6 +78,11 @@ public class UDirectoryNodeController {
 		checkNotNull(entity, "UDirectoryNode is empty");
 		checkArgument(directoryId > 0, "directoryId is not set");
 
+		if (entity.getId() != id) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.body(String.format("Can't change root node for Directory (id=%d)", directoryId));
+		}
+		
 		try {
 			directoryNodeService.save(entity, directoryId);
 		} catch (AccessDeniedException e) {
