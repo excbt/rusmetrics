@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -37,7 +38,8 @@ public class Organization extends AbstractAuditableEntity<SystemUser, Long>{
 	@Column(name="ex_system")
 	private String exSystem;
 	
-	
+	@Version
+	private int version;
 
 	public String getName() {
 		return name;
@@ -77,5 +79,13 @@ public class Organization extends AbstractAuditableEntity<SystemUser, Long>{
 
 	public void setExSystem(String exSystem) {
 		this.exSystem = exSystem;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 }

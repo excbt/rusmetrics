@@ -29,7 +29,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
     private EntityManagerFactory emf;	
 	
 	@Test
-	public void testGetNode() {
+	public void testGetAndSaveNode() {
 		
 		
 		UDirectoryNode nd = nodeDirectoryService.getRootNode(TEST_DIRECTORY_NODE_ID);
@@ -37,7 +37,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
 		logger.info("Testing get root Node (nodeName={})", nd.getNodeName());
 		
 		logger.info("Testing save Node...");
-		UDirectoryNode nd2 = nodeDirectoryService.save(nd, TEST_DIRECTORY_ID);
+		UDirectoryNode nd2 = nodeDirectoryService.save(nd);
 		assertNotNull(nd2);
 		
 		assertEquals(nd.getChildNodes().size(), nd2.getChildNodes().size());
@@ -57,7 +57,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child1"));
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child2"));
 		
-		nodeDirectoryService.save(nd, TEST_DIRECTORY_ID);
+		nodeDirectoryService.save(nd);
 		nodeDirectoryService.delete(nd);
 	}
 	

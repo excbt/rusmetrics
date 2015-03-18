@@ -1,22 +1,27 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 
 @Entity
 @Table(name="device_model")
-public class DeviceModel extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class DeviceModel extends AbstractAuditableEntity<SystemUser, Long>{
 
+
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6370569022830583056L;
 
 	
 	@Column(name="device_model_name")
@@ -30,6 +35,9 @@ public class DeviceModel extends IdEntity implements Serializable {
 
 	@Column(name="ex_code")
 	private String exCode;
+	
+	@Version
+	private int version;
 	
 	public String getModelName() {
 		return modelName;
@@ -62,6 +70,14 @@ public class DeviceModel extends IdEntity implements Serializable {
 
 	public void setCaption(String caption) {
 		this.caption = caption;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 	
 }

@@ -47,10 +47,14 @@ public class UDirectoryNodeController {
 	public ResponseEntity<?> getAll(
 			@PathVariable("directoryId") long directoryId) {
 
+		logger.trace("getAll DirectoryNode ID {}", directoryId);
+		
 		UDirectory directory = directoryService.findOne(directoryId);
 		if (directory == null) {
 			return ResponseEntity.notFound().build();
 		}
+		
+		logger.trace("getAll DirectoryNode ID {}. getDirectoryNode", directoryId);
 		UDirectoryNode directoryNode = directory.getDirectoryNode();
 
 		if (directoryNode == null) {
@@ -84,7 +88,7 @@ public class UDirectoryNodeController {
 		}
 		
 		try {
-			directoryNodeService.save(entity, directoryId);
+			directoryNodeService.saveWithDictionary(entity, directoryId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (PersistenceException e) {
@@ -111,7 +115,7 @@ public class UDirectoryNodeController {
 
 		UDirectoryNode resultEntity = null;
 		try {
-			resultEntity = directoryNodeService.save(entity, directoryId);
+			resultEntity = directoryNodeService.saveWithDictionary(entity, directoryId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (PersistenceException e) {

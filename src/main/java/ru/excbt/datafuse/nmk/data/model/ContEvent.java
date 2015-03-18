@@ -1,31 +1,36 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="cont_event")
-public class ContEvent extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class ContEvent extends AbstractAuditableEntity<SystemUser, Long> {
 
+
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -5865290731548602858L;
 
-	
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
@@ -47,6 +52,9 @@ public class ContEvent extends IdEntity implements Serializable {
 
 	@Column(name = "cont_event_comment")
 	private String comment;
+	
+	@Version
+	private int version;
 	
 	public ContObject getContObject() {
 		return contObject;

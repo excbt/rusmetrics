@@ -1,30 +1,34 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="device_object")
-public class DeviceObject extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class DeviceObject extends AbstractAuditableEntity<SystemUser, Long> {
 
+
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -199459403017867220L;
 
-	
 	@OneToOne 
 	@JoinColumn(name = "device_model_id")
 	private DeviceModel deviceModel;
@@ -45,7 +49,9 @@ public class DeviceObject extends IdEntity implements Serializable {
 	@JsonIgnore
 	private ContObject contObject;
 	
-
+	@Version
+	private int version; 
+	
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
@@ -84,6 +90,14 @@ public class DeviceObject extends IdEntity implements Serializable {
 
 	public void setContObject(ContObject contObject) {
 		this.contObject = contObject;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}	
 	
 	

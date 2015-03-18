@@ -33,7 +33,7 @@ public class UDirectory extends AbstractAuditableEntity<AuditUser,Long>  {
 	@Column(name = "directory_description")
 	private String directoryDescription;	
 	
-	@OneToOne
+	@OneToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "directory_node_id")
 	@JsonIgnore
 	private UDirectoryNode directoryNode;

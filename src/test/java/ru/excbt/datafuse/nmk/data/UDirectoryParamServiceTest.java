@@ -31,6 +31,8 @@ public class UDirectoryParamServiceTest extends RepositoryTest {
 
 	@Test
 	public void testSaveDelete() {
+		logger.info("TEST_DIRECTORY_ID = {}", TEST_DIRECTORY_ID);
+		
 		UDirectory n = directoryService.findOne(TEST_DIRECTORY_ID);
 
 		assertNotNull(n);

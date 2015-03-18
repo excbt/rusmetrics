@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -58,6 +59,8 @@ public class ContZPoint extends AbstractAuditableEntity<SystemUser, Long>  {
     inverseJoinColumns=@JoinColumn(name="device_object_id"))	
 	private Collection<DeviceObject> deviceObjects;
 	
+	@Version
+	private int version;
 	
 
 	public ContObject getContObject() {
@@ -119,6 +122,16 @@ public class ContZPoint extends AbstractAuditableEntity<SystemUser, Long>  {
 
 	public void setContServiceType(ContServiceType contServiceType) {
 		this.contServiceType = contServiceType;
+	}
+
+
+	public int getVersion() {
+		return version;
+	}
+
+
+	public void setVersion(int version) {
+		this.version = version;
 	}	
 	
 	

@@ -57,6 +57,7 @@ public class UDirectoryParamController {
 	public ResponseEntity<?> getOne(
 			@PathVariable("directoryId") long directoryId,
 			@PathVariable("id") long id) {
+		
 		UDirectoryParam result = directoryParamService
 				.findOne(id);
 		
