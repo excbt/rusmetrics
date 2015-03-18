@@ -19,6 +19,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryNodeServiceTest.class);
 	
+	public final static long TEST_DIRECTORY_ID = 19748782;	
 	public static final long TEST_DIRECTORY_NODE_ID = 19748646;
 	
 	@Autowired
@@ -36,7 +37,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
 		logger.info("Testing get root Node (nodeName={})", nd.getNodeName());
 		
 		logger.info("Testing save Node...");
-		UDirectoryNode nd2 = nodeDirectoryService.save(nd);
+		UDirectoryNode nd2 = nodeDirectoryService.save(nd, TEST_DIRECTORY_ID);
 		assertNotNull(nd2);
 		
 		assertEquals(nd.getChildNodes().size(), nd2.getChildNodes().size());
@@ -56,7 +57,7 @@ public class UDirectoryNodeServiceTest extends JpaConfigTest {
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child1"));
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child2"));
 		
-		nodeDirectoryService.save(nd);
+		nodeDirectoryService.save(nd, TEST_DIRECTORY_ID);
 		nodeDirectoryService.delete(nd);
 	}
 	
