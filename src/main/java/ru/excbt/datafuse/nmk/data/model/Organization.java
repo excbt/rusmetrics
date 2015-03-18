@@ -1,28 +1,26 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 
 @Entity
 @Table(name="organization")
-public class Organization extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class Organization extends AbstractAuditableEntity<SystemUser, Long>{
 	
 	
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -2192600082628553203L;
 
 	@Column(name="organization_name")
 	private String name;
@@ -40,10 +38,6 @@ public class Organization extends IdEntity implements Serializable {
 	private String exSystem;
 	
 	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
 
 	public String getName() {
 		return name;
@@ -84,13 +78,4 @@ public class Organization extends IdEntity implements Serializable {
 	public void setExSystem(String exSystem) {
 		this.exSystem = exSystem;
 	}
-
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
-	
 }

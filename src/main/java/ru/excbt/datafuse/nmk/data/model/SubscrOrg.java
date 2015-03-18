@@ -1,11 +1,10 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -13,14 +12,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="subscr_org")
-public class SubscrOrg extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class SubscrOrg extends AbstractAuditableEntity<SystemUser, Long> {
 
 	/**
 	 * 
@@ -36,10 +37,6 @@ public class SubscrOrg extends IdEntity implements Serializable {
 
 	@Column (name="subscr_org_comment")
 	private String comment;
-	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;	
 	
 	@ManyToOne 
 	@JoinColumn(name = "organization_id")
@@ -82,14 +79,6 @@ public class SubscrOrg extends IdEntity implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
-	}
-
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
 	}
 
 	public Organization getOrganization() {

@@ -9,10 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import ru.excbt.datafuse.nmk.data.domain.RowAuditDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity
@@ -42,7 +41,7 @@ public class TimeDetailType implements Serializable {
 	
 	@Embedded
 	@JsonIgnore
-	private RowAudit rowAudit;
+	private RowAuditDate rowAudit;
 
 	public String getKeyname() {
 		return keyname;
@@ -84,12 +83,14 @@ public class TimeDetailType implements Serializable {
 		this.version = version;
 	}
 
-	public RowAudit getRowAudit() {
+	public RowAuditDate getRowAudit() {
 		return rowAudit;
 	}
 
-	public void setRowAudit(RowAudit rowAudit) {
+	public void setRowAudit(RowAuditDate rowAudit) {
 		this.rowAudit = rowAudit;
-	}		
+	}
+
+
 	
 }

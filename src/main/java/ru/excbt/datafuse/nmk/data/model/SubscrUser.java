@@ -1,31 +1,35 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 
 @Entity
 @Table(name="subscr_user")
-public class SubscrUser extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class SubscrUser extends AbstractAuditableEntity<SystemUser, Long> {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7393532811974219624L;
+
+	/**
+	 * 
+	 */
 
 	
 	@Column(name = "user_name")
@@ -40,10 +44,8 @@ public class SubscrUser extends IdEntity implements Serializable {
 	@Column(name = "password")
 	private String password;
 	
-	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
+	@Version
+	private int version;
 
 	
 	@OneToMany (fetch = FetchType.EAGER)
@@ -84,13 +86,6 @@ public class SubscrUser extends IdEntity implements Serializable {
 		this.password = password;
 	}
 
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 	public Collection<SubscrOrg> getSubscrOrgs() {
 		return subscrOrgs;
@@ -98,6 +93,14 @@ public class SubscrUser extends IdEntity implements Serializable {
 
 	public void setSubscrOrgs(Collection<SubscrOrg> subscrOrgs) {
 		this.subscrOrgs = subscrOrgs;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}		
 	
 	

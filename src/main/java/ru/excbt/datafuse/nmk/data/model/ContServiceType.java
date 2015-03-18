@@ -3,15 +3,10 @@ package ru.excbt.datafuse.nmk.data.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
-
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -41,9 +36,6 @@ public class ContServiceType implements Serializable {
 	@Version
 	private int version;	
 	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
 
 	public String getKeyname() {
 		return keyname;
@@ -85,13 +77,6 @@ public class ContServiceType implements Serializable {
 		this.version = version;
 	}
 
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 	public String getCaption() {
 		return caption;
