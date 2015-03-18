@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -39,7 +40,9 @@ public class ContObject extends AbstractAuditableEntity<SystemUser, Long> {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
-
+	@Version
+    private int version; 
+	
 	public String getName() {
 		return name;
 	}
@@ -86,6 +89,14 @@ public class ContObject extends AbstractAuditableEntity<SystemUser, Long> {
 
 	public void setOwnerContacts(String ownerContacts) {
 		this.ownerContacts = ownerContacts;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	

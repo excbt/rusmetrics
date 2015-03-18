@@ -1,16 +1,19 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 @Entity
 @Table(name="cont_event_type")
-public class ContEventType extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class ContEventType extends AbstractAuditableEntity<SystemUser, Long> {
 
 	/**
 	 * 
@@ -28,6 +31,9 @@ public class ContEventType extends IdEntity implements Serializable {
 
 	@Column(name = "cont_event_type_comment")
 	private String comment;
+	
+	@Version
+	private int version;
 	
 	public String getKeyname() {
 		return keyname;
@@ -59,6 +65,14 @@ public class ContEventType extends IdEntity implements Serializable {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	

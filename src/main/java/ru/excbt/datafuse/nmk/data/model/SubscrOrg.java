@@ -11,6 +11,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -57,6 +58,10 @@ public class SubscrOrg extends AbstractAuditableEntity<SystemUser, Long> {
 	@JsonIgnore
 	private Collection<UDirectory> directories;	
 
+	
+	@Version
+	private int version;
+	
 	public String getRole() {
 		return role;
 	}
@@ -103,6 +108,14 @@ public class SubscrOrg extends AbstractAuditableEntity<SystemUser, Long> {
 
 	public void setDirectories(Collection<UDirectory> directories) {
 		this.directories = directories;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 	
