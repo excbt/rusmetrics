@@ -4,10 +4,75 @@
 
 <div>
     <ul>
-        <li><a tabindex="-1" href="#">Коммерческий отчет</a></li>
+        <li><a tabindex="-1" data-target="#paramReportModal" data-toggle="modal"><i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-click="newNode()" title="Отчет ююю">Коммерческий отчет</i></a></li>
         <li><a tabindex="-1" href="#">Сводный отчет</a></li>
         <li><a tabindex="-1" href="#">Еще какой-то отчет</a></li>
         <li class="divider"></li>
         <li><a tabindex="-1" href="#">и т.д.</a></li>
     </ul>
+</div>
+
+<!--Params for report ""-->
+<div id="paramReportModal" class="modal fade" role="dialog"
+	aria-labelledby="paramReportLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="paramReportLabel">
+				Параметры отчета "&lt;Тут должно быть название отчета&gt;" 
+			</h3>
+		</div>
+      
+                <div class="modal-body modal-scrollable-area1">
+                         <form class="form-horizontal">
+                            <div class="control-group">
+                                <label class="control-label" for="inputParam1">Парметр 1</label>
+                                <div class="controls">
+                                    <input type="text" id="inputParam1" placeholder="Караметр 1">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="inputPassword">Пароль</label>
+                                <div class="controls">
+                                    <input type="password" id="inputPassword" placeholder="Пароль">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <div class="controls">
+                                    <label class="checkbox">
+                                        <input type="checkbox"> Запомнить меня
+                                    </label>
+                                    <button type="submit" class="btn">Сформировать</button>
+                                </div>
+                            </div>
+                        </form>   
+                        
+                </div>    
+            
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click=""
+								value="Сохранить" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
 </div>

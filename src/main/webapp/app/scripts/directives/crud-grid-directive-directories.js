@@ -31,9 +31,7 @@ angular.module('portalNMK').directive('crudGridDirectories', function () {
                 $scope.bGroupByObject = angular.fromJson($attrs.bgroup) || false;
                 $scope.bExtraMenu = angular.fromJson($attrs.bextramenu) || false; //признак дополнительного меню
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
-                
-console.log("bGroup = "+$scope.bGroupByObject);
-console.log("bExtraMenu = "+$scope.bExtraMenu);                
+              
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -386,7 +384,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                             });
                         if ($scope.list.length == 0){
                             $scope.list[0] = {
-                                id: 1,
+                                
                                 nodeName: $scope.currentObject.directoryName,
                                 childNodes: []
                             };
@@ -522,7 +520,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.newSubItem = function(scope) {
                   var nodeData = scope.$modelValue;
                   nodeData.childNodes.push({
-                    id: nodeData.id * 10 + nodeData.childNodes.length,
+                    
                     nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
                     childNodes: []
                   });
@@ -572,14 +570,14 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.newNode = function() {
                     if ($scope.list.length == 0){
                       $scope.list.push({
-                        id: 1,
+                     
                         nodeName: $scope.currentObject.directoryName,
                         childNodes: []
                       });
                     }else{
                         var nodeData = $scope.list[0];
                         nodeData.childNodes.push({
-                        id: nodeData.id * 10 + nodeData.childNodes.length,
+                        
                         nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
                         childNodes: []
                       });
