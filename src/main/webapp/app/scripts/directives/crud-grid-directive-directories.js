@@ -138,12 +138,15 @@ angular.module('portalNMK').directive('crudGridDirectories', function () {
                 $scope.updateObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
                 };
-//                  function Update for directory page                
+//                  function Update for struct of directory                 
                 $scope.updateObject = function (objId, object) {
-             	
-                	var tableName = $scope.crudTableName+"/"+String($scope.currentObject.id)+"/node";
-               	
-                    crudGridDataFactory(tableName).update({id: objId},object, successCallback, errorCallback);
+             	     var tableName = $scope.crudTableName+"/"+String($scope.currentObject.id)+"/node";    
+                	if ((typeof objId == 'undefined')||(objId == null) ){                    
+                        crudGridDataFactory(tableName).save(object, successCallback, errorCallback);
+                        
+                    }else{                                              
+                        crudGridDataFactory(tableName).update({id: objId},object, successCallback, errorCallback);
+                    }
                 };
 
                 $scope.getData = function (cb) {

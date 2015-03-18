@@ -20,29 +20,32 @@
 
 		<div class="modal-header">
 			<h3 id="paramReportLabel">
-				Параметры отчета "&lt;Тут должно быть название отчета&gt;" 
+				Параметры Коммерческого отчета
 			</h3>
 		</div>
       
                 <div class="modal-body modal-scrollable-area1">
                          <form class="form-horizontal">
                             <div class="control-group">
-                                <label class="control-label" for="inputParam1">Парметр 1</label>
+                                <label class="control-label" for="idOrganization">Организация</label>
                                 <div class="controls">
-                                    <input type="text" id="inputParam1" placeholder="Караметр 1">
+                                    <input type="select" id="idOrganization" placeholder="Организация">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label" for="inputPassword">Пароль</label>
+                                <label class="control-label" for="inputDateStart">Дата начала</label>
                                 <div class="controls">
-                                    <input type="password" id="inputPassword" placeholder="Пароль">
+                                    <input type="text" id="inputDateStart" placeholder="Дата начала">
                                 </div>
+                                
+                                <label class="control-label" for="inputDateFinish">Дата окончания</label>
+                                <div class="controls">
+                                    <input type="text" id="inputDateFinish" placeholder="Дата окончания">
+                                </div>
+                                
                             </div>
                             <div class="control-group">
                                 <div class="controls">
-                                    <label class="checkbox">
-                                        <input type="checkbox"> Запомнить меня
-                                    </label>
                                     <button type="submit" class="btn">Сформировать</button>
                                 </div>
                             </div>
