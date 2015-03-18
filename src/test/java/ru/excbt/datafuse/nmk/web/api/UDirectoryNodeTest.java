@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -17,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 public class UDirectoryNodeTest extends AnyControllerTest {
 
@@ -64,4 +66,34 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 		resultActionsAll.andExpect(status().isAccepted());		
 		
 	}
+	
+	@Test
+	public void testCreate() throws Exception {
+
+		String urlStr = String.format(UDirectoryTestConst.DIRECTORY_URL_API
+				+ "/%d/node", 19878756);
+		
+		String jsonNew = "{\"nodeName\": \"1212\",\"childNodes\": [{\"nodeName\": \"1212.1\",\"childNodes\": [{\"nodeName\": \"1212.1.1\",\"childNodes\": []}]}]}";
+
+		ResultActions resultAction = mockMvc.perform(post(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonNew)
+				.with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON));
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+
+		resultAction.andExpect(status().isCreated());		
+		
+		String jsonContent = resultAction.andReturn().getResponse()
+				.getContentAsString();
+		Integer createdId = JsonPath.read(jsonContent,
+				"$.id");
+		logger.info("createdId: {}", createdId);		
+
+		logger.info("Testing delete Param id: {}", createdId);		
+		
+		
+	}
+	
 }

@@ -1,6 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 
@@ -21,10 +25,27 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 	@Autowired
 	private UDirectoryService directoryService;
 
+//	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+//	public UDirectoryNode save(final UDirectoryNode nodeDir) {
+//		checkNotNull(nodeDir);
+//		UDirectoryNode result = directoryNodeRepository.save(nodeDir); 
+//		loadLazyChildNodes(result);
+//		return result; 
+//	}
+
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-	public UDirectoryNode save(final UDirectoryNode nodeDir) {
+	public UDirectoryNode save(final UDirectoryNode nodeDir, final long directoryId) {
 		checkNotNull(nodeDir);
-		UDirectoryNode result = directoryNodeRepository.save(nodeDir); 
+		checkArgument(directoryId > 0);
+		
+		UDirectory directory = directoryService.findOne(directoryId);
+		if (directory == null) {
+			throw new PersistenceException();
+		}
+		
+		UDirectoryNode result = directoryNodeRepository.save(nodeDir);
+		directory.setDirectoryNode(result);
+		directoryService.save(directory);
 		loadLazyChildNodes(result);
 		return result; 
 	}
