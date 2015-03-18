@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,10 @@ import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
 @Transactional
 public class UDirectoryService implements SecuredServiceRoles {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(UDirectoryService.class);
+	
 	@Autowired
 	private UDirectoryRepository directoryRepository;
 
@@ -37,7 +43,10 @@ public class UDirectoryService implements SecuredServiceRoles {
 			return null;
 		}
 		UDirectory result = directoryRepository.findOne(id);
-		result.getDirectoryNode();
+		if (result == null) {
+			logger.debug("UDirectory (id={}) not found", id);
+			return null;
+		}
 		return result;
 	}
 

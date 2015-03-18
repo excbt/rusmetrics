@@ -5,6 +5,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,10 @@ import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 @Transactional
 public class UDirectoryNodeService implements SecuredServiceRoles {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(UDirectoryNodeService.class);
+	
 	@Autowired
 	private UDirectoryNodeRepository directoryNodeRepository;
 	
@@ -34,19 +40,32 @@ public class UDirectoryNodeService implements SecuredServiceRoles {
 //	}
 
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-	public UDirectoryNode save(final UDirectoryNode nodeDir, final long directoryId) {
+	@Transactional
+	public UDirectoryNode save(final UDirectoryNode nodeDir) {
+		checkNotNull(nodeDir);
+		UDirectoryNode result = directoryNodeRepository.save(nodeDir);
+		loadLazyChildNodes(result);
+		return result; 
+	}
+
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Transactional
+	public UDirectoryNode saveWithDictionary(final UDirectoryNode nodeDir, final long directoryId) {
 		checkNotNull(nodeDir);
 		checkArgument(directoryId > 0);
 		
 		UDirectory directory = directoryService.findOne(directoryId);
+		
 		if (directory == null) {
+			logger.warn("UDirectory (id={}) is not found", directoryId);
 			throw new PersistenceException();
 		}
 		
 		UDirectoryNode result = directoryNodeRepository.save(nodeDir);
-		directory.setDirectoryNode(result);
-		directoryService.save(directory);
 		loadLazyChildNodes(result);
+		
+		directory.setDirectoryNode(result);
+		
 		return result; 
 	}
 

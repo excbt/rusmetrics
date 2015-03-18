@@ -71,7 +71,7 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 	public void testCreate() throws Exception {
 
 		String urlStr = String.format(UDirectoryTestConst.DIRECTORY_URL_API
-				+ "/%d/node", 19878756);
+				+ "/%d/node", 19875915);
 		
 		String jsonNew = "{\"nodeName\": \"1212\",\"childNodes\": [{\"nodeName\": \"1212.1\",\"childNodes\": [{\"nodeName\": \"1212.1.1\",\"childNodes\": []}]}]}";
 

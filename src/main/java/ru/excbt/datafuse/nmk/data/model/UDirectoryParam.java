@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -30,7 +31,7 @@ public class UDirectoryParam extends AbstractAuditableEntity<AuditUser,Long> {
     @Column
     private int version;
 
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "directory_id")	
     @JsonIgnore
 	private UDirectory directory;    

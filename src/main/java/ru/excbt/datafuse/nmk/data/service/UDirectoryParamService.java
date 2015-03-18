@@ -64,7 +64,12 @@ public class UDirectoryParamService implements SecuredServiceRoles {
 	
 	@Transactional(readOnly = true)
 	public UDirectoryParam findOne(long id) {
-		return repository.findOne(id);
+		UDirectoryParam result = repository.findOne(id);
+		if (result != null) {
+			checkNotNull(result.getDirectory().getId());
+		}
+		
+		return result;
 	}
 	
 	@Transactional(readOnly = true)
