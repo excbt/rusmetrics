@@ -1,12 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -16,14 +15,16 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="cont_zpoint")
-public class ContZPoint extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class ContZPoint extends AbstractAuditableEntity<SystemUser, Long>  {
 
 	/**
 	 * 
@@ -58,10 +59,6 @@ public class ContZPoint extends IdEntity implements Serializable {
 	private Collection<DeviceObject> deviceObjects;
 	
 	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
 
 	public ContObject getContObject() {
 		return contObject;
@@ -103,15 +100,6 @@ public class ContZPoint extends IdEntity implements Serializable {
 		this.endDate = endDate;
 	}
 
-
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 
 	public Collection<DeviceObject> getDeviceObjects() {

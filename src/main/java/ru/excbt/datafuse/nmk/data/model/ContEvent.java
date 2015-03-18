@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -14,7 +13,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -50,10 +48,6 @@ public class ContEvent extends IdEntity implements Serializable {
 	@Column(name = "cont_event_comment")
 	private String comment;
 	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -95,13 +89,6 @@ public class ContEvent extends IdEntity implements Serializable {
 		this.comment = comment;
 	}
 
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 	public Date getEventTime() {
 		return eventTime;

@@ -3,14 +3,10 @@ package ru.excbt.datafuse.nmk.data.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -35,11 +31,6 @@ public class DeviceModel extends IdEntity implements Serializable {
 	@Column(name="ex_code")
 	private String exCode;
 	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
-
 	public String getModelName() {
 		return modelName;
 	}
@@ -64,13 +55,6 @@ public class DeviceModel extends IdEntity implements Serializable {
 		this.exCode = exCode;
 	}
 
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 	public String getCaption() {
 		return caption;

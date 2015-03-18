@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.data.model;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -12,7 +11,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,11 +38,6 @@ public class DeviceObject extends IdEntity implements Serializable {
 	@Column(name = "ex_system")
 	private String exSystem;
 	
-	
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
 	@ManyToOne 
     @JoinTable(name="device_object_cont",
     joinColumns=@JoinColumn(name="device_object_id"),
@@ -83,14 +76,6 @@ public class DeviceObject extends IdEntity implements Serializable {
 
 	public void setExSystem(String exSystem) {
 		this.exSystem = exSystem;
-	}
-
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
 	}
 
 	public ContObject getContObject() {

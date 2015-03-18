@@ -1,22 +1,20 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.domain.IdEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAudit;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 
 
 @Entity
 @Table(name="cont_object")
-public class ContObject extends IdEntity implements Serializable {
+@EntityListeners({AuditingEntityListener.class})
+public class ContObject extends AbstractAuditableEntity<SystemUser, Long> {
 
 	/**
 	 * 
@@ -41,17 +39,6 @@ public class ContObject extends IdEntity implements Serializable {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
-	@Embedded
-	@JsonIgnore
-	private RowAudit rowAudit;
-
-	public RowAudit getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAudit rowAudit) {
-		this.rowAudit = rowAudit;
-	}
 
 	public String getName() {
 		return name;
