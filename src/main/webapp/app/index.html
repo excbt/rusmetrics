@@ -15,8 +15,11 @@
     <link rel="stylesheet" href="styles/main.css"/>
 <!--    <link rel="stylesheet" href="styles/angular.treeview.css"/>-->
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css">
-      <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
+      <link rel="stylesheet" href="bower_components/angular-ui-tree-master/dist/angular-ui-tree.min.css">
     <!-- endbuild -->
+    
+      <link rel="stylesheet" href="bower_components/bootstrap-daterangepicker-master/daterangepicker-bs3.css">
+      
   </head>
   <body ng-app="portalNMK">
     <!--[if lt IE 7]>
@@ -52,7 +55,7 @@
             <ul class="nav navbar-nav pull-right">
 				
 				<li><a href="#/private/"
-					title='Private office' ng-click="showPrivateOfficeMenu=true"><p
+					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false"><p
 							class="displayInLine"> <b>Личный кабинет</b>
 				</p></a></li>			
 			
@@ -78,15 +81,15 @@
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas">Главная</a>
+                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false">Главная</a>
                                 <!-- Notices -->
                                 <a class="list-group-item"
 
-                                    href="#/notice/" data-toggle="offcanvas">Уведомления</a>
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false">Уведомления</a>
                                 <!-- Журнал операций -->
                                 <a class="list-group-item"
 
-                                    href="#/operationlog/" data-toggle="offcanvas">Журнал операций</a>
+                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false">Журнал операций</a>
                                 <!-- Объекты -->
 <!--
                                 <a class="list-group-item"
@@ -96,17 +99,39 @@
                                 <!-- Отчеты -->
                                 <a class="list-group-item"
 
-                                    href="#/reports/" data-toggle="offcanvas">Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="showMenuReport=true">Отчеты</a>
                                 
                                  <!-- Test -->
 <!--
                                 <a class="list-group-item"
 
                                     href="#/test/" data-toggle="offcanvas">Test</a>
+                                
+-->
+                                <div ng-show="showMenuReport" id="sidebar-entries" class="list-group submenu">
+                                    <!-- Home -->
+<!--
+
+                                    <label class="list-group-item"
+
+                                       data-toggle="offcanvas"><b>Отчеты:</b></label>
 -->
 
+                                    <a class="list-group-item"
+
+                                       href="#/reports/commercial_report/" data-toggle="offcanvas">Коммерческий отчет</a>
+
+                                    <a class="list-group-item"
+
+                                        href="#/" data-toggle="offcanvas">Сводный отчет</a>
+                                    <a class="list-group-item"
+
+                                        href="#/" data-toggle="offcanvas">Еще какой-то отчет</a>
+                                </div>
+
                             </div>
-                        </nav>            
+                        </nav>
+            
             </div>                
          <div class="col-xs-6 col-sm-2 well well-bgc sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        
              <nav class="sidebar-nav"
@@ -223,7 +248,13 @@
     
     <script src="bower_components/toastr/toastr.js"></script>
     <script src="bower_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
+    <script src="bower_components/bootstrap-daterangepicker-master/moment.js"></script>
+    <script src="bower_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
+    
     
     <script src="scripts/controllers/test.js"></script>
+    
+    
+    
 </body>
 </html>

@@ -125,6 +125,11 @@ angular.module('portalNMK').directive('crudGridDirectories', function () {
                 $scope.addObject = function () {
                     crudGridDataFactory($scope.crudTableName).save($scope.object, successPostCallback, errorCallback);
                 };
+                
+                $scope.addParam = function () {
+                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/param"
+                    crudGridDataFactory(table).save($scope.object, successPostCallback, errorCallback);
+                };
 
                 $scope.deleteObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
@@ -141,10 +146,10 @@ angular.module('portalNMK').directive('crudGridDirectories', function () {
 //                  function Update for struct of directory                 
                 $scope.updateObject = function (objId, object) {
              	     var tableName = $scope.crudTableName+"/"+String($scope.currentObject.id)+"/node";    
-                	if ((typeof objId == 'undefined')||(objId == null) ){                    
+                	if ((typeof objId == 'undefined')||(objId == null) ){                        
                         crudGridDataFactory(tableName).save(object, successCallback, errorCallback);
                         
-                    }else{                                              
+                    }else{                                                
                         crudGridDataFactory(tableName).update({id: objId},object, successCallback, errorCallback);
                     }
                 };
@@ -394,6 +399,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                         };
                 };
                 
+                $scope.typesArray = ["BOOLEAN", "STRING", "NUMBER"]; //array of param type
                 
                 $scope.getCurDirParams = function(){
                     
@@ -410,7 +416,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                                             "value":"typeKeyname",
                                             "orderBy": {"field": "typeKeyname", "asc": "true"}
                                         }                                      
-                                      ,"header" : "Тип", "class":"col-md-2"}
+                                      ,"header" : "Тип", "class":"col-md-3"}
                                     ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
                                     
                     ];
@@ -418,6 +424,11 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 $scope.toggleAddParamMode = function(){
                     $scope.addParamMode = !$scope.addParamMode;
+                    $scope.object = {};
+                    if ($scope.addParamMode) {
+                    	if ($scope.newIdProperty && $scope.newIdValue)
+                    		$scope.object[$scope.newIdProperty] =  $scope.newIdValue;
+                    }
                 };
                 
                 $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){

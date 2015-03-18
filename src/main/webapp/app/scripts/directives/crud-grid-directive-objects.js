@@ -28,6 +28,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.loading = true;
                 $scope.filter = '';
                 $scope.filterType='';
+                $scope.bReports = angular.fromJson($attrs.breports) || false; //Признак того, что объекты выводятся в окне "Отчеты"
                 $scope.bGroupByObject = angular.fromJson($attrs.bgroup) || false;
                 $scope.bExtraMenu = angular.fromJson($attrs.bextramenu) || false; //признак дополнительного меню
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
@@ -413,6 +414,22 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 $scope.test = function(){
                     $('#editDirValueModal').modal();
+                };
+                
+                $scope.selectedObjectsCount=0;
+                $scope.toggleSelectObject = function(object){
+console.log("Object= "+object.name);                       
+                   object.selected = !object.selected;
+console.log("Object.selected= "+object.selected);   
+                   
+                    if(object.selected){
+                        $scope.selectedObjectsCount++;
+                    }else{
+                        if (object.selected == false){
+                            $scope.selectedObjectsCount--;
+                        }
+                    }
+console.log("Object.selected.count= "+$scope.selectedObjectsCount);                        
                 };
             }]
     };

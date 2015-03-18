@@ -1,7 +1,7 @@
 <div ng-show="loading">{{captions.msgLoading}}</div>
 
 <!--Группировка-->
-        <div ng-hide="bdirectories" ng-show="!bObject" class="form-actions">
+        <div ng-hide="bReports" ng-show="!bObject" class="form-actions">
             Группировки: 
             <div ng-show="!bGroupByObject&&!bObject">
                 <button type="button" class="btn" ng-click="groupByObject()">по объектам</button>
@@ -17,7 +17,7 @@
             
         </div>
 <!--Фильтр-->
-<div ng-hide="bdirectories" ng-show="!bObject && !bGroupByObject">
+<div ng-hide="bReports" ng-show="!bObject && !bGroupByObject">
     <div>
         Фильтры:
     </div>
@@ -145,12 +145,16 @@
 
                 <tr><!--    <tr> Уровень 3     -->
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
-            <td ng-show="bGroupByObject || bObject" class="col-md-1 noMargin" style="padding:0;">
+            <td ng-show="bGroupByObject || bObject" ng-hide="bReports" class="col-md-1 noMargin" style="padding:0;">
                 <div ng-show="bGroupByObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
 <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
 <!--                Эта кнопка доступна, когда отображаются объекты-->
                 <div ng-show="bObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i></div>
+
                 
+            </td>
+            <td ng-show="bReports">
+                <div ng-show="bObject" class="btn-toolbar noMargin"><input type="checkbox" ng-click="toggleSelectObject(object)"></div>
             </td>
             
 <!--       Extra column for Add mode in page of directories-->
@@ -209,7 +213,7 @@
                      
             </td>
 <!-- Колонка для редактирования объектов                   -->
-            <td ng-show="bObject" class="col-md-1"> 
+            <td ng-show="bObject" ng-hide="bReports" class="col-md-1"> 
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <table>
@@ -222,7 +226,24 @@
                 </div>
                 
             </td>
+                    
+<!-- Колонка для формирования отчетов по объектам                   -->
+            <td ng-show="bObject" ng-hide="!bReports" class="col-md-1"> 
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <table>
+                            <tr>
+                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="" title="Сформировать"></i> </td>
+                                <td><i class="btn btn-default btn-xs glyphicon" ng-click="">PDF</i></td>                                
+                            </tr>
+                        </table>    
+                    </div>    
+                </div>
+                
+            </td>
+                    
 <!--                    Buttons for directories-->
+<!--
             <td ng-show="bdirectories" class="col-md-2"> 
                 <div class="btn-toolbar">
                     <div class="btn-group">
@@ -239,6 +260,7 @@
                 </div>
                 
             </td>        
+-->
                 </tr><!--    </tr> Уровень 3     -->
                 <tr><!--    <tr> Уровень 3     -->
                     
@@ -324,21 +346,38 @@
     </td>     
     </tr>
     <!--        End Построение таблицы с данными-->
+    
 </table>
 
+          
+    
+
 <!-- Нижняя полоса с описанием количества объектов и элементов учета-->
-<div ng-show="bObject||bdirectories" class="navbar navbar-default  navbar-fixed-bottom" style="margin-bottom:60px;">
-    <div id="navbar-container" class="container">
-        
+<div ng-show="bObject||bdirectories" class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
+                                                    <!--    navbar-fixed-bottom-->
+    <div id="navbar-container" class="container navbar-left">
+      
+        <div class="pull-right btn-toolbar" ng-show="bReports">
+            <div class="btn-group">
+                <i class="btn btn-default btn-md glyphicon" ng-click="" ng-disabled="{{selectedObjectsCount>0}}"> Сформировать отчеты в формате PDF для выбранных обеъектов</i>  
+            </div>    
+				    
+        </div> 
         		
-              <ul class="nav navbar-nav">
+              <ul class="nav navbar-nav ">
 				
 				<li><p
-							class="displayInLine"> <b>Всего: {{objects.length}}</b>  
+							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{objects.length}}</b>  
 				    </p>
                 </li>
+               
                 			
-			
+			     <li ng-show="bReports" style="margin-right:5px;padding-top:15px;"><p
+							class="displayInLine"> <b>Выбрано объектов: {{selectedObjectsCount}}</b>  
+				    </p>
+                </li>
+                  
+                 
 				
 			</ul>
                 

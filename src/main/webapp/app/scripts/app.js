@@ -52,6 +52,10 @@ angular
         templateUrl: 'views/reports.html',
         controller: 'ReportsCtrl'
       })
+    .when('/reports/commercial_report', {
+        templateUrl: 'views/commercial_report.html',
+        controller: 'ReportsCtrl'
+      })
     .when('/test', {
         templateUrl: 'views/test.html',
         controller: 'TestCtrl'
