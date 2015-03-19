@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 @Entity
 @Table(name="system_user")
 @EntityListeners({AuditingEntityListener.class})
-public class SystemUser extends AbstractAuditableEntity<SystemUser, Long> {
+public class SystemUser extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 

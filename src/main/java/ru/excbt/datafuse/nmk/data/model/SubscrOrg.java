@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="subscr_org")
 @EntityListeners({AuditingEntityListener.class})
-public class SubscrOrg extends AbstractAuditableEntity<SystemUser, Long> {
+public class SubscrOrg extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 

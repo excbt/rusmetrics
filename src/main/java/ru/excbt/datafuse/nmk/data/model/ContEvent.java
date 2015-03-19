@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="cont_event")
 @EntityListeners({AuditingEntityListener.class})
-public class ContEvent extends AbstractAuditableEntity<SystemUser, Long> {
+public class ContEvent extends AbstractAuditableEntity<AuditUser, Long> {
 
 
 	

@@ -46,4 +46,25 @@ public class ContObjectService {
 		//return contObjectRepository.selectByUserName(725L);
 	}
 	
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ContObject findOne(long id) {
+		return contObjectRepository.findOne(id);
+	}
+	
+	/**
+	 * 
+	 * @param str
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContObject> findByFullName(String str) {
+		return contObjectRepository.findByFullNameLikeIgnoreCase(str);
+	}
+	
 }
