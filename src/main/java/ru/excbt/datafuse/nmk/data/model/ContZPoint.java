@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="cont_zpoint")
 @EntityListeners({AuditingEntityListener.class})
-public class ContZPoint extends AbstractAuditableEntity<SystemUser, Long>  {
+public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long>  {
 
 	/**
 	 * 

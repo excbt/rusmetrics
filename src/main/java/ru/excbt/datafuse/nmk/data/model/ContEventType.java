@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 @Entity
 @Table(name="cont_event_type")
 @EntityListeners({AuditingEntityListener.class})
-public class ContEventType extends AbstractAuditableEntity<SystemUser, Long> {
+public class ContEventType extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 

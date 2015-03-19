@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="device_object")
 @EntityListeners({AuditingEntityListener.class})
-public class DeviceObject extends AbstractAuditableEntity<SystemUser, Long> {
+public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 
 
 	
