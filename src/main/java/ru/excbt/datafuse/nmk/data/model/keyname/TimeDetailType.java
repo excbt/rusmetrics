@@ -1,37 +1,47 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.domain.RowAuditDate;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
-@Table(name = "ex_system")
-public class ExSystem implements Serializable {
+@Table(name = "time_detail_type")
+public class TimeDetailType implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@Column(name = "keyname")
 	private String keyname;
-
+		
 	@Column(name = "caption")
 	private String caption;
 
-	@Column(name = "ex_system_name")
+	@Column(name = "time_detail_type_name")
 	private String name;
 
-	@Column(name = "ex_system_comment")
+	@Column(name = "time_detail_type_comment")
 	private String comment;
-
+	
 	@Version
-	private int version;
+	private int version;	
+	
+	@Embedded
+	@JsonIgnore
+	private RowAuditDate rowAudit;
 
 	public String getKeyname() {
 		return keyname;
@@ -73,5 +83,14 @@ public class ExSystem implements Serializable {
 		this.version = version;
 	}
 
+	public RowAuditDate getRowAudit() {
+		return rowAudit;
+	}
 
+	public void setRowAudit(RowAuditDate rowAudit) {
+		this.rowAudit = rowAudit;
+	}
+
+
+	
 }

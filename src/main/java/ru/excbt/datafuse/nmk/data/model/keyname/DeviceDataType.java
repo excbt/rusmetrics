@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import java.io.Serializable;
 
@@ -8,15 +8,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-
 @Entity
-@Table(name="cont_service_type")
-public class ContServiceType implements Serializable {
+@Table(name = "device_data_type")
+public class DeviceDataType implements Serializable {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@Column(name = "keyname")
 	private String keyname;
@@ -24,19 +24,18 @@ public class ContServiceType implements Serializable {
 	@Column(name = "caption")
 	private String caption;
 	
-	@Column(name = "cont_service_type_name")
-	private String name;
-	
-	@Column(name = "cont_service_type_comment")
-	private String comment;
-	
+	@Column(name = "device_data_type_name")
+	private String dataTypeName;
+
+	@Column(name = "device_data_type_comment")
+	private String dataTypeComment;
+
 	@Column(name = "ex_code")
 	private String exCode;
 	
 	@Version
 	private int version;	
 	
-
 	public String getKeyname() {
 		return keyname;
 	}
@@ -45,20 +44,28 @@ public class ContServiceType implements Serializable {
 		this.keyname = keyname;
 	}
 
-	public String getName() {
-		return name;
+	public String getDataTypeName() {
+		return dataTypeName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDataTypeName(String dataTypeName) {
+		this.dataTypeName = dataTypeName;
 	}
 
-	public String getComment() {
-		return comment;
+	public String getDataTypeComment() {
+		return dataTypeComment;
 	}
 
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setDataTypeComment(String dataTypeComment) {
+		this.dataTypeComment = dataTypeComment;
+	}
+
+	public String getCaption() {
+		return caption;
+	}
+
+	public void setCaption(String caption) {
+		this.caption = caption;
 	}
 
 	public String getExCode() {
@@ -77,15 +84,5 @@ public class ContServiceType implements Serializable {
 		this.version = version;
 	}
 
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-	
-	
 	
 }
