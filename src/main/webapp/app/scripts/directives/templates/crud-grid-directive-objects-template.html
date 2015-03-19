@@ -346,7 +346,11 @@
     </td>     
     </tr>
     <!--        End Построение таблицы с данными-->
-    
+    <tr>
+        <td>
+            
+        </td>
+    </tr>
 </table>
 
           
@@ -357,13 +361,7 @@
                                                     <!--    navbar-fixed-bottom-->
     <div id="navbar-container" class="container navbar-left">
       
-        <div class="pull-right btn-toolbar" ng-show="bReports">
-            <div class="btn-group">
-                <i class="btn btn-default btn-md glyphicon" ng-click="" ng-disabled="{{selectedObjectsCount>0}}"> Сформировать отчеты в формате PDF для выбранных обеъектов</i>  
-            </div>    
-				    
-        </div> 
-        		
+            		
               <ul class="nav navbar-nav ">
 				
 				<li><p
@@ -376,6 +374,15 @@
 							class="displayInLine"> <b>Выбрано объектов: {{selectedObjectsCount}}</b>  
 				    </p>
                 </li>
+                
+                  <li>
+                      <div class="pull-right btn-toolbar" ng-show="bReports">
+                        <div class="btn-group">
+                            <i class="btn btn-default btn-sm glyphicon" ng-click="" ng-disabled="{{selectedObjectsCount>0}}"> Сформировать отчеты в формате PDF для выбранных обеъектов</i>  
+                        </div>    
+				    
+        </div>
+                  </li>
                   
                  
 				
