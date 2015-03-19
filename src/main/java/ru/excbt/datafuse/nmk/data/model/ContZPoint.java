@@ -19,6 +19,7 @@ import javax.persistence.Version;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
