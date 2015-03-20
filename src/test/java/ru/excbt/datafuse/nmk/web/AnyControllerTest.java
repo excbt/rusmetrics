@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import ru.excbt.datafuse.nmk.web.api.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.WebApiConst;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -66,6 +66,6 @@ public class AnyControllerTest {
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(ApiConst.APPLICATION_JSON_UTF8));		
+				content().contentType(WebApiConst.APPLICATION_JSON_UTF8));		
 	}
 }
