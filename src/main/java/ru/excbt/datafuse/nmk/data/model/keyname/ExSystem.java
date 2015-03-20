@@ -1,25 +1,21 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+
 @Entity
 @Table(name = "ex_system")
-public class ExSystem implements Serializable {
+public class ExSystem extends AbstractKeynameEntity {
+
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
-
-	@Id
-	@Column(name = "keyname")
-	private String keyname;
+	private static final long serialVersionUID = 7700237687698913901L;
 
 	@Column(name = "caption")
 	private String caption;
@@ -32,14 +28,6 @@ public class ExSystem implements Serializable {
 
 	@Version
 	private int version;
-
-	public String getKeyname() {
-		return keyname;
-	}
-
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
-	}
 
 	public String getCaption() {
 		return caption;
