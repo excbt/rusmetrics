@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -30,12 +31,21 @@ public class ReportServiceTest extends JpaConfigTest {
 		DateTime beginDate = formatter.parseDateTime("01/03/2014");
 		DateTime endDate = formatter.parseDateTime("31/03/2014");
 
-		String resultStr = reportService.getCommercialReportPath(18811505,
+		String resultStr = reportService.getCommercialReportHtmlPath(18811505,
 				beginDate, endDate);
 
 		logger.debug("Result Report URL: {}", resultStr);
 
 		assertEquals(EXPECTED_URL, resultStr);
+	}
+	
+	@Test
+	public void testExternalServerSettings() {
+		if (reportService.externalJasperServerEnable()) {
+			String serverUrl = reportService.externalJasperServerUrl();
+			assertNotNull(serverUrl);
+		}
+		
 	}
 
 }
