@@ -21,7 +21,7 @@ public class SystemParamServiceTest extends JpaConfigTest {
 	@Test
 	public void test() {
 		String reportValue = systemParamService
-				.getParamValue(ReportConstants.COMMERCIAL_REPORT_TEMPLATE_PATH);
+				.getParamValueAsString(ReportConstants.COMMERCIAL_REPORT_TEMPLATE_PATH);
 		assertNotNull(reportValue);
 		logger.debug("Default Commercial Report Path {}", reportValue);
 	}

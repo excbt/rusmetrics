@@ -43,7 +43,7 @@ public class UDirectoryNodeController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll(
 			@PathVariable("directoryId") long directoryId) {
 
@@ -74,7 +74,7 @@ public class UDirectoryNodeController {
 	 * @param entity
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(
 			@PathVariable("directoryId") long directoryId,
 			@PathVariable("id") long id, @RequestBody UDirectoryNode entity) {
@@ -105,7 +105,7 @@ public class UDirectoryNodeController {
 	 * @param entity
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
 			@PathVariable("directoryId") long directoryId,
 			@RequestBody UDirectoryNode entity, HttpServletRequest request) {

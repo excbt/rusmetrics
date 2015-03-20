@@ -19,7 +19,7 @@ public class SubscrContEventController {
 	@Autowired
 	private SubscrUserService subscrUserService;
 
-	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("contObjectId") long contObjectId) {
 		List<ContEvent> result = subscrUserService.findContEvents(contObjectId);
 		return ResponseEntity.ok(result);

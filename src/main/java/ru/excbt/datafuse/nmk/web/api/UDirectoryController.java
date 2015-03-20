@@ -39,7 +39,7 @@ public class UDirectoryController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDirectoryNodes(
 			@PathVariable("id") long directoryId) {
 		UDirectory dir = directoryService.findOne(directoryId);
@@ -54,7 +54,7 @@ public class UDirectoryController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
 		if (directoryService.checkAvailableDirectory(directoryId)) {
@@ -72,7 +72,7 @@ public class UDirectoryController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
 		List<UDirectory> result = directoryService.findAll();
 		checkNotNull(result);
@@ -85,7 +85,7 @@ public class UDirectoryController {
 	 * @param entity
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(
 			@PathVariable("directoryId") long directoryId,
 			@RequestBody UDirectory entity) {
@@ -113,7 +113,7 @@ public class UDirectoryController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.POST, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
 			@RequestBody UDirectory entity, HttpServletRequest request) {
 
@@ -138,7 +138,7 @@ public class UDirectoryController {
 	}
 	
 	
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(
 			@PathVariable("directoryId") long id) {
 		

@@ -31,7 +31,7 @@ public class SubscrContObjectController {
 	private SubscrUserService subscrUserService;
 	
 	
-	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
 		
