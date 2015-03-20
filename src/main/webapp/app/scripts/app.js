@@ -16,7 +16,8 @@ angular
     'ngRoute',
     'ngSanitize',
     'ngTouch',
-    'ui.tree'
+    'ui.tree',
+    'daterangepicker'
   ])
   .config(function ($routeProvider) {
     $routeProvider

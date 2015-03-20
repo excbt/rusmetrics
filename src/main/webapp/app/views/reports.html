@@ -51,7 +51,7 @@
                                                  bextramenu='true'
 
                                                  bobject='true'
-                                    
+                                                                             
 
                                                  datasource='[
                                                 {
@@ -163,6 +163,8 @@
                 } 
               },
               function(start, end, label) {
+                  $scope.reportStart = start;
+                $scope.reportEnd = end; 
                 alert('Выбран диапазон дат: ' + start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
               }
             );
