@@ -43,7 +43,7 @@ public class SystemParamService {
 		}
 
 		if (ParamType.BOOLEAN.name().equals(sp.getParamType())) {
-			Boolean value = Boolean.valueOf(sp.getParamType());
+			Boolean value = Boolean.valueOf(sp.getParamValue());
 			if (value != null) {
 				return value.booleanValue();
 			}

@@ -6,6 +6,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.persistence.PersistenceException;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,11 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportType;
 @Service
 public class ReportService {
 
-	private final static String DATE_TEMPLATE = "yyyy-MM-dd";
+	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportService.class);
+	
 
 	@Autowired
 	private SystemParamService systemParamService;
@@ -27,23 +33,49 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	public String getCommercialReportHtmlPath(long contObjectId,
+	public String getCommercialReportPathHtml(long contObjectId,
 			DateTime beginDate, DateTime endDate) {
+		return getCommercialReportPath(ReportType.HTML, contObjectId, beginDate, endDate);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	public String getCommercialReportPathPdf(long contObjectId,
+			DateTime beginDate, DateTime endDate) {
+		return getCommercialReportPath(ReportType.PDF, contObjectId, beginDate, endDate);
+	}
+
+	
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	public String getCommercialReportPath(ReportType reportType, long contObjectId,
+			DateTime beginDate, DateTime endDate) {
+		checkNotNull(reportType);
 		checkArgument(contObjectId > 0);
 		checkNotNull(beginDate);
 		checkNotNull(endDate);
-		checkArgument(beginDate.compareTo(endDate) < 0);
+		checkArgument(beginDate.compareTo(endDate) <= 0,"beginDate is bigger than endDate");
 
 		String defaultUrl = systemParamService
 				.getParamValueAsString(ReportConstants.COMMERCIAL_REPORT_TEMPLATE_PATH);
 
 		checkNotNull(defaultUrl);
 
-		return String.format(defaultUrl, ReportType.HTML.toParam(),
+		return String.format(defaultUrl, reportType.toParam(),
 				endDate.toString(DATE_TEMPLATE),
 				beginDate.toString(DATE_TEMPLATE), contObjectId);
-	}
-
+	}	
+	
 	/**
 	 * 
 	 * @return
@@ -54,6 +86,7 @@ public class ReportService {
 			result = systemParamService
 					.getParamValueAsBoolean(ReportConstants.EXTERNAL_JASPER_SERVER_ENABLE);
 		} catch (PersistenceException e) {
+			logger.error(e.toString());
 			result = false;
 		}
 
