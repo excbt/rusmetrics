@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 
 public class ReportServiceTest extends JpaConfigTest {
