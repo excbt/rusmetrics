@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContManagementService;

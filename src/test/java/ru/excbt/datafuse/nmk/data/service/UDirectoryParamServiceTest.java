@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -9,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ParamType;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 
-public class UDirectoryParamServiceTest extends RepositoryTest {
+public class UDirectoryParamServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryParamServiceTest.class);

@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -15,9 +16,10 @@ import javax.persistence.Version;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.hibernate.types.StringJsonUserType;
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,13 +27,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name="device_object_data_json")
 @TypeDefs( {@TypeDef( name= "StringJsonObject", typeClass = StringJsonUserType.class)})
-public class DeviceObjectDataJson extends AbstractPersistableEntity<Long> {
+@EntityListeners({AuditingEntityListener.class})
+public class DeviceObjectDataJson extends AbstractAuditableEntity<AuditUser, Long> {
 
+ 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
- 
+	private static final long serialVersionUID = 8976999618636726672L;
+
 	@Column(name="import_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date importDate;

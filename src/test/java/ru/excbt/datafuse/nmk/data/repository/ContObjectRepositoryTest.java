@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data;
+package ru.excbt.datafuse.nmk.data.repository;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -10,10 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 
-public class ContObjectRepositoryTest extends RepositoryTest {
+public class ContObjectRepositoryTest extends JpaSupportTest {
 
 	
 	private static final Logger logger = LoggerFactory
