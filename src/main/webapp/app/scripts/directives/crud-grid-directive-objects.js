@@ -7,7 +7,9 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
         scope: {
         	crudTableName : '=table',
         	newIdValue : '=',
-        	newIdProperty : '='
+        	newIdProperty : '=',
+            reportStart: '=',
+            reportEnd: '='
         },
         templateUrl: 'scripts/directives/templates/crud-grid-directive-objects-template.html',
         link : function (scope, element, attrs) {
@@ -431,6 +433,56 @@ console.log("Object.selected= "+object.selected);
                     }
 console.log("Object.selected.count= "+$scope.selectedObjectsCount);                        
                 };
+                
+                 //run report
+console.log("Rep start = "+ $scope.reportStart);                
+//                $scope.reportStart = angular.fromJson($attrs.datestart);
+//                $scope.reportEnd = angular.fromJson($attrs.dateend);
+                $scope.openReport = function(){
+                        window.open("http://ya.ru");
+                        alert("Дата начала = "+$scope.reportStart+"; Дата завершения = "+$scope.reportEnd);
+                    } ;
+                
+                
+                 $scope.getReport = function(object, repType) {
+
+                            var sessDateFrom = $scope.reportStart;// moment(queryDates.startDate).format('YYYY-MM-DD');
+                            var sessDateTill = $scope.reportEnd;//moment(queryDates.endDate).format('YYYY-MM-DD');
+
+                            $scope.loading = true;
+                    
+                                   
+                            var repPath = "/api/report/commercial/"+object.id+"/"+repType+"/";
+                            $scope.invokeReport(repPath).query({beginDate: sessDateFrom, endDate:sessDateTill}
+                                                        ,function(data){
+                                                             window.open(data);
+                                                          }
+                                                       );
+
+//                            terminalDataFactory("sessDateTerminalIdsPeriod").query({
+//                                sessDateFrom : sessDateFrom,
+//                                sessDateTill : sessDateTill
+//                            }, function(data) {
+//
+//                                $scope.setTerminals(data);
+//
+//                                console.log("data:" + data);
+//                                $scope.loading = false;                    
+//
+//                            }, errorCallback);
+                        };
+    
+                $scope.invokeReport = function(type) {
+                            return $resource(type, {beginDate: '@beginDate', endDate: '@endDate' 
+                            }, {
+
+                                query: {method: 'GET', isArray: false}
+
+                            });
+			    };   
+
+                
+               
             }]
     };
 });
