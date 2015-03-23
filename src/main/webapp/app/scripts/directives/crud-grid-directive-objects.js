@@ -420,87 +420,38 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 $scope.selectedObjectsCount=0;
                 $scope.toggleSelectObject = function(object){
-console.log("Object= "+object.name);                       
-                   object.selected = !object.selected;
-console.log("Object.selected= "+object.selected);   
+                     
+                   object.selected = !object.selected;  
                    
                     if(object.selected){
                         $scope.selectedObjectsCount++;
+
                     }else{
                         if (object.selected == false){
                             $scope.selectedObjectsCount--;
+                            
                         }
-                    }
-console.log("Object.selected.count= "+$scope.selectedObjectsCount);                        
+                    }                        
                 };
                 
                  //run report
-console.log("Rep start = "+ $scope.reportStart);                
-//                $scope.reportStart = angular.fromJson($attrs.datestart);
-//                $scope.reportEnd = angular.fromJson($attrs.dateend);
-                $scope.openReport = function(){
-                        window.open("http://ya.ru");
-                        alert("Дата начала = "+$scope.reportStart+"; Дата завершения = "+$scope.reportEnd);
-                    } ;
+            
+                 $scope.getReport = function(object, repType) {                           
+                            $scope.loading = true;             
+                            var repPath = "../api/report/commercial/"+object.id+"/"+repType+"/?beginDate="+$scope.reportStart+"&endDate="+$scope.reportEnd;
+                             window.open(repPath);
+
+                };
                 
-                
-                 $scope.getReport = function(object, repType) {
-
-                            var sessDateFrom = $scope.reportStart;// moment(queryDates.startDate).format('YYYY-MM-DD');
-                            var sessDateTill = $scope.reportEnd;//moment(queryDates.endDate).format('YYYY-MM-DD');
-
-                            $scope.loading = true;
-                    
-//http://192.168.84.251:8080/jasperserver/rest_v2/reports/PublicReports/nmk/common/commerce_report.html?end_date=2013-03-31&begin_date=2013-03-01&object_id=18811505                                
-//                            var repPathAlter = "http://192.168.84.251:8080/jasperserver/rest_v2/reports/PublicReports/nmk/common/commerce_report.html/";
-//                            $scope.invokeReportAlter(repPathAlter).query({end_date:sessDateTill, begin_date: sessDateFrom, object_id: object.id}
-//                                                        ,function(data){
-//                                                            // window.open(data);
-//                                                          }
-//                                                        ,errorCallback       
-//                                                       );
-                     
-                            var repPath = "../api/report/commercial/"+object.id+"/"+repType+"/";
-                            $scope.invokeReport(repPath).query({beginDate: sessDateFrom, endDate:sessDateTill}
-                                                        ,function(data){
-                                                             window.open(data);
-                                                          }
-                                                        ,errorCallback       
-                                                       );
-
-//                            terminalDataFactory("sessDateTerminalIdsPeriod").query({
-//                                sessDateFrom : sessDateFrom,
-//                                sessDateTill : sessDateTill
-//                            }, function(data) {
-//
-//                                $scope.setTerminals(data);
-//
-//                                console.log("data:" + data);
-//                                $scope.loading = false;                    
-//
-//                            }, errorCallback);
-                        };
+                $scope.getReports = function(){                         
+                    for (var i=0;i<$scope.objects.length;i++){
+                            var obj = $scope.objects[i];                       
+                        if (obj.selected==true){                            
+                            $scope.getReport(obj,"pdf");
+                        }
+                    }
+                };
     
-                $scope.invokeReport = function(type) {
-                            return $resource(type, {beginDate: '@beginDate', endDate: '@endDate' 
-                            }, {
-
-                                query: {method: 'GET', isArray: false}
-
-                            });
-			    }; 
-                
-                $scope.invokeReportAlter = function(type) {
-                            return $resource(type, {end_date: '@end_date', begin_date: '@begin_date', object_id: '@object_id' 
-                                                   }, {
-
-                                query: {method: 'GET', isArray: false, 
-                                        headers:{'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods': 'GET', 'Access-Control-Allow-Headers':'Content-Type, Authorization, X-Requested-With'}
-                                       }
-
-                            });
-			    }; 
-
                 
                
             }]
