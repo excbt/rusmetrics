@@ -16,8 +16,8 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$element', '$attrs', '$routeParams', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $element, $attrs, $routeParams, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
+            function ($scope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
                 $scope.objects = angular.fromJson($attrs.datasource); 
                 
                 $scope.lookups = [];
@@ -451,12 +451,21 @@ console.log("Rep start = "+ $scope.reportStart);
 
                             $scope.loading = true;
                     
-                                   
-                            var repPath = "/api/report/commercial/"+object.id+"/"+repType+"/";
+//http://192.168.84.251:8080/jasperserver/rest_v2/reports/PublicReports/nmk/common/commerce_report.html?end_date=2013-03-31&begin_date=2013-03-01&object_id=18811505                                
+//                            var repPathAlter = "http://192.168.84.251:8080/jasperserver/rest_v2/reports/PublicReports/nmk/common/commerce_report.html/";
+//                            $scope.invokeReportAlter(repPathAlter).query({end_date:sessDateTill, begin_date: sessDateFrom, object_id: object.id}
+//                                                        ,function(data){
+//                                                            // window.open(data);
+//                                                          }
+//                                                        ,errorCallback       
+//                                                       );
+                     
+                            var repPath = "../api/report/commercial/"+object.id+"/"+repType+"/";
                             $scope.invokeReport(repPath).query({beginDate: sessDateFrom, endDate:sessDateTill}
                                                         ,function(data){
                                                              window.open(data);
                                                           }
+                                                        ,errorCallback       
                                                        );
 
 //                            terminalDataFactory("sessDateTerminalIdsPeriod").query({
@@ -479,7 +488,18 @@ console.log("Rep start = "+ $scope.reportStart);
                                 query: {method: 'GET', isArray: false}
 
                             });
-			    };   
+			    }; 
+                
+                $scope.invokeReportAlter = function(type) {
+                            return $resource(type, {end_date: '@end_date', begin_date: '@begin_date', object_id: '@object_id' 
+                                                   }, {
+
+                                query: {method: 'GET', isArray: false, 
+                                        headers:{'Access-Control-Allow-Origin':'*', 'Access-Control-Allow-Methods': 'GET', 'Access-Control-Allow-Headers':'Content-Type, Authorization, X-Requested-With'}
+                                       }
+
+                            });
+			    }; 
 
                 
                
