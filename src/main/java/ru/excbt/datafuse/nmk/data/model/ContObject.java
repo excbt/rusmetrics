@@ -1,14 +1,22 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
@@ -40,6 +48,13 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
+	@OneToMany (fetch = FetchType.LAZY)
+    @JoinTable(name="cont_device_object",
+    joinColumns=@JoinColumn(name="cont_object_id"),
+    inverseJoinColumns=@JoinColumn(name="device_object_id"))
+	@JsonIgnore
+	private Collection<DeviceObject> deviceObjects;	
+	
 	@Version
     private int version; 
 	
@@ -97,6 +112,14 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public Collection<DeviceObject> getDeviceObjects() {
+		return deviceObjects;
+	}
+
+	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
+		this.deviceObjects = deviceObjects;
 	}
 
 	

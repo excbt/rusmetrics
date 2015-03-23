@@ -4,8 +4,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -13,8 +11,6 @@ import javax.persistence.Version;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -42,12 +38,12 @@ public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 	@Column(name = "ex_system")
 	private String exSystem;
 	
-	@ManyToOne 
-    @JoinTable(name="device_object_cont",
-    joinColumns=@JoinColumn(name="device_object_id"),
-    inverseJoinColumns=@JoinColumn(name="cont_object_id"))
-	@JsonIgnore
-	private ContObject contObject;
+//	@ManyToOne 
+//    @JoinTable(name="cont_device_object",
+//    joinColumns=@JoinColumn(name="device_object_id"),
+//    inverseJoinColumns=@JoinColumn(name="cont_object_id"))
+//	@JsonIgnore
+//	private ContObject contObject;
 	
 	@Version
 	private int version; 
@@ -84,13 +80,13 @@ public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 		this.exSystem = exSystem;
 	}
 
-	public ContObject getContObject() {
-		return contObject;
-	}
-
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
+//	public ContObject getContObject() {
+//		return contObject;
+//	}
+//
+//	public void setContObject(ContObject contObject) {
+//		this.contObject = contObject;
+//	}
 
 	public int getVersion() {
 		return version;
