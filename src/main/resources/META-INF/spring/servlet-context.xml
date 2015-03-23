@@ -21,6 +21,8 @@
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:resources mapping="/bower_components/**" location="/bower_components/" />
 	<mvc:resources mapping="/app/bower_components/**" location="/bower_components/" />
+	<mvc:resources mapping="/vendor_components/**" location="/vendor_components/" />
+	<mvc:resources mapping="/app/vendor_components/**" location="/vendor_components/" />
 
 
 
