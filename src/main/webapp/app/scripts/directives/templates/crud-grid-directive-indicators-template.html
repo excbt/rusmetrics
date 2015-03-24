@@ -1,0 +1,127 @@
+<div ng-show="loading">{{captions.msgLoading}}</div>
+
+
+<!--Фильтр-->
+
+<!-- Common filter-->
+<div class="input-group col-md-5 row filter marginBottom10">
+    
+    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+    <input type="text" class="form-control" ng-model="filter">
+    <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+</div>
+
+<!-- Create directory-->
+<!--
+<div ng-show="bdirectories">
+    <i class="btn btn-default glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>
+</div>
+-->
+
+  
+    
+<!--         ng-hide="bdirectories">-->
+<!--         off head for page Directories-->
+         
+<!--         ng-show="!bGroupByObject">  -->
+<!--         отключить шапку для групп объектов-->
+         
+         
+        
+             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
+                 <tr class="info">
+<!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
+<!--                       <th class="col-md-1">-->
+<!--                          button "Add" for directories-->
+<!--                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()" title="Создать справочник"></i>-->
+                                                     
+<!--                        </th>-->
+                     
+
+
+                <!--       Шапка таблицы-->
+                        <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                            <div>
+                                {{column.header || column.name}}
+                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                            </div>
+                        </th>
+                     
+<!--                     Extra column for directory buttons-->
+                      <th class="col-md-1"> 
+
+                
+                    </th>
+                     
+                     
+                </tr> 
+                 <!--  Постороение таблицы с данными  -->
+                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-dblclick="selectedItem(object);getCurDirNodes();showDetails(object)" oncontextmenu=" $('.dropdown-toggle').dropdown();return false">
+                        
+                    <!--  Выводим данные в соответствующие столбцы таблицы  -->
+                            <td ng-repeat="column in columns" ng-class="column.class" ng-switch on="object.editMode" >
+                                <div ng-switch-default ng-switch on="!column.lookup">
+                                    <span ng-switch-default>
+                    <!--                    В зависимости от названия столца делаем соответствующую разметку-->
+                                        <div ng-switch on="column.name">
+                    <!--                        Если в столбце должна отображаться категория, то...-->
+
+
+                    <!--                        По дефолту выводим содержимое данной ячейки-->
+                                            <span ng-switch-default>
+
+                                                    {{object[column.name]}}
+
+                                            </span>
+                                        </div>
+                                    </span>
+                                    <span ng-switch-when="false"> {{ getLookupValue(column.lookup, object[column.name]) }} </span>
+                                </div>
+
+                                <div ng-switch-when="true" ng-switch on="!column.lookup">
+                                    <input ng-switch-default ng-model="object[column.name]" model-change-blur ng-disabled="column.autoincrement" class="form-control" />
+                                    <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-model="object[column.name]" class="form-control"></select>
+                                </div>
+
+                            </td>
+
+
+                        </tr><!--    </tr> Уровень 3     -->
+                                                 
+            </table>     
+
+    
+
+<!--      Фильтры по колонкам  -->
+<!--    <tr class="info" ng-show="!bGroupByObject">
+        <td ng-show="bGroupByObject" >
+            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>
+        </td>
+        <td ng-repeat="column in columns" ng-class="column.class">
+            <div>
+                <input type="text" class="form-control" ng-model="filterType">
+            </div>
+        </td>
+    </tr>    -->
+<!--    End фильтры по колонкам-->
+
+
+<!-- Нижняя полоса с описанием количества объектов и элементов учета-->
+<div ng-show="bObject||bdirectories" class="navbar navbar-default  navbar-fixed-bottom" style="margin-bottom:60px;">
+    <div id="navbar-container" class="container">
+        
+        		
+              <ul class="nav navbar-nav">
+				
+				<li><p
+							class="displayInLine"> <b>Всего: {{objects.length}}</b>  
+				    </p>
+                </li>
+                			
+			
+				
+			</ul>
+                
+					
+			</div>
+</div>

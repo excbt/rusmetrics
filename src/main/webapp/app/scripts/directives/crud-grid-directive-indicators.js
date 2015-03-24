@@ -1,23 +1,21 @@
 'use strict';
 
-angular.module('portalNMK').directive('crudGridObjects', function () {
+angular.module('portalNMK').directive('crudGridIndicators', function () {
     return {
         restrict: 'A',
         replace: false,
         scope: {
         	crudTableName : '=table',
         	newIdValue : '=',
-        	newIdProperty : '=',
-            reportStart: '=',
-            reportEnd: '='
+        	newIdProperty : '='
         },
-        templateUrl: 'scripts/directives/templates/crud-grid-directive-objects-template.html',
+        templateUrl: 'scripts/directives/templates/crud-grid-directive-indicators-template.html',
         link : function (scope, element, attrs) {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
+            function ($scope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
                 $scope.objects = angular.fromJson($attrs.datasource); 
                 
                 $scope.lookups = [];
@@ -30,16 +28,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.loading = true;
                 $scope.filter = '';
                 $scope.filterType='';
-                $scope.bReports = angular.fromJson($attrs.breports) || false; //Признак того, что объекты выводятся в окне "Отчеты"
                 $scope.bGroupByObject = angular.fromJson($attrs.bgroup) || false;
                 $scope.bExtraMenu = angular.fromJson($attrs.bextramenu) || false; //признак дополнительного меню
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
-                $scope.bList = angular.fromJson($attrs.blist); //|| true; //Признак того, что объекты выводятся только для просмотра
-
-console.log("Attrs = "+$attrs);                
-console.log("bGroup = "+$scope.bGroupByObject);
-console.log("bExtraMenu = "+$scope.bExtraMenu);                
-console.log("bList = "+$scope.bList);                
+              
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -109,8 +101,9 @@ console.log("bList = "+$scope.bList);
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
+                    $('#showDirectoryStructModal').modal('hide');
                     $scope.currentObject={};
-                    $docScope.$broadcast('lookupDataChange', [$attrs.table]);
+                   // $docScope.$broadcast('lookupDataChange', [$attrs.table]);
                     $scope.getData(cb);
                     
                 };
@@ -132,6 +125,11 @@ console.log("bList = "+$scope.bList);
                 $scope.addObject = function () {
                     crudGridDataFactory($scope.crudTableName).save($scope.object, successPostCallback, errorCallback);
                 };
+                
+                $scope.addParam = function () {
+                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/param"
+                    crudGridDataFactory(table).save($scope.object, successPostCallback, errorCallback);
+                };
 
                 $scope.deleteObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
@@ -144,6 +142,16 @@ console.log("bList = "+$scope.bList);
 
                 $scope.updateObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
+                };
+//                  function Update for struct of directory                 
+                $scope.updateObject = function (objId, object) {
+             	     var tableName = $scope.crudTableName+"/"+String($scope.currentObject.id)+"/node";    
+                	if ((typeof objId == 'undefined')||(objId == null) ){                        
+                        crudGridDataFactory(tableName).save(object, successCallback, errorCallback);
+                        
+                    }else{                                                
+                        crudGridDataFactory(tableName).update({id: objId},object, successCallback, errorCallback);
+                    }
                 };
 
                 $scope.getData = function (cb) {
@@ -321,12 +329,12 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     });
                 };
                 //for page "Objects"
-                $scope.zpoints = angular.fromJson($attrs.zpointdata);
-               
-                $scope.showObjectDetails = function(obj){
-                    $scope.oldObjects = [];
-                    var zps = angular.fromJson($attrs.zpointdata);
-                    var mas = [];
+//                $scope.zpoints = angular.fromJson($attrs.zpointdata);
+//               
+//                $scope.showObjectDetails = function(obj){
+//                    $scope.oldObjects = [];
+//                    var zps = angular.fromJson($attrs.zpointdata);
+//                    var mas = [];
 //                    var masCount = 0;
 //                    for (var k=0;k<$scope.zpoints.length;k++){
 //                        if($scope.zpoints[k].zpointParent == obj.id){
@@ -334,40 +342,70 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 //                            masCount = masCount+1;
 //                        }
 //                    }
-                 //   $scope.oldObjects = mas;
-                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
-   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
-                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
-                    
-                    
-                  
-                };
+//                    $scope.oldObjects = mas;
+//                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
+//   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
+//                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
+//                    
+//                    
+//                  
+//                };
                 
                 //Фильтр "Только непросмотренные"
-                $scope.onlyNoRead = false;
-                $scope.showRow = function(obj){
-                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
-                        return true;
-                    };                                     
-                    if($scope.onlyNoRead){
-                        if($scope.onlyNoRead == !obj.isRead){
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    };
-                    return true;
-                };
+//                $scope.onlyNoRead = false;
+//                $scope.showRow = function(obj){
+//                    if ( (typeof obj.isRead =='undefined') && (!$scope.onlyNoRead)){
+//                        return true;
+//                    };                                     
+//                    if($scope.onlyNoRead){
+//                        if($scope.onlyNoRead == !obj.isRead){
+//                            return true;
+//                        }else{
+//                            return false;
+//                        }
+//                    };
+//                    return true;
+//                };
                 
                 
                 //Directories
+                
                 $scope.paramsTableName = "table";
                 $scope.addParamMode = false;
                 $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+                //get params of current directory
+                $scope.getParams = function(table){
+                         $scope.oldObjects = [];
+                        crudGridDataFactory(table).query(function (data) {
+                                $scope.oldObjects = data;
+
+                            });
+                };
+                
+                //get nodes of current directory
+                $scope.getCurDirNodes = function(){
+                        $scope.list = [];
+                        var table =$scope.crudTableName+"/"+$scope.currentObject.id+"/node";
+                        $scope.crudGridDir(table).query(function (data) {
+                                $scope.list[0] = data;
+
+                            });
+                        if ($scope.list.length == 0){
+                            $scope.list[0] = {
+                                
+                                nodeName: $scope.currentObject.directoryName,
+                                childNodes: []
+                            };
+                        };
+                };
+                
+                $scope.typesArray = ["BOOLEAN", "STRING", "NUMBER"]; //array of param type
                 
                 $scope.getCurDirParams = function(){
                     
                     $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
+                    
+                    $scope.getParams($scope.crudTableName+"/"+$scope.currentObject.id+"/param");
                     $scope.oldColumns = [ 
                                       {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
                                     ,{"name":"paramType"
@@ -378,7 +416,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                                             "value":"typeKeyname",
                                             "orderBy": {"field": "typeKeyname", "asc": "true"}
                                         }                                      
-                                      ,"header" : "Тип", "class":"col-md-2"}
+                                      ,"header" : "Тип", "class":"col-md-3"}
                                     ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
                                     
                     ];
@@ -386,6 +424,11 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 $scope.toggleAddParamMode = function(){
                     $scope.addParamMode = !$scope.addParamMode;
+                    $scope.object = {};
+                    if ($scope.addParamMode) {
+                    	if ($scope.newIdProperty && $scope.newIdValue)
+                    		$scope.object[$scope.newIdProperty] =  $scope.newIdValue;
+                    }
                 };
                 
                 $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
@@ -393,75 +436,174 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     $scope.currentObjectToDel = obj;
                     $scope.extraProp.idColumnName = idColumnName;
                     $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
+                    $scope.targetTableName = $scope.crudTableName+"/";
                 };
                 
-                $scope.treedata =
-                    [
-                        { "label" : "Школы", "id" : "role1", "children" : [
-                            { "label" : "Школа1", "id" : "role11", "children" : [] },
-                            { "label" : "Школа2", "id" : "role12", "children" : [
-                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
-                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
-                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
-                                ]}
-                            ]}
-                        ]},
-                        { "label" : "Заводы", "id" : "role2", "children" : [] },
-                        { "label" : "Администрация", "id" : "role3", "children" : [] }
-                    ];
+//                $scope.treedata =
+//                    [
+//                        { "label" : "Школы", "id" : "role1", "children" : [
+//                            { "label" : "Школа1", "id" : "role11", "children" : [] },
+//                            { "label" : "Школа2", "id" : "role12", "children" : [
+//                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
+//                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
+//                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
+//                                ]}
+//                            ]}
+//                        ]},
+//                        { "label" : "Заводы", "id" : "role2", "children" : [] },
+//                        { "label" : "Администрация", "id" : "role3", "children" : [] }
+//                    ];
+                
+                
+                $scope.list=[
+                  {
+                    "id": 1,
+                    "nodeName": "Заводы",
+                    "childNodes": []
+                  },
+                  {
+                    "id": 2,
+                    "nodeName": "Школы",
+                    "childNodes": [
+                      {
+                        "id": 21,
+                        "nodeName": "Школа №1",
+                        "childNodes": [
+                          {
+                            "id": 211,
+                            "nodeName": "Корпус 1",
+                            "childNodes": []
+                          },
+                          {
+                            "id": 212,
+                            "nodeName": "Корпус 2",
+                            "childNodes": []
+                          }
+                        ]
+                      },
+                      {
+                        "id": 22,
+                        "nodeName": "Школа №2",
+                        "childNodes": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": 3,
+                    "nodeName": "3. unicorn-zapper",
+                    "childNodes": []
+                  },
+                  {
+                    "id": 4,
+                    "nodeName": "4. romantic-transclusion",
+                    "childNodes": []
+                  }
+                ];
                 
                 $scope.showDetails = function(obj){
-                    if($scope.bdirectories){
+                    
                         $scope.currentObject = obj;
                         $('#showDirectoryStructModal').modal();
-                    }
+                    
                 };
                 
                 $scope.test = function(){
                     $('#editDirValueModal').modal();
                 };
                 
-                $scope.selectedObjectsCount=0;
-                $scope.toggleSelectObject = function(object){
-                     
-                   object.selected = !object.selected;  
-                   
-                    if(object.selected){
-                        $scope.selectedObjectsCount++;
-
-                    }else{
-                        if (object.selected == false){
-                            $scope.selectedObjectsCount--;
-                            
-                        }
-                    }                        
-                };
-                
-                 //run report
-            
-                 $scope.getReport = function(object, repType) {                           
-                            $scope.loading = true;             
-                            var repPath = "../api/report/commercial/"+object.id+"/"+repType+"/?beginDate="+$scope.reportStart+"&endDate="+$scope.reportEnd;
-                             window.open(repPath);
-
-                };
-                
-                $scope.getReports = function(){                         
-                    for (var i=0;i<$scope.objects.length;i++){
-                            var obj = $scope.objects[i];                       
-                        if (obj.selected==true){                            
-                            $scope.getReport(obj,"pdf");
-                        }
-                    }
-                };
-    
-                $scope.getIndicators = function(){
-console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);                    
-                    $rootScope.showIndicatorsParam = true;
-                    window.location.replace("#/objects/indicators/");
-
-                };
                
+                
+                $scope.selItem = {};
+
+                $scope.options = {
+                };
+                
+                $scope.remove = function(scope) {
+                  scope.remove();
+                };
+
+                $scope.toggle = function(scope) {
+                  scope.toggle();
+                };
+
+                $scope.moveLastToTheBegginig = function () {
+                  var a = $scope.data.pop();
+                  $scope.data.splice(0,0, a);
+                };
+
+                $scope.newSubItem = function(scope) {
+                  var nodeData = scope.$modelValue;
+                  nodeData.childNodes.push({
+                    
+                    nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+                    childNodes: []
+                  });
+                };
+
+                var getRootNodesScope = function() {
+                  return angular.element(document.getElementById("tree-root")).scope();
+                };
+
+                $scope.collapseAll = function() {
+                  var scope = getRootNodesScope();
+                  scope.collapseAll();
+                };
+
+                $scope.expandAll = function() {
+                  var scope = getRootNodesScope();
+                  scope.expandAll();
+                };
+                
+                $scope.currentParent = {};
+                
+                $scope.openNode = function(scope){
+                    $scope.currentNode = scope.$modelValue;
+                    $scope.currentNodeScope = scope.$modelValue.$nodeScope;
+                    $scope.treeScope = scope;
+                    $scope.tree = {};
+                    $scope.tree.nodes = [];
+                    $scope.tree.nodes = scope.$nodes;
+                    $scope.currentParentScope = $scope.currentNode.$parentNodeScope;
+                    $scope.tree.element = scope.$element;
+                    $('#editDirValueModal').modal();
+                };
+                
+                $scope.showContextMenu = function(){
+                    $('.dropdown-toggle').dropdown();
+                };
+                
+                $scope.crudGridDir = function(type) {
+                    return $resource(type + '/:id', {id: '@id' 
+                    }, {
+                        
+                        query: {method: 'GET', isArray: false}
+                        
+                    });
+			     };    
+                
+                $scope.newNode = function() {
+                    if ($scope.list.length == 0){
+                      $scope.list.push({
+                     
+                        nodeName: $scope.currentObject.directoryName,
+                        childNodes: []
+                      });
+                    }else{
+                        var nodeData = $scope.list[0];
+                        nodeData.childNodes.push({
+                        
+                        nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+                        childNodes: []
+                      });
+                    }
+                    
+                };
+                
+                $scope.removeTree = function(){
+                    $scope.list = [];
+                };
+                
+                
             }]
     };
 });

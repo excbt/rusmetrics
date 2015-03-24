@@ -41,9 +41,17 @@ angular
         templateUrl: 'views/private_office.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/private/objects_list', {
+      .when('/private/objects_private', {
+        templateUrl: 'views/objects_private.html',
+        controller: 'ObjectsCtrl'
+      })
+      .when('/objects_list', {
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
+      })
+      .when('/objects/indicators', {
+        templateUrl: 'views/indicators.html',
+        controller: 'MainCtrl'
       })
       .when('/private/directories', {
         templateUrl: 'views/directories.html',
@@ -51,11 +59,15 @@ angular
       })
     .when('/reports', {
         templateUrl: 'views/reports.html',
-        controller: 'ReportsCtrl'
+        controller: 'MainCtrl'
       })
     .when('/reports/commercial_report', {
         templateUrl: 'views/commercial_report.html',
-        controller: 'ReportsCtrl'
+        controller: 'MainCtrl'
+      })
+    .when('/objects/indicators', {
+        templateUrl: 'views/indicators.html',
+        controller: 'IndicatorsCtrl'
       })
     .when('/test', {
         templateUrl: 'views/test.html',

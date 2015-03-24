@@ -213,7 +213,7 @@
                      
             </td>
 <!-- Колонка для редактирования объектов                   -->
-            <td ng-show="bObject" ng-hide="bReports" class="col-md-1"> 
+            <td ng-show="bObject" ng-hide="bReports || bList" class="col-md-1"> 
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <table>
@@ -279,7 +279,7 @@
                         <th ng-show="bObject" class="col-md-1">
                         </th>
                     </tr>
-                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
+                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators()">
                          <td ng-repeat="oldColumn in oldColumns">
                              <div ng-switch on="oldColumn.name">
     <!--                        Если в столбце должна отображаться категория, то...-->
