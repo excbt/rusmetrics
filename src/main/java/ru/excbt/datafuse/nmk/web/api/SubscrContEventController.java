@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContEventController {
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SubscriberService subscrUserService;
 
 	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(@PathVariable("contObjectId") long contObjectId) {

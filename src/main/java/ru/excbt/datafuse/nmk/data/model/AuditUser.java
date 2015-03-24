@@ -8,7 +8,7 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 
 @Entity
-@Table(name="system_user")
+@Table(name="audit_user")
 public class AuditUser extends AbstractPersistableEntity<Long> {
 
 	/**

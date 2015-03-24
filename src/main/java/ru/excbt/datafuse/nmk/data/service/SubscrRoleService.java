@@ -4,19 +4,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrOrg;
-import ru.excbt.datafuse.nmk.data.repository.SubscrOrgRepository;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
+import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 
 @Service
 @Transactional
-public class SubscrOrgService {
+public class SubscrRoleService {
 	
 	@Autowired
-	private SubscrOrgRepository subscrOrgRepository;
+	private SubscrRoleRepository subscrRoleRepository;
 	
 	@Transactional(readOnly = true)
-	public SubscrOrg findOne(long id) {
-		return subscrOrgRepository.findOne(id);
+	public SubscrRole findOne(long id) {
+		return subscrRoleRepository.findOne(id);
 	}
 	
 	

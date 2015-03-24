@@ -3,21 +3,21 @@ package ru.excbt.datafuse.nmk.data.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrOrg;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 
 @Service
-public class CurrentSubscrOrgService {
+public class CurrentSubscrRoleService {
 
 	private static final long SUBSCR_ORG_ID = 728;
 	
 	@Autowired
-	private SubscrOrgService subscrOrgService;
+	private SubscrRoleService subscrOrgService;
 	
 	public long getSubscrOrgId() {
 		return SUBSCR_ORG_ID;
 	}
 	
-	public SubscrOrg getSubscrOrg() {
+	public SubscrRole getSubscrOrg() {
 		return subscrOrgService.findOne(SUBSCR_ORG_ID);
 	}
 }
