@@ -158,6 +158,7 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                     function () {
                         $scope.setLookupData();
                         $scope.loading = false;
+                         $scope.getAllNotices();
                     });
                 
                 $scope.initLookupData = function(table){
@@ -288,32 +289,88 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                   //  $scope.selectedItem(curObject);
                 };
                 
-                $scope.zPointsByObject = [];
-                $scope.getZpointsDataByObject = function(table){
+                $scope.notices = [];            
+                $scope.noticeIter = 0;
+                $scope.getAllNotices = function(){
+                    $scope.oldObjects = $scope.objects;
+                    for (var i=0;i<2; i++){
+                        
+                             
                     
-console.log(table);                 
-                    crudGridDataFactory(table).query(function (data) {
-                        $scope.zPointsByObject = data;
-console.log("Data:");                
-console.log($scope.zPointsByObject); 
-                        
-                        
-                        for(var i=0;i<$scope.zPointsByObject.length;i++){
-                            var zpoint = {};
-                            zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
-                            zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
-                            zpoint.zpointLastDataDate  = "27.02.2015";   
+                        //
+                        var table = $scope.crudTableName+"/"+$scope.oldObjects[i].id+"/events";
+                        crudGridDataFactory(table).query(function (data) {
+                                                        $scope.noticesByObject = data;
                             
-                            $scope.oldObjects[i] = zpoint;
+                            console.log("Table = "+table);
+
+                                                        for(var j=0;j<2;j++){                             
+                                                            
+//// Полезная функция                        
+//                        var str="";
+//                        for(var k in $scope.noticesByObject[j]){
+//                            str+= k+": "+$scope.noticesByObject[j][k]+";;";
+//                        }
+//console.log(" Object"+j+" = "+str);                        
+////           
+                                                            
+                                                            
+                                                            var notice = {};
+                                                            notice.noticeType = $scope.noticesByObject[j].contEventType.name;
+                                                            notice.noticeText = $scope.noticesByObject[j].message;
+                                                            notice.noticeDate = $scope.noticesByObject[j].eventTime;
+                                                            notice.noticeObject = "Объект";//$scope.oldObjects[i].fullName;
+                                                            notice.noticeZpoint  = $scope.noticesByObject[j].contServiceType;   
+
+                                                            $scope.notices[$scope.noticeIter] = notice;
+                                                            $scope.noticeIter=$scope.noticeIter+1;
+                                                            
+                                                        
+
+//console.log("Notice: "+$scope.notices[$scope.noticeIter-1].noticeType+"; "+$scope.notices[$scope.noticeIter-1].noticeText+"; "+$scope.notices[$scope.noticeIter-1].noticeDate+"; "+$scope.notices[$scope.noticeIter-1].noticeObject+";"+$scope.notices[$scope.noticeIter-1].noticeZpoint);                        
+                                                        }
+
                         
-console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
-                        }
+                        });
                         
                         
-                    });
-                };
+                        $scope.objects = $scope.notices;
+                        //
+                        
+                            
+                    }
+                    
+                    
+                }; //end getAllNotices
+              
+               
+                
+//                $scope.zPointsByObject = [];
+//                $scope.getZpointsDataByObject = function(table){
+//                    
+//console.log(table);                 
+//                    crudGridDataFactory(table).query(function (data) {
+//                        $scope.zPointsByObject = data;
+//console.log("Data:");                
+//console.log($scope.zPointsByObject); 
+//                        
+//                        
+//                        for(var i=0;i<$scope.zPointsByObject.length;i++){
+//                            var zpoint = {};
+//                            zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
+//                            zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
+//                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+//                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+//                            zpoint.zpointLastDataDate  = "27.02.2015";   
+//                            
+//                            $scope.oldObjects[i] = zpoint;
+//                        
+//console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
+//                        }
+//                        
+//                        
+//                    });
+//                };
                 //for page "Objects"
                 $scope.zpoints = angular.fromJson($attrs.zpointdata);
                

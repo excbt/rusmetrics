@@ -1,16 +1,19 @@
 <div>Портал / Уведомления</div>
 <h2>Уведомления</h2>
 
-<div crud-grid-notice table=""
+<div crud-grid-notice table="'../api/subscr/contObjects'"
 	columns='[
              
 	          {"name":"noticeCat", "header" : "Категория", "class":"col-md-1"},
              {"name":"noticeType", "header" : "Тип", "class":"col-md-2"},
              {"name":"noticeText", "header" : "Уведомление", "class":"col-md-3"},
              {"name":"noticeDate", "header" : "Дата", "class":"col-md-2"},
-	          {"name":"noticeObject", "header" : "Объект", "class":"col-md-3"}]'
+	          {"name":"noticeObject", "header" : "Объект", "class":"col-md-3"}
+             ,{"name":"noticeZpoint", "header" : "Точка учета", "class":"col-md-3"}
+             ]'
 	captions='{"loading":"loading", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}'  
+	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}' 
+    ></div><div ng-show="false"> 
      datasource='[
     {
       "noticeId": "1",
