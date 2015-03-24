@@ -9,7 +9,7 @@ public class ReportConstants {
 	public enum ReportType {
 		HTML, PDF;
 
-		public String toParam() {
+		public String toLowerName() {
 			return this.name().toLowerCase();
 		}
 	};

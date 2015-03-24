@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 public class ReportTest extends AnyControllerTest {
 
 
-	public final static String REPORT_URL_API = "/api/report";	
+	public final static String API_REPORT_URL = "/api/report";	
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportTest.class);
@@ -27,7 +27,7 @@ public class ReportTest extends AnyControllerTest {
 	private void redirectOption(ReportType reportType) throws Exception {
 		assertNotNull(reportType);
 		
-		String urlStr = String.format(REPORT_URL_API + "/commercial/%d/%s", 18811505, reportType.toParam());
+		String urlStr = String.format(API_REPORT_URL + "/commercial/%d/%s", 18811505, reportType.toLowerName());
 
 		ResultActions resultAction = mockMvc.perform(get(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
