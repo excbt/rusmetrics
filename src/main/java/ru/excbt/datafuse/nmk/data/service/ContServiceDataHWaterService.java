@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 
@@ -26,9 +27,12 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public List<ContServiceDataHWater> selectByZPoint(final long contZPointId) {
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetail timeDetail) {
 		checkArgument(contZPointId > 0);
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId);
+		checkNotNull(timeDetail);
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname());
 	}
 
 	/**
@@ -39,15 +43,16 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public List<ContServiceDataHWater> selectByZPoint(final long contZPointId,
-			final DateTime beginDate, final DateTime endDate) {
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetail timeDetail, DateTime beginDate, DateTime endDate) {
 		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
-		
+
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
-				beginDate.toDate(), endDate.toDate());
+				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 	}
 
 }

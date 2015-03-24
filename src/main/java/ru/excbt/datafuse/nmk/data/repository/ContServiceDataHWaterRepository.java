@@ -12,16 +12,20 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 public interface ContServiceDataHWaterRepository extends
 		CrudRepository<ContServiceDataHWater, Long> {
 
-	@Query("SELECT d FROM ContServiceDataHWater d WHERE d.contZPoint.id = :contZPointId "
-			+ "ORDER BY d.dataDate")
-	public List<ContServiceDataHWater> selectByZPoint(
-			@Param("contZPointId") long contZPointId);
-
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ "WHERE d.contZPoint.id = :contZPointId and d.dataDate >= :beginDate and d.dataDate <= :endDate "
-			+ "ORDER BY d.dataDate")
+			+ " WHERE d.contZPoint.id = :contZPointId AND time_detail_type = :timeDetailType "
+			+ " ORDER BY d.dataDate ")
 	public List<ContServiceDataHWater> selectByZPoint(
 			@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String timeDetailType);
+
+	@Query("SELECT d FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :beginDate "
+			+ " AND d.dataDate <= :endDate "
+			+ " AND time_detail_type = :timeDetailType ORDER BY d.dataDate ")
+	public List<ContServiceDataHWater> selectByZPoint(
+			@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String timeDetailType,
 			@Param("beginDate") Date beginDate, @Param("endDate") Date endDate);
 
 }

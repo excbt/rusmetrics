@@ -21,6 +21,7 @@ public class ContServiceDataHWaterRepositoryTest extends JpaSupportTest {
 			.getLogger(ContServiceDataHWaterRepositoryTest.class);
 
 	private final static long ZPOINT_ID = 18811557;
+	private final static String TIME_DETAIL_24H = "24h";
 
 	@Autowired
 	private ContServiceDataHWaterRepository repository;
@@ -28,7 +29,8 @@ public class ContServiceDataHWaterRepositoryTest extends JpaSupportTest {
 	@Test
 	public void testSelectByZPoint() {
 
-		List<?> resultList = repository.selectByZPoint(ZPOINT_ID);
+		List<?> resultList = repository.selectByZPoint(ZPOINT_ID,
+				TIME_DETAIL_24H);
 		assertTrue(resultList.size() > 0);
 		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID,
 				resultList.size());
@@ -43,7 +45,7 @@ public class ContServiceDataHWaterRepositoryTest extends JpaSupportTest {
 		DateTime endDate = srcDate.dayOfMonth().withMaximumValue();
 
 		List<?> resultList = repository.selectByZPoint(ZPOINT_ID,
-				beginDate.toDate(), endDate.toDate());
+				TIME_DETAIL_24H, beginDate.toDate(), endDate.toDate());
 		assertTrue(resultList.size() > 0);
 		logger.info("ZPoint (ID:{}) Found {} records on period: [{}...{}]",
 				ZPOINT_ID, resultList.size(), beginDate.toDate(),

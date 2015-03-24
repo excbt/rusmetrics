@@ -14,26 +14,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
 
 public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContServiceDataHWaterServiceTest.class);
-	
-	private final static long ZPOINT_ID = 18811557;	
-	
+
+	private final static long ZPOINT_ID = 18811557;
+
 	@Autowired
 	private ContServiceDataHWaterService service;
-	
+
 	@Test
 	public void testSelectByZPoint() {
-		List<?> resultList = service.selectByZPoint(ZPOINT_ID);
+		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
+				TimeDetail.TYPE_24H);
 		assertTrue(resultList.size() > 0);
 		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID,
 				resultList.size());
 	}
-	
+
 	@Test
 	public void testSelectByZPointDated() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -42,14 +43,13 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 		DateTime beginDate = srcDate.dayOfMonth().withMinimumValue();
 		DateTime endDate = srcDate.dayOfMonth().withMaximumValue();
 
-		List<?> resultList = service.selectByZPoint(ZPOINT_ID,
-				beginDate, endDate);
+		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
+				TimeDetail.TYPE_24H, beginDate, endDate);
 		assertTrue(resultList.size() > 0);
-		
+
 		logger.info("ZPoint (ID:{}) Found {} records on period: [{}...{}]",
 				ZPOINT_ID, resultList.size(), beginDate.toDate(),
 				endDate.toDate());
-	}	
-	
+	}
 
 }
