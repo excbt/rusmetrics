@@ -13,4 +13,8 @@ public enum ParamType {
 		return this.camelName;
 	}
 
+	public String getKeyname() {
+		return this.name();
+	}
+
 }
