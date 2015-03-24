@@ -1,39 +1,47 @@
-<div>Портал / Объекты</div>
-<h2>Объекты</h2>
+<div>Портал / Объекты / Системы - точки учета</div>
+<h2>Показания &lt; Объект &gt; - &lt; Название системы &gt;</h2>
 
-<div crud-grid-objects table="'../api/subscr/contObjects'"
+<div crud-grid-indicators table="'../api/u_directory1'"
 	columns='[
 
-	          {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-             {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+	          {"name":"indicatorDate", "header" : "Дата", "class":"col-md-3"},
+             {"name":"indicatorName", "header" : "Название", "class":"col-md-5"},
+             {"name":"indicatorValue", "header" : "Значение", "class":"col-md-5"},
+             {"name":"indicatorDelta", "header" : "delta", "class":"col-md-5"}
            
             ]'
 
 	captions='{"loading":"loading", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
+	exprops='{"idColumnName":"id", "defaultOrderBy" : "indicatorDate", "deleteConfirmationProp":"indicatorName"}'
      
-     blist = 'true'
      
-     bgroup='true'
-     
-     bextramenu='true'
-     
-     bobject='true'
 
      datasource='[
     {
       "id":"753",
-      "fullName": "Тестовый контейнер для разработки",
-      "fullAddress": "Новые Васюки, ул. Московская, д. 56"
-        
+      "indicatorDate": "22.03.2015",           
+      "indicatorName": "Пример",
+      "indicatorValue": "32",
+      "indicatorDelta": "0.5"
         
     }
-                     ,{    "id":"754",
-                 "fullName": "Контейнер 1",
-      "fullAddress": "Ижевск, 30 лет Победы, 31"
-      
-                       
+                 ,{
+      "id":"754",
+      "indicatorDate": "23.03.2015",           
+      "indicatorName": "Пример1",
+      "indicatorValue": "29",
+      "indicatorDelta": "3"
+        
     }
+                 ,{
+      "id":"755",
+      "indicatorDate": "24.03.2015",           
+      "indicatorName": "Пример_2",
+      "indicatorValue": "30",
+      "indicatorDelta": "1"
+        
+    }
+
     
     ]'
      

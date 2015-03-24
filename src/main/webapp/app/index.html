@@ -108,6 +108,7 @@
                                     href="#/test/" data-toggle="offcanvas">Test</a>
                                 
 -->
+                                <!-- Меню отчетов -->
                                 <div ng-show="showMenuReport" id="sidebar-entries" class="list-group submenu">
                                     <!-- Home -->
 <!--
@@ -128,12 +129,55 @@
 
                                         href="#/" data-toggle="offcanvas">Еще какой-то отчет</a>
                                 </div>
+                                
+                                <!-- Объекты, только просмотр объектов -->
+                                <a class="list-group-item"
+
+                                    href="#/objects_list/" data-toggle="offcanvas" ng-click="showMenuReport=false">Объекты</a>
 
                             </div>
                         </nav>
             
+                        <nav class="sidebar-nav"
+                            role="navigation"
+                             ng-show="showIndicatorsParam">
+<!--                Параметры отображения показаний точек учета            -->
+                            <div id="sidebar-entries" class="list-group">
+                                <div class="list-group-item">
+                                    <label >
+
+                                         Задайте интервал дат</label>
+                                    <div>
+                                            <input style="font-size: 10px;" date-range-picker class="form-control date-picker"
+                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                        </div>
+                                
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="container">
+                                        <div class="row">
+                                                <label>
+
+                                                     Показания</label>
+                                        </div>
+                                        <div class="row">
+                                                <input type=radio name="indicatorsKind" value="24h" checked="true" 
+
+                                                    data-toggle="offcanvas"> Суточные</input>
+                                        </div>
+                                        <div class="row">
+                                                <input type=radio name="indicatorsKind" value="1h" 
+
+                                                    data-toggle="offcanvas"> Часовые</input>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>    
+                        
+            
             </div>                
-         <div class="col-xs-6 col-sm-2 well well-bgc sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        
+         <div class="col-xs-6 col-sm-2 well sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        
              <nav class="sidebar-nav"
                             role="navigation">
 <!--              Меню Личного кабинета              -->
@@ -142,10 +186,10 @@
                                 <a class="list-group-item"
 
                                     href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Главная</a>
-                                <!-- Notices -->
+                                <!-- Объекты, меню настройки объектов -->
                                 <a class="list-group-item"
 
-                                    href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
+                                    href="#/private/objects_private/" data-toggle="offcanvas">Объекты</a>
                                 <!-- Справочники -->
                                 <a class="list-group-item"
 
@@ -229,6 +273,7 @@
     <script src="scripts/controllers/operationlog.js"></script>
     <script src="scripts/controllers/objects.js"></script>
     <script src="scripts/controllers/reports.js"></script>
+    <script src="scripts/controllers/indicator.js"></script>
       <!-- Directives -->
 <script src="scripts/directives/crud-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-data-factory.js"></script>
@@ -240,6 +285,7 @@
     <script src="scripts/directives/crud-grid-directive-directories.js"></script>
 <script src="scripts/directives/crud-grid-paged-directive.js"></script>
     <script src="scripts/directives/tree-model.js"></script>
+    <script src="scripts/directives/crud-grid-directive-indicators.js"></script>
       
       <!-- Services -->
       <script src="scripts/services/notification-factory.js"></script>      
