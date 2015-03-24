@@ -20,9 +20,9 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="subscr_org")
+@Table(name="subscr_role")
 @EntityListeners({AuditingEntityListener.class})
-public class SubscrOrg extends AbstractAuditableEntity<AuditUser, Long> {
+public class SubscrRole extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 
@@ -30,13 +30,13 @@ public class SubscrOrg extends AbstractAuditableEntity<AuditUser, Long> {
 	private static final long serialVersionUID = 1L;
 
 	
-	@Column (name="subscr_org_role")
-	private String role;
+	@Column (name="subscr_role_name")
+	private String name;
 
-	@Column (name="subscr_org_info")
+	@Column (name="subscr_role_info")
 	private String info;
 
-	@Column (name="subscr_org_comment")
+	@Column (name="subscr_role_comment")
 	private String comment;
 	
 	@ManyToOne 
@@ -45,15 +45,15 @@ public class SubscrOrg extends AbstractAuditableEntity<AuditUser, Long> {
 
 	
 	@OneToMany (fetch = FetchType.EAGER)
-    @JoinTable(name="subscr_org_cont",
-    joinColumns=@JoinColumn(name="subscr_org_id"),
+    @JoinTable(name="subscr_role_cont",
+    joinColumns=@JoinColumn(name="subscr_role_id"),
     inverseJoinColumns=@JoinColumn(name="cont_object_id"))
 	private Collection<ContObject> contObjects;
 	
 	
 	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_org_directory",
-    joinColumns=@JoinColumn(name="subscr_org_id"),
+    @JoinTable(name="subscr_role_directory",
+    joinColumns=@JoinColumn(name="subscr_role_id"),
     inverseJoinColumns=@JoinColumn(name="directory_id"))
 	@JsonIgnore
 	private Collection<UDirectory> directories;	
@@ -62,12 +62,12 @@ public class SubscrOrg extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 	
-	public String getRole() {
-		return role;
+	public String getName() {
+		return name;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setName(String role) {
+		this.name = role;
 	}
 
 	public String getInfo() {

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
 public class SubscrUserRepositoryTest extends JpaSupportTest {
 
@@ -31,7 +30,7 @@ public class SubscrUserRepositoryTest extends JpaSupportTest {
 		SubscrUser su = suList.get(0);
 		
 		logger.debug("Find subscrUser {}", su.getUserName());
-		logger.debug("subscrUser roles {}", su.getSubscrOrgs().size());
+		logger.debug("subscrUser roles {}", su.getSubscrRoles().size());
 
 	}
 	

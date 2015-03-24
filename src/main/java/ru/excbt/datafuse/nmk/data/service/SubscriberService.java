@@ -11,12 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.SubscrOrg;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrOrgRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
 @Service
@@ -27,7 +27,7 @@ public class SubscriberService {
 	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
-	private SubscrOrgRepository subscrOrgRepository;
+	private SubscrRoleRepository subscrRoleRepository;
 
 	@Autowired
 	private ContZPointRepository contZPointRepository;
@@ -89,9 +89,9 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<SubscrOrg> selectSubscrOrg(long subscrUserId) {
+	public List<SubscrRole> selectSubscrRole(long subscrUserId) {
 		checkArgument(subscrUserId > 0);
-		return subscrOrgRepository.selectByUserId(subscrUserId);
+		return subscrRoleRepository.selectByUserId(subscrUserId);
 	}
 	
 }

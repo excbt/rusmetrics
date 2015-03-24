@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrOrgRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
 @Service
@@ -21,7 +21,7 @@ public class ContObjectService {
 	private ContObjectRepository contObjectRepository;
 	
 	@Autowired
-	private SubscrOrgRepository subscrOrgRepository;
+	private SubscrRoleRepository subscrOrgRepository;
 	
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;

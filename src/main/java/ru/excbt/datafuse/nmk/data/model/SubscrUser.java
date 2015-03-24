@@ -49,10 +49,10 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 
 	
 	@OneToMany (fetch = FetchType.EAGER)
-    @JoinTable(name="subscr_org_user",
+    @JoinTable(name="subscr_role_user",
     joinColumns=@JoinColumn(name="subscr_user_id"),
-    inverseJoinColumns=@JoinColumn(name="subscr_org_id"))
-	private Collection<SubscrOrg> subscrOrgs;	
+    inverseJoinColumns=@JoinColumn(name="subscr_role_id"))
+	private Collection<SubscrRole> subscrRoles;	
 	
 	public String getUserName() {
 		return userName;
@@ -87,12 +87,12 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 	}
 
 
-	public Collection<SubscrOrg> getSubscrOrgs() {
-		return subscrOrgs;
+	public Collection<SubscrRole> getSubscrRoles() {
+		return subscrRoles;
 	}
 
-	public void setSubscrOrgs(Collection<SubscrOrg> subscrOrgs) {
-		this.subscrOrgs = subscrOrgs;
+	public void setSubscrOrgs(Collection<SubscrRole> subscrRoles) {
+		this.subscrRoles = subscrRoles;
 	}
 
 	public int getVersion() {
