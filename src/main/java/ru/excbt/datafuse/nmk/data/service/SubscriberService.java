@@ -89,7 +89,7 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<SubscrRole> selectSubscrRole(long subscrUserId) {
+	public List<SubscrRole> selectSubscrRoles(long subscrUserId) {
 		checkArgument(subscrUserId > 0);
 		return subscrRoleRepository.selectByUserId(subscrUserId);
 	}

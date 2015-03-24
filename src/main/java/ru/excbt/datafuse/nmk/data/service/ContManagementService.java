@@ -17,10 +17,11 @@ import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.repository.ContManagementRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 @Transactional
-public class ContManagementService implements SecuredServiceRoles {
+public class ContManagementService implements SecuredRoles {
 
 	@Autowired
 	private ContManagementRepository contManagementRepository;
@@ -31,7 +32,6 @@ public class ContManagementService implements SecuredServiceRoles {
 	@Autowired
 	private OrganizationService organizationService;
 
-	// @Secured({ROLE_ADMIN, SUBSCR_ROLE_ADMIN})
 	@Transactional(readOnly = true)
 	public List<ContManagement> selectAllManagement(long contObjectId,
 			long organizationId) {

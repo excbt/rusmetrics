@@ -17,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 @Transactional
-public class UDirectoryService implements SecuredServiceRoles {
+public class UDirectoryService implements SecuredRoles {
 
 	
 	private static final Logger logger = LoggerFactory

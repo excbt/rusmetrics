@@ -34,7 +34,7 @@ public class SubscriberServiceTest extends JpaSupportTest {
 		assertEquals(passwordService.passwordEncoder().encode(SIMPLE_PASSWORD),
 				user.getPassword());
 
-		List<SubscrRole> subscrOrgs = subscriberService.selectSubscrRole(user
+		List<SubscrRole> subscrOrgs = subscriberService.selectSubscrRoles(user
 				.getId());
 		assertTrue(subscrOrgs.size() == 1);
 		// subscrOrgs.get(0)
