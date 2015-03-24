@@ -1,0 +1,127 @@
+package ru.excbt.datafuse.nmk.web.api;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.ReportService;
+
+@Controller
+@RequestMapping(value = "/api/subscr")
+public class ContServiceDataController {
+
+	public static final String HEAT = "heat";
+	public static final String HW = "hw";
+
+	private static final List<String> SUPPORTED_SERVICES = Arrays.asList(HEAT,
+			HW);
+
+	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
+			.forPattern(ReportService.DATE_TEMPLATE);
+
+	@Autowired
+	private ContServiceDataHWaterService contServiceDataHWaterService;
+
+	@Autowired
+	private ContZPointService contZPointService;
+
+	/**
+	 * 
+	 * @param serviceType
+	 * @param zPointId
+	 * @param timeDetailType
+	 * @param beginDateS
+	 * @param endDateS
+	 * @return
+	 */
+	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> serviceDataHWater(
+			@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId,
+			@PathVariable("timeDetailType") String timeDetailType,
+			@RequestParam("beginDate") String beginDateS,
+			@RequestParam("endDate") String endDateS) {
+
+		checkArgument(contObjectId > 0);
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetailType);
+		checkNotNull(beginDateS);
+		checkNotNull(endDateS);
+
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+
+		if (contZPoint == null) {
+			return ResponseEntity.badRequest().body(
+					String.format("contZPointId (id=%d) not found",
+							contZPointId));
+		}
+
+		if (contZPoint.getContObject() == null
+				|| contZPoint.getContObject().getId() != contObjectId) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("contZPointId (id=%d) is not valid for contObject (id=%d)",
+									contZPointId, contObjectId));
+		}
+
+		String serviceType = contZPoint.getContServiceType().getKeyname();
+
+		if (!SUPPORTED_SERVICES.contains(serviceType)) {
+			return ResponseEntity.badRequest().body(
+					String.format("Service type %s is not supported yet",
+							serviceType));
+		}
+
+		DateTime beginD = null;
+		DateTime endD = null;
+		try {
+			beginD = DATE_FORMATTER.parseDateTime(beginDateS);
+			endD = DATE_FORMATTER.parseDateTime(endDateS);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters beginDateS:{}, endDateS:{}",
+							beginDateS, endDateS));
+		}
+
+		if (beginD.compareTo(endD) > 0) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters beginDateS:{}, endDateS:{}",
+							beginDateS, endDateS));
+		}
+
+		TimeDetail timeDetail = TimeDetail.searchKeyname(timeDetailType);
+		if (timeDetail == null) {
+			return ResponseEntity.badRequest().body(
+					String.format("Invalid parameters timeDetailType:{}",
+							timeDetailType));
+		}
+
+		List<ContServiceDataHWater> result = contServiceDataHWaterService
+				.selectByContZPoint(contZPointId, timeDetail, beginD, endD);
+
+		return ResponseEntity.ok(result);
+
+	}
+
+}

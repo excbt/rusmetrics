@@ -71,7 +71,7 @@ public class ReportService {
 
 		checkNotNull(defaultUrl);
 
-		return String.format(defaultUrl, reportType.toParam(),
+		return String.format(defaultUrl, reportType.toLowerName(),
 				endDate.toString(DATE_TEMPLATE),
 				beginDate.toString(DATE_TEMPLATE), contObjectId);
 	}	

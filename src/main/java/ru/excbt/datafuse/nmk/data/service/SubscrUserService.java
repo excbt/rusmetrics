@@ -30,11 +30,11 @@ public class SubscrUserService {
 	private ContEventRepository contEventRepository;
 
 	@Autowired
-	private ContObjectRepository contEventObjectRepository;
+	private ContObjectRepository contObjectRepository;
 	
 	@Transactional(readOnly = true)
 	public List<ContObject> selectSubscrContObjects(long userId) {
-		List<ContObject> result = contEventObjectRepository.selectSubscrContObjects(userId); 
+		List<ContObject> result = contObjectRepository.selectSubscrContObjects(userId); 
 		return result;
 	}
 	
