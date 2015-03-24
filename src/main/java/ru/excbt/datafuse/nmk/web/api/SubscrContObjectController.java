@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 
 @Controller
@@ -28,7 +28,7 @@ public class SubscrContObjectController {
 	private ContObjectService contObjectService;
 	
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SubscriberService subscrUserService;
 	
 	
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)

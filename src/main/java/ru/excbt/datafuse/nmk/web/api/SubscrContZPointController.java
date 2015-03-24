@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 
 @Controller
@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 public class SubscrContZPointController {
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SubscriberService subscrUserService;
 	
 	
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
