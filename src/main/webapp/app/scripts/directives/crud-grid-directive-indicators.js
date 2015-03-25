@@ -14,8 +14,8 @@ angular.module('portalNMK').directive('crudGridIndicators', function () {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
                 $scope.objects = angular.fromJson($attrs.datasource); 
                 
                 $scope.lookups = [];
@@ -172,6 +172,7 @@ angular.module('portalNMK').directive('crudGridIndicators', function () {
                     function () {
                         $scope.setLookupData();
                         $scope.loading = false;
+                        $scope.setColumns();
                     });
                 
                 $scope.initLookupData = function(table){
@@ -184,6 +185,17 @@ angular.module('portalNMK').directive('crudGridIndicators', function () {
 			        var curObject = angular.copy(item);
 			        $scope.currentObject = curObject;
 			    };
+                
+                
+                //indicators
+                $scope.setColumns = function(){
+                    var iCol = 0;
+                    for (k in $scope.objects){
+                        $scope.columns[iCol] = k;
+                        iCol=iCol+1;
+                    };
+                };
+                //end indicators
                 
                 
                 //Работа с уведомлениями
