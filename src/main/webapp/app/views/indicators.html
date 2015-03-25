@@ -1,7 +1,7 @@
 <div>Портал / Объекты / Системы - точки учета</div>
-<h2>Показания &lt; Объект &gt; - &lt; Название системы &gt;</h2>
+<h2>Показания &lt; {{contObject.fullName}} &gt; - &lt; {{contZPoint.zpointName}} &gt;</h2>
 
-<div crud-grid-indicators table="'../api/u_directory1'"
+<div crud-grid-indicators table="zpointTable"
 	columns='[
 
 	          {"name":"indicatorDate", "header" : "Дата", "class":"col-md-3"},

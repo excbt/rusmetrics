@@ -13,6 +13,22 @@ angular.module('portalNMK')
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
       
+    //for indicators
+//    $scope.contObjectId = $rootScope.contObjectId;
+//    $scope.contZPointId = $rootScope.contZPointId; 
+      
+      $scope.timeDetailType = "1h";
+                   
+      $scope.endDate = "2014-03-20";//new Date();                 
+      $scope.beginDate = "2014-03-19";//endDate;     
+      //$scope.beginDate.setHours(0,0,0,0);
+      
+      $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$scope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$scope.beginDate+"&endDate="+$scope.endDate;
+      
+      
+    //end for indicators  
+      
+      
     $scope.reportStart= new Date();
                     $scope.reportEnd=new Date(2015, 03, 22);
                     $scope.welcome = "Вас обслуживает контролер отчетов.";

@@ -291,48 +291,39 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                 
                 $scope.notices = [];            
                 $scope.noticeIter = 0;
-                $scope.getAllNotices = function(){
-                    $scope.oldObjects = $scope.objects;
-                    for (var i=0;i<2; i++){
-                        
-                             
+                
+                $scope.getNoticesByObject = function(tableName, object){
                     
-                        //
-                        var table = $scope.crudTableName+"/"+$scope.oldObjects[i].id+"/events";
+                        var table = tableName+"/"+object.id+"/events";
                         crudGridDataFactory(table).query(function (data) {
                                                         $scope.noticesByObject = data;
                             
                             console.log("Table = "+table);
 
-                                                        for(var j=0;j<2;j++){                             
-                                                            
-//// Полезная функция                        
-//                        var str="";
-//                        for(var k in $scope.noticesByObject[j]){
-//                            str+= k+": "+$scope.noticesByObject[j][k]+";;";
-//                        }
-//console.log(" Object"+j+" = "+str);                        
-////           
-                                                            
+                                                        for(var j=0;j<6;j++){                                                                            
+                                                      
                                                             
                                                             var notice = {};
                                                             notice.noticeType = $scope.noticesByObject[j].contEventType.name;
                                                             notice.noticeText = $scope.noticesByObject[j].message;
-                                                            notice.noticeDate = $scope.noticesByObject[j].eventTime;
-                                                            notice.noticeObject = "Объект";//$scope.oldObjects[i].fullName;
+                                                            notice.noticeDate = new Date($scope.noticesByObject[j].eventTime);
+                                                            notice.noticeObject = object.fullName;
                                                             notice.noticeZpoint  = $scope.noticesByObject[j].contServiceType;   
 
                                                             $scope.notices[$scope.noticeIter] = notice;
                                                             $scope.noticeIter=$scope.noticeIter+1;
-                                                            
-                                                        
-
-//console.log("Notice: "+$scope.notices[$scope.noticeIter-1].noticeType+"; "+$scope.notices[$scope.noticeIter-1].noticeText+"; "+$scope.notices[$scope.noticeIter-1].noticeDate+"; "+$scope.notices[$scope.noticeIter-1].noticeObject+";"+$scope.notices[$scope.noticeIter-1].noticeZpoint);                        
                                                         }
-
-                        
                         });
+                    
+                    
+                };
+                
+                $scope.getAllNotices = function(){
+                    $scope.oldObjects = $scope.objects;
+                    for (var i=0;i<4; i++){
+                        //
                         
+                        $scope.getNoticesByObject($scope.crudTableName, $scope.oldObjects[i]);                
                         
                         $scope.objects = $scope.notices;
                         //
