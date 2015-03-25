@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 @RequestMapping(value = "/api/subscr")
 public class SubscrContObjectController {
 
-	private final static int TEST_USER_ID = 729;
+	private final static int TEST_SUBSCRIBER_ID = 728;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContObjectController.class);
@@ -35,7 +35,7 @@ public class SubscrContObjectController {
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
 		
-		List<ContObject> resultList = subscrUserService.selectSubscrContObjects(TEST_USER_ID);
+		List<ContObject> resultList = subscrUserService.selectSubscrContObjects(TEST_SUBSCRIBER_ID);
 		
 		return ResponseEntity.ok().body(resultList);
 	}

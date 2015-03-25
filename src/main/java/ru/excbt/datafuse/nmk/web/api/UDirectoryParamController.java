@@ -10,6 +10,8 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +31,10 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryParamController {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(UDirectoryParamController.class);
+	
 	@Autowired
 	private UDirectoryParamService directoryParamService;
 
@@ -81,6 +87,8 @@ public class UDirectoryParamController {
 		checkNotNull(entity);
 		checkArgument(entity.getId().longValue() == id);
 
+		logger.debug("directoryId:{}. Param id:{}", directoryId, id);
+		
 		UDirectory directory = directoryService.findOne(directoryId);
 		checkNotNull(directory);
 
