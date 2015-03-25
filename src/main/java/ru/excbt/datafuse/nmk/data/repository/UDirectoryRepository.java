@@ -10,16 +10,16 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 
 public interface UDirectoryRepository extends CrudRepository<UDirectory, Long> {
 
-	@Query("SELECT d FROM UDirectory d INNER JOIN d.subscrRole sr WHERE sr.id = :id")
-	public List<UDirectory> selectBySubscrOrg(@Param("id") long id);
+	@Query("SELECT d FROM UDirectory d INNER JOIN d.subscriber s WHERE s.id = :id")
+	public List<UDirectory> selectBySubscriber(@Param("id") long id);
 
-	@Query("SELECT d.id FROM UDirectory d INNER JOIN d.subscrRole sr WHERE sr.id = :subscrRoleId")
+	@Query("SELECT d.id FROM UDirectory d INNER JOIN d.subscriber s WHERE s.id = :subscriberId")
 	public List<Long> selectDirectoryIds(
-			@Param("subscrRoleId") long subscrRoleId);
+			@Param("subscriberId") long subscriberId);
 
-	@Query("SELECT d.id FROM UDirectory d INNER JOIN d.subscrRole sr WHERE sr.id = :subscrRoleId and d.id = :directoryId")
+	@Query("SELECT d.id FROM UDirectory d INNER JOIN d.subscriber s WHERE s.id = :subscriber and d.id = :directoryId")
 	public List<Long> selectAvailableId(
-			@Param("subscrRoleId") long subscrRoleId,
+			@Param("subscriber") long subscriber,
 			@Param("directoryId") long directoryId);
 
 }

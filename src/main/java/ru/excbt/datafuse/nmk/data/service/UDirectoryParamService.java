@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryParamRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 @Transactional
-public class UDirectoryParamService implements SecuredServiceRoles {
+public class UDirectoryParamService implements SecuredRoles {
 
 	@Autowired
 	private UDirectoryParamRepository repository;

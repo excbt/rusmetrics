@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
 public class SubscriberServiceTest extends JpaSupportTest {
 
@@ -34,7 +34,7 @@ public class SubscriberServiceTest extends JpaSupportTest {
 		assertEquals(passwordService.passwordEncoder().encode(SIMPLE_PASSWORD),
 				user.getPassword());
 
-		List<SubscrRole> subscrOrgs = subscriberService.selectSubscrRole(user
+		List<Subscriber> subscrOrgs = subscriberService.selectSubscrRoles(user
 				.getId());
 		assertTrue(subscrOrgs.size() == 1);
 		// subscrOrgs.get(0)

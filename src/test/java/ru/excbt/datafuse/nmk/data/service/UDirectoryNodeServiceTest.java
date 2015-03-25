@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
-import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 
 public class UDirectoryNodeServiceTest extends JpaConfigTest {
 

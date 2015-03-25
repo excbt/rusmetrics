@@ -40,11 +40,11 @@ public class UDirectory extends AbstractAuditableEntity<AuditUser,Long>  {
 
 	
 	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinTable(name="subscr_role_directory",
+	@JoinTable(name="subscr_directory",
     joinColumns=@JoinColumn(name="directory_id"),
-    inverseJoinColumns=@JoinColumn(name="subscr_role_id"))
+    inverseJoinColumns=@JoinColumn(name="subscriber_id"))
 	@JsonIgnore
-	private SubscrRole subscrRole;
+	private Subscriber subscriber;
 	
 	@Version
 	private int version;
@@ -81,12 +81,12 @@ public class UDirectory extends AbstractAuditableEntity<AuditUser,Long>  {
 		this.version = version;
 	}
 
-	public SubscrRole getSubscrRole() {
-		return subscrRole;
+	public Subscriber getSubscriber() {
+		return subscriber;
 	}
 
-	public void setSubscrRole(SubscrRole subscrRole) {
-		this.subscrRole = subscrRole;
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
 	}
 	
 }

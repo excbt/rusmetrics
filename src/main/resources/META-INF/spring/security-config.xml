@@ -35,18 +35,18 @@
 <!-- 	<context:component-scan base-package="ru.excbt.datatube.manager.security" /> -->
 
 	<security:authentication-manager>
-<!-- 		 	<security:authentication-provider ref="systemUserAuthenticationProvider"/>	 -->
-		<security:authentication-provider>
+		 	<security:authentication-provider ref="userAuthenticationProvider"/>	
+<!-- 		<security:authentication-provider> -->
 
-			<security:user-service>
-				<security:user name="user" password="user"
-					authorities="ROLE_USER" />
+<!-- 			<security:user-service> -->
+<!-- 				<security:user name="user" password="user" -->
+<!-- 					authorities="ROLE_USER" /> -->
 
-				<security:user name="admin" password="admin"
-					authorities="ROLE_ADMIN" />
+<!-- 				<security:user name="admin" password="admin" -->
+<!-- 					authorities="ROLE_ADMIN" /> -->
 
-			</security:user-service>
-		</security:authentication-provider>
+<!-- 			</security:user-service> -->
+<!-- 		</security:authentication-provider> -->
 	</security:authentication-manager>
 
 

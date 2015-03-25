@@ -14,13 +14,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 @Transactional
-public class UDirectoryService implements SecuredServiceRoles {
+public class UDirectoryService implements SecuredRoles {
 
 	
 	private static final Logger logger = LoggerFactory
@@ -30,7 +31,7 @@ public class UDirectoryService implements SecuredServiceRoles {
 	private UDirectoryRepository directoryRepository;
 
 	@Autowired
-	private CurrentSubscrRoleService currentSubscrRoleService;
+	private CurrentSubscriberService currentSubscrRoleService;
 
 	/**
 	 * 
@@ -56,7 +57,7 @@ public class UDirectoryService implements SecuredServiceRoles {
 	 */
 	@Transactional(readOnly = true)
 	public List<UDirectory> findAll() {
-		return directoryRepository.selectBySubscrOrg(currentSubscrRoleService
+		return directoryRepository.selectBySubscriber(currentSubscrRoleService
 				.getSubscrOrgId());
 	}
 
@@ -94,10 +95,10 @@ public class UDirectoryService implements SecuredServiceRoles {
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public UDirectory save(final UDirectory entity) {
 		checkNotNull(entity);
-		SubscrRole currentSubscrOrg = currentSubscrRoleService.getSubscrOrg();
-		checkNotNull(currentSubscrOrg, "Empty current SubscrOrg");
+		Subscriber currentSubscriber = currentSubscrRoleService.getSubscriber();
+		checkNotNull(currentSubscriber, "Empty current SubscrOrg");
 		
-		long subscrOrgId = currentSubscrOrg.getId();
+		long subscrOrgId = currentSubscriber.getId();
 		
 
 		UDirectory recordToSave = null;
@@ -121,7 +122,7 @@ public class UDirectoryService implements SecuredServiceRoles {
 		recordToSave.setDirectoryDescription(entity.getDirectoryDescription());
 		recordToSave.setDirectoryName(entity.getDirectoryName());
 		recordToSave.setVersion(entity.getVersion());
-		recordToSave.setSubscrRole(currentSubscrOrg);
+		recordToSave.setSubscriber(currentSubscriber);
 		UDirectory savedRecord = directoryRepository.save(recordToSave);
 
 		return savedRecord;

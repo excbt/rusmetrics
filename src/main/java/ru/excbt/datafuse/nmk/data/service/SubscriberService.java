@@ -11,24 +11,26 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 
 @Service
 @Transactional
 public class SubscriberService {
-
+	
+	@Autowired
+	private SubscriberRepository subscriberRepository;
+	
+	
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
 
-	@Autowired
-	private SubscrRoleRepository subscrRoleRepository;
-
+	
 	@Autowired
 	private ContZPointRepository contZPointRepository;
 
@@ -37,6 +39,12 @@ public class SubscriberService {
 
 	@Autowired
 	private ContObjectRepository contObjectRepository;
+	
+	
+	@Transactional(readOnly = true)
+	public Subscriber findOne(long id) {
+		return subscriberRepository.findOne(id);
+	}
 
 	@Transactional(readOnly = true)
 	@Deprecated
@@ -68,7 +76,7 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public SubscrUser findOne(long subscrUserId) {
+	public SubscrUser findSubscrUser(long subscrUserId) {
 		return subscrUserRepository.findOne(subscrUserId);
 	}
 
@@ -89,9 +97,9 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<SubscrRole> selectSubscrRole(long subscrUserId) {
+	public List<Subscriber> selectSubscrRoles(long subscrUserId) {
 		checkArgument(subscrUserId > 0);
-		return subscrRoleRepository.selectByUserId(subscrUserId);
-	}
+		return subscriberRepository.selectByUserId(subscrUserId);
+	}	
 	
 }

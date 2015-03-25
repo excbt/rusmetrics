@@ -9,9 +9,11 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
@@ -20,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 @Entity
 @Table(name="subscr_user")
 @EntityListeners({AuditingEntityListener.class})
+@Where(clause="id > 0 and deleted = 0")
 public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
@@ -47,12 +50,15 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 
-	
 	@OneToMany (fetch = FetchType.EAGER)
-    @JoinTable(name="subscr_role_user",
+    @JoinTable(name="subscr_user_role",
     joinColumns=@JoinColumn(name="subscr_user_id"),
     inverseJoinColumns=@JoinColumn(name="subscr_role_id"))
 	private Collection<SubscrRole> subscrRoles;	
+
+	@OneToOne
+	@JoinColumn(name="subscriber_id")
+	private Subscriber subscriber; 
 	
 	public String getUserName() {
 		return userName;
@@ -91,7 +97,7 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 		return subscrRoles;
 	}
 
-	public void setSubscrOrgs(Collection<SubscrRole> subscrRoles) {
+	public void setSubscrRoles(Collection<SubscrRole> subscrRoles) {
 		this.subscrRoles = subscrRoles;
 	}
 
@@ -101,7 +107,15 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setVersion(int version) {
 		this.version = version;
-	}		
-	
+	}
+
+	public Subscriber getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
+	}
+
 	
 }
