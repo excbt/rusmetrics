@@ -13,8 +13,6 @@ import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ParamType;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
-import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
-import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 
 public class UDirectoryParamServiceTest extends JpaSupportTest {
 
@@ -22,6 +20,7 @@ public class UDirectoryParamServiceTest extends JpaSupportTest {
 			.getLogger(UDirectoryParamServiceTest.class);
 
 	private final static long TEST_DIRECTORY_ID = 19748782;
+	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;	
 
 	@Autowired
 	private UDirectoryParamService directoryParamService;
@@ -52,6 +51,14 @@ public class UDirectoryParamServiceTest extends JpaSupportTest {
 	public void testSelectParams() {
 		List<?> lst = directoryParamService.selectDirectoryParams(TEST_DIRECTORY_ID);
 		assertNotNull(lst);
+	}
+	
+	
+	@Test
+	public void testUpdate() {
+		UDirectoryParam param = directoryParamService.findOne(TEST_DIRECTORY_PARAM_ID);
+		param.setParamName("TEST Param - Name " + System.currentTimeMillis());
+		directoryParamService.save(param);
 	}
 
 }

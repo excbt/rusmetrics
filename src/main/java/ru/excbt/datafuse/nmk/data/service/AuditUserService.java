@@ -4,16 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.repository.AuditUserRepository;
 
 @Service
+@Transactional
 public class AuditUserService {
 
 	@Autowired
 	private AuditUserRepository auditUserRepository;
 
+	@Transactional(readOnly = true)
 	public AuditUser findByUsername(String userName) {
 		List<AuditUser> auditUsers = auditUserRepository
 				.findByUserName(userName);
@@ -23,6 +26,7 @@ public class AuditUserService {
 		return null;
 	}
 
+	@Transactional(readOnly = true)
 	public AuditUser findOne(long id) {
 		return auditUserRepository.findOne(id);
 	}

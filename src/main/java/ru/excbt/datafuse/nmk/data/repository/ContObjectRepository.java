@@ -13,8 +13,8 @@ public interface ContObjectRepository extends JpaRepository<ContObject, Long> {
 	@Query("SELECT co FROM ContObject co WHERE co.id = :id")
 	public List<ContObject> selectByUserName(@Param("id") long id);
 	
-	@Query("SELECT co FROM SubscrUser su INNER JOIN su.subscriber s INNER JOIN s.contObjects co WHERE su.id = :id")
-	public List<ContObject> selectSubscrContObjects(@Param("id")long userId);
+	@Query("SELECT co FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :id")
+	public List<ContObject> selectSubscrContObjects(@Param("id")long subscriberId);
 	
 
 	public List<ContObject> findByFullNameLikeIgnoreCase(String str);
