@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 
 public class ContObjectRepositoryTest extends JpaSupportTest {
 
@@ -36,7 +35,7 @@ public class ContObjectRepositoryTest extends JpaSupportTest {
 
 	@Test
 	public void testFindContObjects() {
-		List<ContObject> contObjects = contObjectRepository.selectSubscrContObjects(729);
+		List<ContObject> contObjects = contObjectRepository.selectSubscrContObjects(728);
 		assertTrue(contObjects.size() > 0);
 		
 		logger.debug("find {} contObjects", contObjects.size());
