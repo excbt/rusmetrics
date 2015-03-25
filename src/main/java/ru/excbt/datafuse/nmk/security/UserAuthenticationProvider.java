@@ -14,8 +14,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 import ru.excbt.datafuse.nmk.data.service.PasswordService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -64,10 +64,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-		List<SubscrRole> roles = subscriberService.selectSubscrRoles(sUser
+		List<Subscriber> roles = subscriberService.selectSubscrRoles(sUser
 				.getId());
 
-		for (SubscrRole sr : roles) {
+		for (Subscriber sr : roles) {
 			String roleName = sr.getName();
 			grantedAuths.add(new SimpleGrantedAuthority(roleName));
 		}

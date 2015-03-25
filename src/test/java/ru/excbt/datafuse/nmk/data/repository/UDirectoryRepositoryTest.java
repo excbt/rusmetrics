@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
-import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
 
 /**
  * 
@@ -35,7 +34,7 @@ public class UDirectoryRepositoryTest extends JpaSupportTest {
 	
 	@Test
 	public void testSelectBySubscrOrg() {
-		List<UDirectory> ddList = directoryRepository.selectBySubscrOrg(TEST_SUBSCR_ORG_ID);
+		List<UDirectory> ddList = directoryRepository.selectBySubscriber(TEST_SUBSCR_ORG_ID);
 		assertTrue(ddList.size() > 0);
 		for (UDirectory d : ddList) {
 			logger.info("Found root node {}", d.getDirectoryName());
