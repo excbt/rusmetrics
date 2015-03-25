@@ -31,7 +31,7 @@ public class UDirectoryService implements SecuredRoles {
 	private UDirectoryRepository directoryRepository;
 
 	@Autowired
-	private CurrentSubscrRoleService currentSubscrRoleService;
+	private CurrentSubscriberService currentSubscrRoleService;
 
 	/**
 	 * 

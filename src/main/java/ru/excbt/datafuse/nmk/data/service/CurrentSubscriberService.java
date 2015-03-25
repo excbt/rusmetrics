@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 
 @Service
-public class CurrentSubscrRoleService {
+public class CurrentSubscriberService {
 
 	private static final long SUBSCR_ORG_ID = 728;
 	

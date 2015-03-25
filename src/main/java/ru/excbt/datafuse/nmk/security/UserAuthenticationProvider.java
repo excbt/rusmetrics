@@ -12,14 +12,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.service.PasswordService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
+@Component("userAuthenticationProvider")
 public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	private static final Logger logger = LoggerFactory
@@ -32,7 +34,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	private SystemUserService systemUserService;
 
 	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private PasswordService passwordService;
 
 	/**
 	 * 
@@ -46,17 +48,17 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		List<SubscrUser> subscrUsers = subscriberService
 				.findUserByUsername(name);
 
+		if (subscrUsers.size() > 1) {
+			return null;
+		}
+		
 		if (subscrUsers.size() == 0) {
 			return checkSystemUser(authentication);
 		}
 
-		if (subscrUsers.size() > 1) {
-			return null;
-		}
-
 		SubscrUser sUser = subscrUsers.get(0);
 
-		if (!passwordEncoder.matches(password, sUser.getPassword())) {
+		if (!passwordService.passwordEncoder().matches(password, sUser.getPassword())) {
 			return null;
 		}
 
@@ -87,15 +89,15 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	 * @return
 	 */
 	private Authentication checkSystemUser(Authentication authentication) {
-		String name = authentication.getName();
+		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
 
-		SystemUser systemUser = systemUserService.findByUsername(name);
+		SystemUser systemUser = systemUserService.findByUsername(userName);
 		if (systemUser == null) {
 			return null;
 		}
 
-		if (!passwordEncoder.matches(password, systemUser.getPassword())) {
+		if (!passwordService.passwordEncoder().matches(password, systemUser.getPassword())) {
 			return null;
 		}
 
@@ -104,8 +106,11 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.SUBSCR_ROLE_ADMIN));
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(name,
+		Authentication auth = new UsernamePasswordAuthenticationToken(userName,
 				password, grantedAuths);
+		
+		logger.info("LOGIN as a SystemUser. Authentication complete. userName:{}", userName);
+		
 		return auth;
 
 	}
