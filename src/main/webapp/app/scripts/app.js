@@ -51,7 +51,7 @@ angular
       })
       .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
-        controller: 'MainCtrl'
+        controller: 'IndicatorsCtrl'
       })
       .when('/private/directories', {
         templateUrl: 'views/directories.html',

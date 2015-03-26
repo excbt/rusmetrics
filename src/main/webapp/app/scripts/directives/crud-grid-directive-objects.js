@@ -306,6 +306,7 @@ console.log($scope.zPointsByObject);
                         
                         for(var i=0;i<$scope.zPointsByObject.length;i++){
                             var zpoint = {};
+                            zpoint.id = $scope.zPointsByObject[i].id;
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
                             zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
@@ -460,7 +461,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 // Показания точек учета
     
                 $scope.getIndicators = function(object){
-console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);                    
+
                     $rootScope.showIndicatorsParam = true;
                     
                     //Send:
@@ -469,6 +470,11 @@ console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);
                     //  1h
                     //  beginDate = lastDate.nachalo
                     //  endDate = lastDate.konec
+ 
+//console.debug("$scope.currentObject");
+//for (var k in $scope.currentObject){
+//    console.log("$scope.currentObject["+k+"]="+$scope.currentObject[k]);
+//};                    
                     
                     $rootScope.contObject =  $scope.currentObject;
                     $rootScope.contZPoint = object;

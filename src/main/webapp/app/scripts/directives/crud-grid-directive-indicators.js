@@ -189,11 +189,28 @@ angular.module('portalNMK').directive('crudGridIndicators', function () {
                 
                 //indicators
                 $scope.setColumns = function(){
+//console.log("CrudTableName = "+$scope.crudTableName);                    
                     var iCol = 0;
-                    for (k in $scope.objects){
-                        $scope.columns[iCol] = k;
+                    var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
+                    for (var k in $scope.objects[0]){
+                //    for (var k=1;k<=$scope.objects[0].length-7;k++)    
+console.log("Column["+iCol+"]= "+k);  
+                        if (notUserColumns.has(k)){continue;};
+                        
+                        
+                        var column = {};
+                        
+                        column.header = k;
+                        column.class = "col-md-1";
+                        column.name = k; 
+                        
+                        $scope.columns[iCol] = column;
                         iCol=iCol+1;
                     };
+                };
+                
+                $scope.timeStampToString = function(timestamp){
+                    return new Date(timestamp);
                 };
                 //end indicators
                 

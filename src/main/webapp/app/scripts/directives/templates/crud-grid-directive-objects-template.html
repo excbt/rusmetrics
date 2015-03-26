@@ -149,7 +149,7 @@
                 <div ng-show="bGroupByObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
 <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
 <!--                Эта кнопка доступна, когда отображаются объекты-->
-                <div ng-show="bObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i></div>
+                <div ng-show="bObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i></div>
 
                 
             </td>

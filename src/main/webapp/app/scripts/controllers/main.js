@@ -13,25 +13,24 @@ angular.module('portalNMK')
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
       
+      $scope.getIndicators(){
+          window.location.replace("#/objects/indicators/");
+      };
+      
     //for indicators
-//    $scope.contObjectId = $rootScope.contObjectId;
-//    $scope.contZPointId = $rootScope.contZPointId; 
       
-      $scope.timeDetailType = "1h";
-                   
-      $scope.endDate = "2014-03-20";//new Date();                 
-      $scope.beginDate = "2014-03-19";//endDate;     
-      //$scope.beginDate.setHours(0,0,0,0);
-      
-      $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$scope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$scope.beginDate+"&endDate="+$scope.endDate;
-      
+       $rootScope.timeDetailType = "1h";
+
+        $rootScope.endDate = "2014-03-20";//new Date();                 
+          $rootScope.beginDate = "2014-03-19";//endDate;  
+
       
     //end for indicators  
       
-      
-    $scope.reportStart= new Date();
-                    $scope.reportEnd=new Date(2015, 03, 22);
-                    $scope.welcome = "Вас обслуживает контролер отчетов.";
+      //report
+                    $rootScope.reportStart= new Date();
+                    $rootScope.reportEnd=new Date(2015, 03, 22);
+//                    $scope.welcome = "Вас обслуживает контролер отчетов.";
 //                    $scope.setDateRange = function(){
 //                        
 //                                        $('input[name="daterange"]').daterangepicker();
@@ -42,12 +41,12 @@ angular.module('portalNMK')
 //                        alert("Дата начала = "+$scope.reportStart+"; Дата завершения"+$scope.reportEnd);
 //                    } ;
     
-                    $scope.navPlayerDates = {
+                    $rootScope.navPlayerDates = {
                             startDate : moment().startOf('day'),
                             endDate : moment().endOf('day'),
                         };
 
-                    $scope.queryDateOptsRu = {
+                    $rootScope.queryDateOptsRu = {
                                 locale : {
                                     applyClass : 'btn-green',
                                     applyLabel : "Применить",
@@ -77,7 +76,7 @@ angular.module('portalNMK')
                                 format : 'DD-MM-YYYY'
                             };
 
-                        $scope.queryDateOptsEn = {
+                        $rootScope.queryDateOptsEn = {
                                 locale : {
                                     applyClass : 'btn-green',
                                 },
@@ -100,10 +99,10 @@ angular.module('portalNMK')
                         };
 
 
-                        $scope.$watch('navPlayerDates', function (newDates) {
+                        $rootScope.$watch('navPlayerDates', function (newDates) {
 console.log('New date set: ', newDates);
-                            $scope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-                            $scope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+                            $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+                            $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
                             //  $scope.getReport(newDates);                
                         }, false);      
     
