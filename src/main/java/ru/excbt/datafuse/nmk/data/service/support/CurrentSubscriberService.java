@@ -1,9 +1,10 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.data.service.support;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 @Service
 public class CurrentSubscriberService {

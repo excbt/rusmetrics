@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.AuditorAware;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.service.CurrentUserService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 public class AuditorAwareImpl implements AuditorAware<AuditUser> {
 
