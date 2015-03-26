@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,10 +32,9 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryParamController {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryParamController.class);
-	
+
 	@Autowired
 	private UDirectoryParamService directoryParamService;
 
@@ -63,12 +63,11 @@ public class UDirectoryParamController {
 	public ResponseEntity<?> getOne(
 			@PathVariable("directoryId") long directoryId,
 			@PathVariable("id") long id) {
-		
-		UDirectoryParam result = directoryParamService
-				.findOne(id);
-		
+
+		UDirectoryParam result = directoryParamService.findOne(id);
+
 		checkState(directoryId == result.getDirectory().getId());
-		
+
 		return ResponseEntity.ok(result);
 	}
 
@@ -87,8 +86,6 @@ public class UDirectoryParamController {
 		checkNotNull(entity);
 		checkArgument(entity.getId().longValue() == id);
 
-		logger.debug("directoryId:{}. Param id:{}", directoryId, id);
-		
 		UDirectory directory = directoryService.findOne(directoryId);
 		checkNotNull(directory);
 
@@ -98,7 +95,10 @@ public class UDirectoryParamController {
 			directoryParamService.save(entity);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Error during update entity UDirectoryParam (id={}): {}",
+					id, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
@@ -129,7 +129,10 @@ public class UDirectoryParamController {
 			resultEntity = directoryParamService.save(entity);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Error during create entity UDirectoryParam (directoryId={}): {}",
+					directoryId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
@@ -146,12 +149,15 @@ public class UDirectoryParamController {
 	public ResponseEntity<?> deleteOne(
 			@PathVariable("directoryId") long directoryId,
 			@PathVariable("id") long id) {
-		
+
 		try {
 			directoryParamService.delete(id);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Error during delete entity UDirectoryParam (id={}): {}",
+					id, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}

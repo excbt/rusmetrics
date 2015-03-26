@@ -10,7 +10,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.SequenceGenerator;
 
 import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,6 +38,7 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 	 * 
 	 * @see org.springframework.data.domain.Persistable#getId()
 	 */	
+	@Override
 	public PK getId() {
 		return id;
 	}
@@ -106,7 +106,7 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 			return false;
 		}
 
-		AbstractPersistable<?> that = (AbstractPersistable<?>) obj;
+		AbstractPersistableEntity<?> that = (AbstractPersistableEntity<?>) obj;
 
 		return null == this.getId() ? false : this.getId().equals(that.getId());
 	}

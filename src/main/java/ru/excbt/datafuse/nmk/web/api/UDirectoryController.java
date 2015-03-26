@@ -9,11 +9,14 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +30,9 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 @Controller
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryController {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(UDirectoryController.class);
 
 	@Autowired
 	private UDirectoryService directoryService;
@@ -86,27 +92,26 @@ public class UDirectoryController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = WebApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(
-			@PathVariable("directoryId") long directoryId,
+	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long id,
 			@RequestBody UDirectory entity) {
 
 		checkNotNull(entity);
 		checkNotNull(entity.getId());
-		checkArgument(entity.getId().longValue() == directoryId);
+		checkArgument(entity.getId().longValue() == id);
 
 		try {
 			directoryService.save(entity);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during save entity UDirectory (id={}): {}", id,
+					e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
-
 		return ResponseEntity.accepted().build();
 	}
 
-	
 	/**
 	 * 
 	 * @param entity
@@ -114,45 +119,44 @@ public class UDirectoryController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, produces = WebApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne(
-			@RequestBody UDirectory entity, HttpServletRequest request) {
+	public ResponseEntity<?> createOne(@RequestBody UDirectory entity,
+			HttpServletRequest request) {
 
 		checkNotNull(entity);
 		checkArgument(entity.getId() == null);
-		
+
 		UDirectory resultEntity = null;
-		
+
 		try {
 			resultEntity = directoryService.save(entity);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during create entity UDirectory: {}", e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
-		}		
-		
+		}
+
 		URI location = URI.create(request.getRequestURI() + "/"
 				+ resultEntity.getId());
-		
+
 		return ResponseEntity.created(location).body(resultEntity);
 	}
-	
-	
+
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = WebApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne(
-			@PathVariable("directoryId") long id) {
-		
+	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") long id) {
+
 		try {
 			directoryService.delete(id);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during delete entity UDirectory (id={}): {}",
+					id, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
 		return ResponseEntity.ok().build();
 	}
-	
-	
-	
+
 }

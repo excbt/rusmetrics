@@ -17,9 +17,9 @@ import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
-import ru.excbt.datafuse.nmk.data.service.PasswordService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
+import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 
 @Component("userAuthenticationProvider")
 public class UserAuthenticationProvider implements AuthenticationProvider {

@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,7 +92,8 @@ public class UDirectoryNodeController {
 			directoryNodeService.saveWithDictionary(entity, directoryId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during update entity UDirectoryNode (id={}): {}", id, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
@@ -118,10 +120,12 @@ public class UDirectoryNodeController {
 			resultEntity = directoryNodeService.saveWithDictionary(entity, directoryId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (PersistenceException e) {
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during create entity UDirectoryNode (directoryId={}): {}", directoryId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
+
 		
 		URI location = URI.create(request.getRequestURI() + "/"
 				+ resultEntity.getId());
