@@ -21,7 +21,11 @@
 		p:driverClassName="${dataSource.driverClassName}"
 		p:url="${dataSource.url}" 
 		p:username="${dataSource.username}"
-		p:password="${dataSource.password}" 
+		p:password="${dataSource.password}"
+        p:maxActive="10" 
+        p:maxIdle="3" 
+        p:maxWait="100"		
+		 
 		/>
 
 	<bean id="persistenceUnitManager"
