@@ -8,7 +8,7 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('portalNMK', [
     'ngAnimate',
     'ngCookies',
@@ -17,8 +17,10 @@ angular
     'ngSanitize',
     'ngTouch',
     'ui.tree',
-    'daterangepicker'
-  ])
+    'daterangepicker',
+    'react'
+  ]);
+app
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -77,3 +79,9 @@ angular
         redirectTo: '/'
       });
   });
+
+var getIndicators1 = function(){
+    alert("getIndicators from Index.");
+};
+
+app.value('getIndicators1',getIndicators1);

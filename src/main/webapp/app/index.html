@@ -149,7 +149,7 @@
                                          Задайте интервал дат</label>
                                     <div>
                                             <input style="font-size: 10px;" date-range-picker class="form-control date-picker"
-                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                                type="text" ng-model="navPlayerDatesIndi" options="queryDateOptsRu" />
                                         </div>
                                 
                                 </div>
@@ -161,21 +161,24 @@
                                                      Показания</label>
                                         </div>
                                         <div class="row">
-                                                <input type=radio name="indicatorsKind" value="24h" checked="true" 
+                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="24h" checked="true" 
 
                                                     data-toggle="offcanvas"> Суточные</input>
                                         </div>
                                         <div class="row">
-                                                <input type=radio name="indicatorsKind" value="1h" 
+                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="1h" 
 
                                                     data-toggle="offcanvas"> Часовые</input>
                                         </div>
                                     
                                     </div>
                                 </div>
-                                <div class="list-group-item">
-                                    <i class="btn btn-default btn-xs" ng-click="getIndicators()"> Показать</i>
-                                </div>
+<!--                                <div class="list-group-item">-->
+<!--                                    <i class="btn btn-default btn-xs" ng-click="getIndicators1()"> Показать</i>-->
+                                    <a class="list-group-item"
+
+                                        href="#/objects/indicators/" data-toggle="offcanvas">Показать</a>
+<!--                                </div>-->
                             </div>
                         </nav>    
                         
@@ -295,17 +298,35 @@
       <script src="scripts/services/notification-factory.js"></script>      
 <!--        <script src="include/javascript-include.html"></script>-->
         <!-- endbuild -->
-    
+    <script src="bower_components/react/react.js"></script>
+    <script src="bower_components/ngReact/ngReact.js"></script>
+    <script src="bower_components/react/JSXTransformer.js"></script>
     <script src="bower_components/toastr/toastr.js"></script>
     <script src="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
     <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
     <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
     <script src="vendor_components/angular-daterangepicker.js"></script>
+      
+    <script src="scripts/controllers/test.js"></script> 
+
+    <script src="scripts/jsx/Hello.jsx" type="text/jsx"></script>
+    <script src="scripts/directives/hello.js"></script>
+
+
+    <script src="vendor_components/jQuery-contextMenu-master/src/jquery.ui.position.js" type="text/javascript"></script>
+    <script src="vendor_components/jQuery-contextMenu-master/src/jquery.contextMenu.js" type="text/javascript"></script>
+    <script src="vendor_components/jQuery-contextMenu-master/screen.js" type="text/javascript"></script>
+    <script src="vendor_components/jQuery-contextMenu-master/prettify/prettify.js" type="text/javascript"></script>
     
-    
-    <script src="scripts/controllers/test.js"></script>
-    
-    
+    <link href="vendor_components/jQuery-contextMenu-master/src/jquery.contextMenu.css" rel="stylesheet" type="text/css" />
+<!--    <link href="vendor_components/jQuery-contextMenu-master/screen.css" rel="stylesheet" type="text/css" />-->
+    <link href="vendor_components/jQuery-contextMenu-master/prettify/prettify.sunburst.css" rel="stylesheet" type="text/css" />
+
+<script>
+    function getIndicators1(){
+        alert("Call from Index");
+    }
+</script>
     
 </body>
 </html>

@@ -41,7 +41,7 @@
 </div>
 -->
 
-<table class="table table-bordered table-condensed noMarginBottom">
+<table id="datatabl" class="table table-bordered table-condensed noMarginBottom">
   
      <tr class="info" >
 <!--         ng-hide="bdirectories">-->
@@ -55,14 +55,10 @@
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
-                       <th ng-show="bGroupByObject || bObject" class="col-md-1">
-                          
-                           
+                       <th ng-show="bGroupByObject || bObject" class="col-md-1">                         
                 <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
                            
                         </th>
-                     
-
 
                 <!--       Шапка таблицы-->
                         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
@@ -84,9 +80,9 @@
                         </th>
                      
 <!--                     Extra column for directory buttons-->
-                      <th ng-show="bdirectories" class="col-md-2"> 
+<!--                      <th ng-show="bdirectories" class="col-md-2"> -->
 <!--                          button "Add" for directories-->
-                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>
+<!--                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>-->
 <!--
                 <div class="btn-toolbar">
                     <div class="btn-group">
@@ -96,11 +92,12 @@
                 </div>
 -->
                 
-                    </th>
+<!--                    </th>-->
                      
                      
                 </tr> 
                  
+<!--
                 <tr ng-show="addMode">
                     
                     <td ng-repeat="column in columns" ng-switch="!column.lookup" ng-class="column.class">
@@ -116,6 +113,7 @@
                         </div>
                     </td>
                 </tr> 
+-->
                  
             </table>     
         </td>          
@@ -138,7 +136,7 @@
        
     
 <!--  Постороение таблицы с данными  -->
-    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
             
@@ -146,11 +144,22 @@
                 <tr><!--    <tr> Уровень 3     -->
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
             <td ng-show="bGroupByObject || bObject" ng-hide="bReports" class="col-md-1 noMargin" style="padding:0;">
-                <div ng-show="bGroupByObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i></div>
-<!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
-<!--                Эта кнопка доступна, когда отображаются объекты-->
-                <div ng-show="bObject" class="btn-toolbar noMargin"><i class="btn btn-default btn-xs glyphicon " ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i></div>
+                <div class="btn-toolbar">
+<!--                    <div  class="noMargin">-->
+                        <i ng-show="bGroupByObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i>
+<!--                    </div>-->
+    <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
+    <!--                Эта кнопка доступна, когда отображаются объекты-->
+<!--                    <div  class="noMargin">-->
+                        <i ng-show="bObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+<!--                    </div>-->
 
+    <!--                Кнопка для открытия параметров объекта-->
+<!--                    <div >            -->
+<!--                        <i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjectOptionModal" data-toggle="modal"></i>-->
+
+<!--                     </div>-->
+                </div>        
                 
             </td>
             <td ng-show="bReports">
@@ -219,7 +228,7 @@
                         <table>
                             <tr>
                                 <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click=""></i></td>                                
+                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjectOptionModal" data-toggle="modal"></i></td>                                
                             </tr>
                         </table>    
                     </div>    
@@ -266,7 +275,7 @@
                     
                     
                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover" ng-show="object.showGroupDetails">
+				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover" ng-show="object.showGroupDetails">
                     <tr>
                         <!--       Шапка таблицы-->
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
@@ -279,7 +288,7 @@
                         <th ng-show="bObject" class="col-md-1">
                         </th>
                     </tr>
-                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators(oldObject)">
+                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
                          <td ng-repeat="oldColumn in oldColumns">
                              <div ng-switch on="oldColumn.name">
     <!--                        Если в столбце должна отображаться категория, то...-->
@@ -289,7 +298,7 @@
                                     <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
                                     <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
                                     <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
-                                    <span ng-switch-default>no define</span>
+                                    <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
                             </span> 
                             <span ng-switch-when="zpointType">
@@ -300,7 +309,7 @@
                                     <span ng-switch-when="HVS"><img height=16 width=16 src="images/hvs.png"></span>
                                     <span ng-switch-when="GS"><img height=16 width=16 src="images/gaz.png"></span>
                                     <span ng-switch-when="ES"><img height=16 width=16 src="images/es.png"></span>
-                                    <span ng-switch-default>no define</span>
+                                    <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
                             </span>      
     <!--                        По дефолту выводим содержимое данной ячейки-->
@@ -318,7 +327,7 @@
                                         <table>
                                             <tr>
                                                 <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click=""></i></td>
+                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
                                             </tr>
                                         </table>    
                                     </div>    
@@ -392,272 +401,161 @@
 			</div>
 </div>
 
-<!-- Детали по группе-->
-<div id="showObjectDetailModal" class="modal fade" role="dialog"
-	aria-labelledby="showObjectDetailLabel" tabindex="-1">
+
+
+<!--Show object options-->
+<div id="showObjectOptionModal" class="modal fade" role="dialog"
+	aria-labelledby="showObjectOptionLabel" tabindex="-1">
 
 	<div class="modal-dialog  modal-content">
 
 		<div class="modal-header">
-			<h3 id="showObjectDetailLabel">
-				{{currentObject.name}} 
+			<h3 id="showObjectOptionLabel">
+				Свойства объекта "{{currentObject.fullName}}"
 			</h3>
 		</div>
 		<div class="modal-body">
-			<form name="showObjectDetailForm" novalidate>
-
-                
-<!--            Таблица с данными    -->
-				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover">
-                    <tr>
-                        <!--       Шапка таблицы-->
-                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
-                            <div>
-                                {{oldColumn.header || oldColumn.name}}
-                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
-                            </div>
-                        </th>
-                    </tr>
-                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
-                         <td ng-repeat="oldColumn in oldColumns">
-                             <div ng-switch on="oldColumn.name">
-    <!--                        Если в столбце должна отображаться категория, то...-->
-                            <span ng-switch-when="noticeCat">
-    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
-                                <div ng-switch on="oldObject[oldColumn.name]">
-                                    <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
-                                    <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
-                                    <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
-                                    <span ng-switch-default>no define</span>
-                                </div>
-                            </span>                        
-    <!--                        По дефолту выводим содержимое данной ячейки-->
-                            <span ng-switch-default>
-                                    {{oldObject[oldColumn.name]}}
-<!--                                Раскрываем группировку-->
-                            </span>
-                        </div>
-                         </td>
-                     </tr>
-                    </table>
-
-			</form>
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-	<!--					<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
-								value="Delete" />
-						</div>-->
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block" data-dismiss="modal"
-								ng-click="toogleShowGroupDetails(currentObject); exit('#currentObject')">
-								Cancel
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
-
-
-<!-- Edit parametrs of directory-->
-<div id="editDirectoryParamsModal" class="modal fade" role="dialog"
-	aria-labelledby="editDirectoryParamsLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="editDirectoryParamsLabel">
-				Параметры справочника "{{currentObject.directName}}" 
-			</h3>
-		</div>
-		<div class="modal-body">
-			<form name="editDirectoryParamsForm" novalidate>
-
-                
-<!--            Таблица с данными    -->
-				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover">
-                    <tr>
-                        <!--       Шапка таблицы-->
-                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
-                            <div>
-                                {{oldColumn.header || oldColumn.name}}
-                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
-                            </div>
-                        </th>
-                        <th class="col-md-1"> 
-<!--                          button "Add" for param of cur directory-->
-                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addParamMode, 'glyphicon-plus': !addParamMode}" ng-click="toggleAddParamMode()"></i>
-
-                
-                        </th>
-                    </tr>
-<!--                    Add new param in row-->
-                    <tr ng-show="addParamMode">
                     
-                        <td ng-repeat="column in oldColumns" ng-switch="!column.lookup" ng-class="column.class">
-                            <input ng-switch-default ng-model="object[column.name]" ng-disabled="column.autoincrement" class="form-control"/>
-                            <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-show="column.lookup" ng-model="object[column.name]" class="form-control"></select>
-                        </td>
-                        <td class="col-md-2">
-                            <div class="btn-toolbar">
-                                <div class="btn-group">
-                                    <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="addObject()"></i>
-                                    <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleAddParamMode()"></i>
-                                </div>
-                            </div>
-                        </td>
-                     </tr>
-                    
-<!--                    Show exists params-->
-                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
-                         <td ng-repeat="oldColumn in oldColumns" ng-switch on="oldObject.editMode">
-                        <div ng-switch-default >
-                                    <div ng-switch on="oldColumn.name">
 
-                <!--                        По дефолту выводим содержимое данной ячейки-->
-                                        <span ng-switch-default>
-                                                {{oldObject[oldColumn.name]}}
+<!--               <div> 
 
-                                        </span>
-                                    </div>
-                        </div>         
-                        <div ng-switch-when="true" ng-switch on="!oldColumn.lookup">
-                            <input ng-switch-default ng-model="oldObject[oldColumn.name]" model-change-blur ng-disabled="oldColumn.autoincrement" class="form-control" />
-                            <select ng-switch-when="false" ng-options="l[oldColumn.lookup.key] as l[oldColumn.lookup.value] for l in getLookupData(oldColumn.lookup.table) | orderBy: oldColumn.lookup.orderBy.field:!oldColumn.lookup.orderBy.asc" ng-model="oldObject[oldColumn.name]" class="form-control"></select>
-                        </div>
-                         </td>
-                         <td ng-class="col-md-1">
-                             <div class="btn-toolbar">
-                                    <div class="btn-group">
-                                        <table>
-                                            <tr>
-                                                <td ng-show="!oldObject.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="toggleEditMode(oldObject)" ></i> </td>
-                                                <td ng-show="oldObject.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditMode(oldObject)" ></i> </td>
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="setCurObjToDel(oldObject, 1, oldColumns[0].name)" data-target="#deleteObjectModal" data-toggle="modal"></i></td>
-                                            </tr>
-                                        </table>    
-                                    </div>    
-                                </div>
-                         </td>
-                     </tr>
-                    </table>
-
-			</form>
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-	<!--					<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
-								value="Delete" />
-						</div>-->
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#currentObject')">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
-
-<!--Delete window-->
-<div id="deleteObjectModal" class="modal fade" role="dialog"
-	aria-labelledby="deleteObjectLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="deleteObjectLabel">
-				Удалить 
-			</h3>
-		</div>
-		<div class="modal-body">
-			<form name="deleteContactForm" novalidate>
-				<p>
-					<label class="text-warning"> Вы действительно хотите удалить  
-					</label> 
-					<label class="text-primary">{{currentObjectToDel[extraProp.deleteConfirmationProp || extraProp.idColumnName]}}</label> 
-					<label
-						class="text-warning"> ? </label>
-				</p>
-
-			</form>
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block"
-								ng-click="deleteObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
-								value="Удалить" />
-						</div>
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
-
-
-<!--Show structure of directory-->
-<div id="showDirectoryStructModal" class="modal fade" role="dialog"
-	aria-labelledby="showDirectoryStructLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="showDirectoryStructLabel">
-				{{currentObject.directName}} 
-			</h3>
-		</div>
-		<div class="modal-body">
-<!--            <div><i class="btn btn-default" ng-click="test()"></i></div>     -->
-<!--            <div>{{abc.currentNode.label}}</div>-->
-
-               <div
-                    data-angular-treeview="true"
-                    data-tree-id="abc"
-                    data-tree-model="treedata"
-                    data-node-id="id"
-                    data-node-label="label"
-                    data-node-children="children" 
-                    ng-dblclick="openNode(abc.currentNode)">
-                </div> 
+                   <div class="row">
+                       <div class="span2">
+                           Наименование
+                       </div>
+                       <div class="span8">
+                           <input type="text"/>
+                       </div>
+                   </div>  
+                   <div class="row">
+                       <div class="span2">
+                           описание
+                       </div>
+                       <div class="span2">
+                           <input type="text"/>
+                       </div>
+                   </div>  
+-->
+                   
+                   <table class="table table-lighter table-striped table-condensed table-hover">
+                     
+                       <tr>
+                           <td ><div class="pull-right">Наименование</div></td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">Описание</div></td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">Адрес</div></td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">Режим функционирования</div></td>
+                           <td><select>
+                                   <option>Летний</option>
+                                   <option>Зимний</option>
+                                   <option>Не определено</option>
+                               </select>
+                           </td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">Температура холодной воды</div></td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">РСО:</div></td>
+                       </tr>tr>
+                        <tr>
+                            <td></td>
+                           <td>
+                               <table>
+                                   <tr>
+                                       <td> Теплоснабжение
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>Теплоснабжающая организация №1</option>
+                                            <option>Теплоснабжающая организация №2</option>
+                                            <option>Теплоснабжающая организация №3</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td> ГВС
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>ООО "Горячая вода №1"</option>
+                                            <option>ООО "Горячая вода №2"</option>
+                                            <option>ООО "Горячая вода №3"</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td> ХВ
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>МГУП "Хол вода" №1</option>
+                                            <option>МГУП "Хол вода" №2</option>
+                                            <option>МГУП "Хол вода" №3</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td> Газ
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>Облгазоснабжающая организация №1</option>
+                                            <option>Райгазоснабжающая №2</option>
+                                            <option>КакаяТоМестная Газаоснабжающая организация №3</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td> Электричество
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>Обл электросеть №1</option>
+                                            <option>Рай электросеть №2</option>
+                                            <option>Ад электросеть №3</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td> Пароснабжение
+                                       </td>
+                                       <td>
+                                           <select>
+                                            <option>Вообще откуда это взялось №1</option>
+                                            <option>Откда это №2</option>
+                                            <option>Что это №3</option>
+                                           </select>
+                                       </td>
+                                   </tr>
+                               
+                                </table>   
+                            </td>
+                        </tr>
+                       <tr>
+                           <td><div class="pull-right">УК</div></td>
+                           <td><select>
+                                <option>Упр комп №1</option>
+                                <option>Упр комп №2</option>
+                                <option>Упр комп №3</option>
+                               </select>
+                           </td>
+                        </tr>
+<!--
+                       <tr>
+                           <td><div class="pull-right">Тарифы</div></td><td><input type="text"/></td>
+                        </tr>
+-->
+                       <tr>
+                           <td><div class="pull-right">Отапливаемая площадь</div></td><td><input type="text"/></td>
+                       </tr>
+                   </table>
+             
 
 
 			
@@ -666,14 +564,13 @@
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-	<!--					<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
-								value="Delete" />
-						</div>-->
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs fa fa-plug" data-dismiss="modal"
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click="saveObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
@@ -689,32 +586,196 @@
 	</div>
 </div>
 
-<!--Edit value of directory params-->
-<div id="editDirValueModal" class="modal fade" role="dialog"
-	aria-labelledby="editDirValueLabel" tabindex="-1">
+
+<!--Show Zpoint options-->
+<div id="showZpointOptionModal" class="modal fade" role="dialog"
+	aria-labelledby="showZpointOptionLabel" tabindex="-1">
 
 	<div class="modal-dialog  modal-content">
 
 		<div class="modal-header">
-			<h3 id="editDirValueLabel">
-				Атрибуты записи {{abc.currentNode.label}}
+			<h3 id="showZpointOptionLabel">
+				Свойства точки учета "{{currentObject.fullName}}"
 			</h3>
 		</div>
 		<div class="modal-body">
                     
 
                <div> 
-                   <table class="crud-grid table table-lighter table-bordered table-condensed table-hover">
+                   <table class="table table-lighter table-striped table-condensed table-hover">
+                     
                        <tr>
-                           <th> Название
-                           </th>
-                           <th> Тип
-                           </th>
-                           <th> Описание
-                           </th>
-                           <th> Значение
-                           </th>
-                       </tr>
+                           <td>Наименование</td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td>Тип</td>
+                           <td>
+                               <input type=text disabled="true" value="ГВС"/>
+                               <input type="radio" name="tubes">Однатрубная</input>
+                                <input type="radio" name="tubes">Двухтрубная</input>
+                           </td>
+                           <td>
+                           </td>
+                        </tr>
+                       <tr>
+                           <td>Прибор</td>
+                           <td><select>
+                                    <option>Прибор 1</option>
+                                    <option>Прибор такой-то</option>
+                                    <option>Приборррррррррррррррр</option>
+                                   
+                               </select>
+                           </td>
+                        </tr>
+ 
+                       <tr>
+                           <td>Расчетный час</td><td><input type="text"/></td>
+                        </tr>
+                       <tr>
+                           <td>Расчетный день</td><td><input type="text"/></td>
+                        </tr>
+
+                       <tr>
+                           <td>Рабочие режимы потребления:</td>
+                           <td>
+                               <TABLE>
+                                   <tr>
+                                       <td><input type="checkbox" title="M1"/>М1
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           т/час
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="M2"/>М2
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           т/час
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="Т1"/>Т1
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           &deg;C
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="Т2"/>Т2
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           &deg;C
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="Р1"/>Р1
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           ат
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="Р2"/>Р2
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           ат
+                                       </td>
+                                   </tr>
+                                   <tr>
+                                       <td><input type="checkbox" title="&Delta;Q"/>&Delta;Q
+                                       </td>
+                                       <td>
+                                           от
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           до
+                                       </td>
+                                       <td>
+                                           <input type=text/>
+                                       </td>
+                                       <td>
+                                           ГКал/сут
+                                       </td>
+                                   </tr>
+                               </TABLE>
+                           </td>
+                        </tr>
+
                    </table>
                 </div> 
 
@@ -725,8 +786,13 @@
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs fa fa-bars" data-dismiss="modal"
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click="saveObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
@@ -741,3 +807,68 @@
 		</span>
 	</div>
 </div>
+
+
+<!--Context menu-->
+<script>
+//    <!--Context menu for object-->
+    $(function($scope){
+        $('#datatabl').contextMenu({
+            selector: 'tr', 
+            callback: function(key, options) {
+//                var m = "clicked: " + key + " on " + $(this).text();
+//                window.console && console.log(m) || alert(m); 
+//var str = "";                
+//for (var k in options){                
+//console.log("options["+k+"]= "+options[k]);
+//    for (var j in options[k]){
+//        console.log("options["+k+"]["+j+"]= "+options[k][j]);
+//    };
+//}
+
+                if ("options"==key){
+                    $('#showObjectOptionModal').modal();
+                };
+            },
+            items: {
+                "watch": {name: "Посмотреть", icon: ""},
+                "options": {name: "Свойства", icon: ""}
+//                ,
+//                "delete": {name: "Delete", icon: "delete"},
+//                "sep1": "---------",
+//                "quit": {name: "Quit", icon: "quit"}
+            }
+        });
+    });
+    
+//    <!--Context menu for zpoint-->
+    $(function($scope){
+        $('#dataZpointTabl').contextMenu({
+            selector: 'tr', 
+            callback: function(key, options) {
+//                var m = "clicked: " + key + " on " + $(this).text();
+//                window.console && console.log(m) || alert(m); 
+//var str = "";                
+//for (var k in options){                
+//console.log("options["+k+"]= "+options[k]);
+//    for (var j in options[k]){
+//        console.log("options["+k+"]["+j+"]= "+options[k][j]);
+//    };
+//}
+
+                if ("options"==key){
+                    $('#showZpointOptionModal').modal();
+                };
+            },
+            items: {
+                "watch": {name: "Посмотреть!", icon: ""},
+                "options": {name: "Свойства", icon: ""}
+//                ,
+//                "delete": {name: "Delete", icon: "delete"},
+//                "sep1": "---------",
+//                "quit": {name: "Quit", icon: "quit"}
+            }
+        });
+    });
+    
+</script>

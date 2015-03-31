@@ -7,10 +7,7 @@ angular.module('portalNMK')
      //    $scope.contObjectId = $rootScope.contObjectId;
     //    $scope.contZPointId = $rootScope.contZPointId; 
 
-          $rootScope.timeDetailType = "1h";
-
-        $rootScope.endDate = "2014-03-20";//new Date();                 
-          $rootScope.beginDate = "2014-03-19";//endDate;     
+            
           //$scope.beginDate.setHours(0,0,0,0);
 //console.log("$rootScope.contObject");
 //for (k in $rootScope.contObject){
@@ -22,15 +19,23 @@ angular.module('portalNMK')
 //}; 
 //        
         
-          $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$scope.beginDate+"&endDate="+$scope.endDate;
+//          $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$rootScope.beginDate+"&endDate="+$rootScope.endDate;
     
+        $scope.setTable = function(){
+            $rootScope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$rootScope.beginDate+"&endDate="+$rootScope.endDate;
+            
+ console.log("$scope.zpointTable = "+$rootScope.zpointTable);
+          //  window.location.replace("#/objects/indicators/");
+        };
+        
+   
       
     //end for indicators  
       
       
-    $scope.reportStart= new Date();
-                    $scope.reportEnd=new Date(2015, 03, 22);
-                    $scope.welcome = "Вас обслуживает контролер отчетов.";
+//    $scope.reportStart= new Date();
+//                    $scope.reportEnd=new Date(2015, 03, 22);
+//                    $scope.welcome = "Вас обслуживает контролер отчетов.";
 //                    $scope.setDateRange = function(){
 //                        
 //                                        $('input[name="daterange"]').daterangepicker();
@@ -41,7 +46,7 @@ angular.module('portalNMK')
 //                        alert("Дата начала = "+$scope.reportStart+"; Дата завершения"+$scope.reportEnd);
 //                    } ;
     
-                    $scope.navPlayerDates = {
+                    $rootScope.navPlayerDatesIndi = {
                             startDate : moment().startOf('day'),
                             endDate : moment().endOf('day'),
                         };
@@ -99,10 +104,14 @@ angular.module('portalNMK')
                         };
 
 
-                        $scope.$watch('navPlayerDates', function (newDates) {
+                        $scope.$watch('navPlayerDatesIndi', function (newDates) {
 console.log('New date set: ', newDates);
-                            $scope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-                            $scope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+                            $rootScope.beginDate = moment(newDates.startDate).format('YYYY-MM-DD');
+                            $rootScope.endDate = moment(newDates.endDate).format('YYYY-MM-DD');
+console.log("$rootScope.beginDate = "+$rootScope.beginDate);                            
+console.log("$rootScope.endDate = "+$rootScope.endDate);                                                        
+                            $scope.setTable();
+                            
                             //  $scope.getReport(newDates);                
                         }, false);      
     

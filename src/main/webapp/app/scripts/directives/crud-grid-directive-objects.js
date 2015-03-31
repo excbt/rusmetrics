@@ -36,10 +36,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = angular.fromJson($attrs.blist); //|| true; //Признак того, что объекты выводятся только для просмотра
 
-console.log("Attrs = "+$attrs);                
-console.log("bGroup = "+$scope.bGroupByObject);
-console.log("bExtraMenu = "+$scope.bExtraMenu);                
-console.log("bList = "+$scope.bList);                
+//console.log("Attrs = "+$attrs);                
+//console.log("bGroup = "+$scope.bGroupByObject);
+//console.log("bExtraMenu = "+$scope.bExtraMenu);                
+//console.log("bList = "+$scope.bList);                
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -482,6 +482,17 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                     window.location.replace("#/objects/indicators/");
 
                 };
+                
+                
+                //Objects. Context menu for objects and zpoints
+                $scope.rclick = function(){
+                  alert("Right button click!");  
+                };
+                
+                function rclick(){
+                    alert("Privet iz directive");
+                };
+                //end objects.context menu
                
             }]
     };
