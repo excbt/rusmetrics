@@ -1,4 +1,4 @@
-'use strict';
+//'use strict';
 
 angular.module('portalNMK').directive('crudGridNotice', function () {
     return {
@@ -11,8 +11,7 @@ angular.module('portalNMK').directive('crudGridNotice', function () {
         },
         templateUrl: 'scripts/directives/templates/crud-grid-directive-notice-template.html',
         link : function (scope, element, attrs) {
-        	//scope.crudTableName = scope.$eval($attrs.table);  
-        	//console.log(scope.crudTableName);
+
         },
         controller: ['$scope', '$element', '$attrs', '$routeParams', 'crudGridDataFactory', 'notificationFactory',
             function ($scope, $element, $attrs, $routeParams, crudGridDataFactory, notificationFactory) {
@@ -32,8 +31,7 @@ angular.module('portalNMK').directive('crudGridNotice', function () {
                 $scope.bExtraMenu = angular.fromJson($attrs.bextramenu) || false; //признак дополнительного меню
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 
-console.log("bGroup = "+$scope.bGroupByObject);
-console.log("bExtraMenu = "+$scope.bExtraMenu);                
+     
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -363,12 +361,12 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
 //                    });
 //                };
                 //for page "Objects"
-                $scope.zpoints = angular.fromJson($attrs.zpointdata);
-               
-                $scope.showObjectDetails = function(obj){
-                    $scope.oldObjects = [];
-                    var zps = angular.fromJson($attrs.zpointdata);
-                    var mas = [];
+//                $scope.zpoints = angular.fromJson($attrs.zpointdata);
+//               
+//                $scope.showObjectDetails = function(obj){
+//                    $scope.oldObjects = [];
+//                    var zps = angular.fromJson($attrs.zpointdata);
+//                    var mas = [];
 //                    var masCount = 0;
 //                    for (var k=0;k<$scope.zpoints.length;k++){
 //                        if($scope.zpoints[k].zpointParent == obj.id){
@@ -377,13 +375,13 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
 //                        }
 //                    }
                  //   $scope.oldObjects = mas;
-                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
-   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
-                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
-                    
-                    
-                  
-                };
+//                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
+//   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
+//                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
+//                    
+//                    
+//                  
+//                };
                 
                 //Фильтр "Только непросмотренные"
                 $scope.onlyNoRead = false;
@@ -403,65 +401,49 @@ console.log("bExtraMenu = "+$scope.bExtraMenu);
                 
                 
                 //Directories
-                $scope.paramsTableName = "table";
-                $scope.addParamMode = false;
-                $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+//                $scope.paramsTableName = "table";
+//                $scope.addParamMode = false;
+//                $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+//                
+//                $scope.getCurDirParams = function(){
+//                    
+//                    $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
+//                    $scope.oldColumns = [ 
+//                                      {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
+//                                    ,{"name":"paramType"
+//                                      ,"lookup":
+//                                        {
+//                                            "table": "rest/types",
+//                                            "key": "typeId",
+//                                            "value":"typeKeyname",
+//                                            "orderBy": {"field": "typeKeyname", "asc": "true"}
+//                                        }                                      
+//                                      ,"header" : "Тип", "class":"col-md-2"}
+//                                    ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
+//                                    
+//                    ];
+//                };
+//                
+//                $scope.toggleAddParamMode = function(){
+//                    $scope.addParamMode = !$scope.addParamMode;
+//                };
+//                
+//                $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
+//                    $scope.extraProp = {};
+//                    $scope.currentObjectToDel = obj;
+//                    $scope.extraProp.idColumnName = idColumnName;
+//                    $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
+//                };
+//                
+//                
+//                $scope.showDetails = function(obj){
+//                    if($scope.bdirectories){
+//                        $scope.currentObject = obj;
+//                        $('#showDirectoryStructModal').modal();
+//                    }
+//                };
                 
-                $scope.getCurDirParams = function(){
-                    
-                    $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
-                    $scope.oldColumns = [ 
-                                      {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
-                                    ,{"name":"paramType"
-                                      ,"lookup":
-                                        {
-                                            "table": "rest/types",
-                                            "key": "typeId",
-                                            "value":"typeKeyname",
-                                            "orderBy": {"field": "typeKeyname", "asc": "true"}
-                                        }                                      
-                                      ,"header" : "Тип", "class":"col-md-2"}
-                                    ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
-                                    
-                    ];
-                };
-                
-                $scope.toggleAddParamMode = function(){
-                    $scope.addParamMode = !$scope.addParamMode;
-                };
-                
-                $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
-                    $scope.extraProp = {};
-                    $scope.currentObjectToDel = obj;
-                    $scope.extraProp.idColumnName = idColumnName;
-                    $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
-                };
-                
-                $scope.treedata =
-                    [
-                        { "label" : "Школы", "id" : "role1", "children" : [
-                            { "label" : "Школа1", "id" : "role11", "children" : [] },
-                            { "label" : "Школа2", "id" : "role12", "children" : [
-                                { "label" : "Корпус2-1", "id" : "role121", "children" : [
-                                    { "label" : "Этаж2-1-1", "id" : "role1211", "children" : [] },
-                                    { "label" : "Этаж2-1-2", "id" : "role1212", "children" : [] }
-                                ]}
-                            ]}
-                        ]},
-                        { "label" : "Заводы", "id" : "role2", "children" : [] },
-                        { "label" : "Администрация", "id" : "role3", "children" : [] }
-                    ];
-                
-                $scope.showDetails = function(obj){
-                    if($scope.bdirectories){
-                        $scope.currentObject = obj;
-                        $('#showDirectoryStructModal').modal();
-                    }
-                };
-                
-                $scope.test = function(){
-                    $('#editDirValueModal').modal();
-                };
+
             }]
     };
 });

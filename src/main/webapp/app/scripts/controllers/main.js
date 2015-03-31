@@ -7,31 +7,30 @@
  * # MainCtrl
  * Controller of the portalNMK
  */
-angular.module('portalNMK')
-  .controller('MainCtrl', ['$scope','$rootScope', function ($scope, $rootScope) {
+var app = angular.module('portalNMK');
+  app.controller('MainCtrl', ['$scope','$rootScope', 'crudGridDataFactory', function ($scope, $rootScope, crudGridDataFactory) {
     
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
       
+//      $scope.getIndicators(){
+//          window.location.replace("#/objects/indicators/");
+//      };
+      
     //for indicators
-//    $scope.contObjectId = $rootScope.contObjectId;
-//    $scope.contZPointId = $rootScope.contZPointId; 
       
-      $scope.timeDetailType = "1h";
-                   
-      $scope.endDate = "2014-03-20";//new Date();                 
-      $scope.beginDate = "2014-03-19";//endDate;     
-      //$scope.beginDate.setHours(0,0,0,0);
-      
-      $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$scope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$scope.beginDate+"&endDate="+$scope.endDate;
-      
+       $rootScope.timeDetailType = "1h";
+
+       // $rootScope.endDate = ""; //"2014-03-20";//new Date();                 
+       //   $rootScope.beginDate ="";// "2014-03-19";//endDate;  
+
       
     //end for indicators  
       
-      
-    $scope.reportStart= new Date();
-                    $scope.reportEnd=new Date(2015, 03, 22);
-                    $scope.welcome = "Вас обслуживает контролер отчетов.";
+      //report
+                    $rootScope.reportStart= new Date();
+                    $rootScope.reportEnd=new Date(2015, 03, 22);
+//                    $scope.welcome = "Вас обслуживает контролер отчетов.";
 //                    $scope.setDateRange = function(){
 //                        
 //                                        $('input[name="daterange"]').daterangepicker();
@@ -42,12 +41,12 @@ angular.module('portalNMK')
 //                        alert("Дата начала = "+$scope.reportStart+"; Дата завершения"+$scope.reportEnd);
 //                    } ;
     
-                    $scope.navPlayerDates = {
+                    $rootScope.navPlayerDates = {
                             startDate : moment().startOf('day'),
                             endDate : moment().endOf('day'),
                         };
 
-                    $scope.queryDateOptsRu = {
+                    $rootScope.queryDateOptsRu = {
                                 locale : {
                                     applyClass : 'btn-green',
                                     applyLabel : "Применить",
@@ -77,7 +76,7 @@ angular.module('portalNMK')
                                 format : 'DD-MM-YYYY'
                             };
 
-                        $scope.queryDateOptsEn = {
+                        $rootScope.queryDateOptsEn = {
                                 locale : {
                                     applyClass : 'btn-green',
                                 },
@@ -100,11 +99,68 @@ angular.module('portalNMK')
                         };
 
 
-                        $scope.$watch('navPlayerDates', function (newDates) {
-console.log('New date set: ', newDates);
-                            $scope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-                            $scope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+                        $rootScope.$watch('navPlayerDates', function (newDates) {
+
+                            $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+                            $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+console.log("This change");                            
                             //  $scope.getReport(newDates);                
-                        }, false);      
+                        }, false);
+      
+                
+                $scope.notices = [];            
+               
+
+                    $scope.getNoticesByObject = function(tableName, object){
+                        var tempArr = [];
+                         var noticeIter = 0;
+                        var table = tableName+"/"+object.id+"/events";
+                        crudGridDataFactory(table).query(function (data) {
+                                                        $scope.noticesByObject = data;
+                            
+console.log("TableName = "+table);
+
+                                                        for(var j=0;j<$scope.noticesByObject.length;j++){                                                                            
+                                                      
+                                                            
+                                                            var notice = {};
+                                                            notice.noticeType = $scope.noticesByObject[j].contEventType.name;
+                                                            notice.noticeText = $scope.noticesByObject[j].message;
+                                                            notice.noticeDate = new Date($scope.noticesByObject[j].eventTime);
+                                                            notice.noticeObject = object.fullName;
+                                                            notice.noticeZpoint  = $scope.noticesByObject[j].contServiceType;   
+                                                            tempArr[noticeIter] = notice;
+                                                            noticeIter=noticeIter+1;
+                                                        }
+                            
+                                                        $scope.notices = tempArr;
+                        });
+                        
+                       
+                    
+                };  
+    
+  
+     function generateRows( ) {
+       // var rows = [];
+         var object = {"id": "18811505", "fullName": "Какой-то объект"};
+        var tableName = "../api/subscr/contObjects";// + object.id+ "/events";
+
+          $scope.getNoticesByObject(tableName, object);
+        //return rows;
+      }
+
+        generateRows();
+
+      $scope.cols = [ 'Тип', 'Сообщение', 'Дата', 'Объект', 'Точка учета'];
+       $scope.table = {
+          cols: [ 'Тип', 'Сообщение', 'Email', 'Twitter', 'Id', 'Modified' ],
+          rows: $scope.notices
+        };
+                    
+      
     
   }]);
+
+
+

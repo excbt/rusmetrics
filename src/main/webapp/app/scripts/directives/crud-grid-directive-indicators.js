@@ -189,157 +189,178 @@ angular.module('portalNMK').directive('crudGridIndicators', function () {
                 
                 //indicators
                 $scope.setColumns = function(){
+//console.log("CrudTableName = "+$scope.crudTableName);                    
                     var iCol = 0;
-                    for (k in $scope.objects){
-                        $scope.columns[iCol] = k;
+                    var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
+                    for (var k in $scope.objects[0]){
+                //    for (var k=1;k<=$scope.objects[0].length-7;k++)    
+//console.log("Column["+iCol+"]= "+k);  
+                        if (notUserColumns.has(k)){continue;};
+                        
+                        
+                        var column = {};
+                        
+                        column.header = k;
+                        column.class = "col-md-1";
+                        column.name = k; 
+                        
+                        $scope.columns[iCol] = column;
                         iCol=iCol+1;
                     };
+                };
+                
+                $scope.timeStampToString = function(timestamp){
+                    return new Date(timestamp);
+                };
+                
+                $scope.getIndicators1 = function(){
+                    alert("Indicators");
                 };
                 //end indicators
                 
                 
                 //Работа с уведомлениями
-                    $scope.bGroupByObject = false;
-                    $scope.oldObjects = $scope.objects;
-                    $scope.oldColumns = $scope.columns;
-                    $scope.oldCaptions = $scope.captions;
-                    $scope.oldExtraProps = $scope.extraProps;
-                
-                $scope.cancelGroup = function(){
-                    $scope.objects = $scope.oldObjects;
-                    $scope.columns = $scope.oldColumns;
-                    $scope.captions = $scope.oldCaptions;
-                    $scope.extraProps = $scope.oldExtraProps;
-                    $scope.bGroupByObject = false;
-                };
+//                    $scope.bGroupByObject = false;
+//                    $scope.oldObjects = $scope.objects;
+//                    $scope.oldColumns = $scope.columns;
+//                    $scope.oldCaptions = $scope.captions;
+//                    $scope.oldExtraProps = $scope.extraProps;
+//                
+//                $scope.cancelGroup = function(){
+//                    $scope.objects = $scope.oldObjects;
+//                    $scope.columns = $scope.oldColumns;
+//                    $scope.captions = $scope.oldCaptions;
+//                    $scope.extraProps = $scope.oldExtraProps;
+//                    $scope.bGroupByObject = false;
+//                };
                 
                 //
-                $scope.groupByObject = function(){
+//                $scope.groupByObject = function(){
                     //1.сделать копию объектов
                     //2.Найти уникальные объекты
                     //3.Посчитать у каждого объекта количество уведомлений всех и каждого из видов в отдельности
                     //4.Перестроить структуру и вывести объекты
   //                 alert("groupByObject");
 
-                     $scope.bGroupByObject = true;
+//                     $scope.bGroupByObject = true;
                     //1.
-                    $scope.oldObjects = $scope.objects;
-                    $scope.oldColumns = $scope.columns;
-                    $scope.oldCaptions = $scope.captions;
-                    $scope.oldExtraProps = $scope.extraProps;
+//                    $scope.oldObjects = $scope.objects;
+//                    $scope.oldColumns = $scope.columns;
+//                    $scope.oldCaptions = $scope.captions;
+//                    $scope.oldExtraProps = $scope.extraProps;
 
                     //2.
-                    $scope.objectGroups = [];
-                    
-                    $scope.groupsCount =0;
-                  
-                    for (var i=0;i<$scope.objects.length;i++){
-                   
-                        $scope.objectGroup = {"name":"", "commonCount":0, "critCount":0, "warnCount":0, "infoCount":0};
-
-                        if ( $scope.objectGroups.length == 0){
-         
-   
-                            $scope.objectGroup.name = $scope.objects[i].noticeObject;
-                            $scope.objectGroup.commonCount = 1;
-                            switch($scope.objects[i].noticeCat){
-                                    case "Критическая": $scope.objectGroup.critCount=1; break;
-                                    case "Предупреждение": $scope.objectGroup.warnCount=1; break;
-                                    case "Информация": $scope.objectGroup.infoCount=1; break;
-                                    
-                            }
-                            $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
-                            $scope.groupsCount=$scope.groupsCount+1;
-                        }else{
-     
-                            $scope.bNewGroup = false;
-                            for(var j=0; j<$scope.objectGroups.length; j++){
-
-                                if ($scope.objectGroups[j].name==$scope.objects[i].noticeObject){
-                                    $scope.objectGroups[j].commonCount=$scope.objectGroups[j].commonCount+1; //3.
-                                    switch($scope.objects[i].noticeCat){
-                                            case "Критическая": $scope.objectGroups[j].critCount=$scope.objectGroups[j].critCount+1; break;
-                                            case "Предупреждение": $scope.objectGroups[j].warnCount=$scope.objectGroups[j].warnCount+1; break;
-                                            case "Информация": $scope.objectGroups[j].infoCount=$scope.objectGroups[j].infoCount+1; break;
-                                    
-                                    }
-                                    $scope.bNewGroup = false;
-                                    break;
-                                 
-                                }else{
-                                    $scope.bNewGroup = true;
-                                }
-                            }
-                            
-                            if($scope.bNewGroup){
-                                $scope.objectGroup.name = $scope.objects[i].noticeObject;
-                                    $scope.objectGroup.commonCount = 1;
-                                     switch($scope.objects[i].noticeCat){
-                                            case "Критическая": $scope.objectGroup.critCount=1; break;
-                                            case "Предупреждение": $scope.objectGroup.warnCount=1; break;
-                                            case "Информация": $scope.objectGroup.infoCount=1; break;
-
-                                    }
-                                    $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
-                                    $scope.groupsCount=$scope.groupsCount+1;
-                            }
-
-                            
-                        }
-                    }
-                console.log($scope.groupsCount);
+//                    $scope.objectGroups = [];
+//                    
+//                    $scope.groupsCount =0;
+//                  
+//                    for (var i=0;i<$scope.objects.length;i++){
+//                   
+//                        $scope.objectGroup = {"name":"", "commonCount":0, "critCount":0, "warnCount":0, "infoCount":0};
+//
+//                        if ( $scope.objectGroups.length == 0){
+//         
+//   
+//                            $scope.objectGroup.name = $scope.objects[i].noticeObject;
+//                            $scope.objectGroup.commonCount = 1;
+//                            switch($scope.objects[i].noticeCat){
+//                                    case "Критическая": $scope.objectGroup.critCount=1; break;
+//                                    case "Предупреждение": $scope.objectGroup.warnCount=1; break;
+//                                    case "Информация": $scope.objectGroup.infoCount=1; break;
+//                                    
+//                            }
+//                            $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
+//                            $scope.groupsCount=$scope.groupsCount+1;
+//                        }else{
+//     
+//                            $scope.bNewGroup = false;
+//                            for(var j=0; j<$scope.objectGroups.length; j++){
+//
+//                                if ($scope.objectGroups[j].name==$scope.objects[i].noticeObject){
+//                                    $scope.objectGroups[j].commonCount=$scope.objectGroups[j].commonCount+1; //3.
+//                                    switch($scope.objects[i].noticeCat){
+//                                            case "Критическая": $scope.objectGroups[j].critCount=$scope.objectGroups[j].critCount+1; break;
+//                                            case "Предупреждение": $scope.objectGroups[j].warnCount=$scope.objectGroups[j].warnCount+1; break;
+//                                            case "Информация": $scope.objectGroups[j].infoCount=$scope.objectGroups[j].infoCount+1; break;
+//                                    
+//                                    }
+//                                    $scope.bNewGroup = false;
+//                                    break;
+//                                 
+//                                }else{
+//                                    $scope.bNewGroup = true;
+//                                }
+//                            }
+//                            
+//                            if($scope.bNewGroup){
+//                                $scope.objectGroup.name = $scope.objects[i].noticeObject;
+//                                    $scope.objectGroup.commonCount = 1;
+//                                     switch($scope.objects[i].noticeCat){
+//                                            case "Критическая": $scope.objectGroup.critCount=1; break;
+//                                            case "Предупреждение": $scope.objectGroup.warnCount=1; break;
+//                                            case "Информация": $scope.objectGroup.infoCount=1; break;
+//
+//                                    }
+//                                    $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
+//                                    $scope.groupsCount=$scope.groupsCount+1;
+//                            }
+//
+//                            
+//                        }
+//                    }
+//                console.log($scope.groupsCount);
                     
                     
                     //4.
-                    $scope.columns = [ 
-                                      {"name":"name", "header" : "Объект", "class":"col-md-3"}
-                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-2"}
-                                    ,{"name":"critCount", "header" : "Критические", "class":"col-md-1"}
-                                    ,{"name":"warnCount", "header" : "Предупреждений", "class":"col-md-1"}
-                                    ,{"name":"infoCount", "header" : "Информативных", "class":"col-md-1"}
-                    ];
-                    $scope.objects = $scope.objectGroups;
-                    
-                }; //End groupByObject
+//                    $scope.columns = [ 
+//                                      {"name":"name", "header" : "Объект", "class":"col-md-3"}
+//                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-2"}
+//                                    ,{"name":"critCount", "header" : "Критические", "class":"col-md-1"}
+//                                    ,{"name":"warnCount", "header" : "Предупреждений", "class":"col-md-1"}
+//                                    ,{"name":"infoCount", "header" : "Информативных", "class":"col-md-1"}
+//                    ];
+//                    $scope.objects = $scope.objectGroups;
+//                    
+//                }; //End groupByObject
                 
                 
-                $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
-                   for(var i=0;i<$scope.objects.length;i++){
-                       if ($scope.objects[i]!=curObject && $scope.objects[i].showGroupDetails==true){
-                           $scope.objects[i].showGroupDetails=false;
-                       }
-                   }
-                    curObject.showGroupDetails = !curObject.showGroupDetails;
+//                $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
+//                   for(var i=0;i<$scope.objects.length;i++){
+//                       if ($scope.objects[i]!=curObject && $scope.objects[i].showGroupDetails==true){
+//                           $scope.objects[i].showGroupDetails=false;
+//                       }
+//                   }
+//                    curObject.showGroupDetails = !curObject.showGroupDetails;
                     
                   //  $scope.selectedItem(curObject);
-                };
+//                };
                 
-                $scope.zPointsByObject = [];
-                $scope.getZpointsDataByObject = function(table){
-                    
-console.log(table);                 
-                    crudGridDataFactory(table).query(function (data) {
-                        $scope.zPointsByObject = data;
-console.log("Data:");                
-console.log($scope.zPointsByObject); 
-                        
-                        
-                        for(var i=0;i<$scope.zPointsByObject.length;i++){
-                            var zpoint = {};
-                            zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
-                            zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
-                            zpoint.zpointLastDataDate  = "27.02.2015";   
-                            
-                            $scope.oldObjects[i] = zpoint;
-                        
-console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
-                        }
-                        
-                        
-                    });
-                };
+//                $scope.zPointsByObject = [];
+//                $scope.getZpointsDataByObject = function(table){
+//                    
+//console.log(table);                 
+//                    crudGridDataFactory(table).query(function (data) {
+//                        $scope.zPointsByObject = data;
+//console.log("Data:");                
+//console.log($scope.zPointsByObject); 
+//                        
+//                        
+//                        for(var i=0;i<$scope.zPointsByObject.length;i++){
+//                            var zpoint = {};
+//                            zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
+//                            zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
+//                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+//                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+//                            zpoint.zpointLastDataDate  = "27.02.2015";   
+//                            
+//                            $scope.oldObjects[i] = zpoint;
+//                        
+//console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
+//                        }
+//                        
+//                        
+//                    });
+//                };
                 //for page "Objects"
 //                $scope.zpoints = angular.fromJson($attrs.zpointdata);
 //               
@@ -382,74 +403,74 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 //Directories
                 
-                $scope.paramsTableName = "table";
-                $scope.addParamMode = false;
-                $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
+//                $scope.paramsTableName = "table";
+//                $scope.addParamMode = false;
+//                $scope.bdirectories = angular.fromJson($attrs.bdirectories) || false; //flag for page "Directories". If this is set, that visible page is page "Directories"
                 //get params of current directory
-                $scope.getParams = function(table){
-                         $scope.oldObjects = [];
-                        crudGridDataFactory(table).query(function (data) {
-                                $scope.oldObjects = data;
-
-                            });
-                };
+//                $scope.getParams = function(table){
+//                         $scope.oldObjects = [];
+//                        crudGridDataFactory(table).query(function (data) {
+//                                $scope.oldObjects = data;
+//
+//                            });
+//                };
                 
                 //get nodes of current directory
-                $scope.getCurDirNodes = function(){
-                        $scope.list = [];
-                        var table =$scope.crudTableName+"/"+$scope.currentObject.id+"/node";
-                        $scope.crudGridDir(table).query(function (data) {
-                                $scope.list[0] = data;
-
-                            });
-                        if ($scope.list.length == 0){
-                            $scope.list[0] = {
-                                
-                                nodeName: $scope.currentObject.directoryName,
-                                childNodes: []
-                            };
-                        };
-                };
-                
-                $scope.typesArray = ["BOOLEAN", "STRING", "NUMBER"]; //array of param type
-                
-                $scope.getCurDirParams = function(){
-                    
-                    $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
-                    
-                    $scope.getParams($scope.crudTableName+"/"+$scope.currentObject.id+"/param");
-                    $scope.oldColumns = [ 
-                                      {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
-                                    ,{"name":"paramType"
-                                      ,"lookup":
-                                        {
-                                            "table": "rest/types",
-                                            "key": "typeId",
-                                            "value":"typeKeyname",
-                                            "orderBy": {"field": "typeKeyname", "asc": "true"}
-                                        }                                      
-                                      ,"header" : "Тип", "class":"col-md-3"}
-                                    ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
-                                    
-                    ];
-                };
-                
-                $scope.toggleAddParamMode = function(){
-                    $scope.addParamMode = !$scope.addParamMode;
-                    $scope.object = {};
-                    if ($scope.addParamMode) {
-                    	if ($scope.newIdProperty && $scope.newIdValue)
-                    		$scope.object[$scope.newIdProperty] =  $scope.newIdValue;
-                    }
-                };
-                
-                $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
-                    $scope.extraProp = {};
-                    $scope.currentObjectToDel = obj;
-                    $scope.extraProp.idColumnName = idColumnName;
-                    $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
-                    $scope.targetTableName = $scope.crudTableName+"/";
-                };
+//                $scope.getCurDirNodes = function(){
+//                        $scope.list = [];
+//                        var table =$scope.crudTableName+"/"+$scope.currentObject.id+"/node";
+//                        $scope.crudGridDir(table).query(function (data) {
+//                                $scope.list[0] = data;
+//
+//                            });
+//                        if ($scope.list.length == 0){
+//                            $scope.list[0] = {
+//                                
+//                                nodeName: $scope.currentObject.directoryName,
+//                                childNodes: []
+//                            };
+//                        };
+//                };
+//                
+//                $scope.typesArray = ["BOOLEAN", "STRING", "NUMBER"]; //array of param type
+//                
+//                $scope.getCurDirParams = function(){
+//                    
+//                    $scope.oldObjects = angular.fromJson($scope.currentObject.directParams);
+//                    
+//                    $scope.getParams($scope.crudTableName+"/"+$scope.currentObject.id+"/param");
+//                    $scope.oldColumns = [ 
+//                                      {"name":"paramName", "header" : "Наименование", "class":"col-md-3"}
+//                                    ,{"name":"paramType"
+//                                      ,"lookup":
+//                                        {
+//                                            "table": "rest/types",
+//                                            "key": "typeId",
+//                                            "value":"typeKeyname",
+//                                            "orderBy": {"field": "typeKeyname", "asc": "true"}
+//                                        }                                      
+//                                      ,"header" : "Тип", "class":"col-md-3"}
+//                                    ,{"name":"paramDescription", "header" : "Описание", "class":"col-md-4"}
+//                                    
+//                    ];
+//                };
+//                
+//                $scope.toggleAddParamMode = function(){
+//                    $scope.addParamMode = !$scope.addParamMode;
+//                    $scope.object = {};
+//                    if ($scope.addParamMode) {
+//                    	if ($scope.newIdProperty && $scope.newIdValue)
+//                    		$scope.object[$scope.newIdProperty] =  $scope.newIdValue;
+//                    }
+//                };
+//                
+//                $scope.setCurObjToDel = function(obj, idColumnName, deleteConfirmationProp){
+//                    $scope.extraProp = {};
+//                    $scope.currentObjectToDel = obj;
+//                    $scope.extraProp.idColumnName = idColumnName;
+//                    $scope.extraProp.deleteConfirmationProp = deleteConfirmationProp;
+//                    $scope.targetTableName = $scope.crudTableName+"/";
+//                };
                 
 //                $scope.treedata =
 //                    [
@@ -466,154 +487,154 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
 //                        { "label" : "Администрация", "id" : "role3", "children" : [] }
 //                    ];
                 
+//                
+//                $scope.list=[
+//                  {
+//                    "id": 1,
+//                    "nodeName": "Заводы",
+//                    "childNodes": []
+//                  },
+//                  {
+//                    "id": 2,
+//                    "nodeName": "Школы",
+//                    "childNodes": [
+//                      {
+//                        "id": 21,
+//                        "nodeName": "Школа №1",
+//                        "childNodes": [
+//                          {
+//                            "id": 211,
+//                            "nodeName": "Корпус 1",
+//                            "childNodes": []
+//                          },
+//                          {
+//                            "id": 212,
+//                            "nodeName": "Корпус 2",
+//                            "childNodes": []
+//                          }
+//                        ]
+//                      },
+//                      {
+//                        "id": 22,
+//                        "nodeName": "Школа №2",
+//                        "childNodes": []
+//                      }
+//                    ]
+//                  },
+//                  {
+//                    "id": 3,
+//                    "nodeName": "3. unicorn-zapper",
+//                    "childNodes": []
+//                  },
+//                  {
+//                    "id": 4,
+//                    "nodeName": "4. romantic-transclusion",
+//                    "childNodes": []
+//                  }
+//                ];
                 
-                $scope.list=[
-                  {
-                    "id": 1,
-                    "nodeName": "Заводы",
-                    "childNodes": []
-                  },
-                  {
-                    "id": 2,
-                    "nodeName": "Школы",
-                    "childNodes": [
-                      {
-                        "id": 21,
-                        "nodeName": "Школа №1",
-                        "childNodes": [
-                          {
-                            "id": 211,
-                            "nodeName": "Корпус 1",
-                            "childNodes": []
-                          },
-                          {
-                            "id": 212,
-                            "nodeName": "Корпус 2",
-                            "childNodes": []
-                          }
-                        ]
-                      },
-                      {
-                        "id": 22,
-                        "nodeName": "Школа №2",
-                        "childNodes": []
-                      }
-                    ]
-                  },
-                  {
-                    "id": 3,
-                    "nodeName": "3. unicorn-zapper",
-                    "childNodes": []
-                  },
-                  {
-                    "id": 4,
-                    "nodeName": "4. romantic-transclusion",
-                    "childNodes": []
-                  }
-                ];
-                
-                $scope.showDetails = function(obj){
-                    
-                        $scope.currentObject = obj;
-                        $('#showDirectoryStructModal').modal();
-                    
-                };
-                
-                $scope.test = function(){
-                    $('#editDirValueModal').modal();
-                };
-                
+//                $scope.showDetails = function(obj){
+//                    
+//                        $scope.currentObject = obj;
+//                        $('#showDirectoryStructModal').modal();
+//                    
+//                };
+//                
+//                $scope.test = function(){
+//                    $('#editDirValueModal').modal();
+//                };
+//                
                
                 
-                $scope.selItem = {};
-
-                $scope.options = {
-                };
-                
-                $scope.remove = function(scope) {
-                  scope.remove();
-                };
-
-                $scope.toggle = function(scope) {
-                  scope.toggle();
-                };
-
-                $scope.moveLastToTheBegginig = function () {
-                  var a = $scope.data.pop();
-                  $scope.data.splice(0,0, a);
-                };
-
-                $scope.newSubItem = function(scope) {
-                  var nodeData = scope.$modelValue;
-                  nodeData.childNodes.push({
-                    
-                    nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
-                    childNodes: []
-                  });
-                };
-
-                var getRootNodesScope = function() {
-                  return angular.element(document.getElementById("tree-root")).scope();
-                };
-
-                $scope.collapseAll = function() {
-                  var scope = getRootNodesScope();
-                  scope.collapseAll();
-                };
-
-                $scope.expandAll = function() {
-                  var scope = getRootNodesScope();
-                  scope.expandAll();
-                };
-                
-                $scope.currentParent = {};
-                
-                $scope.openNode = function(scope){
-                    $scope.currentNode = scope.$modelValue;
-                    $scope.currentNodeScope = scope.$modelValue.$nodeScope;
-                    $scope.treeScope = scope;
-                    $scope.tree = {};
-                    $scope.tree.nodes = [];
-                    $scope.tree.nodes = scope.$nodes;
-                    $scope.currentParentScope = $scope.currentNode.$parentNodeScope;
-                    $scope.tree.element = scope.$element;
-                    $('#editDirValueModal').modal();
-                };
-                
-                $scope.showContextMenu = function(){
-                    $('.dropdown-toggle').dropdown();
-                };
-                
-                $scope.crudGridDir = function(type) {
-                    return $resource(type + '/:id', {id: '@id' 
-                    }, {
-                        
-                        query: {method: 'GET', isArray: false}
-                        
-                    });
-			     };    
-                
-                $scope.newNode = function() {
-                    if ($scope.list.length == 0){
-                      $scope.list.push({
-                     
-                        nodeName: $scope.currentObject.directoryName,
-                        childNodes: []
-                      });
-                    }else{
-                        var nodeData = $scope.list[0];
-                        nodeData.childNodes.push({
-                        
-                        nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
-                        childNodes: []
-                      });
-                    }
-                    
-                };
-                
-                $scope.removeTree = function(){
-                    $scope.list = [];
-                };
+//                $scope.selItem = {};
+//
+//                $scope.options = {
+//                };
+//                
+//                $scope.remove = function(scope) {
+//                  scope.remove();
+//                };
+//
+//                $scope.toggle = function(scope) {
+//                  scope.toggle();
+//                };
+//
+//                $scope.moveLastToTheBegginig = function () {
+//                  var a = $scope.data.pop();
+//                  $scope.data.splice(0,0, a);
+//                };
+//
+//                $scope.newSubItem = function(scope) {
+//                  var nodeData = scope.$modelValue;
+//                  nodeData.childNodes.push({
+//                    
+//                    nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+//                    childNodes: []
+//                  });
+//                };
+//
+//                var getRootNodesScope = function() {
+//                  return angular.element(document.getElementById("tree-root")).scope();
+//                };
+//
+//                $scope.collapseAll = function() {
+//                  var scope = getRootNodesScope();
+//                  scope.collapseAll();
+//                };
+//
+//                $scope.expandAll = function() {
+//                  var scope = getRootNodesScope();
+//                  scope.expandAll();
+//                };
+//                
+//                $scope.currentParent = {};
+//                
+//                $scope.openNode = function(scope){
+//                    $scope.currentNode = scope.$modelValue;
+//                    $scope.currentNodeScope = scope.$modelValue.$nodeScope;
+//                    $scope.treeScope = scope;
+//                    $scope.tree = {};
+//                    $scope.tree.nodes = [];
+//                    $scope.tree.nodes = scope.$nodes;
+//                    $scope.currentParentScope = $scope.currentNode.$parentNodeScope;
+//                    $scope.tree.element = scope.$element;
+//                    $('#editDirValueModal').modal();
+//                };
+//                
+//                $scope.showContextMenu = function(){
+//                    $('.dropdown-toggle').dropdown();
+//                };
+//                
+//                $scope.crudGridDir = function(type) {
+//                    return $resource(type + '/:id', {id: '@id' 
+//                    }, {
+//                        
+//                        query: {method: 'GET', isArray: false}
+//                        
+//                    });
+//			     };    
+//                
+//                $scope.newNode = function() {
+//                    if ($scope.list.length == 0){
+//                      $scope.list.push({
+//                     
+//                        nodeName: $scope.currentObject.directoryName,
+//                        childNodes: []
+//                      });
+//                    }else{
+//                        var nodeData = $scope.list[0];
+//                        nodeData.childNodes.push({
+//                        
+//                        nodeName: nodeData.nodeName + '.' + (nodeData.childNodes.length + 1),
+//                        childNodes: []
+//                      });
+//                    }
+//                    
+//                };
+//                
+//                $scope.removeTree = function(){
+//                    $scope.list = [];
+//                };
                 
                 
             }]

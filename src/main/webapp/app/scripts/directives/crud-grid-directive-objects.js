@@ -36,10 +36,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = angular.fromJson($attrs.blist); //|| true; //Признак того, что объекты выводятся только для просмотра
 
-console.log("Attrs = "+$attrs);                
-console.log("bGroup = "+$scope.bGroupByObject);
-console.log("bExtraMenu = "+$scope.bExtraMenu);                
-console.log("bList = "+$scope.bList);                
+//console.log("Attrs = "+$attrs);                
+//console.log("bGroup = "+$scope.bGroupByObject);
+//console.log("bExtraMenu = "+$scope.bExtraMenu);                
+//console.log("bList = "+$scope.bList);                
                 
                 ///$scope.crudTableName = $scope.$eval($attrs.table);     
                 //console.log($scope.crudTableName);
@@ -306,6 +306,7 @@ console.log($scope.zPointsByObject);
                         
                         for(var i=0;i<$scope.zPointsByObject.length;i++){
                             var zpoint = {};
+                            zpoint.id = $scope.zPointsByObject[i].id;
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
                             zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
@@ -460,7 +461,7 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 // Показания точек учета
     
                 $scope.getIndicators = function(object){
-console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);                    
+
                     $rootScope.showIndicatorsParam = true;
                     
                     //Send:
@@ -469,6 +470,11 @@ console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);
                     //  1h
                     //  beginDate = lastDate.nachalo
                     //  endDate = lastDate.konec
+ 
+//console.debug("$scope.currentObject");
+//for (var k in $scope.currentObject){
+//    console.log("$scope.currentObject["+k+"]="+$scope.currentObject[k]);
+//};                    
                     
                     $rootScope.contObject =  $scope.currentObject;
                     $rootScope.contZPoint = object;
@@ -476,6 +482,17 @@ console.log("$rootScope.showIndicatorsParam = "+$rootScope.showIndicatorsParam);
                     window.location.replace("#/objects/indicators/");
 
                 };
+                
+                
+                //Objects. Context menu for objects and zpoints
+                $scope.rclick = function(){
+                  alert("Right button click!");  
+                };
+                
+                function rclick(){
+                    alert("Privet iz directive");
+                };
+                //end objects.context menu
                
             }]
     };
