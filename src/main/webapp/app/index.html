@@ -201,6 +201,10 @@
   
 <!--        <div ng-view="" ng-animate="{enter:'enter-animation'"></div>-->
         <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea">
+          <div class="container" ng-controller = "TableController">
+            <table-component-react table-def="tableDef" columns="columnDef" data="data"/>
+          </div>  					
+					
 					<div id="main" ng-view></div>
         </div>
 
@@ -210,20 +214,25 @@
 </div> <!-- end id=wrap -->
       
       <div class="footer navbar-fixed-bottom row-fluid">
-          <div class="container">
+          <div class="container" >
+            
 			<p class="muted credit">
 <!--              <table>
                   <tr>
-                      <td>-->
-                        <p align="center"><span class="glyphicon"></span> (c) "НМК" 2015</p>
-                     <!-- </td>   
-                      <td align="right">
-                          <p>Телефон технической поддержки: +7(499)678-82-80</p>
-                          <p>E-mail: support@excbt.ru</p>
-                      </td>
-                  </tr>  
-              </table>-->
-              </p>
+                      <td> -->
+<!--                         <react-component name="FooterComponent" props="person"/> -->
+                        <p align="center"><span class="glyphicon"></span> (c) "НМК" 2015 </p>
+                        
+<!--                      </td>   
+<!--                       <td align="right"> -->
+<!--                           <p>Телефон технической поддержки: +7(499)678-82-80</p> -->
+<!--                           <p>E-mail: support@excbt.ru</p> -->
+<!--                       </td> -->
+<!--                   </tr>   -->
+<!--               </table>--> -->
+              
+
+<!--               </p> -->
           </div>
       </div>
    
@@ -253,6 +262,10 @@
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/react/react.js"></script>
+	<script src="bower_components/react/JSXTransformer.js"></script>
+	<script src="bower_components/ngReact/ngReact.min.js"></script>
+	    
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -261,11 +274,31 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
+
+  
+    <script src="bower_components/toastr/toastr.js"></script>
+    
     <!-- endbower -->
     <!-- endbuild -->
 
+
+    <script src="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
+    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
+    <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
+    <script src="vendor_components/angular-daterangepicker.js"></script>
+
+    
+
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
+     
+ 		        
         <script src="scripts/app.js"></script>
+	    <script src="scripts/controllers/table-controller-react(example).js"></script>
+<!--  		<script src="react_components/footer_comp.jsx" type="text/jsx"></script> -->
+ 		<script src="scripts/react/footer_comp.js"></script>
+ 		<script src="scripts/react/tableComponent.react.js"></script>
+
+        
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/about.js"></script>
         <script src="scripts/controllers/notice.js"></script>
@@ -286,22 +319,14 @@
 <script src="scripts/directives/crud-grid-paged-directive.js"></script>
     <script src="scripts/directives/tree-model.js"></script>
     <script src="scripts/directives/crud-grid-directive-indicators.js"></script>
+
+    
       
       <!-- Services -->
       <script src="scripts/services/notification-factory.js"></script>      
 <!--        <script src="include/javascript-include.html"></script>-->
         <!-- endbuild -->
     
-    <script src="bower_components/toastr/toastr.js"></script>
-    <script src="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
-    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
-    <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
-    <script src="vendor_components/angular-daterangepicker.js"></script>
-    
-    
-    <script src="scripts/controllers/test.js"></script>
-    
-    
-    
+
 </body>
 </html>

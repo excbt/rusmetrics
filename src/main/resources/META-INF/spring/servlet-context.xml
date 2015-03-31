@@ -19,10 +19,10 @@
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/bower_components/**" location="/bower_components/" />
-	<mvc:resources mapping="/app/bower_components/**" location="/bower_components/" />
-	<mvc:resources mapping="/vendor_components/**" location="/vendor_components/" />
-	<mvc:resources mapping="/app/vendor_components/**" location="/vendor_components/" />
+	<mvc:resources mapping="/bower_components/**" location="/app/bower_components/" />
+	<mvc:resources mapping="/vendor_components/**" location="/app/vendor_components/" />
+	<mvc:resources mapping="/app/bower_components/**" location="/app/bower_components/" />
+	<mvc:resources mapping="/app/vendor_components/**" location="/app/vendor_components/" />
 
 
 
@@ -51,6 +51,7 @@
 		<property name="favorPathExtension" value="true" />
 		<property name="mediaTypes">
 			<map>
+				
 				<entry key="xml" value="text/xml" />
 				<entry key="json" value="application/json" />
 				<entry key="html" value="text/html" />
