@@ -53,6 +53,9 @@ public class ContEvent extends AbstractAuditableEntity<AuditUser, Long> {
 	@Column(name = "cont_event_comment")
 	private String comment;
 	
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
+	private Long contObjectId;
+	
 	@Version
 	private int version;
 	
@@ -104,6 +107,14 @@ public class ContEvent extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setEventTime(Date eventTime) {
 		this.eventTime = eventTime;
+	}
+
+	public Long getContObjectId() {
+		return contObjectId;
+	}
+
+	public void setContObjectId(Long contObjectId) {
+		this.contObjectId = contObjectId;
 	}	
 	
 	

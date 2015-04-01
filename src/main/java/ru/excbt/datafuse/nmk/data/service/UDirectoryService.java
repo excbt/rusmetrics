@@ -59,7 +59,7 @@ public class UDirectoryService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public List<UDirectory> findAll() {
 		return directoryRepository.selectBySubscriber(currentSubscrRoleService
-				.getSubscrOrgId());
+				.getSubscriberId());
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class UDirectoryService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public List<Long> selectAvailableDirectoryIds() {
-		long subscrOrgId = currentSubscrRoleService.getSubscrOrgId();
+		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		List<Long> directoryIds = directoryRepository
 				.selectDirectoryIds(subscrOrgId);
 		return Collections.unmodifiableList(directoryIds);
@@ -81,7 +81,7 @@ public class UDirectoryService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public boolean checkAvailableDirectory(long directoryId) {
-		long subscrOrgId = currentSubscrRoleService.getSubscrOrgId();
+		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		List<Long> res = directoryRepository.selectAvailableId(subscrOrgId,
 				directoryId);
 		return !res.isEmpty();
@@ -137,7 +137,7 @@ public class UDirectoryService implements SecuredRoles {
 	@Transactional
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void delete(final long directoryId) {
-		long subscrOrgId = currentSubscrRoleService.getSubscrOrgId();
+		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		
 		if (!checkAvailableDirectory(directoryId)) {
 			throw new PersistenceException("SubscrOrgId: " + subscrOrgId
