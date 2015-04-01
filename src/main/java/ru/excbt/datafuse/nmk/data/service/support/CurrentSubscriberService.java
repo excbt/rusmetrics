@@ -14,7 +14,7 @@ public class CurrentSubscriberService {
 	@Autowired
 	private SubscriberService subscriberService;
 	
-	public long getSubscrOrgId() {
+	public long getSubscriberId() {
 		return SUBSCR_ORG_ID;
 	}
 	
