@@ -40,8 +40,19 @@
     <i class="btn btn-default glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>
 </div>
 -->
+<div>
+    <pre class="code">
+        {{objects}}
+    </pre>
+</div>
 
-<table class="table table-bordered table-condensed noMarginBottom">
+<!-- Use react-->
+<!--    <div class="container" ng-controller = "TableController">-->
+            <table-component-react table-def="tableDef" data="objects"/>
+<!--    </div>-->
+<!-- end of Use react-->
+
+<table ng-hide="true" class="table table-bordered table-condensed noMarginBottom">
   
      <tr class="info" >
 <!--         ng-hide="bdirectories">-->
