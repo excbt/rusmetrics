@@ -2,6 +2,10 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +25,16 @@ public class AuditUserService {
 	@Autowired
 	private AuditUserRepository auditUserRepository;
 
+	@PersistenceContext(unitName = "nmk-p")
+	private EntityManager em;
+
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
 	public AuditUser findByUserName(String userName) {
+
 		List<AuditUser> auditUsers = auditUserRepository
 				.findByUserName(userName);
 
@@ -35,8 +48,50 @@ public class AuditUserService {
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	public AuditUser findByUserName2(String userName) {
+
+		Query query = em
+				.createQuery("from AuditUser s where s.userName = :arg1");
+		query.setParameter("arg1", userName);
+		@SuppressWarnings("unchecked")
+		List<AuditUser> auditUsers = query.getResultList();
+
+		if (auditUsers.size() == 1) {
+			return auditUsers.get(0);
+		} else if (auditUsers.size() > 0) {
+			logger.error(
+					"There is more than 1 AuditUser in system (user_name={})",
+					userName);
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public AuditUser findOne(long id) {
 		return auditUserRepository.findOne(id);
+
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public AuditUser findOne2(long id) {
+		Query query = em.createQuery("from AuditUser s where s.id = :arg1");
+		query.setParameter("arg1", id);
+		AuditUser result = (AuditUser) query.getSingleResult();
+
+		return result;
 	}
 
 }
