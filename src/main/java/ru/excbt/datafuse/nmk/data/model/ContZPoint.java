@@ -24,116 +24,97 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="cont_zpoint")
-@EntityListeners({AuditingEntityListener.class})
-public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long>  {
+@Table(name = "cont_zpoint")
+@EntityListeners({ AuditingEntityListener.class })
+public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@OneToOne 
+	@OneToOne(cascade = {})
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 
-	
-	@OneToOne 
+	@OneToOne
 	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
-	
-	@Column(name="custom_service_name")
+
+	@Column(name = "custom_service_name")
 	private String customServiceName;
-	
-	@Column(name="start_date")
+
+	@Column(name = "start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
 
-	@Column(name="end_date")
+	@Column(name = "end_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
-	
-	@OneToMany (fetch = FetchType.EAGER)
-    @JoinTable(name="cont_zpoint_device",
-    joinColumns=@JoinColumn(name="cont_zpoint_id"),
-    inverseJoinColumns=@JoinColumn(name="device_object_id"))	
+
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	@JsonIgnore
 	private Collection<DeviceObject> deviceObjects;
-	
+
 	@Version
 	private int version;
-	
 
 	public ContObject getContObject() {
 		return contObject;
 	}
 
-
 	public void setContObject(ContObject contObject) {
 		this.contObject = contObject;
 	}
-
-
 
 	public String getCustomServiceName() {
 		return customServiceName;
 	}
 
-
 	public void setCustomServiceName(String customServiceName) {
 		this.customServiceName = customServiceName;
 	}
-
 
 	public Date getStartDate() {
 		return startDate;
 	}
 
-
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-
 
 	public Date getEndDate() {
 		return endDate;
 	}
 
-
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
-
-
 
 	public Collection<DeviceObject> getDeviceObjects() {
 		return deviceObjects;
 	}
 
-
 	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
 		this.deviceObjects = deviceObjects;
 	}
-
 
 	public ContServiceType getContServiceType() {
 		return contServiceType;
 	}
 
-
 	public void setContServiceType(ContServiceType contServiceType) {
 		this.contServiceType = contServiceType;
 	}
-
 
 	public int getVersion() {
 		return version;
 	}
 
-
 	public void setVersion(int version) {
 		this.version = version;
-	}	
-	
-	
+	}
+
 }
