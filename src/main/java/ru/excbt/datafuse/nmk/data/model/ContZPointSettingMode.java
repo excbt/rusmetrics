@@ -41,22 +41,22 @@ public class ContZPointSettingMode extends AbstractAuditableEntity<AuditUser, Lo
 	private String settingMode;
 	
 	@Column(name = "md_v_min_chk")
-	private boolean md_V_minChk;
+	private boolean md_V_minChk = true;
 	
 	@Column(name = "md_v_max_chk")
-	private boolean md_V_maxChk;
+	private boolean md_V_maxChk = true;
 	
 	@Column(name = "md_t_min_chk")	
-	private boolean md_T_minChk;
+	private boolean md_T_minChk = true;
 	
 	@Column(name = "md_t_max_chk")	
-	private boolean md_T_maxChk;
+	private boolean md_T_maxChk = true;
 	
 	@Column(name = "md_p_min_chk")	
-	private boolean md_P_minChk;
+	private boolean md_P_minChk = true;
 	
 	@Column(name = "md_p_max_chk")	
-	private boolean md_P_maxChk;
+	private boolean md_P_maxChk = true;
 	
 	@Column(name = "wm_m1_chk")	
 	private boolean wm_M1_chk;
