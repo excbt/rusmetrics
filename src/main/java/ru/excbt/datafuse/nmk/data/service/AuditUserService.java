@@ -33,7 +33,7 @@ public class AuditUserService {
 	 * @param userName
 	 * @return
 	 */
-	public AuditUser findByUserName(String userName) {
+	public AuditUser findByUserName22(String userName) {
 
 		List<AuditUser> auditUsers = auditUserRepository
 				.findByUserName(userName);
@@ -53,16 +53,17 @@ public class AuditUserService {
 	 * @param userName
 	 * @return
 	 */
-	public AuditUser findByUserName2(String userName) {
+	public AuditUser findByUserName(String userName) {
 
 		Query query = em
-				.createQuery("from AuditUser s where s.userName = :arg1");
+				.createQuery("from AuditUser s where s.userName = :arg1", AuditUser.class);
 		query.setParameter("arg1", userName);
-		@SuppressWarnings("unchecked")
-		List<AuditUser> auditUsers = query.getResultList();
+		List<?> auditUsers = query.getResultList();
 
 		if (auditUsers.size() == 1) {
-			return auditUsers.get(0);
+			AuditUser result = (AuditUser) auditUsers.get(0);
+			em.detach(result);
+			return result;
 		} else if (auditUsers.size() > 0) {
 			logger.error(
 					"There is more than 1 AuditUser in system (user_name={})",
@@ -76,7 +77,7 @@ public class AuditUserService {
 	 * @param id
 	 * @return
 	 */
-	public AuditUser findOne(long id) {
+	public AuditUser findOne22(long id) {
 		return auditUserRepository.findOne(id);
 
 	}
@@ -86,11 +87,11 @@ public class AuditUserService {
 	 * @param id
 	 * @return
 	 */
-	public AuditUser findOne2(long id) {
+	public AuditUser findOne(long id) {
 		Query query = em.createQuery("from AuditUser s where s.id = :arg1");
 		query.setParameter("arg1", id);
 		AuditUser result = (AuditUser) query.getSingleResult();
-
+		em.detach(result);
 		return result;
 	}
 

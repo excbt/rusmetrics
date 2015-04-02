@@ -12,10 +12,10 @@ public class WebApiController {
 	/**
 	 * 
 	 * @param currentEntity
-	 * @param savedEntity
+	 * @param newEntity
 	 */
 	protected void prepareAuditableProps (Auditable<AuditUser, ?> currentEntity,
-			Auditable<AuditUser, ?> savedEntity) {
-		AuditableTools.copyAuditableProps(currentEntity, savedEntity);
+			Auditable<AuditUser, ?> newEntity) {
+		AuditableTools.copyAuditableProps(currentEntity, newEntity);
 	}
 }
