@@ -1,6 +1,7 @@
 <div>Портал / Уведомления</div>
 <h2>Уведомления</h2>
 
+<!--
 <div crud-grid-notice table="'../api/subscr/contObjects'"
 	columns='[
              
@@ -14,3 +15,12 @@
 	captions='{"loading":"loading", "totalElements":"totalElements"}'
 	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}' 
     ></div>
+-->
+<div>
+    <pre class="code">
+        {{notices}}
+    </pre>
+</div>
+<div>
+    <table-component-react table-def="tableDef" data="notices"/>
+</div>

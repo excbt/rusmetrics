@@ -300,7 +300,9 @@ angular.module('portalNMK').directive('crudGridNotice', function () {
 
                                                         for(var j=0;j<6;j++){                                                                            
                                                       
-                                                            
+                                                            if (typeof $scope.noticesByObject[j] == 'undefined'){
+                                                                continue;
+                                                            };
                                                             var notice = {};
                                                             notice.noticeType = $scope.noticesByObject[j].contEventType.name;
                                                             notice.noticeText = $scope.noticesByObject[j].message;
@@ -442,6 +444,44 @@ angular.module('portalNMK').directive('crudGridNotice', function () {
 //                        $('#showDirectoryStructModal').modal();
 //                    }
 //                };
+                
+            $scope.tableDef = {
+					tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
+					hideHeader : false,
+					headerClassTR : "info",
+					columns : [ {
+						fieldName : "noticeCat",
+						header : "Категория",
+						headerClass : "col-md-1",
+						dataClass : "col-md-1",
+						autoincrement : "false"
+					}, {
+						fieldName : "noticeType",
+						header : "Тип",
+						headerClass : "col-md-2",
+						dataClass : "col-md-2"
+					}, {
+						fieldName : "noticeText",
+						header : "Уведомление",
+						headerClass : "col-md-3",
+						dataClass : "col-md-3"
+					}, {
+						fieldName : "noticeDate",
+						header : "Дата",
+						headerClass : "col-md-2",
+						dataClass : "col-md-2"
+					}, {
+						fieldName : "noticeObject",
+						header : "Объект",
+						headerClass : "col-md-3",
+						dataClass : "col-md-3"
+					} , {
+						fieldName : "noticeZpoint",
+						header : "Точка учета",
+						headerClass : "col-md-1",
+						dataClass : "col-md-1"
+					} ]
+			};    
                 
 
             }]
