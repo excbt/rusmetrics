@@ -25,6 +25,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import ru.excbt.datafuse.nmk.web.api.WebApiConst;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
@@ -33,6 +35,7 @@ import ru.excbt.datafuse.nmk.web.api.WebApiConst;
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN" })
 public class AnyControllerTest {
 	
+	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	@Autowired
 	private WebApplicationContext wac;

@@ -1,15 +1,14 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
@@ -17,136 +16,136 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name="cont_zpoint_setting_mode")
-@EntityListeners({AuditingEntityListener.class})
+@Table(name = "cont_zpoint_setting_mode")
+// @EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContZPointSettingMode extends AbstractAuditableEntity<AuditUser, Long>  {
+public class ContZPointSettingMode extends
+		AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5728833577792967110L;
 
-	
-	@OneToOne 
+	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.REFRESH })
 	@JoinColumn(name = "cont_zpoint_id")
 	@JsonIgnore
 	@NotNull
 	private ContZPoint contZPoint;
-	
+
 	@Column(name = "is_primary")
 	private boolean primary;
-	
+
 	@Column(name = "setting_mode")
 	private String settingMode;
-	
+
 	@Column(name = "md_v_min_chk")
 	private boolean md_V_minChk = true;
-	
+
 	@Column(name = "md_v_max_chk")
 	private boolean md_V_maxChk = true;
-	
-	@Column(name = "md_t_min_chk")	
+
+	@Column(name = "md_t_min_chk")
 	private boolean md_T_minChk = true;
-	
-	@Column(name = "md_t_max_chk")	
+
+	@Column(name = "md_t_max_chk")
 	private boolean md_T_maxChk = true;
-	
-	@Column(name = "md_p_min_chk")	
+
+	@Column(name = "md_p_min_chk")
 	private boolean md_P_minChk = true;
-	
-	@Column(name = "md_p_max_chk")	
+
+	@Column(name = "md_p_max_chk")
 	private boolean md_P_maxChk = true;
-	
-	@Column(name = "wm_m1_chk")	
+
+	@Column(name = "wm_m1_chk")
 	private boolean wm_M1_chk;
-	
-	@Column(name = "wm_m1_min")	
-	private double wm_M1_min;	
-	
-	@Column(name = "wm_m1_max")	
-	private double wm_M1_max;	
-	
-	@Column(name = "wm_m2_chk")	
+
+	@Column(name = "wm_m1_min")
+	private double wm_M1_min;
+
+	@Column(name = "wm_m1_max")
+	private double wm_M1_max;
+
+	@Column(name = "wm_m2_chk")
 	private boolean wm_M2_chk;
-	
-	@Column(name = "wm_m2_min")	
-	private double wm_M2_min;	
-	
-	@Column(name = "wm_m2_max")	
-	private double wm_M2_max;	
-	
-	@Column(name = "wm_t1_chk")	
+
+	@Column(name = "wm_m2_min")
+	private double wm_M2_min;
+
+	@Column(name = "wm_m2_max")
+	private double wm_M2_max;
+
+	@Column(name = "wm_t1_chk")
 	private boolean wm_T1_chk;
-	
-	@Column(name = "wm_t1_min")	
-	private double wm_T1_min;	
-	
-	@Column(name = "wm_t1_max")	
-	private double wm_T1_max;	
-	
-	@Column(name = "wm_t2_chk")	
+
+	@Column(name = "wm_t1_min")
+	private double wm_T1_min;
+
+	@Column(name = "wm_t1_max")
+	private double wm_T1_max;
+
+	@Column(name = "wm_t2_chk")
 	private boolean wm_T2_chk;
-	
-	@Column(name = "wm_t2_min")	
-	private double wm_T2_min;	
-	
-	@Column(name = "wm_t2_max")	
-	private double wm_T2_max;	
-	
-	@Column(name = "wm_p1_chk")	
+
+	@Column(name = "wm_t2_min")
+	private double wm_T2_min;
+
+	@Column(name = "wm_t2_max")
+	private double wm_T2_max;
+
+	@Column(name = "wm_p1_chk")
 	private boolean wm_P1_chk;
-	
-	@Column(name = "wm_p1_min")	
-	private double wm_P1_min;	
-	
-	@Column(name = "wm_p1_max")	
-	private double wm_P1_max;	
-	
-	@Column(name = "wm_p2_chk")	
+
+	@Column(name = "wm_p1_min")
+	private double wm_P1_min;
+
+	@Column(name = "wm_p1_max")
+	private double wm_P1_max;
+
+	@Column(name = "wm_p2_chk")
 	private boolean wm_P2_chk;
-	
-	@Column(name = "wm_p2_min")	
-	private double wm_P2_min;	
-	
-	@Column(name = "wm_p2_max")	
-	private double wm_P2_max;	
-	
-	@Column(name = "wm_delta_q_chk")	
+
+	@Column(name = "wm_p2_min")
+	private double wm_P2_min;
+
+	@Column(name = "wm_p2_max")
+	private double wm_P2_max;
+
+	@Column(name = "wm_delta_q_chk")
 	private boolean wm_deltaQ_chk;
-	
-	@Column(name = "wm_delta_q_min")	
-	private double wm_deltaQ_min;	
-	
-	@Column(name = "wm_delta_q_max")	
-	private double wm_deltaQ_max;	
 
-	@Column(name = "leak_night_chk")	
+	@Column(name = "wm_delta_q_min")
+	private double wm_deltaQ_min;
+
+	@Column(name = "wm_delta_q_max")
+	private double wm_deltaQ_max;
+
+	@Column(name = "leak_night_chk")
 	private boolean leak_Night_chk;
-	
-	@Column(name = "leak_night")	
-	private double leak_Night;	
 
-	@Column(name = "leak_gush_chk")	
+	@Column(name = "leak_night")
+	private double leak_Night;
+
+	@Column(name = "leak_gush_chk")
 	private boolean leak_Gush_chk;
-	
-	@Column(name = "leak_gush")	
-	private double leak_Gush;	
 
-	@Column(name = "ov_worktime_chk")	
+	@Column(name = "leak_gush")
+	private double leak_Gush;
+
+	@Column(name = "ov_worktime_chk")
 	private boolean ov_Worktime_chk;
-	
-	@Column(name = "ov_worktime")	
-	private String ov_Worktime;	
-	
-	@Column(name = "ov_overheat_cool_chk")	
+
+	@Column(name = "ov_worktime")
+	private String ov_Worktime;
+
+	@Column(name = "ov_overheat_cool_chk")
 	private boolean ov_OverheatCool_chk;
-	
-	@Column(name = "ov_balance_m_ctrl_chk")	
+
+	@Column(name = "ov_balance_m_ctrl_chk")
 	private boolean ov_BalanceM_ctrl_chk;
-	
-	@Column(name = "ov_balance_m_ctrl")	
-	private double ov_BalanceM_ctrl;	
+
+	@Column(name = "ov_balance_m_ctrl")
+	private double ov_BalanceM_ctrl;
 
 	@Version
 	private int version;
@@ -470,5 +469,5 @@ public class ContZPointSettingMode extends AbstractAuditableEntity<AuditUser, Lo
 	public void setSettingMode(String settingMode) {
 		this.settingMode = settingMode;
 	}
-	
+
 }

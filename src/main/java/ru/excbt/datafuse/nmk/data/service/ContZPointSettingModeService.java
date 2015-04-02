@@ -46,7 +46,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 
 		List<ContZPointSettingMode> result = settingModeRepository
 				.findByContZPointId(contZPointId);
-		
+
 		// Auto insert ZPointSettingMode record if option enabled
 		if (result.size() < ZPOINT_SETTING_AUTO_INIT_CNT
 				&& ZPOINT_SETTING_AUTO_INIT) {
@@ -76,7 +76,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 			result = settingModeRepository.findByContZPointIdAndSettingMode(
 					contZPointId, settingMode);
 		}
-		
+
 		return result;
 	}
 
@@ -91,7 +91,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 		checkNotNull(arg);
 		checkNotNull(arg.getContZPoint());
 
-		if (arg.isNew() ) {
+		if (arg.isNew()) {
 			throw new PersistenceException(
 					"Creating new record of ZPointSettingMode is not allowed");
 		}
@@ -146,9 +146,20 @@ public class ContZPointSettingModeService implements SecuredRoles {
 			if (mode.size() == 0) {
 				ContZPointSettingMode newMode = new ContZPointSettingMode();
 				newMode.setContZPoint(contZPoint);
+				newMode.setSettingMode(check.getKeyname());
 				settingModeRepository.save(newMode);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param contZPointSettingModeId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ContZPointSettingMode findOne(long contZPointSettingModeId) {
+		return settingModeRepository.findOne(contZPointSettingModeId);
 	}
 
 }
