@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "cont_zpoint_setting_mode")
-// @EntityListeners({AuditingEntityListener.class})
+//@EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContZPointSettingMode extends
 		AbstractAuditableEntity<AuditUser, Long> {
@@ -27,7 +27,7 @@ public class ContZPointSettingMode extends
 	 */
 	private static final long serialVersionUID = 5728833577792967110L;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = { CascadeType.REFRESH })
+	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@JoinColumn(name = "cont_zpoint_id")
 	@JsonIgnore
 	@NotNull
@@ -150,6 +150,9 @@ public class ContZPointSettingMode extends
 	@Version
 	private int version;
 
+	@Column(name="cont_zpoint_id", insertable = false, updatable = false)
+	private Long contZPointId;
+	
 	public ContZPoint getContZPoint() {
 		return contZPoint;
 	}
@@ -468,6 +471,14 @@ public class ContZPointSettingMode extends
 
 	public void setSettingMode(String settingMode) {
 		this.settingMode = settingMode;
+	}
+
+	public Long getContZPointId() {
+		return contZPointId;
+	}
+
+	public void setContZPointId(Long contZPointId) {
+		this.contZPointId = contZPointId;
 	}
 
 }

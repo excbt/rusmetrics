@@ -47,7 +47,7 @@ public class ContZPointService {
 	 */
 	@Transactional(readOnly = true)
 	public boolean checkContZPointOwnership(long contZPointId, long contObjectId) {
-		List<Long> checkIds = contZPointRepository.findIdByIdAndContObject(
+		List<?> checkIds = contZPointRepository.findByIdAndContObject(
 				contZPointId, contObjectId);
 		return checkIds.size() > 0;
 	}

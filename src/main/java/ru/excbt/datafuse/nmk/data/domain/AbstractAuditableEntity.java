@@ -44,7 +44,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 	@JsonIgnore
 	private U createdBy;
 
-	@Column(name = "created_date", updatable = false)	
+	@Column(name = "created_date", insertable = false, updatable = false)	
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonIgnore
 	private Date createdDate;

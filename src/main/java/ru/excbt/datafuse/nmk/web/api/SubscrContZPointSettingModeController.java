@@ -46,18 +46,21 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId) {
+			@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
 
-		if (!contZPointService.checkContZPointOwnership(contZPointId,
-				contObjectId)) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("ContZPoint (id=%d) is not own to ContZObject(id=%d)",
-									contZPointId, contObjectId));
-		}
+		logger.debug("Fire All");
+		
+//		if (!contZPointService.checkContZPointOwnership(contZPointId,
+//				contObjectId)) {
+//			return ResponseEntity
+//					.badRequest()
+//					.body(String
+//							.format("ContZPoint (id=%d) is not own to ContZObject(id=%d)",
+//									contZPointId, contObjectId));
+//		}
 
+		logger.debug("Fire Result List");
 		List<ContZPointSettingMode> resultList = contZPointSettingModeService
 				.findSettingByContZPointId(contZPointId);
 		return ResponseEntity.ok(resultList);
@@ -101,7 +104,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (currentSetting.getContZPoint().getId().longValue() != contZPoint
+		if (currentSetting.getContZPointId().longValue() != contZPoint
 				.getId().longValue()) {
 			return ResponseEntity.badRequest().build();
 		}
