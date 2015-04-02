@@ -10,7 +10,7 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 
 	public List<ContZPoint> findByContObjectId(long contObjectId);
 
-	public List<Long> findIdByIdAndContObject(long contZPointId,
+	public List<ContZPoint> findByIdAndContObject(long contZPointId,
 			long contObjectId);
 
 }

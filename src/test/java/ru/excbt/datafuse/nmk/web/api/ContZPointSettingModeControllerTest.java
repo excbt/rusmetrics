@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingsModeServiceTest;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -27,13 +28,14 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 	private static final String URL_TEMPLATE = "/api/subscr/contObjects/%s/"
 			+ "zpoints/%s/settingMode/%s";
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContZPointSettingModeControllerTest.class);
-	
+
 	@Autowired
 	private ContZPointSettingModeService settingModeService;
-	
+
+	@Autowired
+	private ContZPointService contZPointService;
 
 	/**
 	 * 
@@ -46,17 +48,24 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 		String urlStr = "";
 
 		for (ContZPointSettingMode settingMode : settingModes) {
+
+			if (settingMode == null) {
+				logger.error("settingMode is null");
+				continue;
+			}
 			
-			
-			long contZPointId = settingMode.getContZPoint().getId();
-			long contObjectId = settingMode.getContZPoint().getContObject().getId();
-			
-			urlStr = String.format(URL_TEMPLATE, contObjectId, contZPointId, settingMode.getId());
-			
+			long contZPointId = settingMode.getContZPointId();
+			long contObjectId = contZPointService.findOne(contZPointId)
+					.getContObject().getId();
+
+			urlStr = String.format(URL_TEMPLATE, contObjectId, contZPointId,
+					settingMode.getId());
+
 			logger.info("Testing URL: {}", urlStr);
-			
-			settingMode.setOv_BalanceM_ctrl(settingMode.getOv_BalanceM_ctrl() + 0.1);
-			
+
+			settingMode
+					.setOv_BalanceM_ctrl(settingMode.getOv_BalanceM_ctrl() + 0.1);
+
 			String jsonBody = null;
 			try {
 				jsonBody = OBJECT_MAPPER.writeValueAsString(settingMode);
@@ -65,15 +74,15 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 				fail(e.toString());
 			}
 
-			
 			try {
-				logger.info("Testing JSON: {}",  OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(settingMode));
+				logger.info("Testing JSON: {}",
+						OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+								.writeValueAsString(settingMode));
 			} catch (JsonProcessingException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-			
+
 			ResultActions resultActionsAll;
 			try {
 				resultActionsAll = mockMvc.perform(put(urlStr)
@@ -93,4 +102,10 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 		}
 	}
 
+	@Test
+	public void testAAA() throws Exception {
+		testJsonGet("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
+		
+	}
+	
 }

@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
@@ -44,7 +43,6 @@ public class CurrentUserService {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)	
 	public AuditUser getCurrentAuditUser() {
 		Authentication auth = getUserAuth();
 
