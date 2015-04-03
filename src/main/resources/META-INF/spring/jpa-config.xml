@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:p="http://www.springframework.org/schema/p"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.3.xsd
@@ -17,16 +15,10 @@
 
 
 	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource"
-		destroy-method="close" 
-		p:driverClassName="${dataSource.driverClassName}"
-		p:url="${dataSource.url}" 
-		p:username="${dataSource.username}"
-		p:password="${dataSource.password}"
-        p:maxActive="10" 
-        p:maxIdle="3" 
-        p:maxWait="100"		
-		 
-		/>
+		destroy-method="close" p:driverClassName="${dataSource.driverClassName}"
+		p:url="${dataSource.url}" p:username="${dataSource.username}"
+		p:password="${dataSource.password}" p:maxActive="10" p:maxIdle="3"
+		p:maxWait="100" />
 
 	<bean id="persistenceUnitManager"
 		class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
@@ -41,10 +33,10 @@
 
 	<bean id="localEntityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<!--  -->
+		<!-- -->
 		<property name="persistenceUnitManager" ref="persistenceUnitManager" />
-		<property name="persistenceUnitName" value="nmk-p" />		
-		<!--  -->
+		<property name="persistenceUnitName" value="nmk-p" />
+		<!-- -->
 	</bean>
 
 
@@ -67,9 +59,10 @@
 		entity-manager-factory-ref="localEntityManagerFactory"
 		transaction-manager-ref="txManager" />
 
-	<context:annotation-config/>
-	
-	<context:component-scan base-package="ru.excbt.datafuse.nmk.data" />	
+	<context:annotation-config />
 
+	<context:component-scan base-package="ru.excbt.datafuse.nmk.data" />
+
+	<bean class="org.springframework.data.web.config.SpringDataWebConfiguration" />
 
 </beans>

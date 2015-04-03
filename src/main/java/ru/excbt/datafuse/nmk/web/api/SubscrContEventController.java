@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
+import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -23,6 +24,9 @@ public class SubscrContEventController {
 
 	@Autowired
 	private ContEventService contEventService;
+
+	@Autowired
+	private ContEventRepository contEventRepository;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -43,4 +47,15 @@ public class SubscrContEventController {
 		return ResponseEntity.ok(result);
 	}
 
+//	@RequestMapping(value = "/persons", method = RequestMethod.GET)
+//	  HttpEntity<?> persons(Pageable pageable,
+//	    PagedResourcesAssembler assembler) {
+//
+//	    Page<ContEvent> result = contEventRepository.selectBySubscriberId(currentSubscriberService
+//				.getSubscriberId(), pageable);
+//	    //assembler;
+//	    assembler.toResource(result, null);
+//	    return null; // new ResponseEntity<>(assembler.toResources(result), HttpStatus.OK);
+//	  }	
+	
 }
