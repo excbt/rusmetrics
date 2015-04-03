@@ -27,7 +27,7 @@ public class ContZPointSettingMode extends
 	 */
 	private static final long serialVersionUID = 5728833577792967110L;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+	@OneToOne(fetch = FetchType.EAGER, cascade = {})
 	@JoinColumn(name = "cont_zpoint_id")
 	@JsonIgnore
 	@NotNull
@@ -120,6 +120,15 @@ public class ContZPointSettingMode extends
 	@Column(name = "wm_delta_q_max")
 	private double wm_deltaQ_max;
 
+	@Column(name = "wm_delta_t_chk")
+	private boolean wm_deltaT_chk;
+	
+	@Column(name = "wm_delta_t_min")
+	private double wm_deltaT_min;
+	
+	@Column(name = "wm_delta_t_max")
+	private double wm_deltaT_max;
+
 	@Column(name = "leak_night_chk")
 	private boolean leak_Night_chk;
 
@@ -147,11 +156,22 @@ public class ContZPointSettingMode extends
 	@Column(name = "ov_balance_m_ctrl")
 	private double ov_BalanceM_ctrl;
 
+	@Column(name = "ov_delta_m_chk")
+	private boolean ov_deltaM_chk;
+
+	//@Column(name = "ov_delta_m_min")
+	//private double ov_deltaM_min;
+	
+	//@Column(name = "wm_delta_m_max")
+	//private double ov_deltaM_max;
+
+	
+	
 	@Version
 	private int version;
 
-	@Column(name="cont_zpoint_id", insertable = false, updatable = false)
-	private Long contZPointId;
+//	@Column(name="cont_zpoint_id", insertable = false, updatable = false)
+//	private Long contZPointId;
 	
 	public ContZPoint getContZPoint() {
 		return contZPoint;
@@ -473,12 +493,44 @@ public class ContZPointSettingMode extends
 		this.settingMode = settingMode;
 	}
 
-	public Long getContZPointId() {
-		return contZPointId;
+	public boolean isWm_deltaT_chk() {
+		return wm_deltaT_chk;
 	}
 
-	public void setContZPointId(Long contZPointId) {
-		this.contZPointId = contZPointId;
+	public void setWm_deltaT_chk(boolean wm_deltaT_chk) {
+		this.wm_deltaT_chk = wm_deltaT_chk;
 	}
+
+	public double getWm_deltaT_min() {
+		return wm_deltaT_min;
+	}
+
+	public void setWm_deltaT_min(double wm_deltaT_min) {
+		this.wm_deltaT_min = wm_deltaT_min;
+	}
+
+	public double getWm_deltaT_max() {
+		return wm_deltaT_max;
+	}
+
+	public void setWm_deltaT_max(double wm_deltaT_max) {
+		this.wm_deltaT_max = wm_deltaT_max;
+	}
+
+	public boolean isOv_deltaM_chk() {
+		return ov_deltaM_chk;
+	}
+
+	public void setOv_deltaM_chk(boolean ov_deltaM_chk) {
+		this.ov_deltaM_chk = ov_deltaM_chk;
+	}
+
+//	public Long getContZPointId() {
+//		return contZPointId;
+//	}
+//
+//	public void setContZPointId(Long contZPointId) {
+//		this.contZPointId = contZPointId;
+//	}
 
 }

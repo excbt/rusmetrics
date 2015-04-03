@@ -89,7 +89,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public ContZPointSettingMode save(ContZPointSettingMode arg) {
 		checkNotNull(arg);
-		checkNotNull(arg.getContZPointId());
+		checkNotNull(arg.getContZPoint().getId());
 
 		if (arg.isNew()) {
 			throw new PersistenceException(

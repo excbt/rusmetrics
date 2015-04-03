@@ -41,6 +41,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 	 * 
 	 */
 	@Test
+	//@Transactional
 	public void testPut() {
 		List<ContZPointSettingMode> settingModes = settingModeService
 				.findSettingByContZPointId(ContZPointSettingsModeServiceTest.TEST_ZPOINT_ID);
@@ -54,7 +55,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 				continue;
 			}
 			
-			long contZPointId = settingMode.getContZPointId();
+			long contZPointId = settingMode.getContZPoint().getId();
 			long contObjectId = contZPointService.findOne(contZPointId)
 					.getContObject().getId();
 

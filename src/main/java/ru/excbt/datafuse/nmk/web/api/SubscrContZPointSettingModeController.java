@@ -104,7 +104,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (currentSetting.getContZPointId().longValue() != contZPoint
+		if (currentSetting.getContZPoint().getId().longValue() != contZPoint
 				.getId().longValue()) {
 			return ResponseEntity.badRequest().build();
 		}

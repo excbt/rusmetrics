@@ -61,6 +61,19 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 
+	@OneToMany(cascade = {})
+	@JoinColumn(name = "rso_organization_id")
+	private Organization organization;
+
+	@Column(name = "checkout_time")
+	private String checkoutTime;
+
+	@Column(name = "checkout_day")
+	private Integer checkoutDay;
+	
+	@Column(name = "is_double_pipe")
+	private Boolean doublePipe;
+	
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -115,6 +128,38 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public String getCheckoutTime() {
+		return checkoutTime;
+	}
+
+	public void setCheckoutTime(String checkoutTime) {
+		this.checkoutTime = checkoutTime;
+	}
+
+	public Integer getCheckoutDay() {
+		return checkoutDay;
+	}
+
+	public void setCheckoutDay(Integer checkoutDay) {
+		this.checkoutDay = checkoutDay;
+	}
+
+	public Boolean getDoublePipe() {
+		return doublePipe;
+	}
+
+	public void setDoublePipe(Boolean doublePipe) {
+		this.doublePipe = doublePipe;
 	}
 
 }
