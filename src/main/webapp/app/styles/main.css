@@ -36,6 +36,16 @@ td, th {
     text-align: center;
 }
 
+input[type="checkbox"] {
+    margin-right: 5px;
+    
+}
+
+input[type="radio"]{
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
@@ -117,13 +127,71 @@ td, th {
     margin-bottom: 0;
 }
 
+.marginBottom10 {
+    margin-bottom: 10px;
+}
+
+.marginLeft5 {
+    margin-left: 5px;
+}
+
+.marginLeft15 {
+    margin-left: 15px;
+}
+
+.marginTop10 {
+    margin-top: 10px;
+}
+
+.margin10 {
+    margin:10px;
+}
+
+.marginRight15 {
+    margin-right:15px;
+}
+
 .noMargin {
     margin : 0;
 }
 
-.marginBottom10 {
-    margin-bottom: 10px;
+.noPadding {
+    padding : 0;
 }
+
+.noPaddingBottom {
+    padding-bottom : 0;
+}
+
+.noPaddingRight {
+    padding-right : 0;
+}
+
+
+.paddingBottom10 {
+    padding-bottom: 10px;
+}
+
+.paddingTop10 {
+    padding-top: 10px;
+}
+
+.onlyPaddingLeft15 {
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 15px;
+}
+
+.noPaddingTop {
+    padding-top: 0px;
+}
+
+.textAlign_left {
+    text-align: left;
+}
+
+
 
 .btn-toolbar {
     width: 85px;
@@ -214,6 +282,14 @@ td, th {
     width: 1200px;
 }
 
+.modalWindow_moreWide {
+    width: 700px;
+}
+
+.modalWindow_lessWide {
+    width: 300px;
+}
+
 
 /*Настройка главного окна*/
 mainTable {
@@ -230,6 +306,12 @@ mainTable {
 /* border: 1px solid grey;*/
  width: 100%;
  }
+
+/*
+.mainarea {
+    margin-bottom: 60px;
+}
+*/
 
 .button1 {
  
@@ -250,3 +332,22 @@ mainTable {
     .list-group-item{
         background-color: bisque;
     }
+
+.span2 {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+.modal-body {
+    padding: 0px;
+    padding-top: 10px;
+}
+
+.modal-footer {
+    padding: 10px;
+}
+
+/*
+.nav > li > a {
+    padding: 5px 10px;
+}*/

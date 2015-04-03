@@ -16,11 +16,34 @@
 	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}' 
     ></div>
 -->
+<!--
 <div>
     <pre class="code">
         {{notices}}
     </pre>
 </div>
+-->
 <div>
-    <table-component-react table-def="tableDef" data="notices"/>
+    <table-component-react table-def="tableDef" data="data"/>
+<!--    <my-table cols="cols" rows="data" />-->
+</div>
+<!--Строка состояния-->
+<div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
+                                                    <!--    navbar-fixed-bottom-->
+    <div id="navbar-container" class="container navbar-left">
+      
+            		
+              <ul class="nav navbar-nav ">
+				
+				<li><p
+							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{data.length}}</b>  
+				    </p>
+                </li>
+                             
+                 
+				
+			</ul>
+                
+					
+			</div>
 </div>

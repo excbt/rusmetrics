@@ -7,7 +7,7 @@ var app = angular.module('portalNMK');
 var TableComponentReact = React.createClass( {displayName: "TableComponentReact",
 	    propTypes: {
 		    tableDef: React.PropTypes.object.isRequired,
-		    data: React.PropTypes.array.isRequired
+		    data: React.PropTypes.object.isRequired
 		  },
 
 		getTHeadRow : function() {
@@ -52,7 +52,9 @@ var TableComponentReact = React.createClass( {displayName: "TableComponentReact"
 	   		var cbProcess = this.getTDRows;
 	   		var dataRows = this.props.data.map(function (row, i) {
 	   			var tdRows = cbProcess (row);
-	   			return React.createElement("tr", {key: i}, tdRows);
+            var reactTr = React.createElement("tr", {key: i}, tdRows);    
+console.log("REact row = "+reactTr);                
+	   			return reactTr;
 	   		});
 
 	   		return React.createElement("div", null, 

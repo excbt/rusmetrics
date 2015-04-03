@@ -2,7 +2,7 @@
 
 angular.module('portalNMK')
 .controller('ObjectsCtrl', function($scope){
-    
+console.log("loading ObjectsCtrl.");    
      $scope.navPlayerDates = {
                             startDate : moment().startOf('day'),
                             endDate : moment().endOf('day'),

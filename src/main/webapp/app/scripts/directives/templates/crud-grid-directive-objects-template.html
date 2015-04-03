@@ -1,4 +1,6 @@
+
 <div ng-show="loading">{{captions.msgLoading}}</div>
+<!-- <i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showZpointOptionModal" data-toggle="modal"></i> -->
 
 <!--Группировка-->
         <div ng-hide="bReports" ng-show="!bObject" class="form-actions">
@@ -56,8 +58,6 @@
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
                        <th ng-show="bGroupByObject || bObject" class="col-md-1">                         
-                <!--            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>-->
-                           
                         </th>
 
                 <!--       Шапка таблицы-->
@@ -68,73 +68,14 @@
                             </div>
                         </th>
                      <th ng-show="bObject" class="col-md-1"> 
-<!--
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click=""></i>
-                        <i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click=""></i>
-                    </div>    
-                </div>
--->
                 
-                        </th>
-                     
-<!--                     Extra column for directory buttons-->
-<!--                      <th ng-show="bdirectories" class="col-md-2"> -->
-<!--                          button "Add" for directories-->
-<!--                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>-->
-<!--
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click=""></i>
-                        <i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click=""></i>
-                    </div>    
-                </div>
--->
-                
-<!--                    </th>-->
-                     
-                     
-                </tr> 
-                 
-<!--
-                <tr ng-show="addMode">
-                    
-                    <td ng-repeat="column in columns" ng-switch="!column.lookup" ng-class="column.class">
-                        <input ng-switch-default ng-model="object[column.name]" ng-disabled="column.autoincrement" class="form-control"/>
-                        <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-show="column.lookup" ng-model="object[column.name]" class="form-control"></select>
-                    </td>
-                    <td class="col-md-2">
-                        <div class="btn-toolbar">
-                            <div class="btn-group">
-                                <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="addObject()"></i>
-                                <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleAddMode()"></i>
-                            </div>
-                        </div>
-                    </td>
-                </tr> 
--->
-                 
+                        </th>                   
+                </tr>                  
             </table>     
         </td>          
      </tr>
     
 
-<!--      Фильтры по колонкам  -->
-<!--    <tr class="info" ng-show="!bGroupByObject">
-        <td ng-show="bGroupByObject" >
-            <div class="btn-toolbar"><i class="btn btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>
-        </td>
-        <td ng-repeat="column in columns" ng-class="column.class">
-            <div>
-                <input type="text" class="form-control" ng-model="filterType">
-            </div>
-        </td>
-    </tr>    -->
-<!--    End фильтры по колонкам-->
-
-       
-    
 <!--  Постороение таблицы с данными  -->
     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
@@ -166,11 +107,6 @@
                 <div ng-show="bObject" class="btn-toolbar noMargin"><input type="checkbox" ng-click="toggleSelectObject(object)"></div>
             </td>
             
-<!--       Extra column for Add mode in page of directories-->
-<!--
-            <td ng-show="bdirectories" class="col-md-1">
-            </td>
--->
 
     <!--  Выводим данные в соответствующие столбцы таблицы  -->
             <td ng-repeat="column in columns" ng-class="column.class" ng-switch on="object.editMode" >
@@ -228,7 +164,7 @@
                         <table>
                             <tr>
                                 <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjectOptionModal" data-toggle="modal"></i></td>                                
+                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
                             </tr>
                         </table>    
                     </div>    
@@ -250,26 +186,6 @@
                 </div>
                 
             </td>
-                    
-<!--                    Buttons for directories-->
-<!--
-            <td ng-show="bdirectories" class="col-md-2"> 
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <table>
-                            <tr>
-                                <td ng-show="!object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="toggleEditMode(object)" ></i> </td>
-                                <td ng-show="object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditMode(object)" ></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showDirectoryStructModal" data-toggle="modal"></i></td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-pencil" ng-click="selectedItem(object); getCurDirParams()" data-target="#editDirectoryParamsModal" data-toggle="modal"></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="setCurObjToDel(object, extraProps.idColumnName, extraProps.deleteConfirmationProp)" data-target="#deleteObjectModal" data-toggle="modal"></i></td>
-                            </tr>
-                        </table>    
-                    </div>    
-                </div>
-                
-            </td>        
--->
                 </tr><!--    </tr> Уровень 3     -->
                 <tr><!--    <tr> Уровень 3     -->
                     
@@ -327,7 +243,7 @@
                                         <table>
                                             <tr>
                                                 <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
+                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
                                             </tr>
                                         </table>    
                                     </div>    
@@ -337,15 +253,7 @@
                          
                              
                      </tr>
-                    </table>
-<!--
-                    <table>
-                        <tr>
-                            <td ng-show="object.showGroupDetails">hello</td>
-                        </tr>
-                    </table>
--->
-                
+                    </table>         
                 
                 </tr><!--    <tr> Уровень 3     -->
 
@@ -403,382 +311,536 @@
 
 
 
-<!--Show object options-->
-<div id="showObjectOptionModal" class="modal fade" role="dialog"
-	aria-labelledby="showObjectOptionLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="showObjectOptionLabel">
-				Свойства объекта "{{currentObject.fullName}}"
-			</h3>
-		</div>
-		<div class="modal-body">
-                    
-
-<!--               <div> 
-
-                   <div class="row">
-                       <div class="span2">
-                           Наименование
-                       </div>
-                       <div class="span8">
-                           <input type="text"/>
-                       </div>
-                   </div>  
-                   <div class="row">
-                       <div class="span2">
-                           описание
-                       </div>
-                       <div class="span2">
-                           <input type="text"/>
-                       </div>
-                   </div>  
--->
-                   
-                   <table class="table table-lighter table-striped table-condensed table-hover">
-                     
-                       <tr>
-                           <td ><div class="pull-right">Наименование</div></td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">Описание</div></td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">Адрес</div></td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">Режим функционирования</div></td>
-                           <td><select>
-                                   <option>Летний</option>
-                                   <option>Зимний</option>
-                                   <option>Не определено</option>
-                               </select>
-                           </td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">Температура холодной воды</div></td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">РСО:</div></td>
-                       </tr>tr>
-                        <tr>
-                            <td></td>
-                           <td>
-                               <table>
-                                   <tr>
-                                       <td> Теплоснабжение
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>Теплоснабжающая организация №1</option>
-                                            <option>Теплоснабжающая организация №2</option>
-                                            <option>Теплоснабжающая организация №3</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td> ГВС
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>ООО "Горячая вода №1"</option>
-                                            <option>ООО "Горячая вода №2"</option>
-                                            <option>ООО "Горячая вода №3"</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td> ХВ
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>МГУП "Хол вода" №1</option>
-                                            <option>МГУП "Хол вода" №2</option>
-                                            <option>МГУП "Хол вода" №3</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td> Газ
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>Облгазоснабжающая организация №1</option>
-                                            <option>Райгазоснабжающая №2</option>
-                                            <option>КакаяТоМестная Газаоснабжающая организация №3</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td> Электричество
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>Обл электросеть №1</option>
-                                            <option>Рай электросеть №2</option>
-                                            <option>Ад электросеть №3</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td> Пароснабжение
-                                       </td>
-                                       <td>
-                                           <select>
-                                            <option>Вообще откуда это взялось №1</option>
-                                            <option>Откда это №2</option>
-                                            <option>Что это №3</option>
-                                           </select>
-                                       </td>
-                                   </tr>
-                               
-                                </table>   
-                            </td>
-                        </tr>
-                       <tr>
-                           <td><div class="pull-right">УК</div></td>
-                           <td><select>
-                                <option>Упр комп №1</option>
-                                <option>Упр комп №2</option>
-                                <option>Упр комп №3</option>
-                               </select>
-                           </td>
-                        </tr>
-<!--
-                       <tr>
-                           <td><div class="pull-right">Тарифы</div></td><td><input type="text"/></td>
-                        </tr>
--->
-                       <tr>
-                           <td><div class="pull-right">Отапливаемая площадь</div></td><td><input type="text"/></td>
-                       </tr>
-                   </table>
-             
-
-
-			
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
-								value="Сохранить" />
-						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject')">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
+<!--#include file="scripts/directives/templates/zpoint-settings.html"-->
+<!--<link rel="import" href="scripts/directives/templates/zpoint-settings.html">-->
 
 
 <!--Show Zpoint options-->
 <div id="showZpointOptionModal" class="modal fade" role="dialog"
 	aria-labelledby="showZpointOptionLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content modalWindow_moreWide">
 
-		<div class="modal-header">
+		<div class="modal-header onlyPaddingLeft15">
 			<h3 id="showZpointOptionLabel">
-				Свойства точки учета "{{currentObject.fullName}}"
+				Свойства точки учета "{{zpointSettings.zpointName}}"
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body ">
+          
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><input disabled="true" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="textAlign_left "><textarea disabled="true" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputType">Тип</label>
+                                    
+                                </td>
+                                <td class="textAlign_left "><input type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
+                                    <div ng-show="zpointSettings.piped">
+                                        <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.singlePipe">Однотрубная
+                                        <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.doublePipe">Двухтрубная
+                                    </div>    
+                                </td>
+                            </tr>
+                             <tr>
+                                <td class="col-sm-3"><label for="inputDevice">Прибор</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left "><input disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputPCO">РСО</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-6 "><label for="inputRh" class="" style="margin-right: 24px; margin-left: 14px;">Расчетный час : </label><input disabled="true" type="text" id="inputRh" pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]" class="margin10" ng-model="zpointSettings.checkoutTime"> <label for="inputRd" style="margin-left: 25px">Расчетный день : </label><input disabled="true" type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" class="margin10" size="19" style="margin-right: 0px" ng-model="zpointSettings.checkoutDay">
+                                </td>
+<!--
+                                <td class="col-sm-6"><label for="inputRd">Расчетный день</label><input type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" >
+                                </td>
+-->
+                            </tr>
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputRd">Расчетный день</label>
+                                </td>
+                                <td class="col-sm-9"><input type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" size="70">
+                                </td>
+                            </tr>
+-->
+                        </table>
+
+                    </div>    
                     
+                </div>
+                <div class="row-fluid">
+                    
+                    
+                    <div class="col-md-12">
+                        
+                        <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
+                            <ul id="myTab" class="nav nav-tabs" role="tablist">
+                              <li role="presentation" class="active"><a href="" id="summersetup-tab" role="tab" data-target="#summersetup" data-toggle="tab" aria-controls="home" aria-expanded="true">Для летнего режима</a></li>
+                              <li role="presentation"><a href="" role="tab" id="wintersetup-tab" data-target="#wintersetup" data-toggle="tab" aria-controls="profile">Для зимнего режима</a></li>
 
-               <div> 
-                   <table class="table table-lighter table-striped table-condensed table-hover">
-                     
-                       <tr>
-                           <td>Наименование</td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td>Тип</td>
-                           <td>
-                               <input type=text disabled="true" value="ГВС"/>
-                               <input type="radio" name="tubes">Однатрубная</input>
-                                <input type="radio" name="tubes">Двухтрубная</input>
-                           </td>
-                           <td>
-                           </td>
-                        </tr>
-                       <tr>
-                           <td>Прибор</td>
-                           <td><select>
-                                    <option>Прибор 1</option>
-                                    <option>Прибор такой-то</option>
-                                    <option>Приборррррррррррррррр</option>
-                                   
-                               </select>
-                           </td>
-                        </tr>
- 
-                       <tr>
-                           <td>Расчетный час</td><td><input type="text"/></td>
-                        </tr>
-                       <tr>
-                           <td>Расчетный день</td><td><input type="text"/></td>
-                        </tr>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                              <div role="tabpanel" class="tab-pane fade in active" id="summersetup" aria-labelledBy="summersetup-tab">
+                                  
+                                <div class="col-md-12 well noPadding marginBottom10">
+                                  <div class="col-md-3 paddingTop10">
+                                      <div class="well marginBottom10 paddingTop10" style="padding-bottom: 45px;">
+                                        <div class="row">
+                                            Метрологический 
+                                            диапазон:
+                                        </div>    
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход объема за мин значение" ng-model="zpointSettings.summer.md_V_minChk" />V &lt; Vmin
+                                        </div> 
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход объема за макс значение" ng-model="zpointSettings.summer.md_V_maxChk"/>V &gt; Vmax
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход температуры за мин значение" ng-model="zpointSettings.summer.md_T_minChk"/>T &lt; Tmin
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход температуры за макс значение" ng-model="zpointSettings.summer.md_T_maxChk"/>T &gt; Tmax
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход давления за мин значение" ng-model="zpointSettings.summer.md_P_minChk"/>P &lt; Pmin
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход давления за макс значение" ng-model="zpointSettings.summer.md_P_maxChk"/>P &gt; Pmax
+                                        </div> 
+                                      
+                                      </div>
+                                </div>
+                                <div class="col-md-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10">
+                                    
+                        <!--                                Строка для режима потребления-->            
+                                    <div class="row-fluid ">
+                                       <div class="col-sx-12">
+                                            <div>Рабочий режим потребления:</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row-fluid">
 
-                       <tr>
-                           <td>Рабочие режимы потребления:</td>
-                           <td>
-                               <TABLE>
-                                   <tr>
-                                       <td><input type="checkbox" title="M1"/>М1
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           т/час
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="M2"/>М2
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           т/час
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="Т1"/>Т1
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           &deg;C
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="Т2"/>Т2
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           &deg;C
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="Р1"/>Р1
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           ат
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="Р2"/>Р2
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           ат
-                                       </td>
-                                   </tr>
-                                   <tr>
-                                       <td><input type="checkbox" title="&Delta;Q"/>&Delta;Q
-                                       </td>
-                                       <td>
-                                           от
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           до
-                                       </td>
-                                       <td>
-                                           <input type=text/>
-                                       </td>
-                                       <td>
-                                           ГКал/сут
-                                       </td>
-                                   </tr>
-                               </TABLE>
-                           </td>
-                        </tr>
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="M1" class="" ng-model="zpointSettings.summer.wm_M1_chk"/>М1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_min">
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_max"> т/час
+                                        </div>
 
-                   </table>
-                </div> 
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="M2" class="" ng-model="zpointSettings.summer.wm_M2_chk"/>М2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_min">
 
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_max"> т/час
+                                        </div>
+
+                                    </div> 
+                                    
+                                    
+                                     <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="T1" class="" ng-model="zpointSettings.summer.wm_T1_chk"/>T1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding ">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_max"> &deg;C
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="T2" class="" ng-model="zpointSettings.summer.wm_T2_chk"/>T2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_max"> &deg;C
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="P1" class="" ng-model="zpointSettings.summer.wm_P1_chk"/>P1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_max"> ат
+                                        </div>
+
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="P2" class="" ng-model="zpointSettings.summer.wm_P2_chk"/>P2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_max"> ат
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2">
+                                            <input type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.summer.wm_deltaQ_chk"/>&Delta;Q
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал/сут
+                                        </div>
+
+                                    </div> 
+                                    
+
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.summer.wm_deltaT_chk"/>&Delta;T
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> &deg;C
+                                        </div>
+                                        
+
+                                    </div>
+                                    
+                                    
+                                </div>  
+                            </div> 
+                            
+<!--                                  Утечки и порывы воды-->
+                            <div class="col-md-12 well paddingBottom10 marginBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid ">
+                                        <div class="col-xs-12 "><h4>Утечки и прорывы воды</h4></div>
+                                    </div>    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input type="checkbox" title="" class="" ng-model="zpointSettings.summer.leak_Night_chk"/>Утечки, если ночной расход больше
+<!--                                        </div>-->
+<!--                                        <div class="col-xs-7 noPadding">-->
+                                            <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.summer.leak_Night_chk" ng-model="zpointSettings.summer.leak_Night">
+                                            &#37; от среднечасового расхода за сутки
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input type="checkbox" title="" class="" ng-model="zpointSettings.summer.leak_Gush_chk"/>Порыв / сброс, если расход в 
+<!--                                        </div>-->
+<!--                                        <div class="col-xs-7 noPadding">-->
+                                            <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.summer.leak_Gush_chk" ng-model="zpointSettings.summer.leak_Gush" style="margin-left: 0px;">
+                                            раза больше обычного
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>    
+<!--                                Нарушение эксплуатации  -->
+                            <div class="col-md-12 well paddingBottom10 marginBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                            <input type="checkbox" title="Tраб" class="" ng-model="zpointSettings.summer.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.summer.ov_Worktime_chk" ng-model="zpointSettings.summer.ov_Worktime"> чч:мм
+                                        </div>
+                                        <div class="col-xs-5">
+                                           <input type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.summer.ov_OverheatCool_chk"/> Перегрев / недогрев
+
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                           <input type="checkbox" title="Контроль баланса масс" class="" ng-model="zpointSettings.summer.ov_BalanceM_ctrl_chk"/>
+                                            Контроль баланса масс <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.summer.ov_BalanceM_ctrl_chk" ng-model="zpointSettings.summer.ov_BalanceM_ctrl"> &#37;
+                                        
+                                        </div>
+                                                                              
+                                        <div class="col-xs-5">
+                                               <input type="checkbox" title="&Delta;M" class="" ng-model="zpointSettings.summer.ov_deltaM_chk"/>&Delta;M &lt; 0 
+                                        </div>
+                                    
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>    
+
+                                  
+                              </div>
+                              <div role="tabpanel" class="tab-pane fade" id="wintersetup" aria-labelledBy="wintersetup-tab">
+                                 
+                                 <div class="col-md-12 well noPadding marginBottom10">
+                                  <div class="col-md-3 paddingTop10">
+                                      <div class="well marginBottom10 paddingTop10" style="padding-bottom: 45px;">
+                                        <div class="row">
+                                            Метрологический 
+                                            диапазон:
+                                        </div>    
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход объема за мин значение" ng-model="zpointSettings.winter.md_V_minChk" />V &lt; Vmin
+                                        </div> 
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход объема за макс значение" ng-model="zpointSettings.winter.md_V_maxChk"/>V &gt; Vmax
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход температуры за мин значение" ng-model="zpointSettings.winter.md_T_minChk"/>T &lt; Tmin
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход температуры за макс значение" ng-model="zpointSettings.winter.md_T_maxChk"/>T &gt; Tmax
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход давления за мин значение" ng-model="zpointSettings.winter.md_P_minChk"/>P &lt; Pmin
+                                        </div>
+                                        <div class="row">
+                                            <input type="checkbox" title="Отслеживать выход давления за макс значение" ng-model="zpointSettings.winter.md_P_maxChk"/>P &gt; Pmax
+                                        </div> 
+                                      
+                                      </div>
+                                </div>
+                                <div class="col-md-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10">
+                                    
+                        <!--                                Строка для режима потребления-->            
+                                    <div class="row-fluid ">
+                                       <div class="col-sx-12">
+                                            <div>Рабочий режим потребления:</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row-fluid">
+
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="M1" class="" ng-model="zpointSettings.winter.wm_M1_chk"/>М1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_min">
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_max"> т/час
+                                        </div>
+
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="M2" class="" ng-model="zpointSettings.winter.wm_M2_chk"/>М2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_max"> т/час
+                                        </div>
+
+                                    </div> 
+                                    
+                                    
+                                     <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="T1" class="" ng-model="zpointSettings.winter.wm_T1_chk"/>T1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding ">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_max"> &deg;C
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="T2" class="" ng-model="zpointSettings.winter.wm_T2_chk"/>T2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_max"> &deg;C
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="P1" class="" ng-model="zpointSettings.winter.wm_P1_chk"/>P1
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_max"> ат
+                                        </div>
+
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="P2" class="" ng-model="zpointSettings.winter.wm_P2_chk"/>P2
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_max"> ат
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2">
+                                            <input type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.winter.wm_deltaQ_chk"/>&Delta;Q
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал/сут
+                                        </div>
+
+                                    </div> 
+                                    
+
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 ">
+                                            <input type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.winter.wm_deltaT_chk"/>&Delta;T
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_min">
+
+                                        </div>
+                                        <div class="col-xs-5 noPadding">
+                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> &deg;C
+                                        </div>
+                                        
+
+                                    </div>
+                                    
+                                    
+                                </div>  
+                            </div> 
+                            
+<!--                                  Утечки и порывы воды-->
+                            <div class="col-md-12 well paddingBottom10 marginBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid ">
+                                        <div class="col-xs-12 "><h4>Утечки и прорывы воды</h4></div>
+                                    </div>    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Night_chk"/>Утечки, если ночной расход больше
+<!--                                        </div>-->
+<!--                                        <div class="col-xs-7 noPadding">-->
+                                            <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Night_chk" ng-model="zpointSettings.winter.leak_Night">
+                                            &#37; от среднечасового расхода за сутки
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Gush_chk"/>Порыв / сброс, если расход в 
+<!--                                        </div>-->
+<!--                                        <div class="col-xs-7 noPadding">-->
+                                            <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Gush_chk" ng-model="zpointSettings.winter.leak_Gush" style="margin-left: 0px;">
+                                            раза больше обычного
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>    
+<!--                                Нарушение эксплуатации  -->
+                            <div class="col-md-12 well paddingBottom10 marginBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                            <input type="checkbox" title="Tраб" class="" ng-model="zpointSettings.winter.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_Worktime_chk" ng-model="zpointSettings.winter.ov_Worktime"> чч:мм
+                                        </div>
+                                        <div class="col-xs-5">
+                                           <input type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.winter.ov_OverheatCool_chk"/> Перегрев / недогрев
+
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                           <input type="checkbox" title="Контроль баланса масс" class="" ng-model="zpointSettings.winter.ov_BalanceM_ctrl_chk"/>
+                                            Контроль баланса масс <input class="span1" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_BalanceM_ctrl_chk" ng-model="zpointSettings.winter.ov_BalanceM_ctrl"> &#37;
+                                        
+                                        </div>
+                                                                              
+                                        <div class="col-xs-5">
+                                               <input type="checkbox" title="&Delta;M" class="" ng-model="zpointSettings.winter.ov_deltaM_chk"/>&Delta;M &lt; 0 
+                                        </div>
+                                    
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+<!--                            </div>     -->
+                                  
+                              </div>
+                            </div>
+                        </div><!-- /example -->
+
+                    </div>
+                </div>
+            </div>        
 
 			
 		</div>
@@ -788,7 +850,7 @@
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
+								ng-click="updateZpointSettings()"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
@@ -808,67 +870,119 @@
 	</div>
 </div>
 
+<!--Show Object options-->
+<div id="showObjOptionModal" class="modal fade" role="dialog"
+	aria-labelledby="showObjOptionLabel" tabindex="-1">
 
-<!--Context menu-->
-<script>
-//    <!--Context menu for object-->
-    $(function($scope){
-        $('#datatabl').contextMenu({
-            selector: 'tr', 
-            callback: function(key, options) {
-//                var m = "clicked: " + key + " on " + $(this).text();
-//                window.console && console.log(m) || alert(m); 
-//var str = "";                
-//for (var k in options){                
-//console.log("options["+k+"]= "+options[k]);
-//    for (var j in options[k]){
-//        console.log("options["+k+"]["+j+"]= "+options[k][j]);
-//    };
-//}
+	<div class="modal-dialog  modal-content">
 
-                if ("options"==key){
-                    $('#showObjectOptionModal').modal();
-                };
-            },
-            items: {
-                "watch": {name: "Посмотреть", icon: ""},
-                "options": {name: "Свойства", icon: ""}
-//                ,
-//                "delete": {name: "Delete", icon: "delete"},
-//                "sep1": "---------",
-//                "quit": {name: "Quit", icon: "quit"}
-            }
-        });
-    });
-    
-//    <!--Context menu for zpoint-->
-    $(function($scope){
-        $('#dataZpointTabl').contextMenu({
-            selector: 'tr', 
-            callback: function(key, options) {
-//                var m = "clicked: " + key + " on " + $(this).text();
-//                window.console && console.log(m) || alert(m); 
-//var str = "";                
-//for (var k in options){                
-//console.log("options["+k+"]= "+options[k]);
-//    for (var j in options[k]){
-//        console.log("options["+k+"]["+j+"]= "+options[k][j]);
-//    };
-//}
+		<div class="modal-header">
+			<h3 id="showObjOptionLabel">
+				Свойства объекта учета "{{currentObject.fullName}}"
+			</h3>
+		</div>
+		<div class="modal-body ">
+            
+            
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputName" placeholder="Наименование" size="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Описание</label>
+                                </td>
+                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Описание" cols="51"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress">Адрес</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputAddress" placeholder="Адрес" size="50">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><select id="inputCC" style="width:329px;">
+                                                        <option>УК 1</option>
+                                                        <option>Ук 3</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
+                                </td>
+                                <td class="textAlign_left col-sm-9"><select id="inpuinputModetPCO" style="width:127px;">
+                                                        <option>Летний</option>
+                                                        <option>Зимний</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-sm-6"><label for="inputThv">Температура холодной воды</label>
+                                </td>
+                                <td class="textAlign_left col-sm-6"><input type="text" id="inputThv" placeholder="" size="4"> &deg; C 
+                                </td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-sm-6"><label for="inputSquare">Отапливаемая площадь</label>
+                                </td>
+                                <td class="col-sm-6 textAlign_left"><input type="text" id="inputSquare" placeholder="" size="4"> кв. м.
+                                </td>
+                            </tr>
+                            
+                            
+                            
 
-                if ("options"==key){
-                    $('#showZpointOptionModal').modal();
-                };
-            },
-            items: {
-                "watch": {name: "Посмотреть!", icon: ""},
-                "options": {name: "Свойства", icon: ""}
-//                ,
-//                "delete": {name: "Delete", icon: "delete"},
-//                "sep1": "---------",
-//                "quit": {name: "Quit", icon: "quit"}
-            }
-        });
-    });
-    
-</script>
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputRd">Расчетный день</label>
+                                </td>
+                                <td class="col-sm-9"><input type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" size="70">
+                                </td>
+                            </tr>
+-->
+                        </table>
+
+                    </div>    
+                    
+                </div>
+                
+            </div>        
+
+			
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click=""
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>

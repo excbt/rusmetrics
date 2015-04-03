@@ -2,7 +2,7 @@
 
 /**
  * @ngdoc function
- * @name portalNMK.controller:NotificationCtrl
+ * @name portalNMK.controller:NotifiCtrl
  * @description
  * # MainCtrl
  * Controller of the portalNMK
@@ -12,11 +12,15 @@ angular.module('portalNMK')
 
     $scope.crudTableName= "../api/subscr/contObjects";
     
+//    $scope.cols = [ 'Тип', 'Сообщение', 'Дата', 'Объект', 'Точка учета'];
+      
+    //Определяем оформление для таблицы уведомлений
     $scope.tableDef = {
 					tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
 					hideHeader : false,
 					headerClassTR : "info",
-					columns : [ {
+					columns : [ 
+                        {
 						fieldName : "noticeCat",
 						header : "Категория",
 						headerClass : "col-md-1",
@@ -40,86 +44,50 @@ angular.module('portalNMK')
 					}, {
 						fieldName : "noticeObject",
 						header : "Объект",
-						headerClass : "col-md-3",
-						dataClass : "col-md-3"
+						headerClass : "col-md-2",
+						dataClass : "col-md-2"
 					} , {
 						fieldName : "noticeZpoint",
 						header : "Точка учета",
 						headerClass : "col-md-1",
 						dataClass : "col-md-1"
 					} ]
-			};
-    
-    
-            $scope.getData = function (cb) {
-                    crudGridDataFactory($scope.crudTableName).query(function (data) {
-                        $scope.objects = data;
-                    
-                        if (cb) cb();
-                    });
-                };
+		};
 
-            $scope.getData(
-                    function () {
-                         $scope.loading = false;
-                         $scope.getAllNotices();
-                    });
-    
-    
-                $scope.notices = [];            
-                $scope.noticeIter = 0;
-                
-                $scope.getNoticesByObject = function(tableName, object){
-                    
-                        var table = tableName+"/"+object.id+"/events";
-                        crudGridDataFactory(table).query(function (data) {
-                           
-                            var tempArr = [];
-                            $scope.noticesByObject = data;
-                            
-                            console.log("Table = "+table);
+      //Получаем уведомления
+        $scope.data = {};
+        $scope.getData = function () {
+            var table =  $scope.crudTableName+"/events";
+            crudGridDataFactory(table).query(function (data) {
 
-                                                        for(var j=0;j<6;j++){                                                                            
-                                                      
-                                                            if (typeof $scope.noticesByObject[j] == 'undefined'){
-                                                                continue;
-                                                            };
-                                                            var notice = {};
-                                                            notice.noticeType = $scope.noticesByObject[j].contEventType.name;
-                                                            notice.noticeText = $scope.noticesByObject[j].message;
-                                                            notice.noticeDate = new Date($scope.noticesByObject[j].eventTime);
-                                                            notice.noticeObject = object.fullName;
-                                                            notice.noticeZpoint  = $scope.noticesByObject[j].contServiceType;   
+                var tempArr = [];
+                var noticesByAbonent = data;
 
-                                                            tempArr[$scope.noticeIter] = notice;
-                                                            $scope.noticeIter=$scope.noticeIter+1;
-                                                        }
-                         $scope.notices = tempArr;   
-                        });
-                    
-                    
-                };
-                
-                $scope.getAllNotices = function(){
-                    $scope.oldObjects = $scope.objects;
-                    for (var i=0;i<4; i++){
-                        //
-                        
-                        $scope.getNoticesByObject($scope.crudTableName, $scope.oldObjects[i]);                
-                        
-                        $scope.objects1 = $scope.notices;
-                        //
-                        
-                            
+                console.log("Table = "+table);
+
+
+                var tmp = data.map(function(el) {
+                    var result = {};
+                    result.noticeCheckbox = " ";
+                    result.noticeType = el.contEventType.name;
+                    result.noticeText = el.message;
+                    result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
+                    result.noticeObject = el.contObjectId;
+                //Преобразование типа точки учета в значение, которое сможет прочитать пользователь
+                    switch (el.contServiceType)
+                    {
+                            case "heat" : result.noticeZpoint = "ТС"; break;
+                            case "hw" : result.noticeZpoint = "ГВС"; break;
+                            default: result.noticeZpoint  = el.contServiceType;
                     }
-                    
-                    
-                }; //end getAllNotices
-    
-    
-    
-    $scope.data = [{operationId : 1,
-				operationText : "Тест Тест Тест",
-				operationUser : "User User User"}];
-    
+                    return result;
+                });
+
+                $scope.data = tmp;
+
+            });
+        };
+
+        $scope.getData();
+
   }]);
