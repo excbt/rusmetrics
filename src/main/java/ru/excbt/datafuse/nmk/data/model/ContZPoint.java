@@ -9,6 +9,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -61,7 +62,7 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 
-	@OneToMany(cascade = {})
+	@ManyToOne(cascade = {})
 	@JoinColumn(name = "rso_organization_id")
 	private Organization organization;
 
