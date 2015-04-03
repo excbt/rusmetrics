@@ -64,7 +64,7 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 
 	@ManyToOne(cascade = {})
 	@JoinColumn(name = "rso_organization_id")
-	private Organization organization;
+	private Organization rso;
 
 	@Column(name = "checkout_time")
 	private String checkoutTime;
@@ -131,14 +131,6 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 		this.version = version;
 	}
 
-	public Organization getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
-
 	public String getCheckoutTime() {
 		return checkoutTime;
 	}
@@ -161,6 +153,14 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setDoublePipe(Boolean doublePipe) {
 		this.doublePipe = doublePipe;
+	}
+
+	public Organization getRso() {
+		return rso;
+	}
+
+	public void setRso(Organization rso) {
+		this.rso = rso;
 	}
 
 }
