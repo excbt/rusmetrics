@@ -18,7 +18,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
         },
         controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
+console.log("Loading crudGridObjects directive.");                
+                
                 $scope.objects = angular.fromJson($attrs.datasource); 
+                
                 
                 $scope.lookups = [];
                 $scope.object = {};
@@ -297,11 +300,11 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.zPointsByObject = [];
                 $scope.getZpointsDataByObject = function(table){
                     
-console.log(table);                 
+//console.log(table);                 
                     crudGridDataFactory(table).query(function (data) {
                         $scope.zPointsByObject = data;
-console.log("Data:");                
-console.log($scope.zPointsByObject); 
+//console.log("Data:");                
+//console.log($scope.zPointsByObject); 
                         
                         
                         for(var i=0;i<$scope.zPointsByObject.length;i++){
@@ -309,13 +312,27 @@ console.log($scope.zPointsByObject);
                             zpoint.id = $scope.zPointsByObject[i].id;
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+                            zpoint.zpointRSO = $scope.zPointsByObject[i].organizationFullname;
+                            zpoint.checkoutTime = $scope.zPointsByObject[i].checkoutTime;
+                            zpoint.checkoutDay = $scope.zPointsByObject[i].checkoutDay;
+                            if(typeof $scope.zPointsByObject[i].doublePipe == 'undefined'){
+                                zpoint.piped = false;
+                                
+                            }else {
+                                zpoint.piped = true;
+                                zpoint.doublePipe = $scope.zPointsByObject[i].doublePipe;
+                                zpoint.singlePipe = !zpoint.doublePipe;
+                            };
+                            if (typeof $scope.zPointsByObject[i].deviceObjects != 'undefined'){
+                                zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                                zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+                            };
+                            
                             zpoint.zpointLastDataDate  = "27.02.2015";   
                             
                             $scope.oldObjects[i] = zpoint;
                         
-console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
+//console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
                         }
                         
                         
@@ -463,21 +480,11 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 $scope.getIndicators = function(object){
 
                     $rootScope.showIndicatorsParam = true;
-                    
-                    //Send:
-                    //  object_id
-                    //  zpoint_id
-                    //  1h
-                    //  beginDate = lastDate.nachalo
-                    //  endDate = lastDate.konec
- 
-//console.debug("$scope.currentObject");
-//for (var k in $scope.currentObject){
-//    console.log("$scope.currentObject["+k+"]="+$scope.currentObject[k]);
-//};                    
+              
                     
                     $rootScope.contObject =  $scope.currentObject;
                     $rootScope.contZPoint = object;
+                    $rootScope.timeDetailType = "1h";
                                         
                     window.location.replace("#/objects/indicators/");
 
@@ -485,14 +492,99 @@ console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i]
                 
                 
                 //Objects. Context menu for objects and zpoints
-                $scope.rclick = function(){
-                  alert("Right button click!");  
+//                $scope.rclick = function(){
+//                  alert("Right button click!");  
+//                };
+                
+//                function rclick(){
+//                    alert("Privet iz directive");
+//                };
+                //end objects.context menu
+                
+                
+                ///trash
+//                $scope.openZpointSettings = function(){
+//                    console.log("Invoke openZpointSettings().");
+//                    $('#showZpointOptionModal').modal();
+//                    
+//                };
+                
+                
+                //Свойства точки учета
+                $scope.zpointSettings = {};
+                $scope.getZpointSettings = function(object){
+                    var zps = {};
+                    zps.id = object.id;
+                    zps.zpointName = object.zpointName;
+                    
+                    switch (object.zpointType){
+                       case "heat" :  zps.zpointType="ТС"; break;
+                       case "hw" : zps.zpointType="ГВС"; break;
+                        default : zps.zpointType=object.zpointType;        
+                    }
+                    zps.zpointModel = object.zpointModel;
+                    zps.winter = {};
+                    zps.summer = {};
+                    //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
+                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+object.id+"/settingMode";
+                    crudGridDataFactory(table).query(function (data) {
+                        
+//console.log("Data:");                
+//console.log(data); 
+                        for(var i = 0; i<data.length;i++){
+                                                    
+                            if(data[i].settingMode == "winter"){
+                                zps.winter = data[i];
+                            }else if(data[i].settingMode == "summer"){
+                                zps.summer=data[i];
+                            }
+                            
+                        };
+                        
+                     $scope.zpointSettings = zps;
+//console.log("$scope.zpointSettings");                        
+//for (var k in $scope.zpointSettings){
+//    console.log("$scope.zpointSettings["+k+"]="+$scope.zpointSettings[k]); 
+//    
+//}; 
+//console.log("$scope.zpointSettings.summer = "+$scope.zpointSettings.summer); 
+//                        
+//for (var j in $scope.zpointSettings.summer){
+//        console.log("$scope.zpointSettings.summer["+j+"]="+$scope.zpointSettings.summer[j]);
+//}  
+//console.log("$scope.zpointSettings.winter");                         
+//for (var j in $scope.zpointSettings.winter){
+//        console.log("$scope.zpointSettings.winter["+j+"]="+$scope.zpointSettings.winter[j]);
+//}                          
+                    });
+                    
                 };
                 
-                function rclick(){
-                    alert("Privet iz directive");
+                
+                var successZpointSummerCallback = function (e) {
+                    notificationFactory.success();
+                    var tableWinter = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
+                    crudGridDataFactory(tableWinter).update({ id: $scope.zpointSettings.winter.id }, $scope.zpointSettings.winter, successZpointWinterCallback, errorCallback);           
+                    
                 };
-                //end objects.context menu
+                
+                 var successZpointWinterCallback = function (e) {
+                    notificationFactory.success();
+                    
+                    $('#showZpointOptionModal').modal('hide');                    
+                     $scope.zpointSettings={};
+                    
+                    
+                };
+
+//                var errorZpointCallback = function (e) {
+//                    notificationFactory.error(e.data.ExceptionMessage);
+//                };
+                
+                $scope.updateZpointSettings = function(){                   
+                    var tableSummer = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
+                    crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
+                };
                
             }]
     };

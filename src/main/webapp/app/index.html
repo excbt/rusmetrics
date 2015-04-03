@@ -27,7 +27,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    
+<!--<div ng-controller="MainCtrl"    >-->
 <div id="wrap">
 <!--    Навигационная строка в верху страницы-->
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -55,7 +55,7 @@
             <ul class="nav navbar-nav pull-right">
 				
 				<li><a href="#/private/"
-					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false"><p
+					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false"><p
 							class="displayInLine"> <b>Личный кабинет</b>
 				</p></a></li>			
 			
@@ -73,23 +73,23 @@
     <div class="row row-offcanvas row-offcanvas-left">    
        
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas menuWidth" ng-show="!showPrivateOfficeMenu">
+        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas menuWidth" >
                         <nav class="sidebar-nav"
-                            role="navigation">
+                            role="navigation" ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false">Главная</a>
+                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Главная</a>
                                 <!-- Notices -->
                                 <a class="list-group-item"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false">Уведомления</a>
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Уведомления</a>
                                 <!-- Журнал операций -->
                                 <a class="list-group-item"
 
-                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false">Журнал операций</a>
+                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Журнал операций</a>
                                 <!-- Объекты -->
 <!--
                                 <a class="list-group-item"
@@ -99,7 +99,7 @@
                                 <!-- Отчеты -->
                                 <a class="list-group-item"
 
-                                    href="#/reports/commercial_report/" data-toggle="offcanvas" ng-click="showMenuReport=true">Отчеты</a>
+                                    href="#/reports/commercial_report/" data-toggle="offcanvas" ng-click="showMenuReport=true;showIndicatorsParam=false">Отчеты</a>
                                 
                                  <!-- Test -->
 <!--
@@ -109,7 +109,7 @@
                                 
 -->
                                 <!-- Меню отчетов -->
-                                <div ng-show="showMenuReport" id="sidebar-entries" class="list-group submenu">
+                                <div class="list-group submenu hideM" ng-class="{'showM': showMenuReport, 'hideM': !showMenuReport}" id="sidebar-entries" >
                                     <!-- Home -->
 <!--
 
@@ -138,48 +138,8 @@
                             </div>
                         </nav>
             
-                        <nav class="sidebar-nav"
-                            role="navigation"
-                             ng-show="showIndicatorsParam">
-<!--                Параметры отображения показаний точек учета            -->
-                            <div id="sidebar-entries" class="list-group">
-                                <div class="list-group-item">
-                                    <label >
-
-                                         Задайте интервал дат</label>
-                                    <div>
-                                            <input style="font-size: 10px;" date-range-picker class="form-control date-picker"
-                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
-                                        </div>
-                                
-                                </div>
-                                <div class="list-group-item">
-                                    <div class="container">
-                                        <div class="row">
-                                                <label>
-
-                                                     Показания</label>
-                                        </div>
-                                        <div class="row">
-                                                <input type=radio name="indicatorsKind" value="24h" checked="true" 
-
-                                                    data-toggle="offcanvas"> Суточные</input>
-                                        </div>
-                                        <div class="row">
-                                                <input type=radio name="indicatorsKind" value="1h" 
-
-                                                    data-toggle="offcanvas"> Часовые</input>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </nav>    
-                        
-            
-            </div>                
-         <div class="col-xs-6 col-sm-2 well sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        
-             <nav class="sidebar-nav"
-                            role="navigation">
+                        <nav class="sidebar-nav hideM "
+                            role="navigation" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}"> 
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
@@ -197,7 +157,53 @@
 
                             </div>
                         </nav>  
-            </div>
+            
+                        <nav class="sidebar-nav hideM" ng-class="{'showM': showIndicatorsParam, 'hideM': !showIndicatorsParam}"
+                            role="navigation"
+                             ng-show="showIndicatorsParam">
+<!--                Параметры отображения показаний точек учета            -->
+                            <div id="sidebar-entries" class="list-group">
+                                <div class="list-group-item">
+                                    <label >
+
+                                         Задайте интервал дат</label>
+                                    <div ng-controller="DataRangeSettings">
+                                            <input style="font-size: 9px;" date-range-picker class="form-control date-picker"
+                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                    </div>
+                                
+                                </div>
+                                <div class="list-group-item">
+                                    <div class="container">
+                                        <div class="row">
+                                                <label>
+
+                                                     Показания</label>
+                                        </div>
+                                        <div class="row">
+                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="24h" checked> Суточные
+                                        </div>
+                                        <div class="row">
+                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="1h"> Часовые
+                                        </div>
+<!--
+                                        <div class="row">
+                                            <i class="btn btn-default" data-target="#/objects/indicators/" >Показать</i>
+                                        </div>
+-->
+                                    </div>
+                                </div>
+                                <a class="list-group-item"
+
+                                    href="#/objects/indicators/" data-toggle="offcanvas" ng-click="">Показать</a>
+                            </div>
+                        </nav>    
+                        
+            
+            </div>                
+<!--         <div class="col-xs-6 col-sm-2 well sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        -->
+
+<!--            </div>-->
   
 <!--        <div ng-view="" ng-animate="{enter:'enter-animation'"></div>-->
         <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea">
@@ -215,7 +221,7 @@
 
 </div> <!-- end id=wrap -->
       
-      <div class="footer navbar-fixed-bottom row-fluid">
+      <div class="footer navbar-fixed-bottom row-fluid" style="background: black;">
           <div class="container" >
             
 			<p class="muted credit">
@@ -223,7 +229,7 @@
                   <tr>
                       <td> -->
 <!--                         <react-component name="FooterComponent" props="person"/> -->
-                        <p align="center"><span class="glyphicon"></span> (c) "НМК" 2015 </p>
+                        <p align="center" style="font-size: 16px;"><span class="glyphicon"></span> (c) "НМК" 2015 </p>
                         
 <!--                      </td>   
 <!--                       <td align="right"> -->
@@ -237,8 +243,9 @@
 <!--               </p> -->
           </div>
       </div>
-   
-
+   <!-- end ng-controller=MainCtrl -->
+<!--</div>-->
+    
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
 <!--
@@ -264,10 +271,6 @@
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/react/react.js"></script>
-	<script src="bower_components/react/JSXTransformer.js"></script>
-	<script src="bower_components/ngReact/ngReact.min.js"></script>
-	    
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.js"></script>
@@ -276,10 +279,8 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-
-  
+    <script src="bower_components/react/react.js"></script>
     <script src="bower_components/toastr/toastr.js"></script>
-    
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -288,6 +289,7 @@
     <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
     <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
     <script src="vendor_components/angular-daterangepicker.js"></script>
+    <script src="bower_components/ngReact/ngReact.js"></script>
 
     
 
@@ -297,7 +299,7 @@
         <script src="scripts/app.js"></script>
 	    <script src="scripts/controllers/table-controller-react(example).js"></script>
 <!--  		<script src="react_components/footer_comp.jsx" type="text/jsx"></script> -->
- 		<script src="scripts/react/footer_comp.js"></script>
+<!-- 		<script src="scripts/react/footer_comp.js"></script>-->
  		<script src="scripts/react/tableComponent.react.js"></script>
 
         
@@ -329,6 +331,8 @@
 <!--        <script src="include/javascript-include.html"></script>-->
         <!-- endbuild -->
     
+<script src="scripts/directives/hello.js"></script>
+<script src="scripts/controllers/data-range-settings.js"></script>
 
 </body>
 </html>

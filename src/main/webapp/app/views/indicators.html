@@ -1,81 +1,35 @@
 <div>Портал / Объекты / Системы - точки учета</div>
 <h2>Показания &lt; {{contObject.fullName}} &gt; - &lt; {{contZPoint.zpointName}} &gt;</h2>
+<!--
+<div class="code">
+    <pre class="code">
+        {{tableDef}}
+    </pre>
+</div>
+-->
 
-<div crud-grid-indicators table="zpointTable"
-	columns='[
+<div>
+    <table-component-react table-def="tableDef" data="data"/>
+<!--    <my-table cols="cols" rows="data" />-->
+</div>
 
-	          {"name":"indicatorDate", "header" : "Дата", "class":"col-md-3"},
-             {"name":"indicatorName", "header" : "Название", "class":"col-md-5"},
-             {"name":"indicatorValue", "header" : "Значение", "class":"col-md-5"},
-             {"name":"indicatorDelta", "header" : "delta", "class":"col-md-5"}
-           
-            ]'
-
-	captions='{"loading":"loading", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"id", "defaultOrderBy" : "indicatorDate", "deleteConfirmationProp":"indicatorName"}'
-     
-     
-
-     datasource='[
-    {
-      "id":"753",
-      "indicatorDate": "22.03.2015",           
-      "indicatorName": "Пример",
-      "indicatorValue": "32",
-      "indicatorDelta": "0.5"
-        
-    }
-                 ,{
-      "id":"754",
-      "indicatorDate": "23.03.2015",           
-      "indicatorName": "Пример1",
-      "indicatorValue": "29",
-      "indicatorDelta": "3"
-        
-    }
-                 ,{
-      "id":"755",
-      "indicatorDate": "24.03.2015",           
-      "indicatorName": "Пример_2",
-      "indicatorValue": "30",
-      "indicatorDelta": "1"
-        
-    }
-
-    
-    ]'
-     
-     
-        zpointcolumns='[
-            
-            {"name":"zpointType", "header" : " ", "class":"col-md-1"},
-	          {"name":"zpointName", "header" : "Наименование", "class":"col-md-2"},
-             {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
-            {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
-           {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
-            ]'     
-          zpointdata='[
-    {
+<!--Строка состояния-->
+<div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
+                                                    <!--    navbar-fixed-bottom-->
+    <div id="navbar-container" class="container navbar-left">
       
-      "zpointId": "1",
-      "zpointType": "GVS",
-       "zpointName": "ГВС",
-      "zpointModel": "ТЭМ-106", 
-        "zpointNumber": "1066502",
-      "zpointLastDataDate": "25.02.2015",
-        "zpointParent": "754"              
-    }
-                     ,{
-      
-      "zpointId": "2",
-      "zpointType": "TS",
-       "zpointName": "TС",
-      "zpointModel": "ТЭМ-106", 
-        "zpointNumber": "1066502",
-      "zpointLastDataDate": "25.02.2015",
-        "zpointParent": "754"              
-    }
-    
-    ]'
-
-     ></div>
+            		
+              <ul class="nav navbar-nav ">
+				
+				<li><p
+							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{data.length}}</b>  
+				    </p>
+                </li>
+                             
+                 
+				
+			</ul>
+                
+					
+			</div>
+</div>
