@@ -1,0 +1,66 @@
+package ru.excbt.datafuse.nmk.data.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.Table;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+@Entity
+@Table(name = "tariff_type")
+@EntityListeners({ AuditingEntityListener.class })
+public class TariffType extends AbstractAuditableModel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7252478781604008586L;
+
+	@Column(name = "tariff_type_name")
+	private String tariffTypeName;
+
+	@Column(name = "cont_service_type")
+	private String contServiceType;
+
+	@Column(name = "tariff_type_unit")
+	private String tariffTypeUnit;
+
+	@Column(name = "tariff_type_capacity")
+	private int tariffTypeCapacity;
+
+	public String getTariffTypeName() {
+		return tariffTypeName;
+	}
+
+	public void setTariffTypeName(String tariffTypeName) {
+		this.tariffTypeName = tariffTypeName;
+	}
+
+	public String getContServiceType() {
+		return contServiceType;
+	}
+
+	public void setContServiceType(String contServiceType) {
+		this.contServiceType = contServiceType;
+	}
+
+	public String getTariffTypeUnit() {
+		return tariffTypeUnit;
+	}
+
+	public void setTariffTypeUnit(String tariffTypeUnit) {
+		this.tariffTypeUnit = tariffTypeUnit;
+	}
+
+	public int getTariffTypeCapacity() {
+		return tariffTypeCapacity;
+	}
+
+	public void setTariffTypeCapacity(int tariffTypeCapacity) {
+		this.tariffTypeCapacity = tariffTypeCapacity;
+	}
+	
+}
