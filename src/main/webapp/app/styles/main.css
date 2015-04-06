@@ -240,6 +240,12 @@ input[type="radio"]{
 	height: 600px; overflow-y: scroll;	
 }
 
+.main-scrollable-area1 {
+	height: 865px; overflow-y: scroll;	
+}
+
+
+
 .modal-position-right {
 /*    position: relative;*/
 /*    right: 0;*/
@@ -330,13 +336,15 @@ mainTable {
 
 .submenu > 
     .list-group-item{
-        background-color: bisque;
+        background-color: beige;
     }
 
-.span2 {
+.span2, .span1 {
         margin-left: 5px;
         margin-right: 5px;
+        text-align: right;
     }
+
 
 .modal-body {
     padding: 0px;
