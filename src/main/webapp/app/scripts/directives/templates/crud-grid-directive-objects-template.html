@@ -2,29 +2,10 @@
 <div ng-show="loading">{{captions.msgLoading}}</div>
 <!-- <i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showZpointOptionModal" data-toggle="modal"></i> -->
 
-<!--Группировка-->
-        <div ng-hide="bReports" ng-show="!bObject" class="form-actions">
-            Группировки: 
-            <div ng-show="!bGroupByObject&&!bObject">
-                <button type="button" class="btn" ng-click="groupByObject()">по объектам</button>
-                <button type="button" class="btn">по типу</button>
-            </div>    
-            <div ng-show="bGroupByObject&&!bObject">
-                <button type="button" class="btn btn-primary">по объектам</button>
-                <button type="button" class="btn">по типу</button>
-                <span class="btn btn-default" ng-click="cancelGroup()"><i class="glyphicon glyphicon-remove"></i></span>
-            </div>
-            
-            
-            
-        </div>
 <!--Фильтр-->
 <div ng-hide="bReports" ng-show="!bObject && !bGroupByObject">
     <div>
         Фильтры:
-    </div>
-    <div>
-        <input type="checkbox" title="Показывать только новые еще непросмотренные записи" ng-model="onlyNoRead">Непросмотренные</input>
     </div>
 </div>
 
@@ -36,14 +17,7 @@
     <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
 </div>
 
-<!-- Create directory-->
-<!--
-<div ng-show="bdirectories">
-    <i class="btn btn-default glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i>
-</div>
--->
-
-<table id="datatabl" class="table table-bordered table-condensed noMarginBottom">
+<table id="datatabl" class="table table-bordered  table-condensed noMarginBottom">
   
      <tr class="info" >
 <!--         ng-hide="bdirectories">-->
@@ -57,8 +31,10 @@
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
+<!--
                        <th ng-show="bGroupByObject || bObject" class="col-md-1">                         
                         </th>
+-->
 
                 <!--       Шапка таблицы-->
                         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
@@ -79,7 +55,7 @@
 <!--  Постороение таблицы с данными  -->
     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
-            <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
+            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
             
 
                 <tr><!--    <tr> Уровень 3     -->
@@ -139,10 +115,7 @@
 
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
-                                <div ng-show="!object.isRead"><b>
-                                    {{object[column.name]}}
-                                    </b></div>
-                                <div ng-show="object.isRead">
+                                <div>
                                     {{object[column.name]}}
                                     </div>
                             </span>
@@ -191,17 +164,18 @@
                     
                     
                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover" ng-show="object.showGroupDetails">
+				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+<!--                    <caption><b>Точки учета</b></caption>-->
                     <tr>
                         <!--       Шапка таблицы-->
-                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)">
+                        <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)" style="text-align: left;">
                             <div>
                                 {{oldColumn.header || oldColumn.name}}
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
                             </div>
                         </th>
 <!--                        Колонка для кнопок-->
-                        <th ng-show="bObject" class="col-md-1">
+                        <th ng-show="bObject && !bList" class="col-md-1">
                         </th>
                     </tr>
                      <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
@@ -217,14 +191,18 @@
                                     <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
                             </span> 
-                            <span ng-switch-when="zpointType">
+                            <span ng-switch-when="zpointType" style="text-align: right;">
     <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
                                 <div ng-switch on="oldObject[oldColumn.name]">
-                                    <span ng-switch-when="hw"><img height=16 width=16 src="images/gvs.png"></span>
-                                    <span ng-switch-when="heat"><img height=16 width=16 src="images/ts.png"></span>
-                                    <span ng-switch-when="HVS"><img height=16 width=16 src="images/hvs.png"></span>
-                                    <span ng-switch-when="GS"><img height=16 width=16 src="images/gaz.png"></span>
-                                    <span ng-switch-when="ES"><img height=16 width=16 src="images/es.png"></span>
+                                    <span ng-switch-when="cw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png"></span>
+                                    <span ng-switch-when="heat">
+                                        <img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png">
+<!--                                        <img height=16 width=16 src="images/ts.png">-->
+                                    </span>
+                                    <span ng-switch-when="hw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png"></span>
+                                    <span ng-switch-when="gas"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png"></span>
+                                    <span ng-switch-when="el"><img height=16 width=16 src="images/es.png"></span>
+                                    <span ng-switch-when="env"><img height=16 width=16 src="images/es.png"></span>
                                     <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
                             </span>      
@@ -237,7 +215,7 @@
                          </td>
                          
                          <!-- Колонка для редактирования элементов                   -->
-                            <td ng-show="bObject" class="col-md-1"> 
+                            <td ng-show="bObject && !bList" class="col-md-1"> 
                                 <div class="btn-toolbar">
                                     <div class="btn-group">
                                         <table>
@@ -308,11 +286,6 @@
 					
 			</div>
 </div>
-
-
-
-<!--#include file="scripts/directives/templates/zpoint-settings.html"-->
-<!--<link rel="import" href="scripts/directives/templates/zpoint-settings.html">-->
 
 
 <!--Show Zpoint options-->
