@@ -59,13 +59,13 @@ app
                         };
     
                         $scope.$watch('navPlayerDates', function (newDates) {
-console.log("newDates[]= "+newDates);
-for (var k in newDates){                            
-    console.log("newDates["+k+"]= "+newDates[k]);
-};
+//console.log("newDates[]= "+newDates);
+//for (var k in newDates){                            
+//    console.log("newDates["+k+"]= "+newDates[k]);
+//};
                             $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
                             $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
-console.log("This change");                            
+//console.log("This change");                            
                             //  $scope.getReport(newDates);                
                         }, false);
 });
