@@ -25,6 +25,10 @@ public class TariffOption extends AbstractKeynameEntity  {
 	@Column (name = "tariff_option_comment")
 	private String tariffOptionComment;
 
+	@Column(name = "tariff_option_order")
+	private int tariffOptionOrder;
+	
+	
 	public String getTariffOptionName() {
 		return tariffOptionName;
 	}
@@ -47,6 +51,14 @@ public class TariffOption extends AbstractKeynameEntity  {
 
 	public void setTariffOptionComment(String tariffOptionComment) {
 		this.tariffOptionComment = tariffOptionComment;
+	}
+
+	public int getTariffOptionOrder() {
+		return tariffOptionOrder;
+	}
+
+	public void setTariffOptionOrder(int tariffOptionOrder) {
+		this.tariffOptionOrder = tariffOptionOrder;
 	}
 	
 }

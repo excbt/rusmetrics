@@ -34,7 +34,7 @@ public class SubscriberRepositoryTest extends JpaSupportTest {
 		
 		List<Subscriber> soList = subscrOrgRepository.selectByOrganizationId(726);
 		checkArgument(soList.size() > 0);
-		logger.debug("subscrRole List Organizatoin FullName {}", soList.get(0).getOrganization().getFullName());
+		logger.debug("subscrRole List Organizatoin FullName {}", soList.get(0).getOrganization().getOrganizationFullName());
 	}
 
 }

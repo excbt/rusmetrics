@@ -2,22 +2,27 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
-
 @Entity
 @Table(name = "audit_user")
-public class AuditUser extends AbstractPersistableEntity<Long> {
+public class AuditUser implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3252857396837049517L;
 
+	@Id
+	@Column(name="id")
+	private long id;	
+	
 	@Column(name = "user_name")
 	private String userName;
 
@@ -52,9 +57,7 @@ public class AuditUser extends AbstractPersistableEntity<Long> {
 
 		this.userName = srcObject.userName;
 		this.version = srcObject.version;
-		if (srcObject.getId() != null) {
-			this.setId(srcObject.getId().longValue());
-		}
+		this.id = srcObject.id;
 		this.isSystem = srcObject.isSystem;
 	}
 
@@ -64,6 +67,14 @@ public class AuditUser extends AbstractPersistableEntity<Long> {
 
 	public void setIsSystem(boolean isSystem) {
 		this.isSystem = isSystem;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

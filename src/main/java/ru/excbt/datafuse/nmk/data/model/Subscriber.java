@@ -48,6 +48,7 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
     @JoinTable(name="subscr_cont",
     joinColumns=@JoinColumn(name="subscriber_id"),
     inverseJoinColumns=@JoinColumn(name="cont_object_id"))
+	@JsonIgnore
 	private Collection<ContObject> contObjects;
 	
 	

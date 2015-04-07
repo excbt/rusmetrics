@@ -31,6 +31,9 @@ public class TariffType extends AbstractAuditableModel {
 	@Column(name = "tariff_type_capacity")
 	private int tariffTypeCapacity;
 
+	@Column(name = "tariff_type_order")
+	private int tariffTypeOrder;
+	
 	public String getTariffTypeName() {
 		return tariffTypeName;
 	}
@@ -61,6 +64,14 @@ public class TariffType extends AbstractAuditableModel {
 
 	public void setTariffTypeCapacity(int tariffTypeCapacity) {
 		this.tariffTypeCapacity = tariffTypeCapacity;
+	}
+
+	public int getTariffTypeOrder() {
+		return tariffTypeOrder;
+	}
+
+	public void setTariffTypeOrder(int tariffTypeOrder) {
+		this.tariffTypeOrder = tariffTypeOrder;
 	}
 	
 }
