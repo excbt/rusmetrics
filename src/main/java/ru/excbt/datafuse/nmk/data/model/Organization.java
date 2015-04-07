@@ -24,13 +24,13 @@ public class Organization extends AbstractAuditableEntity<AuditUser, Long>{
 	private static final long serialVersionUID = -2192600082628553203L;
 
 	@Column(name="organization_name")
-	private String name;
+	private String organizationName;
 	
 	@Column(name="organization_full_name")
-	private String fullName;
+	private String organizationFullName;
 	
 	@Column(name="organization_full_address")
-	private String fullAddress;
+	private String organizationFullAddress;
 	
 	@Column(name="ex_code")
 	private String exCode;
@@ -41,29 +41,7 @@ public class Organization extends AbstractAuditableEntity<AuditUser, Long>{
 	@Version
 	private int version;
 
-	public String getName() {
-		return name;
-	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getFullName() {
-		return fullName;
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
-	}
-
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
-	}
 
 	public String getExCode() {
 		return exCode;
@@ -87,5 +65,29 @@ public class Organization extends AbstractAuditableEntity<AuditUser, Long>{
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getOrganizationName() {
+		return organizationName;
+	}
+
+	public void setOrganizationName(String organizationName) {
+		this.organizationName = organizationName;
+	}
+
+	public String getOrganizationFullName() {
+		return organizationFullName;
+	}
+
+	public void setOrganizationFullName(String organizationFullName) {
+		this.organizationFullName = organizationFullName;
+	}
+
+	public String getOrganizationFullAddress() {
+		return organizationFullAddress;
+	}
+
+	public void setOrganizationFullAddress(String organizationFullAddress) {
+		this.organizationFullAddress = organizationFullAddress;
 	}
 }

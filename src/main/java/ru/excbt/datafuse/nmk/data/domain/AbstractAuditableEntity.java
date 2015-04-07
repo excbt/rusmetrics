@@ -39,7 +39,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 	 */
 	private static final long serialVersionUID = -4282498146105728631L;
 
-	@ManyToOne
+	@ManyToOne 
 	@JoinColumn(name = "created_by", updatable = false)	
 	@JsonIgnore
 	private U createdBy;

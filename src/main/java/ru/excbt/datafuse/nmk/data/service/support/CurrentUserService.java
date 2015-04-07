@@ -44,14 +44,19 @@ public class CurrentUserService {
 	 * @return
 	 */
 	public AuditUser getCurrentAuditUser() {
-		Authentication auth = getUserAuth();
 
+
+		String userName = null;
+		
+		Authentication auth = getUserAuth();
 		if (auth == null) {
-			logger.warn("Authentication of Spring security is NULL");
-			return null;
+			logger.warn("Authentication of Spring security is NULL. Using developer user:{}", DEVELOPER_USER_NAME);
+			userName = DEVELOPER_USER_NAME;;
+		} else {
+			//userName = auth.getName();
+			userName = DEVELOPER_USER_NAME;;
 		}
 
-		String userName = DEVELOPER_USER_NAME;
 		AuditUser srcUser = getMap().get(userName);
 
 		if (srcUser == null) {
@@ -65,7 +70,7 @@ public class CurrentUserService {
 		return srcUser != null ? new AuditUser(srcUser) : null;
 
 	}
-
+	
 	/**
 	 * 
 	 * @return
@@ -74,4 +79,5 @@ public class CurrentUserService {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
+	
 }
