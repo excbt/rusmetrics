@@ -1,0 +1,357 @@
+<div>Портал / Личный кабинет / Тарифы</div>
+<h2>Тарифы</h2>
+
+<div class="input-group col-md-5 filter marginBottom10">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-filter"></i></span>
+    <input type="text" class="form-control" ng-model="filter">
+    <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+</div>
+
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover">
+    <tr class="info">
+        <th class="col-md-1">
+            <div class="btn-toolbar"><i class="btn btn-xs btn-default glyphicon" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()"></i></div>
+        </th>
+
+        <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+            <div>
+                {{column.header || column.name}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+            </div>
+        </th>
+        <th class="col-md-1">
+        </th>
+    </tr>
+    <tr ng-show="addMode">
+        <td>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-save" ng-click="addObject()"></i>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-remove" ng-click="toggleAddMode()"></i>
+                </div>
+            </div>
+        </td>
+        <td ng-repeat="column in columns" ng-switch="!column.lookup">
+            <input ng-switch-default ng-model="object[column.name]" ng-disabled="column.autoincrement" class="form-control"/>
+            <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-show="column.lookup" ng-model="object[column.name]" class="form-control"></select>
+        </td>
+    </tr>
+    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+        <td>
+            <div class="btn-toolbar" ng-switch on="object.editMode">
+                <div class="btn-group" ng-switch-default>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-edit" ng-click="toggleEditMode(object)"></i>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-trash" data-target="#deleteObjectModal" ng-click="selectedItem(object)" data-toggle="modal"></i>
+                </div>
+                <div class="btn-group" ng-switch-when="true">
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-save" ng-click="updateObject(object);toggleEditMode(object);"></i>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-remove" ng-click="toggleEditMode(object)"></i>
+                </div>
+            </div>
+        </td>
+        <td ng-repeat="column in columns" ng-switch on="object.editMode" >
+            <div ng-switch-default ng-switch on="!column.lookup" ng-click="toggleEditMode(object)">
+                <span ng-switch-default>{{object[column.name]}}</span>
+                <span ng-switch-when="false"> {{ getLookupValue(column.lookup, object[column.name]) }} </span>
+            </div>
+
+            <div ng-switch-when="true" ng-switch on="!column.lookup">
+                <input ng-switch-default ng-model="object[column.name]" model-change-blur ng-disabled="column.autoincrement" class="form-control" />
+                <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-model="object[column.name]" class="form-control"></select>
+            </div>
+           
+        </td>
+        <td>
+            <div class="btn-toolbar">
+                <div class="btn-group">
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#editTariffModal" data-toggle="modal"></i>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<div id="deleteObjectModal" class="modal fade" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="deleteObjectLabel">
+				Delete 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning"> Do you want to delete  
+					</label> 
+					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label> 
+					<label
+						class="text-warning"> ? </label>
+				</p>
+
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="deleteObject(currentObject);"
+								value="Delete" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Cancel
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- Edit tariff-->
+<div id="editTariffModal" class="modal fade" role="dialog"
+	aria-labelledby="editTariffLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="editTariffLabel">
+				Тариф <input type="text" ng-model="currentObject.tariff_plan_name">
+			</h3>
+		</div>
+		<div class="modal-body ">
+            
+            
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                            <tr>
+                                <td><label for="inputDescription" >Описание</label>
+                                </td>
+                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputType">Тип тарифа</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><select id="inputType" style="width:329px;">
+                                                        <option>ГВ</option>
+                                                        <option>ХВ</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputRSO">РСО</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><select id="inputRSO" style="width:329px;">
+                                                        <option>РСО 1</option>
+                                                        <option>РСО №123</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputOption">Опция</label>
+                                </td>
+                                <td class="textAlign_left col-sm-9"><select id="inputOption" style="width:127px;">
+                                                        <option>Льготный</option>
+                                                        <option>Основной</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-sm-6"><label for="inputStartDate">Действует с:</label>
+                                </td>
+                                <td class="textAlign_left col-sm-6"><input type="text" id="inputStartDate" placeholder="" size="4">  
+                                </td>
+                                
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-sm-6"><label for="inputEndDate">по:</label>
+                                </td>
+                                <td class="col-sm-6 textAlign_left"><input type="text" id="inputEndDate" placeholder="" size="4"> 
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="col-sm-6"><label for="inputValue">Стоимость</label>
+                                </td>
+                                <td class="col-sm-6 textAlign_left"><input type="text" id="inputValue" placeholder="" size="4"> 
+                                </td>
+                            </tr>
+                            
+
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputRd">Расчетный день</label>
+                                </td>
+                                <td class="col-sm-9"><input type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" size="70">
+                                </td>
+                            </tr>
+-->
+                        </table>
+
+                    </div>    
+                    
+                </div>
+                
+            </div>        
+
+			
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click=""
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!--Edit tariff plan-->
+<div id="editTariffPlanModal" class="modal fade modal-position-right" role="dialog"
+	aria-labelledby="editTariffPlanLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content modalWindow_wide">
+
+		<div class="modal-header">
+			<h3 id="editTariffPlanLabel">
+				Тарифный план: {{currentTariffPlan.tariff_plan_name}}
+<!--                <input type=text ng-model="">-->
+			</h3>
+
+		</div>
+		<div class="modal-body modal-scrollable-area1 ">
+                    
+
+               <!--            Таблица с данными    -->
+				<table class="crud-grid table table-lighter table-striped table-condensed table-hover">
+                    <tr>
+                        <!--       Шапка таблицы-->
+                        <th ng-repeat="column in tariffColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                            <div>
+                                {{column.header || column.name}}
+                                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
+                            </div>
+                        </th>
+                        <th class="col-md-1"> 
+                            <div>Значение</div>
+
+                
+                        </th>
+                    </tr>
+<!--                    Add new param in row-->
+<!--
+                    <tr ng-show="addParamMode">
+                    
+                        <td ng-repeat="column in oldColumns" ng-switch="!column.lookup" ng-class="column.class">
+                            <input ng-switch-default ng-model="object[column.name]" ng-disabled="column.autoincrement" class="form-control"/>
+                            <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-show="column.lookup" ng-model="object[column.name]" class="form-control"></select>
+                        </td>
+                        <td class="col-md-2">
+                            <div class="btn-toolbar">
+                                <div class="btn-group">
+                                    <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="addObject()"></i>
+                                    <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleAddParamMode()"></i>
+                                </div>
+                            </div>
+                        </td>
+                     </tr>
+-->
+                    
+<!--                    Show exists params-->
+                     <tr ng-repeat="object in tariffObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name">
+                         <td ng-repeat="column in tariffColumns" ng-switch on="object.editMode">
+                        <div ng-switch-default >
+                                    <div ng-switch on="column.name">
+
+                <!--                        По дефолту выводим содержимое данной ячейки-->
+                                        <span ng-switch-default>
+                                                {{object[column.name]}}
+
+                                        </span>
+                                    </div>
+                        </div>         
+                        <div ng-switch-when="true" ng-switch on="!oldColumn.lookup">
+                            <input ng-switch-default ng-model="object[column.name]" model-change-blur ng-disabled="column.autoincrement" class="form-control" />
+                            <select ng-switch-when="false" ng-options="l[column.lookup.key] as l[column.lookup.value] for l in getLookupData(column.lookup.table) | orderBy: column.lookup.orderBy.field:!column.lookup.orderBy.asc" ng-model="object[column.name]" class="form-control"></select>
+                        </div>
+                         </td>
+                         <td ng-class="col-md-1">
+                             <div>
+                                 <input type=text>
+                                    
+                            </div>
+                         </td>
+                     </tr>
+                    </table>
+
+
+
+			
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click="saveObject(targetTableName, currentObjectToDel[extraProp.idColumnName]);"
+								value="Сохранить" />
+						</div>
+                        
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Закрыть
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
