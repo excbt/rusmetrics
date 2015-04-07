@@ -16,7 +16,7 @@ angular.module('portalNMK')
       
     //Определяем оформление для таблицы уведомлений
     $scope.tableDef = {
-					tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
+					tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
 					hideHeader : false,
 					headerClassTR : "info",
 					columns : [ 
