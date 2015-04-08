@@ -44,11 +44,11 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/private_office.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/private/objects_private', {
-        templateUrl: 'views/objects_private.html',
+      .when('/objects_edit', {
+        templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/objects_list', {
+      .when('/private/objects_list', {
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })

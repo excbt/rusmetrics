@@ -80,7 +80,7 @@ app.controller('TariffsCtrl', function($scope){
         }
      ];
     
-    $scope.lookups = [];
+ //   $scope.lookups = [];
     $scope.object = {};
 
     $scope.addMode = false;
