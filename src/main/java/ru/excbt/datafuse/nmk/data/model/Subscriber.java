@@ -59,6 +59,14 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
 	@JsonIgnore
 	private Collection<UDirectory> directories;	
 
+
+	@OneToMany (fetch = FetchType.LAZY)
+    @JoinTable(name="subscr_rso",
+    joinColumns=@JoinColumn(name="subscriber_id"),
+    inverseJoinColumns=@JoinColumn(name="organization_id"))
+	@JsonIgnore
+	private Collection<Organization> rsoOrganizations;
+	
 	
 	@Version
 	private int version;
@@ -118,6 +126,15 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
 	public void setVersion(int version) {
 		this.version = version;
 	}
+
+	public Collection<Organization> getRsoOrganizations() {
+		return rsoOrganizations;
+	}
+
+	public void setRsoOrganizations(Collection<Organization> rsoOrganizations) {
+		this.rsoOrganizations = rsoOrganizations;
+	}
+
 
 	
 	

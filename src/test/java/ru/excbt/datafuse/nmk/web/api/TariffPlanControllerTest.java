@@ -41,6 +41,11 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testRso() throws Exception{
+		testJsonGet("/api/subscr/tariff/rso");
+	}	
+	
+	@Test
 	public void testDefault() throws Exception{
 		testJsonGet("/api/subscr/tariff/default");
 	}
