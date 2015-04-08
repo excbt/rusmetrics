@@ -55,7 +55,7 @@
             <ul class="nav navbar-nav pull-right">
 				
 				<li><a href="#/private/"
-					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false"><p
+					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false;showSettings=false"><p
 							class="displayInLine"> <b>Личный кабинет</b>
 				</p></a></li>			
 			
@@ -81,25 +81,17 @@
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Главная</a>
-                                <!-- Notices -->
+                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Главная</a>
+   
+                                <!-- Объекты, редактирование -->
                                 <a class="list-group-item"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Уведомления</a>
-                                <!-- Журнал операций -->
-                                <a class="list-group-item"
-
-                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false">Журнал операций</a>
-                                <!-- Объекты -->
-<!--
-                                <a class="list-group-item"
-
-                                    href="#/objects_list" data-toggle="offcanvas">Объекты</a>
--->
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showMenuReport=false">Объекты</a>
+                                
                                 <!-- Отчеты -->
-                                <a class="list-group-item"
+                                <a class="list-group-item noMarginBottom"
 
-                                    href="#/reports/commercial_report/" data-toggle="offcanvas" ng-click="showMenuReport=true;showIndicatorsParam=false">Отчеты</a>
+                                    href="#/reports/commercial_report/" data-toggle="offcanvas" ng-click="showMenuReport=true;showIndicatorsParam=false;showSettings=false">Отчеты</a>
                                 
                                  <!-- Test -->
 <!--
@@ -130,10 +122,36 @@
                                         href="#/" data-toggle="offcanvas">Еще какой-то отчет</a>
                                 </div>
                                 
-                                <!-- Объекты, только просмотр объектов -->
+                                
+                                
+<!--                                Настройки-->
+                                <a class="list-group-item noMarginBottom"
+
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=true">Настройки</a>
+                                
+                                                                <!-- Меню настроек -->
+                                <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
+
+                                    <a class="list-group-item"
+
+                                       href="#/private/tariffs/" data-toggle="offcanvas">Тарифы</a>
+
+                                    <a class="list-group-item"
+
+                                        href="#/" data-toggle="offcanvas">Еще что-то</a>
+                                    <a class="list-group-item"
+
+                                        href="#/" data-toggle="offcanvas">И Еще какой-то</a>
+                                </div>
+                                
+                                                             <!-- Notices -->
                                 <a class="list-group-item"
 
-                                    href="#/objects_list/" data-toggle="offcanvas" ng-click="showMenuReport=false">Объекты</a>
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Уведомления</a>
+                                <!-- Журнал операций -->
+                                <a class="list-group-item"
+
+                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Журнал операций</a>
 
                             </div>
                         </nav>
@@ -149,15 +167,11 @@
                                 <!-- Объекты, меню настройки объектов -->
                                 <a class="list-group-item"
 
-                                    href="#/private/objects_private/" data-toggle="offcanvas">Объекты</a>
+                                    href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
                                 <!-- Справочники -->
                                 <a class="list-group-item"
 
                                     href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
-                                
-                                <a class="list-group-item"
-
-                                    href="#/private/tariffs/" data-toggle="offcanvas">Тарифы</a>
 
                             </div>
                         </nav>  
@@ -225,7 +239,7 @@
 
 </div> <!-- end id=wrap -->
       
-      <div class="footer navbar-fixed-bottom row-fluid" >
+      <div class="footer navbar-fixed-bottom row-fluid" style="background-color: white;">
           <div class="container" >
             
 			<p class="muted credit">
