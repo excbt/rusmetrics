@@ -18,10 +18,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
+import ru.excbt.datafuse.nmk.data.model.TariffType;
+import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @RestController
 @RequestMapping(value = "/api/subscr/tariff")
@@ -39,6 +44,15 @@ public class TariffPlanController extends WebApiController {
 	@Autowired
 	private TariffTypeRepository tariffTypeRepository;
 
+	@Autowired
+	private SubscriberRepository subscriberRepository;
+
+	@Autowired
+	private OrganizationRepository organizationRepository;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
 	/**
 	 * 
 	 * @return
@@ -54,7 +68,18 @@ public class TariffPlanController extends WebApiController {
 	 */
 	@RequestMapping(value = "/type", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> tariffTypeGet() {
-		return ResponseEntity.ok(tariffOptionRepository.findAll());
+		return ResponseEntity.ok(tariffTypeRepository.findAll());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> rsoGet() {
+		return ResponseEntity.ok(subscriberRepository
+				.selectRsoOrganizations(currentSubscriberService
+						.getSubscriberId()));
 	}
 
 	/**
@@ -86,19 +111,41 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(@PathVariable("tariffId") long tariffId,
+	public ResponseEntity<?> updateOne(
+			@PathVariable("tariffId") long tariffId,
+			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
+			@RequestParam(value = "tariffTypeId", required = false) Long tariffTypeId,
 			@RequestBody TariffPlan tariffPlan) {
-		
+
 		if (tariffId <= 0) {
 			return ResponseEntity.badRequest().build();
 		}
-		
+
 		if (tariffPlan == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		if (tariffPlan.isNew()) {
 			return ResponseEntity.badRequest().build();
+		}
+
+		if (rsoOrganizationId!=null && rsoOrganizationId > 0) {
+			Organization rso = organizationRepository
+					.findOne(rsoOrganizationId);
+			if (rso == null) {
+				return ResponseEntity.badRequest().body(
+						"Invalid rsoOrganizationId");
+			}
+			tariffPlan.setRso(rso);
+		}
+
+		if (tariffTypeId != null && tariffTypeId > 0) {
+			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
+			if (tt == null) {
+				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
+			}
+
+			tariffPlan.setTariffType(tt);
 		}
 
 		TariffPlan resultEntity = null;
@@ -124,12 +171,13 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOneDefault(@PathVariable("tariffId") long tariffId,
+	public ResponseEntity<?> createOneDefault(
+			@PathVariable("tariffId") long tariffId,
 			@RequestParam("rsoOrganizationId") long rsoOrganizationId,
 			@RequestParam("contObjectId") long contObjectId,
 			@RequestParam("tariffTypeId") long tariffTypeId,
 			@RequestBody TariffPlan tariffPlan) {
 		return ResponseEntity.badRequest().build();
 	}
-	
+
 }
