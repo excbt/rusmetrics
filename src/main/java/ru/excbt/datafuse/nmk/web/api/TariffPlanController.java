@@ -110,7 +110,7 @@ public class TariffPlanController extends WebApiController {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "/{tariffId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{tariffId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(
 			@PathVariable("tariffId") long tariffId,
 			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
@@ -170,7 +170,7 @@ public class TariffPlanController extends WebApiController {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneDefault(
 			@PathVariable("tariffId") long tariffId,
 			@RequestParam("rsoOrganizationId") long rsoOrganizationId,
