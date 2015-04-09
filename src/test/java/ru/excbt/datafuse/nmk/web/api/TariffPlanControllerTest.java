@@ -3,7 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
@@ -68,7 +68,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		
 		ResultActions resultActionsAll;
 		try {
-			resultActionsAll = mockMvc.perform(post(urlStr)
+			resultActionsAll = mockMvc.perform(put(urlStr)
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(jsonBody).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
