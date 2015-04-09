@@ -129,7 +129,7 @@ public class TariffPlanController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (rsoOrganizationId!=null && rsoOrganizationId > 0) {
+		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationRepository
 					.findOne(rsoOrganizationId);
 			if (rso == null) {
@@ -151,8 +151,7 @@ public class TariffPlanController extends WebApiController {
 		TariffPlan resultEntity = null;
 
 		try {
-			resultEntity = tariffPlanService.updateOne(tariffPlan.getId(),
-					tariffPlan);
+			resultEntity = tariffPlanService.updateOne(tariffPlan);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {

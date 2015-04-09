@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant;
+import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
@@ -133,20 +134,16 @@ public class TariffPlanService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-	public TariffPlan updateOne(long id, TariffPlan tariffPlan) {
+	public TariffPlan updateOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
-
-		TariffPlan currentRec = tariffPlanRepository.findOne(id);
+		checkNotNull(tariffPlan.getId());
 		
-		currentRec.setTariffOption(tariffPlan.getTariffOption());
-		currentRec.setTariffPlanValue(tariffPlan.getTariffPlanValue());
-		currentRec.setTariffPlanName(tariffPlan.getTariffPlanName());
-		currentRec.setTariffPlanComment(tariffPlan.getTariffPlanComment());
-		currentRec.setTariffPlanDescription(tariffPlan.getTariffPlanDescription());
-		currentRec.setVersion(tariffPlan.getVersion());
+		TariffPlan currentRec = tariffPlanRepository.findOne(tariffPlan.getId());
 		
-		return tariffPlanRepository.save(currentRec);
+		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
+		
+		return tariffPlanRepository.save(tariffPlan);
 	}
 
 	/**
