@@ -28,7 +28,7 @@
          
          
          <td style="padding:0;">
-             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
+             <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
 <!--
@@ -37,6 +37,8 @@
 -->
 
                 <!--       Шапка таблицы-->
+                        <th>
+                     </th>
                         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                             <div>
                                 {{column.header || column.name}}
@@ -61,7 +63,7 @@
                 <tr><!--    <tr> Уровень 3     -->
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
             <td ng-show="bGroupByObject || bObject" ng-hide="bReports" class="col-md-1 noMargin" style="padding:0;">
-                <div class="btn-toolbar">
+                <div class="btn-toolbar marginLeft5">
 <!--                    <div  class="noMargin">-->
                         <i ng-show="bGroupByObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i>
 <!--                    </div>-->
