@@ -32,9 +32,11 @@ body {
   padding-bottom: 20px;
     font-size: 12px;
 }
+/*
 th {
     text-align: center;
 }
+*/
 
 caption {
         padding-left: 20px;
@@ -153,6 +155,10 @@ input[type="radio"]{
 
 .marginRight15 {
     margin-right:15px;
+}
+
+.marginRight28 {
+    margin-right:28px;
 }
 
 .noMargin {

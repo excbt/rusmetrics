@@ -1,87 +1,32 @@
 'use strict';
 var app = angular.module('portalNMK');
-app.controller('TariffsCtrl', function($scope){
+app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, crudGridDataFactory, notificationFactory){
     $scope.welcome = "Tariffs controller";
     
+    $scope.crudTableName = "../api/subscr/tariff";
+    
     $scope.columns = [
-        {"name":"tariff_plan_name", "header" : "Наименование", "class":"col-md-3"},
-        {"name":"tariff_plan_description", "header" : "Описание", "class":"col-md-5"}
-        ,{"name":"tariff_plan_comment", "header" : "Комментарий", "class":"col-md-4"}
+        {"name":"tariffTypeName", "header" : "Вид услуги", "class":"col-md-1"}
+        ,{"name":"tariffPlanName", "header" : "Наименование", "class":"col-md-2"}
+        
+        
+        ,{"name":"rso_organization", "header" : "РСО", "class":"col-md-2"}
+        ,{"name":"tariff_option", "header" : "Опция", "class":"col-md-3"}
+        ,{"name":"tariffPlanValue", "header" : "Значение", "class":"col-md-1"}
+        ,{"name":"tariffPlanDescription", "header" : "Описание", "class":"col-md-3"}
     ];
     
-    $scope.tariffColumns = [
-        {"name":"rso_organization_id", "header" : "РСО", "class":"col-md-1"},
-        {"name":"tariff_type_id", "header" : "Тип тарифа", "class":"col-md-1"}
-        ,{"name":"start_date", "header" : "Действует с", "class":"col-md-1"}
-        ,{"name":"end_date", "header" : "по", "class":"col-md-1"}
-        ,{"name":"tariff_option", "header" : "Опция", "class":"col-md-1"}
-        ,{"name":"tariff_plan_value", "header" : "Значение", "class":"col-md-1"}
-    ];
+    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "tariffPlanName", "deleteConfirmationProp":"tariffPlanName"};
     
-    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "tariff_plan_name", "deleteConfirmationProp":"tariff_plan_name"};
+    $scope.objects = [];
+    $scope.rsos = [];
+    $scope.tariffTypes = [];
+    $scope.tariffOptions = [];
+    $scope.startDateFormat = null;
+    $scope.endDateFormat = null;
     
-    $scope.objects = [
-        {"id":1,
-         "subscriber_id":1,
-         "rso_organization_id":1,
-         "tariff_type_id":1,
-         "cont_object_id":1,
-         "tariff_plan_name":"default",
-         "tariff_plan_description":"Тарифный план по умолчанию",
-         "tariff_plan_comment":"no comment",
-         "tariff_option":"",
-         "tariff_plan_value":0,
-         "start_date": 123,
-         "end_date": 321
-        }
-        ,{
-          "id":28060274,
-         "subscriber_id":728,
-         "rso_organization_id":25201856,
-            "tariff_type_id":28058413,
-         "cont_object_id":null,
-         "tariff_plan_name":"Лето",
-         "tariff_plan_description":"Тарифный план на лето",
-         "tariff_plan_comment":"",
-         "tariff_option":"DEFAULT",
-         "tariff_plan_value":0,
-         "start_date": "2015-04-01 00:00:00",
-         "end_date": null  
-        }
-        ,{
-          "id":28060274,
-         "subscriber_id":728,
-         "rso_organization_id":25201856,
-            "tariff_type_id":28058413,
-         "cont_object_id":null,
-         "tariff_plan_name":"ГВ",
-         "tariff_plan_description":"",
-         "tariff_plan_comment":"AUTO GENERATED for hw",
-         "tariff_option":"DEFAULT",
-         "tariff_plan_value":0,
-         "start_date": "2015-04-01 00:00:00",
-         "end_date": null  
-        }
-    ];
-    
-     $scope.tariffObjects = [
-        {"id":1,
-         "subscriber_id":1,
-         "rso_organization_id":"РСО #1",
-         "tariff_type_id":"ГВС",
-         "cont_object_id":1,
-         "tariff_plan_name":"default",
-         "tariff_plan_description":"Тарифный план по умолчанию",
-         "tariff_plan_comment":"no comment",
-         "tariff_option":"Льготный",
-         "tariff_plan_value":0,
-         "start_date": "2015-04-01 00:00:00",
-         "end_date": "2015-04-30 00:00:00"
-        }
-     ];
-    
- //   $scope.lookups = [];
     $scope.object = {};
+    $scope.currentObject = {};
 
     $scope.addMode = false;
     $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true };
@@ -101,9 +46,87 @@ app.controller('TariffsCtrl', function($scope){
     };
     
     $scope.selectedItem = function (item) {
-			        var curObject = angular.copy(item);
-			        $scope.currentObject = curObject;
+		var curObject = angular.copy(item);
+		$scope.currentObject = curObject;
+        $scope.startDateFormat = ($scope.currentObject.startDate == null) ? null : new Date($scope.currentObject.startDate);
+        $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate);
+       
      };
-
     
-});
+    $scope.setOrderBy = function (field) {
+        var asc = $scope.orderBy.field === field ? !$scope.orderBy.asc : true;
+        $scope.orderBy = { field: field, asc: asc };
+    };
+    
+    var successCallback = function (e, cb) {
+        notificationFactory.success();
+        $('#deleteObjectModal').modal('hide');
+        $scope.currentObject={};
+        $scope.getData(cb);
+
+    };
+
+    var successPostCallback = function (e) {
+        successCallback(e, function () {
+           $('#editTariffModal').modal('hide');
+        });
+    };
+
+    var errorCallback = function (e) {
+        notificationFactory.error(e.data.ExceptionMessage);
+    };
+
+    $scope.addObject = function () {
+        crudGridDataFactory($scope.crudTableName).save($scope.object, successPostCallback, errorCallback);
+    };
+
+    $scope.deleteObject = function (object) {
+        crudGridDataFactory($scope.crudTableName).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
+    };
+
+    $scope.updateObject = function (object) {
+        crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
+    };
+
+    $scope.getTariffs = function (cb) {
+        var table = $scope.crudTableName+"/default";
+        crudGridDataFactory(table).query(function (data) {
+            $scope.objects = data;
+            if (cb) cb();
+        });
+    };
+    
+    $scope.getRSOs = function () {
+        var table = $scope.crudTableName+"/rso";
+        crudGridDataFactory(table).query(function (data) {
+            $scope.rsos = data;         
+        });
+    };
+    
+    $scope.getTariffTypes = function () {
+        var table = $scope.crudTableName+"/type";
+        crudGridDataFactory(table).query(function (data) {
+            $scope.tariffTypes = data;     
+        });
+    };
+    
+    $scope.getTariffOptions = function () {
+        var table = $scope.crudTableName+"/option";
+        crudGridDataFactory(table).query(function (data) {
+            $scope.tariffOptions = data;     
+        });
+    };
+    
+    $scope.getTariffs();
+    $scope.getRSOs();
+    $scope.getTariffTypes();
+    $scope.getTariffOptions();
+    
+    $scope.saveObject = function(){
+        $scope.currentObject.startDate = ($scope.startDateFormat == null)?null: $scope.startDateFormat.getMilliseconds();
+        $scope.currentObject.endDate = ($scope.endDateFormat == null)?null: $scope.endDateFormat.getMilliseconds();
+console.log("In saving...");        
+        crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
+    };
+    
+}]);
