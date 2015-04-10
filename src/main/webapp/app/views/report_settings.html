@@ -307,6 +307,13 @@
                                 </td>
                             </tr>
                             
+                             <tr>
+                                <td class="col-sm-3"><label for="inputValue"></label>
+                                </td>
+                                 <td class="col-sm-9 textAlign_left"><i class="btn btn-xs glyphicon glyphicon-edit" ng-click="" data-target="">Конструктор шаблона</i> 
+                                </td>
+                            </tr>
+                            
                         </table>
 
                     </div>    
@@ -330,6 +337,52 @@
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject');clearTariffDateSet()">
 								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- Конструктор шаблона отчета-->
+<div id="showConstructorModal" class="modal fade" role="dialog"
+	aria-labelledby="showConstructorLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="showConstructorLabel">
+				Конструктор отчета 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+
+				</p>
+
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="saveObject(currentObject);"
+								value="Сохранить" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отмена
 							</button>
 						</div>
 					</div>
