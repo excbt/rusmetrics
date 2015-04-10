@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="report_paramset_group")
-public class ReportParamsetGroupItem extends AbstractAuditableModel {
+public class ReportParamsetGroup extends AbstractAuditableModel {
 
 	/**
 	 * 
