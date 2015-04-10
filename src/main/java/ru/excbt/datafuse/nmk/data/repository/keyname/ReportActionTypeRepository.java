@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.repository;
+package ru.excbt.datafuse.nmk.data.repository.keyname;
 
 import org.springframework.data.repository.CrudRepository;
 

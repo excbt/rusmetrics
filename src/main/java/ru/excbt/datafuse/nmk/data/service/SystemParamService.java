@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ParamType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SystemParam;
-import ru.excbt.datafuse.nmk.data.repository.SystemParamRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.SystemParamRepository;
 
 @Service
 @Transactional

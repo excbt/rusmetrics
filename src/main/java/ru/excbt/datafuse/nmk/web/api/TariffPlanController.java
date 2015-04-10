@@ -23,8 +23,8 @@ import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.data.repository.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
