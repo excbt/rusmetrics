@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity 
@@ -27,8 +30,9 @@ public class ReportTemplate extends AbstractAuditableModel {
 	@JoinColumn(name = "subscriber_id")
 	private Subscriber subscriber;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private String reportType;
+	private ReportTypeKeys reportType;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -64,13 +68,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.subscriber = subscriber;
 	}
 
-	public String getReportType() {
-		return reportType;
-	}
 
-	public void setReportType(String reportType) {
-		this.reportType = reportType;
-	}
 
 	public String getName() {
 		return name;
@@ -134,6 +132,14 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public ReportTypeKeys getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(ReportTypeKeys reportType) {
+		this.reportType = reportType;
 	}
 
 }
