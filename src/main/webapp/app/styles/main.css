@@ -136,6 +136,9 @@ input[type="radio"]{
 .marginBottom10 {
     margin-bottom: 10px;
 }
+.marginBottom15 {
+    margin-bottom: 15px;
+}
 
 .marginLeft5 {
     margin-left: 5px;
@@ -149,6 +152,10 @@ input[type="radio"]{
     margin-top: 10px;
 }
 
+.marginTop15 {
+    margin-top: 15px;
+}
+
 .margin10 {
     margin:10px;
 }
@@ -159,6 +166,10 @@ input[type="radio"]{
 
 .marginRight28 {
     margin-right:28px;
+}
+
+.marginLeft24 {
+    margin-left:24px;
 }
 
 .noMargin {
@@ -186,6 +197,10 @@ input[type="radio"]{
     padding-top: 10px;
 }
 
+.noPaddingTop {
+    padding-top: 0px;
+}
+
 .onlyPaddingLeft15 {
     padding-bottom: 0;
     padding-top: 0;
@@ -199,6 +214,10 @@ input[type="radio"]{
 
 .textAlign_left {
     text-align: left;
+}
+
+.textAlign_right {
+    text-align: right;
 }
 
 

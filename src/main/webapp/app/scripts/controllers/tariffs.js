@@ -62,7 +62,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'n
         notificationFactory.success();
         $('#deleteObjectModal').modal('hide');
         $scope.currentObject={};
-        $scope.getData(cb);
+        $scope.getTariffs(cb);
 
     };
 
@@ -123,8 +123,13 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'n
     $scope.getTariffOptions();
     
     $scope.saveObject = function(){
-        $scope.currentObject.startDate = ($scope.startDateFormat == null)?null: $scope.startDateFormat.getMilliseconds();
-        $scope.currentObject.endDate = ($scope.endDateFormat == null)?null: $scope.endDateFormat.getMilliseconds();
+        $scope.currentObject.startDate = $scope.startDateFormat.getTime() || $scope.currentObject.startDate;
+        $scope.currentObject.endDate = $scope.endDateFormat.getTime() || $scope.currentObject.endDate;
+console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
+console.log("$scope.endDateFormat = "+$scope.endDateFormat);  
+console.log("$scope.currentObject.startDate = "+$scope.currentObject.startDate);  
+console.log("$scope.startDateFormat = "+$scope.startDateFormat);   
+console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.endDateFormat.getTime());           
 console.log("In saving...");        
         crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
     };

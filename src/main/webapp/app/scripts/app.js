@@ -72,9 +72,17 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/indicators.html',
         controller: 'IndicatorsCtrl'
       })
-    .when('/private/tariffs', {
+    .when('/settings/tariffs', {
         templateUrl: 'views/tariffs.html',
         controller: 'TariffsCtrl'
+      })
+    .when('/settings/reports', {
+        templateUrl: 'views/report_settings.html',
+        controller: 'ReportSettingsCtrl'
+      })
+    .when('/settings/paramsets', {
+        templateUrl: 'views/param_sets.html',
+        controller: 'ParamSetsCtrl'
       })
     .when('/test', {
         templateUrl: 'views/test.html',

@@ -86,7 +86,7 @@
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showMenuReport=false">Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showMenuReport=false;showSettings=false">Объекты</a>
                                 
                                 <!-- Отчеты -->
                                 <a class="list-group-item noMarginBottom"
@@ -130,18 +130,18 @@
 <!--                                Настройки-->
                                 <a class="list-group-item noMarginBottom"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=true">Настройки</a>
+                                    href="" data-toggle="offcanvas" ng-click="showSettings=true;showMenuReport=false">Настройки</a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item"
 
-                                       href="#/private/tariffs/" data-toggle="offcanvas">Тарифы</a>
+                                       href="#/settings/tariffs/" data-toggle="offcanvas">Тарифы</a>
 
                                     <a class="list-group-item"
 
-                                        href="#/" data-toggle="offcanvas">Еще что-то</a>
+                                        href="#/settings/reports/" data-toggle="offcanvas">Отчеты</a>
                                     <a class="list-group-item"
 
                                         href="#/" data-toggle="offcanvas">И Еще какой-то</a>
@@ -339,6 +339,8 @@
     <script src="scripts/controllers/reports.js"></script>
     <script src="scripts/controllers/indicator.js"></script>
       <script src="scripts/controllers/tariffs.js"></script>
+      <script src="scripts/controllers/report_settings.js"></script>
+      <script src="scripts/controllers/param_sets.js"></script>
       <!-- Directives -->
 <script src="scripts/directives/crud-data-factory.js"></script>
 <script src="scripts/directives/crud-grid-data-factory.js"></script>
