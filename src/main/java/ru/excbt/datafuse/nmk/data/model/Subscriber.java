@@ -44,7 +44,7 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
     private Organization organization;
 
 	
-	@OneToMany (fetch = FetchType.EAGER)
+	@OneToMany (fetch = FetchType.LAZY)
     @JoinTable(name="subscr_cont",
     joinColumns=@JoinColumn(name="subscriber_id"),
     inverseJoinColumns=@JoinColumn(name="cont_object_id"))
