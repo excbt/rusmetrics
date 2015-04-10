@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContObjectController {
+public class SubscrContObjectController extends WebApiController {
 
-	private final static int TEST_SUBSCRIBER_ID = 728;
+	//private final static int TEST_SUBSCRIBER_ID = 728;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContObjectController.class);
@@ -30,12 +31,14 @@ public class SubscrContObjectController {
 	@Autowired
 	private SubscriberService subscrUserService;
 	
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 	
-	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
 		
-		List<ContObject> resultList = subscrUserService.selectSubscrContObjects(TEST_SUBSCRIBER_ID);
+		List<ContObject> resultList = subscrUserService.selectSubscrContObjects(currentSubscriberService.getSubscriberId());
 		
 		return ResponseEntity.ok().body(resultList);
 	}
