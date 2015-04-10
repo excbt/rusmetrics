@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,8 +15,9 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 
 	
 	@Test
+	@Ignore
 	public void testInitDefaultTarifPlan() {
-		tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
+		//tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
 		tariffPlanService.initDefaultTariffPlan(TEST_RSO_ID);
 	}
 

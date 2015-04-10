@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContZPointSettingModeCheck;
-import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeCheckRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContZPointSettingModeCheckRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service

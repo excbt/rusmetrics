@@ -1,0 +1,189 @@
+package ru.excbt.datafuse.nmk.data.model;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Version;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table(name = "report_paramset")
+public class ReportParamset extends AbstractAuditableModel {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4162460506388144170L;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "report_template_id")
+	@JsonIgnore
+	private ReportTemplate reportTemplate;
+	
+	@Column (name = "report_paramset_name")
+	private String name;
+
+	@Column (name = "report_paramset_description")
+	private String description;
+
+	@Column (name = "report_paramset_comment")
+	private String comment;
+
+	@Column (name = "output_file_type")
+	private String outputFileType;
+	
+	@Column(name="report_period")
+	private String reportPeriod;
+	
+	@Column(name = "report_paramset_date")
+	@Temporal (TemporalType.TIMESTAMP)
+	private Date paramsetDate;
+	
+	@Column(name = "report_paramset_start_date")
+	@Temporal (TemporalType.TIMESTAMP)
+	private Date paramsetStartDate;
+	
+	@Column(name = "report_paramset_end_date")
+	@Temporal (TemporalType.TIMESTAMP)
+	private Date paramsetEndDate;
+	
+	@Column(name = "is_default")
+	private boolean _default;
+
+	@Column(name = "is_active")
+	private boolean _active;
+	
+	@Column(name = "active_start_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date activeStartDate;
+
+	@Column(name = "active_end_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date activeEndDate;
+
+	@Version
+	private int version;
+	
+	public ReportTemplate getReportTemplate() {
+		return reportTemplate;
+	}
+
+	public void setReportTemplate(ReportTemplate reportTemplate) {
+		this.reportTemplate = reportTemplate;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getOutputFileType() {
+		return outputFileType;
+	}
+
+	public void setOutputFileType(String outputFileType) {
+		this.outputFileType = outputFileType;
+	}
+
+	public String getReportPeriod() {
+		return reportPeriod;
+	}
+
+	public void setReportPeriod(String reportPeriod) {
+		this.reportPeriod = reportPeriod;
+	}
+
+	public Date getParamsetDate() {
+		return paramsetDate;
+	}
+
+	public void setParamsetDate(Date paramsetDate) {
+		this.paramsetDate = paramsetDate;
+	}
+
+	public Date getParamsetStartDate() {
+		return paramsetStartDate;
+	}
+
+	public void setParamsetStartDate(Date paramsetStartDate) {
+		this.paramsetStartDate = paramsetStartDate;
+	}
+
+	public Date getParamsetEndDate() {
+		return paramsetEndDate;
+	}
+
+	public void setParamsetEndDate(Date paramsetEndDate) {
+		this.paramsetEndDate = paramsetEndDate;
+	}
+
+	public boolean is_default() {
+		return _default;
+	}
+
+	public void set_default(boolean _default) {
+		this._default = _default;
+	}
+
+	public boolean is_active() {
+		return _active;
+	}
+
+	public void set_active(boolean _active) {
+		this._active = _active;
+	}
+
+	public Date getActiveStartDate() {
+		return activeStartDate;
+	}
+
+	public void setActiveStartDate(Date activeStartDate) {
+		this.activeStartDate = activeStartDate;
+	}
+
+	public Date getActiveEndDate() {
+		return activeEndDate;
+	}
+
+	public void setActiveEndDate(Date activeEndDate) {
+		this.activeEndDate = activeEndDate;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+}
