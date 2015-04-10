@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContEventController {
+public class SubscrContEventController  extends WebApiController{
 
 	@Autowired
 	private SubscriberService subscrUserService;
@@ -31,7 +31,7 @@ public class SubscrContEventController {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll(
 			@PathVariable("contObjectId") long contObjectId) {
 		List<ContEvent> result = contEventService
@@ -39,7 +39,7 @@ public class SubscrContEventController {
 		return ResponseEntity.ok(result);
 	}
 
-	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		List<ContEvent> result = contEventService
 				.selectEventsBySubscriber(currentSubscriberService

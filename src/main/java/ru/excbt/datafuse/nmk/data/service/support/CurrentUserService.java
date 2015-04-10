@@ -53,8 +53,8 @@ public class CurrentUserService {
 			logger.warn("Authentication of Spring security is NULL. Using developer user:{}", DEVELOPER_USER_NAME);
 			userName = DEVELOPER_USER_NAME;;
 		} else {
-			//userName = auth.getName();
-			userName = DEVELOPER_USER_NAME;;
+			userName = auth.getName();
+			//userName = DEVELOPER_USER_NAME;;
 		}
 
 		AuditUser srcUser = getMap().get(userName);

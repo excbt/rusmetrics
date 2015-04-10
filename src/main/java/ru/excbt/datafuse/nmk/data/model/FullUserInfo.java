@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -11,13 +9,14 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 @Entity
-@Table(name = "audit_user")
-public class AuditUser implements Serializable {
+@Table(name = "full_user_info")
+public class FullUserInfo implements Serializable {
+
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3252857396837049517L;
+	private static final long serialVersionUID = 6844261142252428185L;
 
 	@Id
 	@Column(name="id")
@@ -26,11 +25,20 @@ public class AuditUser implements Serializable {
 	@Column(name = "user_name")
 	private String userName;
 
+	@Column(name = "first_name")
+	private String firstName;
+	
+	@Column(name = "last_name")
+	private String lastName;
+
 	@Version
 	private int version;
 
 	@Column(name = "is_system")
 	private boolean _system;
+
+	@Column(name = "subscriber_id")
+	private Long subscriberId;
 
 	public int getVersion() {
 		return version;
@@ -48,20 +56,9 @@ public class AuditUser implements Serializable {
 		this.userName = userName;
 	}
 
-	public AuditUser() {
+	public FullUserInfo() {
 
 	}
-
-	public AuditUser(AuditUser srcObject) {
-		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
-
-		this.userName = srcObject.userName;
-		this.version = srcObject.version;
-		this.id = srcObject.id;
-		this._system = srcObject._system;
-	}
-
-
 
 	public long getId() {
 		return id;
@@ -71,6 +68,30 @@ public class AuditUser implements Serializable {
 		this.id = id;
 	}
 
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
 	public boolean is_system() {
 		return _system;
 	}
@@ -78,5 +99,7 @@ public class AuditUser implements Serializable {
 	public void set_system(boolean _system) {
 		this._system = _system;
 	}
+
+
 
 }
