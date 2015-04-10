@@ -55,6 +55,9 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 	@JsonIgnore
 	private Collection<DeviceObject> deviceObjects;	
 	
+	@Column(name = "current_setting_mode")
+	private String currentSettingMode;
+	
 	@Version
     private int version; 
 	
@@ -120,6 +123,14 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
 		this.deviceObjects = deviceObjects;
+	}
+
+	public String getCurrentSettingMode() {
+		return currentSettingMode;
+	}
+
+	public void setCurrentSettingMode(String currentSettingMode) {
+		this.currentSettingMode = currentSettingMode;
 	}
 
 	
