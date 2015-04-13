@@ -71,7 +71,7 @@ public class ReportSettingsController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reportTemplate/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getSubscriberReportTemplates() {
+	public ResponseEntity<?> getSubscriberCommerceReportTemplates() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -94,6 +94,7 @@ public class ReportSettingsController extends WebApiController {
 		checkNotNull(reportTemplate);
 		checkNotNull(reportTemplate.getId());
 		checkArgument(reportTemplate.getId().equals(reportTemplareId));
+		checkArgument(reportTemplate.getReportType() == ReportTypeKeys.COMMERCE_REPORT);
 		
 		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 		
@@ -113,4 +114,18 @@ public class ReportSettingsController extends WebApiController {
 		return ResponseEntity.accepted().body(resultEntity);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/reportTemplate/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscriberConsReportTemplates() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKeys.CONS_REPORT, DateTime.now());
+		return ResponseEntity.ok(result);
+	}
+	
+	
 }

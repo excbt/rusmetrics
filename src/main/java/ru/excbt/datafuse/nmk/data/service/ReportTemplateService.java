@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -26,6 +28,9 @@ public class ReportTemplateService implements SecuredRoles {
 
 	@Autowired
 	private ReportTemplateRepository reportTemplateRepository;
+
+	@Autowired
+	private ReportTemplateBodyRepository reportTemplateBodyRepository;
 
 	private static final Comparator<ReportTemplate> REPORT_TEMPLATE_COMPARATOR = new Comparator<ReportTemplate>() {
 
@@ -117,8 +122,8 @@ public class ReportTemplateService implements SecuredRoles {
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getDefaultReportTemplates(
 			ReportTypeKeys reportType, DateTime currentDate) {
-		return reportTemplateRepository.selectDefaultTemplates(reportType,
-				currentDate.toDate());
+		return reportTemplateRepository
+				.selectDefaultTemplates(reportType, true);
 	}
 
 	/**
@@ -132,8 +137,7 @@ public class ReportTemplateService implements SecuredRoles {
 			ReportTypeKeys reportType, DateTime currentDate) {
 
 		List<ReportTemplate> result = reportTemplateRepository
-				.selectSubscriberTemplates(subscriberId, reportType,
-						currentDate.toDate());
+				.selectSubscriberTemplates(subscriberId, reportType, true);
 
 		return result;
 	}
@@ -170,4 +174,19 @@ public class ReportTemplateService implements SecuredRoles {
 		List<Long> ids = reportTemplateRepository.selectDefaultTemplateIds();
 		return ids.indexOf(id) == -1;
 	}
+
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void saveReportTemplateBody(long reportTemplateId,
+			byte[] reportTemplateBody) {
+
+		ReportTemplateBody rtb = reportTemplateBodyRepository
+				.findOne(reportTemplateId);
+		if (rtb == null) {
+			rtb = new ReportTemplateBody();
+			rtb.setReportTemplateId(reportTemplateId);
+		}
+		rtb.setReportTemplateBody(reportTemplateBody);
+		reportTemplateBodyRepository.save(rtb);
+	}
+
 }

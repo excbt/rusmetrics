@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -20,11 +19,12 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber IS NULL AND "
-			+ "rt.reportType = :reportType AND rt.activeStartDate <= :currentDate AND "
-			+ "(rt.activeEndDate >= :currentDate OR rt.activeEndDate IS NULL)")
+			+ "rt.reportType = :reportType AND "
+			+ "rt._active = :isActive "
+			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectDefaultTemplates(
 			@Param("reportType") ReportTypeKeys reportType,
-			@Param("currentDate") Date currentDate);
+			@Param("isActive") boolean isActive);
 
 	/**
 	 * 
@@ -34,12 +34,13 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber.id = :subscriberId AND "
-			+ "rt.reportType = :reportType AND rt.activeStartDate <= :currentDate AND "
-			+ "(rt.activeEndDate >= :currentDate OR rt.activeEndDate IS NULL)")
+			+ "rt.reportType = :reportType AND "
+			+ "rt._active = :isActive "
+			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectSubscriberTemplates(
 			@Param("subscriberId") long subscriberId,
 			@Param("reportType") ReportTypeKeys reportType,
-			@Param("currentDate") Date currentDate);
+			@Param("isActive") boolean isActive);
 
 	
 	/**
