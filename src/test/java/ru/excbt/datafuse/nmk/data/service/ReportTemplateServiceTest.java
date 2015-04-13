@@ -80,7 +80,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		InputStream is = new FileInputStream(fileJrxml);
 		try {
 			byte[] fileBytes = IOUtils.toByteArray(is);	
-			reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID, fileBytes);
+			reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID, fileBytes, fileJrxml.getName());
 		} finally {
 			is.close();
 		}

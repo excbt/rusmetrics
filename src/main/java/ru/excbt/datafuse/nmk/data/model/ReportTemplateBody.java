@@ -23,10 +23,10 @@ public class ReportTemplateBody implements Serializable {
 	private Long reportTemplateId;
 
 	@Column(name = "report_template_body")
-	private byte[] reportTemplateBody;
+	private byte[] body;
 
 	@Column(name = "report_template_body_compiled")
-	private byte[] reportTemplateBodyCompiled;
+	private byte[] bodyCompiled;
 
 	@Version
 	private int version;
@@ -45,16 +45,16 @@ public class ReportTemplateBody implements Serializable {
 		this.reportTemplateId = reportTemplateId;
 	}
 
-	public byte[] getReportTemplateBody() {
-		return reportTemplateBody == null ? null : Arrays.copyOf(
-				reportTemplateBody, reportTemplateBody.length);
+	public byte[] getBody() {
+		return body == null ? null : Arrays.copyOf(
+				body, body.length);
 	}
 
-	public void setReportTemplateBody(byte[] reportTemplateBody) {
+	public void setBody(byte[] reportTemplateBody) {
 		if (reportTemplateBody == null) {
-			this.reportTemplateBody = null;
+			this.body = null;
 		} else {
-			this.reportTemplateBody = Arrays.copyOf(reportTemplateBody,
+			this.body = Arrays.copyOf(reportTemplateBody,
 					reportTemplateBody.length);
 		}
 
@@ -68,34 +68,34 @@ public class ReportTemplateBody implements Serializable {
 		this.version = version;
 	}
 
-	public byte[] getReportTemplateBodyCompiled() {
-		return reportTemplateBodyCompiled == null ? null : Arrays.copyOf(
-				reportTemplateBodyCompiled, reportTemplateBodyCompiled.length);
+	public byte[] getBodyCompiled() {
+		return bodyCompiled == null ? null : Arrays.copyOf(
+				bodyCompiled, bodyCompiled.length);
 	}
 
-	public void setReportTemplateBodyCompiled(byte[] reportTemplateBodyCompiled) {
+	public void setBodyCompiled(byte[] reportTemplateBodyCompiled) {
 		if (reportTemplateBodyCompiled == null) {
-			this.reportTemplateBodyCompiled = null;
+			this.bodyCompiled = null;
 		} else {
-			this.reportTemplateBodyCompiled = Arrays.copyOf(
+			this.bodyCompiled = Arrays.copyOf(
 					reportTemplateBodyCompiled,
 					reportTemplateBodyCompiled.length);
 		}
 	}
 
-	public String getReportTemplateBodyFilename() {
+	public String getBodyFilename() {
 		return reportTemplateBodyFilename;
 	}
 
-	public void setReportTemplateBodyFilename(String reportTemplateBodyFilename) {
+	public void setBodyFilename(String reportTemplateBodyFilename) {
 		this.reportTemplateBodyFilename = reportTemplateBodyFilename;
 	}
 
-	public String getReportTemplateBodyCompiledFilename() {
+	public String getBodyCompiledFilename() {
 		return reportTemplateBodyCompiledFilename;
 	}
 
-	public void setReportTemplateBodyCompiledFilename(
+	public void setBodyCompiledFilename(
 			String reportTemplateBodyCompiledFilename) {
 		this.reportTemplateBodyCompiledFilename = reportTemplateBodyCompiledFilename;
 	}

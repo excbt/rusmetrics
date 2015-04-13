@@ -123,7 +123,7 @@ public class ReportTemplateService implements SecuredRoles {
 	public List<ReportTemplate> getDefaultReportTemplates(
 			ReportTypeKeys reportType, DateTime currentDate) {
 		return reportTemplateRepository
-				.selectDefaultTemplates(reportType, true);
+				.selectCommonTemplates(reportType, true);
 	}
 
 	/**
@@ -153,14 +153,14 @@ public class ReportTemplateService implements SecuredRoles {
 			ReportTypeKeys reportType, DateTime currentDate) {
 
 		List<ReportTemplate> result = new ArrayList<>();
-		List<ReportTemplate> defaultTemplate = getDefaultReportTemplates(
+		List<ReportTemplate> commonTemplates = getDefaultReportTemplates(
 				reportType, currentDate);
 
-		List<ReportTemplate> subscriberTemplate = getSubscriberReportTemplates(
+		List<ReportTemplate> subscriberTemplates = getSubscriberReportTemplates(
 				subscriberId, reportType, currentDate);
 
-		result.addAll(defaultTemplate);
-		result.addAll(subscriberTemplate);
+		result.addAll(commonTemplates);
+		result.addAll(subscriberTemplates);
 
 		return result;
 	}
@@ -171,13 +171,18 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	public boolean checkCanUpdateReportTemplate(long id) {
-		List<Long> ids = reportTemplateRepository.selectDefaultTemplateIds();
+		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
 		return ids.indexOf(id) == -1;
 	}
 
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param reportTemplateBody
+	 */
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void saveReportTemplateBody(long reportTemplateId,
-			byte[] reportTemplateBody) {
+			byte[] reportTemplateBody, String filename) {
 
 		ReportTemplateBody rtb = reportTemplateBodyRepository
 				.findOne(reportTemplateId);
@@ -185,7 +190,29 @@ public class ReportTemplateService implements SecuredRoles {
 			rtb = new ReportTemplateBody();
 			rtb.setReportTemplateId(reportTemplateId);
 		}
-		rtb.setReportTemplateBody(reportTemplateBody);
+		rtb.setBody(reportTemplateBody);
+		rtb.setBodyFilename(filename);
+		reportTemplateBodyRepository.save(rtb);
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param reportTemplateBody
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void saveReportTemplateBodyCompiled(long reportTemplateId,
+			byte[] reportTemplateBodyCompiled, String filename) {
+		
+		ReportTemplateBody rtb = reportTemplateBodyRepository
+				.findOne(reportTemplateId);
+		if (rtb == null) {
+			rtb = new ReportTemplateBody();
+			rtb.setReportTemplateId(reportTemplateId);
+		}
+		rtb.setBodyCompiled(reportTemplateBodyCompiled);
+		rtb.setBodyCompiledFilename(filename);
+		
 		reportTemplateBodyRepository.save(rtb);
 	}
 
