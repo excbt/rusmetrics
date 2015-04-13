@@ -17,6 +17,9 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity 
 @Table(name = "report_template")
 public class ReportTemplate extends AbstractAuditableModel {
@@ -28,6 +31,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subscriber_id")
+	@JsonIgnore
 	private Subscriber subscriber;
 
 	@Enumerated(EnumType.STRING)
