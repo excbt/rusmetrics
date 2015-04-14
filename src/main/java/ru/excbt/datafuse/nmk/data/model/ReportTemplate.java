@@ -14,7 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,7 +36,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKeys reportType;
+	private ReportTypeKey reportType;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -141,11 +141,11 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public ReportTypeKeys getReportType() {
+	public ReportTypeKey getReportType() {
 		return reportType;
 	}
 
-	public void setReportType(ReportTypeKeys reportType) {
+	public void setReportType(ReportTypeKey reportType) {
 		this.reportType = reportType;
 	}
 

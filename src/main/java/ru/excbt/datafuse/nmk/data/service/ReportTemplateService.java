@@ -15,7 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
@@ -137,7 +137,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getDefaultReportTemplates(
-			ReportTypeKeys reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive) {
 		return reportTemplateRepository.selectCommonTemplates(reportType,
 				isActive);
 	}
@@ -150,7 +150,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getSubscriberReportTemplates(long subscriberId,
-			ReportTypeKeys reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = reportTemplateRepository
 				.selectSubscriberTemplates(subscriberId, reportType, isActive);
@@ -166,7 +166,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getAllReportTemplates(long subscriberId,
-			ReportTypeKeys reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = new ArrayList<>();
 		List<ReportTemplate> commonTemplates = getDefaultReportTemplates(
@@ -237,7 +237,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
-	public ReportTemplate createByReportTemplate(long srcId,
+	public ReportTemplate createByTemplate(long srcId,
 			ReportTemplate reportTemplate) {
 
 		checkNotNull(reportTemplate);

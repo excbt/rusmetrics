@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 
 public interface ReportTemplateRepository extends
@@ -23,7 +23,7 @@ public interface ReportTemplateRepository extends
 			+ "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectCommonTemplates(
-			@Param("reportType") ReportTypeKeys reportType,
+			@Param("reportType") ReportTypeKey reportType,
 			@Param("isActive") boolean isActive);
 
 	/**
@@ -39,7 +39,7 @@ public interface ReportTemplateRepository extends
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectSubscriberTemplates(
 			@Param("subscriberId") long subscriberId,
-			@Param("reportType") ReportTypeKeys reportType,
+			@Param("reportType") ReportTypeKey reportType,
 			@Param("isActive") boolean isActive);
 
 	

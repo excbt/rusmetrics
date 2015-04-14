@@ -14,7 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -54,7 +54,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
 				.getSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.COMMERCE_REPORT, true);
+						ReportTypeKey.COMMERCE_REPORT, true);
 
 		assertTrue(subscriberReportTemplates.size() > 0);
 		ReportTemplate rt = subscriberReportTemplates.get(0);

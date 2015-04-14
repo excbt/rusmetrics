@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -49,7 +49,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getCommerceReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.COMMERCE_REPORT,
+				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
 						true);
 
 		return ResponseEntity.ok(reportParamsetList);
@@ -63,7 +63,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getConsReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.CONS_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true);
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -76,7 +76,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getEventReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.EVENT_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true);
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -89,7 +89,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getArchCommerceReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.COMMERCE_REPORT,
+				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
 						true);
 
 		return ResponseEntity.ok(reportParamsetList);
@@ -103,7 +103,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getArchConsReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.CONS_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true);
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -116,7 +116,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getArchEventReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKeys.EVENT_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true);
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -238,7 +238,7 @@ public class ReportParamsetController extends WebApiController {
 		ReportParamset resultEntity = null;
 
 		try {
-			resultEntity = reportParamsetService.createByReportParamset(srcId,
+			resultEntity = reportParamsetService.createByTemplate(srcId,
 					reportParamset);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
