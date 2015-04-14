@@ -4,6 +4,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -12,6 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 
@@ -48,8 +51,12 @@ public class ReportParamset extends AbstractAuditableModel {
 	private String outputFileType;
 	
 	@ManyToOne(fetch = FetchType.EAGER)	
-	@JoinColumn(name="report_period")
+	@JoinColumn(name="report_period", insertable = false, updatable = false)
 	private ReportPeriod reportPeriod;
+
+	@Enumerated(EnumType.STRING)	
+	@Column(name="report_period")
+	private ReportPeriodKey reportPeriodKey;
 	
 	@Column(name = "report_paramset_date")
 	@Temporal (TemporalType.TIMESTAMP)
@@ -208,8 +215,13 @@ public class ReportParamset extends AbstractAuditableModel {
 		return reportPeriod;
 	}
 
-	public void setReportPeriod(ReportPeriod reportPeriod) {
-		this.reportPeriod = reportPeriod;
+
+	public ReportPeriodKey getReportPeriodKey() {
+		return reportPeriodKey;
+	}
+
+	public void setReportPeriodKey(ReportPeriodKey reportPeriodKey) {
+		this.reportPeriodKey = reportPeriodKey;
 	}
 	
 }

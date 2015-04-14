@@ -34,7 +34,7 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT, true);
 		assertTrue(reportParamsetList.size() > 0);
 		for (ReportParamset rp : reportParamsetList) {
-			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportType().name());
+			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportTypeKey().name());
 		}
 	}
 	
@@ -44,7 +44,8 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		ReportParamset rp = new ReportParamset();
 		rp.setName("Created by template id=" + TEMPLATE_PARAMSET_ID);
 		rp.setActiveStartDate(new Date());
-		rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
+		//rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
+		rp.setReportPeriodKey(ReportPeriodKey.TODAY);
 		ReportParamset result = reportParamsetService.createByTemplate(TEMPLATE_PARAMSET_ID, rp);
 		assertNotNull(result);
 		

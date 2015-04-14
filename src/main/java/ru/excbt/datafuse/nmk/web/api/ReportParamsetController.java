@@ -252,7 +252,7 @@ public class ReportParamsetController extends WebApiController {
 
 		URI location = URI.create(request.getServletPath()
 				+ ReportConstants.getReportTypeURL(resultEntity
-						.getReportTemplate().getReportType()) + "/"
+						.getReportTemplate().getReportTypeKey()) + "/"
 				+ +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);

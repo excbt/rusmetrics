@@ -187,7 +187,7 @@ public class ReportTemplateController extends WebApiController {
 		checkNotNull(reportTemplate.getId());
 		checkNotNull(reportType);
 		checkArgument(reportTemplate.getId().equals(reportTemplateId));
-		checkArgument(reportTemplate.getReportType() == reportType);
+		checkArgument(reportTemplate.getReportTypeKey() == reportType);
 
 		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 
@@ -311,7 +311,7 @@ public class ReportTemplateController extends WebApiController {
 		}
 
 		URI location = URI.create(request.getServletPath()
-				+ ReportConstants.getReportTypeURL(resultEntity.getReportType()) + "/"
+				+ ReportConstants.getReportTypeURL(resultEntity.getReportTypeKey()) + "/"
 				+ +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);

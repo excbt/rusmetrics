@@ -36,7 +36,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKey reportType;
+	private ReportTypeKey reportTypeKey;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -141,12 +141,12 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public ReportTypeKey getReportType() {
-		return reportType;
+	public ReportTypeKey getReportTypeKey() {
+		return reportTypeKey;
 	}
 
-	public void setReportType(ReportTypeKey reportType) {
-		this.reportType = reportType;
+	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
+		this.reportTypeKey = reportTypeKey;
 	}
 
 	public Long getSrcReportTemplateId() {
