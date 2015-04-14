@@ -27,8 +27,12 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_template_id")
-	@JsonIgnore
 	private ReportTemplate reportTemplate;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "subscriber_id")
+	@JsonIgnore
+	private Subscriber subscriber;	
 	
 	@Column (name = "report_paramset_name")
 	private String name;
@@ -71,6 +75,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date activeEndDate;
 
+	@Column(name = "src_report_paramset_id")
+	private Long srcReportParamsetId;
+	
 	@Version
 	private int version;
 	
@@ -184,6 +191,22 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public Subscriber getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
+	}
+
+	public Long getSrcReportParamsetId() {
+		return srcReportParamsetId;
+	}
+
+	public void setSrcReportParamsetId(Long srcReportParamsetId) {
+		this.srcReportParamsetId = srcReportParamsetId;
 	}
 	
 }

@@ -34,4 +34,31 @@ public class ReportConstants {
 
 	}
 
+	/**
+	 * 
+	 * @param rtk
+	 * @return
+	 */
+	public static String getReportTypeURL(ReportTypeKeys rtk) {
+		String result = null;
+		switch (rtk) {
+		case CONS_REPORT: {
+			result = "/cons";
+			break;
+		}
+		case COMMERCE_REPORT: {
+			result = "/commerce";
+			break;
+		}
+		case EVENT_REPORT: {
+			result = "/event";
+			break;
+		}
+		default:
+			result = "";
+			break;
+		}
+		return result;
+	}
+
 }
