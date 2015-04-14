@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -61,7 +61,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
 		rt.set_active(true);
-		rt.setReportType(ReportTypeKeys.COMMERCE_REPORT);
+		rt.setReportType(ReportTypeKey.COMMERCE_REPORT);
 		rt.setName("Коммерческий отчет");
 		rt.setDescription("Тест " + System.currentTimeMillis());
 		rt.setSubscriber(currentSubscriberService.getSubscriber());
@@ -72,7 +72,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testDefaultCommerceReport() {
 		List<ReportTemplate> resultList = reportTemplateService
-				.getDefaultReportTemplates(ReportTypeKeys.COMMERCE_REPORT,
+				.getDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
 						true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
@@ -84,7 +84,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		List<ReportTemplate> resultList = reportTemplateService
 				.getSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.COMMERCE_REPORT, true);
+						ReportTypeKey.COMMERCE_REPORT, true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -114,7 +114,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		ReportTemplate rt = new ReportTemplate();
 		rt.setName("Создан по шаблону");
 		rt.setActiveStartDate(new Date());
-		ReportTemplate resultRT = reportTemplateService.createByReportTemplate(TEST_REPORT_TEMPLATE_ID, rt);
+		ReportTemplate resultRT = reportTemplateService.createByTemplate(TEST_REPORT_TEMPLATE_ID, rt);
 		assertNotNull(resultRT);
 		//reportTemplateService.deleteOne(resultRT);
 	}

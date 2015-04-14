@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -46,8 +47,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column (name = "output_file_type")
 	private String outputFileType;
 	
-	@Column(name="report_period")
-	private String reportPeriod;
+	@ManyToOne(fetch = FetchType.EAGER)	
+	@JoinColumn(name="report_period")
+	private ReportPeriod reportPeriod;
 	
 	@Column(name = "report_paramset_date")
 	@Temporal (TemporalType.TIMESTAMP)
@@ -121,13 +123,6 @@ public class ReportParamset extends AbstractAuditableModel {
 		this.outputFileType = outputFileType;
 	}
 
-	public String getReportPeriod() {
-		return reportPeriod;
-	}
-
-	public void setReportPeriod(String reportPeriod) {
-		this.reportPeriod = reportPeriod;
-	}
 
 	public Date getParamsetDate() {
 		return paramsetDate;
@@ -207,6 +202,14 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setSrcReportParamsetId(Long srcReportParamsetId) {
 		this.srcReportParamsetId = srcReportParamsetId;
+	}
+
+	public ReportPeriod getReportPeriod() {
+		return reportPeriod;
+	}
+
+	public void setReportPeriod(ReportPeriod reportPeriod) {
+		this.reportPeriod = reportPeriod;
 	}
 	
 }

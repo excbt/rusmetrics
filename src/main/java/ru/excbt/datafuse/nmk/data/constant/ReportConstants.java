@@ -14,19 +14,19 @@ public class ReportConstants {
 		}
 	};
 
-	public enum ReportTypeKeys {
+	public enum ReportTypeKey {
 		COMMERCE_REPORT, CONS_REPORT, EVENT_REPORT
 	}
 
-	public enum ReportPeriodKeys {
+	public enum ReportPeriodKey {
 		CURRENT_MONTH, INTERVAL, LAST_MONTH, TODAY, YESTERDAY
 	}
 
-	public enum ReportActionKeys {
+	public enum ReportActionKey {
 		EMAIL_LIST_DELIVERY
 	}
 
-	public enum ReportSheduleKeys {
+	public enum ReportSheduleKey {
 		DAILY, MONTHLY, SINGLE, WEEKLY
 	}
 
@@ -39,7 +39,7 @@ public class ReportConstants {
 	 * @param rtk
 	 * @return
 	 */
-	public static String getReportTypeURL(ReportTypeKeys rtk) {
+	public static String getReportTypeURL(ReportTypeKey rtk) {
 		String result = null;
 		switch (rtk) {
 		case CONS_REPORT: {

@@ -14,7 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -112,7 +112,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public List<ReportParamset> selectReportTypeParamsetList(
-			ReportTypeKeys reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive) {
 		List<ReportParamset> commonReportParams = reportParamsetRepository
 				.selectCommonReportParamset(reportType, isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
@@ -179,7 +179,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
-	public ReportParamset createByReportParamset(long srcId,
+	public ReportParamset createByTemplate(long srcId,
 			ReportParamset reportParamset) {
 
 		checkNotNull(reportParamset);

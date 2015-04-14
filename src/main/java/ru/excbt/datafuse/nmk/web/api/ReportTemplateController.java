@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
@@ -59,7 +59,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.COMMERCE_REPORT, true);
+						ReportTypeKey.COMMERCE_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
 
@@ -72,7 +72,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.CONS_REPORT, true);
+						ReportTypeKey.CONS_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
 
@@ -85,7 +85,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.EVENT_REPORT, true);
+						ReportTypeKey.EVENT_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
 
@@ -98,7 +98,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.COMMERCE_REPORT, false);
+						ReportTypeKey.COMMERCE_REPORT, false);
 		return ResponseEntity.ok(result);
 	}
 
@@ -111,7 +111,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.CONS_REPORT, false);
+						ReportTypeKey.CONS_REPORT, false);
 		return ResponseEntity.ok(result);
 	}
 
@@ -124,7 +124,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.EVENT_REPORT, false);
+						ReportTypeKey.EVENT_REPORT, false);
 		return ResponseEntity.ok(result);
 	}
 
@@ -180,7 +180,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	public ResponseEntity<?> updateInternal(Long reportTemplateId,
-			ReportTemplate reportTemplate, ReportTypeKeys reportType) {
+			ReportTemplate reportTemplate, ReportTypeKey reportType) {
 
 		checkNotNull(reportTemplateId);
 		checkNotNull(reportTemplate);
@@ -217,7 +217,7 @@ public class ReportTemplateController extends WebApiController {
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKeys.COMMERCE_REPORT);
+				ReportTypeKey.COMMERCE_REPORT);
 	}
 
 	/**
@@ -231,7 +231,7 @@ public class ReportTemplateController extends WebApiController {
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKeys.CONS_REPORT);
+				ReportTypeKey.CONS_REPORT);
 	}
 
 	/**
@@ -245,7 +245,7 @@ public class ReportTemplateController extends WebApiController {
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKeys.EVENT_REPORT);
+				ReportTypeKey.EVENT_REPORT);
 	}
 
 	/**
@@ -298,7 +298,7 @@ public class ReportTemplateController extends WebApiController {
 		ReportTemplate resultEntity = null;
 
 		try {
-			resultEntity = reportTemplateService.createByReportTemplate(
+			resultEntity = reportTemplateService.createByTemplate(
 					srcId, reportTemplate);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();

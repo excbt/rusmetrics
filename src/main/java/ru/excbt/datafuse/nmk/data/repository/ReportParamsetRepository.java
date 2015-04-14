@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 
 public interface ReportParamsetRepository extends CrudRepository<ReportParamset, Long> {
@@ -25,7 +25,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			+ "rp._active = :isActive "
 			+ "ORDER BY rp.activeStartDate, rp.name")
 	public List<ReportParamset> selectCommonReportParamset(
-			@Param("reportType") ReportTypeKeys reportType,
+			@Param("reportType") ReportTypeKey reportType,
 			@Param("isActive") boolean isActive);	
 
 	/**
@@ -40,7 +40,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			+ "ORDER BY rp.activeStartDate, rp.name")
 	public List<ReportParamset> selectSubscriberReportParamset(
 			@Param("subscriberId") long subscriberId,
-			@Param("reportType") ReportTypeKeys reportType,
+			@Param("reportType") ReportTypeKey reportType,
 			@Param("isActive") boolean isActive);	
 	
 
