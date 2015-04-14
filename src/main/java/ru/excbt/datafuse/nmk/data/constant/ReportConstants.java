@@ -7,7 +7,7 @@ public class ReportConstants {
 	public final static String EXTERNAL_JASPER_SERVER_URL = "EXTERNAL_JASPER_SERVER_URL";
 
 	public enum ReportOutputType {
-		HTML, PDF;
+		HTML, PDF, ZIP;
 
 		public String toLowerName() {
 			return this.name().toLowerCase();

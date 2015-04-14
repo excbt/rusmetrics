@@ -61,7 +61,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
 		rt.set_active(true);
-		rt.setReportType(ReportTypeKey.COMMERCE_REPORT);
+		rt.setReportTypeKey(ReportTypeKey.COMMERCE_REPORT);
 		rt.setName("Коммерческий отчет");
 		rt.setDescription("Тест " + System.currentTimeMillis());
 		rt.setSubscriber(currentSubscriberService.getSubscriber());

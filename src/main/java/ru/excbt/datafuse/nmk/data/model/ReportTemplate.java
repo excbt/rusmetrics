@@ -18,10 +18,12 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity 
 @Table(name = "report_template")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportTemplate extends AbstractAuditableModel {
 
 	/**
@@ -36,7 +38,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKey reportType;
+	private ReportTypeKey reportTypeKey;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -141,12 +143,12 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public ReportTypeKey getReportType() {
-		return reportType;
+	public ReportTypeKey getReportTypeKey() {
+		return reportTypeKey;
 	}
 
-	public void setReportType(ReportTypeKey reportType) {
-		this.reportType = reportType;
+	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
+		this.reportTypeKey = reportTypeKey;
 	}
 
 	public Long getSrcReportTemplateId() {
@@ -157,4 +159,8 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.srcReportTemplateId = srcReportTemplateId;
 	}
 
+	public boolean isCommon() {
+		return this.subscriber == null;
+	}
+	
 }

@@ -250,7 +250,7 @@ public class ReportTemplateService implements SecuredRoles {
 				+ srcId);
 
 		ReportTemplate rTemplate = reportTemplate;
-		rTemplate.setReportType(srcReportTemplate.getReportType());
+		rTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
 		rTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 		rTemplate.setSrcReportTemplateId(srcId);
 		rTemplate.set_default(false);
