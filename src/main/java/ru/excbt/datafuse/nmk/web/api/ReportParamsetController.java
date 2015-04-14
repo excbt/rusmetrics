@@ -155,7 +155,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	public ResponseEntity<?> updateInternal(Long reportParamsetId,
+	private ResponseEntity<?> updateInternal(Long reportParamsetId,
 			ReportParamset reportParamset) {
 
 		checkNotNull(reportParamsetId);

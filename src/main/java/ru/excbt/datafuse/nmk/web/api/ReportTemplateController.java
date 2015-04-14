@@ -179,7 +179,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	public ResponseEntity<?> updateInternal(Long reportTemplateId,
+	private ResponseEntity<?> updateInternal(Long reportTemplateId,
 			ReportTemplate reportTemplate, ReportTypeKey reportType) {
 
 		checkNotNull(reportTemplateId);

@@ -6,24 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 
 @Service
 @Transactional(readOnly = true)
-public class ReportPeriodService {
+public class ReportTypeService {
 
 	@Autowired
-	private ReportPeriodRepository reportPeriodRepository;
+	private ReportTypeRepository reportTypeRepository;
 
 	/**
 	 * 
 	 * @param keyname
 	 * @return
 	 */
-	public ReportPeriod findByKeyname(String keyname) {
-		List<ReportPeriod> resultList = reportPeriodRepository
+	public ReportType findByKeyname(String keyname) {
+		List<ReportType> resultList = reportTypeRepository
 				.findByKeynameIgnoreCase(keyname);
 		return resultList.size() == 1 ? resultList.get(0) : null;
 	}
@@ -33,8 +33,8 @@ public class ReportPeriodService {
 	 * @param key
 	 * @return
 	 */
-	public ReportPeriod findByKeyname(ReportPeriodKey key) {
-		List<ReportPeriod> resultList = reportPeriodRepository
+	public ReportType findByKeyname(ReportTypeKey key) {
+		List<ReportType> resultList = reportTypeRepository
 				.findByKeynameIgnoreCase(key.name());
 		return resultList.size() == 1 ? resultList.get(0) : null;
 	}
