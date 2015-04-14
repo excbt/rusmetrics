@@ -19,7 +19,7 @@
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
             <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=true" >Действующие</a></li>
             <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=false" style="width:108px;text-align:center">Архив</a></li>
-            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>
+<!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные варианты-->
@@ -41,11 +41,15 @@
                                             <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
                                         </div>
-                                        <div class="col-md-10">
+                                        <div class="col-md-2">
                                             <b>{{object.reportType}}</b> <small>(вариантов: {{object.templatesCount}})</small>
                                         </div>
-
-
+                                        <div class="col-md-2">
+                                             <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
+                                        </div>
+                                        <div class="col-md-7">
+                                            
+                                        </div>
                                     </td>
 
                                 </tr>
@@ -341,6 +345,17 @@
                                     </select>
                                 </td>
                             </tr>
+                            
+                            <tr>
+                                <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
+                                        <option>Шаблон 1</option>
+                                        <option>Ш 2</option>
+                                        <option>Нолбаш E</option>
+                                    </select>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
@@ -369,6 +384,23 @@
                                         <option>Вчера</option>
                                         <option>Последний месяц</option>
                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left">
+                                     <div ng-controller="DataRangeSettings">
+                                            <input style="font-size: 12px;width:329px" date-range-picker class="form-control date-picker"
+                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                    </div>
+                                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Наименование варианта">
                                 </td>
                             </tr>
                             <tr>
