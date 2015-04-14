@@ -15,7 +15,7 @@ public class ReportConstants {
 	};
 
 	public enum ReportTypeKeys {
-		COMMERCE_REPORT, CONS_REPORT
+		COMMERCE_REPORT, CONS_REPORT, EVENT_REPORT
 	}
 
 	public enum ReportPeriodKeys {

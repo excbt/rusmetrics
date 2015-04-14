@@ -5,11 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -31,6 +32,9 @@ public class ReportTemplateService implements SecuredRoles {
 
 	@Autowired
 	private ReportTemplateBodyRepository reportTemplateBodyRepository;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	private static final Comparator<ReportTemplate> REPORT_TEMPLATE_COMPARATOR = new Comparator<ReportTemplate>() {
 
@@ -56,6 +60,18 @@ public class ReportTemplateService implements SecuredRoles {
 		}
 
 	};
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ReportTemplate findOne(long reportTemplateId) {
+		ReportTemplate result = reportTemplateRepository
+				.findOne(reportTemplateId);
+		return result;
+	}
 
 	/**
 	 * 
@@ -121,9 +137,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getDefaultReportTemplates(
-			ReportTypeKeys reportType, DateTime currentDate) {
-		return reportTemplateRepository
-				.selectCommonTemplates(reportType, true);
+			ReportTypeKeys reportType, boolean isActive) {
+		return reportTemplateRepository.selectCommonTemplates(reportType,
+				isActive);
 	}
 
 	/**
@@ -134,10 +150,10 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getSubscriberReportTemplates(long subscriberId,
-			ReportTypeKeys reportType, DateTime currentDate) {
+			ReportTypeKeys reportType, boolean isActive) {
 
 		List<ReportTemplate> result = reportTemplateRepository
-				.selectSubscriberTemplates(subscriberId, reportType, true);
+				.selectSubscriberTemplates(subscriberId, reportType, isActive);
 
 		return result;
 	}
@@ -150,14 +166,14 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> getAllReportTemplates(long subscriberId,
-			ReportTypeKeys reportType, DateTime currentDate) {
+			ReportTypeKeys reportType, boolean isActive) {
 
 		List<ReportTemplate> result = new ArrayList<>();
 		List<ReportTemplate> commonTemplates = getDefaultReportTemplates(
-				reportType, currentDate);
+				reportType, isActive);
 
 		List<ReportTemplate> subscriberTemplates = getSubscriberReportTemplates(
-				subscriberId, reportType, currentDate);
+				subscriberId, reportType, isActive);
 
 		result.addAll(commonTemplates);
 		result.addAll(subscriberTemplates);
@@ -203,7 +219,7 @@ public class ReportTemplateService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void saveReportTemplateBodyCompiled(long reportTemplateId,
 			byte[] reportTemplateBodyCompiled, String filename) {
-		
+
 		ReportTemplateBody rtb = reportTemplateBodyRepository
 				.findOne(reportTemplateId);
 		if (rtb == null) {
@@ -212,8 +228,61 @@ public class ReportTemplateService implements SecuredRoles {
 		}
 		rtb.setBodyCompiled(reportTemplateBodyCompiled);
 		rtb.setBodyCompiledFilename(filename);
-		
+
 		reportTemplateBodyRepository.save(rtb);
+	}
+
+	/**
+	 * 
+	 * @param srcReportTemplateId
+	 * @return
+	 */
+	public ReportTemplate createByReportTemplate(long srcReportTemplateId,
+			ReportTemplate reportTemplate) {
+
+		checkNotNull(reportTemplate);
+		checkArgument(reportTemplate.isNew());
+
+		ReportTemplate srcReportTemplate = reportTemplateRepository
+				.findOne(srcReportTemplateId);
+
+		checkNotNull(srcReportTemplate, "Report Template not found. id="
+				+ srcReportTemplateId);
+
+		ReportTemplate rTemplate = reportTemplate;
+		rTemplate.setReportType(srcReportTemplate.getReportType());
+		rTemplate.setSubscriber(currentSubscriberService.getSubscriber());
+		rTemplate.setSrcReportTemplateId(srcReportTemplateId);
+		rTemplate.set_default(false);
+		rTemplate.set_active(true);
+		rTemplate.setActiveEndDate(null);
+
+		ReportTemplate result = reportTemplateRepository.save(rTemplate);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	public ReportTemplate moveToArchive(long reportTemplateId) {
+
+		if (!checkCanUpdateReportTemplate(reportTemplateId)) {
+			return null;
+		}
+
+		ReportTemplate rt = reportTemplateRepository.findOne(reportTemplateId);
+		if (rt == null) {
+			throw new PersistenceException(String.format(
+					"ReportTemplate (id=%d) not found", reportTemplateId));
+		}
+		rt.set_active(false);
+		rt.setActiveEndDate(new Date());
+		ReportTemplate result = reportTemplateRepository.save(rt);
+		return result;
+
 	}
 
 }

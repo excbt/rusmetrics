@@ -8,10 +8,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +35,28 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	/**
+	 * 
+	 * @param resourcePath
+	 * @return
+	 */
+	private static File findResource(String resourcePath) {
+		ClassLoader classLoader = Thread.currentThread()
+				.getContextClassLoader();
+
+		URL startDir = classLoader.getResource(".");
+		URL urlResource = classLoader.getResource(resourcePath);
+
+		File f;
+		if (urlResource == null) {
+			f = new File(startDir.getPath() + resourcePath);
+		} else {
+			f = new File(urlResource.getPath());
+		}
+
+		return f;
+	}	
+	
 	@Test
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
@@ -51,7 +73,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	public void testDefaultCommerceReport() {
 		List<ReportTemplate> resultList = reportTemplateService
 				.getDefaultReportTemplates(ReportTypeKeys.COMMERCE_REPORT,
-						DateTime.now());
+						true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -62,7 +84,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		List<ReportTemplate> resultList = reportTemplateService
 				.getSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKeys.COMMERCE_REPORT, DateTime.now());
+						ReportTypeKeys.COMMERCE_REPORT, true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -84,29 +106,17 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		} finally {
 			is.close();
 		}
-
-
 	}
 
-	/**
-	 * 
-	 * @param resourcePath
-	 * @return
-	 */
-	public static File findResource(String resourcePath) {
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
 
-		URL startDir = classLoader.getResource(".");
-		URL urlResource = classLoader.getResource(resourcePath);
-
-		File f;
-		if (urlResource == null) {
-			f = new File(startDir.getPath() + resourcePath);
-		} else {
-			f = new File(urlResource.getPath());
-		}
-
-		return f;
+	@Test
+	public void testCreateByTemplate() {
+		ReportTemplate rt = new ReportTemplate();
+		rt.setName("Создан по шаблону");
+		rt.setActiveStartDate(new Date());
+		ReportTemplate resultRT = reportTemplateService.createByReportTemplate(TEST_REPORT_TEMPLATE_ID, rt);
+		assertNotNull(resultRT);
+		//reportTemplateService.deleteOne(resultRT);
 	}
+	
 }
