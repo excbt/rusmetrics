@@ -17,6 +17,9 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity 
 @Table(name = "report_template")
 public class ReportTemplate extends AbstractAuditableModel {
@@ -28,6 +31,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subscriber_id")
+	@JsonIgnore
 	private Subscriber subscriber;
 
 	@Enumerated(EnumType.STRING)
@@ -57,6 +61,9 @@ public class ReportTemplate extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date activeEndDate;
 
+	@Column(name = "src_report_template_id")
+	private Long srcReportTemplateId;
+	
 	@Version
 	private int version;
 
@@ -140,6 +147,14 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	public void setReportType(ReportTypeKeys reportType) {
 		this.reportType = reportType;
+	}
+
+	public Long getSrcReportTemplateId() {
+		return srcReportTemplateId;
+	}
+
+	public void setSrcReportTemplateId(Long srcReportTemplateId) {
+		this.srcReportTemplateId = srcReportTemplateId;
 	}
 
 }
