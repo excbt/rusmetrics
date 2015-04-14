@@ -18,10 +18,12 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 @Entity 
 @Table(name = "report_template")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportTemplate extends AbstractAuditableModel {
 
 	/**
@@ -157,4 +159,8 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.srcReportTemplateId = srcReportTemplateId;
 	}
 
+	public boolean isCommon() {
+		return this.subscriber == null;
+	}
+	
 }

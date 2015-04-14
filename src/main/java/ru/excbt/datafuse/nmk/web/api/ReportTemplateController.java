@@ -128,50 +128,51 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
-
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/commerce/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneCommerce(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+	public ResponseEntity<?> getOneCommerce(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok(result);
-	}	
+	}
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneCons(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-		
+	public ResponseEntity<?> getOneCons(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok(result);
-	}	
+	}
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneEvent(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-		
+	public ResponseEntity<?> getOneEvent(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok(result);
-	}	
-	
-	
+	}
+
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -298,8 +299,8 @@ public class ReportTemplateController extends WebApiController {
 		ReportTemplate resultEntity = null;
 
 		try {
-			resultEntity = reportTemplateService.createByTemplate(
-					srcId, reportTemplate);
+			resultEntity = reportTemplateService.createByTemplate(srcId,
+					reportTemplate);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -310,12 +311,11 @@ public class ReportTemplateController extends WebApiController {
 					.build();
 		}
 
-		URI location = URI.create(request.getServletPath()
-				+ ReportConstants.getReportTypeURL(resultEntity.getReportTypeKey()) + "/"
-				+ +resultEntity.getId());
+		URI location = URI.create("/api/reportTemplate"
+				+ ReportConstants.getReportTypeURL(resultEntity
+						.getReportTypeKey()) + "/" + +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
 
-	
 }

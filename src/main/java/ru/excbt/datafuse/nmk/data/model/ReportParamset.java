@@ -14,14 +14,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_paramset")
+@JsonIgnoreProperties (ignoreUnknown = true)
 public class ReportParamset extends AbstractAuditableModel {
 
 	/**
@@ -47,8 +50,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column (name = "report_paramset_comment")
 	private String comment;
 
+	@Enumerated(EnumType.STRING)	
 	@Column (name = "output_file_type")
-	private String outputFileType;
+	private ReportOutputType outputFileType;
 	
 	@ManyToOne(fetch = FetchType.EAGER)	
 	@JoinColumn(name="report_period", insertable = false, updatable = false)
@@ -122,11 +126,11 @@ public class ReportParamset extends AbstractAuditableModel {
 		this.comment = comment;
 	}
 
-	public String getOutputFileType() {
+	public ReportOutputType getOutputFileType() {
 		return outputFileType;
 	}
 
-	public void setOutputFileType(String outputFileType) {
+	public void setOutputFileType(ReportOutputType outputFileType) {
 		this.outputFileType = outputFileType;
 	}
 
@@ -222,6 +226,10 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setReportPeriodKey(ReportPeriodKey reportPeriodKey) {
 		this.reportPeriodKey = reportPeriodKey;
+	}
+
+	public boolean isCommon() {
+		return this.subscriber == null;
 	}
 	
 }
