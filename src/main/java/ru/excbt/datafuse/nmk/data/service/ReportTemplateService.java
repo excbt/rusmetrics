@@ -99,7 +99,7 @@ public class ReportTemplateService implements SecuredRoles {
 		checkArgument(!reportTemplate.isNew());
 
 		ReportTemplate result = null;
-		if (checkCanUpdateReportTemplate(reportTemplate.getId())) {
+		if (checkCanUpdate(reportTemplate.getId())) {
 			result = reportTemplateRepository.save(reportTemplate);
 		} else {
 			throw new PersistenceException(String.format(
@@ -119,7 +119,7 @@ public class ReportTemplateService implements SecuredRoles {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
 
-		if (checkCanUpdateReportTemplate(reportTemplate.getId())) {
+		if (checkCanUpdate(reportTemplate.getId())) {
 			reportTemplateRepository.delete(reportTemplate);
 		} else {
 			throw new PersistenceException(String.format(
@@ -186,7 +186,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	public boolean checkCanUpdateReportTemplate(long id) {
+	public boolean checkCanUpdate(long id) {
 		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
 		return ids.indexOf(id) == -1;
 	}
@@ -237,22 +237,22 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
-	public ReportTemplate createByReportTemplate(long srcReportTemplateId,
+	public ReportTemplate createByReportTemplate(long srcId,
 			ReportTemplate reportTemplate) {
 
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
 		ReportTemplate srcReportTemplate = reportTemplateRepository
-				.findOne(srcReportTemplateId);
+				.findOne(srcId);
 
 		checkNotNull(srcReportTemplate, "Report Template not found. id="
-				+ srcReportTemplateId);
+				+ srcId);
 
 		ReportTemplate rTemplate = reportTemplate;
 		rTemplate.setReportType(srcReportTemplate.getReportType());
 		rTemplate.setSubscriber(currentSubscriberService.getSubscriber());
-		rTemplate.setSrcReportTemplateId(srcReportTemplateId);
+		rTemplate.setSrcReportTemplateId(srcId);
 		rTemplate.set_default(false);
 		rTemplate.set_active(true);
 		rTemplate.setActiveEndDate(null);
@@ -269,7 +269,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
-		if (!checkCanUpdateReportTemplate(reportTemplateId)) {
+		if (!checkCanUpdate(reportTemplateId)) {
 			return null;
 		}
 

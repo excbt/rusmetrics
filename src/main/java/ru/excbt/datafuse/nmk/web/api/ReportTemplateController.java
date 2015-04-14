@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKeys;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
@@ -54,7 +55,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCommerceReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesCommerce() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -67,7 +68,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesCons() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -80,7 +81,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getEventReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesEvent() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -93,7 +94,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArchiveCommerceReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesArchiveCommerce() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -106,7 +107,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArchiveConsReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesArchiveCons() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -119,7 +120,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArchiveEventReportTemplates() {
+	public ResponseEntity<?> getReportTemplatesArchiveEvent() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
@@ -133,7 +134,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/commerce/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCommerceOne(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+	public ResponseEntity<?> getOneCommerce(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
@@ -147,7 +148,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsOne(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+	public ResponseEntity<?> getOneCons(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 		
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
@@ -161,7 +162,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getEventOne(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+	public ResponseEntity<?> getOneEvent(@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 		
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
@@ -212,7 +213,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/commerce/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateCommerceOne(
+	public ResponseEntity<?> updateOneCommerce(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
@@ -226,7 +227,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateConsOne(
+	public ResponseEntity<?> updateOneCons(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
@@ -240,7 +241,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateEventOne(
+	public ResponseEntity<?> updateOneEvent(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
@@ -284,13 +285,13 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/createByTemplate/{srcReportTemplateId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(
-			@PathVariable(value = "srcReportTemplateId") Long srcReportTemplateId,
+			@PathVariable(value = "srcId") Long srcId,
 			@RequestBody ReportTemplate reportTemplate,
 			HttpServletRequest request) {
 
-		checkNotNull(srcReportTemplateId);
+		checkNotNull(srcId);
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
@@ -298,48 +299,23 @@ public class ReportTemplateController extends WebApiController {
 
 		try {
 			resultEntity = reportTemplateService.createByReportTemplate(
-					srcReportTemplateId, reportTemplate);
+					srcId, reportTemplate);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
 			logger.error(
 					"Error during create entity by ReportTemplate (id={}): {}",
-					srcReportTemplateId, e);
+					srcId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
 
 		URI location = URI.create(request.getServletPath()
-				+ getReportTypeURL(resultEntity.getReportType()) + "/"
+				+ ReportConstants.getReportTypeURL(resultEntity.getReportType()) + "/"
 				+ +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
 
-	/**
-	 * 
-	 * @param rtk
-	 * @return
-	 */
-	private String getReportTypeURL(ReportTypeKeys rtk) {
-		String result = null;
-		switch (rtk) {
-		case CONS_REPORT: {
-			result = "/cons";
-			break;
-		}
-		case COMMERCE_REPORT: {
-			result = "/commerce";
-			break;
-		}
-		case EVENT_REPORT: {
-			result = "/event";
-			break;
-		}
-		default:
-			result = "";
-			break;
-		}
-		return result;
-	}
+	
 }
