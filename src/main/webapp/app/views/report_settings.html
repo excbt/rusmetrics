@@ -42,7 +42,11 @@
 
                                         </div>
                                         <div class="col-md-11">
-                                            <b>{{object.reportType}}</b> <small>(шаблонов: {{object.templatesCount}})</small>
+                                            <div class="col-md-2"><b>{{object.reportType}}</b> <small>(шаблонов: {{object.templatesCount}})</small>
+                                            </div>    
+                                            <div class="col-md-9">
+                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="" data-target="#editTemplateModal" data-toggle="modal">Добавить</i>
+                                            </div>
                                         </div>
 
 
@@ -244,7 +248,7 @@
 <div id="editTemplateModal" class="modal fade" role="dialog"
 	aria-labelledby="editTariffLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content modalWindow_wide">
 
 		<div class="modal-header">
 			<h3 id="editTariffLabel">
@@ -255,7 +259,7 @@
             
             
             <div class="container-fluid">
-                <div class="row-fluid">
+                <div class="row-fluid col-md-6">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
                             <tr>
@@ -307,18 +311,140 @@
                                 </td>
                             </tr>
                             
+<!--
                              <tr>
                                 <td class="col-sm-3"><label for="inputValue"></label>
                                 </td>
-                                 <td class="col-sm-9 textAlign_left"><i class="btn btn-xs glyphicon glyphicon-edit" ng-click="" data-target="">Конструктор шаблона</i> 
+                                 <td class="col-sm-9 textAlign_left"><i class="btn btn-xs glyphicon glyphicon-edit" ng-click="" data-target="" data-toggle="modal">Конструктор шаблона</i> 
                                 </td>
                             </tr>
+-->
                             
                         </table>
 
-                    </div>    
+                    </div>  
+                    <div class="row-fluid">
+                                <div class="col-md-12 paddingLeft20">
+                                    <input type=checkbox ng-model="template.integratorsFlag"> Включить интеграторы в отчет.
+                                </div>
+                     </div>
+                     <div class="row-fluid">
+                        <div class="col-md-12 well marginBottom10 noPaddingBottom">
+                            <div class="col-md-6 noPadding">
+                                <label>Порядок систем в отчете</label>
+                                    <div class="btn-group">
+                                         <i title="Поменять системы местами" class="btn btn-default btn-xs" ng-click="changeSystemPosition()">Изменить порядок</i>
+                                     </div>
+                                
+                            </div>
+                            <div class="col-md-6 onlyPaddingLeft15">
+                                <table class="table table-hover table-condensed">
+
+
+                                    <tr ng-repeat="system in systems">
+                                        <td>
+
+                                           {{$index+1}}. {{system.name}}
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>    
+                        </div>
+                        
+                     </div>
                     
                 </div>
+                
+<!--
+                <div template-designer>
+                </div>
+-->
+
+                <div class="row-fluid col-md-6">
+<!--                    <label>Конструктор шаблона</label>-->
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a id="system1-tab" href="" data-target="#system1" data-toggle="tab">Система 1</a>
+                        </li>
+                        <li class="">
+                            <a id="system2-tab" href="" data-target="#system2" data-toggle="tab">Система 2</a>
+                        </li>
+                    </ul>
+                     <div id="systemsTabContent" class="tab-content">
+                              <div role="tabpanel" class="tab-pane fade in active" id="system1" aria-labelledBy="system1-tab">
+                                <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <table class="table table-striped table-hover table-condensed">
+                                        <tr ng-repeat="defaultcolumn in system1.defaultColumns" class="noPadding" ng-click="selectItem(defaultcolumn)">
+                                            <td style="padding:0;">
+                                               <input type="checkbox" ng-model="defaultcolumn.selected"> {{defaultcolumn.name}}
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div class="col-md-1 column_list column_list_button">
+                                    <div class="btn-group">
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="removeColumns(system1.defaultColumns, system1.defineColumns)"></i>
+                                    </div>
+                                </div>
+                                <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <table class="table table-striped table-hover table-condensed">
+                                        <tr ng-repeat="definecolumn in system1.defineColumns" class="noPadding">
+                                            <td style="padding:0;">
+                                                <input type="checkbox" ng-model="definecolumn.selectedforremove"> {{definecolumn.name}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-1 column_list column_list_button">
+                                    <div class="btn-group">
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up" ng-click="moveColumnsUp()"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down" ng-click="moveColumnsDown()"></i>
+                                    </div>
+                                </div>
+                            </div> 
+                         
+                            <div role="tabpanel" class="tab-pane fade " id="system2" aria-labelledBy="system2-tab">
+<!--
+                                <div class="col-md-5 well noPaddingBottom marginBottom10">
+                                    <table class="table table-striped table-hover table-condensed">
+                                        <tr ng-repeat="defaultcolumn in system2.defaultColumns">
+                                            <td>
+
+                                               <input type="checkbox" ng-model="defaultcolumn.selected"> {{defaultcolumn.name}}
+                                            </td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="btn-group">
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="addColumns(system2.defaultColumns, system2.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="removeColumns(system2.defaultColumns, system2.defineColumns)"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 well noPaddingBottom marginBottom10">
+                                    <table class="table table-striped table-hover table-condensed">
+                                        <tr ng-repeat="definecolumn in system2.defineColumns">
+                                            <td>
+                                                <input type="checkbox" ng-model="definecolumn.selectedforremove"> {{definecolumn.name}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="btn-group">
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up" ng-click="moveColumnsUp()"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down" ng-click="moveColumnsDown()"></i>
+                                    </div>
+                                </div>
+-->
+                            </div>
+                    </div>
+
+                
                 
             </div>        
 
@@ -351,23 +477,22 @@
 </div>
 
 <!-- Конструктор шаблона отчета-->
-<div id="showConstructorModal" class="modal fade" role="dialog"
-	aria-labelledby="showConstructorLabel" tabindex="-1">
+<!--
+<div id="templateDesignerModal" class="modal fade" role="dialog"
+	aria-labelledby="templateDesignerLabel" tabindex="-1">
 
 	<div class="modal-dialog  modal-content">
 
 		<div class="modal-header">
-			<h3 id="showConstructorLabel">
+			<h3 id="templateDesignerLabel">
 				Конструктор отчета 
 			</h3>
 		</div>
 		<div class="modal-body">
-			<form name="deleteContactForm" novalidate>
-				<p>
-
-				</p>
-
-			</form>
+            <div class="container-fluid">
+                <div template-designer>
+                </div>
+            </div>
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
@@ -394,4 +519,4 @@
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
 	</div>
-</div>
+</div>-->

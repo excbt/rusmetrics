@@ -201,12 +201,17 @@ input[type="radio"]{
     padding-top: 0px;
 }
 
+.paddingLeft20 {
+    padding-left: 20px;
+}
+
 .onlyPaddingLeft15 {
     padding-bottom: 0;
     padding-top: 0;
     padding-right: 0;
     padding-left: 15px;
 }
+
 
 .noPaddingTop {
     padding-top: 0px;
@@ -268,6 +273,17 @@ input[type="radio"]{
 .modal-scrollable-area1 {
 	height: 600px; overflow-y: scroll;	
 }
+
+.column_list {
+    height: 353px;
+}
+
+.column_list_button {
+    padding-top: 150px;
+}
+#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols     {
+      overflow-y: scroll;
+    }
 
 .main-scrollable-area1 {
 	height: 865px; 
