@@ -29,7 +29,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			.getLogger(ReportTemplateServiceTest.class);
 
 	private static final long TEST_REPORT_TEMPLATE_ID = 28181422;
-	
+
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
@@ -56,8 +56,8 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		}
 
 		return f;
-	}	
-	
+	}
+
 	@Test
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
@@ -102,24 +102,27 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 		InputStream is = new FileInputStream(fileJrxml);
 		try {
-			byte[] fileBytes = IOUtils.toByteArray(is);	
-			reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID, fileBytes, fileJrxml.getName());
+			byte[] fileBytes = IOUtils.toByteArray(is);
+			reportTemplateService.saveReportTemplateBody(
+					TEST_REPORT_TEMPLATE_ID, fileBytes, fileJrxml.getName());
 		} finally {
 			is.close();
 		}
 	}
-
 
 	@Test
 	public void testCreateByTemplate() {
 		ReportTemplate rt = new ReportTemplate();
 		rt.setName("Создан по шаблону");
 		rt.setActiveStartDate(new Date());
-		ReportTemplate resultRT = reportTemplateService.createByTemplate(TEST_REPORT_TEMPLATE_ID, rt);
+		ReportTemplate resultRT = reportTemplateService.createByTemplate(
+				TEST_REPORT_TEMPLATE_ID, rt,
+				currentSubscriberService.getSubscriber());
 		assertNotNull(resultRT);
-		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT.getId());
+		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT
+				.getId());
 		assertFalse(archiveRT.is_active());
-		//reportTemplateService.deleteOne(archiveRT);
+		// reportTemplateService.deleteOne(archiveRT);
 	}
-	
+
 }

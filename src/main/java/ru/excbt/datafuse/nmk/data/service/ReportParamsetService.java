@@ -18,9 +18,9 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -33,8 +33,6 @@ public class ReportParamsetService implements SecuredRoles {
 	@Autowired
 	private ReportParamsetUnitRepository reportParamsetUnitRepository;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
@@ -120,12 +118,12 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public List<ReportParamset> selectReportTypeParamsetList(
-			ReportTypeKey reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive, long subscriberId) {
 		List<ReportParamset> commonReportParams = reportParamsetRepository
 				.selectCommonReportParamset(reportType, isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
 				.selectSubscriberReportParamset(
-						currentSubscriberService.getSubscriberId(), reportType,
+						subscriberId, reportType,
 						isActive);
 
 		List<ReportParamset> result = new ArrayList<>();
@@ -187,10 +185,13 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public ReportParamset createByTemplate(long srcId,
-			ReportParamset reportParamset) {
+			ReportParamset reportParamset, Subscriber subscriber) {
 
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
+
+		checkNotNull(subscriber);
+		checkArgument(!subscriber.isNew());
 
 		ReportParamset src = reportParamsetRepository.findOne(srcId);
 
@@ -198,7 +199,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset rp = reportParamset;
 		rp.setReportTemplate(src.getReportTemplate());
-		rp.setSubscriber(currentSubscriberService.getSubscriber());
+		rp.setSubscriber(subscriber);
 		rp.setSrcReportParamsetId(srcId);
 		rp.set_default(false);
 		rp.set_active(true);
@@ -225,9 +226,9 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public List<ContObject> selectParamsetAvailableContObjectUnits(
-			long reportParamsetId) {
+			long reportParamsetId, long subscriberId) {
 		return reportParamsetUnitRepository.selectAvailableContObjectUnits(
-				reportParamsetId, currentSubscriberService.getSubscriberId());
+				reportParamsetId, subscriberId);
 	}
 
 	/**

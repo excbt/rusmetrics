@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -33,8 +33,6 @@ public class ReportTemplateService implements SecuredRoles {
 	@Autowired
 	private ReportTemplateBodyRepository reportTemplateBodyRepository;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	private static final Comparator<ReportTemplate> REPORT_TEMPLATE_COMPARATOR = new Comparator<ReportTemplate>() {
 
@@ -238,20 +236,22 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	public ReportTemplate createByTemplate(long srcId,
-			ReportTemplate reportTemplate) {
+			ReportTemplate reportTemplate, Subscriber subscriber) {
 
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
+		checkNotNull(subscriber);
+		checkArgument(!subscriber.isNew());
+
 		ReportTemplate srcReportTemplate = reportTemplateRepository
 				.findOne(srcId);
-
 		checkNotNull(srcReportTemplate, "Report Template not found. id="
 				+ srcId);
 
 		ReportTemplate rTemplate = reportTemplate;
 		rTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
-		rTemplate.setSubscriber(currentSubscriberService.getSubscriber());
+		rTemplate.setSubscriber(subscriber);
 		rTemplate.setSrcReportTemplateId(srcId);
 		rTemplate.set_default(false);
 		rTemplate.set_active(true);
