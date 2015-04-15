@@ -32,4 +32,9 @@ public interface ReportParamsetUnitRepository extends
 			@Param("reportParamsetId") long reportParamsetId,
 			@Param("objectId") long objectId);
 
+	@Query("SELECT u.id FROM ReportParamsetUnit u "
+			+ "WHERE u.reportParamset.id = :reportParamsetId ")
+	public List<Long> selectObjectIds(
+			@Param("reportParamsetId") long reportParamsetId);
+
 }

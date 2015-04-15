@@ -205,6 +205,8 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset result = reportParamsetRepository.save(rp);
 
+		copyReportParamsetUnit(srcId, result.getId());
+
 		return result;
 	}
 
@@ -235,11 +237,9 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset,
-			Long objectId) {
+			long objectId) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
-
-		checkNotNull(objectId);
 
 		if (checkReportParamsetUnitObject(reportParamset.getId(), objectId)) {
 			throw new PersistenceException(
@@ -254,6 +254,23 @@ public class ReportParamsetService implements SecuredRoles {
 		ReportParamsetUnit result = reportParamsetUnitRepository.save(u);
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param objectIds
+	 */
+	public void addUnitToParamset(ReportParamset reportParamset,
+			long[] objectIds) {
+		checkNotNull(reportParamset);
+		checkArgument(!reportParamset.isNew());
+
+		checkNotNull(objectIds);
+
+		for (long id : objectIds) {
+			addUnitToParamset(reportParamset, id);
+		}
 	}
 
 	/**
@@ -290,6 +307,19 @@ public class ReportParamsetService implements SecuredRoles {
 	/**
 	 * 
 	 * @param reportParamsetId
+	 * @param contObjectIds
+	 */
+	public void deleteUnitFromParamset(long reportParamsetId,
+			long[] contObjectIds) {
+		checkNotNull(contObjectIds);
+		for (long id : contObjectIds) {
+			deleteUnitFromParamset(reportParamsetId, id);
+		}
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
 	 * @param objectId
 	 * @return
 	 */
@@ -298,4 +328,34 @@ public class ReportParamsetService implements SecuredRoles {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId,
 				objectId).size() > 0;
 	}
+
+	/**
+	 * 
+	 * @param srcReportParamsetId
+	 * @param dstReportParamsetId
+	 * @return
+	 */
+	public void copyReportParamsetUnit(long srcReportParamsetId,
+			long dstReportParamsetId) {
+
+		List<?> checkList = reportParamsetUnitRepository
+				.selectObjectIds(dstReportParamsetId);
+		if (checkList.size() > 0) {
+			throw new PersistenceException(
+					String.format(
+							"ReportParamsetUnit of ReportParamset(id=%d) already exists",
+							dstReportParamsetId));
+		}
+
+		ReportParamset dstReportParamset = reportParamsetRepository
+				.findOne(dstReportParamsetId);
+		checkNotNull(dstReportParamset);
+
+		List<Long> idsToCopy = reportParamsetUnitRepository
+				.selectObjectIds(srcReportParamsetId);
+		for (Long id : idsToCopy) {
+			addUnitToParamset(dstReportParamset, id);
+		}
+	}
+
 }

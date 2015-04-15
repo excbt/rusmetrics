@@ -23,10 +23,11 @@ public class ReportConstants {
 	}
 
 	public enum ReportActionKey {
-		EMAIL_LIST_DELIVERY
+		EMAIL_LIST_DELIVERY,
+		EMAIL_RAW_DELIVERY
 	}
 
-	public enum ReportSheduleKey {
+	public enum ReportSheduleTypeKey {
 		DAILY, MONTHLY, SINGLE, WEEKLY
 	}
 
