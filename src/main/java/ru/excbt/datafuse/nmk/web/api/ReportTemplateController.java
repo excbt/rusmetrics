@@ -256,7 +256,7 @@ public class ReportTemplateController extends WebApiController {
 	 */
 	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
-			@RequestParam(value = "{reportTemplateId}", required = true) Long reportTemplateId) {
+			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId) {
 
 		checkNotNull(reportTemplateId);
 

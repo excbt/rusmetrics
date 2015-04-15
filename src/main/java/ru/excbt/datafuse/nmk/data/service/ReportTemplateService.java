@@ -136,7 +136,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public List<ReportTemplate> getDefaultReportTemplates(
+	public List<ReportTemplate> selectDefaultReportTemplates(
 			ReportTypeKey reportType, boolean isActive) {
 		return reportTemplateRepository.selectCommonTemplates(reportType,
 				isActive);
@@ -149,7 +149,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public List<ReportTemplate> getSubscriberReportTemplates(long subscriberId,
+	public List<ReportTemplate> selectSubscriberReportTemplates(long subscriberId,
 			ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = reportTemplateRepository
@@ -169,10 +169,10 @@ public class ReportTemplateService implements SecuredRoles {
 			ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = new ArrayList<>();
-		List<ReportTemplate> commonTemplates = getDefaultReportTemplates(
+		List<ReportTemplate> commonTemplates = selectDefaultReportTemplates(
 				reportType, isActive);
 
-		List<ReportTemplate> subscriberTemplates = getSubscriberReportTemplates(
+		List<ReportTemplate> subscriberTemplates = selectSubscriberReportTemplates(
 				subscriberId, reportType, isActive);
 
 		result.addAll(commonTemplates);
@@ -277,6 +277,10 @@ public class ReportTemplateService implements SecuredRoles {
 		if (rt == null) {
 			throw new PersistenceException(String.format(
 					"ReportTemplate (id=%d) not found", reportTemplateId));
+		}
+		if (!rt.is_active()) {
+			throw new PersistenceException(String.format(
+					"ReportTemplate (id=%d) is alredy archived", reportTemplateId));
 		}
 		rt.set_active(false);
 		rt.setActiveEndDate(new Date());

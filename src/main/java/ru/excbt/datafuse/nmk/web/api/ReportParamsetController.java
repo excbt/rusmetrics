@@ -25,10 +25,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @Controller
@@ -46,6 +49,9 @@ public class ReportParamsetController extends WebApiController {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private SubscriberService subscriberService;
 
 	/**
 	 * 
@@ -133,10 +139,8 @@ public class ReportParamsetController extends WebApiController {
 	 */
 	@RequestMapping(value = "/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportParamsetList(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		checkNotNull(reportTemplateId);
 		checkNotNull(reportParamsetId);
 
 		ReportParamset result = reportParamsetService.findOne(reportParamsetId);
@@ -145,9 +149,6 @@ public class ReportParamsetController extends WebApiController {
 		}
 
 		if (result.getReportTemplate() == null) {
-			return ResponseEntity.badRequest().build();
-		}
-		if (!result.getReportTemplate().getId().equals(reportTemplateId)) {
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -345,6 +346,88 @@ public class ReportParamsetController extends WebApiController {
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
 		return createInternal(reportTemplateId, reportParamset, request);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportParamsetContObjectUnits(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		checkNotNull(reportParamsetId);
+		List<ContObject> resultList = reportParamsetService
+				.selectParamsetContObjectUnits(reportParamsetId);
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> postReportParamsetAddUnit(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectId", required = true) Long contObjectId) {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(contObjectId);
+
+		if (!subscriberService.checkContObjectSubscription(
+				currentSubscriberService.getSubscriberId(), contObjectId)) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		ReportParamsetUnit resultEntity = null;
+
+		try {
+			resultEntity = reportParamsetService.addUnitToParamset(
+					reportParamsetId, contObjectId);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+					reportParamsetId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}		
+		
+		return ResponseEntity.accepted().body(resultEntity);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/contObject/{reportParamsetUnitId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportParamsetDeleteUnit(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@PathVariable(value = "reportParamsetUnitId") Long reportParamsetUnitId) {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamsetUnitId);
+
+		try {
+			reportParamsetService.deleteUnitFromParamset(reportParamsetId,
+					reportParamsetUnitId);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Can't delete ReportParamsetUnit(id={}) from ReportParamset (id={}) : {}",
+					reportParamsetUnitId, reportParamsetId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		return ResponseEntity.ok().build();
 	}
 
 }

@@ -15,32 +15,33 @@ import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
-
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContObjectController extends WebApiController {
 
-	//private final static int TEST_SUBSCRIBER_ID = 728;
-	
+	// private final static int TEST_SUBSCRIBER_ID = 728;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContObjectController.class);
-	
+
 	@Autowired
 	private ContObjectService contObjectService;
-	
+
 	@Autowired
 	private SubscriberService subscrUserService;
-	
+
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
-	
+
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		logger.debug("Fire listAll");
-		
-		List<ContObject> resultList = subscrUserService.selectSubscrContObjects(currentSubscriberService.getSubscriberId());
-		
+
+		List<ContObject> resultList = subscrUserService
+				.selectSubscriberContObjects(currentSubscriberService
+						.getSubscriberId());
+
 		return ResponseEntity.ok().body(resultList);
 	}
-	
+
 }

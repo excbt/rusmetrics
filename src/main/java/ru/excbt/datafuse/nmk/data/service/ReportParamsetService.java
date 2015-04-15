@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -26,6 +29,9 @@ public class ReportParamsetService implements SecuredRoles {
 
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
+
+	@Autowired
+	private ReportParamsetUnitRepository reportParamsetUnitRepository;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -53,11 +59,12 @@ public class ReportParamsetService implements SecuredRoles {
 	public void deleteOne(ReportParamset entity) {
 		checkNotNull(entity);
 		if (checkCanUpdate(entity.getId())) {
-			reportParamsetRepository.delete(entity);	
+			reportParamsetRepository.delete(entity);
 		} else {
-			throw new PersistenceException(String.format("Can't delete ReportParamset(id=%d)", entity.getId()));
+			throw new PersistenceException(String.format(
+					"Can't delete ReportParamset(id=%d)", entity.getId()));
 		}
-		
+
 	}
 
 	/**
@@ -80,8 +87,8 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		return result;
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param id
@@ -89,9 +96,10 @@ public class ReportParamsetService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
-			reportParamsetRepository.delete(id);	
+			reportParamsetRepository.delete(id);
 		} else {
-			throw new PersistenceException(String.format("Can't delete ReportParamset(id=%d)", id));
+			throw new PersistenceException(String.format(
+					"Can't delete ReportParamset(id=%d)", id));
 		}
 
 	}
@@ -140,7 +148,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param id
@@ -150,8 +158,7 @@ public class ReportParamsetService implements SecuredRoles {
 		List<Long> ids = reportParamsetRepository.selectCommonParamsetIds();
 		return ids.indexOf(id) == -1;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -172,7 +179,7 @@ public class ReportParamsetService implements SecuredRoles {
 		rp.setActiveEndDate(new Date());
 		ReportParamset result = reportParamsetRepository.save(rp);
 		return result;
-	}	
+	}
 
 	/**
 	 * 
@@ -185,11 +192,9 @@ public class ReportParamsetService implements SecuredRoles {
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
 
-		ReportParamset src = reportParamsetRepository
-				.findOne(srcId);
+		ReportParamset src = reportParamsetRepository.findOne(srcId);
 
-		checkNotNull(src, "ReportParamset not found. id="
-				+ srcId);
+		checkNotNull(src, "ReportParamset not found. id=" + srcId);
 
 		ReportParamset rp = reportParamset;
 		rp.setReportTemplate(src.getReportTemplate());
@@ -202,6 +207,95 @@ public class ReportParamsetService implements SecuredRoles {
 		ReportParamset result = reportParamsetRepository.save(rp);
 
 		return result;
-	}	
-	
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public List<ContObject> selectParamsetContObjectUnits(long reportParamsetId) {
+		return reportParamsetUnitRepository
+				.selectContObjectUnits(reportParamsetId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public List<ContObject> selectParamsetAvailableContObjectUnits(
+			long reportParamsetId) {
+		return reportParamsetUnitRepository.selectAvailableContObjectUnits(
+				reportParamsetId, currentSubscriberService.getSubscriberId());
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset,
+			Long objectId) {
+		checkNotNull(reportParamset);
+		checkArgument(!reportParamset.isNew());
+
+		checkNotNull(objectId);
+
+		if (checkReportParamsetUnitObject(reportParamset.getId(), objectId)) {
+			throw new PersistenceException(
+					String.format(
+							"ReportParamsetUnit error. A pair of ReportParamset (id=%d) and Object (id=%d) is alredy exists",
+							reportParamset.getId(), objectId));
+		}
+
+		ReportParamsetUnit u = new ReportParamsetUnit();
+		u.setObjectId(objectId);
+		u.setReportParamset(reportParamset);
+		ReportParamsetUnit result = reportParamsetUnitRepository.save(u);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	public ReportParamsetUnit addUnitToParamset(long reportParamsetId,
+			Long objectId) {
+		ReportParamset rp = findOne(reportParamsetId);
+		checkNotNull(rp);
+		return addUnitToParamset(rp, objectId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetUnitId
+	 */
+	public void deleteUnitFromParamset(long reportParamsetId,
+			long reportParamsetUnitId) {
+		ReportParamsetUnit unit = reportParamsetUnitRepository
+				.findOne(reportParamsetUnitId);
+		if (unit.getReportParamset().getId() != reportParamsetId) {
+			throw new PersistenceException(
+					String.format(
+							"Can't delete ReportParamsetUnit(id=%d) from ReportParamset (id=%d)",
+							reportParamsetUnitId, reportParamsetId));
+		}
+
+		reportParamsetUnitRepository.delete(reportParamsetUnitId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param objectId
+	 * @return
+	 */
+	public boolean checkReportParamsetUnitObject(long reportParamsetId,
+			long objectId) {
+		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId,
+				objectId).size() > 0;
+	}
 }
