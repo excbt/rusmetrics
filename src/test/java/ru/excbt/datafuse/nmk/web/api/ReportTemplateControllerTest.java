@@ -52,7 +52,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Test
 	public void testUpdate() throws Exception {
 		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
-				.getSubscriberReportTemplates(
+				.selectSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
 						ReportTypeKey.COMMERCE_REPORT, true);
 
@@ -75,6 +75,37 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 			resultActionsAll.andExpect(status().isAccepted());
 
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.toString());
+		}
+	}
+
+	@Test
+	public void testMoveToArchive() throws Exception {
+		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
+				.selectSubscriberReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.COMMERCE_REPORT, true);
+		
+		assertTrue(subscriberReportTemplates.size() > 0);
+		ReportTemplate rt = subscriberReportTemplates.get(0);
+		
+		//rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
+		//String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
+		String urlStr = "/api/reportTemplate/archive/move";
+		
+		ResultActions resultActionsAll;
+		try {
+			resultActionsAll = mockMvc.perform(put(urlStr)
+					.param("reportTemplateId", rt.getId().toString())
+					.with(testSecurityContext())
+					.accept(MediaType.APPLICATION_JSON));
+			
+			resultActionsAll.andDo(MockMvcResultHandlers.print());
+			
+			resultActionsAll.andExpect(status().isAccepted());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.toString());

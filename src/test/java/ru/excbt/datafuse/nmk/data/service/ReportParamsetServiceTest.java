@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
+import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ReportParamsetServiceTest extends JpaConfigTest {
@@ -28,6 +29,9 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+
+	@Autowired
+	private ReportTemplateService reportTemplateService;
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -93,6 +97,28 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 					co.getId());
 		}
 
+	}
+
+	@Test
+	public void testParamsetAvailableContObjectUnits() {
+		List<ReportTemplate> reportTemplates = reportTemplateService
+				.selectSubscriberReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.COMMERCE_REPORT, true);
+		assertTrue(reportTemplates.size() > 0);
+		ReportTemplate rt = reportTemplates.get(0);
+		
+		logger.info("ReportTemplate ID={}", rt.getId());
+		
+//		List<ReportParamset> rpList = reportParamsetService
+//				.findReportParamsetList(rt.getId());
+//		assertTrue(rpList.size() > 0);
+
+		List<ContObject> contObjects = reportParamsetService
+				.selectParamsetAvailableContObjectUnits(-1);
+		
+		assertTrue(contObjects.size() > 0);
+		logger.info("Found {} Available ContObjects", contObjects.size());
 	}
 
 }

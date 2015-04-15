@@ -221,6 +221,17 @@ public class ReportParamsetService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public List<ContObject> selectParamsetAvailableContObjectUnits(
+			long reportParamsetId) {
+		return reportParamsetUnitRepository.selectAvailableContObjectUnits(
+				reportParamsetId, currentSubscriberService.getSubscriberId());
+	}
+
+	/**
+	 * 
 	 * @param contObject
 	 * @return
 	 */
@@ -230,6 +241,13 @@ public class ReportParamsetService implements SecuredRoles {
 		checkArgument(!reportParamset.isNew());
 
 		checkNotNull(objectId);
+
+		if (checkReportParamsetUnitObject(reportParamset.getId(), objectId)) {
+			throw new PersistenceException(
+					String.format(
+							"ReportParamsetUnit error. A pair of ReportParamset (id=%d) and Object (id=%d) is alredy exists",
+							reportParamset.getId(), objectId));
+		}
 
 		ReportParamsetUnit u = new ReportParamsetUnit();
 		u.setObjectId(objectId);
@@ -267,5 +285,17 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		reportParamsetUnitRepository.delete(reportParamsetUnitId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param objectId
+	 * @return
+	 */
+	public boolean checkReportParamsetUnitObject(long reportParamsetId,
+			long objectId) {
+		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId,
+				objectId).size() > 0;
 	}
 }

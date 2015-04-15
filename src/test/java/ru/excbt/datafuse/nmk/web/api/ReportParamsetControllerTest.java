@@ -44,7 +44,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	@Test
 	public void testCreateCommerce() throws Exception {
 		List<ReportTemplate> commTemplates = reportTemplateService
-				.getDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT, true);
+				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT, true);
 		
 		assertTrue(commTemplates.size() > 0);
 		

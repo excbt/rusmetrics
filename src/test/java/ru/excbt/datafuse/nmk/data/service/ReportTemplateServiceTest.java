@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -72,7 +73,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testDefaultCommerceReport() {
 		List<ReportTemplate> resultList = reportTemplateService
-				.getDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
+				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
 						true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
@@ -82,7 +83,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testSubscriberReports() {
 		List<ReportTemplate> resultList = reportTemplateService
-				.getSubscriberReportTemplates(
+				.selectSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
 						ReportTypeKey.COMMERCE_REPORT, true);
 		assertNotNull(resultList);
@@ -116,7 +117,9 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		rt.setActiveStartDate(new Date());
 		ReportTemplate resultRT = reportTemplateService.createByTemplate(TEST_REPORT_TEMPLATE_ID, rt);
 		assertNotNull(resultRT);
-		//reportTemplateService.deleteOne(resultRT);
+		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT.getId());
+		assertFalse(archiveRT.is_active());
+		//reportTemplateService.deleteOne(archiveRT);
 	}
 	
 }
