@@ -197,6 +197,10 @@ input[type="radio"]{
     padding-top: 10px;
 }
 
+.paddingTop3 {
+    padding-top: 3px;
+}
+
 .noPaddingTop {
     padding-top: 0px;
 }
@@ -305,6 +309,13 @@ table {
 td {
     vertical-align: middle !important;
 }
+
+/* Если нужна подсветка цветом для выделенных строк
+tr > .active{
+    background-color: #337ab7 !important;
+    color:white;
+}
+*/
 /* Lastly, apply responsive CSS fixes as necessary */
 @media (max-width: 767px) {
     table {
@@ -418,4 +429,15 @@ mainTable {
 
 a.list-group-item:focus {
     font-weight: bold;
+}
+
+.div-checkbox {
+    width:15px;
+}
+
+.default {
+    font-weight: bold;
+}
+.common {
+    font-weight: lighter;
 }
