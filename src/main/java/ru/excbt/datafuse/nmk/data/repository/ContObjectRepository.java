@@ -10,12 +10,8 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 
 public interface ContObjectRepository extends JpaRepository<ContObject, Long> {
 
-	@Query("SELECT co FROM ContObject co WHERE co.id = :id")
-	public List<ContObject> selectByUserName(@Param("id") long id);
-	
 	@Query("SELECT co FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :id")
 	public List<ContObject> selectSubscrContObjects(@Param("id")long subscriberId);
 	
-
 	public List<ContObject> findByFullNameLikeIgnoreCase(String str);
 }

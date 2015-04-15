@@ -13,8 +13,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="report_paramset_group")
-public class ReportParamsetGroup extends AbstractAuditableModel {
+@Table(name="report_paramset_unit")
+public class ReportParamsetUnit extends AbstractAuditableModel {
 
 	/**
 	 * 

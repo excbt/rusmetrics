@@ -14,7 +14,6 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
@@ -22,35 +21,31 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 @Service
 @Transactional
 public class SubscriberService {
-	
+
 	@Autowired
 	private SubscriberRepository subscriberRepository;
-	
-	
+
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
 
-	
 	@Autowired
 	private ContZPointRepository contZPointRepository;
 
 	@Autowired
 	private ContEventRepository contEventRepository;
 
-	@Autowired
-	private ContObjectRepository contObjectRepository;
-	
-	
+	// @Autowired
+	// private ContObjectRepository contObjectRepository;
+
 	@Transactional(readOnly = true)
 	public Subscriber findOne(long id) {
 		return subscriberRepository.findOne(id);
 	}
 
 	@Transactional(readOnly = true)
-	@Deprecated
-	public List<ContObject> selectSubscrContObjects(long userId) {
-		List<ContObject> result = contObjectRepository
-				.selectSubscrContObjects(userId);
+	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
+		List<ContObject> result = subscriberRepository
+				.selectContObjects(subscriberId);
 		return result;
 	}
 
@@ -64,7 +59,7 @@ public class SubscriberService {
 
 	@Transactional(readOnly = true)
 	@Deprecated
-	public List<ContEvent> findContEvents(long contObjectId) {
+	public List<ContEvent> findContObjectEvents(long contObjectId) {
 		List<ContEvent> result = contEventRepository
 				.findByContObjectId(contObjectId);
 		return result;
@@ -90,7 +85,6 @@ public class SubscriberService {
 		return subscrUserRepository.findByUserNameIgnoreCase(userName);
 	}
 
-	
 	/**
 	 * 
 	 * @param subscrUserId
@@ -100,6 +94,14 @@ public class SubscriberService {
 	public List<Subscriber> selectSubscrRoles(long subscrUserId) {
 		checkArgument(subscrUserId > 0);
 		return subscriberRepository.selectByUserId(subscrUserId);
-	}	
-	
+	}
+
+	@Transactional(readOnly = true)
+	public boolean checkContObjectSubscription(long subscriberId,
+			long contObjectId) {
+		List<Long> resultIds = subscriberRepository.selectContObjectId(
+				subscriberId, contObjectId);
+		return resultIds.size() > 0;
+	}
+
 }
