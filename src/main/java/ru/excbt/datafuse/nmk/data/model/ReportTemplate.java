@@ -16,6 +16,7 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,6 +40,10 @@ public class ReportTemplate extends AbstractAuditableModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
 	private ReportTypeKey reportTypeKey;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	private ReportType reportType;
 
 	@Column(name = "report_template_name")
 	private String name;
@@ -76,8 +81,6 @@ public class ReportTemplate extends AbstractAuditableModel {
 	public void setSubscriber(Subscriber subscriber) {
 		this.subscriber = subscriber;
 	}
-
-
 
 	public String getName() {
 		return name;
@@ -161,6 +164,14 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	public boolean isCommon() {
 		return this.subscriber == null;
+	}
+
+	public ReportType getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(ReportType reportType) {
+		this.reportType = reportType;
 	}
 	
 }
