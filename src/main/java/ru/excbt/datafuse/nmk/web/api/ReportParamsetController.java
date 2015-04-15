@@ -62,7 +62,7 @@ public class ReportParamsetController extends WebApiController {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
-						true);
+						true, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -75,7 +75,8 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getConsReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -88,7 +89,8 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getEventReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -102,7 +104,7 @@ public class ReportParamsetController extends WebApiController {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
-						true);
+						true, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -115,7 +117,8 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getReportParamsetListArchCons() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -128,7 +131,8 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getReportParamsetListArchEvent() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true);
+				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -287,7 +291,7 @@ public class ReportParamsetController extends WebApiController {
 
 		try {
 			resultEntity = reportParamsetService.createByTemplate(srcId,
-					reportParamset);
+					reportParamset, currentSubscriberService.getSubscriber());
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -365,6 +369,22 @@ public class ReportParamsetController extends WebApiController {
 
 	/**
 	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportParamsetAvailableContObjectUnits(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		checkNotNull(reportParamsetId);
+		List<ContObject> resultList = reportParamsetService
+				.selectParamsetAvailableContObjectUnits(reportParamsetId,
+						currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
 	 * @param reportParamsetId
 	 * @param contObjectId
 	 * @return
@@ -395,8 +415,8 @@ public class ReportParamsetController extends WebApiController {
 					reportParamsetId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
-		}		
-		
+		}
+
 		return ResponseEntity.accepted().body(resultEntity);
 	}
 

@@ -300,7 +300,7 @@ public class ReportTemplateController extends WebApiController {
 
 		try {
 			resultEntity = reportTemplateService.createByTemplate(srcId,
-					reportTemplate);
+					reportTemplate, currentSubscriberService.getSubscriber());
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {

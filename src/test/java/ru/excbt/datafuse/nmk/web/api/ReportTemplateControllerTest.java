@@ -28,7 +28,6 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-
 	@Test
 	public void testGetCommReportTemplates() throws Exception {
 		testJsonGet("/api/reportTemplate/commerce");
@@ -43,7 +42,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	public void testGetCommReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/commerce");
 	}
-	
+
 	@Test
 	public void testGetConsReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/cons");
@@ -61,8 +60,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 		rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
-		String urlStr = "/api/reportTemplate/commerce/"
-				+ rt.getId();
+		String urlStr = "/api/reportTemplate/commerce/" + rt.getId();
 
 		ResultActions resultActionsAll;
 		try {
@@ -87,28 +85,34 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 				.selectSubscriberReportTemplates(
 						currentSubscriberService.getSubscriberId(),
 						ReportTypeKey.COMMERCE_REPORT, true);
-		
+
 		assertTrue(subscriberReportTemplates.size() > 0);
 		ReportTemplate rt = subscriberReportTemplates.get(0);
-		
-		//rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
-		//String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
+
+		// rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
+		// String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
 		String urlStr = "/api/reportTemplate/archive/move";
-		
+
 		ResultActions resultActionsAll;
 		try {
 			resultActionsAll = mockMvc.perform(put(urlStr)
 					.param("reportTemplateId", rt.getId().toString())
 					.with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
-			
+
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
-			
+
 			resultActionsAll.andExpect(status().isAccepted());
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail(e.toString());
 		}
 	}
+
+	@Test
+	public void testGetAvailableContbjects() throws Exception {
+		testJsonGet("/api/reportParamset/0/contObject/available");
+	}
+
 }
