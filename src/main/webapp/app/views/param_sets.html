@@ -41,13 +41,13 @@
                                             <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-md-3">
                                             <b>{{object.reportType}}</b> <small>(вариантов: {{object.templatesCount}})</small>
                                         </div>
                                         <div class="col-md-2">
                                              <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
                                         </div>
-                                        <div class="col-md-7">
+                                        <div class="col-md-6">
                                             
                                         </div>
                                     </td>
@@ -321,7 +321,7 @@
 <div id="createParamsetModal" class="modal fade" role="dialog"
 	aria-labelledby="createParamsetLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content" ng-class="{'modalWindow_wide': set_of_objects_flag}">
 
 		<div class="modal-header">
 			<h3 id="createParamsetLabel">
@@ -331,117 +331,182 @@
 		<div class="modal-body ">
             
             
-            <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
-                            <tr>
-                                <td class="col-sm-3"><label for="inputType">Тип отчета</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
-                                        <option>Коммерческий</option>
-                                        <option>Сводный</option>
-                                        <option>Сведения</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
-                                        <option>Шаблон 1</option>
-                                        <option>Ш 2</option>
-                                        <option>Нолбаш E</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
-                                </td>
-                            </tr>
+            <div role="tabpanel">
 
-<!--
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
-                                </td>
-                            </tr>
--->
-                            <tr>
-                                <td class="col-sm-3"><label for="inputPeriod">Период</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
-                                        <option>Вчера</option>
-                                        <option>Последний месяц</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left">
-                                     <div ng-controller="DataRangeSettings">
-                                            <input style="font-size: 12px;width:329px" date-range-picker class="form-control date-picker"
-                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
-                                    </div>
-                                    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Наименование варианта">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
-                                        <option>PDF</option>
-                                        <option>HTML</option>
-                                    </select>
-                                </td>
-                            </tr>
+              <!-- Навигационная полоса -->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true">Выбор объектов</a></li>
+                <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>
 
-                            <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox >По умолчанию
-                                </td>
+              </ul>
 
-                            </tr>                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Дата создания:</label>
-                                </td>
-                                <td class="textAlign_left col-sm-9">
-                                    
-                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
-                                </td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
-                                </td>
-                            </tr>
-                            
-                        </table>
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Варианты отчетов-->
+                <div role="tabpanel" class="tab-pane fade in active" id="main_properties">
+            
+            
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType">Тип отчета</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
+                                                <option>Коммерческий</option>
+                                                <option>Сводный</option>
+                                                <option>Сведения</option>
+                                            </select>
+                                        </td>
+                                    </tr>
 
-                    </div>    
-                    
-                </div>
-                
-            </div>        
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
+                                                <option>Шаблон 1</option>
+                                                <option>Ш 2</option>
+                                                <option>Нолбаш E</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="inputDescription" >Описание</label>
+                                        </td>
+                                        <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
+                                        </td>
+                                    </tr>
+
+        <!--
+                                    <tr>
+                                        <td><label for="inputComment" >Комментарий</label>
+                                        </td>
+                                        <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
+                                        </td>
+                                    </tr>
+        -->
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputPeriod">Период</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
+                                                <option>Вчера</option>
+                                                <option>Последний месяц</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left">
+                                             <div ng-controller="DataRangeSettings">
+                                                    <input style="font-size: 12px;width:329px" date-range-picker class="form-control date-picker"
+                                                        type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                            </div>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Наименование варианта">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
+                                                <option>PDF</option>
+                                                <option>HTML</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox >По умолчанию
+                                        </td>
+
+                                    </tr>                            
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputStartDate">Дата создания:</label>
+                                        </td>
+                                        <td class="textAlign_left col-sm-9">
+
+                                            <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
+                                        </td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
+                                        </td>
+                                    </tr>
+
+                                </table>
+
+                            </div> 
+                        </div>
+
+                    </div>
+                  </div>    
+                <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <label>Список объектов</label>
+                            <div class="col-md-6 object_list" id="object_list">
+                                <div crud-grid-objects table="'../api/subscr/contObjects'"
+                                    columns='[
+
+                                              {"name":"fullName", "header" : "Название", "class":"col-md-5"},
+                                             {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+
+                                            ]'
+
+                                    captions='{"loading":"loading", "totalElements":"totalElements"}'
+                                    exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
+
+                                    breports='true'  
+                                    bgroup='true'
+
+                                     bextramenu='true'
+
+                                     bobject='true'
+
+                                 ></div>
+                            </div>
+                            <div class="col-md-6 object_list" id="object_list">
+                                <div crud-grid-objects table="'../api/subscr/contObjects'"
+                                    columns='[
+
+                                              {"name":"fullName", "header" : "Название", "class":"col-md-5"},
+                                             {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+
+                                            ]'
+
+                                    captions='{"loading":"loading", "totalElements":"totalElements"}'
+                                    exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
+
+                                    breports='true'  
+                                    bgroup='true'
+
+                                     bextramenu='true'
+
+                                     bobject='true'
+
+                                 ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
 
 			
 		</div>
@@ -492,6 +557,64 @@
 				</p>
 
 			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="deleteObject(currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отмена
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<div id="addObjectsModal" class="modal fade" role="dialog"
+	aria-labelledby="addObjectsLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="addObjectsLabel">
+				Добавление объектов в вариант отчета 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<div crud-grid-objects table="'../api/subscr/contObjects'"
+                columns='[
+
+                          {"name":"fullName", "header" : "Название", "class":"col-md-5"},
+                         {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+
+                        ]'
+
+                captions='{"loading":"loading", "totalElements":"totalElements"}'
+                exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
+
+                breports='true'  
+                bgroup='true'
+
+                 bextramenu='true'
+
+                 bobject='true'
+
+             ></div>
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">

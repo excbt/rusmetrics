@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMK');
 
-app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificationFactory', function($scope,crudGridDataFactory, notificationFactory){
+app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $resource,crudGridDataFactory, notificationFactory){
     
     $scope.active_tab_active_templates = true;
     
@@ -41,17 +41,20 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     
     $scope.objects = [
         {
-            "reportTypeName":"Коммерческий"
+            "reportType":"COMMERCIAL_REPORT"
+            ,"reportTypeName":"Коммерческий"
             ,"templatesCount": 0
             ,"templates": []
         }
         ,        {
-            "reportTypeName":"Сводный"
+            "reportType":"CONS_REPORT"
+            ,"reportTypeName":"Сводный"
             ,"templatesCount":0
             ,"templates": []
         }
         ,        {
-            "reportTypeName":"События"
+            "reportType":"EVENT_REPORT"
+            ,"reportTypeName":"События"
             ,"templatesCount": 0
             ,"templates": []
         }
@@ -65,8 +68,13 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     
     var successCallback = function (e) {
         notificationFactory.success();
-        $('#deleteObjectModal').modal('hide');
-        $scope.currentObject={};
+        $('#editTemplateModal').modal('hide');
+        $('#moveToArchiveModal').modal('hide');
+        //$scope.currentObject={};
+        if (!$scope.createByTemplate_flag){
+            $scope.getActive();
+        };
+        $scope.setDefault();
     };
 
 
@@ -79,6 +87,9 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     $scope.getCommerceTemplates = function (table) {
         crudGridDataFactory(table).query(function (data) {
             $scope.commerce.templates = data;
+            if ($scope.commerce.templates!=[]){
+                $scope.objects[0].reportTypeName = $scope.commerce.templates[0].reportType.caption;
+            }
             $scope.objects[0].templatesCount = $scope.commerce.templates.length;
             $scope.objects[0].templates = $scope.commerce.templates;
         });
@@ -86,6 +97,9 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     $scope.getConsTemplates = function (table) {
         crudGridDataFactory(table).query(function (data) {
             $scope.cons.templates = data; 
+            if ($scope.cons.templates!=[]){
+                $scope.objects[1].reportTypeName = $scope.cons.templates[0].reportType.caption;
+            }
             $scope.objects[1].templatesCount = $scope.cons.templates.length;
             $scope.objects[1].templates = $scope.cons.templates;
         });
@@ -93,6 +107,9 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     $scope.getEventTemplates = function (table) {
         crudGridDataFactory(table).query(function (data) {
             $scope.event.templates = data;
+            if ($scope.event.templates!=[]){
+                $scope.objects[2].reportTypeName = $scope.event.templates[0].reportType.caption;
+            }
             $scope.objects[2].templatesCount = $scope.event.templates.length;
             $scope.objects[2].templates = $scope.event.templates;
         });
@@ -146,9 +163,9 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
     $scope.updateTemplate = function(object){
         var table = "";
         if ($scope.createByTemplate_flag){
-            object.activeStartDate = activeStartDateFormat==null?null:activeStartDateFormat.getTime();
-            table = $scope.crudTableName+"/createByTemplate/"    
-            crudGridDataFactory(table).save({srcReportTemplateId: $scope.archiveTemplate.id}, object, successCallback, errorCallback);
+            object.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveTemplate.id;    
+            crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
             return;
         };
         var reportType = object.reportTypeKey;
@@ -161,9 +178,16 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
         crudGridDataFactory(table).update({reportTemplateId: object.id}, object, successCallback, errorCallback);
     };
     
+    $scope.toArchive = function(url, id) {
+        return $resource(url, {
+            }, {
+                update: {method: 'PUT', params:{reportTemplateId:id}}
+            });
+    };
+    
     $scope.moveToArchive = function(object){
-        var table = $scope.crudTableName+"/archive/move"    
-        crudGridDataFactory(table).update({reportTemplateId: object.id}, object, successCallback, errorCallback);
+        var table = $scope.crudTableName+"/archive/move"  
+        $scope.toArchive(table, object.id).update({}, object, successCallback, errorCallback);
     };
     
 //    $scope.createTemplate = function(object){
@@ -346,7 +370,7 @@ app.controller('ReportSettingsCtrl',['$scope', 'crudGridDataFactory', 'notificat
         item.class= item.selected?"active":"";
     };
     
-    $scope.setToDefault = function(){
+    $scope.setDefault = function(){
         $scope.currentObject = {};
         $scope.createByTemplate_flag = false;
         $scope.archiveTemplate = {};
