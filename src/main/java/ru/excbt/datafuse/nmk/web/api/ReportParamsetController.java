@@ -357,7 +357,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetContObjectUnits(
+	public ResponseEntity<?> getContObjectUnits(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
@@ -372,7 +372,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetAvailableContObjectUnits(
+	public ResponseEntity<?> getAvailableContObjectUnits(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
@@ -390,7 +390,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> postReportParamsetAddUnit(
+	public ResponseEntity<?> addReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId) {
 
@@ -426,23 +426,23 @@ public class ReportParamsetController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObject/{reportParamsetUnitId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportParamsetDeleteUnit(
+	@RequestMapping(value = "/{reportParamsetId}/contObject/{contObjectId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@PathVariable(value = "reportParamsetUnitId") Long reportParamsetUnitId) {
+			@PathVariable(value = "contObjectId") Long contObjectId) {
 
 		checkNotNull(reportParamsetId);
-		checkNotNull(reportParamsetUnitId);
+		checkNotNull(contObjectId);
 
 		try {
 			reportParamsetService.deleteUnitFromParamset(reportParamsetId,
-					reportParamsetUnitId);
+					contObjectId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
 			logger.error(
-					"Can't delete ReportParamsetUnit(id={}) from ReportParamset (id={}) : {}",
-					reportParamsetUnitId, reportParamsetId, e);
+					"Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
+					reportParamsetId, contObjectId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
 		}
