@@ -33,7 +33,6 @@ public class ReportParamsetService implements SecuredRoles {
 	@Autowired
 	private ReportParamsetUnitRepository reportParamsetUnitRepository;
 
-
 	/**
 	 * 
 	 * @param entity
@@ -122,8 +121,7 @@ public class ReportParamsetService implements SecuredRoles {
 		List<ReportParamset> commonReportParams = reportParamsetRepository
 				.selectCommonReportParamset(reportType, isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
-				.selectSubscriberReportParamset(
-						subscriberId, reportType,
+				.selectSubscriberReportParamset(subscriberId, reportType,
 						isActive);
 
 		List<ReportParamset> result = new ArrayList<>();
@@ -274,18 +272,19 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
-	public void deleteUnitFromParamset(long reportParamsetId,
-			long reportParamsetUnitId) {
-		ReportParamsetUnit unit = reportParamsetUnitRepository
-				.findOne(reportParamsetUnitId);
-		if (unit.getReportParamset().getId() != reportParamsetId) {
+	public void deleteUnitFromParamset(long reportParamsetId, long contObjectId) {
+
+		List<Long> ids = reportParamsetUnitRepository.selectObjectIds(
+				reportParamsetId, contObjectId);
+
+		if (ids.size() != 1) {
 			throw new PersistenceException(
 					String.format(
-							"Can't delete ReportParamsetUnit(id=%d) from ReportParamset (id=%d)",
-							reportParamsetUnitId, reportParamsetId));
+							"Can't delete ReportParamsetUnit. (reportParamsetId=%d, contObjectId=%d)",
+							reportParamsetId, contObjectId));
 		}
 
-		reportParamsetUnitRepository.delete(reportParamsetUnitId);
+		reportParamsetUnitRepository.delete(ids.get(0));
 	}
 
 	/**
