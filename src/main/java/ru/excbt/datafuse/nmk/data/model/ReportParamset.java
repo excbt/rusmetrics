@@ -53,6 +53,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Enumerated(EnumType.STRING)	
 	@Column (name = "output_file_type")
 	private ReportOutputType outputFileType;
+
+	@Column (name = "output_file_name_template")
+	private String outputFileNameTemplate;
 	
 	@ManyToOne(fetch = FetchType.EAGER)	
 	@JoinColumn(name="report_period", insertable = false, updatable = false)
@@ -230,6 +233,18 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public boolean isCommon() {
 		return this.subscriber == null;
+	}
+
+	public String getOutputFileNameTemplate() {
+		return outputFileNameTemplate;
+	}
+
+	public void setOutputFileNameTemplate(String outputFileNameTemplate) {
+		this.outputFileNameTemplate = outputFileNameTemplate;
+	}
+
+	public void setReportPeriod(ReportPeriod reportPeriod) {
+		this.reportPeriod = reportPeriod;
 	}
 	
 }
