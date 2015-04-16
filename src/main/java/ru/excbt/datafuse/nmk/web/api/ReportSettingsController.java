@@ -8,7 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -32,6 +34,12 @@ public class ReportSettingsController extends WebApiController {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private ReportSheduleTypeRepository reportSheduleTypeRepository;
+
+	@Autowired
+	private ReportActionTypeRepository reportActionTypeRepository;
+	
 	/**
 	 * 
 	 * @return
@@ -51,6 +59,25 @@ public class ReportSettingsController extends WebApiController {
 	}
 
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/reportSheduleType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportSheduleTypeJson() {
+		return ResponseEntity.ok(reportActionTypeRepository.findAll());
+	}
+	
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/reportActionType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportActionTypeJson() {
+		return ResponseEntity.ok(reportSheduleTypeRepository.findAll());
+	}
+	
 
 
 
