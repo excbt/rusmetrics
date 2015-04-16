@@ -100,6 +100,20 @@ public class ReportShedule extends AbstractAuditableModel {
 	@JoinColumn (name = "report_shedule_action5", insertable = false, updatable = false)
 	private ReportActionType sheduleAction5;
 	
+	@Column(name = "report_shedule_action1_param")	
+	private String sheduleAction1Param;
+
+	@Column(name = "report_shedule_action2_param")	
+	private String sheduleAction2Param;
+	
+	@Column(name = "report_shedule_action3_param")	
+	private String sheduleAction3Param;
+
+	@Column(name = "report_shedule_action4_param")	
+	private String sheduleAction4Param;
+
+	@Column(name = "report_shedule_action5_param")	
+	private String sheduleAction5Param;
 	
 	@Version
 	private int version;
@@ -254,6 +268,46 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	public void setSheduleAction5(ReportActionType sheduleAction5) {
 		this.sheduleAction5 = sheduleAction5;
+	}
+
+	public String getSheduleAction1Param() {
+		return sheduleAction1Param;
+	}
+
+	public void setSheduleAction1Param(String sheduleAction1Param) {
+		this.sheduleAction1Param = sheduleAction1Param;
+	}
+
+	public String getSheduleAction2Param() {
+		return sheduleAction2Param;
+	}
+
+	public void setSheduleAction2Param(String sheduleAction2Param) {
+		this.sheduleAction2Param = sheduleAction2Param;
+	}
+
+	public String getSheduleAction3Param() {
+		return sheduleAction3Param;
+	}
+
+	public void setSheduleAction3Param(String sheduleAction3Param) {
+		this.sheduleAction3Param = sheduleAction3Param;
+	}
+
+	public String getSheduleAction4Param() {
+		return sheduleAction4Param;
+	}
+
+	public void setSheduleAction4Param(String sheduleAction4Param) {
+		this.sheduleAction4Param = sheduleAction4Param;
+	}
+
+	public String getSheduleAction5Param() {
+		return sheduleAction5Param;
+	}
+
+	public void setSheduleAction5Param(String sheduleAction5Param) {
+		this.sheduleAction5Param = sheduleAction5Param;
 	}
 
 	
