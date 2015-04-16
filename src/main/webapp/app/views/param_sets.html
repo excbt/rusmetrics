@@ -365,7 +365,7 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
+                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;" ng-model="currentObject.reportTemplate.id">
                                                 <option>Шаблон 1</option>
                                                 <option>Ш 2</option>
                                                 <option>Нолбаш E</option>
@@ -375,13 +375,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputName">Наименование</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта">
+                                        <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта" ng-model="currentObject.name">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><label for="inputDescription" >Описание</label>
                                         </td>
-                                        <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
+                                        <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.description"></textarea>
                                         </td>
                                     </tr>
 
@@ -396,13 +396,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
+                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey">
                                                 <option>Вчера</option>
                                                 <option>Последний месяц</option>
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr ng-show="currentObject.reportPeriod.sign==null">
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
@@ -416,13 +416,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без указания расширения</small>)</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Наименование варианта">
+                                        <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Шаблон имени файла" ng-model="currentObject.outputFileTemplateName">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
+                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.outputFileType"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
                                             </select>
@@ -430,7 +430,7 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox >По умолчанию
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
                                         </td>
 
                                     </tr>                            
@@ -439,7 +439,7 @@
                                         </td>
                                         <td class="textAlign_left col-sm-9">
 
-                                            <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
+                                            <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" disabled=true> 
                                         </td>
 
                                     </tr>
@@ -447,7 +447,7 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
+                                        <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeEndDateFormat" disabled=true> 
                                         </td>
                                     </tr>
 
@@ -465,25 +465,14 @@
 <!--                            </div>    -->
                             <div class="col-md-5 object_list" id="object_list">
                                 <div><label>Выбранные объекты</label></div>
-                                <div crud-grid-objects table="'../api/subscr/contObjects'"
-                                    columns='[
-
-                                              {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-                                             {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
-
-                                            ]'
-
-                                    captions='{"loading":"loading", "totalElements":"totalElements"}'
-                                    exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
-
-                                    breports='true'  
-                                    bgroup='true'
-
-                                     bextramenu='true'
-
-                                     bobject='true'
-
-                                 ></div>
+                                <div>
+                                    <table>
+                                        <tr ng-repeat="object in selectedObjects">
+                                            <td><input type="checkbox" ng-model="object.selected">{{object.name}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                             <div class="col-md-1 object_list object_list_button">
                                     <div class="btn-group-vertical">
@@ -493,25 +482,14 @@
                             </div>
                             <div class="col-md-5 object_list" id="object_list">
                                  <div><label>Доступные объекты</label></div>
-                                <div crud-grid-objects table="'../api/subscr/contObjects'"
-                                    columns='[
-
-                                              {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-                                             {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
-
-                                            ]'
-
-                                    captions='{"loading":"loading", "totalElements":"totalElements"}'
-                                    exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
-
-                                    breports='true'  
-                                    bgroup='true'
-
-                                     bextramenu='true'
-
-                                     bobject='true'
-
-                                 ></div>
+                                <div>
+                                    <table>
+                                        <tr ng-repeat="object in availableObjects">
+                                            <td><input type="checkbox" ng-model="object.selected">{{object.name}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                             <div class="col-md-1 column_list column_list_button">
                                     <div class="btn-group-vertical">
