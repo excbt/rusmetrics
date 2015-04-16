@@ -29,8 +29,8 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ReportShedule> selectReportShedule(
-			DateTime dateTime, long subscriberId) {
+	public List<ReportShedule> selectReportShedule(DateTime dateTime,
+			long subscriberId) {
 		return reportSheduleRepository.selectReportShedule(subscriberId,
 				dateTime.toDate());
 	}
@@ -162,7 +162,8 @@ public class ReportSheduleService implements SecuredRoles {
 
 	@Transactional(readOnly = true)
 	public ReportShedule findOne(long reportSheduleId) {
-		return reportSheduleRepository.findOne(reportSheduleId);
+		ReportShedule result = reportSheduleRepository.findOne(reportSheduleId);
+		return result;
 	}
 
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })

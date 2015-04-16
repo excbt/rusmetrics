@@ -32,7 +32,7 @@ public class ReportParamset extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = -4162460506388144170L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "report_template_id")
 	private ReportTemplate reportTemplate;
 	

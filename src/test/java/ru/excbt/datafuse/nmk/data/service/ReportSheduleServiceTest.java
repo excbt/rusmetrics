@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
@@ -64,10 +66,10 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 				.selectReportParamset(sReportTemplate.getId(), DateTime.now());
 
 		if (reportParamsetList.size() == 0) {
-//			sReportParamset = reportParamsetService.createReportParamsetMaster(
-//					sReportTemplate.getId(), "Auto Genereate for TEST",
-//					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
-//					currentSubscriberService.getSubscriberId());
+			sReportParamset = reportParamsetService.createReportParamsetMaster(
+					sReportTemplate.getId(), "Auto Genereate for TEST",
+					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
+					currentSubscriberService.getSubscriberId());
 		} else {
 			sReportParamset = reportParamsetList.get(0);
 		}

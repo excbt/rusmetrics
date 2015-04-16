@@ -146,8 +146,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ReportParamset findOne(long id) {
-		ReportParamset result = reportParamsetRepository.findOne(id);
+	public ReportParamset findOne(long reportParamsetId) {
+		ReportParamset result = reportParamsetRepository.findOne(reportParamsetId);
 		if (result.getReportTemplate() != null) {
 			result.getReportTemplate().getId();
 		}
