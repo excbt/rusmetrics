@@ -278,12 +278,20 @@ input[type="radio"]{
 	height: 600px; overflow-y: scroll;	
 }
 
-.column_list, .object_list  {
+.column_list  {
     height: 353px;
+}
+
+.object_list  {
+    height: 520px;
 }
 
 .column_list_button {
     padding-top: 150px;
+}
+
+.object_list_button  {
+   padding-top: 250px;
 }
 #system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
       overflow-y: scroll;

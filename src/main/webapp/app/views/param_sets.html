@@ -17,18 +17,18 @@
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
         <!--       Активные / Архивные -->
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=true" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=false" style="width:108px;text-align:center">Архив</a></li>
+            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=true; getActive();" >Действующие</a></li>
+            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=false; getArchive();" style="width:108px;text-align:center">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные варианты-->
-            <div role="tabpanel" class="tab-pane fade in active" id="active_templates">
+            <div role="tabpanel" class="tab-pane fade in active" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
                 <table id="datatabl" class="table table-bordered table-striped  table-condensed noMarginBottom">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> 
 
@@ -42,10 +42,10 @@
 
                                         </div>
                                         <div class="col-md-3">
-                                            <b>{{object.reportType}}</b> <small>(вариантов: {{object.templatesCount}})</small>
+                                            <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount}})</small>
                                         </div>
                                         <div class="col-md-2">
-                                             <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
+                                             <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="selectedItem(object)" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
                                         </div>
                                         <div class="col-md-6">
                                             
@@ -59,7 +59,7 @@
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
-                                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
 
                                          <td class="col-md-12">
                                              <div class="col-md-1" style="width:45px;">
@@ -68,9 +68,9 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" data-target="#editParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(oldObject)" data-target="#editParamsetModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -78,10 +78,10 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-4">     
-                                                    {{oldObject.reportSetName}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.reportSetFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportSetPeriod}}</label>
+                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label>
                                             </div>
                                             <div class="col-md-5">     
-                                                    создан: {{oldObject.reportSetCreateDate}}
+                                                    действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
 
@@ -105,12 +105,12 @@
 <!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table - active               -->
             </div>
 <!--            Архивные шаблоны-->
-             <div role="tabpanel" class="tab-pane fade " id="arhive_templates">
+             <div role="tabpanel" class="tab-pane fade " id="arhive_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
                 <table id="datatabl" class="table table-bordered table-striped  table-condensed noMarginBottom">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> 
 
@@ -124,7 +124,7 @@
 
                                         </div>
                                         <div class="col-md-10">
-                                            <b>{{object.reportType}}</b> <small>(вариантов: {{object.templatesCount}})</small>
+                                            <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount}})</small>
                                         </div>
 
 
@@ -137,7 +137,7 @@
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
-                                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(oldObject)" ng-dblclick="">
 
                                          <td class="col-md-12">
                                              <div class="col-md-1" style="width:45px;">
@@ -154,10 +154,10 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-4 ">     
-                                                    {{oldObject.reportSetName}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.reportSetFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportSetPeriod}}</label>
+                                                    {{oldObject.reportSetName}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportSetPeriod}}</label>
                                             </div>
                                             <div class="col-md-5">     
-                                                    в архиве с: {{oldObject.reportSetArchiveDate}}
+                                                    в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
 
@@ -414,7 +414,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла</label>
+                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без указания расширения</small>)</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Наименование варианта">
                                         </td>
@@ -461,8 +461,10 @@
                 <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
                     <div class="container-fluid">
                         <div class="row-fluid">
-                            <label>Список объектов</label>
-                            <div class="col-md-6 object_list" id="object_list">
+<!--                            <div class="col-md-12"><label>Списоки объектов</label>-->
+<!--                            </div>    -->
+                            <div class="col-md-5 object_list" id="object_list">
+                                <div><label>Выбранные объекты</label></div>
                                 <div crud-grid-objects table="'../api/subscr/contObjects'"
                                     columns='[
 
@@ -483,7 +485,14 @@
 
                                  ></div>
                             </div>
-                            <div class="col-md-6 object_list" id="object_list">
+                            <div class="col-md-1 object_list object_list_button">
+                                    <div class="btn-group-vertical">
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
+                                    </div>
+                            </div>
+                            <div class="col-md-5 object_list" id="object_list">
+                                 <div><label>Доступные объекты</label></div>
                                 <div crud-grid-objects table="'../api/subscr/contObjects'"
                                     columns='[
 
@@ -503,6 +512,14 @@
                                      bobject='true'
 
                                  ></div>
+                            </div>
+                            <div class="col-md-1 column_list column_list_button">
+                                    <div class="btn-group-vertical">
+<!--
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
+-->
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -551,70 +568,12 @@
 				<p>
 					<label class="text-warning"> Вы хотите переместить в архив  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label> 
+					<label class="text-primary">{{currentObject.name}}</label> 
 					<label
 						class="text-warning"> ? </label>
 				</p>
 
 			</form>
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
-								value="Удалить" />
-						</div>
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
-								Отмена
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
-
-<div id="addObjectsModal" class="modal fade" role="dialog"
-	aria-labelledby="addObjectsLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="addObjectsLabel">
-				Добавление объектов в вариант отчета 
-			</h3>
-		</div>
-		<div class="modal-body">
-			<div crud-grid-objects table="'../api/subscr/contObjects'"
-                columns='[
-
-                          {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-                         {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
-
-                        ]'
-
-                captions='{"loading":"loading", "totalElements":"totalElements"}'
-                exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
-
-                breports='true'  
-                bgroup='true'
-
-                 bextramenu='true'
-
-                 bobject='true'
-
-             ></div>
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
