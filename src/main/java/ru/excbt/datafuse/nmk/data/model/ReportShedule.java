@@ -327,6 +327,10 @@ public class ReportShedule extends AbstractAuditableModel {
 		return subscriberId;
 	}
 
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+	
 	public String getComment() {
 		return comment;
 	}

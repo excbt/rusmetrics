@@ -116,6 +116,8 @@ public class ReportSheduleController extends WebApiController {
 		}
 
 		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+		
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
 
@@ -130,8 +132,8 @@ public class ReportSheduleController extends WebApiController {
 					.build();
 		}
 
-		URI location = URI.create(request.getRequestURI() + "/"
-				+ +resultEntity.getId());
+		URI location = URI.create(request.getRequestURI()
+				+ resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
