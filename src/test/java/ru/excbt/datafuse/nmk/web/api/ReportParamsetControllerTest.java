@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
@@ -54,7 +54,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		rp.set_active(true);
 		rp.setActiveStartDate(new Date());
 		rp.setName("Created by REST");
-		rp.setOutputFileType(ReportOutputType.PDF);
+		rp.setOutputFileType(ReportOutputFileType.PDF);
 		rp.setReportPeriodKey(ReportPeriodKey.LAST_MONTH);
 		
 		String jsonBody = null;

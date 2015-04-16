@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 
 @Controller
@@ -37,7 +37,7 @@ public class ReportController {
 	 * @param endDateS
 	 * @return
 	 */
-	private Object processRequest(ReportOutputType reportType, long contObjectId,
+	private Object processRequest(ReportOutputFileType reportType, long contObjectId,
 			String beginDateS, String endDateS) {
 		boolean checkPass = true;
 
@@ -94,7 +94,7 @@ public class ReportController {
 
 		logger.trace("Fire commercialReportHtml");
 
-		return processRequest(ReportOutputType.HTML, contObjectId, beginDateS,
+		return processRequest(ReportOutputFileType.HTML, contObjectId, beginDateS,
 				endDateS);
 	}
 
@@ -113,7 +113,7 @@ public class ReportController {
 
 		logger.trace("Fire commercialReportPdf");
 
-		return processRequest(ReportOutputType.PDF, contObjectId, beginDateS,
+		return processRequest(ReportOutputFileType.PDF, contObjectId, beginDateS,
 				endDateS);
 	}
 

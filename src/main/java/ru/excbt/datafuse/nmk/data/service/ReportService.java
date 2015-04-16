@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 
 @Service
 public class ReportService {
@@ -35,7 +35,7 @@ public class ReportService {
 	 */
 	public String getCommercialReportPathHtml(long contObjectId,
 			DateTime beginDate, DateTime endDate) {
-		return getCommercialReportPath(ReportOutputType.HTML, contObjectId, beginDate, endDate);
+		return getCommercialReportPath(ReportOutputFileType.HTML, contObjectId, beginDate, endDate);
 	}
 
 	/**
@@ -47,7 +47,7 @@ public class ReportService {
 	 */
 	public String getCommercialReportPathPdf(long contObjectId,
 			DateTime beginDate, DateTime endDate) {
-		return getCommercialReportPath(ReportOutputType.PDF, contObjectId, beginDate, endDate);
+		return getCommercialReportPath(ReportOutputFileType.PDF, contObjectId, beginDate, endDate);
 	}
 
 	
@@ -58,7 +58,7 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	public String getCommercialReportPath(ReportOutputType reportType, long contObjectId,
+	public String getCommercialReportPath(ReportOutputFileType reportType, long contObjectId,
 			DateTime beginDate, DateTime endDate) {
 		checkNotNull(reportType);
 		checkArgument(contObjectId > 0);

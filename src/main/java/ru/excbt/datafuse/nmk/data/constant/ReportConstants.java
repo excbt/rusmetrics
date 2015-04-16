@@ -6,7 +6,7 @@ public class ReportConstants {
 	public final static String EXTERNAL_JASPER_SERVER_ENABLE = "EXTERNAL_JASPER_SERVER_ENABLE";
 	public final static String EXTERNAL_JASPER_SERVER_URL = "EXTERNAL_JASPER_SERVER_URL";
 
-	public enum ReportOutputType {
+	public enum ReportOutputFileType {
 		HTML, PDF, ZIP, XLS;
 
 		public String toLowerName() {

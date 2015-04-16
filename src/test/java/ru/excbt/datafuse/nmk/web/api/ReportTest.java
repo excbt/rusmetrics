@@ -11,7 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ReportTest extends AnyControllerTest {
@@ -24,7 +24,7 @@ public class ReportTest extends AnyControllerTest {
 	
 	
 	
-	private void redirectOption(ReportOutputType reportType) throws Exception {
+	private void redirectOption(ReportOutputFileType reportType) throws Exception {
 		assertNotNull(reportType);
 		
 		String urlStr = String.format(API_REPORT_URL + "/commercial/%d/%s", 18811505, reportType.toLowerName());
@@ -46,12 +46,12 @@ public class ReportTest extends AnyControllerTest {
 	
 	@Test
 	public void testReportHtmlRedirect() throws Exception {
-		redirectOption(ReportOutputType.HTML);
+		redirectOption(ReportOutputFileType.HTML);
 	}
 
 	@Test
 	public void testReportPdfRedirect() throws Exception {
-		redirectOption(ReportOutputType.PDF);
+		redirectOption(ReportOutputFileType.PDF);
 	}
 	
 	

@@ -20,8 +20,10 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportActionType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
-@Table(name="report_shedule")
+@Table(name = "report_shedule")
 public class ReportShedule extends AbstractAuditableModel {
 
 	/**
@@ -29,29 +31,33 @@ public class ReportShedule extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 2213169218870112017L;
 
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "subscriber_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "subscriber_id")
+	@JsonIgnore
 	private Subscriber subscriber;
-	
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "report_template_id")
+
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_template_id")
 	private ReportTemplate reportTemplate;
-	
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn (name = "report_paramset_id")
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_paramset_id")
 	private ReportParamset reportParamset;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_shedule_type")
 	private ReportSheduleTypeKey reportSheduleTypeKey;
 
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_type", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_type", insertable = false, updatable = false)
 	private ReportSheduleType reportSheduleType;
-	
+
 	@Column(name = "report_shedule_time_template")
 	private String sheduleTimeTemplate;
-	
+
 	@Column(name = "report_shedule_start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date sheduleStartDate;
@@ -59,48 +65,68 @@ public class ReportShedule extends AbstractAuditableModel {
 	@Column(name = "report_shedule_end_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date sheduleEndDate;
-	
-	@Enumerated(EnumType.STRING)	
-	@Column(name = "report_shedule_action1")	
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_shedule_action1")
 	private ReportActionKey sheduleAction1Key;
 
-	@Enumerated(EnumType.STRING)	
-	@Column(name = "report_shedule_action2")	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_shedule_action2")
 	private ReportActionKey sheduleAction2Key;
-	
-	@Enumerated(EnumType.STRING)	
-	@Column(name = "report_shedule_action3")	
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_shedule_action3")
 	private ReportActionKey sheduleAction3Key;
 
-	@Enumerated(EnumType.STRING)	
-	@Column(name = "report_shedule_action4")	
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_shedule_action4")
 	private ReportActionKey sheduleAction4Key;
-	
-	@Enumerated(EnumType.STRING)	
-	@Column(name = "report_shedule_action5")	
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_shedule_action5")
 	private ReportActionKey sheduleAction5Key;
 
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_action1", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_action1", insertable = false, updatable = false)
 	private ReportActionType sheduleAction1;
 
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_action2", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_action2", insertable = false, updatable = false)
 	private ReportActionType sheduleAction2;
-	
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_action3", insertable = false, updatable = false)
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_action3", insertable = false, updatable = false)
 	private ReportActionType sheduleAction3;
 
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_action4", insertable = false, updatable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_action4", insertable = false, updatable = false)
 	private ReportActionType sheduleAction4;
-	
-	@ManyToOne (fetch = FetchType.EAGER)
-	@JoinColumn (name = "report_shedule_action5", insertable = false, updatable = false)
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_shedule_action5", insertable = false, updatable = false)
 	private ReportActionType sheduleAction5;
-	
-	
+
+	@Column(name = "report_shedule_action1_param")
+	private String sheduleAction1Param;
+
+	@Column(name = "report_shedule_action2_param")
+	private String sheduleAction2Param;
+
+	@Column(name = "report_shedule_action3_param")
+	private String sheduleAction3Param;
+
+	@Column(name = "report_shedule_action4_param")
+	private String sheduleAction4Param;
+
+	@Column(name = "report_shedule_action5_param")
+	private String sheduleAction5Param;
+
+	@Column(name = "report_shedule_comment")
+	private String comment;
+
+	@Column(name = "report_shedule_description")
+	private String description;
+
 	@Version
 	private int version;
 
@@ -164,7 +190,8 @@ public class ReportShedule extends AbstractAuditableModel {
 		return reportSheduleTypeKey;
 	}
 
-	public void setReportSheduleTypeKey(ReportSheduleTypeKey reportSheduleTypeKey) {
+	public void setReportSheduleTypeKey(
+			ReportSheduleTypeKey reportSheduleTypeKey) {
 		this.reportSheduleTypeKey = reportSheduleTypeKey;
 	}
 
@@ -256,5 +283,68 @@ public class ReportShedule extends AbstractAuditableModel {
 		this.sheduleAction5 = sheduleAction5;
 	}
 
+	public String getSheduleAction1Param() {
+		return sheduleAction1Param;
+	}
+
+	public void setSheduleAction1Param(String sheduleAction1Param) {
+		this.sheduleAction1Param = sheduleAction1Param;
+	}
+
+	public String getSheduleAction2Param() {
+		return sheduleAction2Param;
+	}
+
+	public void setSheduleAction2Param(String sheduleAction2Param) {
+		this.sheduleAction2Param = sheduleAction2Param;
+	}
+
+	public String getSheduleAction3Param() {
+		return sheduleAction3Param;
+	}
+
+	public void setSheduleAction3Param(String sheduleAction3Param) {
+		this.sheduleAction3Param = sheduleAction3Param;
+	}
+
+	public String getSheduleAction4Param() {
+		return sheduleAction4Param;
+	}
+
+	public void setSheduleAction4Param(String sheduleAction4Param) {
+		this.sheduleAction4Param = sheduleAction4Param;
+	}
+
+	public String getSheduleAction5Param() {
+		return sheduleAction5Param;
+	}
+
+	public void setSheduleAction5Param(String sheduleAction5Param) {
+		this.sheduleAction5Param = sheduleAction5Param;
+	}
+
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
 	
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 }

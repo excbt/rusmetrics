@@ -9,15 +9,19 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
+import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
@@ -32,6 +36,12 @@ public class ReportParamsetService implements SecuredRoles {
 
 	@Autowired
 	private ReportParamsetUnitRepository reportParamsetUnitRepository;
+
+	@Autowired
+	private ReportTemplateService reportTemplateService;
+
+	@Autowired
+	private SubscriberService subscriberService;
 
 	/**
 	 * 
@@ -121,8 +131,8 @@ public class ReportParamsetService implements SecuredRoles {
 		List<ReportParamset> commonReportParams = reportParamsetRepository
 				.selectCommonReportParamset(reportType, isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
-				.selectSubscriberReportParamset(subscriberId, reportType,
-						isActive);
+				.selectSubscriberReportParamset(reportType, isActive,
+						subscriberId);
 
 		List<ReportParamset> result = new ArrayList<>();
 		result.addAll(commonReportParams);
@@ -136,8 +146,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ReportParamset findOne(long id) {
-		ReportParamset result = reportParamsetRepository.findOne(id);
+	public ReportParamset findOne(long reportParamsetId) {
+		ReportParamset result = reportParamsetRepository.findOne(reportParamsetId);
 		if (result.getReportTemplate() != null) {
 			result.getReportTemplate().getId();
 		}
@@ -356,6 +366,51 @@ public class ReportParamsetService implements SecuredRoles {
 		for (Long id : idsToCopy) {
 			addUnitToParamset(dstReportParamset, id);
 		}
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	public ReportParamset createReportParamsetMaster(long reportTemplateId,
+			String reportParamsetName, ReportPeriodKey reportPeriod,
+			ReportOutputFileType reportOutputFileType, long subscriberId) {
+
+		ReportTemplate reportTemplate = reportTemplateService
+				.findOne(reportTemplateId);
+		checkNotNull(reportTemplate, String.format(
+				"ReportTemplate (id=%d) not found", reportTemplateId));
+
+		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		checkNotNull(subscriber,
+				String.format("Subscriber (id=%d) not found", subscriberId));
+
+		ReportParamset reportParamset = new ReportParamset();
+		reportParamset.setSubscriber(subscriber);
+		reportParamset.setReportTemplate(reportTemplate);
+		reportParamset.setName(reportParamsetName);
+		reportParamset.setOutputFileType(reportOutputFileType);
+		reportParamset.setReportPeriodKey(reportPeriod);
+		reportParamset.setActiveStartDate(new Date());
+		reportParamset.set_active(true);
+
+		ReportParamset result = createOne(reportParamset);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param activeDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ReportParamset> selectReportParamset(long reportTemplateId,
+			DateTime activeDate) {
+		return reportParamsetRepository.selectReportParamset(reportTemplateId,
+				activeDate.toDate());
 	}
 
 }
