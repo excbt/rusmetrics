@@ -25,5 +25,15 @@ public class ReportSettingControllerTest extends AnyControllerTest {
 		testJsonGet("/api/reportSettings/reportPeriod");
 	}
 
+	@Test
+	public void testGetReportSheduleType() throws Exception {
+		testJsonGet("/api/reportSettings/reportSheduleType");
+	}
+
+	@Test
+	public void testGetReportActionType() throws Exception {
+		testJsonGet("/api/reportSettings/reportActionType");
+	}
+
 	
 }
