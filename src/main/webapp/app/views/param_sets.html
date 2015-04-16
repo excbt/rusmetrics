@@ -17,8 +17,8 @@
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
         <!--       Активные / Архивные -->
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=true; getActive();" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="active_tab_active_templates=false; getArchive();" style="width:108px;text-align:center">Архив</a></li>
+            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
+            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive();" style="width:108px;text-align:center">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
@@ -38,14 +38,14 @@
 
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
                                         <div class="col-md-3">
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount}})</small>
                                         </div>
                                         <div class="col-md-2">
-                                             <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="selectedItem(object)" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
+                                             <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addParamSet(object)" data-target="#createParamsetModal" data-toggle="modal">Добавить</i>
                                         </div>
                                         <div class="col-md-6">
                                             
@@ -68,9 +68,9 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(oldObject)" data-target="#editParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="setCurrentReportType(object);selectedItem(oldObject);createParamset_flag=false;" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="setCurrentReportType(object);selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -120,7 +120,7 @@
 
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
                                         <div class="col-md-10">
@@ -196,6 +196,7 @@
 </div>
 
 <!-- Edit paramset-->
+<!--
 <div id="editParamsetModal" class="modal fade" role="dialog"
 	aria-labelledby="editParamsetLabel" tabindex="-1">
 
@@ -231,6 +232,7 @@
                                 <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
                                 </td>
                             </tr>
+-->
 
 <!--
                             <tr>
@@ -240,6 +242,7 @@
                                 </td>
                             </tr>
 -->
+<!--
                             <tr>
                                 <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                 </td>
@@ -316,6 +319,7 @@
 		</span>
 	</div>
 </div>
+-->
 
 <!-- Create paramset-->
 <div id="createParamsetModal" class="modal fade" role="dialog"
@@ -324,8 +328,11 @@
 	<div class="modal-dialog  modal-content" ng-class="{'modalWindow_wide': set_of_objects_flag}">
 
 		<div class="modal-header">
-			<h3 id="createParamsetLabel">
+			<h3 id="createParamsetLabel" ng-show="createParamset_flag">
 				Создание варианта отчета
+			</h3>
+            <h3 id="createParamsetLabel" ng-show="!createParamset_flag">
+				Редактирование варианта отчета
 			</h3>
 		</div>
 		<div class="modal-body ">
@@ -333,10 +340,10 @@
             
             <div role="tabpanel">
 
-              <!-- Навигационная полоса -->
+              <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true">Выбор объектов</a></li>
+                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;saveParamset(currentObject);">Выбор объектов</a></li>
                 <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>
 
               </ul>
@@ -354,21 +361,26 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType">Тип отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;">
+                                        <td class="col-sm-9 textAlign_left">{{currentReportType.reportTypeName}}
+<!--
+                                            <select style="width: 150px;">
                                                 <option>Коммерческий</option>
                                                 <option>Сводный</option>
                                                 <option>Сведения</option>
                                             </select>
+-->
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;" ng-model="currentObject.reportTemplate.id">
+                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;" ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset">
+<!--
                                                 <option>Шаблон 1</option>
                                                 <option>Ш 2</option>
                                                 <option>Нолбаш E</option>
+-->
                                             </select>
                                         </td>
                                     </tr>
@@ -396,9 +408,11 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey">
+                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+<!--
                                                 <option>Вчера</option>
                                                 <option>Последний месяц</option>
+-->
                                             </select>
                                         </td>
                                     </tr>
@@ -414,7 +428,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без указания расширения</small>)</label>
+                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без расширения</small>)</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Шаблон имени файла" ng-model="currentObject.outputFileTemplateName">
                                         </td>
@@ -435,11 +449,11 @@
 
                                     </tr>                            
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputStartDate">Дата создания:</label>
+                                        <td class="col-sm-3"><label for="inputStartDate">Действует с:</label>
                                         </td>
                                         <td class="textAlign_left col-sm-9">
 
-                                            <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" disabled=true> 
+                                            <input class="marginRight28" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
                                         </td>
 
                                     </tr>
@@ -447,7 +461,7 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeEndDateFormat" disabled=true> 
+                                        <td class="col-sm-9 textAlign_left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
                                         </td>
                                     </tr>
 
@@ -463,42 +477,48 @@
                         <div class="row-fluid">
 <!--                            <div class="col-md-12"><label>Списоки объектов</label>-->
 <!--                            </div>    -->
-                            <div class="col-md-5 object_list" id="object_list">
+                            <div class="col-md-6 object_list" id="object_list">
                                 <div><label>Выбранные объекты</label></div>
                                 <div>
-                                    <table>
+                                    <table class="table table-condensed table-striped">
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td><input type="checkbox" ng-model="object.selected">{{object.name}}
+                                            <td><input type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
+<!--
                             <div class="col-md-1 object_list object_list_button">
                                     <div class="btn-group-vertical">
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
                                     </div>
                             </div>
-                            <div class="col-md-5 object_list" id="object_list">
+-->
+                            <div class="col-md-6 object_list" id="object_list">
                                  <div><label>Доступные объекты</label></div>
                                 <div>
-                                    <table>
+                                    <table class="table table-condensed table-striped">
                                         <tr ng-repeat="object in availableObjects">
-                                            <td><input type="checkbox" ng-model="object.selected">{{object.name}}
+                                            <td><input type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
+<!--
                             <div class="col-md-1 column_list column_list_button">
                                     <div class="btn-group-vertical">
+-->
 <!--
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
 -->
+<!--
                                     </div>
                             </div>
+-->
                         </div>
                     </div>
                 </div>    
@@ -507,6 +527,9 @@
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
+                    <div class="row" ng-show="!set_of_objects_flag">
+                        <label>При переходе на вкладку выбора объектов текущий вариант отчета будет сохранен!</label>
+                    </div>
 
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
@@ -516,7 +539,7 @@
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject');clearTariffDateSet()">
+								ng-click="exit('#currentObject');setDefault();set_of_objects_flag=false" data-target="#main_properties" data-toggle="tab">
 								Отменить
 							</button>
 						</div>
@@ -542,7 +565,7 @@
 			</h3>
 		</div>
 		<div class="modal-body">
-			<form name="deleteContactForm" novalidate>
+			<form name="moveForm" novalidate>
 				<p>
 					<label class="text-warning"> Вы хотите переместить в архив  
 					</label> 
@@ -560,13 +583,13 @@
 						<div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block"
 								ng-click="deleteObject(currentObject);"
-								value="Удалить" />
+								value="Переместить" />
 						</div>
 
 						<div class="col-xs-offset-2 col-md-3">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
-								Отмена
+								Отменить
 							</button>
 						</div>
 					</div>
@@ -579,3 +602,53 @@
 		</span>
 	</div>
 </div>
+        
+<div id="saveObjectModal" class="modal fade" role="dialog"
+	aria-labelledby="moveToArchiveLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="saveObjectLabel">
+				Сохранить вариант 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="saveContactForm" novalidate>
+				<p>
+					<label class="text-warning"> Перед выбором объектов необходимо сохранить вариант отчета!  
+					</label> 
+					<label class="text-primary">Сохранить {{currentObject.name}}</label> 
+					<label
+						class="text-warning"> ? </label>
+				</p>
+
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="saveParamset(currentObject); set_of_objects=true;"
+								value="Сохранить" data-target="set_of_objects" data-toggle="tab"/>
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="closeSaveObjectModal();set_of_objects_flag=false" data-target="#main_properties" data-toggle="tab">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+

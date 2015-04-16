@@ -1,9 +1,10 @@
 'use strict';
 var app = angular.module('portalNMK');
 
-app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFactory',function($scope, crudGridDataFactory, notificationFactory){
+app.controller('ParamSetsCtrl',['$scope', '$resource','crudGridDataFactory','notificationFactory',function($scope, $resource, crudGridDataFactory, notificationFactory){
     
-    $scope.active_tab_active_templates = true;
+    //$scope.active_tab_active_templates = true;
+    $scope.set_of_objects_flag = false;
     
     $scope.columns = [
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
@@ -48,10 +49,9 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
     
     $scope.crudTableName = "../api/reportParamset"; 
     
-
     $scope.objects = [
         {
-            "reportType":"COMMERCIAL_REPORT"
+            "reportType":"COMMERCE_REPORT"
             ,"reportTypeName":"Коммерческий"
             ,"paramsetsCount": 0
             ,"paramsets": []
@@ -70,38 +70,73 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
         }
     ];
     
+    //report types
+    $scope.reportTypes = [];
+    $scope.getReportTypes = function(){
+        var table = "../api/reportSettings/reportType";
+        crudGridDataFactory(table).query(function(data){
+            $scope.reportTypes = data;
+            $scope.objects[0].reportTypeName = $scope.reportTypes[0].caption;
+            $scope.objects[1].reportTypeName = $scope.reportTypes[1].caption;
+            $scope.objects[2].reportTypeName = $scope.reportTypes[2].caption;
+        });
+    };
+    $scope.getReportTypes();
+    
+    //report periods
+    $scope.reportPeriods = [];
+    $scope.getReportPeriods = function(){
+        var table = "../api/reportSettings/reportPeriod";
+        crudGridDataFactory(table).query(function(data){
+            $scope.reportPeriods = data;
+        });
+    };
+    $scope.getReportPeriods();
+
     var successCallback = function (e) {
+console.log("Сохранил вариант.");  
+console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);        
         notificationFactory.success();
-        $('#editParamsetModal').modal('hide');
+        
         $('#moveToArchiveModal').modal('hide');
         //$scope.currentObject={};
         if (!$scope.createByTemplate_flag){
             $scope.getActive();
         };
-        $scope.setDefault();
+        if ($scope.set_of_objects_flag){
+            $scope.currentObject = e;
+            $scope.getAvailableObjects();
+            $scope.getSelectedObjects();
+        }else{
+            $('#createParamsetModal').modal('hide');
+            $scope.setDefault();
+            
+        }
     };
 
 
     var errorCallback = function (e) {
         notificationFactory.error(e.data.ExceptionMessage);
+        if ($scope.set_of_objects_flag){
+            $scope.getAvailableObjects();
+            $scope.getSelectedObjects();
+        }else{
+            $scope.setDefault();
+        }
     };
        
     $scope.getCommerceParamsets = function (table) {
         crudGridDataFactory(table).query(function (data) {
             $scope.commerce.paramsets = data;
-            if ($scope.commerce.paramsets!=[]){
-                $scope.objects[0].reportTypeName = $scope.commerce.paramsets[0].reportTemplate.reportType.caption;
-            }
+            
             $scope.objects[0].paramsetsCount = $scope.commerce.paramsets.length;
             $scope.objects[0].paramsets = $scope.commerce.paramsets;
         });
     };
     $scope.getConsParamsets = function (table) {
         crudGridDataFactory(table).query(function (data) {
-            $scope.cons.templates = data; 
-            if ($scope.cons.paramsets!=[]){
-                $scope.objects[1].reportTypeName = $scope.cons.paramsets[0].reportTemplate.reportType.caption;
-            }
+            $scope.cons.paramsets = data; 
+           
             $scope.objects[1].paramsetsCount = $scope.cons.paramsets.length;
             $scope.objects[1].paramsets = $scope.cons.paramsets;
         });
@@ -109,9 +144,7 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
     $scope.getEventParamsets = function (table) {
         crudGridDataFactory(table).query(function (data) {
             $scope.event.paramsets = data;
-            if ($scope.event.paramsets!=[]){
-                $scope.objects[2].reportTypeName = $scope.event.paramsets[0].reportTemplate.reportType.caption;
-            }
+            
             $scope.objects[2].paramsetsCount = $scope.event.paramsets.length;
             $scope.objects[2].paramsets = $scope.event.paramsets;
         });
@@ -141,6 +174,8 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
 //console.log("In selected item.");        
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
+        $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
+        $scope.getTemplates();
 //console.log("Selected item = ");        
 //for(var k in $scope.currentObject){
 //console.log("$scope.currentObject["+k+"]="+$scope.currentObject[k]);    
@@ -150,19 +185,35 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
     $scope.updateParamsets = function(object){
         var table = "";
         if ($scope.createByTemplate_flag){
-            object.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+            object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;    
             crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
             return;
         };
-        var reportType = object.reportTypeKey;
-        
-        switch (reportType){
+                
+        switch (object.reportTypeKey){
             case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
             case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
-            case "EVENT_REPORT":  table=$scope.crudTableName+"/events/"; break;       
+            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
         };
         crudGridDataFactory(table).update({reportParamsetId: object.id}, object, successCallback, errorCallback);
+    };
+    
+    $scope.saveParamset = function(object){
+         
+        var table="";
+        object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
+        if ($scope.createParamset_flag){
+            switch ($scope.currentReportType.reportType){
+                case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce"; break;   
+                case "CONS_REPORT":  table=$scope.crudTableName+"/cons"; break;   
+                case "EVENT_REPORT":  table=$scope.crudTableName+"/event"; break;       
+            };
+            crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id},object, successCallback, errorCallback);
+        }else{
+            $scope.getAvailableObjects();
+            $scope.getSelectedObjects();
+        };
     };
     
     $scope.toArchive = function(url, id) {
@@ -201,6 +252,19 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
         $scope.createByTemplate_flag = false;
         $scope.archiveParamset = {};
         $scope.activeStartDateFormat = null;
+        $scope.currentReportType = {};
+    };
+    
+    $scope.currentReportType = {};
+    $scope.setCurrentReportType = function(object){
+        $scope.currentReportType.reportType = object.reportType;
+        $scope.currentReportType.reportTypeName=object.reportTypeName;
+    };
+    $scope.addParamSet = function(object){
+        $scope.setCurrentReportType(object);
+        $scope.currentObject = {};
+        $scope.createParamset_flag = true;
+        $scope.getTemplates();
     };
     
      //Account objects
@@ -208,22 +272,121 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(){
-        var table=$scope.crudTableName+"/"+currentObject.id+"/contObjects/available";
-        grudGridDataFactory(table).query(function(data){
+        var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject/available";
+        crudGridDataFactory(table).query(function(data){
             $scope.availableObjects = data;
+//for(var k in $scope.availableObjects){
+//console.log("$scope.availableObjects["+k+"]="+$scope.availableObjects[k]);    
+//}            
         });
     };
     $scope.getSelectedObjects = function(){
-        var table=$scope.crudTableName+"/"+currentObject.id+"/contObjects";
-        grudGridDataFactory(table).query(function(data){
-            $scope.availableObjects = data;
+        var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
+        crudGridDataFactory(table).query(function(data){
+            $scope.selectedObjects = data;
         });
+    };
+    
+    var successObjectCallback = function(e){
+//for(var k in e){        
+//console.log("e["+k+"]= "+e[k]);  
+//}
+//console.log("e.id = "+e.id);        
+//console.log("e.objectId = "+e.objectId);                
+        notificationFactory.success();
+        var el = {};
+        var arr1 = [];
+        var arr2 = [];
+        if ($scope.addObject_flag){
+console.log("Flag true");            
+            arr1 = $scope.availableObjects;
+            arr2 = $scope.selectedObjects;  
+        }else{
+console.log("Flag false");              
+            arr2 = $scope.availableObjects;
+            arr1 = $scope.selectedObjects; 
+        };
+       
+        for (var i=0; i<arr1.length;i++){
+            if (arr1[i].id == $scope.currentObjectId) {
+console.log("Find: arr1["+i+"]= "+arr1[i].fullName);                
+                el = angular.copy(arr1[i]);
+                el.selected = false;
+                arr1.splice(i,1);
+                break;
+            };
+        }
+        arr2.push(el);
+for(var k in el){        
+console.log("el["+k+"]= "+el[k]);  
+}       
+        
+//        if ($scope.addObject_flag){
+//            for (var i=0; i<=$scope.availableObjects.length;i++){
+//                if ($scope.availableObjects[i].id == e.id) {
+//                    el = $scope.availableObjects[i].id;
+//                    $scope.availableObjects.splice(i,1);
+//                    break;
+//                };
+//            }
+//            $scope.selectedObjects.push(el);
+//        }else{
+//            for (var i=0; i<=$scope.selectedObjects.length;i++){
+//                if ($scope.selectedObjects[i].id == e.id) {
+//                    el = $scope.selectedObjects[i].id;
+//                    $scope.selectedObjects.splice(i,1);
+//                    break;
+//                };
+//            }
+//            $scope.availableObjects.push(el);
+//        };
+    };
+    
+    var errorObjectCallback = function(e){
+        notificationFactory.error(e.data.ExceptionMessage);
+        $scope.getAvailableObjects();
+        $scope.getSelectedObjects();
+    };
+    
+    $scope.getResource = function(url, id) {
+        return $resource(url, {
+            }, {
+                update: {method: 'PUT', params:{reportParamsetId:id}},
+                addObject: {method: 'POST', params:{contObjectId: id}},
+                removeObject: {method: 'DELETE'}
+            });
+    };
+    
+    $scope.addObject = function(object){
+        $scope.addObject_flag = true;
+        $scope.currentObjectId = object.id;
+        var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
+        $scope.getResource(table,object.id).addObject({}, successObjectCallback, errorObjectCallback);
+    };
+    
+    $scope.removeObject = function(object){
+        $scope.addObject_flag = false;
+        $scope.currentObjectId = object.id;
+        var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/contObject/"+object.id;
+        crudGridDataFactory(table).delete({contObjectId: object.id}, successObjectCallback, errorObjectCallback);
     };
     
     //templates
     $scope.templatesForCurrentParaset = [];
-    $scope.getTemplates = function(){
-        
+    $scope.getTemplates = function(){        
+       var table = ""; 
+        switch ($scope.currentReportType.reportType){
+            case "COMMERCE_REPORT":  table="../api/reportTemplate/commerce"; break;   
+            case "CONS_REPORT":  table="../api/reportTemplate/cons"; break;   
+            case "EVENT_REPORT":  table="../api/reportTemplate/event"; break;       
+        };
+        crudGridDataFactory(table).query(function(data){
+            $scope.templatesForCurrentParaset = data;
+        });
+    };
+    
+    $scope.closeSaveObjectModal = function(){
+        $('#saveObjectModal').hide();
     };
     
 }]);
