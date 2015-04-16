@@ -208,8 +208,16 @@ app.controller('ParamSetsCtrl',['$scope','crudGridDataFactory','notificationFact
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(){
+        var table=$scope.crudTableName+"/"+currentObject.id+"/contObjects/available";
+        grudGridDataFactory(table).query(function(data){
+            $scope.availableObjects = data;
+        });
     };
     $scope.getSelectedObjects = function(){
+        var table=$scope.crudTableName+"/"+currentObject.id+"/contObjects";
+        grudGridDataFactory(table).query(function(data){
+            $scope.availableObjects = data;
+        });
     };
     
     //templates
