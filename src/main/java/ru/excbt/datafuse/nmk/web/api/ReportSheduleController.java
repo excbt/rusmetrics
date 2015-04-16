@@ -82,7 +82,7 @@ public class ReportSheduleController extends WebApiController {
 	public ResponseEntity<?> deleteReportShedule(
 			@PathVariable(value = "reportSheduleId") Long reportSheduleId) {
 		reportSheduleService.deleteOne(reportSheduleId);
-		return ResponseEntity.accepted().build();
+		return ResponseEntity.ok().build();
 	}
 
 	/**

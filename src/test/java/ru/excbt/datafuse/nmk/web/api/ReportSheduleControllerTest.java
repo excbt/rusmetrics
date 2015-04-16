@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -155,6 +156,21 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		logger.info("createdId: {}", createdId);
 
+		testDeleteShedule(createdId);
 	}
 
+	
+	public void testDeleteShedule (long reportSheduleId) throws Exception {
+		
+		String urlStr = "/api/reportShedule/" + String.valueOf(reportSheduleId);
+		
+		
+		ResultActions deleteResultActions = mockMvc.perform(delete(urlStr)
+				.with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON));
+
+		deleteResultActions.andDo(MockMvcResultHandlers.print());			
+		deleteResultActions.andExpect(status().isOk());		
+	}
+	
 }
