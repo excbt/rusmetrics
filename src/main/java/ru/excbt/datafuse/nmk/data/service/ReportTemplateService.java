@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -33,6 +35,8 @@ public class ReportTemplateService implements SecuredRoles {
 	@Autowired
 	private ReportTemplateBodyRepository reportTemplateBodyRepository;
 
+	@Autowired
+	private ReportParamsetRepository reportParamsetRepository;
 
 	private static final Comparator<ReportTemplate> REPORT_TEMPLATE_COMPARATOR = new Comparator<ReportTemplate>() {
 
@@ -147,8 +151,8 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public List<ReportTemplate> selectSubscriberReportTemplates(long subscriberId,
-			ReportTypeKey reportType, boolean isActive) {
+	public List<ReportTemplate> selectSubscriberReportTemplates(
+			long subscriberId, ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = reportTemplateRepository
 				.selectSubscriberTemplates(subscriberId, reportType, isActive);
@@ -270,6 +274,15 @@ public class ReportTemplateService implements SecuredRoles {
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
 		if (!checkCanUpdate(reportTemplateId)) {
+			throw new PersistenceException(String.format(
+					"ReportTemplate with (id=%d) is not updatable",
+					reportTemplateId));
+		}
+
+		List<ReportParamset> reportParamsetList = reportParamsetRepository
+				.selectReportParamset(reportTemplateId, true);
+
+		if (reportParamsetList.size() > 0) {
 			return null;
 		}
 
@@ -280,7 +293,8 @@ public class ReportTemplateService implements SecuredRoles {
 		}
 		if (!rt.is_active()) {
 			throw new PersistenceException(String.format(
-					"ReportTemplate (id=%d) is alredy archived", reportTemplateId));
+					"ReportTemplate (id=%d) is alredy archived",
+					reportTemplateId));
 		}
 		rt.set_active(false);
 		rt.setActiveEndDate(new Date());

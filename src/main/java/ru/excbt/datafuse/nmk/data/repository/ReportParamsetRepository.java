@@ -13,6 +13,12 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 
 	public List<ReportParamset> findByReportTemplateId(long reportTemplateId);
 
+	@Query("SELECT rp FROM ReportParamset rp "
+			+ "WHERE rp.reportTemplate.id = :reportTemplateId AND "
+			+ "rp._active = :isActive "
+			+ "ORDER BY rp.activeStartDate, rp.name")	
+	public List<ReportParamset> selectReportParamset(Long reportTemplateId, boolean isActive);
+
 	
 	/**
 	 * 
@@ -42,7 +48,6 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 			@Param("subscriberId") long subscriberId,
 			@Param("reportType") ReportTypeKey reportType,
 			@Param("isActive") boolean isActive);	
-	
 
 	/**
 	 * 
@@ -52,6 +57,5 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	 */
 	@Query("SELECT rt.id FROM ReportParamset rt WHERE rt.subscriber IS NULL ")
 	public List<Long> selectCommonParamsetIds();	
-	
 	
 }

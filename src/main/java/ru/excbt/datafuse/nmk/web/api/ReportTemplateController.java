@@ -275,8 +275,9 @@ public class ReportTemplateController extends WebApiController {
 		}
 
 		if (resultEntity == null) {
-			return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
+		
 		return ResponseEntity.accepted().body(resultEntity);
 	}
 
