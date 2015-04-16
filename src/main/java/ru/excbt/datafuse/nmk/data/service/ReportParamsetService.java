@@ -147,7 +147,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public ReportParamset findOne(long reportParamsetId) {
-		ReportParamset result = reportParamsetRepository.findOne(reportParamsetId);
+		ReportParamset result = reportParamsetRepository
+				.findOne(reportParamsetId);
 		if (result.getReportTemplate() != null) {
 			result.getReportTemplate().getId();
 		}
@@ -411,6 +412,19 @@ public class ReportParamsetService implements SecuredRoles {
 			DateTime activeDate) {
 		return reportParamsetRepository.selectReportParamset(reportTemplateId,
 				activeDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param activeDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ReportParamset> selectReportParamset(long reportTemplateId,
+			boolean isActive) {
+		return reportParamsetRepository.selectReportParamset(reportTemplateId,
+				isActive);
 	}
 
 }

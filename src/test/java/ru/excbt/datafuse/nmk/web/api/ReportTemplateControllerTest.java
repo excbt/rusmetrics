@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -24,6 +26,9 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -51,9 +56,8 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Test
 	public void testUpdate() throws Exception {
 		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(
-				ReportTypeKey.COMMERCE_REPORT, true,
-						currentSubscriberService.getSubscriberId());
+				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
+						true, currentSubscriberService.getSubscriberId());
 
 		assertTrue(subscriberReportTemplates.size() > 0);
 		ReportTemplate rt = subscriberReportTemplates.get(0);
@@ -86,7 +90,19 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 						true, currentSubscriberService.getSubscriberId());
 
 		assertTrue(subscriberReportTemplates.size() > 0);
-		ReportTemplate rt = subscriberReportTemplates.get(0);
+
+		ReportTemplate rt = null;
+		for (ReportTemplate checkTemplate : subscriberReportTemplates) {
+			List<ReportParamset> checkList = reportParamsetService
+					.selectReportParamset(checkTemplate.getId(), true);
+			if (checkList.size() == 0) {
+				rt = checkTemplate;
+			}
+		}
+
+		if (rt == null) {
+			return;
+		}
 
 		// rt.setComment("TEST AutoUpdate " + System.currentTimeMillis());
 		// String jsonBody = OBJECT_MAPPER.writeValueAsString(rt);
