@@ -152,10 +152,10 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = false)
 	public List<ReportTemplate> selectSubscriberReportTemplates(
-			long subscriberId, ReportTypeKey reportType, boolean isActive) {
+			ReportTypeKey reportType, boolean isActive, long subscriberId) {
 
 		List<ReportTemplate> result = reportTemplateRepository
-				.selectSubscriberTemplates(subscriberId, reportType, isActive);
+				.selectSubscriberTemplates(reportType, isActive, subscriberId);
 
 		return result;
 	}
@@ -175,7 +175,7 @@ public class ReportTemplateService implements SecuredRoles {
 				reportType, isActive);
 
 		List<ReportTemplate> subscriberTemplates = selectSubscriberReportTemplates(
-				subscriberId, reportType, isActive);
+				reportType, isActive, subscriberId);
 
 		result.addAll(commonTemplates);
 		result.addAll(subscriberTemplates);

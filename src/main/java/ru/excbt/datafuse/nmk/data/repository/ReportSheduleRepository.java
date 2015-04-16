@@ -13,9 +13,10 @@ public interface ReportSheduleRepository extends
 		CrudRepository<ReportShedule, Long> {
 
 	@Query("SELECT rs FROM ReportShedule rs "
+			+ "LEFT JOIN FETCH rs.reportTemplate LEFT JOIN FETCH rs.reportParamset "
 			+ "WHERE rs.subscriber.id = :subscriberId AND "
-			+ "rs.sheduleStartDate >= :sheduleDate AND "
-			+ "( rs.sheduleEndDate IS NULL OR rs.sheduleEndDate <= :sheduleDate)")
+			+ "rs.sheduleStartDate <= :sheduleDate AND "
+			+ "( rs.sheduleEndDate IS NULL OR rs.sheduleEndDate >= :sheduleDate)")
 	public List<ReportShedule> selectReportShedule(
 			@Param("subscriberId") long subscriberId,
 			@Param("sheduleDate") Date sheduleDate);

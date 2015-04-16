@@ -29,8 +29,8 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ReportShedule> selectReportShedule(long subscriberId,
-			DateTime dateTime) {
+	public List<ReportShedule> selectReportShedule(
+			DateTime dateTime, long subscriberId) {
 		return reportSheduleRepository.selectReportShedule(subscriberId,
 				dateTime.toDate());
 	}
@@ -64,8 +64,8 @@ public class ReportSheduleService implements SecuredRoles {
 				"ReportTemplate of reportShedule is NULL");
 		checkNotNull(reportShedule.getReportParamset(),
 				"ReportParamset of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportSheduleType(),
-				"Shedule Type of reportShedule IS NULL");
+		checkNotNull(reportShedule.getReportSheduleTypeKey(),
+				"getReportSheduleTypeKey of reportShedule IS NULL");
 
 		checkNotNull(reportShedule.getSheduleStartDate(),
 				"SheduleStartDate of reportShedule is NULL");
@@ -120,8 +120,8 @@ public class ReportSheduleService implements SecuredRoles {
 				"ReportTemplate of reportShedule is NULL");
 		checkNotNull(reportShedule.getReportParamset(),
 				"ReportParamset of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportSheduleType(),
-				"Shedule Type of reportShedule IS NULL");
+		checkNotNull(reportShedule.getReportSheduleTypeKey(),
+				"getReportSheduleTypeKey of reportShedule IS NULL");
 
 		checkNotNull(reportShedule.getSheduleStartDate(),
 				"SheduleStartDate of reportShedule is NULL");

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -21,6 +22,15 @@ public interface ReportParamsetRepository extends
 	public List<ReportParamset> selectReportParamset(
 			@Param("reportTemplateId") Long reportTemplateId,
 			@Param("isActive") boolean isActive);
+
+	@Query("SELECT rp FROM ReportParamset rp "
+			+ "WHERE rp.reportTemplate.id = :reportTemplateId AND "
+			+ "rp.activeStartDate <= :activeDate AND "
+			+ " (rp.activeEndDate IS NULL OR rp.activeEndDate >= :activeDate) "
+			+ "ORDER BY rp.activeStartDate, rp.name")
+	public List<ReportParamset> selectReportParamset(
+			@Param("reportTemplateId") Long reportTemplateId,
+			@Param("activeDate") Date activeDate);
 
 	/**
 	 * 
@@ -47,9 +57,9 @@ public interface ReportParamsetRepository extends
 			+ "rp._active = :isActive "
 			+ "ORDER BY rp.activeStartDate, rp.name")
 	public List<ReportParamset> selectSubscriberReportParamset(
-			@Param("subscriberId") long subscriberId,
 			@Param("reportType") ReportTypeKey reportType,
-			@Param("isActive") boolean isActive);
+			@Param("isActive") boolean isActive,
+			@Param("subscriberId") long subscriberId);
 
 	/**
 	 * 

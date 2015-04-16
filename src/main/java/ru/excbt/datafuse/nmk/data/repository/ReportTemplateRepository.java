@@ -19,8 +19,7 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber IS NULL AND "
-			+ "rt.reportTypeKey = :reportType AND "
-			+ "rt._active = :isActive "
+			+ "rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectCommonTemplates(
 			@Param("reportType") ReportTypeKey reportType,
@@ -38,11 +37,10 @@ public interface ReportTemplateRepository extends
 			+ "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectSubscriberTemplates(
-			@Param("subscriberId") long subscriberId,
 			@Param("reportType") ReportTypeKey reportType,
-			@Param("isActive") boolean isActive);
+			@Param("isActive") boolean isActive,
+			@Param("subscriberId") long subscriberId);
 
-	
 	/**
 	 * 
 	 * @param reportType
@@ -50,6 +48,6 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt.id FROM ReportTemplate rt WHERE rt.subscriber IS NULL ")
-	public List<Long> selectCommonTemplateIds();	
-	
+	public List<Long> selectCommonTemplateIds();
+
 }

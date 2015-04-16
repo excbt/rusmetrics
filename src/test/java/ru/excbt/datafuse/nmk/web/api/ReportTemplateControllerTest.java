@@ -52,8 +52,8 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	public void testUpdate() throws Exception {
 		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
 				.selectSubscriberReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT, true);
+				ReportTypeKey.COMMERCE_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 
 		assertTrue(subscriberReportTemplates.size() > 0);
 		ReportTemplate rt = subscriberReportTemplates.get(0);
@@ -82,9 +82,8 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Test
 	public void testMoveToArchive() throws Exception {
 		List<ReportTemplate> subscriberReportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT, true);
+				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
+						true, currentSubscriberService.getSubscriberId());
 
 		assertTrue(subscriberReportTemplates.size() > 0);
 		ReportTemplate rt = subscriberReportTemplates.get(0);

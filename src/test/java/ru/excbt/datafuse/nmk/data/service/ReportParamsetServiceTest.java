@@ -62,7 +62,8 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		// rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
 		rp.setReportPeriodKey(ReportPeriodKey.TODAY);
 		ReportParamset result = reportParamsetService.createByTemplate(
-				TEMPLATE_PARAMSET_ID, rp, currentSubscriberService.getSubscriber());
+				TEMPLATE_PARAMSET_ID, rp,
+				currentSubscriberService.getSubscriber());
 		assertNotNull(result);
 
 		testAddUnitToParamset(result);
@@ -103,20 +104,21 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 	public void testParamsetAvailableContObjectUnits() {
 		List<ReportTemplate> reportTemplates = reportTemplateService
 				.selectSubscriberReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT, true);
+				ReportTypeKey.COMMERCE_REPORT, true,
+						currentSubscriberService.getSubscriberId());
 		assertTrue(reportTemplates.size() > 0);
 		ReportTemplate rt = reportTemplates.get(0);
-		
+
 		logger.info("ReportTemplate ID={}", rt.getId());
-		
-//		List<ReportParamset> rpList = reportParamsetService
-//				.findReportParamsetList(rt.getId());
-//		assertTrue(rpList.size() > 0);
+
+		// List<ReportParamset> rpList = reportParamsetService
+		// .findReportParamsetList(rt.getId());
+		// assertTrue(rpList.size() > 0);
 
 		List<ContObject> contObjects = reportParamsetService
-				.selectParamsetAvailableContObjectUnits(-1, currentSubscriberService.getSubscriberId());
-		
+				.selectParamsetAvailableContObjectUnits(-1,
+						currentSubscriberService.getSubscriberId());
+
 		assertTrue(contObjects.size() > 0);
 		logger.info("Found {} Available ContObjects", contObjects.size());
 	}

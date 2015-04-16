@@ -14,7 +14,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
@@ -52,7 +52,7 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	@Enumerated(EnumType.STRING)	
 	@Column (name = "output_file_type")
-	private ReportOutputType outputFileType;
+	private ReportOutputFileType outputFileType;
 
 	@Column (name = "output_file_name_template")
 	private String outputFileNameTemplate;
@@ -129,11 +129,11 @@ public class ReportParamset extends AbstractAuditableModel {
 		this.comment = comment;
 	}
 
-	public ReportOutputType getOutputFileType() {
+	public ReportOutputFileType getOutputFileType() {
 		return outputFileType;
 	}
 
-	public void setOutputFileType(ReportOutputType outputFileType) {
+	public void setOutputFileType(ReportOutputFileType outputFileType) {
 		this.outputFileType = outputFileType;
 	}
 

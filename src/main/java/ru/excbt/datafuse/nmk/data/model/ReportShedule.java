@@ -20,6 +20,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportActionType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="report_shedule")
 public class ReportShedule extends AbstractAuditableModel {
@@ -31,7 +33,11 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "subscriber_id")
+	@JsonIgnore
 	private Subscriber subscriber;
+	
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
 	
 	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn (name = "report_template_id")
@@ -308,6 +314,10 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	public void setSheduleAction5Param(String sheduleAction5Param) {
 		this.sheduleAction5Param = sheduleAction5Param;
+	}
+
+	public Long getSubscriberId() {
+		return subscriberId;
 	}
 
 	
