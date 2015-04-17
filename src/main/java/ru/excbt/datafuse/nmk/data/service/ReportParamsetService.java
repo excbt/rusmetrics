@@ -34,10 +34,9 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Transactional
 public class ReportParamsetService implements SecuredRoles {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportParamsetService.class);
-	
+
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
 
@@ -62,6 +61,22 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset result = reportParamsetRepository.save(entity);
 
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public ReportParamset createOne(ReportParamset entity, Long[] contObjectIds) {
+
+		ReportParamset result = createOne(entity);
+
+		if (contObjectIds != null) {
+			updateUnitToParamset(result.getId(), contObjectIds);
+		}
 		return result;
 	}
 
@@ -100,6 +115,22 @@ public class ReportParamsetService implements SecuredRoles {
 					reportParamset.getId()));
 		}
 
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public ReportParamset updateOne(ReportParamset reportParamset,
+			Long[] contObjectIds) {
+		ReportParamset result = updateOne(reportParamset);
+
+		if (contObjectIds != null) {
+			updateUnitToParamset(result.getId(), contObjectIds);
+		}
 		return result;
 	}
 
@@ -307,20 +338,25 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
-	public void deleteUnitFromParamset(final long reportParamsetId, final long contObjectId) {
+	public void deleteUnitFromParamset(final long reportParamsetId,
+			final long contObjectId) {
 
 		List<Long> ids = reportParamsetUnitRepository.selectUnitIds(
 				reportParamsetId, contObjectId);
 
 		if (ids.size() > 1) {
-			logger.trace("Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})", reportParamsetId, contObjectId);
+			logger.trace(
+					"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})",
+					reportParamsetId, contObjectId);
 			throw new PersistenceException(
 					String.format(
 							"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId=%d, contObjectId=%d)",
 							reportParamsetId, contObjectId));
 		}
 		if (ids.size() == 0) {
-			logger.trace("Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})", reportParamsetId, contObjectId);
+			logger.trace(
+					"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})",
+					reportParamsetId, contObjectId);
 			throw new PersistenceException(
 					String.format(
 							"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId=%d, contObjectId=%d)",
@@ -451,22 +487,23 @@ public class ReportParamsetService implements SecuredRoles {
 			final Long[] objectIds) {
 
 		checkNotNull(objectIds);
-		
+
 		List<Long> newObjectIdList = Arrays.asList(objectIds);
-		
-		List<Long> currentIds = reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
+
+		List<Long> currentIds = reportParamsetUnitRepository
+				.selectObjectIds(reportParamsetId);
 		for (Long currentId : currentIds) {
 			if (!newObjectIdList.contains(currentId)) {
 				logger.trace("removing objectId:{}", currentId);
 				deleteUnitFromParamset(reportParamsetId, currentId);
-			} 
+			}
 		}
-		
+
 		for (Long newId : newObjectIdList) {
 			if (!currentIds.contains(newId)) {
 				addUnitToParamset(reportParamsetId, newId);
-			} 
+			}
 		}
-		
+
 	}
 }

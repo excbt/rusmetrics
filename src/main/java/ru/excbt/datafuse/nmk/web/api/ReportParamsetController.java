@@ -167,7 +167,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	private ResponseEntity<?> updateInternal(Long reportParamsetId,
-			ReportParamset reportParamset) {
+			ReportParamset reportParamset, Long[] contObjectIds) {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -178,7 +178,7 @@ public class ReportParamsetController extends WebApiController {
 
 		ReportParamset resultEntity = null;
 		try {
-			resultEntity = reportParamsetService.updateOne(reportParamset);
+			resultEntity = reportParamsetService.updateOne(reportParamset, contObjectIds);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -199,7 +199,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	private ResponseEntity<?> createInternal(Long reportTemplateId,
-			ReportParamset reportParamset, HttpServletRequest request) {
+			ReportParamset reportParamset, Long[] contObjectIds,
+			HttpServletRequest request) {
 
 		checkNotNull(reportTemplateId);
 		checkNotNull(reportParamset);
@@ -218,7 +219,7 @@ public class ReportParamsetController extends WebApiController {
 
 		ReportParamset resultEntity = null;
 		try {
-			resultEntity = reportParamsetService.createOne(reportParamset);
+			resultEntity = reportParamsetService.createOne(reportParamset, contObjectIds);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -242,8 +243,9 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneCommerce(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset);
+		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
 	}
 
 	/**
@@ -255,8 +257,9 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset);
+		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
 	}
 
 	/**
@@ -268,8 +271,9 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneEvent(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset);
+		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
 	}
 
 	/**
@@ -320,9 +324,10 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneCommerce(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, request);
+		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
 	}
 
 	/**
@@ -334,9 +339,10 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/cons", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneCons(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, request);
+		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
 	}
 
 	/**
@@ -348,9 +354,10 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/event", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneEvent(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds, request);
 	}
 
 	/**
