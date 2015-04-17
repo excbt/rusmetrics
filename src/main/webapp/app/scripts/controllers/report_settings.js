@@ -8,7 +8,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     $scope.currentObject = {};
     $scope.createByTemplate_flag = false;
     $scope.archiveTemplate = {};
-    $scope.activeStartDateFormat = null;
+    $scope.activeStartDateFormat = new Date();//null;
     $scope.currentReportType = {};
     
     $scope.objects = [
@@ -168,9 +168,8 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
             crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
             return;
         };
-        var reportType = object.reportTypeKey;
         
-        switch (reportType){
+        switch ($scope.currentReportType.reportType){
             case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
             case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
             case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
@@ -375,7 +374,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         $scope.currentObject = {};
         $scope.createByTemplate_flag = false;
         $scope.archiveTemplate = {};
-        $scope.activeStartDateFormat = null;
+        $scope.activeStartDateFormat = new Date();
     };
     
     $scope.setCurrentReportType = function(object){
