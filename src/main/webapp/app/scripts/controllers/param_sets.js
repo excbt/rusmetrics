@@ -183,22 +183,17 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
 //}        
     };
     
-    $scope.updateParamsets = function(object){
-        var table = "";
-        if ($scope.createByTemplate_flag){
-            object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
-            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;    
-            crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
-            return;
-        };
-                
-        switch (object.reportTypeKey){
-            case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
-            case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
-            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
-        };
-        crudGridDataFactory(table).update({reportParamsetId: object.id}, object, successCallback, errorCallback);
-    };
+//    $scope.updateParamsets = function(object){
+//        var table = "";
+//        
+//                
+//        switch (object.reportTypeKey){
+//            case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
+//            case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
+//            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
+//        };
+//        
+//    };
     
     $scope.saveParamset = function(object){
 console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);         
@@ -209,6 +204,13 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
             object.paramsetEndDate = (new Date($rootScope.reportEnd)) || null;
         }
 
+        
+        if ($scope.createByTemplate_flag){
+            object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
+            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;    
+            crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
+            return;
+        };
         if ($scope.createParamset_flag){            
             object._active = true;
             switch ($scope.currentReportType.reportType){
@@ -218,6 +220,7 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
             };
             crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id},object, successCallback, errorCallback);
         }else{
+            crudGridDataFactory(table).update({reportParamsetId: object.id}, object, successCallback, errorCallback);
             $scope.getAvailableObjects();
             $scope.getSelectedObjects();
         };
@@ -245,9 +248,9 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
         $scope.archiveParamset = {};
         $scope.archiveParamset.id = object.id;
         $scope.archiveParamset.name = object.name;
-        $scope.currentObject = {};
-        $scope.currentObject.name = angular.copy(object.name);
-        $scope.currentObject.description = angular.copy(object.description);
+        $scope.currentObject = angular.copy(object);//{};
+        //$scope.currentObject.name = angular.copy(object.name);
+        //$scope.currentObject.description = angular.copy(object.description);
         
         
 //        var table = $scope.crudTableName+"/createByTemplate/"    
