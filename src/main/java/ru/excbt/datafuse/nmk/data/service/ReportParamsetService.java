@@ -4,12 +4,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,10 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Transactional
 public class ReportParamsetService implements SecuredRoles {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportParamsetService.class);
+	
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
 
@@ -300,15 +307,23 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
-	public void deleteUnitFromParamset(long reportParamsetId, long contObjectId) {
+	public void deleteUnitFromParamset(final long reportParamsetId, final long contObjectId) {
 
-		List<Long> ids = reportParamsetUnitRepository.selectObjectIds(
+		List<Long> ids = reportParamsetUnitRepository.selectUnitIds(
 				reportParamsetId, contObjectId);
 
-		if (ids.size() != 1) {
+		if (ids.size() > 1) {
+			logger.trace("Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})", reportParamsetId, contObjectId);
 			throw new PersistenceException(
 					String.format(
-							"Can't delete ReportParamsetUnit. (reportParamsetId=%d, contObjectId=%d)",
+							"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId=%d, contObjectId=%d)",
+							reportParamsetId, contObjectId));
+		}
+		if (ids.size() == 0) {
+			logger.trace("Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})", reportParamsetId, contObjectId);
+			throw new PersistenceException(
+					String.format(
+							"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId=%d, contObjectId=%d)",
 							reportParamsetId, contObjectId));
 		}
 
@@ -336,7 +351,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	public boolean checkReportParamsetUnitObject(long reportParamsetId,
 			long objectId) {
-		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId,
+		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId,
 				objectId).size() > 0;
 	}
 
@@ -350,7 +365,7 @@ public class ReportParamsetService implements SecuredRoles {
 			long dstReportParamsetId) {
 
 		List<?> checkList = reportParamsetUnitRepository
-				.selectObjectIds(dstReportParamsetId);
+				.selectUnitIds(dstReportParamsetId);
 		if (checkList.size() > 0) {
 			throw new PersistenceException(
 					String.format(
@@ -363,7 +378,7 @@ public class ReportParamsetService implements SecuredRoles {
 		checkNotNull(dstReportParamset);
 
 		List<Long> idsToCopy = reportParamsetUnitRepository
-				.selectObjectIds(srcReportParamsetId);
+				.selectUnitIds(srcReportParamsetId);
 		for (Long id : idsToCopy) {
 			addUnitToParamset(dstReportParamset, id);
 		}
@@ -427,4 +442,31 @@ public class ReportParamsetService implements SecuredRoles {
 				isActive);
 	}
 
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	public void updateUnitToParamset(final long reportParamsetId,
+			final Long[] objectIds) {
+
+		checkNotNull(objectIds);
+		
+		List<Long> newObjectIdList = Arrays.asList(objectIds);
+		
+		List<Long> currentIds = reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
+		for (Long currentId : currentIds) {
+			if (!newObjectIdList.contains(currentId)) {
+				logger.trace("removing objectId:{}", currentId);
+				deleteUnitFromParamset(reportParamsetId, currentId);
+			} 
+		}
+		
+		for (Long newId : newObjectIdList) {
+			if (!currentIds.contains(newId)) {
+				addUnitToParamset(reportParamsetId, newId);
+			} 
+		}
+		
+	}
 }

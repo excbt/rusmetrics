@@ -25,6 +25,9 @@ import org.springframework.web.context.WebApplicationContext;
 @ContextConfiguration("classpath:META-INF/spring/app-config.xml")
 public class WebTest {
 
+	public final static String CHARSET_UTF8 = "charset=UTF-8";
+	public final static String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON + ";" + CHARSET_UTF8;
+	
 	@Autowired
 	private WebApplicationContext wac;
 
@@ -60,7 +63,7 @@ public class WebTest {
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(MediaType.APPLICATION_JSON));
+				content().contentType(APPLICATION_JSON_UTF8));
 	}
 
 }

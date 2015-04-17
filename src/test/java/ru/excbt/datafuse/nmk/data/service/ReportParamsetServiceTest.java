@@ -123,4 +123,13 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		logger.info("Found {} Available ContObjects", contObjects.size());
 	}
 
+	
+	@Test
+	public void testParamsetUpdateUnitObjects() {
+
+		Long[] objectIds = {1L,2L,3L,4L,55L};
+		
+		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID, objectIds);
+		
+	}
 }

@@ -28,11 +28,16 @@ public interface ReportParamsetUnitRepository extends
 
 	@Query("SELECT u.id FROM ReportParamsetUnit u "
 			+ "WHERE u.reportParamset.id = :reportParamsetId AND u.objectId = :objectId ")
-	public List<Long> selectObjectIds(
+	public List<Long> selectUnitIds(
 			@Param("reportParamsetId") long reportParamsetId,
 			@Param("objectId") long objectId);
 
 	@Query("SELECT u.id FROM ReportParamsetUnit u "
+			+ "WHERE u.reportParamset.id = :reportParamsetId ")
+	public List<Long> selectUnitIds(
+			@Param("reportParamsetId") long reportParamsetId);
+
+	@Query("SELECT u.objectId FROM ReportParamsetUnit u "
 			+ "WHERE u.reportParamset.id = :reportParamsetId ")
 	public List<Long> selectObjectIds(
 			@Param("reportParamsetId") long reportParamsetId);
