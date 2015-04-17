@@ -41,7 +41,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     
     $scope.objects = [
         {
-            "reportType":"COMMERCIAL_REPORT"
+            "reportType":"COMMERCE_REPORT"
             ,"reportTypeName":"Коммерческий"
             ,"templatesCount": 0
             ,"templates": []
@@ -173,7 +173,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         switch (reportType){
             case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
             case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
-            case "EVENT_REPORT":  table=$scope.crudTableName+"/events/"; break;       
+            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
         };
         crudGridDataFactory(table).update({reportTemplateId: object.id}, object, successCallback, errorCallback);
     };
