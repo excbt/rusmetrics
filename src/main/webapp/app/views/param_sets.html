@@ -68,7 +68,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="createParamset_flag=false;setCurrentReportType(object);selectedItem(oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editParamset_flag=true;setCurrentReportType(object);selectedItem(oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
                                                             <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="setCurrentReportType(object);selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
@@ -77,10 +77,10 @@
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-4">     
-                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label>
+                                             <div class="col-md-4" ng-class="{'default': oldObject._default}">     
+                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}}
                                             </div>
-                                            <div class="col-md-5">     
+                                            <div class="col-md-5" ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
@@ -153,7 +153,7 @@
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-4 ">     
+                                             <div class="col-md-4 " >     
                                                     {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label>
                                             </div>
                                             <div class="col-md-5">     
@@ -343,8 +343,8 @@
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;saveParamset(currentObject);" ng-show="!(currentObject.reportTemplate.id==null)">Выбор объектов</a></li>
-                <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>
+                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
+<!--                <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>-->
 
               </ul>
 
@@ -539,7 +539,7 @@
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
-                                ng-disabled="currentObject.reportTemplate.id==null"   />
+                                ng-disabled="(currentObject.reportTemplate.id==null)||(currentObject.reportPeriodKey==null)"   />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
