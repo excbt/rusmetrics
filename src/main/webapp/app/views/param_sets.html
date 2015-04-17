@@ -493,8 +493,18 @@
                 <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
                     <div class="container-fluid">
                         <div class="row-fluid">
-<!--                            <div class="col-md-12"><label>Списоки объектов</label>-->
-<!--                            </div>    -->
+               
+                             <div class="col-md-6 object_list" id="object_list">
+                                 <div><label>Доступные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped">
+                                        <tr ng-repeat="object in availableObjects">
+                                            <td><input type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                             <div class="col-md-6 object_list" id="object_list">
                                 <div><label>Выбранные объекты</label></div>
                                 <div>
@@ -506,37 +516,7 @@
                                     </table>
                                 </div>
                             </div>
-<!--
-                            <div class="col-md-1 object_list object_list_button">
-                                    <div class="btn-group-vertical">
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
-                                    </div>
-                            </div>
--->
-                            <div class="col-md-6 object_list" id="object_list">
-                                 <div><label>Доступные объекты</label></div>
-                                <div>
-                                    <table class="table table-condensed table-striped">
-                                        <tr ng-repeat="object in availableObjects">
-                                            <td><input type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-<!--
-                            <div class="col-md-1 column_list column_list_button">
-                                    <div class="btn-group-vertical">
--->
-<!--
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
--->
-<!--
-                                    </div>
-                            </div>
--->
+
                         </div>
                     </div>
                 </div>    
