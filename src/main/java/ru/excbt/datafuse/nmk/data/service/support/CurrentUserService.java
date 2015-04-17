@@ -22,6 +22,8 @@ public class CurrentUserService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CurrentUserService.class);
 
+	private final static AuditUser EMPTY_USER = new AuditUser();
+
 	@Autowired
 	private AuditUserService auditUserService;
 
@@ -45,16 +47,18 @@ public class CurrentUserService {
 	 */
 	public AuditUser getCurrentAuditUser() {
 
-
 		String userName = null;
-		
+
 		Authentication auth = getUserAuth();
 		if (auth == null) {
-			logger.warn("Authentication of Spring security is NULL. Using developer user:{}", DEVELOPER_USER_NAME);
-			userName = DEVELOPER_USER_NAME;;
+			logger.warn(
+					"Authentication of Spring security is NULL. Using developer user:{}",
+					DEVELOPER_USER_NAME);
+			userName = DEVELOPER_USER_NAME;
+			;
 		} else {
 			userName = auth.getName();
-			//userName = DEVELOPER_USER_NAME;;
+			// userName = DEVELOPER_USER_NAME;;
 		}
 
 		AuditUser srcUser = getMap().get(userName);
@@ -67,10 +71,11 @@ public class CurrentUserService {
 			// scrObject = auditUserService.findOne(DEVELOPER_USER_ID);
 		}
 		// return safe copy of scrObject
-		return srcUser != null ? new AuditUser(srcUser) : null;
+		return srcUser != null ? new AuditUser(srcUser) : new AuditUser(
+				EMPTY_USER);
 
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -79,5 +84,4 @@ public class CurrentUserService {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
-	
 }
