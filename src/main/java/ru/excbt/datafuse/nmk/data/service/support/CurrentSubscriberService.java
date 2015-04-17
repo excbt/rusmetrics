@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 public class CurrentSubscriberService {
 
 	private static final long SUBSCR_ORG_ID = 728;
-	private static final long NOT_LOGGED_ORG_ID = 0;
+	private static final long NOT_LOGGED_ORG_ID = 728;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(CurrentSubscriberService.class);
