@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ReportTemplateServiceTest extends JpaSupportTest {
@@ -32,6 +35,8 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			.getLogger(ReportTemplateServiceTest.class);
 
 	private static final long TEST_REPORT_TEMPLATE_ID = 28181422;
+	
+	private static final String COMM_FILE_COMPILED = "jasper/nmk_com_report.jasper";
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
@@ -41,6 +46,9 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
+
+	@Autowired
+	ReportTemplateBodyRepository reportTemplateBodyRepository;
 
 	/**
 	 * 
@@ -97,6 +105,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+	@Ignore
 	public void testReportTemplateLoad() throws IOException {
 		File fileJrxml = findResource("jasper/nmk_com_report_agr.jrxml");
 
@@ -115,7 +124,27 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		checkNotNull(fileBytes);
 		reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID,
 				fileBytes, fileJrxml.getName());
+	}
 
+	@Test
+	public void testReportTemplateLoadCompiled() throws IOException {
+		File fileJasper = findResource(COMM_FILE_COMPILED);
+		
+		assertTrue(fileJasper.exists());
+		
+		logger.info("Resource Path: {}. {}", fileJasper.exists(),
+				fileJasper.getAbsolutePath());
+		
+		byte[] fileBytes = null;
+		InputStream is = new FileInputStream(fileJasper);
+		try {
+			fileBytes = IOUtils.toByteArray(is);
+		} finally {
+			is.close();
+		}
+		checkNotNull(fileBytes);
+		reportTemplateService.saveReportTemplateBodyCompiled(TEST_REPORT_TEMPLATE_ID,
+				fileBytes, fileJasper.getName());
 	}
 
 	@Test
@@ -149,13 +178,27 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		List<ReportShedule> reportSheduleList = reportSheduleService
 				.selectReportShedule(DateTime.now(),
 						currentSubscriberService.getSubscriberId());
-		
+
 		for (ReportShedule rs : reportSheduleList) {
-			reportTemplateService.saveReportTemplateBody(rs.getReportTemplate().getId(),
-					fileBytes, fileJasper.getName());
-			
+			reportTemplateService.saveReportTemplateBodyCompiled(rs.getReportTemplate()
+					.getId(), fileBytes, fileJasper.getName());
+
 		}
 
+	}
+
+	@Test
+	public void testLoadedReportTemplateBody() {
+		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository
+				.findOne(TEST_REPORT_TEMPLATE_ID);
+		assertNotNull(reportTemplateBody);
+		byte[] fileBody = reportTemplateBody.getBody();
+		assertNotNull(fileBody);
+		logger.info("FileBody length: {}", fileBody.length);
+
+		byte[] fileBodyCompiled = reportTemplateBody.getBodyCompiled();
+		assertNotNull(fileBodyCompiled);
+		logger.info("fileBodyCompiled length: {}", fileBodyCompiled.length);
 	}
 
 }

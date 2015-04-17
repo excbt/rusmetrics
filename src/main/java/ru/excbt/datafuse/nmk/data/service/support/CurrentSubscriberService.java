@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
@@ -22,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 public class CurrentSubscriberService {
 
 	private static final long SUBSCR_ORG_ID = 728;
+	private static final long NOT_LOGGED_ORG_ID = 728;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(CurrentSubscriberService.class);
@@ -71,7 +73,14 @@ public class CurrentSubscriberService {
 	 */
 	public long getSubscriberId() {
 
-		Long userId = currentUserService.getCurrentAuditUser().getId();
+		AuditUser auditUser = currentUserService.getCurrentAuditUser();
+		checkNotNull(auditUser, "AuditUser from currentUserService is NULL");
+
+		Long userId = auditUser.getId();
+
+		if (userId == null) {
+			return NOT_LOGGED_ORG_ID;
+		}
 
 		checkNotNull(userId);
 
@@ -83,6 +92,8 @@ public class CurrentSubscriberService {
 			if (userInfo != null) {
 				em.detach(userInfo);
 				getFullUserMap().put(userId.toString(), userInfo);
+			} else {
+				return NOT_LOGGED_ORG_ID;
 			}
 
 		}
@@ -100,15 +111,16 @@ public class CurrentSubscriberService {
 	 */
 	public Subscriber getSubscriber() {
 		long subscriberId = getSubscriberId();
-		
+
 		Subscriber subscriber = getSubscriberMap().get(subscriberId);
 		if (subscriber == null) {
 			subscriber = subscriberService.findOne(subscriberId);
-			if (subscriber !=null) {
-				getSubscriberMap().put(String.valueOf(subscriberId), subscriber);
+			if (subscriber != null) {
+				getSubscriberMap()
+						.put(String.valueOf(subscriberId), subscriber);
 			}
 		}
-		
+
 		return subscriber;
 	}
 }

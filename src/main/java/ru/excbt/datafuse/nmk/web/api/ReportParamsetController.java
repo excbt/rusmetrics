@@ -131,8 +131,8 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getReportParamsetListArchEvent() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, false,
-						currentSubscriberService.getSubscriberId());
+				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT,
+						false, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -214,6 +214,7 @@ public class ReportParamsetController extends WebApiController {
 
 		reportParamset.setReportTemplate(reportTemplate);
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+		reportParamset.set_active(true);
 
 		ReportParamset resultEntity = null;
 		try {
@@ -469,7 +470,8 @@ public class ReportParamsetController extends WebApiController {
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during move to archive entity ReportParamset (id={}): {}",
+			logger.error(
+					"Error during move to archive entity ReportParamset (id={}): {}",
 					reportParamsetId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
@@ -478,8 +480,45 @@ public class ReportParamsetController extends WebApiController {
 		if (resultEntity == null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
-		
+
 		return ResponseEntity.accepted().body(resultEntity);
-	}	
-	
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/contObjects", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateReportParamsetContObjects(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = true) Long[] contObjectIds) {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(contObjectIds);
+
+		for (Long id : contObjectIds) {
+			if (!subscriberService.checkContObjectSubscription(
+					currentSubscriberService.getSubscriberId(), id)) {
+				return ResponseEntity.badRequest().build();
+			}
+		}
+
+		try {
+			reportParamsetService.updateUnitToParamset(reportParamsetId,
+					contObjectIds);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error(
+					"Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+					reportParamsetId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		return ResponseEntity.accepted().build();
+	}
+
 }

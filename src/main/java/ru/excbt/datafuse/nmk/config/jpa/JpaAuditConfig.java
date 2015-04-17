@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.config;
+package ru.excbt.datafuse.nmk.config.jpa;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

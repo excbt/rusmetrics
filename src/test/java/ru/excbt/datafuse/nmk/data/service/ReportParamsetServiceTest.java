@@ -90,7 +90,7 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		assertTrue(listCO.size() > 0);
 
 		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(),
-				unit.getId());
+				co.getId());
 
 		if (contObjects.size() > 1) {
 			co = contObjects.get(1);
@@ -123,4 +123,13 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		logger.info("Found {} Available ContObjects", contObjects.size());
 	}
 
+	
+	@Test
+	public void testParamsetUpdateUnitObjects() {
+
+		Long[] objectIds = {1L,2L,3L,4L,55L};
+		
+		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID, objectIds);
+		
+	}
 }
