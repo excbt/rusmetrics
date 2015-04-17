@@ -90,7 +90,7 @@ public class ReportParamsetServiceTest extends JpaConfigTest {
 		assertTrue(listCO.size() > 0);
 
 		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(),
-				unit.getId());
+				co.getId());
 
 		if (contObjects.size() > 1) {
 			co = contObjects.get(1);

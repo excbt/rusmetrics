@@ -15,7 +15,7 @@ public class RestCheckController {
 	
 	@RequestMapping(method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
-		return ResponseEntity.ok("Hallo. Check is OK. I am a JSON )))");
+		return ResponseEntity.ok("Hallo. Check is OK. I am a JSON. И я могу по РУССКИ )))");
 	}	
 	
 }
