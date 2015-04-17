@@ -450,4 +450,36 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.ok().build();
 	}
 
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> moveToArchive(
+			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId) {
+
+		checkNotNull(reportParamsetId);
+
+		ReportParamset resultEntity = null;
+
+		try {
+			resultEntity = reportParamsetService
+					.moveToArchive(reportParamsetId);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during move to archive entity ReportParamset (id={}): {}",
+					reportParamsetId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		if (resultEntity == null) {
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+		}
+		
+		return ResponseEntity.accepted().body(resultEntity);
+	}	
+	
 }

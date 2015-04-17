@@ -268,7 +268,7 @@ public class ReportTemplateController extends WebApiController {
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save entity ReportTemplate (id={}): {}",
+			logger.error("Error during move to archive entity ReportTemplate (id={}): {}",
 					reportTemplateId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
