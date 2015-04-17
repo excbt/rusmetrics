@@ -1,11 +1,11 @@
 'use strict';
 var app = angular.module('portalNMK');
 
-app.controller('ParamSetsCtrl',['$scope', '$resource','crudGridDataFactory','notificationFactory',function($scope, $resource, crudGridDataFactory, notificationFactory){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDataFactory','notificationFactory',function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
     
     //$scope.active_tab_active_templates = true;
     $scope.set_of_objects_flag = false;
-    
+    $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
     $scope.columns = [
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
 //        ,{"name":"templatesCount", "header":"Кол-во шаблонов", "class":"col-md-1"}
@@ -35,7 +35,7 @@ app.controller('ParamSetsCtrl',['$scope', '$resource','crudGridDataFactory','not
     $scope.currentObject = {};
     $scope.createByTemplate_flag = false;
     $scope.archiveParamset = {};
-    $scope.activeStartDateFormat = null;
+    $scope.activeStartDateFormat = new Date();
     
     $scope.columns = [
         {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
@@ -175,6 +175,7 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
+        
         $scope.getTemplates();
 //console.log("Selected item = ");        
 //for(var k in $scope.currentObject){
@@ -200,10 +201,16 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
     };
     
     $scope.saveParamset = function(object){
-         
+console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);         
         var table="";
         object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
-        if ($scope.createParamset_flag){
+        if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
+            object.paramsetStartDate = (new Date($rootScope.reportStart)) || null;
+            object.paramsetEndDate = (new Date($rootScope.reportEnd)) || null;
+        }
+
+        if ($scope.createParamset_flag){            
+            object._active = true;
             switch ($scope.currentReportType.reportType){
                 case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce"; break;   
                 case "CONS_REPORT":  table=$scope.crudTableName+"/cons"; break;   
@@ -388,5 +395,15 @@ console.log("el["+k+"]= "+el[k]);
     $scope.closeSaveObjectModal = function(){
         $('#saveObjectModal').hide();
     };
+    
+    $scope.$watch('currentObject.reportPeriodKey', function (newKey) {
+        //отслеживаем изменение периода у варианта отчета
+        for (var i = 0; i<$scope.reportPeriods.length;i++){
+            if (newKey == $scope.reportPeriods[i].keyname){
+                $scope.currentSign = $scope.reportPeriods[i].sign;
+            };
+        };
+              
+    }, false);
     
 }]);

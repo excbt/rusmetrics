@@ -447,3 +447,7 @@ a.list-group-item:focus {
 .common {
     font-weight: lighter;
 }
+
+#inputStartDate {
+    line-height: 19px;
+}

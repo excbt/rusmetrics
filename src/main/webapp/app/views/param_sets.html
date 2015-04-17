@@ -68,7 +68,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="setCurrentReportType(object);selectedItem(oldObject);createParamset_flag=false;" data-target="#createParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="createParamset_flag=false;setCurrentReportType(object);selectedItem(oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
                                                             <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="setCurrentReportType(object);selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
@@ -146,7 +146,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать новый действующий вариант на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="" data-target="" data-toggle="modal"></i>
+                                                            <td>    <i title="Создать новый действующий вариант на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(oldObject)" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -343,7 +343,7 @@
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;saveParamset(currentObject);">Выбор объектов</a></li>
+                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;saveParamset(currentObject);" ng-show="!(currentObject.reportTemplate.id==null)">Выбор объектов</a></li>
                 <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>
 
               </ul>
@@ -375,13 +375,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select style="width: 150px;" ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset">
+                                        <td class="col-sm-9 textAlign_left"><select class="required" style="width: 150px;" ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset"  required>
 <!--
                                                 <option>Шаблон 1</option>
                                                 <option>Ш 2</option>
                                                 <option>Нолбаш E</option>
 -->
-                                            </select>
+                                            </select>*
                                         </td>
                                     </tr>
                                     <tr>
@@ -408,7 +408,7 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+                                        <td class="col-sm-9 textAlign_left"><select class="required" id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
 <!--
                                                 <option>Вчера</option>
                                                 <option>Последний месяц</option>
@@ -416,7 +416,16 @@
                                             </select>
                                         </td>
                                     </tr>
-                                    <tr ng-show="currentObject.reportPeriod.sign==null">
+<!--                                    temp    -->
+                                    <tr>
+                                        <td><label for="inputDescription" >Параметры периода:</label>
+                                        </td>
+                                        <td class="textAlign_left">
+                                            {{currentObject.reportPeriodKey}}, {{currentSign}}
+                                        </td>
+                                    </tr>
+<!--                                    end temp-->
+                                    <tr ng-show="currentSign==null">
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
@@ -527,15 +536,19 @@
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
-                    <div class="row" ng-show="!set_of_objects_flag">
+                    <div class="row" >
+                        <label>* - обязательно для заполнения</label>
+                    </div>
+                    <div class="row" ng-show="!set_of_objects_flag && createParamset_flag">
                         <label>При переходе на вкладку выбора объектов текущий вариант отчета будет сохранен!</label>
                     </div>
 
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject()"
-								value="Сохранить" />
+								ng-click="saveParamset(currentObject)"
+								value="Сохранить" 
+                                ng-disabled="currentObject.reportTemplate.id==null"   />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
@@ -582,7 +595,7 @@
 					<div class="row">
 						<div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
+								ng-click="moveToArchiveObject(currentObject);"
 								value="Переместить" />
 						</div>
 
@@ -603,6 +616,7 @@
 	</div>
 </div>
         
+<!--
 <div id="saveObjectModal" class="modal fade" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
@@ -651,4 +665,5 @@
 		</span>
 	</div>
 </div>
+-->
 
