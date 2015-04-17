@@ -201,8 +201,14 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
 //    };
     
     $scope.saveParamset = function(object){
-console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);         
+console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);
+console.log("$scope.editParamset_flag = "+$scope.editParamset_flag);        
+console.log("$scope.createByTemplate_flag = "+$scope.createByTemplate_flag);                
         var table="";
+        
+        var tmp = $scope.selectedObjects.map(function(elem){
+            return elem.id;
+        });
         object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
             object.paramsetStartDate = (new Date($rootScope.reportStart)) || null;
@@ -213,22 +219,22 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
         if ($scope.createByTemplate_flag){
             object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;    
-            crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
+            crudGridDataFactory(table).save({contObjectIds: tmp}, object, successCallback, errorCallback);
             return;
         };
-        if ($scope.createParamset_flag){            
-            object._active = true;
-            switch ($scope.currentReportType.reportType){
+        switch ($scope.currentReportType.reportType){
                 case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce"; break;   
                 case "CONS_REPORT":  table=$scope.crudTableName+"/cons"; break;   
                 case "EVENT_REPORT":  table=$scope.crudTableName+"/event"; break;       
             };
-            crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id},object, successCallback, errorCallback);
+        if ($scope.createParamset_flag){            
+            object._active = true;
+            
+            crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id, contObjectIds: tmp},object, successCallback, errorCallback);
         };
         if ($scope.editParamset_flag){
-            crudGridDataFactory(table).update({reportParamsetId: object.id}, object, successCallback, errorCallback);
-            $scope.getAvailableObjects();
-            $scope.getSelectedObjects();
+//            table = table+"?contObjectIds="+tmp;         
+            crudGridDataFactory(table).update({reportParamsetId: object.id, contObjectIds: tmp}, object, successCallback, errorCallback);
         };
     };
     
@@ -250,6 +256,7 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
 //    };
     
     $scope.createByTemplate =  function(object){
+//        Установка объектов при создании варианта по архивному шаблону
         $scope.createByTemplate_flag = true;
         $scope.archiveParamset = {};
         $scope.archiveParamset.id = object.id;
@@ -265,6 +272,7 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
     };
     
     $scope.setDefault = function(){
+//        Сброс всех вспомогательных объектов в дефолтное состояние
         $scope.currentObject = {};
         $scope.createByTemplate_flag = false;
         $scope.archiveParamset = {};
@@ -274,6 +282,11 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
         $scope.editParamset_flag = false;
         $scope.set_of_objects_flag = false;
         $scope.currentSign = 9999;
+        //Устанавливаем активность вкладок по дефолту: Основные свойства - активная, Выбор объектов - неактивная
+        $('#main_properties_tab').addClass("active");
+        $('#main_properties').addClass("active");
+        $('#set_of_objects_tab').removeClass("active");
+        $('#set_of_objects').removeClass("active");
         
     };
     
@@ -287,14 +300,23 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
         $scope.currentObject = {};
         $scope.createParamset_flag = true;
         $scope.getTemplates();
+        $scope.getAvailableObjects(0); //Ноль используем для вновь созданных объектов - у нас нет другого способа получить доступные объекты для нового парамсета.
+        $scope.selectedObjects = [];
+    };
+    $scope.editParamSet =function(parentObject,object){
+        $scope.setCurrentReportType(parentObject);
+        $scope.selectedItem(object);
+        $scope.editParamset_flag = true;
+        $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета
+        $scope.getSelectedObjects();
     };
     
      //Account objects
     $scope.availableObjects = [];
     $scope.selectedObjects = [];
     
-    $scope.getAvailableObjects = function(){
-        var table=$scope.crudTableName+"/0/contObject/available";
+    $scope.getAvailableObjects = function(paramsetId){
+        var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";
         crudGridDataFactory(table).query(function(data){
             $scope.availableObjects = data;
 //for(var k in $scope.availableObjects){
@@ -302,7 +324,7 @@ console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParams
 //}            
         });
     };
-    $scope.getAvailableObjects();
+//    $scope.getAvailableObjects();
     $scope.getSelectedObjects = function(){
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
@@ -347,7 +369,7 @@ console.log("Find: arr1["+i+"]= "+arr1[i].fullName);
         var tmp = resultArr.map(function(elem){
             return elem.id;
         });
-        
+//console.log("tmp="+tmp);       
         return tmp; //Возвращаем массив Id-шников выбранных объектов
         
 //for(var k in el){        

@@ -44,8 +44,8 @@
                                         <div class="col-md-11">
                                             <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount}})</small>
                                             </div>    
-                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCIAL_REPORT'">
-                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>
+                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
+                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>
                                             </div>
                                         </div>
 
@@ -67,7 +67,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
                                                             <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
@@ -145,7 +145,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -264,19 +264,21 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputType">Тип отчета</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input type=text disabled=true size="20" value="Коммерческий">
+                                <td class="col-sm-9 textAlign_left">
+                                    {{currentReportType.reportTypeName}}
+<!--                                    <input type=text disabled=true size="20" value="Коммерческий">-->
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование шаблона" ng-model="currentObject.name">
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование шаблона" ng-model="currentObject.name">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.description"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.description"></textarea>
                                 </td>
                             </tr>
 <!--
@@ -298,7 +300,7 @@
                                 </td>
                                 <td class="textAlign_left col-sm-9">
                                     
-                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" > 
+                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" > 
                                 </td>
                                 
                             </tr>
@@ -306,7 +308,9 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat" disabled=true> 
+                                <td class="col-sm-9 textAlign_left">
+<!--                                    <input class="form-control marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat" disabled=true> -->
+                                    {{endDateFormat}}
                                 </td>
                             </tr>
                             
@@ -509,19 +513,21 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputType">Тип отчета</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input type=text disabled=true size="20" value="Коммерческий">
+                                <td class="col-sm-9 textAlign_left">
+                                    {{currentReportType.reportTypeName}}
+<!--                                    <input type=text disabled=true size="20" value="Коммерческий">-->
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование шаблона" ng-model="currentObject.name">
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.description"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
                                 </td>
                             </tr>
 
@@ -538,7 +544,7 @@
 <!--                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> -->
                                 </td>
                                 <td class="textAlign_left col-sm-9" ng-show="createByTemplate_flag">
-                                    <input class="marginRight28" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
+                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
                                 </td>                                
                             </tr>
                             

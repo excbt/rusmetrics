@@ -57,7 +57,7 @@
 
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
 
@@ -68,7 +68,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editParamset_flag=true;setCurrentReportType(object);selectedItem(oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editParamSet(object,oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
                                                             <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="setCurrentReportType(object);selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
@@ -135,7 +135,7 @@
 
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(oldObject)" ng-dblclick="">
 
@@ -342,8 +342,8 @@
 
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" ><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
+                <li role="presentation" class="active" id="main_properties_tab"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
 <!--                <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>-->
 
               </ul>
@@ -377,7 +377,7 @@
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.reportTemplate.id==null)}">
-                                            <select class="form-control inputData"  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset">
+                                            <select class="form-control "  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset">
 <!--
                                                 <option>Шаблон 1</option>
                                                 <option>Ш 2</option>
@@ -391,13 +391,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputName">Наименование</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта" ng-model="currentObject.name">
+                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование варианта" ng-model="currentObject.name">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><label for="inputDescription" >Описание</label>
                                         </td>
-                                        <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.description"></textarea>
+                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
                                         </td>
                                     </tr>
 
@@ -414,7 +414,7 @@
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
-                                                <select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+                                                <select class="form-control input-sm inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
     <!--
                                                     <option>Вчера</option>
                                                     <option>Последний месяц</option>
@@ -448,13 +448,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без расширения</small>)</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input id="inputFileTemplate" type=text size="50" placeholder="Шаблон имени файла" ng-model="currentObject.outputFileTemplateName">
+                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileTemplateName">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.outputFileType"> 
+                                        <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
                                             </select>
@@ -471,7 +471,7 @@
                                         </td>
                                         <td class="textAlign_left col-sm-9">
 
-                                            <input class="marginRight28" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
+                                            <input class="form-control input-sm marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
                                         </td>
 
                                     </tr>
@@ -539,11 +539,11 @@
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
-                                ng-disabled="(currentObject.reportTemplate.id==null)||(currentObject.reportPeriodKey==null)"   />
+                                ng-disabled="(currentObject.reportTemplate.id==null)||(currentObject.reportPeriodKey==null)"  data-target="#main_properties" data-toggle="tab" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject');setDefault();set_of_objects_flag=false" data-target="#main_properties" data-toggle="tab">
+								ng-click="exit('#currentObject');setDefault();" data-target="#main_properties" data-toggle="tab">
 								Отменить
 							</button>
 						</div>
