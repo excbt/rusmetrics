@@ -17,8 +17,8 @@
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
         <!--       Активные / Архивные -->
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive();" style="width:108px;text-align:center">Архив</a></li>
+            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_paramsets" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
+            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();" style="width:108px;text-align:center">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
@@ -154,7 +154,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-4 ">     
-                                                    {{oldObject.reportSetName}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportSetPeriod}}</label>
+                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label>
                                             </div>
                                             <div class="col-md-5">     
                                                     в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
@@ -375,13 +375,17 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select class="required" style="width: 150px;" ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset"  required>
+                                        <td class="col-sm-9 textAlign_left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.reportTemplate.id==null)}">
+                                            <select class="form-control inputData"  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset">
 <!--
                                                 <option>Шаблон 1</option>
                                                 <option>Ш 2</option>
                                                 <option>Нолбаш E</option>
 -->
-                                            </select>*
+                                            </select>
+                                            
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -408,15 +412,19 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select class="required" id="inputPeriod" placeholder="" style="width: 150px;" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
-<!--
-                                                <option>Вчера</option>
-                                                <option>Последний месяц</option>
--->
-                                            </select>
+                                        <td class="col-sm-9 textAlign_left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
+                                                <select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+    <!--
+                                                    <option>Вчера</option>
+                                                    <option>Последний месяц</option>
+    -->
+                                                </select>
+                                            </div>    
                                         </td>
                                     </tr>
 <!--                                    temp    -->
+<!--
                                     <tr>
                                         <td><label for="inputDescription" >Параметры периода:</label>
                                         </td>
@@ -424,6 +432,7 @@
                                             {{currentObject.reportPeriodKey}}, {{currentSign}}
                                         </td>
                                     </tr>
+-->
 <!--                                    end temp-->
                                     <tr ng-show="currentSign==null">
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
@@ -531,17 +540,19 @@
                         </div>
                     </div>
                 </div>    
-
-			
+                </div>
+                </div>	
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
+<!--
                     <div class="row" >
                         <label>* - обязательно для заполнения</label>
                     </div>
                     <div class="row" ng-show="!set_of_objects_flag && createParamset_flag">
                         <label>При переходе на вкладку выбора объектов текущий вариант отчета будет сохранен!</label>
                     </div>
+-->
 
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
@@ -566,7 +577,8 @@
 		</span>
 	</div>
 </div>
-
+   
+    
 <div id="moveToArchiveModal" class="modal fade" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
@@ -595,13 +607,13 @@
 					<div class="row">
 						<div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block"
-								ng-click="moveToArchiveObject(currentObject);"
+								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
 
 						<div class="col-xs-offset-2 col-md-3">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
+								ng-click="exit('#moveToArchive');">
 								Отменить
 							</button>
 						</div>

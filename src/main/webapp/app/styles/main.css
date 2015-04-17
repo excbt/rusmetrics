@@ -451,3 +451,7 @@ a.list-group-item:focus {
 #inputStartDate {
     line-height: 19px;
 }
+
+.inputData {
+    width: 330px;
+}
