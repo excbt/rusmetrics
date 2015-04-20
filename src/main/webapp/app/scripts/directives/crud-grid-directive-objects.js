@@ -53,48 +53,56 @@ console.log("Loading crudGridObjects directive.");
                 
 
                 var $docScope = angular.element(document).scope();
-
-                $scope.setLookupData = function () {
-           
-                    for (var i = 0; i < $scope.columns.length; i++) {
-                        var c = $scope.columns[i];
-                        if (c.lookup && !$scope.hasLookupData(c.lookup.table)) {
-                        	var lookup_table = c.lookup.table;
-            				$scope.initLookupData(lookup_table);
-                        }
-                    }    
-                };
                 
-                $scope.resetLookupData = function(table) {
-                    $scope.setIndividualLookupData(table, {});
-                    $scope.setLookupData();
-                };
+                
+                //Режимы функционирования (лето/зима)
+                $scope.cont_zpoint_setting_mode_check = [
+                    {"keyname":"summer", "caption":"Летний режим"}
+                    ,{"keyname":"winter", "caption":"Зимний режим"}
+                ];
+                
 
-                $scope.getLookupData = function (table) {
-                    return typeof table == 'undefined' ? null : $scope.lookups[table.toLowerCase()];
-                };
-
-                $scope.setIndividualLookupData = function (table, data) {
-
-                    $scope.lookups[table.toLowerCase()] = data;
-                };
-
-                $scope.hasLookupData = function (table) {                    
-                    return !$.isEmptyObject($scope.getLookupData(table));
-                };
-
-                $scope.getLookupValue = function (lookup, key) {
-                    var data = $scope.getLookupData(lookup.table);
-
-                    if (typeof data != 'undefined') {
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i][lookup.key] === key)
-                                return data[i][lookup.value];
-                        }
-                    }
-
-                    return '';
-                };
+//                $scope.setLookupData = function () {
+//           
+//                    for (var i = 0; i < $scope.columns.length; i++) {
+//                        var c = $scope.columns[i];
+//                        if (c.lookup && !$scope.hasLookupData(c.lookup.table)) {
+//                        	var lookup_table = c.lookup.table;
+//            				$scope.initLookupData(lookup_table);
+//                        }
+//                    }    
+//                };
+//                
+//                $scope.resetLookupData = function(table) {
+//                    $scope.setIndividualLookupData(table, {});
+//                    $scope.setLookupData();
+//                };
+//
+//                $scope.getLookupData = function (table) {
+//                    return typeof table == 'undefined' ? null : $scope.lookups[table.toLowerCase()];
+//                };
+//
+//                $scope.setIndividualLookupData = function (table, data) {
+//
+//                    $scope.lookups[table.toLowerCase()] = data;
+//                };
+//
+//                $scope.hasLookupData = function (table) {                    
+//                    return !$.isEmptyObject($scope.getLookupData(table));
+//                };
+//
+//                $scope.getLookupValue = function (lookup, key) {
+//                    var data = $scope.getLookupData(lookup.table);
+//
+//                    if (typeof data != 'undefined') {
+//                        for (var i = 0; i < data.length; i++) {
+//                            if (data[i][lookup.key] === key)
+//                                return data[i][lookup.value];
+//                        }
+//                    }
+//
+//                    return '';
+//                };
 
                 $scope.toggleAddMode = function () {
                     $scope.addMode = !$scope.addMode;
@@ -124,9 +132,9 @@ console.log("Loading crudGridObjects directive.");
                     });
                 };
 
-                $scope.$on('lookupDataChange', function (scope, table) {
-                    $scope.resetLookupData(table[0]);
-                });
+//                $scope.$on('lookupDataChange', function (scope, table) {
+//                    $scope.resetLookupData(table[0]);
+//                });
 
                 var errorCallback = function (e) {
                     notificationFactory.error(e.data.ExceptionMessage);
@@ -165,16 +173,16 @@ console.log("Loading crudGridObjects directive.");
 
                 $scope.getData(
                     function () {
-                        $scope.setLookupData();
+//                        $scope.setLookupData();
                         $scope.loading = false;
                     });
                 
-                $scope.initLookupData = function(table){
-                	crudGridDataFactory(table).query(function (data) {
-                		$scope.setIndividualLookupData(table, data);
-                	});
-                };
-                
+//                $scope.initLookupData = function(table){
+//                	crudGridDataFactory(table).query(function (data) {
+//                		$scope.setIndividualLookupData(table, data);
+//                	});
+//                };
+//                
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);
 			        $scope.currentObject = curObject;

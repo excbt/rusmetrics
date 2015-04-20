@@ -310,20 +310,20 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input disabled="true" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
+                                <td class="col-sm-9 textAlign_left"><input disabled="true" class="" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="textAlign_left "><textarea disabled="true" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
+                                <td class="textAlign_left "><textarea disabled="true" class="" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputType">Тип</label>
                                     
                                 </td>
-                                <td class="textAlign_left "><input type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
+                                <td class="textAlign_left "><input class="" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
                                     <div ng-show="zpointSettings.piped">
                                         <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.singlePipe">Однотрубная
                                         <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.doublePipe">Двухтрубная
@@ -333,13 +333,13 @@
                              <tr>
                                 <td class="col-sm-3"><label for="inputDevice">Прибор</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left "><input disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
+                                <td class="col-sm-9 textAlign_left "><input class="" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputPCO">РСО</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
+                                <td class="col-sm-9 textAlign_left"><input class="" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
 
                                 </td>
                             </tr>
@@ -422,7 +422,7 @@
                                             от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_min">
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_max"> т/час
+                                            до <input class=" span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_max"> т/час
                                         </div>
 
                                     </div> 
@@ -431,11 +431,11 @@
                                             <input type="checkbox" title="M2" class="" ng-model="zpointSettings.summer.wm_M2_chk"/>М2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_min">
+                                            от <input class=" span2" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_min">
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_max"> т/час
+                                            до <input class=" span2" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M2_max"> т/час
                                         </div>
 
                                     </div> 
@@ -864,25 +864,25 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputName" placeholder="Наименование" size="50">
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Описание" cols="51"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Описание - Это поле отсутвтует у объекта" ></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputAddress">Адрес</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input type="text" id="inputAddress" placeholder="Адрес" size="50">
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputCC" style="width:329px;">
+                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputCC" >
                                                         <option>УК 1</option>
                                                         <option>Ук 3</option>
                                     </select>
@@ -891,25 +891,28 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9"><select id="inpuinputModetPCO" style="width:127px;">
+                                <td class="textAlign_left col-sm-9"><select class="form-control inputData" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+<!--
                                                         <option>Летний</option>
                                                         <option>Зимний</option>
+-->
                                     </select>
                                 </td>
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-6"><label for="inputThv">Температура холодной воды</label>
+                                <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
                                 </td>
-                                <td class="textAlign_left col-sm-6"><input type="text" id="inputThv" placeholder="" size="4"> &deg; C 
+                                <td class="textAlign_left col-sm-9">
+                                        <input class="form-control inputDigitalData" type="text" id="inputThv" placeholder="" > <label class="control-label">&deg; C </label>
                                 </td>
                                 
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-6"><label for="inputSquare">Отапливаемая площадь</label>
+                                <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
                                 </td>
-                                <td class="col-sm-6 textAlign_left"><input type="text" id="inputSquare" placeholder="" size="4"> кв. м.
+                                <td class="col-sm-9 textAlign_left"><input class="form-control inputDigitalData" type="text" id="inputSquare" placeholder="" > кв. м.
                                 </td>
                             </tr>
                             
@@ -940,7 +943,7 @@
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click=""
+								ng-click="updateObject(currentObject)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">

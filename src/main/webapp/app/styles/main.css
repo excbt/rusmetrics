@@ -455,3 +455,8 @@ a.list-group-item:focus {
 .inputData {
     width: 150px;
 }
+
+.inputDigitalData {
+    width: 80px;
+    display: inline;
+}
