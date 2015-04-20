@@ -129,6 +129,9 @@ input[type="radio"]{
   }
 }
 
+.noMarginTop {
+    margin-top: 0;
+}
 .noMarginBottom {
     margin-bottom: 0;
 }
@@ -195,6 +198,10 @@ input[type="radio"]{
 
 .paddingTop10 {
     padding-top: 10px;
+}
+
+.paddingTop15 {
+    padding-top: 15px;
 }
 
 .paddingTop3 {
@@ -459,4 +466,17 @@ a.list-group-item:focus {
 .inputDigitalData {
     width: 80px;
     display: inline;
+}
+
+.excbt_inputFormControl {
+    font-size: 12px;
+    height: 24px;
+}
+
+.excbt_selectObjectWindow > .modal-backdrop {
+    background-color: inherit;
+}
+
+.excbt_selectObjectWindow > .modal-dialog {
+    margin-top: 200px;
 }

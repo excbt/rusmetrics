@@ -8,7 +8,7 @@
  * Controller of the portalNMK
  */
 angular.module('portalNMK')
-  .controller('NoticeCtrl',['$scope', 'crudGridDataFactory', function ($scope, crudGridDataFactory) {
+  .controller('NoticeCtrl',['$scope', 'crudGridDataFactory', function ($scope, crudGridDataFactory, DTOptionsBuilder, DTColumnBuilder) {
 
     $scope.crudTableName= "../api/subscr/contObjects";
     
@@ -57,16 +57,20 @@ angular.module('portalNMK')
       //Получаем уведомления
         $scope.data = {};
         $scope.getData = function () {
-            var table =  $scope.crudTableName+"/events";
+            var table =  $scope.crudTableName+"/events";    
             crudGridDataFactory(table).query(function (data) {
 
                 var tempArr = [];
                 var noticesByAbonent = data;
 
                 console.log("Table = "+table);
-
-
-                var tmp = data.map(function(el) {
+//        Заглушка. Будем брать из полученного массива  уведомлений первую попавшуюся тысячу и выводить ее       
+                var ROW_COUNT_TO_PAGE = 1000;
+                var tmpRowCount = 0;
+                var tmp1 = data.slice(0,999);
+                
+// ........................................................................                
+                var tmp = tmp1.map(function(el) {
                     var result = {};
                     result.noticeCheckbox = " ";
                     result.noticeType = el.contEventType.name;
@@ -80,7 +84,10 @@ angular.module('portalNMK')
                             case "hw" : result.noticeZpoint = "ГВС"; break;
                             default: result.noticeZpoint  = el.contServiceType;
                     }
+              
                     return result;
+                    
+                    
                 });
 
                 $scope.data = tmp;
@@ -88,6 +95,56 @@ angular.module('portalNMK')
             });
         };
 
-        $scope.getData();
+      //get Events
+ //       $scope.getData();
+      
+      //get Objects
+        $scope.objects = [];
+        $scope.getObjects = function(){
+            crudGridDataFactory($scope.crudTableName).query(function(data){
+                $scope.objects = data;
+console.log("data = "+data);                
+            });
+        };
+        $scope.getObjects();
+      
+      
+      $scope.selectObjectsClick = function(){
+          $('#selectObjectsModal').modal('show');
+      };
+      
+      $scope.selectObjects = function(){
+          $scope.selectedObjects_list = "";
+          $('#selectObjectsModal').modal('hide');
+          $scope.objects.map(function(el){
+              if(el.selected){
+                  $scope.selectedObjects_list+=el.fullName+";";
+                  
+              }
+          });
+console.log($scope.selectedObjects_list);          
+      };
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      //use angular-datatable
+//      $scope.dtOptions = DTOptionsBuilder.fromFnPromise(function(){
+//          var table =  $scope.crudTableName+"/events";
+//          return crudGridDataFactory(table).query().$promise;
+//      }).withPaginationType('full_numbers');
+//      $scope.dtColumns = [
+//        DTColumnBuilder.newColumn('noticeCat').withTitle('Категория').notVisible(),
+//        DTColumnBuilder.newColumn('noticeType').withTitle('Тип'),
+//        DTColumnBuilder.newColumn('noticeText').withTitle('Уведомление')
+//        ,DTColumnBuilder.newColumn('noticeDate').withTitle('Дата')  
+//      ];
+      
 
   }]);

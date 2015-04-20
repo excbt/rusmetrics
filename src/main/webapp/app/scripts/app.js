@@ -20,6 +20,7 @@ var app = angular
     'ngTouch',
     'ui.tree',
     'daterangepicker'
+      ,'datatables'
   ]);
 
 app.config(function ($routeProvider) {

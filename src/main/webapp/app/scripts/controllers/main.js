@@ -171,4 +171,41 @@ var app = angular.module('portalNMK');
   }]);
 
 
+///////////////////////////////test
+
+//angular.module('portalNMK').
+//factory('DTLoadingTemplate', dtLoadingTemplate);
+//function dtLoadingTemplate() {
+//    return {
+//        html: '<h3>Загрузка...</h3>'
+//    };
+//}
+
+
+angular.module('portalNMK').controller('WithPromiseCtrl', WithPromiseCtrl);
+
+function WithPromiseCtrl(DTOptionsBuilder, DTColumnBuilder, $resource) {
+    var crudTableName= "../api/subscr/contObjects";
+    
+    var vm = this;
+    vm.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
+        var table =  crudTableName+"/events";
+          return $resource(crudTableName).query().$promise;
+    }).withPaginationType('full_numbers')
+    .withLanguageSource('vendor_components/DataTables-1.10.6/plugins/i18n/Russian.json')
+ 
+    ;
+
+    vm.dtColumns = [
+//        DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
+//        DTColumnBuilder.newColumn('contObjectId').withTitle('Тип'),
+//        DTColumnBuilder.newColumn('message').withTitle('Уведомление')
+//        ,DTColumnBuilder.newColumn('noticeDate').withTitle('Дата') 
+        DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
+        DTColumnBuilder.newColumn('fullName').withTitle('Название'),
+        DTColumnBuilder.newColumn('fullAddress').withTitle('Адрес')
+    ];
+}
+////////////////////////////////// end test
+
 

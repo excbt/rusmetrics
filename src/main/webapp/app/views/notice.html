@@ -23,10 +23,65 @@
     </pre>
 </div>
 -->
+<div class="container-fluid">
+<div class="row">    
+<div class="col-md-12 noPadding">
+    <div class="col-md-12 noPadding">
+        <b>Фильтры:</b>
+    </div>     
+    <div class="col-md-2 noPadding" ng-controller="DataRangeSettings">
+        <div>по интервалу дат:</div>
+        <input date-range-picker class="form-control excbt_inputFormControl date-picker"
+            type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+    </div>
+
+    <div class="col-md-3">
+        <div>по объектам:</div>
+        <div class="">
+                <input  class="form-control excbt_inputFormControl" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list">
+<!--
+            <ul class="navbar navbar-static">
+                <ul class="nav">
+                    <li class="dropdown">
+                      <a class="btn btn-default btn-xs dropdown-toggle" id="dObjects" role="button" data-toggle="dropdown" data-target="#" href="">
+                        по объектам
+                        <b class="caret"></b>
+                      </a>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="dObjects">
+                        <li class="modal-scrollable-area1"><table class="table table-striped table-condensed table-hover">
+                            <tr ng-repeat="object in objects">
+                                <td><input type="checkbox">{{object.fullName}}
+                                </td>    
+                            </tr>    
+                            </table>
+                        </li>
+                      </ul>
+                    </li>
+                </ul>
+            </ul>    
+-->
+<!--            <select class="form-control excbt_inputFormControl" ng-model="selectedObjects" multiple ng-options="object.id as object.fullName for object in objects"></select>-->
+        </div>
+    </div>
+    <div class="col-md-7 btn-toolbar">
+<!--        <div> </div>-->
+        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary">Применить</i>
+        </div>
+    </div>
+</div>
+</div>    
+</div>    
+<!--//////////////////////// Notices: react version-->
 <div>
     <table-component-react table-def="tableDef" data="data"/>
 <!--    <my-table cols="cols" rows="data" />-->
 </div>
+<!--///////////////////////-->
+
+<!--++++++++++++++++++++++++++++ Notices: angular-datatable-->
+<!--    <table datatable="" dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover"></table>-->
+<!--++++++++++++++++++++++++++++-->
+
 <!--Строка состояния-->
 <div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
                                                     <!--    navbar-fixed-bottom-->
@@ -46,4 +101,56 @@
                 
 					
 			</div>
+</div>
+
+
+<div id="selectObjectsModal" class="modal excbt_selectObjectWindow " role="dialog"
+	aria-labelledby="selectObjectsLabel" tabindex="-1">
+
+	<div class="modal-dialog ">
+<!--                modal-content">-->
+    <div class="modal-content modalWindow_lessWide">
+
+		<div class=" well modalWindow_lessWide noMarginBottom noPadding">
+            <div class="input-group col-md-12 filter marginBottom10">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                <input type="text" class="form-control" ng-model="objectfilter">
+                <span class="input-group-addon btn btn-default" ng-disabled="objectfilter.length == 0" ng-click="objectfilter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+            </div>
+		</div>
+		<div class=" well modal-scrollable-area1 modalWindow_lessWide noMarginBottom noMarginTop noPadding">
+
+			<table class="table table-striped table-condensed table-hover">
+                <tr ng-repeat="object in objects | filter: objectfilter">
+                    <td><input type="checkbox" ng-model="object.selected">{{object.fullName}}
+                    </td>    
+                </tr>    
+            </table>
+		</div>
+		<div class=" well modalWindow_lessWide noMarginBottom noMarginTop noPadding">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-4">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="selectObjects();"
+								value="Выбрать" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-4">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#moveToArchive');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+        </div>
 </div>
