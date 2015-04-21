@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -25,7 +26,7 @@ public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 	 */
 	private static final long serialVersionUID = -199459403017867220L;
 
-	@OneToOne 
+	@OneToOne (fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id")
 	private DeviceModel deviceModel;
 	
@@ -37,13 +38,6 @@ public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 
 	@Column(name = "ex_system")
 	private String exSystem;
-	
-//	@ManyToOne 
-//    @JoinTable(name="cont_device_object",
-//    joinColumns=@JoinColumn(name="device_object_id"),
-//    inverseJoinColumns=@JoinColumn(name="cont_object_id"))
-//	@JsonIgnore
-//	private ContObject contObject;
 	
 	@Version
 	private int version; 
@@ -79,14 +73,6 @@ public class DeviceObject extends AbstractAuditableEntity<AuditUser, Long> {
 	public void setExSystem(String exSystem) {
 		this.exSystem = exSystem;
 	}
-
-//	public ContObject getContObject() {
-//		return contObject;
-//	}
-//
-//	public void setContObject(ContObject contObject) {
-//		this.contObject = contObject;
-//	}
 
 	public int getVersion() {
 		return version;

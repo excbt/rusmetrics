@@ -3,10 +3,12 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,4 +57,29 @@ public class ContServiceDataHWaterService {
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 	}
 
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = false)
+	public ContServiceDataHWater selectLastData(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
+				.selectLastDetailByZPoint(contZPointId, new PageRequest(0, 1));
+		return resultList.size() > 0 ? resultList.get(0) : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = false)
+	public Date selectLastDataDate(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
+				.selectLastDetailByZPoint(contZPointId, new PageRequest(0, 1));
+		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
 }

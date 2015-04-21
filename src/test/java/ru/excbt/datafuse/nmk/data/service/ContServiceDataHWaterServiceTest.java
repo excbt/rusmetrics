@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
 public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 
@@ -52,4 +54,10 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 				endDate.toDate());
 	}
 
+	@Test
+	public void testLastData() {
+		ContServiceDataHWater resultList = service.selectLastData(ZPOINT_ID);
+		assertNotNull(resultList);
+	}	
+	
 }
