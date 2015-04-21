@@ -23,6 +23,10 @@
     </pre>
 </div>
 -->
+<div class="btn-group">
+    <i class="btn btn-xs btn-default" data-target="#showNoticeModal" data-toggle="modal">Карточка уведомления</i>
+</div>
+
 <div class="container-fluid">
 <div class="row">    
 <div class="col-md-12 noPadding">
@@ -31,14 +35,19 @@
     </div>     
     <div class="col-md-2 noPadding" ng-controller="DataRangeSettings">
         <div>по интервалу дат:</div>
-        <input date-range-picker class="form-control excbt_inputFormControl date-picker"
-            type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+        <div class="input-group">
+            <span class="input-group-addon excbt_inputGroupAddon">с</span>
+            <input date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
+                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+        </div>    
     </div>
 
+<!--
     <div class="col-md-3">
         <div>по объектам:</div>
         <div class="">
                 <input  class="form-control excbt_inputFormControl" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list">
+-->
 <!--
             <ul class="navbar navbar-static">
                 <ul class="nav">
@@ -61,13 +70,24 @@
             </ul>    
 -->
 <!--            <select class="form-control excbt_inputFormControl" ng-model="selectedObjects" multiple ng-options="object.id as object.fullName for object in objects"></select>-->
+<!--
         </div>
     </div>
-    <div class="col-md-7 btn-toolbar">
+-->
+    <div class="col-md-10 btn-toolbar">
 <!--        <div> </div>-->
         <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary">Применить</i>
         </div>
     </div>
+    
+    <div class="col-md-12 noPadding">
+        <div>по объектам:</div>
+        <div class="">
+            <textarea  class="form-control excbt_inputFormControl" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
+
+        </div>
+    </div>
+    
 </div>
 </div>    
 </div>    
@@ -146,11 +166,99 @@
 					</div>
 				</div>		
 		</div>
+<!--
 		<span class="alert alert-error dialogErrorMessage"
 			ng-show="errorOnSubmit"> Request error
 		</span> <span class="alert alert-error dialogErrorMessage"
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
+-->
 	</div>
         </div>
 </div>
+
+
+<!--
+                    result.noticeType = el.contEventType.name;
+                    result.noticeText = el.message;
+                    result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
+                    result.noticeObject = el.contObjectId;
+                //Преобразование типа точки учета в значение, которое сможет прочитать пользователь
+                    switch (el.contServiceType)
+                    {
+                            case "heat" : result.noticeZpoint = "ТС"; break;
+-->
+
+<!-- Карточка уведомления-->
+<div id="showNoticeModal" class="modal fade" role="dialog"
+	aria-labelledby="showNoticeLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="showNoticeLabel">
+				Уведомление 
+			</h3>
+		</div>
+		<div class="modal-body">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Тип</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left">Большой объем недокаченной воды
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Текст</label>
+                                </td>
+                                <td class="textAlign_left">Аларм!!! В ночь с понедельника на субботу был зафиксирован большой объем недокаченной воды по направлению на юг от места происшествия. Вот такая вот байда.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress">Дата</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left">{{111111 | date:'dd.MM.yyyy'}}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                    </div> 
+                </div> 
+
+            </div>     
+<!--		</div>-->
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+<!--
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="deleteObject(currentObject);"
+								value="Ок" />
+						</div>
+-->
+
+						<div class="col-xs-offset-2 col-md-3 pull-right">
+							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Ок
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+<!--
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+-->
+	</div>
+</div>
+

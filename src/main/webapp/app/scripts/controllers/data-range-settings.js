@@ -34,6 +34,7 @@ app
                                 endDate : moment().endOf('day'),
 
                                 format : 'DD-MM-YYYY'
+                                ,separator: "  по  "
                             };
 
                         $scope.queryDateOptsEn = {
