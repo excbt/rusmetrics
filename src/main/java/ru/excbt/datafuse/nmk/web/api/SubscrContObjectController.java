@@ -37,7 +37,7 @@ public class SubscrContObjectController extends WebApiController {
 	private ContObjectService contObjectService;
 
 	@Autowired
-	private SubscriberService subscrUserService;
+	private SubscriberService subscriberService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -46,7 +46,7 @@ public class SubscrContObjectController extends WebApiController {
 	public ResponseEntity<?> getContObjectsList() {
 		logger.debug("Fire listAll");
 
-		List<ContObject> resultList = subscrUserService
+		List<ContObject> resultList = subscriberService
 				.selectSubscriberContObjects(currentSubscriberService
 						.getSubscriberId());
 

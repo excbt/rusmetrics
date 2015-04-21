@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -34,7 +35,7 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@OneToOne(cascade = {})
+	@OneToOne()
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
@@ -55,9 +56,10 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 	private Date endDate;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	@JsonIgnore
-	private Collection<DeviceObject> deviceObjects;
+	@JoinTable(name = "cont_zpoint_device", 
+			joinColumns = @JoinColumn(name = "cont_zpoint_id"), 
+			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	private Collection<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
 	private int version;
@@ -71,10 +73,10 @@ public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
 
 	@Column(name = "checkout_day")
 	private Integer checkoutDay;
-	
+
 	@Column(name = "is_double_pipe")
 	private Boolean doublePipe;
-	
+
 	public ContObject getContObject() {
 		return contObject;
 	}
