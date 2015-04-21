@@ -194,7 +194,7 @@
                                 </div>
                             </span> 
                             <span ng-switch-when="zpointType" style="text-align: right;">
-    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+    <!--                                Смотрим какой тип у точки учета и выводим соответствующий значок-->
                                 <div ng-switch on="oldObject[oldColumn.name]">
                                     <span ng-switch-when="cw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png"></span>
                                     <span ng-switch-when="heat">
@@ -207,7 +207,10 @@
                                     <span ng-switch-when="env"><img height=16 width=16 src="images/es.png"></span>
                                     <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
-                            </span>      
+                            </span> 
+                            <span ng-switch-when="zpointLastDataDate">
+                                {{oldObject[oldColumn.name] | date: 'dd.MM.yyyy'}}
+                            </span>     
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
                                     {{oldObject[oldColumn.name]}}

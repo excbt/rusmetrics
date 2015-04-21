@@ -308,21 +308,34 @@ console.log("object.currentSettingMode="+object.currentSettingMode);
                 };
                 
                 $scope.zPointsByObject = [];
-                $scope.getZpointsDataByObject = function(table){
+                $scope.getZpointsDataByObject = function(table, mode){
                     
 //console.log(table);                 
                     crudGridDataFactory(table).query(function (data) {
-                        $scope.zPointsByObject = data;
+                        var tmp = [];
+                        if (mode == "Ex"){
+                            tmp = data.map(function(el){
+                                var result = {};
+                                result = el.object;
+                                result.lastDataDate = el.lastDataDate;
+                                return result;
+                            });
+                        }else{
+                            tmp = data;
+                        };
+                        $scope.zPointsByObject = tmp;
 //console.log("Data:");                
 //console.log($scope.zPointsByObject); 
                         
-                        
+                        var zpoints = [];
                         for(var i=0;i<$scope.zPointsByObject.length;i++){
+//console.log($scope.zPointsByObject[i].rso);                             
                             var zpoint = {};
                             zpoint.id = $scope.zPointsByObject[i].id;
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointRSO = $scope.zPointsByObject[i].organizationFullname;
+                           
+                            zpoint.zpointRSO = $scope.zPointsByObject[i].rso.organizationFullName;
                             zpoint.checkoutTime = $scope.zPointsByObject[i].checkoutTime;
                             zpoint.checkoutDay = $scope.zPointsByObject[i].checkoutDay;
                             if(typeof $scope.zPointsByObject[i].doublePipe == 'undefined'){
@@ -338,18 +351,18 @@ console.log("object.currentSettingMode="+object.currentSettingMode);
                                 zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
                             };
                             
-                            zpoint.zpointLastDataDate  = "27.02.2015";   
+                            zpoint.zpointLastDataDate  = $scope.zPointsByObject[i].lastDataDate;   
                             
-                            $scope.oldObjects[i] = zpoint;
+                            zpoints[i] = zpoint;
                         
-//console.log("Device: "+$scope.oldObjects[i].zpointType+"; "+$scope.oldObjects[i].zpointName+"; "+$scope.oldObjects[i].zpointModel+"; "+$scope.oldObjects[i].zpointNumber+";");                        
+//console.log("Device: "+zpoints[i].zpointType+"; "+zpoints[i].zpointName+"; "+zpoints[i].zpointModel+"; "+zpoints[i].zpointNumber+";"+zpoints[i].zpointRSO);                        
                         }
-                        
+                        $scope.oldObjects = zpoints;
                         
                     });
                 };
                 //for page "Objects"
-                $scope.zpoints = angular.fromJson($attrs.zpointdata);
+//                $scope.zpoints = angular.fromJson($attrs.zpointdata);
                
                 $scope.showObjectDetails = function(obj){
                     $scope.oldObjects = [];
@@ -364,8 +377,8 @@ console.log("object.currentSettingMode="+object.currentSettingMode);
 //                    }
                  //   $scope.oldObjects = mas;
                     $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
-   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
-                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/zpoints");
+//   console.log($scope.crudTableName+"/"+obj.id+"/zpoints");                 
+                    $scope.getZpointsDataByObject($scope.crudTableName+"/"+obj.id+"/contZPointsEx", "Ex");
                     
                     
                   
@@ -530,9 +543,13 @@ console.log("object.currentSettingMode="+object.currentSettingMode);
                     switch (object.zpointType){
                        case "heat" :  zps.zpointType="ТС"; break;
                        case "hw" : zps.zpointType="ГВС"; break;
+                       case "cw" : zps.zpointType="ХВ"; break;    
                         default : zps.zpointType=object.zpointType;        
                     }
                     zps.zpointModel = object.zpointModel;
+                    zps.zpointRSO = object.zpointRSO;
+                    zps.checkoutTime = object.checkoutTime;
+                    zps.checkoutDay = object.checkoutDay;
                     zps.winter = {};
                     zps.summer = {};
                     //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
