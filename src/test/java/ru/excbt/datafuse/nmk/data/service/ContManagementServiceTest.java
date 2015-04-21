@@ -39,8 +39,7 @@ public class ContManagementServiceTest extends JpaConfigTest {
 
 		for (ContObject co : list) {
 			List<ContManagement> managementList = contManagementService
-					.selectActiveManagement(co.getId(),
-							TestConstants.ORGANIZATION_TEST_IZH);
+					.selectActiveManagement(co.getId());
 
 			if (managementList.size() == 0) {
 				ContManagement contManagement = contManagementService.createManagement(co.getId(),

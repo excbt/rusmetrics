@@ -33,10 +33,8 @@ public class ContManagementService implements SecuredRoles {
 	private OrganizationService organizationService;
 
 	@Transactional(readOnly = true)
-	public List<ContManagement> selectAllManagement(long contObjectId,
-			long organizationId) {
-		return contManagementRepository.selectAllManagement(contObjectId,
-				organizationId);
+	public List<ContManagement> selectAllManagement(long contObjectId) {
+		return contManagementRepository.selectAllManagement(contObjectId);
 	}
 
 	/**
@@ -55,8 +53,7 @@ public class ContManagementService implements SecuredRoles {
 		checkArgument(organizationId > 0);
 		checkNotNull(beginDate);
 
-		List<ContManagement> checkExists = selectAllManagement(contObjectId,
-				organizationId);
+		List<ContManagement> checkExists = contManagementRepository.selectAllManagement(contObjectId);
 
 		for (ContManagement cm : checkExists) {
 			if (beginDate.toDate().equals(cm.getBeginDate())) {
@@ -97,9 +94,8 @@ public class ContManagementService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContManagement> selectActiveManagement (long contObjectId,
-			long organizationId) {
-		return contManagementRepository.selectActiveManagement(contObjectId, organizationId);
+	public List<ContManagement> selectActiveManagement (long contObjectId) {
+		return contManagementRepository.selectActiveManagement(contObjectId);
 	}
 
 	/**
@@ -109,28 +105,12 @@ public class ContManagementService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContManagement> selectActiveManagement (final ContObject contObject,
-			long organizationId) {
+	public List<ContManagement> selectActiveManagement (final ContObject contObject) {
 		checkNotNull(contObject);
 		checkNotNull(contObject.getId());
-		return contManagementRepository.selectActiveManagement(contObject.getId(), organizationId);
+		return contManagementRepository.selectActiveManagement(contObject.getId());
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param organizationId
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public List<ContManagement> selectActiveManagement (final ContObject contObject,
-			final Organization organization) {
-		checkNotNull(contObject);
-		checkNotNull(contObject.getId());
-		checkNotNull(organization);
-		checkNotNull(organization.getId());
-		return contManagementRepository.selectActiveManagement(contObject.getId(), organization.getId());
-	}
 	
 	/**
 	 * 

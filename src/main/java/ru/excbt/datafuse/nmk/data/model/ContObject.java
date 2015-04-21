@@ -1,13 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.Collection;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -15,8 +15,6 @@ import javax.persistence.Version;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 
@@ -28,7 +26,12 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2174907606605476227L;
+
+	/**
+	 * 
+	 */
+
 	
 	@Column(name="cont_object_name")
 	private String name;
@@ -48,18 +51,34 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 	@Column(name="owner_contacts")
 	private String ownerContacts;
 
-	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="cont_device_object",
-    joinColumns=@JoinColumn(name="cont_object_id"),
-    inverseJoinColumns=@JoinColumn(name="device_object_id"))
-	@JsonIgnore
-	private Collection<DeviceObject> deviceObjects;	
+//	@OneToMany (fetch = FetchType.LAZY)
+//    @JoinTable(name="cont_device_object",
+//    joinColumns=@JoinColumn(name="cont_object_id"),
+//    inverseJoinColumns=@JoinColumn(name="device_object_id"))
+//	@JsonIgnore
+//	private Collection<DeviceObject> deviceObjects;	
 	
 	@Column(name = "current_setting_mode")
 	private String currentSettingMode;
 	
+	@Column(name = "cont_object_description")
+	private String description;
+
+	@Column(name = "cont_object_comment")
+	private String comment;
+	
+	@Column(name = "cont_object_cw_temp")
+	private BigDecimal cwTemp;
+
+	@Column(name = "cont_object_heat_area")
+	private BigDecimal heatArea;
+	
+
 	@Version
     private int version; 
+	
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
+	private List<ContManagement> contManagements = new ArrayList<>();
 	
 	public String getName() {
 		return name;
@@ -117,13 +136,13 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 		this.version = version;
 	}
 
-	public Collection<DeviceObject> getDeviceObjects() {
-		return deviceObjects;
-	}
-
-	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
-		this.deviceObjects = deviceObjects;
-	}
+//	public Collection<DeviceObject> getDeviceObjects() {
+//		return deviceObjects;
+//	}
+//
+//	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
+//		this.deviceObjects = deviceObjects;
+//	}
 
 	public String getCurrentSettingMode() {
 		return currentSettingMode;
@@ -132,6 +151,48 @@ public class ContObject extends AbstractAuditableEntity<AuditUser, Long> {
 	public void setCurrentSettingMode(String currentSettingMode) {
 		this.currentSettingMode = currentSettingMode;
 	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+	public BigDecimal getCwTemp() {
+		return cwTemp;
+	}
+
+	public void setCwTemp(BigDecimal cwTemp) {
+		this.cwTemp = cwTemp;
+	}
+
+	public BigDecimal getHeatArea() {
+		return heatArea;
+	}
+
+	public void setHeatArea(BigDecimal heatArea) {
+		this.heatArea = heatArea;
+	}
+
+	public List<ContManagement> getContManagements() {
+		return contManagements;
+	}
+
+	public void setContManagements(List<ContManagement> contManagements) {
+		this.contManagements = contManagements;
+	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 
 	
 }
