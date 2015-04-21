@@ -88,6 +88,7 @@ public class ContObjectService {
 		currentEntity.setFullAddress(entity.getFullAddress());
 		currentEntity.setNumber(entity.getNumber());
 		currentEntity.setDescription(entity.getDescription());
+		currentEntity.setCurrentSettingMode(entity.getCurrentSettingMode());
 		currentEntity.setComment(entity.getComment());
 		currentEntity.setOwner(entity.getOwner());
 		currentEntity.setOwnerContacts(entity.getOwnerContacts());
