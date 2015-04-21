@@ -82,6 +82,7 @@ angular.module('portalNMK')
                     {
                             case "heat" : result.noticeZpoint = "ТС"; break;
                             case "hw" : result.noticeZpoint = "ГВС"; break;
+                            case "cw" : result.noticeZpoint = "ХВ"; break;
                             default: result.noticeZpoint  = el.contServiceType;
                     }
               
@@ -118,7 +119,7 @@ console.log("data = "+data);
           $('#selectObjectsModal').modal('hide');
           $scope.objects.map(function(el){
               if(el.selected){
-                  $scope.selectedObjects_list+=el.fullName+";";
+                  $scope.selectedObjects_list+=el.fullName+"; ";
                   
               }
           });

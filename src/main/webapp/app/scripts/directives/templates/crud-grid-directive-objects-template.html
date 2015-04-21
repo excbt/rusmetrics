@@ -17,7 +17,7 @@
     <span class="input-group-addon btn btn-default" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
 </div>
 
-<table id="datatabl" class="table table-bordered  table-condensed noMarginBottom">
+<table id="datatabl" class="table table-bordered  table-condensed noMarginBottom excbt_table">
   
      <tr class="info" >
 <!--         ng-hide="bdirectories">-->
@@ -28,7 +28,7 @@
          
          
          <td style="padding:0;">
-             <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom">
+             <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom excbt_table">
                  <tr class="info">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
 <!--
@@ -57,7 +57,7 @@
 <!--  Постороение таблицы с данными  -->
     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
-            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> <!--    <table> Уровень 2     -->
+            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table"> <!--    <table> Уровень 2     -->
             
 
                 <tr><!--    <tr> Уровень 3     -->
@@ -166,7 +166,7 @@
                     
                     
                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover excbt_table" ng-show="object.showGroupDetails">
 <!--                    <caption><b>Точки учета</b></caption>-->
                     <tr>
                         <!--       Шапка таблицы-->
@@ -306,7 +306,7 @@
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
@@ -860,7 +860,7 @@
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
