@@ -34,5 +34,20 @@ public interface ContEventRepository extends PagingAndSortingRepository<ContEven
 			+ "WHERE ce.contObject IN (SELECT co FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :subscriberId) "
 			+ "ORDER BY ce.eventTime DESC")	
 	public Page<ContEvent> selectBySubscriberId(@Param("subscriberId") long subscriberId, Pageable pageable);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)	
+	@Query("SELECT ce FROM ContEvent ce "
+			+ "WHERE ce.contObject IN "
+			+ "(SELECT co "
+			+ " FROM Subscriber s INNER JOIN s.contObjects co "
+			+ " WHERE s.id = :subscriberId AND co.id IN (:contObjectIds)) "
+			+ "ORDER BY ce.eventTime DESC")	
+	public List<ContEvent> selectBySubscriberIdAndContObjectIds(@Param("subscriberId") long subscriberId, @Param("contObjectIds") List<Long> contObjectIds, Pageable pageable);
 	
 }
