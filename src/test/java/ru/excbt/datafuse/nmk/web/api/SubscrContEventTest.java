@@ -67,4 +67,12 @@ public class SubscrContEventTest extends AnyControllerTest {
 				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 	}
 
+
+	@Test
+	@Ignore
+	public void testSubscrContObjectEventsPaged() throws Exception {
+		testJsonGet ("/api/subscr/contObjects/events/paged");
+	}
+	
+	
 }

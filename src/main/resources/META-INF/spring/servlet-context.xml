@@ -11,18 +11,7 @@
 
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<mvc:annotation-driven />
-	<mvc:default-servlet-handler />
-
-	<context:component-scan base-package="ru.excbt.datafuse.nmk.web" />
-
-
-	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
-		up static resources in the ${webappRoot}/resources directory -->
-	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/bower_components/**" location="/app/bower_components/" />
-	<mvc:resources mapping="/vendor_components/**" location="/app/vendor_components/" />
-	<mvc:resources mapping="/app/bower_components/**" location="/app/bower_components/" />
-	<mvc:resources mapping="/app/vendor_components/**" location="/app/vendor_components/" />
+<!-- 	<mvc:default-servlet-handler /> -->
 
 
 
@@ -76,23 +65,7 @@
 	</bean>
 
 
-	<bean id="multipartResolver"
-		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-		<!-- max upload size in bytes -->
-		<property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
-		<!-- max size of file in memory (in bytes) -->
-		<property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
-	</bean>
 
-
-<!-- 	<bean -->
-<!-- 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver"> -->
-<!-- 		<property name="exceptionMappings"> -->
-<!-- 			<props> -->
-<!-- 				<prop key="java.lang.Exception">Error</prop> -->
-<!-- 			</props> -->
-<!-- 		</property> -->
-<!-- 	</bean> -->
 
 	<bean
 		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
