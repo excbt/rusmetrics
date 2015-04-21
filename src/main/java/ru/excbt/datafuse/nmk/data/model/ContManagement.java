@@ -5,8 +5,10 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -45,14 +47,13 @@ public class ContManagement extends AbstractAuditableEntity<AuditUser, Long> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 
-	@ManyToOne
+	@OneToOne (fetch = FetchType.EAGER)
 	@JoinColumn(name = "organization_id")
-	@JsonIgnore
 	private Organization organization;
 
 	@Column(name = "reports_path")
