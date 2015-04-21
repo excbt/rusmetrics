@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,12 @@ public interface ContServiceDataHWaterRepository extends
 			@Param("timeDetailType") String timeDetailType,
 			@Param("beginDate") Date beginDate, @Param("endDate") Date endDate);
 
+
+	@Query("SELECT d FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPoint.id = :contZPointId "
+			+ " ORDER BY d.dataDate desc")
+	public List<ContServiceDataHWater> selectLastDetailByZPoint(
+			@Param("contZPointId") long contZPointId, Pageable pageable);
+	
+	
 }
