@@ -63,7 +63,7 @@ app.config(function ($routeProvider) {
       })
     .when('/reports', {
         templateUrl: 'views/reports.html',
-        controller: 'MainCtrl'
+        controller: 'ReportsCtrl'
       })
     .when('/reports/commercial_report', {
         templateUrl: 'views/commercial_report.html',

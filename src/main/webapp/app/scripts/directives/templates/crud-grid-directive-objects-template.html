@@ -868,9 +868,15 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputComment" >Описание</label>
+                                <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Описание - Это поле отсутвтует у объекта" ></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -882,10 +888,7 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputCC" >
-                                                        <option>УК 1</option>
-                                                        <option>Ук 3</option>
-                                    </select>
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" disabled="true" ng-model="currentObject.contManagements[0].organization.organizationName">
                                 </td>
                             </tr>
                             <tr>
@@ -904,7 +907,7 @@
                                 <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
                                 </td>
                                 <td class="textAlign_left col-sm-9">
-                                        <input class="form-control inputDigitalData" type="text" id="inputThv" placeholder="" > <label class="control-label">&deg; C </label>
+                                        <input class="form-control inputDigitalData" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> <label class="control-label">&deg; C </label>
                                 </td>
                                 
                             </tr>
@@ -912,7 +915,7 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control inputDigitalData" type="text" id="inputSquare" placeholder="" > кв. м.
+                                <td class="col-sm-9 textAlign_left"><input class="form-control inputDigitalData" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
                                 </td>
                             </tr>
                             
