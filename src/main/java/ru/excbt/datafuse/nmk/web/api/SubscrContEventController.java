@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,15 @@ public class SubscrContEventController  extends WebApiController{
 		return ResponseEntity.ok(result);
 	}
 
+	@RequestMapping(value = "/contObjects/events/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	HttpEntity<?> showEvents(
+			//PagedResourcesAssembler<ContEvent> assembler,
+			//@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable
+			) {
+
+		return ResponseEntity.ok().body("Hallo");
+	}	
+	
 //	@RequestMapping(value = "/persons", method = RequestMethod.GET)
 //	  HttpEntity<?> persons(Pageable pageable,
 //	    PagedResourcesAssembler assembler) {

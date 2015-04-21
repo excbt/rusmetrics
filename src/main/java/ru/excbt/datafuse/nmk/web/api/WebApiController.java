@@ -7,7 +7,9 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
 
 public class WebApiController {
 
-	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";	
+	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
+	
+	public static final int DEFAULT_PAGE_SIZE = 100;
 	
 	/**
 	 * 
