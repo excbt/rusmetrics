@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -34,14 +33,21 @@ public class SubscriberService {
 	@Autowired
 	private ContEventRepository contEventRepository;
 
-	// @Autowired
-	// private ContObjectRepository contObjectRepository;
-
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public Subscriber findOne(long id) {
 		return subscriberRepository.findOne(id);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
 		List<ContObject> result = subscriberRepository
@@ -49,18 +55,15 @@ public class SubscriberService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	@Deprecated
 	public List<ContZPoint> findContZPoints(long contObjectId) {
 		List<ContZPoint> result = contZPointRepository
-				.findByContObjectId(contObjectId);
-		return result;
-	}
-
-	@Transactional(readOnly = true)
-	@Deprecated
-	public List<ContEvent> findContObjectEvents(long contObjectId) {
-		List<ContEvent> result = contEventRepository
 				.findByContObjectId(contObjectId);
 		return result;
 	}
@@ -96,6 +99,12 @@ public class SubscriberService {
 		return subscriberRepository.selectByUserId(subscrUserId);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectId
+	 * @return
+	 */
 	@Transactional(readOnly = true)
 	public boolean checkContObjectSubscription(long subscriberId,
 			long contObjectId) {
