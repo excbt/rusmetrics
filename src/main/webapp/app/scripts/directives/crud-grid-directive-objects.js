@@ -120,8 +120,9 @@ console.log("Loading crudGridObjects directive.");
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
+                    $('#showObjOptionModal').modal('hide');
                     $scope.currentObject={};
-                    $docScope.$broadcast('lookupDataChange', [$attrs.table]);
+//                    $docScope.$broadcast('lookupDataChange', [$attrs.table]);
                     $scope.getData(cb);
                     
                 };
@@ -154,6 +155,7 @@ console.log("Loading crudGridObjects directive.");
                 };
 
                 $scope.updateObject = function (object) {
+console.log("object.currentSettingMode="+object.currentSettingMode);                    
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
                 };
 

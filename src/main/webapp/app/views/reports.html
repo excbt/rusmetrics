@@ -2,171 +2,83 @@
 <h2>Отчеты</h2>
 
 <div>
-    <ul>
-        <li><a tabindex="-1" data-target="#paramReportModal" data-toggle="modal"><i class="btn btn-default btn-xs glyphicon" ng-click="newNode()" title="Отчет ююю">Коммерческий отчет</i></a></li>
-        <li><a tabindex="-1" data-target="#paramReportModal" data-toggle="modal"><i class="btn btn-default btn-xs glyphicon" ng-click="newNode()" title="Отчет ююю">Сводный отчет</i></a></li>
-        <li><a tabindex="-1" data-target="#paramReportModal" data-toggle="modal"><i class="btn btn-default btn-xs glyphicon" ng-click="newNode()" title="Отчет ююю">Еще какой-то отчет</i></a></li>
-        <li class="divider"></li>
-        <li><a tabindex="-1" href="#">и т.д.</a></li>
-    </ul>
-</div>
+    <table id="datatabl" class="table table-bordered table-striped  table-condensed noMarginBottom">
 
-<!--Params for report ""-->
-<div id="paramReportModal" class="modal fade" role="dialog"
-	aria-labelledby="paramReportLabel" tabindex="-1">
+                <!--  Постороение таблицы с данными  -->
+                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
+                        <td style="padding:0;">
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> 
 
-	<div class="modal-dialog  modal-content modalWindow_wide">
+                                <tr>
 
-		<div class="modal-header">
-			<h3 id="paramReportLabel">
-				Параметры Коммерческого отчета
-			</h3>
-		</div>       
-        
-                <div class="modal-body modal-scrollable-area1">
-                         <form class="form-horizontal">
-                             <div class="control-group marginBottom10">
-                                    <label class="control-label" for="inputInterval">Укажите временной интервал:</label>
-                                    <div class="controls">
-                                        <input type="text" id="inputInterval" name="daterange" value="2015-01-01 - 2015-01-31"/>
-                                 </div>
-                             </div>
-                             <div>
-                                 <label class="control-label">Выберете объект:</label>
-                             </div>
-                             <div crud-grid-objects table="'../api/subscr/contObjects'"
-                                                columns='[
+                                    <td ng-class="column.class">
 
-                                                          {"name":"fullName", "header" : "Название", "class":"col-md-5"},
-                                                         {"name":"fullAddress", "header" : "Адрес", "class":"col-md-5"}
+                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                                        ]'
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
-                                                captions='{"loading":"loading", "totalElements":"totalElements"}'
-                                                exprops='{"idColumnName":"id", "defaultOrderBy" : "fullName"}'
-
-                                                breports='true'  
-                                                bgroup='true'
-
-                                                 bextramenu='true'
-
-                                                 bobject='true'
-                                                                             
-
-                                                 datasource='[
-                                                {
-                                                  "id":"753",
-                                                  "fullName": "Тестовый контейнер для разработки",
-                                                  "fullAddress": "Новые Васюки, ул. Московская, д. 56"
+                                        </div>
+                                        <div class="col-md-11">
+                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount}})</small>
+                                            </div>    
+                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
+<!--                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>-->
+                                            </div>
+                                        </div>
 
 
-                                                }
-                                                                 ,{    "id":"754",
-                                                             "fullName": "Контейнер 1",
-                                                  "fullAddress": "Ижевск, 30 лет Победы, 31"
+                                    </td>
 
+                                </tr>
+                                <tr>
 
-                                                }
+                                    <!--          Внутренняя(раскрывающая) таблица с данными    -->
+                                <table id="dataЗaramsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
-                                                ]'
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
-
-                                                    zpointcolumns='[
-
-                                                        {"name":"zpointType", "header" : " ", "class":"col-md-1"},
-                                                          {"name":"zpointName", "header" : "Наименование", "class":"col-md-2"},
-                                                         {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
-                                                        {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
-                                                       {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
-                                                        ]'     
-                                                      zpointdata='[
-                                                {
-
-                                                  "zpointId": "1",
-                                                  "zpointType": "GVS",
-                                                   "zpointName": "ГВС",
-                                                  "zpointModel": "ТЭМ-106", 
-                                                    "zpointNumber": "1066502",
-                                                  "zpointLastDataDate": "25.02.2015",
-                                                    "zpointParent": "754"              
-                                                }
-                                                                 ,{
-
-                                                  "zpointId": "2",
-                                                  "zpointType": "TS",
-                                                   "zpointName": "TС",
-                                                  "zpointModel": "ТЭМ-106", 
-                                                    "zpointNumber": "1066502",
-                                                  "zpointLastDataDate": "25.02.2015",
-                                                    "zpointParent": "754"              
-                                                }
-
-                                                ]'
-
-                             ></div>
-                             
+                                         <td class="col-md-12">
+                                             <div class="col-md-1" style="width:45px;">
+                                             </div>
+                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+                                                    <div class="btn-group" style="width:45px;">
+                                                      <table>
+                                                          <tr>
+                                                            <td>    <i title="Сформировать" class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="createReport(oldObject)"></i>
+                                                            </td>
 <!--
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit" class="btn">Сформировать</button>
-                                </div>
-                            </div>
--->
-                        </form>   
-                        
-                </div>    
-            
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-<!--
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click=""
-								value="Сохранить" />
-						</div>
+                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            </td>
 -->
 
-						<div class="pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject')">
-								Закрыть
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
+                                                          </tr>
+                                                      </table>
+                                                    </div>    
+                                                </div>
+                                             <div class="col-md-2 noPadding" ng-class="{'default': oldObject._default}">     
+                                                    {{oldObject.name}}
+                                            </div>
+                                            <div class="col-md-7"  ng-class="{'default': oldObject._default}">     
+                                                    действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
+                                            </div>
+                                         </td>
+
+                                     </tr>
+                                    </table>         
+
+                                </tr>
+
+
+                            </table>  
+
+                    </td>     
+                    </tr>
+                    <!--        End Построение таблицы с данными-->
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>          
 </div>
 
-<script type="text/javascript">
-        $(document).ready(function() {
-          $('input[name="daterange"]').daterangepicker(
-              { 
-                locale: {cancelLabel:'Закрыть'},
-                format: 'YYYY-MM-DD',
-                startDate: '2015-01-01',
-                endDate: '2015-12-31',
-                ranges: {
-                    'Сегодня': [moment(), moment()],
-                    'Вчера': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                    'Последние 7 дней': [moment().subtract(6, 'days'), moment()],
-                    'Последние 30 дней': [moment().subtract(29, 'days'), moment()],
-                    'Этот месяц': [moment().startOf('month'), moment().endOf('month')],
-                    'Последний месяц': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                } 
-              },
-              function(start, end, label) {
-                  $scope.reportStart = start;
-                $scope.reportEnd = end; 
-                alert('Выбран диапазон дат: ' + start.format('YYYY-MM-DD') + ' - ' + end.format('YYYY-MM-DD'));
-              }
-            );
-        });
-</script>
