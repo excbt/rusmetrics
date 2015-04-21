@@ -11,12 +11,12 @@ import ru.excbt.datafuse.nmk.data.model.ContManagement;
 public interface ContManagementRepository extends CrudRepository<ContManagement, Long> {
 
 	@Query("SELECT cm FROM ContManagement cm INNER JOIN cm.organization o INNER JOIN cm.contObject co "
-			+ "WHERE co.id = :contObjectId and o.id = :organizationId")
-	public List<ContManagement> selectAllManagement(@Param("contObjectId") long contObjectId, @Param("organizationId") long organizationId);
+			+ "WHERE co.id = :contObjectId")
+	public List<ContManagement> selectAllManagement(@Param("contObjectId") long contObjectId);
 
 	@Query("SELECT cm FROM ContManagement cm INNER JOIN cm.organization o INNER JOIN cm.contObject co "
-			+ "WHERE co.id = :contObjectId and o.id = :organizationId and cm.endDate is null")
-	public List<ContManagement> selectActiveManagement(@Param("contObjectId") long contObjectId, @Param("organizationId") long organizationId);
+			+ "WHERE co.id = :contObjectId AND cm.endDate is null")
+	public List<ContManagement> selectActiveManagement(@Param("contObjectId") long contObjectId);
 
 	@Query("SELECT cm FROM ContManagement cm INNER JOIN cm.organization o "
 			+ "WHERE o.id = :organizationId")
