@@ -20,10 +20,6 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
-	@Test
-	public void testFindTemplate() {
-		// reportMasterTemplateBodyService.selectReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT);
-	}
 
 	@Test
 	public void testCreateCommerceReportMasterTemplate() throws IOException {
