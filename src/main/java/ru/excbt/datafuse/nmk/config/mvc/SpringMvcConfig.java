@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -16,12 +17,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
 import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.web" })
+@Import(WebSecurityConfig.class)
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
