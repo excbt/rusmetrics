@@ -63,18 +63,46 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesConsT1() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.CONS_T1_REPORT, true);
+		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesConsT2() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.CONS_T2_REPORT, true);
+		return ResponseEntity.ok(result);
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesCons() {
+	public ResponseEntity<?> getReportTemplatesConsOld() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_REPORT, true);
+						ReportTypeKey.CONS_T2_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
+
 
 	/**
 	 * 
@@ -102,19 +130,46 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesArchiveConsT1() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.CONS_T1_REPORT, false);
+		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesArchiveConsT2() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.CONS_T2_REPORT, false);
+		return ResponseEntity.ok(result);
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveCons() {
+	public ResponseEntity<?> getReportTemplatesArchiveConsOld() {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_REPORT, false);
+						ReportTypeKey.CONS_T2_REPORT, false);
 		return ResponseEntity.ok(result);
-	}
-
+	}	
+	
 	/**
 	 * 
 	 * @return
@@ -147,10 +202,40 @@ public class ReportTemplateController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneCons(
+	@RequestMapping(value = "/cons_t1/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOneConsT1(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
+		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
+		if (result == null) {
+			ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok(result);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOneConsT2(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+		
+		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
+		if (result == null) {
+			ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOneConsOld(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+		
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
@@ -227,12 +312,40 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneCons(
+	@RequestMapping(value = "/cons_t1/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOneConsT1(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONS_REPORT);
+				ReportTypeKey.CONS_T1_REPORT);
+	}
+	
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOneConsT2(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
+			@RequestBody ReportTemplate reportTemplate) {
+		return updateInternal(reportTemplateId, reportTemplate,
+				ReportTypeKey.CONS_T2_REPORT);
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOneConsOld(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
+			@RequestBody ReportTemplate reportTemplate) {
+		return updateInternal(reportTemplateId, reportTemplate,
+				ReportTypeKey.CONS_T2_REPORT);
 	}
 
 	/**
@@ -268,7 +381,8 @@ public class ReportTemplateController extends WebApiController {
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during move to archive entity ReportTemplate (id={}): {}",
+			logger.error(
+					"Error during move to archive entity ReportTemplate (id={}): {}",
 					reportTemplateId, e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.build();
@@ -277,7 +391,7 @@ public class ReportTemplateController extends WebApiController {
 		if (resultEntity == null) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 		}
-		
+
 		return ResponseEntity.accepted().body(resultEntity);
 	}
 
@@ -319,4 +433,22 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.created(location).body(resultEntity);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/commerce/createWizard", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createCommerceReport(
+			@RequestParam(value = "includeIntegrators", required = false) Boolean includeIntegrators,
+			@RequestBody ReportTemplate reportTemplate) {
+
+		checkNotNull(reportTemplate);
+		if (!reportTemplate.isNew()) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		
+		
+		return ResponseEntity.badRequest().build();
+	}
 }

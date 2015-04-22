@@ -44,6 +44,16 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testGetConsT1ReportTemplates() throws Exception {
+		testJsonGet("/api/reportTemplate/cons_t1");
+	}
+
+	@Test
+	public void testGetConsT2ReportTemplates() throws Exception {
+		testJsonGet("/api/reportTemplate/cons_t2");
+	}
+
+	@Test
 	public void testGetCommReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/commerce");
 	}
@@ -51,6 +61,16 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Test
 	public void testGetConsReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/cons");
+	}
+	
+	@Test
+	public void testGetConsT1ReportTemplatesArch() throws Exception {
+		testJsonGet("/api/reportTemplate/archive/cons_t1");
+	}
+	
+	@Test
+	public void testGetConsT2ReportTemplatesArch() throws Exception {
+		testJsonGet("/api/reportTemplate/archive/cons_t2");
 	}
 
 	@Test
