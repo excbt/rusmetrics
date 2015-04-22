@@ -1,34 +1,6 @@
 <div>Портал / Уведомления</div>
 <h2>Уведомления</h2>
 
-<!--
-<div crud-grid-notice table="'../api/subscr/contObjects'"
-	columns='[
-             
-	          {"name":"noticeCat", "header" : "Категория", "class":"col-md-1"},
-             {"name":"noticeType", "header" : "Тип", "class":"col-md-2"},
-             {"name":"noticeText", "header" : "Уведомление", "class":"col-md-3"},
-             {"name":"noticeDate", "header" : "Дата", "class":"col-md-2"},
-	          {"name":"noticeObject", "header" : "Объект", "class":"col-md-3"}
-             ,{"name":"noticeZpoint", "header" : "Точка учета", "class":"col-md-3"}
-             ]'
-	captions='{"loading":"loading", "totalElements":"totalElements"}'
-	exprops='{"idColumnName":"noticeId", "defaultOrderBy" : "noticeDate"}' 
-    ></div>
--->
-<!--
-<div>
-    <pre class="code">
-        {{notices}}
-    </pre>
-</div>
--->
-<!--
-<div class="btn-group">
-    <i class="btn btn-xs btn-default" data-target="#showNoticeModal" data-toggle="modal">Карточка уведомления</i>
-</div>
--->
-
 <div class="container-fluid">
 <div class="row">    
 <div class="col-md-12 noPadding marginBottom10">
@@ -43,41 +15,7 @@
                 type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
         </div>    
     </div>
-
-<!--
-    <div class="col-md-3">
-        <div>по объектам:</div>
-        <div class="">
-                <input  class="form-control excbt_inputFormControl" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list">
--->
-<!--
-            <ul class="navbar navbar-static">
-                <ul class="nav">
-                    <li class="dropdown">
-                      <a class="btn btn-default btn-xs dropdown-toggle" id="dObjects" role="button" data-toggle="dropdown" data-target="#" href="">
-                        по объектам
-                        <b class="caret"></b>
-                      </a>
-                      <ul class="dropdown-menu" role="menu" aria-labelledby="dObjects">
-                        <li class="modal-scrollable-area1"><table class="table table-striped table-condensed table-hover">
-                            <tr ng-repeat="object in objects">
-                                <td><input type="checkbox">{{object.fullName}}
-                                </td>    
-                            </tr>    
-                            </table>
-                        </li>
-                      </ul>
-                    </li>
-                </ul>
-            </ul>    
--->
-<!--            <select class="form-control excbt_inputFormControl" ng-model="selectedObjects" multiple ng-options="object.id as object.fullName for object in objects"></select>-->
-<!--
-        </div>
-    </div>
--->
     <div class="col-md-10 btn-toolbar">
-<!--        <div> </div>-->
         <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="dtInstance.changeData(newPromise)">Применить</i>
         </div>
     </div>
@@ -93,46 +31,12 @@
 </div>
 </div>    
 </div>    
-<!--//////////////////////// Notices: react version-->
-<!--
-<div>
-    <table-component-react table-def="tableDef" data="data"/>
--->
-<!--    <my-table cols="cols" rows="data" />-->
-<!--</div>-->
-<!--///////////////////////-->
 
-<!--++++++++++++++++++++++++++++ Notices: angular-datatable-->
-<!--
-<div ng-controller="NoticeDatatableCtrl as noticeCtrl">
-    <table datatable="" dt-options="noticeCtrl.dtOptions" dt-columns="noticeCtrl.dtColumns" class="row-border hover"></table>
-</div>    
--->
-<!--++++++++++++++++++++++++++++-->
-
-
-<!--++++++++++++++++++++++++++++ Notices: angular-datatable - Angular way-->
-<!--<div ng-controller="NoticeDatatableCtrl as noticeCtrl">-->
-<div ng-init="getObjects()">
+<!--++++++++++++++++++++++++++++ Notices: angular-datatable -->
+<!--<div ng-init="getObjects()">-->
     <table  datatable="" dt-options="dtOptions" dt-columns="dtColumns" ng-class="tableDef.tableClass">
-<!--
-        <thead>
-            <tr>
-                <td ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
-                    {{column.header}}
-                </td>
-            </tr>
-        </thead> 
-        <tbody>
-            <tr ng-repeat="notice in data" ng-click="selectedItem(notice)" data-target="#showNoticeModal" data-toggle="modal">
-                <td ng-repeat="column in tableDef.columns">
-                    {{notice[column.fieldName]}}
-                </td>
-            </tr>
-        </tbody>    
--->
+
     </table>
-</div>    
 <!--</div>    -->
 <!--++++++++++++++++++++++++++++-->
 
@@ -145,11 +49,8 @@
               <ul class="nav navbar-nav ">
 				
 				<li>
-                    <p
-							 style="margin-right:5px;padding-top:15px;"> <b>Start get: {{startGetData | date:'dd.MM.yyyy HH:mm:ss'}} Start mod: {{startModificateData | date:'dd.MM.yyyy HH:mm:ss'}} End mod: {{endModificateData | date:'dd.MM.yyyy HH:mm:ss'}}</b>  
-				    </p>
                     <div ng-show="totalPages>1">
-                        По вашему запросу найдено {{totalElements}} уведомлений. Для комфортной работы с системой отображены только первые 1000 уведомлений. Для просмотра остальных уведомлений сузьте область поиска в фильтре.
+                        По вашему запросу найдено {{totalElements}} уведомлений. Для комфортной работы с системой отображены только последние 1000 уведомлений. Для просмотра остальных уведомлений сузьте область поиска в фильтре.
                     </div>
                 </li>
                              
@@ -161,7 +62,7 @@
 			</div>
 </div>
 
-
+<!--Окно выбора объектов-->
 <div id="selectObjectsModal" class="modal excbt_selectObjectWindow " role="dialog"
 	aria-labelledby="selectObjectsLabel" tabindex="-1">
 
@@ -204,28 +105,11 @@
 					</div>
 				</div>		
 		</div>
-<!--
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
--->
+
 	</div>
         </div>
 </div>
 
-
-<!--
-                    result.noticeType = el.contEventType.name;
-                    result.noticeText = el.message;
-                    result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
-                    result.noticeObject = el.contObjectId;
-                //Преобразование типа точки учета в значение, которое сможет прочитать пользователь
-                    switch (el.contServiceType)
-                    {
-                            case "heat" : result.noticeZpoint = "ТС"; break;
--->
 
 <!-- Карточка уведомления-->
 <div id="showNoticeModal" class="modal fade" role="dialog"
@@ -247,21 +131,19 @@
                                 <td class="col-sm-3"><label for="inputName">Тип</label>
                                 </td>
                                 <td class="col-sm-9 textAlign_left">{{currentObject.noticeType}}
-<!--                                    Большой объем недокаченной воды-->
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Текст</label>
                                 </td>
                                 <td class="textAlign_left">{{currentObject.noticeText}}
-<!--                                    Аларм!!! В ночь с понедельника на субботу был зафиксирован большой объем недокаченной воды по направлению на юг от места происшествия. Вот такая вот байда.-->
+
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
                                 <td class="textAlign_left">{{currentObject.noticeObjectName}}
-<!--                                    Объект одна тысяча семьсот первый-->
                                 </td>
                             </tr>
                             <tr>
@@ -283,18 +165,11 @@
                 </div> 
 
             </div>     
-<!--		</div>-->
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-<!--
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
-								ng-click="deleteObject(currentObject);"
-								value="Ок" />
-						</div>
--->
+
 
 						<div class="col-xs-offset-2 col-md-3 pull-right">
 							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
@@ -305,13 +180,7 @@
 					</div>
 				</div>		
 		</div>
-<!--
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
--->
+
 	</div>
 </div>
 
