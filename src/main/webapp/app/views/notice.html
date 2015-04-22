@@ -23,9 +23,11 @@
     </pre>
 </div>
 -->
+<!--
 <div class="btn-group">
     <i class="btn btn-xs btn-default" data-target="#showNoticeModal" data-toggle="modal">Карточка уведомления</i>
 </div>
+-->
 
 <div class="container-fluid">
 <div class="row">    
@@ -76,7 +78,7 @@
 -->
     <div class="col-md-10 btn-toolbar">
 <!--        <div> </div>-->
-        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary">Применить</i>
+        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="dtInstance.changeData(newPromise)">Применить</i>
         </div>
     </div>
     
@@ -101,9 +103,37 @@
 <!--///////////////////////-->
 
 <!--++++++++++++++++++++++++++++ Notices: angular-datatable-->
+<!--
 <div ng-controller="NoticeDatatableCtrl as noticeCtrl">
     <table datatable="" dt-options="noticeCtrl.dtOptions" dt-columns="noticeCtrl.dtColumns" class="row-border hover"></table>
 </div>    
+-->
+<!--++++++++++++++++++++++++++++-->
+
+
+<!--++++++++++++++++++++++++++++ Notices: angular-datatable - Angular way-->
+<!--<div ng-controller="NoticeDatatableCtrl as noticeCtrl">-->
+<div ng-init="getObjects()">
+    <table  datatable="" dt-options="dtOptions" dt-columns="dtColumns" ng-class="tableDef.tableClass">
+<!--
+        <thead>
+            <tr>
+                <td ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
+                    {{column.header}}
+                </td>
+            </tr>
+        </thead> 
+        <tbody>
+            <tr ng-repeat="notice in data" ng-click="selectedItem(notice)" data-target="#showNoticeModal" data-toggle="modal">
+                <td ng-repeat="column in tableDef.columns">
+                    {{notice[column.fieldName]}}
+                </td>
+            </tr>
+        </tbody>    
+-->
+    </table>
+</div>    
+<!--</div>    -->
 <!--++++++++++++++++++++++++++++-->
 
 <!--Строка состояния-->
@@ -114,9 +144,13 @@
             		
               <ul class="nav navbar-nav ">
 				
-				<li><p
-							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{data.length}}</b>  
+				<li>
+                    <p
+							 style="margin-right:5px;padding-top:15px;"> <b>Start get: {{startGetData | date:'dd.MM.yyyy HH:mm:ss'}} Start mod: {{startModificateData | date:'dd.MM.yyyy HH:mm:ss'}} End mod: {{endModificateData | date:'dd.MM.yyyy HH:mm:ss'}}</b>  
 				    </p>
+                    <div ng-show="totalPages>1">
+                        По вашему запросу найдено {{totalElements}} уведомлений. Для комфортной работы с системой отображены только первые 1000 уведомлений. Для просмотра остальных уведомлений сузьте область поиска в фильтре.
+                    </div>
                 </li>
                              
                  
@@ -212,25 +246,34 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Тип</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">Большой объем недокаченной воды
+                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeType}}
+<!--                                    Большой объем недокаченной воды-->
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Текст</label>
                                 </td>
-                                <td class="textAlign_left">Аларм!!! В ночь с понедельника на субботу был зафиксирован большой объем недокаченной воды по направлению на юг от места происшествия. Вот такая вот байда.
+                                <td class="textAlign_left">{{currentObject.noticeText}}
+<!--                                    Аларм!!! В ночь с понедельника на субботу был зафиксирован большой объем недокаченной воды по направлению на юг от места происшествия. Вот такая вот байда.-->
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
-                                <td class="textAlign_left">Объект одна тысяча семьсот первый
+                                <td class="textAlign_left">{{currentObject.noticeObjectName}}
+<!--                                    Объект одна тысяча семьсот первый-->
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputAddress">Дата</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">{{111111 | date:'dd.MM.yyyy'}}
+                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeDate | date:'dd.MM.yyyy HH:mm:ss'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress">Точка учета</label>
+                                </td>
+                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeZpoint}}
                                 </td>
                             </tr>
 
@@ -255,7 +298,7 @@
 
 						<div class="col-xs-offset-2 col-md-3 pull-right">
 							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
+								ng-click="exit('#currentObject');">
 								Ок
 							</button>
 						</div>

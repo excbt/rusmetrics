@@ -33,8 +33,8 @@ var app = angular.module('portalNMK');
     //end for indicators  
       
       //report
-                    $rootScope.reportStart= new Date();
-                    $rootScope.reportEnd=new Date(2015, 03, 22);
+//                    $rootScope.reportStart= new Date();
+//                    $rootScope.reportEnd=new Date(2015, 03, 22);
 //                    $scope.welcome = "Вас обслуживает контролер отчетов.";
 //                    $scope.setDateRange = function(){
 //                        
@@ -188,13 +188,52 @@ function WithPromiseCtrl(DTOptionsBuilder, DTColumnBuilder, $resource) {
     var crudTableName= "../api/subscr/contObjects";
     
     var vm = this;
-    vm.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
+    vm.dtOptions = DTOptionsBuilder
+//    .fromSource(crudTableName)
+    .fromFnPromise(function() {
         var table =  crudTableName+"/events";
           return $resource(crudTableName).query().$promise;
-    }).withPaginationType('full_numbers')
+    })
+    .withPaginationType('full_numbers')
     .withLanguageSource('vendor_components/DataTables-1.10.6/plugins/i18n/Russian.json')
- 
+//    .withOption('fnRowCallback', rowCallback)
+//    .withOption('fnPreDrawCallback', preDrawCallback)
+//    .withOption('fnInitComplete', initComplete)
+    //.withDataProp('{}.contManagements');
+    .withFnServerData(serverData)
     ;
+    
+    function serverData(sSource, aoData, fnCallback, oSettings) {
+console.log("In serverData");        
+for(var k in sSource){
+    console.log("sSource["+k+"]= "+sSource[k]);
+};         
+//        oSettings.jqXHR = $.ajax({
+//            'dataType': 'json',
+//            'type': 'POST',
+//            'url': sSource,
+//            'data': aoData,
+//            'success': fnCallback
+//        });
+    }
+    
+    function rowCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+        console.log(aData);
+        return nRow;
+    }
+    
+    function preDrawCallback(oSettings) {
+for(var k in oSettings){
+    console.log("oSettings["+k+"]= "+oSettings[k]);
+};             
+    }
+    
+    function initComplete(oSettings, json) {
+for(var k in oSettings){
+    console.log("oSettings["+k+"]= "+oSettings[k]);
+};  
+console.log("JSON= "+json);        
+    }    
 
     vm.dtColumns = [
 //        DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
@@ -202,7 +241,9 @@ function WithPromiseCtrl(DTOptionsBuilder, DTColumnBuilder, $resource) {
 //        DTColumnBuilder.newColumn('message').withTitle('Уведомление')
 //        ,DTColumnBuilder.newColumn('noticeDate').withTitle('Дата') 
         DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
-        DTColumnBuilder.newColumn('fullName').withTitle('Название'),
+        DTColumnBuilder.newColumn('fullName').withTitle('Название').renderWith(function(data, type, full){
+            return full.fullName + "Я влез и изменил содержимое колонки";
+        }),
         DTColumnBuilder.newColumn('fullAddress').withTitle('Адрес')
     ];
 }
