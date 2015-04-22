@@ -70,6 +70,9 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@Column(name = "src_report_template_id")
 	private Long srcReportTemplateId;
+
+	@Column(name = "is_integrator_included")
+	private Boolean integratorIncluded;
 	
 	@Version
 	private int version;
@@ -172,6 +175,14 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	public void setReportType(ReportType reportType) {
 		this.reportType = reportType;
+	}
+
+	public Boolean getIntegratorIncluded() {
+		return integratorIncluded;
+	}
+
+	public void setIntegratorIncluded(Boolean integratorIncluded) {
+		this.integratorIncluded = integratorIncluded;
 	}
 	
 }
