@@ -131,6 +131,16 @@ public class SubscrContEventController extends WebApiController {
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 	}
 
+//	@RequestMapping(value = "/persons", method = RequestMethod.GET)
+//	  HttpEntity<?> persons(Pageable pageable,
+//	    PagedResourcesAssembler assembler) {
+//
+//	    Page<ContEvent> result = contEventRepository.selectBySubscriberId(currentSubscriberService
+//				.getSubscriberId(), pageable);
+//	    //assembler;
+//	    assembler.toResource(result, null);
+//	    return null; // new ResponseEntity<>(assembler.toResources(result), HttpStatus.OK);
+//	  }	
 	
 	// @RequestMapping(value = "/persons", method = RequestMethod.GET)
 	// HttpEntity<?> persons(Pageable pageable,

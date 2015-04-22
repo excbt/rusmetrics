@@ -11,12 +11,14 @@
     <!-- Uncomment and add your base-package here:
          <context:component-scan
             base-package="org.springframework.samples.service"/>  -->
-	<import resource="jpa-config.xml" /> 
-	<import resource="security-config.xml" /> 
 
 
 	<context:annotation-config/>
 	
 	<context:component-scan base-package="ru.excbt.datafuse.nmk" />	
+
+	<import resource="jpa-config.xml" /> 
+<!-- 	<import resource="security-config.xml" />  -->
+
 
 </beans>
