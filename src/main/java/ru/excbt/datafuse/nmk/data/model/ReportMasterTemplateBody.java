@@ -13,8 +13,8 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 @Entity
-@Table(name = "report_template_body_master")
-public class ReportTemplateBodyMaster extends AbstractAuditableEntity<AuditUser, Long> {
+@Table(name = "report_master_template_body")
+public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
 	 * 
@@ -29,16 +29,16 @@ public class ReportTemplateBodyMaster extends AbstractAuditableEntity<AuditUser,
 	@Enumerated(EnumType.STRING)
 	private ReportTypeKey reportTypeKey;
 	
-	@Column(name = "report_template_body")
+	@Column(name = "body")
 	private byte[] body;
 
-	@Column(name = "report_template_body_compiled")
+	@Column(name = "body_compiled")
 	private byte[] bodyCompiled;
 
-	@Column(name = "report_template_body_filename")
+	@Column(name = "body_filename")
 	private String bodyFilename;
 
-	@Column(name = "report_template_body_compiled_filename")
+	@Column(name = "body_compiled_filename")
 	private String bodyCompiledFilename;
 	
 	@Version
