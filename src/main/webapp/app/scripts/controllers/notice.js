@@ -10,7 +10,7 @@
 angular.module('portalNMK')
   .controller('NoticeCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTInstances', function ($scope, $rootScope, $resource, crudGridDataFactory, DTOptionsBuilder, DTColumnBuilder, DTInstances) {
 
-    $scope.TEXT_CAPTION_LENGTH = 20*4; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3
+    $scope.TEXT_CAPTION_LENGTH = 20*4; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3; //length of type visible part  
     $scope.crudTableName= "../api/subscr/contObjects";
       
@@ -70,15 +70,15 @@ angular.module('portalNMK')
             });
         };
       
-        $scope.getData = function () {
-$scope.startGetData = new Date();            
+//        $scope.getData = function () {
+//$scope.startGetData = new Date();            
         //Устанавливаем временной интервал для получения уведомлений
-            $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
-            $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
-            
-            var table =  $scope.crudTableName+"/eventsFilter";  
+//            $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
+//            $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
+//            
+//            var table =  $scope.crudTableName+"/eventsFilter";  
            // table = "events.json";
-            getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function (data) {
+//            getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function (data) {
 
 //                var tempArr = [];
 //                var noticesByAbonent = data.objects;
@@ -90,60 +90,60 @@ $scope.startGetData = new Date();
 //                var tmp1 = data.slice(0,999);
                 
 // ........................................................................                
-                $scope.totalElements = data.totalElements;
-                $scope.totalPages = data.totalPages;
-                $scope.startModificateData = new Date();
-                var tmp = data.objects.map(function(el) {
-                    var result = {};
-                    result.noticeCheckbox = " ";
-                    result.noticeType = el.contEventType.name;
-                    
-                    if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
-                        result.noticeCaption = el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
-                    }else{
-                        result.noticeCaption = el.message;
-                    }
-                    if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
-                        result.noticeTypeCaption = el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-                    }else{
-                        result.noticeTypeCaption = el.contEventType.name;
-                    };
-                    
-                    result.noticeText = el.message;
-                    result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
-                    result.noticeObject = el.contObjectId;
+//                $scope.totalElements = data.totalElements;
+//                $scope.totalPages = data.totalPages;
+//                $scope.startModificateData = new Date();
+//                var tmp = data.objects.map(function(el) {
+//                    var result = {};
+//                    result.noticeCheckbox = " ";
+//                    result.noticeType = el.contEventType.name;
+//                    
+//                    if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
+//                        result.noticeCaption = el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+//                    }else{
+//                        result.noticeCaption = el.message;
+//                    }
+//                    if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
+//                        result.noticeTypeCaption = el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+//                    }else{
+//                        result.noticeTypeCaption = el.contEventType.name;
+//                    };
+//                    
+//                    result.noticeText = el.message;
+//                    result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
+//                    result.noticeObject = el.contObjectId;
                 //Преобразование типа точки учета в значение, которое сможет прочитать пользователь
-                    switch (el.contServiceType)
-                    {
-                            case "heat" : result.noticeZpoint = "ТС"; break;
-                            case "hw" : result.noticeZpoint = "ГВС"; break;
-                            case "cw" : result.noticeZpoint = "ХВ"; break;
-                            default: result.noticeZpoint  = el.contServiceType;
-                    }
-                    result.noticeObjectName = "Не определено";
-                    for (var i=0; i<$scope.objects.length; i++){
+//                    switch (el.contServiceType)
+//                    {
+//                            case "heat" : result.noticeZpoint = "ТС"; break;
+//                            case "hw" : result.noticeZpoint = "ГВС"; break;
+//                            case "cw" : result.noticeZpoint = "ХВ"; break;
+//                            default: result.noticeZpoint  = el.contServiceType;
+//                    }
+//                    result.noticeObjectName = "Не определено";
+//                    for (var i=0; i<$scope.objects.length; i++){
 //console.log("$scope.objects[i].id = "+$scope.objects[i].id);
 //console.log("el.contObjectId = "+el.contObjectId);                        
-                        if ($scope.objects[i].id == el.contObjectId ){
+//                        if ($scope.objects[i].id == el.contObjectId ){
 //console.log("Bingo");                            
-                            result.noticeObjectName = $scope.objects[i].fullName;
+//                            result.noticeObjectName = $scope.objects[i].fullName;
 //console.log("result.noticeObjectName ="+result.noticeObjectName);                            
-                            break;
-                        };
-                        
-                    }
-                    return result;
-                    
-                    
-                });
-                
-                $scope.endModificateData = new Date();
-                $scope.data = tmp;
-                
-
-
-            });
-        };
+//                            break;
+//                        };
+//                        
+//                    }
+//                    return result;
+//                    
+//                    
+//                });
+//                
+//                $scope.endModificateData = new Date();
+//                $scope.data = tmp;
+//                
+//
+//
+//            });
+//        };
       
 //      $scope.setFilter = function(){
 //          
@@ -165,7 +165,7 @@ $scope.startGetData = new Date();
                   $scope.selectedObjects.push(el.id);
               }
           });
-console.log($scope.selectedObjects_list);          
+//console.log($scope.selectedObjects_list);          
       };
       
       $scope.selectedItem = function (item) {
@@ -202,6 +202,7 @@ console.log($scope.selectedObjects_list);
             .fromFnPromise(newPromise)
             .withDataProp('data.objects')
             .withPaginationType('full_numbers')
+            .withOption('rowCallback', rowCallback)
             .withLanguageSource('vendor_components/DataTables-1.10.6/plugins/i18n/Russian.json')
             .withDOM('pitrfl')
         ;
@@ -260,15 +261,59 @@ console.log($scope.selectedObjects_list);
       
           $scope.newPromise = newPromise;
           function newPromise(){
+//console.log("new Promise");              
               $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
               $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
               var table =  $scope.crudTableName+"/eventsFilter";
-              return getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get().$promise;
+              return getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(
+                            function(data){
+                                $scope.data = data.objects;
+                                $scope.totalElements = data.totalElements;
+                                $scope.totalPages = data.totalPages;})
+                    .$promise;
           };
       
           DTInstances.getLast().then(function (dtInstance) {
                 $scope.dtInstance = dtInstance;
           });
+      
+        $scope.getNotice = function(info){
+            var tmp = $scope.data;
+            if ((tmp==[])||(typeof tmp == 'undefined')){
+                return;
+            };
+            for(var i=0; i<tmp.length; i++){
+                if (info.id == tmp[i].id){
+                    $scope.currentObject = {};
+                    $scope.currentObject.noticeType = tmp[i].contEventType.name;
+                    $scope.currentObject.noticeText = tmp[i].message;
+                    if (($scope.objects == []) || ($scope.objects.length==0)||(typeof $scope.objects=='undefined')){
+                         $scope.currentObject.noticeObjectName = info.contObjectId;
+                    }else{
+                        for (var i=0; i<$scope.objects.length; i++){                   
+                                if ($scope.objects[i].id == info.contObjectId ){
+                                    $scope.currentObject.noticeObjectName = $scope.objects[i].fullName;
+                                };   
+                            }  
+                    }
+                    
+                    $scope.currentObject.noticeDate = info.eventTime;
+                    $scope.currentObject.noticeZpoint = info.contServiceType;
+                    $('#showNoticeModal').modal();
+                    break;
+                };
+            };
+        };
+        
+        function rowCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+            $('td', nRow).unbind('click');
+            $('td', nRow).bind('click', function() {
+                $scope.$apply(function() {
+                    $scope.getNotice(aData);
+                });
+            });
+            return nRow;
+        };
       
       
                 //get Objects
