@@ -10,6 +10,7 @@
 angular.module('portalNMK')
   .controller('NoticeCtrl',['$scope', 'crudGridDataFactory', function ($scope, crudGridDataFactory, DTOptionsBuilder, DTColumnBuilder) {
 
+      $scope.CAPTION_LENGTH = 15; //length of message visible part
     $scope.crudTableName= "../api/subscr/contObjects";
     
 //    $scope.cols = [ 'Тип', 'Сообщение', 'Дата', 'Объект', 'Точка учета'];
@@ -32,7 +33,7 @@ angular.module('portalNMK')
 						headerClass : "col-md-2",
 						dataClass : "col-md-2"
 					}, {
-						fieldName : "noticeText",
+						fieldName : "noticeCaption",
 						header : "Уведомление",
 						headerClass : "col-md-3",
 						dataClass : "col-md-3"
@@ -57,7 +58,8 @@ angular.module('portalNMK')
       //Получаем уведомления
         $scope.data = {};
         $scope.getData = function () {
-            var table =  $scope.crudTableName+"/events";    
+            var table =  $scope.crudTableName+"/events";  
+            table = "events.json";
             crudGridDataFactory(table).query(function (data) {
 
                 var tempArr = [];
@@ -74,6 +76,11 @@ angular.module('portalNMK')
                     var result = {};
                     result.noticeCheckbox = " ";
                     result.noticeType = el.contEventType.name;
+                    if (el.message.length > $scope.CAPTION_LENGTH){
+                        result.noticeCaption = el.message.substr(0, $scope.CAPTION_LENGTH)+"...";
+                    }else{
+                        result.noticeCaption = el.message;
+                    }
                     result.noticeText = el.message;
                     result.noticeDate = (new Date(el.eventTime)).toLocaleString();                      
                     result.noticeObject = el.contObjectId;
@@ -97,7 +104,7 @@ angular.module('portalNMK')
         };
 
       //get Events
- //       $scope.getData();
+        $scope.getData();
       
       //get Objects
         $scope.objects = [];
@@ -143,9 +150,53 @@ console.log($scope.selectedObjects_list);
 //      $scope.dtColumns = [
 //        DTColumnBuilder.newColumn('noticeCat').withTitle('Категория').notVisible(),
 //        DTColumnBuilder.newColumn('noticeType').withTitle('Тип'),
-//        DTColumnBuilder.newColumn('noticeText').withTitle('Уведомление')
+//        DTColumnBuilder.newColumn('noticeCaption').withTitle('Уведомление')
 //        ,DTColumnBuilder.newColumn('noticeDate').withTitle('Дата')  
 //      ];
       
 
   }]);
+
+
+///////////////////////////////test
+
+angular.module('portalNMK').
+factory('DTLoadingTemplate', dtLoadingTemplate);
+function dtLoadingTemplate() {
+    return {
+        html: '<h3>Загрузка...</h3>'
+    };
+}
+
+
+angular.module('portalNMK').controller('NoticeDatatableCtrl', NoticeDatatableCtrl);
+
+function NoticeDatatableCtrl(DTOptionsBuilder, DTColumnBuilder, $resource) {
+    var crudTableName= "../api/subscr/contObjects";
+    
+    var vm = this;
+    vm.dtOptions = DTOptionsBuilder.fromFnPromise(function() {
+        var table =  crudTableName+"/events";
+        table = "events.json";
+          return $resource(table).query().$promise;
+    }).withPaginationType('full_numbers')
+    .withLanguageSource('vendor_components/DataTables-1.10.6/plugins/i18n/Russian.json')
+    .withDOM('pitrfl')
+    ;
+
+    vm.dtColumns = [
+//        DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
+//        DTColumnBuilder.newColumn('contObjectId').withTitle('Тип'),
+//        DTColumnBuilder.newColumn('message').withTitle('Уведомление')
+//        ,DTColumnBuilder.newColumn('noticeDate').withTitle('Дата') 
+//        DTColumnBuilder.newColumn('id').withTitle('id').notVisible(),
+//        DTColumnBuilder.newColumn('fullName').withTitle('Название'),
+//        DTColumnBuilder.newColumn('fullAddress').withTitle('Адрес')
+        
+//        DTColumnBuilder.newColumn('noticeCat').withTitle('Категория').notVisible(),
+        DTColumnBuilder.newColumn('contEventType.name').withTitle('Тип'),
+        DTColumnBuilder.newColumn('message').withTitle('Уведомление')
+        ,DTColumnBuilder.newColumn('eventTime').withTitle('Дата')
+    ];
+}
+////////////////////////////////// end test

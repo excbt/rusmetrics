@@ -29,7 +29,7 @@
 
 <div class="container-fluid">
 <div class="row">    
-<div class="col-md-12 noPadding">
+<div class="col-md-12 noPadding marginBottom10">
     <div class="col-md-12 noPadding">
         <b>Фильтры:</b>
     </div>     
@@ -92,14 +92,18 @@
 </div>    
 </div>    
 <!--//////////////////////// Notices: react version-->
+<!--
 <div>
     <table-component-react table-def="tableDef" data="data"/>
+-->
 <!--    <my-table cols="cols" rows="data" />-->
-</div>
+<!--</div>-->
 <!--///////////////////////-->
 
 <!--++++++++++++++++++++++++++++ Notices: angular-datatable-->
-<!--    <table datatable="" dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover"></table>-->
+<div ng-controller="NoticeDatatableCtrl as noticeCtrl">
+    <table datatable="" dt-options="noticeCtrl.dtOptions" dt-columns="noticeCtrl.dtColumns" class="row-border hover"></table>
+</div>    
 <!--++++++++++++++++++++++++++++-->
 
 <!--Строка состояния-->
@@ -215,6 +219,12 @@
                                 <td><label for="inputComment" >Текст</label>
                                 </td>
                                 <td class="textAlign_left">Аларм!!! В ночь с понедельника на субботу был зафиксирован большой объем недокаченной воды по направлению на юг от места происшествия. Вот такая вот байда.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Объект</label>
+                                </td>
+                                <td class="textAlign_left">Объект одна тысяча семьсот первый
                                 </td>
                             </tr>
                             <tr>
