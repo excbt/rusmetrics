@@ -15,7 +15,8 @@ public class ReportConstants {
 	};
 
 	public enum ReportTypeKey {
-		COMMERCE_REPORT, CONS_REPORT, EVENT_REPORT
+		COMMERCE_REPORT, //CONS_REPORT, 
+		EVENT_REPORT, CONS_T1_REPORT, CONS_T2_REPORT
 	}
 
 	public enum ReportPeriodKey {
@@ -43,7 +44,11 @@ public class ReportConstants {
 	public static String getReportTypeURL(ReportTypeKey rtk) {
 		String result = null;
 		switch (rtk) {
-		case CONS_REPORT: {
+		case CONS_T1_REPORT: {
+			result = "/cons_t1";
+			break;
+		}
+		case CONS_T2_REPORT: {
 			result = "/cons";
 			break;
 		}

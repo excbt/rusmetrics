@@ -27,6 +27,12 @@ public class ReportType extends AbstractKeynameEntity {
 
 	@Column(name="report_type_comment")
 	private String comment;
+
+	@Column(name="report_type_suffix")
+	private String suffix;
+
+	@Column(name="report_type_enabled")
+	private boolean _enabled;
 	
 	@Version
 	private int version;
@@ -69,6 +75,22 @@ public class ReportType extends AbstractKeynameEntity {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public boolean is_enabled() {
+		return _enabled;
+	}
+
+	public void set_enabled(boolean _enabled) {
+		this._enabled = _enabled;
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
 	}		
 	
 }

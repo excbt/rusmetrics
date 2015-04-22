@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
@@ -38,30 +38,8 @@ public class ReportTemplateService implements SecuredRoles {
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
 
-	private static final Comparator<ReportTemplate> REPORT_TEMPLATE_COMPARATOR = new Comparator<ReportTemplate>() {
-
-		@Override
-		public int compare(ReportTemplate o1, ReportTemplate o2) {
-			if (o1.getSubscriber() == null && o1.getSubscriber() != null) {
-				return 1;
-			}
-
-			if (o1.getSubscriber() != null && o1.getSubscriber() == null) {
-				return -1;
-			}
-
-			if (o1.getName() == null) {
-				return 1;
-			}
-
-			if (o2.getName() == null) {
-				return -1;
-			}
-
-			return o1.getName().compareToIgnoreCase(o2.getName());
-		}
-
-	};
+	@Autowired
+	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
 	/**
 	 * 
@@ -122,6 +100,9 @@ public class ReportTemplateService implements SecuredRoles {
 		checkArgument(!reportTemplate.isNew());
 
 		if (checkCanUpdate(reportTemplate.getId())) {
+			if (reportTemplateBodyRepository.exists(reportTemplate.getId())) {
+				reportTemplateBodyRepository.delete(reportTemplate.getId());	
+			}
 			reportTemplateRepository.delete(reportTemplate);
 		} else {
 			throw new PersistenceException(String.format(
@@ -257,6 +238,8 @@ public class ReportTemplateService implements SecuredRoles {
 		rTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
 		rTemplate.setSubscriber(subscriber);
 		rTemplate.setSrcReportTemplateId(srcId);
+		rTemplate.setIntegratorIncluded(srcReportTemplate
+				.getIntegratorIncluded());
 		rTemplate.set_default(false);
 		rTemplate.set_active(true);
 		rTemplate.setActiveEndDate(null);
@@ -301,6 +284,55 @@ public class ReportTemplateService implements SecuredRoles {
 		ReportTemplate result = reportTemplateRepository.save(rt);
 		return result;
 
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
+			Subscriber subscriber) {
+
+		checkNotNull(reportTemplate);
+		checkArgument(reportTemplate.isNew());
+		checkNotNull(subscriber);
+		checkArgument(!subscriber.isNew());
+
+		if (reportTemplate.getIntegratorIncluded() == null) {
+			reportTemplate.setIntegratorIncluded(false);
+		}
+
+		reportTemplate.setSubscriber(subscriber);
+		reportTemplate.setReportTypeKey(ReportTypeKey.COMMERCE_REPORT);
+
+		ReportMasterTemplateBody masterBody = reportMasterTemplateBodyService
+				.selectReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT);
+
+		if (masterBody == null) {
+			throw new PersistenceException(String.format(
+					"ReportMasterTemplate for %s not found",
+					ReportTypeKey.COMMERCE_REPORT.name()));
+		}
+
+		ReportTemplate resultEntity = reportTemplateRepository
+				.save(reportTemplate);
+
+		saveReportTemplateBodyCompiled(resultEntity.getId(),
+				masterBody.getBodyCompiled(), masterBody.getBodyFilename());
+
+		return resultEntity;
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ReportTemplateBody findReportTemplateBody(long reportTemplateId) {
+		return reportTemplateBodyRepository.findOne(reportTemplateId);
 	}
 
 }
