@@ -9,7 +9,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
 public class ReportTemplateServiceTest extends JpaSupportTest {
 
@@ -50,27 +50,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Autowired
 	ReportTemplateBodyRepository reportTemplateBodyRepository;
 
-	/**
-	 * 
-	 * @param resourcePath
-	 * @return
-	 */
-	private static File findResource(String resourcePath) {
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
 
-		URL startDir = classLoader.getResource(".");
-		URL urlResource = classLoader.getResource(resourcePath);
-
-		File f;
-		if (urlResource == null) {
-			f = new File(startDir.getPath() + resourcePath);
-		} else {
-			f = new File(urlResource.getPath());
-		}
-
-		return f;
-	}
 
 	@Test
 	public void testReportTemplateCreateDelete() {
@@ -107,7 +87,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	@Ignore
 	public void testReportTemplateLoad() throws IOException {
-		File fileJrxml = findResource("jasper/nmk_com_report_agr.jrxml");
+		File fileJrxml = ResourceHelper.findResource("jasper/nmk_com_report_agr.jrxml");
 
 		assertTrue(fileJrxml.exists());
 
@@ -128,7 +108,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testReportTemplateLoadCompiled() throws IOException {
-		File fileJasper = findResource(COMM_FILE_COMPILED);
+		File fileJasper = ResourceHelper.findResource(COMM_FILE_COMPILED);
 		
 		assertTrue(fileJasper.exists());
 		
@@ -164,7 +144,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testReportTemplateLoadShedule() throws IOException {
-		File fileJasper = findResource("jasper/nmk_com_report_agr.jasper");
+		File fileJasper = ResourceHelper.findResource("jasper/nmk_com_report_agr.jasper");
 		assertNotNull(fileJasper);
 		assertTrue(fileJasper.exists());
 		byte[] fileBytes = null;

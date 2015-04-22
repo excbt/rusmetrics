@@ -9,11 +9,14 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
 @Entity
 @Table(name = "report_master_template_body")
+@DynamicUpdate
 public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser, Long> {
 
 	/**
@@ -72,13 +75,13 @@ public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser,
 				bodyCompiled, bodyCompiled.length);
 	}
 
-	public void setBodyCompiled(byte[] reportTemplateBodyCompiled) {
-		if (reportTemplateBodyCompiled == null) {
+	public void setBodyCompiled(byte[] bodyCompiled) {
+		if (bodyCompiled == null) {
 			this.bodyCompiled = null;
 		} else {
 			this.bodyCompiled = Arrays.copyOf(
-					reportTemplateBodyCompiled,
-					reportTemplateBodyCompiled.length);
+					bodyCompiled,
+					bodyCompiled.length);
 		}
 	}
 
@@ -86,8 +89,8 @@ public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser,
 		return bodyFilename;
 	}
 
-	public void setBodyFilename(String reportTemplateBodyFilename) {
-		this.bodyFilename = reportTemplateBodyFilename;
+	public void setBodyFilename(String bodyFilename) {
+		this.bodyFilename = bodyFilename;
 	}
 
 	public String getBodyCompiledFilename() {
@@ -95,8 +98,8 @@ public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser,
 	}
 
 	public void setBodyCompiledFilename(
-			String reportTemplateBodyCompiledFilename) {
-		this.bodyCompiledFilename = reportTemplateBodyCompiledFilename;
+			String bodyCompiledFilename) {
+		this.bodyCompiledFilename = bodyCompiledFilename;
 	}
 
 	public ReportTypeKey getReportTypeKey() {
