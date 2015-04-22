@@ -72,9 +72,13 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
-		configurer.favorPathExtension(true).favorParameter(true)
-				.parameterName("mediaType").ignoreAcceptHeader(true)
-				.useJaf(false).mediaType("xml", MediaType.APPLICATION_XML)
+		configurer
+				.favorPathExtension(true)
+				.favorParameter(true)
+				.parameterName("mediaType")
+				.ignoreAcceptHeader(true)
+				.useJaf(false)
+				.mediaType("xml", MediaType.APPLICATION_XML)
 				.mediaType("json", MediaType.APPLICATION_JSON)
 				.mediaType("html", MediaType.TEXT_HTML)
 				.mediaType("less", MediaType.TEXT_HTML);
