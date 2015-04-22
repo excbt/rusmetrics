@@ -75,7 +75,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getConsReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, true,
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, true,
 						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
@@ -117,7 +117,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getReportParamsetListArchCons() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_REPORT, false,
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, false,
 						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);

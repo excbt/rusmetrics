@@ -72,7 +72,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_REPORT, true);
+						ReportTypeKey.CONS_T2_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
 
@@ -111,7 +111,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_REPORT, false);
+						ReportTypeKey.CONS_T2_REPORT, false);
 		return ResponseEntity.ok(result);
 	}
 
@@ -232,7 +232,7 @@ public class ReportTemplateController extends WebApiController {
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONS_REPORT);
+				ReportTypeKey.CONS_T2_REPORT);
 	}
 
 	/**
