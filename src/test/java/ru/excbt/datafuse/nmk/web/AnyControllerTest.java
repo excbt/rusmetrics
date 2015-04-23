@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,8 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:META-INF/spring/app-config.xml",
-		                           "classpath:META-INF/spring/servlet-context.xml"})
+@ContextConfiguration (classes = {SpringMvcConfig.class})
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN" })
 public class AnyControllerTest {
 	
