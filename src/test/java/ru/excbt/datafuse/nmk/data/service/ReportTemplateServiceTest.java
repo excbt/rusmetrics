@@ -29,6 +29,8 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
 public class ReportTemplateServiceTest extends JpaSupportTest {
@@ -54,6 +56,9 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
+	
+	@Autowired	
+	private ReportWizardService reportWizardService;
 
 	@Test
 	public void testReportTemplateCreateDelete() {
@@ -198,12 +203,14 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 		checkNotNull(reportMasterTemplateBody);
 
+		ReportColumnSettings reportColumnSettings = reportWizardService.getReportColumnSettings();
+		
 		ReportTemplate reportTemplate = new ReportTemplate();
 		reportTemplate.setComment("Created By Wizard");
 		reportTemplate.setActiveStartDate(new Date());
 		reportTemplate.set_active(true);
 		ReportTemplate result = reportTemplateService.createCommerceWizard(
-				reportTemplate, currentSubscriberService.getSubscriber());
+				reportTemplate, reportColumnSettings, currentSubscriberService.getSubscriber());
 		checkNotNull(result);
 
 		ReportTemplateBody templateBody = reportTemplateService

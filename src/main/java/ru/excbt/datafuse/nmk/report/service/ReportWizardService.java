@@ -13,7 +13,7 @@ import ru.excbt.nmk.reports.ColumnElement;
 import ru.excbt.nmk.reports.ReportConvert;
 
 @Service
-public class ReportSystemService {
+public class ReportWizardService {
 
 	private void loadColumnHeader() {
 		// ReportConvert.getHeaderColumn()

@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
+import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -313,10 +314,18 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
-			Subscriber subscriber) {
+			ReportColumnSettings reportColumnSettings, Subscriber subscriber) {
 
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
+		checkNotNull(reportColumnSettings);
+		
+		checkNotNull(reportColumnSettings.getAllTsList());
+		checkArgument(reportColumnSettings.getAllTsList().size() == 2);
+		
+		checkNotNull(reportColumnSettings.getTs1List());
+		checkNotNull(reportColumnSettings.getTs2List());
+		
 		checkNotNull(subscriber);
 		checkArgument(!subscriber.isNew());
 

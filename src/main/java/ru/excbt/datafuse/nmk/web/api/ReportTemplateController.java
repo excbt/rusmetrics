@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
@@ -50,6 +51,9 @@ public class ReportTemplateController extends WebApiController {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private ReportWizardService reportSystemService;
+
 	/**
 	 * 
 	 * @return
@@ -63,7 +67,6 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
-
 	/**
 	 * 
 	 * @return
@@ -76,7 +79,7 @@ public class ReportTemplateController extends WebApiController {
 						ReportTypeKey.CONS_T1_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -102,7 +105,6 @@ public class ReportTemplateController extends WebApiController {
 						ReportTypeKey.CONS_T2_REPORT, true);
 		return ResponseEntity.ok(result);
 	}
-
 
 	/**
 	 * 
@@ -130,7 +132,6 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
-
 	/**
 	 * 
 	 * @return
@@ -143,7 +144,7 @@ public class ReportTemplateController extends WebApiController {
 						ReportTypeKey.CONS_T1_REPORT, false);
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -168,8 +169,8 @@ public class ReportTemplateController extends WebApiController {
 						currentSubscriberService.getSubscriberId(),
 						ReportTypeKey.CONS_T2_REPORT, false);
 		return ResponseEntity.ok(result);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @return
@@ -212,7 +213,7 @@ public class ReportTemplateController extends WebApiController {
 		}
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * 
 	 * @return
@@ -220,7 +221,7 @@ public class ReportTemplateController extends WebApiController {
 	@RequestMapping(value = "/cons_t2/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOneConsT2(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-		
+
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
@@ -235,7 +236,7 @@ public class ReportTemplateController extends WebApiController {
 	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOneConsOld(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-		
+
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
 		if (result == null) {
 			ResponseEntity.badRequest().build();
@@ -319,7 +320,7 @@ public class ReportTemplateController extends WebApiController {
 		return updateInternal(reportTemplateId, reportTemplate,
 				ReportTypeKey.CONS_T1_REPORT);
 	}
-	
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -433,22 +434,5 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.created(location).body(resultEntity);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/createWizard", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createCommerceReport(
-			@RequestParam(value = "includeIntegrators", required = false) Boolean includeIntegrators,
-			@RequestBody ReportTemplate reportTemplate) {
 
-		checkNotNull(reportTemplate);
-		if (!reportTemplate.isNew()) {
-			return ResponseEntity.badRequest().build();
-		}
-
-		
-		
-		return ResponseEntity.badRequest().build();
-	}
 }

@@ -33,6 +33,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	
 	@Test
 	public void testGetCommReportTemplates() throws Exception {
 		testJsonGet("/api/reportTemplate/commerce");
@@ -62,12 +63,12 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	public void testGetConsReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/cons");
 	}
-	
+
 	@Test
 	public void testGetConsT1ReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/cons_t1");
 	}
-	
+
 	@Test
 	public void testGetConsT2ReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/cons_t2");
@@ -149,5 +150,6 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	public void testGetAvailableContbjects() throws Exception {
 		testJsonGet("/api/reportParamset/0/contObject/available");
 	}
+
 
 }
