@@ -20,9 +20,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration("classpath:META-INF/spring/app-config.xml")
+@ContextConfiguration(classes = {SpringMvcConfig.class})
 public class WebTest {
 
 	public final static String CHARSET_UTF8 = "charset=UTF-8";
