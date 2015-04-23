@@ -20,7 +20,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -36,7 +35,7 @@ public class ReportTemplateService implements SecuredRoles {
 	private ReportTemplateBodyRepository reportTemplateBodyRepository;
 
 	@Autowired
-	private ReportParamsetRepository reportParamsetRepository;
+	private ReportParamsetService reportParamsetService;
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
@@ -101,7 +100,7 @@ public class ReportTemplateService implements SecuredRoles {
 
 		if (checkCanUpdate(reportTemplate.getId())) {
 			if (reportTemplateBodyRepository.exists(reportTemplate.getId())) {
-				reportTemplateBodyRepository.delete(reportTemplate.getId());	
+				reportTemplateBodyRepository.delete(reportTemplate.getId());
 			}
 			reportTemplateRepository.delete(reportTemplate);
 		} else {
@@ -177,20 +176,25 @@ public class ReportTemplateService implements SecuredRoles {
 	/**
 	 * 
 	 * @param reportTemplateId
-	 * @param reportTemplateBody
+	 * @param body
+	 * @param filename
+	 * @param isCompiled
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-	public void saveReportTemplateBody(long reportTemplateId,
-			byte[] reportTemplateBody, String filename) {
-
+	private void saveReportTemplateBodyInternal(long reportTemplateId,
+			byte[] body, String filename, boolean isCompiled) {
 		ReportTemplateBody rtb = reportTemplateBodyRepository
 				.findOne(reportTemplateId);
 		if (rtb == null) {
 			rtb = new ReportTemplateBody();
 			rtb.setReportTemplateId(reportTemplateId);
 		}
-		rtb.setBody(reportTemplateBody);
-		rtb.setBodyFilename(filename);
+		if (isCompiled) {
+			rtb.setBodyCompiled(body);
+			rtb.setBodyCompiledFilename(filename);
+		} else {
+			rtb.setBody(body);
+			rtb.setBodyFilename(filename);
+		}
 		reportTemplateBodyRepository.save(rtb);
 	}
 
@@ -200,19 +204,21 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateBody
 	 */
 	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void saveReportTemplateBody(long reportTemplateId, byte[] body,
+			String filename) {
+		saveReportTemplateBodyInternal(reportTemplateId, body, filename, false);
+	}
+
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @param reportTemplateBody
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public void saveReportTemplateBodyCompiled(long reportTemplateId,
-			byte[] reportTemplateBodyCompiled, String filename) {
+			byte[] body, String filename) {
 
-		ReportTemplateBody rtb = reportTemplateBodyRepository
-				.findOne(reportTemplateId);
-		if (rtb == null) {
-			rtb = new ReportTemplateBody();
-			rtb.setReportTemplateId(reportTemplateId);
-		}
-		rtb.setBodyCompiled(reportTemplateBodyCompiled);
-		rtb.setBodyCompiledFilename(filename);
-
-		reportTemplateBodyRepository.save(rtb);
+		saveReportTemplateBodyInternal(reportTemplateId, body, filename, true);
 	}
 
 	/**
@@ -220,6 +226,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public ReportTemplate createByTemplate(long srcId,
 			ReportTemplate reportTemplate, Subscriber subscriber) {
 
@@ -234,17 +241,29 @@ public class ReportTemplateService implements SecuredRoles {
 		checkNotNull(srcReportTemplate, "Report Template not found. id="
 				+ srcId);
 
-		ReportTemplate rTemplate = reportTemplate;
-		rTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
-		rTemplate.setSubscriber(subscriber);
-		rTemplate.setSrcReportTemplateId(srcId);
-		rTemplate.setIntegratorIncluded(srcReportTemplate
+		reportTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
+		reportTemplate.setSubscriber(subscriber);
+		reportTemplate.setSrcReportTemplateId(srcId);
+		reportTemplate.setIntegratorIncluded(srcReportTemplate
 				.getIntegratorIncluded());
-		rTemplate.set_default(false);
-		rTemplate.set_active(true);
-		rTemplate.setActiveEndDate(null);
+		reportTemplate.set_default(false);
+		reportTemplate.set_active(true);
+		reportTemplate.setActiveEndDate(null);
+		reportTemplate.setActiveStartDate(new Date());
 
-		ReportTemplate result = reportTemplateRepository.save(rTemplate);
+		ReportTemplate result = reportTemplateRepository.save(reportTemplate);
+
+		ReportTemplateBody srcBody = getReportTemplateBody(srcReportTemplate
+				.getId());
+		if (srcBody != null) {
+			ReportTemplateBody newBody = new ReportTemplateBody();
+			newBody.setReportTemplateId(result.getId());
+			newBody.setBody(srcBody.getBody());
+			newBody.setBodyFilename(srcBody.getBodyFilename());
+			newBody.setBodyCompiled(srcBody.getBodyCompiled());
+			newBody.setBodyCompiledFilename(srcBody.getBodyCompiledFilename());
+			reportTemplateBodyRepository.save(newBody);
+		}
 
 		return result;
 	}
@@ -254,6 +273,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
 		if (!checkCanUpdate(reportTemplateId)) {
@@ -262,7 +282,7 @@ public class ReportTemplateService implements SecuredRoles {
 					reportTemplateId));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetRepository
+		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportParamset(reportTemplateId, true);
 
 		if (reportParamsetList.size() > 0) {
@@ -331,7 +351,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ReportTemplateBody findReportTemplateBody(long reportTemplateId) {
+	public ReportTemplateBody getReportTemplateBody(long reportTemplateId) {
 		return reportTemplateBodyRepository.findOne(reportTemplateId);
 	}
 
