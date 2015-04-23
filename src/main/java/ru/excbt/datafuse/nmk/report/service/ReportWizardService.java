@@ -2,9 +2,10 @@ package ru.excbt.datafuse.nmk.report.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 import javax.persistence.PersistenceException;
 
@@ -40,24 +41,6 @@ public class ReportWizardService implements SecuredRoles {
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
-
-	private void loadColumnHeader() {
-		// ReportConvert.getHeaderColumn()
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<ReportColumn> getReportColumns() {
-		List<ReportColumn> resultList = new ArrayList<>();
-		ColumnElement[] elements = ReportConvert.getHeaderColumn();
-		checkNotNull(elements);
-		for (ColumnElement ce : elements) {
-			resultList.add(new ReportColumn(ce));
-		}
-		return resultList;
-	}
 
 	/**
 	 * 
@@ -123,6 +106,21 @@ public class ReportWizardService implements SecuredRoles {
 					ReportTypeKey.COMMERCE_REPORT.name()));
 		}
 
+		checkState(masterBody.getBody() != null && masterBody.getBody().length > 0);
+		
+		ByteArrayInputStream is = new ByteArrayInputStream(masterBody.getBody());
+
+		boolean showIntegrators = reportTemplate.getIntegratorIncluded() == null ? false : reportTemplate.getIntegratorIncluded();
+		
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try {
+//			/ReportConvert.convertJRXmlReport(is, chd, showIntegrators, os);
+			
+		} finally {
+
+		}
+		
+		
 		ReportTemplate resultEntity = reportTemplateRepository
 				.save(reportTemplate);
 
