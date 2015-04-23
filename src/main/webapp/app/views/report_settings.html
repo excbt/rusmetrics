@@ -42,7 +42,7 @@
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount}})</small>
+                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
                                             <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
                                                 <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>
@@ -123,7 +123,7 @@
 
                                         </div>
                                         <div class="col-md-10">
-                                            <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount}})</small>
+                                            <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                         </div>
 
 
