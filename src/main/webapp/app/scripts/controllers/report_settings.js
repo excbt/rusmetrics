@@ -12,24 +12,24 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     $scope.currentReportType = {};
     
     $scope.objects = [
-        {
-            "reportType":"COMMERCE_REPORT"
-            ,"reportTypeName":"Коммерческий"
-            ,"templatesCount": 0
-            ,"templates": []
-        }
-        ,        {
-            "reportType":"CONS_REPORT"
-            ,"reportTypeName":"Сводный"
-            ,"templatesCount":0
-            ,"templates": []
-        }
-        ,        {
-            "reportType":"EVENT_REPORT"
-            ,"reportTypeName":"События"
-            ,"templatesCount": 0
-            ,"templates": []
-        }
+//        {
+//            "reportType":"COMMERCE_REPORT"
+//            ,"reportTypeName":"Коммерческий"
+//            ,"templatesCount": 0
+//            ,"templates": []
+//        }
+//        ,        {
+//            "reportType":"CONS_REPORT"
+//            ,"reportTypeName":"Сводный"
+//            ,"templatesCount":0
+//            ,"templates": []
+//        }
+//        ,        {
+//            "reportType":"EVENT_REPORT"
+//            ,"reportTypeName":"События"
+//            ,"templatesCount": 0
+//            ,"templates": []
+//        }
     ];
     
     
@@ -38,9 +38,9 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 //        ,{"name":"templatesCount", "header":"Кол-во шаблонов", "class":"col-md-1"}
     ];
     
-    $scope.commerce = {};
-    $scope.cons = {};
-    $scope.event = {};
+//    $scope.commerce = {};
+//    $scope.cons = {};
+//    $scope.event = {};
     
     
     $scope.crudTableName = "../api/reportTemplate"; 
@@ -50,9 +50,23 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
             $scope.reportTypes = data;
-            $scope.objects[0].reportTypeName = $scope.reportTypes[0].caption;
-            $scope.objects[1].reportTypeName = $scope.reportTypes[1].caption;
-            $scope.objects[2].reportTypeName = $scope.reportTypes[2].caption;
+            var newObjects = [];
+            var newObject = {};
+            for (var i = 0; i<data.length; i++){
+                newObject = {};
+                newObject.reportType = data[i].keyname;
+                newObject.reportTypeName = data[i].caption;
+                newObject.suffix = data[i].suffix;
+                
+                newObjects.push(newObject);
+            };
+//console.log(newObjects);            
+            $scope.objects = newObjects;
+            
+            $scope.getActive();
+//            $scope.objects[0].reportTypeName = $scope.reportTypes[0].caption;
+//            $scope.objects[1].reportTypeName = $scope.reportTypes[1].caption;
+//            $scope.objects[2].reportTypeName = $scope.reportTypes[2].caption;
         });
     };
     $scope.getReportTypes();
@@ -89,44 +103,59 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     };
     
     
-      
-    $scope.getCommerceTemplates = function (table) {
+    $scope.getTemplates = function(table, type){
         crudGridDataFactory(table).query(function (data) {
-            $scope.commerce.templates = data;
-
-            $scope.objects[0].templatesCount = $scope.commerce.templates.length;
-            $scope.objects[0].templates = $scope.commerce.templates;
+            type.templates = data;
+            type.templatesCount = data.length;
         });
-    };
-    $scope.getConsTemplates = function (table) {
-        crudGridDataFactory(table).query(function (data) {
-            $scope.cons.templates = data; 
-
-            $scope.objects[1].templatesCount = $scope.cons.templates.length;
-            $scope.objects[1].templates = $scope.cons.templates;
-        });
-    };
-    $scope.getEventTemplates = function (table) {
-        crudGridDataFactory(table).query(function (data) {
-            $scope.event.templates = data;
-
-            $scope.objects[2].templatesCount = $scope.event.templates.length;
-            $scope.objects[2].templates = $scope.event.templates;
-        });
-    };
+    };  
+    
+//    $scope.getCommerceTemplates = function (table) {
+//        crudGridDataFactory(table).query(function (data) {
+//            $scope.commerce.templates = data;
+//
+//            $scope.objects[0].templatesCount = $scope.commerce.templates.length;
+//            $scope.objects[0].templates = $scope.commerce.templates;
+//        });
+//    };
+//    $scope.getConsTemplates = function (table) {
+//        crudGridDataFactory(table).query(function (data) {
+//            $scope.cons.templates = data; 
+//
+//            $scope.objects[1].templatesCount = $scope.cons.templates.length;
+//            $scope.objects[1].templates = $scope.cons.templates;
+//        });
+//    };
+//    $scope.getEventTemplates = function (table) {
+//        crudGridDataFactory(table).query(function (data) {
+//            $scope.event.templates = data;
+//
+//            $scope.objects[2].templatesCount = $scope.event.templates.length;
+//            $scope.objects[2].templates = $scope.event.templates;
+//        });
+//    };
  //get templates   
     $scope.getActive = function(){
-        $scope.getCommerceTemplates($scope.crudTableName+"/commerce");
-        $scope.getConsTemplates($scope.crudTableName+"/cons");
-        $scope.getEventTemplates($scope.crudTableName+"/event");
+        if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
+        for (var i=0; i<$scope.objects.length; i++){
+            $scope.getTemplates($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+        };
+        
+//        $scope.getCommerceTemplates($scope.crudTableName+"/commerce");
+//        $scope.getConsTemplates($scope.crudTableName+"/cons");
+//        $scope.getEventTemplates($scope.crudTableName+"/event");
     };
     
-    $scope.getActive();
+//    $scope.getActive();
     
     $scope.getArchive = function(){
-        $scope.getCommerceTemplates($scope.crudTableName+"/archive/commerce");
-        $scope.getConsTemplates($scope.crudTableName+"/archive/cons");
-        $scope.getEventTemplates($scope.crudTableName+"/archive/event");
+        if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
+        for (var i=0; i<$scope.objects.length; i++){
+            $scope.getTemplates($scope.crudTableName+"/archive"+$scope.objects[i].suffix, $scope.objects[i]);
+        };
+//        $scope.getCommerceTemplates($scope.crudTableName+"/archive/commerce");
+//        $scope.getConsTemplates($scope.crudTableName+"/archive/cons");
+//        $scope.getEventTemplates($scope.crudTableName+"/archive/event");
     };
     
 //    $scope.oldObjects = [
@@ -169,11 +198,12 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
             return;
         };
         
-        switch ($scope.currentReportType.reportType){
-            case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
-            case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
-            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
-        };
+        table =$scope.crudTableName+$scope.currentReportType.suffix;
+//        switch ($scope.currentReportType.reportType){
+//            case "COMMERCE_REPORT":  table=$scope.crudTableName+"/commerce/"; break;   
+//            case "CONS_REPORT":  table=$scope.crudTableName+"/cons/"; break;   
+//            case "EVENT_REPORT":  table=$scope.crudTableName+"/event/"; break;       
+//        };
         crudGridDataFactory(table).update({reportTemplateId: object.id}, object, successCallback, errorCallback);
     };
     
@@ -380,6 +410,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     $scope.setCurrentReportType = function(object){
         $scope.currentReportType.reportType = object.reportType;
         $scope.currentReportType.reportTypeName=object.reportTypeName;
+        $scope.currentReportType.suffix=object.suffix;
     };
     $scope.editTemplate = function(object, oldObject){
         $scope.selectedItem(oldObject);

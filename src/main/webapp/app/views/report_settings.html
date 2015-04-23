@@ -528,18 +528,18 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name">
+                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
+                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common">По умолчанию
                                 </td>
 
                             </tr>                            
@@ -551,7 +551,7 @@
 <!--                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> -->
                                 </td>
                                 <td class="textAlign_left col-sm-9" ng-show="createByTemplate_flag">
-                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat"> 
+                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
                                 </td>                                
                             </tr>
                             
