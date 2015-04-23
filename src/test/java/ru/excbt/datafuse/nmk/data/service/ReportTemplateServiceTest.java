@@ -207,7 +207,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		checkNotNull(result);
 
 		ReportTemplateBody templateBody = reportTemplateService
-				.findReportTemplateBody(reportTemplate.getId());
+				.getReportTemplateBody(reportTemplate.getId());
 
 		assertArrayEquals(reportMasterTemplateBody.getBodyCompiled(),
 				templateBody.getBodyCompiled());

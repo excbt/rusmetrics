@@ -11,14 +11,12 @@ import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.service.ContManagementService;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.support.TestConstants;
 
-public class ContManagementServiceTest extends JpaConfigTest {
+public class ContManagementServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ContManagementService contManagementService;

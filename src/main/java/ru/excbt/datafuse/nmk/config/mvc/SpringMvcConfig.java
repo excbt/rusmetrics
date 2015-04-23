@@ -17,14 +17,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import ru.excbt.datafuse.nmk.config.PropertyConfig;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
 import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
 import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.web" })
-@Import(WebSecurityConfig.class)
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" })
+@Import({ PropertyConfig.class, JpaConfig.class, WebSecurityConfig.class })
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
@@ -72,13 +74,9 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 	@Override
 	public void configureContentNegotiation(
 			ContentNegotiationConfigurer configurer) {
-		configurer
-				.favorPathExtension(true)
-				.favorParameter(true)
-				.parameterName("mediaType")
-				.ignoreAcceptHeader(true)
-				.useJaf(false)
-				.mediaType("xml", MediaType.APPLICATION_XML)
+		configurer.favorPathExtension(true).favorParameter(true)
+				.parameterName("mediaType").ignoreAcceptHeader(true)
+				.useJaf(false).mediaType("xml", MediaType.APPLICATION_XML)
 				.mediaType("json", MediaType.APPLICATION_JSON)
 				.mediaType("html", MediaType.TEXT_HTML)
 				.mediaType("less", MediaType.TEXT_HTML);

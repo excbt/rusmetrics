@@ -6,11 +6,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 
-public class DeviceModelServiceTest extends JpaConfigTest {
+public class DeviceModelServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private DeviceModelService deviceModelService;

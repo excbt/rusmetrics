@@ -7,11 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 
-public class SystemParamServiceTest extends JpaConfigTest {
+public class SystemParamServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SystemParamServiceTest.class);

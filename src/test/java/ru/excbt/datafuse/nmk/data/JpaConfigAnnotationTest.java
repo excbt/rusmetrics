@@ -2,8 +2,8 @@ package ru.excbt.datafuse.nmk.data;
 
 import static org.junit.Assert.assertNotNull;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,15 +15,15 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {JpaConfig.class})
-public class JpaConfigTest {
+public class JpaConfigAnnotationTest {
 
-	@PersistenceContext
-	protected EntityManager entityManager;
+	@PersistenceUnit
+	protected EntityManagerFactory entityManagerFactory;
 	
 	
 	@Test
 	public void entityManagerOK() {
-		assertNotNull(entityManager);
+		assertNotNull(entityManagerFactory);
 	}
 	
 

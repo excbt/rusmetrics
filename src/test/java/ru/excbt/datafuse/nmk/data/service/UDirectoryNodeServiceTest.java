@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 
-public class UDirectoryNodeServiceTest extends JpaConfigTest {
+public class UDirectoryNodeServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryNodeServiceTest.class);
