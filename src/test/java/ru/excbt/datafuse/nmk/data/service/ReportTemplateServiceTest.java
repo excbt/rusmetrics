@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -23,12 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
-import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
 public class ReportTemplateServiceTest extends JpaSupportTest {
@@ -54,7 +53,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
-
+	
 	@Test
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
@@ -187,32 +186,6 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		logger.info("fileBodyCompiled length: {}", fileBodyCompiled.length);
 	}
 
-	/**
-	 * 
-	 */
-	@Test
-	public void testCreateReportWizard() {
-
-		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
-				.selectReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT);
-
-		checkNotNull(reportMasterTemplateBody);
-
-		ReportTemplate reportTemplate = new ReportTemplate();
-		reportTemplate.setComment("Created By Wizard");
-		reportTemplate.setActiveStartDate(new Date());
-		reportTemplate.set_active(true);
-		ReportTemplate result = reportTemplateService.createCommerceWizard(
-				reportTemplate, currentSubscriberService.getSubscriber());
-		checkNotNull(result);
-
-		ReportTemplateBody templateBody = reportTemplateService
-				.getReportTemplateBody(reportTemplate.getId());
-
-		assertArrayEquals(reportMasterTemplateBody.getBodyCompiled(),
-				templateBody.getBodyCompiled());
-
-		reportTemplateService.deleteOne(result);
-	}
+	
 
 }
