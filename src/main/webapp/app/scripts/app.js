@@ -26,13 +26,15 @@ var app = angular
 app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/objects_edit.html',
+        controller: 'ObjectsCtrl'
+//        templateUrl: 'views/main.html',
+//        controller: 'MainCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
-      })
+//      .when('/about', {
+//        templateUrl: 'views/about.html',
+//        controller: 'AboutCtrl'
+//      })
       .when('/notice', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl'
@@ -85,10 +87,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/param_sets.html',
         controller: 'ParamSetsCtrl'
       })
-    .when('/test', {
-        templateUrl: 'views/test.html',
-        controller: 'TestCtrl'
-      })
+//    .when('/test', {
+//        templateUrl: 'views/test.html',
+//        controller: 'TestCtrl'
+//      })
       .otherwise({
         redirectTo: '/'
       });
