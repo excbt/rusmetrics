@@ -241,6 +241,15 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     
     
     //for template designer
+    $scope.getWizard = function(){
+        var table = "../api/reportWizard/columnSettings/commerce";
+        crudGridDataFactory(table).get(function(data){
+console.log(data);            
+        });
+    };
+    
+    $scope.getWizard();
+    
     $scope.systems = [];
     $scope.system1 ={} ;
     $scope.system2 ={} ;
