@@ -15,14 +15,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
-import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
-import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -38,8 +36,6 @@ public class ReportTemplateService implements SecuredRoles {
 	@Autowired
 	private ReportParamsetService reportParamsetService;
 
-	@Autowired
-	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
 	/**
 	 * 
@@ -307,52 +303,7 @@ public class ReportTemplateService implements SecuredRoles {
 
 	}
 
-	/**
-	 * 
-	 * @param reportTemplate
-	 * @return
-	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
-			ReportColumnSettings reportColumnSettings, Subscriber subscriber) {
-
-		checkNotNull(reportTemplate);
-		checkArgument(reportTemplate.isNew());
-		checkNotNull(reportColumnSettings);
-		
-		checkNotNull(reportColumnSettings.getAllTsList());
-		checkArgument(reportColumnSettings.getAllTsList().size() == 2);
-		
-		checkNotNull(reportColumnSettings.getTs1List());
-		checkNotNull(reportColumnSettings.getTs2List());
-		
-		checkNotNull(subscriber);
-		checkArgument(!subscriber.isNew());
-
-		if (reportTemplate.getIntegratorIncluded() == null) {
-			reportTemplate.setIntegratorIncluded(false);
-		}
-
-		reportTemplate.setSubscriber(subscriber);
-		reportTemplate.setReportTypeKey(ReportTypeKey.COMMERCE_REPORT);
-
-		ReportMasterTemplateBody masterBody = reportMasterTemplateBodyService
-				.selectReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT);
-
-		if (masterBody == null) {
-			throw new PersistenceException(String.format(
-					"ReportMasterTemplate for %s not found",
-					ReportTypeKey.COMMERCE_REPORT.name()));
-		}
-
-		ReportTemplate resultEntity = reportTemplateRepository
-				.save(reportTemplate);
-
-		saveReportTemplateBodyCompiled(resultEntity.getId(),
-				masterBody.getBodyCompiled(), masterBody.getBodyFilename());
-
-		return resultEntity;
-	}
+	
 
 	/**
 	 * 

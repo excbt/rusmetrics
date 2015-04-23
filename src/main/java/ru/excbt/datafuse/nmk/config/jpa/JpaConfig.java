@@ -26,7 +26,8 @@ import ru.excbt.datafuse.nmk.config.PropertyConfig;
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")
-@ComponentScan("ru.excbt.datafuse.nmk.data")
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data",
+		"ru.excbt.datafuse.nmk.report" })
 public class JpaConfig {
 
 	@Value("${dataSource.driverClassName}")
@@ -87,7 +88,6 @@ public class JpaConfig {
 		transactionManager.setEntityManagerFactory(emf);
 		return transactionManager;
 	}
-
 
 	@Bean
 	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
