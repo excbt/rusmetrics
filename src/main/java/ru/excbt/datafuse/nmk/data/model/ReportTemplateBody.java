@@ -32,10 +32,10 @@ public class ReportTemplateBody implements Serializable {
 	private int version;
 
 	@Column(name = "report_template_body_filename")
-	private String reportTemplateBodyFilename;
+	private String bodyFilename;
 
 	@Column(name = "report_template_body_compiled_filename")
-	private String reportTemplateBodyCompiledFilename;
+	private String bodyCompiledFilename;
 	
 	public Long getReportTemplateId() {
 		return reportTemplateId;
@@ -84,19 +84,19 @@ public class ReportTemplateBody implements Serializable {
 	}
 
 	public String getBodyFilename() {
-		return reportTemplateBodyFilename;
+		return bodyFilename;
 	}
 
 	public void setBodyFilename(String reportTemplateBodyFilename) {
-		this.reportTemplateBodyFilename = reportTemplateBodyFilename;
+		this.bodyFilename = reportTemplateBodyFilename;
 	}
 
 	public String getBodyCompiledFilename() {
-		return reportTemplateBodyCompiledFilename;
+		return bodyCompiledFilename;
 	}
 
 	public void setBodyCompiledFilename(
 			String reportTemplateBodyCompiledFilename) {
-		this.reportTemplateBodyCompiledFilename = reportTemplateBodyCompiledFilename;
+		this.bodyCompiledFilename = reportTemplateBodyCompiledFilename;
 	}
 }
