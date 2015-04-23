@@ -297,6 +297,21 @@
 			<scope>test</scope>
 		</dependency>
 
+
+		<!--  -->
+		<dependency>
+			<groupId>ru.excbt.datafuse</groupId>
+			<artifactId>nmkreports</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.postgresql</groupId>
+					<artifactId>postgresql</artifactId>
+				</exclusion>
+			</exclusions>			
+		</dependency>
+		<!--  -->
+
 	</dependencies>
 
 
