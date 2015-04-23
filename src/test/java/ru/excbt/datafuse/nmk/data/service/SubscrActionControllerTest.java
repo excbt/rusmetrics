@@ -10,4 +10,9 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	public void testGetGroup() throws Exception {
 		testJsonGet("/api/subscr/subscrAction/groups");
 	}
+
+	@Test
+	public void testGetUser() throws Exception {
+		testJsonGet("/api/subscr/subscrAction/users");
+	}
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
+import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -30,6 +31,17 @@ public class SubscrActionController extends WebApiController {
 	public ResponseEntity<?> getSubscrActionGroup() {
 		List<SubscrActionGroup> resultList = subscrActionService
 				.findActionGroup(currentSubscriberService.getSubscriberId());
+		return ResponseEntity.ok(resultList);
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrActionUser() {
+		List<SubscrActionUser> resultList = subscrActionService
+				.findActionUser(currentSubscriberService.getSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
