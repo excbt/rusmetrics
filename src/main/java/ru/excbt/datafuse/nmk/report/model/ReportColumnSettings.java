@@ -3,6 +3,9 @@ package ru.excbt.datafuse.nmk.report.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportColumnSettings {
 
 	private List<ReportColumn> allTsList = new ArrayList<>();
