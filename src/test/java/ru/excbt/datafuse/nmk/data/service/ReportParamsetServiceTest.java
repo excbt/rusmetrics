@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
-public class ReportParamsetServiceTest extends JpaConfigTest {
+public class ReportParamsetServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportParamsetServiceTest.class);

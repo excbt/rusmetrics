@@ -3,19 +3,21 @@ package ru.excbt.datafuse.nmk.data;
 import static org.junit.Assert.assertNotNull;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:/META-INF/spring/jpa-config.xml")
+@ContextConfiguration(classes = {JpaConfig.class})
 public class JpaConfigTest {
 
-	@Autowired
+	@PersistenceContext
 	protected EntityManager entityManager;
 	
 	

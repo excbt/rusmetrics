@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaConfigTest;
+import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 
-public class ReportServiceTest extends JpaConfigTest {
+public class ReportServiceTest extends JpaSupportTest {
 
 	private final static String EXPECTED_URL = "/jasperserver/rest_v2/reports/PublicReports/nmk/common/nmk_com_report.html?"
 			+ "end_date=2014-03-31&begin_date=2014-03-01&object_id=18811505";
