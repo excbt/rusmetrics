@@ -84,9 +84,11 @@
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
+<!--
                                 <a class="list-group-item"
 
                                     href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Главная</a>
+-->
    
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item"
@@ -147,9 +149,11 @@
                                     <a class="list-group-item"
 
                                         href="#/settings/reports/" data-toggle="offcanvas">Отчеты</a>
+<!--
                                     <a class="list-group-item"
 
                                         href="#/" data-toggle="offcanvas">И Еще какой-то</a>
+-->
                                 </div>
                                 
 
@@ -170,7 +174,7 @@
                                 <!-- Home -->
                                 <a class="list-group-item"
 
-                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Главная</a>
+                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Портал</a>
                                 <!-- Объекты, меню настройки объектов -->
                                 <a class="list-group-item"
 
@@ -193,8 +197,11 @@
 
                                          Задайте интервал дат</label>
                                     <div ng-controller="DataRangeSettings">
-                                            <input style="font-size: 9px;" date-range-picker class="form-control date-picker"
-                                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                            <div class="input-group">
+                                                <span style="font-size:9px;" class="input-group-addon excbt_inputGroupAddon">с</span>
+                                                <input style="font-size:9px;" date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
+                                                    type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
+                                            </div>
                                     </div>
                                 
                                 </div>

@@ -230,7 +230,7 @@ angular.module('portalNMK')
               
             });
         };
-//        $scope.getObjects();     
+        $scope.getObjects();     
 
   }]);
 
