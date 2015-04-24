@@ -2,6 +2,7 @@
 
 # Log Generated files
 log/*
+out/*
 
 ### Eclipse ###
 *.pydevproject
