@@ -62,6 +62,91 @@ public class ReportParamsetUtils {
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
+			result = reportDate.withMillisOfDay(0);
+			break;
+		}
+		case YESTERDAY: {
+			result = reportDate.minusDays(1).withMillisOfDay(0);
+			break;
+		}
+		case CURRENT_MONTH: {
+			result = reportDate.withMillisOfDay(0).plusMonths(1).withDayOfMonth(1)
+					.minusDays(1);
+			;
+			break;
+		}
+		case LAST_MONTH: {
+			result = reportDate.withMillisOfDay(0).withDayOfMonth(1)
+					.minusDays(1);
+
+			break;
+		}
+		case INTERVAL: {
+			break;
+		}
+
+		default:
+			break;
+
+		}
+
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param reportDate
+	 * @param reportPeriodKey
+	 * @return
+	 */
+	public static LocalDateTime getStartDateTime(LocalDateTime reportDate,
+			ReportPeriodKey reportPeriodKey) {
+		checkNotNull(reportDate);
+		checkNotNull(reportPeriodKey);
+		LocalDateTime result = null;
+		switch (reportPeriodKey) {
+		case TODAY: {
+			result = reportDate.withMillisOfDay(0);
+			break;
+		}
+		case YESTERDAY: {
+			result = reportDate.minusDays(1).withMillisOfDay(0);
+			break;
+		}
+		case CURRENT_MONTH: {
+			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			break;
+		}
+		case LAST_MONTH: {
+			result = reportDate.minusMonths(1).withDayOfMonth(1)
+					.withMillisOfDay(0);
+			break;
+		}
+		case INTERVAL: {
+			break;
+		}
+
+		default:
+			break;
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportDate
+	 * @param reportPeriodKey
+	 * @return
+	 */
+	public static LocalDateTime getEndDateTime(LocalDateTime reportDate,
+			ReportPeriodKey reportPeriodKey) {
+		checkNotNull(reportDate);
+		checkNotNull(reportPeriodKey);
+		LocalDateTime result = null;
+		switch (reportPeriodKey) {
+		case TODAY: {
 			result = reportDate.withHourOfDay(23).withMinuteOfHour(59)
 					.withSecondOfMinute(59).withMillisOfSecond(999);
 			break;
@@ -95,5 +180,6 @@ public class ReportParamsetUtils {
 		}
 
 		return result;
-	}
+	}	
+	
 }

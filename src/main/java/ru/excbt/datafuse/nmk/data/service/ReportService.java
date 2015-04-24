@@ -6,8 +6,10 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
@@ -150,42 +152,50 @@ public class ReportService {
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
 
-		if (reportParamset.getReportPeriodKey() == null) {
-			throw new PersistenceException(
-					String.format(
-							"ReportParamset (id=%d) is invalid. ReportPeriodKey is not set",
-							reportParamsetId));
-		}
+		ReportTemplateBody reportTemplateBody = reportTemplateService
+				.getReportTemplateBody(reportParamset.getReportTemplate()
+						.getId());
+
+		checkNotNull(reportTemplateBody.getBodyCompiled());
+		checkState(reportTemplateBody.getBodyCompiled().length > 0);
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				reportTemplateBody.getBodyCompiled());
+
+		makeCommerceReportZip(reportParamset, reportDate, is, outputStream);
+	}
+
+	/**
+	 * 
+	 * @param outputStream
+	 * @param reportParamsetId
+	 */
+	public void makeCommerceReportZip(ReportParamset reportParamset,
+			LocalDateTime reportDate, InputStream inputStream,
+			OutputStream outputStream) {
+
+		checkNotNull(inputStream);
+		checkNotNull(outputStream);
+		checkNotNull(reportParamset);
+		checkArgument(!reportParamset.isNew());
+		checkNotNull(reportParamset.getReportPeriodKey());
 
 		List<Long> reportParamsetObjectIds = reportParamsetService
-				.selectReportParamsetObjectIds(reportParamsetId);
+				.selectReportParamsetObjectIds(reportParamset.getId());
 
 		ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-
-		NmkReport rep = null;
-		try {
-			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
-					jpaConfig.getDatasourceUsername(),
-					jpaConfig.getDatasourcePassword());
-		} catch (ClassNotFoundException e) {
-			throw new IllegalStateException("Can't initialize NmkReport");
-		} catch (SQLException e) {
-			throw new PersistenceException(String.format(
-					"NmkReport connection to %s cannot be established",
-					jpaConfig.getDatasourceUrl()));
-		}
 
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
 			if (reportParamset.getParamsetStartDate() == null
 					|| reportParamset.getParamsetEndDate() == null) {
-				throw new IllegalStateException(
+				throw new IllegalArgumentException(
 						String.format(
 								"ReportParamset (id=%d) is invalid. "
 										+ "ParamsetStartDate and ParamsetEndDat is not set correctly. "
 										+ "ReportPeriodKey=%s",
-								reportParamsetId, ReportPeriodKey.INTERVAL));
+								reportParamset.getId(),
+								ReportPeriodKey.INTERVAL));
 			}
 			dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
 			dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
@@ -197,34 +207,44 @@ public class ReportService {
 					reportParamset.getReportPeriodKey());
 		}
 
-		ReportTemplateBody reportTemplateBody = reportTemplateService
-				.getReportTemplateBody(reportParamset.getReportTemplate()
-						.getId());
-
-		checkNotNull(reportTemplateBody.getBodyCompiled());
-		checkState(reportTemplateBody.getBodyCompiled().length > 0);
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				reportTemplateBody.getBodyCompiled());
-
 		long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
 				.toArray(new Long[0]));
 
+		NmkReport rep = null;
+
 		try {
-			rep.nmkGetReport(ReportType.RPT_COMMERCE, is, zipOutputStream, 0,
-					dtStart.toDate(), dtEnd.toDate(), objectIds, FileType.PDF);
-		} catch (JRException | IOException | SQLException e) {
+
+			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
+					jpaConfig.getDatasourceUsername(),
+					jpaConfig.getDatasourcePassword());
+
+			logger.info(
+					"Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;objectIds:{};)",
+					dtStart, dtEnd, Arrays.toString(objectIds));
+
+			rep.nmkGetReport(ReportType.RPT_COMMERCE, inputStream,
+					zipOutputStream, 0, dtStart.toDate(), dtEnd.toDate(),
+					objectIds, FileType.PDF);
+
+		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
 			throw new PersistenceException(String.format(
 					"NmkReport exception: %s", e.getMessage()));
+		} catch (ClassNotFoundException e) {
+			logger.error("NmkReport exception: {}", e);
+			throw new IllegalStateException("Can't initialize NmkReport");
+		} catch (SQLException e) {
+			logger.error("NmkReport exception: {}", e);
+			throw new PersistenceException(String.format(
+					"NmkReport exception:", e.getMessage()));
 		} finally {
 			if (rep != null) {
 				try {
 					rep.close();
 				} catch (SQLException e) {
-					throw new PersistenceException("Can't close connection");
+					logger.error("NmkReport exception: {}", e);
 				}
 			}
-
 		}
 
 	}
