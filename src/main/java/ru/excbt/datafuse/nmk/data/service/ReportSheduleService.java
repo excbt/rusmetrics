@@ -5,7 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,20 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ReportShedule> selectReportShedule(DateTime dateTime,
-			long subscriberId) {
+	public List<ReportShedule> selectReportShedule(long subscriberId,
+			LocalDateTime dateTime) {
 		return reportSheduleRepository.selectReportShedule(subscriberId,
 				dateTime.toDate());
+	}
+
+	/**
+	 * 
+	 * @param dateTime
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ReportShedule> selectReportShedule(long subscriberId) {
+		return reportSheduleRepository.findBySubscriberId(subscriberId);
 	}
 
 	/**

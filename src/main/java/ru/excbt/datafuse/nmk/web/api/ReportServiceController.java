@@ -1,6 +1,14 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
@@ -14,20 +22,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 
 @Controller
 @RequestMapping(value = "/api/report")
-public class ReportController {
+public class ReportServiceController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ReportController.class);
+			.getLogger(ReportServiceController.class);
 
 	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
 			.forPattern(ReportService.DATE_TEMPLATE);
 
 	@Autowired
 	private ReportService reportService;
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
 
 	/**
 	 * 
@@ -37,8 +50,8 @@ public class ReportController {
 	 * @param endDateS
 	 * @return
 	 */
-	private Object processRequest(ReportOutputFileType reportType, long contObjectId,
-			String beginDateS, String endDateS) {
+	private Object processRequest(ReportOutputFileType reportType,
+			long contObjectId, String beginDateS, String endDateS) {
 		boolean checkPass = true;
 
 		if (contObjectId <= 0) {
@@ -62,8 +75,8 @@ public class ReportController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		String path = reportService.getCommercialReportPath(reportType, contObjectId,
-				beginD, endD);
+		String path = reportService.getCommercialReportPath(reportType,
+				contObjectId, beginD, endD);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("redirect:");
@@ -94,8 +107,8 @@ public class ReportController {
 
 		logger.trace("Fire commercialReportHtml");
 
-		return processRequest(ReportOutputFileType.HTML, contObjectId, beginDateS,
-				endDateS);
+		return processRequest(ReportOutputFileType.HTML, contObjectId,
+				beginDateS, endDateS);
 	}
 
 	/**
@@ -113,8 +126,55 @@ public class ReportController {
 
 		logger.trace("Fire commercialReportPdf");
 
-		return processRequest(ReportOutputFileType.PDF, contObjectId, beginDateS,
-				endDateS);
+		return processRequest(ReportOutputFileType.PDF, contObjectId,
+				beginDateS, endDateS);
 	}
 
+	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.GET)
+	public void doDowndloadCommerceReportZip(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+
+		if (reportParamset == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream();
+		reportService.makeCommerceReportZip(reportParamsetId,
+				LocalDateTime.now(), memoryOutputStream);
+
+		byte[] byteArray = memoryOutputStream.toByteArray();
+
+		if (byteArray == null || byteArray.length == 0) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
+		}
+		
+		
+		// set content attributes for the response
+		response.setContentType("application/zip");
+		response.setContentLength(byteArray.length);
+
+		String outputFilename = reportParamset.getOutputFileNameTemplate();
+		if (outputFilename == null) {
+			outputFilename = "commerceReport.zip";
+		} else {
+			outputFilename = outputFilename + ".zip";
+		}
+
+		// set headers for the response
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"",
+				outputFilename);
+		response.setHeader(headerKey, headerValue);
+		//
+		OutputStream outStream = response.getOutputStream();
+		outStream.write(byteArray);
+		outStream.close();
+	}
 }

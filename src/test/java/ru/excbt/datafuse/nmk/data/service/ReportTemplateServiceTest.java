@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
-	
+
 	@Test
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
@@ -147,7 +146,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testReportTemplateLoadShedule() throws IOException {
 		File fileJasper = ResourceHelper
-				.findResource("jasper/nmk_com_report_agr.jasper");
+				.findResource("jasper/nmk_com_report.jasper");
 		assertNotNull(fileJasper);
 		assertTrue(fileJasper.exists());
 		byte[] fileBytes = null;
@@ -159,10 +158,13 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		}
 
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(DateTime.now(),
+				.selectReportShedule(
 						currentSubscriberService.getSubscriberId());
 
 		for (ReportShedule rs : reportSheduleList) {
+			logger.info("Shedule Id: {}, Report Id: {}", rs.getId(), rs
+					.getReportTemplate().getId());
+
 			reportTemplateService.saveReportTemplateBodyCompiled(rs
 					.getReportTemplate().getId(), fileBytes, fileJasper
 					.getName());
@@ -184,7 +186,5 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		assertNotNull(fileBodyCompiled);
 		logger.info("fileBodyCompiled length: {}", fileBodyCompiled.length);
 	}
-
-	
 
 }

@@ -9,8 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 @Entity
 @Table(name = "report_template_body")
+@DynamicUpdate
 public class ReportTemplateBody implements Serializable {
 
 	/**
@@ -50,12 +53,12 @@ public class ReportTemplateBody implements Serializable {
 				body, body.length);
 	}
 
-	public void setBody(byte[] reportTemplateBody) {
-		if (reportTemplateBody == null) {
+	public void setBody(byte[] body) {
+		if (body == null) {
 			this.body = null;
 		} else {
-			this.body = Arrays.copyOf(reportTemplateBody,
-					reportTemplateBody.length);
+			this.body = Arrays.copyOf(body,
+					body.length);
 		}
 
 	}
@@ -73,13 +76,13 @@ public class ReportTemplateBody implements Serializable {
 				bodyCompiled, bodyCompiled.length);
 	}
 
-	public void setBodyCompiled(byte[] reportTemplateBodyCompiled) {
-		if (reportTemplateBodyCompiled == null) {
+	public void setBodyCompiled(byte[] bodyCompiled) {
+		if (bodyCompiled == null) {
 			this.bodyCompiled = null;
 		} else {
 			this.bodyCompiled = Arrays.copyOf(
-					reportTemplateBodyCompiled,
-					reportTemplateBodyCompiled.length);
+					bodyCompiled,
+					bodyCompiled.length);
 		}
 	}
 
@@ -87,8 +90,8 @@ public class ReportTemplateBody implements Serializable {
 		return bodyFilename;
 	}
 
-	public void setBodyFilename(String reportTemplateBodyFilename) {
-		this.bodyFilename = reportTemplateBodyFilename;
+	public void setBodyFilename(String bodyFilename) {
+		this.bodyFilename = bodyFilename;
 	}
 
 	public String getBodyCompiledFilename() {
@@ -96,7 +99,7 @@ public class ReportTemplateBody implements Serializable {
 	}
 
 	public void setBodyCompiledFilename(
-			String reportTemplateBodyCompiledFilename) {
-		this.bodyCompiledFilename = reportTemplateBodyCompiledFilename;
+			String bodyCompiledFilename) {
+		this.bodyCompiledFilename = bodyCompiledFilename;
 	}
 }

@@ -182,7 +182,7 @@ public class ReportService {
 		List<Long> reportParamsetObjectIds = reportParamsetService
 				.selectReportParamsetObjectIds(reportParamset.getId());
 
-		ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+
 
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
@@ -211,7 +211,7 @@ public class ReportService {
 				.toArray(new Long[0]));
 
 		NmkReport rep = null;
-
+		ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 		try {
 
 			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
@@ -238,6 +238,13 @@ public class ReportService {
 			throw new PersistenceException(String.format(
 					"NmkReport exception:", e.getMessage()));
 		} finally {
+			try {
+				zipOutputStream.flush();
+				zipOutputStream.close();
+			} catch (IOException e) {
+				logger.error("NmkReport exception: {}", e);
+			}
+			
 			if (rep != null) {
 				try {
 					rep.close();

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -59,13 +60,18 @@ public class ReportServiceTest extends JpaSupportTest {
 	@Test
 	public void testMakeCommerceReport() throws IOException {
 		FileOutputStream fos = new FileOutputStream("./out/testMakeCommerceReport.zip");
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
 			//ByteArrayOutputStream os = new ByteArrayOutputStream();
-			reportService.makeCommerceReportZip(28618264, LocalDateTime.now(), fos);
+			reportService.makeCommerceReportZip(28618264, LocalDateTime.now(), bos);
 			//byte[] result = os.toByteArray();
 			
 			//assertNotNull(result);
 			//assertTrue(result.length > 0);
+			byte[] bytes = bos.toByteArray();
+			assertNotNull(bytes);
+			
+			fos.write(bytes);
 			
 		} finally {
 			fos.flush();
