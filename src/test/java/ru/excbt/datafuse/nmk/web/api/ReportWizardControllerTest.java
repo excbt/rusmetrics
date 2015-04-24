@@ -14,8 +14,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.report.model.ReportWizardParam;
-import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.report.service;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -6,9 +6,16 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import net.sf.jasperreports.engine.JRException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -19,8 +26,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.ReportMasterTemplateBodyService;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.report.model.ReportColumn;
 import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -30,6 +35,10 @@ import ru.excbt.nmk.reports.ReportConvert;
 @Service
 public class ReportWizardService implements SecuredRoles {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportWizardService.class);
+	
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
@@ -70,6 +79,46 @@ public class ReportWizardService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param src
+	 * @return
+	 */
+	private ColumnElement columnElementFactoiry(ReportColumn src) {
+		return new ColumnElement(src.getSystemNumber(), src.getColumnNumber(),
+				src.getColumnHeader());
+	}
+
+	/**
+	 * 
+	 * @param reportColumnSettings
+	 * @return
+	 */
+	public ColumnElement[] makeColumnElement(
+			ReportColumnSettings reportColumnSettings) {
+		checkNotNull(reportColumnSettings);
+		checkNotNull(reportColumnSettings.getAllTsList());
+		checkNotNull(reportColumnSettings.getTs1List());
+		checkNotNull(reportColumnSettings.getTs2List());
+
+		checkArgument(reportColumnSettings.getAllTsList().size() == 2);
+
+		List<ColumnElement> elementList = new ArrayList<>();
+
+		for (ReportColumn rc : reportColumnSettings.getAllTsList()) {
+			elementList.add(columnElementFactoiry(rc));
+		}
+
+		for (ReportColumn rc : reportColumnSettings.getTs1List()) {
+			elementList.add(columnElementFactoiry(rc));
+		}
+
+		for (ReportColumn rc : reportColumnSettings.getTs2List()) {
+			elementList.add(columnElementFactoiry(rc));
+		}
+		return elementList.toArray(new ColumnElement[0]);
+	}
+
+	/**
+	 * 
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -106,26 +155,39 @@ public class ReportWizardService implements SecuredRoles {
 					ReportTypeKey.COMMERCE_REPORT.name()));
 		}
 
-		checkState(masterBody.getBody() != null && masterBody.getBody().length > 0);
-		
-		ByteArrayInputStream is = new ByteArrayInputStream(masterBody.getBody());
+		checkState(masterBody.getBody() != null
+				&& masterBody.getBody().length > 0);
 
-		boolean showIntegrators = reportTemplate.getIntegratorIncluded() == null ? false : reportTemplate.getIntegratorIncluded();
-		
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		boolean showIntegrators = reportTemplate.getIntegratorIncluded() == null ? false
+				: reportTemplate.getIntegratorIncluded();
+
+		byte[] resultBodyCompiled = null;
+
 		try {
-//			/ReportConvert.convertJRXmlReport(is, chd, showIntegrators, os);
+			logger.trace("Starting prepare data for ReportConvert");
+			ColumnElement[] elements = makeColumnElement(reportColumnSettings);
+			ByteArrayInputStream is = new ByteArrayInputStream(
+					masterBody.getBody());
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			logger.trace("Starting convertJRXmlReport");
+			ReportConvert.convertJRXmlReport(is, elements, showIntegrators, os);
+			resultBodyCompiled = os.toByteArray();
+			logger.trace("Complete convertJRXmlReport");
+		} catch (IOException | JRException e) {
+			logger.error("ERROR During covert JRXmlReport: {}", e);
 			
-		} finally {
-
+			throw new PersistenceException(String.format(
+					"Can't parse ReportMasterTemplateBody (id=%d)",
+					masterBody.getId()));
 		}
-		
-		
+
+		checkNotNull(resultBodyCompiled);
+
 		ReportTemplate resultEntity = reportTemplateRepository
 				.save(reportTemplate);
 
 		reportTemplateService.saveReportTemplateBodyCompiled(
-				resultEntity.getId(), masterBody.getBodyCompiled(),
+				resultEntity.getId(), resultBodyCompiled,
 				masterBody.getBodyFilename());
 
 		return resultEntity;

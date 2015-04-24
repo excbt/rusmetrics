@@ -29,8 +29,8 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
