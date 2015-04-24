@@ -241,76 +241,89 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     
     
     //for template designer
+    $scope.systems = [];
+    $scope.system1 ={} ;
+    $scope.system2 ={} ;
+    $scope.systems = [$scope.system1, $scope.system2];
+    
     $scope.getWizard = function(){
         var table = "../api/reportWizard/columnSettings/commerce";
         crudGridDataFactory(table).get(function(data){
 console.log(data);            
+            $scope.obtainedSystems = data;
+            //$scope.systems = $scope.obtainedSystems.allTsList;
+            $scope.system1 = data.allTsList[0];
+            $scope.system2 = data.allTsList[1];
+            
+            $scope.system1.defaultColumns = data.ts1List;
+            $scope.system2.defaultColumns = data.ts2List;
+
         });
     };
     
     $scope.getWizard();
     
-    $scope.systems = [];
-    $scope.system1 ={} ;
-    $scope.system2 ={} ;
-    $scope.systems = [$scope.system1, $scope.system2];
-    $scope.system1.name="Система 1";
-    $scope.system1.defaultColumns = [
-        {"name":"Колонка1"
-        }
-        ,{"name":"Колонка2"
-        }
-        ,{"name":"Колонка3"
-        }
-        ,{"name":"Колонка4"
-        }
-        ,{"name":"Колонка5"
-        }
-        ,{"name":"Колонка6"
-        }
-        ,{"name":"Колонка7"
-        }
-        ,{"name":"Колонка8"
-        }
-        ,{"name":"Колонка9"
-        }
-        ,{"name":"Колонка12"
-        }
-        ,{"name":"Колонка13"
-        }
-        ,{"name":"Колонка22"
-        }
-        ,{"name":"Колонка23"
-        }
-        ,{"name":"Колонка32"
-        }
-        ,{"name":"Колонка33"
-        }
-        ,{"name":"Колонка42"
-        }
-        ,{"name":"Колонка43"
-        }
-        ,{"name":"Колонка52"
-        }
-        ,{"name":"Колонка53"
-        }
-        ,{"name":"Колонка62"
-        }
-        ,{"name":"Колонка63"
-        }
-    ];    
+
+//    $scope.system1.name="Система 1";
+//    $scope.system1.defaultColumns = [
+//        {"name":"Колонка1"
+//        }
+//        ,{"name":"Колонка2"
+//        }
+//        ,{"name":"Колонка3"
+//        }
+//        ,{"name":"Колонка4"
+//        }
+//        ,{"name":"Колонка5"
+//        }
+//        ,{"name":"Колонка6"
+//        }
+//        ,{"name":"Колонка7"
+//        }
+//        ,{"name":"Колонка8"
+//        }
+//        ,{"name":"Колонка9"
+//        }
+//        ,{"name":"Колонка12"
+//        }
+//        ,{"name":"Колонка13"
+//        }
+//        ,{"name":"Колонка22"
+//        }
+//        ,{"name":"Колонка23"
+//        }
+//        ,{"name":"Колонка32"
+//        }
+//        ,{"name":"Колонка33"
+//        }
+//        ,{"name":"Колонка42"
+//        }
+//        ,{"name":"Колонка43"
+//        }
+//        ,{"name":"Колонка52"
+//        }
+//        ,{"name":"Колонка53"
+//        }
+//        ,{"name":"Колонка62"
+//        }
+//        ,{"name":"Колонка63"
+//        }
+//    ];    
+//    
+//    $scope.system2.name="Система 2";
+//    $scope.system2.defaultColumns = [
+//        {"name":"Температура"
+//        }
+//        ,{"name":"Давление"
+//        }
+//        ,{"name":"Объем"
+//        }
+//    ]; 
+    
     $scope.system1.defineColumns = [
     ];
     
-    $scope.system2.name="Система 2";
-    $scope.system2.defaultColumns = [
-        {"name":"Температура"
-        }
-        ,{"name":"Давление"
-        }
-        ,{"name":"Объем"
-        }
-    ];    
+   
     $scope.system2.defineColumns = [
     ];
 

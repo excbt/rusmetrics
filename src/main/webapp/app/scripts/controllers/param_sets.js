@@ -41,14 +41,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     $scope.archiveParamset = {};
     $scope.activeStartDateFormat = new Date();
     
-    $scope.columns = [
-        {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
-//        ,{"name":"templatesCount", "header":"Кол-во шаблонов", "class":"col-md-1"}
-    ];
     
-    $scope.commerce = {};
-    $scope.cons = {};
-    $scope.event = {};
+//    $scope.commerce = {};
+//    $scope.cons = {};
+//    $scope.event = {};
     
     
     $scope.crudTableName = "../api/reportParamset"; 
