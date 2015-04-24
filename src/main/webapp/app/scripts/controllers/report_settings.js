@@ -100,8 +100,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
-console.log(e);        
+        notificationFactory.error(e.data.ExceptionMessage);       
     };
     
     
@@ -220,9 +219,7 @@ console.log(e);
         result.reportColumnSettings.ts2List = $scope.system2.defineColumns;
                
         var table = "../api/reportWizard"+$scope.currentReportType.suffix;
-        crudGridDataFactory(table).save(result, successCallback, errorCallback);
-        
-        
+        crudGridDataFactory(table).save(result, successCallback, errorCallback);        
     };
                      
     
@@ -266,9 +263,9 @@ console.log(e);
     $scope.systems = [$scope.system1, $scope.system2];
     
     $scope.getWizard = function(){
-        var table = "../api/reportWizard/columnSettings/commerce";
+        var table = "../api/reportWizard/columnSettings"+$scope.currentReportType.suffix;///commerce";
         crudGridDataFactory(table).get(function(data){
-console.log(data);            
+//console.log(data);            
             $scope.obtainedSystems = data;
             //$scope.systems = $scope.obtainedSystems.allTsList;
             $scope.systems = data.allTsList;
@@ -284,7 +281,7 @@ console.log(data);
         });
     };
     
-    $scope.getWizard();
+  //  $scope.getWizard();
     
 
 //    $scope.system1.name="Система 1";
@@ -353,8 +350,8 @@ console.log(data);
     $scope.addColumns= function(defaultColumns, defineColumns){
         var result = defineColumns;
         var colSelected = 0;
-console.log(defaultColumns);        
-console.log(defineColumns);      
+//console.log(defaultColumns);        
+//console.log(defineColumns);      
         for (var i =0; i<defaultColumns.length; i++)
         {
             if (defaultColumns[i].selected){  
@@ -363,7 +360,7 @@ console.log(defineColumns);
                 if (typeof defineColumns != 'undefined'){
                     var flagElementAlreadyAdded = false;
                     for (var j=0; j<=defineColumns.length; j++){
-                        if (typeof defineColumns[j] != 'undefined' && (defineColumns[j].columnHeader == defaultColumns[i].columnHeader)){
+                        if (typeof defineColumns[j] != 'undefined' && (defineColumns[j].columnNumber == defaultColumns[i].columnNumber)){
                             flagElementAlreadyAdded = true;
                         };
                     }
@@ -446,11 +443,28 @@ console.log(defineColumns);
         item.class= item.selected?"active":"";
     };
     
+    $scope.toggleEditColumnName = function(definecolumn){   
+        definecolumn.edit = !definecolumn.edit;    
+    };
+    $scope.cancelEditColumnName = function(definecolumn){
+        definecolumn.columnHeader = definecolumn.oldColumnName;
+        $scope.toggleEditColumnName(definecolumn);   
+    };
+    $scope.editColumnName = function(definecolumn){
+        definecolumn.oldColumnName = definecolumn.columnHeader;
+        $scope.toggleEditColumnName(definecolumn);  
+    };
+        
+    
+//    $scope.cancelEditColumnName =
+    
     $scope.setDefault = function(){
         $scope.currentObject = {};
         $scope.createByTemplate_flag = false;
         $scope.archiveTemplate = {};
         $scope.activeStartDateFormat = new Date();
+        $scope.system1.defineColumns = [];
+        $scope.system2.defineColumns = [];
     };
     
     $scope.setCurrentReportType = function(object){
@@ -465,7 +479,9 @@ console.log(defineColumns);
     
     $scope.addTemplate = function(object){
         $scope.setCurrentReportType(object);
-        $scope.currentObject = {};
+        $scope.getWizard();
+//        $scope.currentObject = {};
+        $scope.setDefault();
     };
 
     

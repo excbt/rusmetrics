@@ -105,8 +105,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     $scope.getReportPeriods();
 
     var successCallback = function (e) {
-console.log("Сохранил вариант.");  
-console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);        
+//console.log("Сохранил вариант.");  
+//console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);        
         notificationFactory.success();
         
         $('#moveToArchiveModal').modal('hide');
@@ -199,7 +199,8 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
     };
     
    
-    $scope.selectedItem = function(item){
+    $scope.selectedItem = function(parentItem, item){
+        $scope.setCurrentReportType(parentItem);
 //console.log("In selected item.");        
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
@@ -288,6 +289,9 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
         $scope.archiveParamset.name = object.name;
         $scope.currentObject = angular.copy(object);//{};
         $scope.currentObject._active = true;
+
+        $scope.getAvailableObjects(object.id);
+    
         //$scope.currentObject.name = angular.copy(object.name);
         //$scope.currentObject.description = angular.copy(object.description);
         
@@ -307,6 +311,7 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
         $scope.editParamset_flag = false;
         $scope.set_of_objects_flag = false;
         $scope.currentSign = 9999;
+        $scope.editInterval = false;
         //Устанавливаем активность вкладок по дефолту: Основные свойства - активная, Выбор объектов - неактивная
         $('#main_properties_tab').addClass("active");
         $('#main_properties').addClass("active");
@@ -330,25 +335,33 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
         $scope.selectedObjects = [];
     };
     $scope.editParamSet =function(parentObject,object){
-        $scope.setCurrentReportType(parentObject);
-        $scope.selectedItem(object);
+//        $scope.setCurrentReportType(parentObject);
+        $scope.selectedItem(parentObject, object);
         $scope.editParamset_flag = true;
+        $scope.editInterval = false;
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета
         $scope.getSelectedObjects();
+        
+        $scope.currentSign = object.reportPeriod.sign;
+        if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
+            $scope.paramsetStartDateFormat = moment(object.paramsetStartDate).format("YYYY-MM-DD");
+            $scope.paramsetEndDateFormat= moment(object.paramsetEndDate).format("YYYY-MM-DD");  
+            $scope.intervalFormat = "c "+$scope.paramsetStartDateFormat+" по "+$scope.paramsetEndDateFormat;
+        }
     };
     
      //Account objects
     $scope.availableObjects = [];
     $scope.selectedObjects = [];
     
-    $scope.getAvailableObjects = function(paramsetId){
-        var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";
-        crudGridDataFactory(table).query(function(data){
-            $scope.availableObjects = data;
+    $scope.getAvailableObjects = function(paramsetId){      
+        var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
+        crudGridDataFactory(table).query(function(data){           
+            $scope.availableObjects = data;         
 //for(var k in $scope.availableObjects){
 //console.log("$scope.availableObjects["+k+"]="+$scope.availableObjects[k]);    
 //}            
-        });
+        });        
     };
 //    $scope.getAvailableObjects();
     $scope.getSelectedObjects = function(){
@@ -370,12 +383,12 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
         var arr2 = [];
         var resultArr = [];
         if ($scope.addObject_flag){
-console.log("Flag true");            
+//console.log("Flag true");            
             arr1 = $scope.availableObjects;
             arr2 = $scope.selectedObjects; 
             resultArr = arr2;
         }else{
-console.log("Flag false");              
+//console.log("Flag false");              
             arr2 = $scope.availableObjects;
             arr1 = $scope.selectedObjects;
             resultArr = arr1;
@@ -383,7 +396,7 @@ console.log("Flag false");
        
         for (var i=0; i<arr1.length;i++){
             if (arr1[i].id == $scope.currentObjectId) {
-console.log("Find: arr1["+i+"]= "+arr1[i].fullName);                
+//console.log("Find: arr1["+i+"]= "+arr1[i].fullName);                
                 el = angular.copy(arr1[i]);
                 el.selected = false;
                 arr1.splice(i,1);
