@@ -77,10 +77,10 @@
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-4" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}}
+                                             <div class="col-md-7" ng-class="{'default': oldObject._default}">     
+                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}}
                                             </div>
-                                            <div class="col-md-5" ng-class="{'default': oldObject._default}">     
+                                            <div class="col-md-2" ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
@@ -153,10 +153,10 @@
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-4 " >     
-                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label>
+                                             <div class="col-md-7 " >     
+                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}}
                                             </div>
-                                            <div class="col-md-5">     
+                                            <div class="col-md-2">     
                                                     в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
@@ -448,11 +448,11 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без расширения</small>)</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileTemplateName" ng-disabled="currentObject.common">
+                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileNameTemplate" ng-disabled="currentObject.common">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
+                                        <td class="col-sm-3"><label for="inputPeriod">Тип файла</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="currentObject.common"> 
                                                 <option>PDF</option>

@@ -252,11 +252,15 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 console.log(data);            
             $scope.obtainedSystems = data;
             //$scope.systems = $scope.obtainedSystems.allTsList;
+            $scope.systems = data.allTsList;
+            //$scope.system2 = data.allTsList[1];
+            
             $scope.system1 = data.allTsList[0];
             $scope.system2 = data.allTsList[1];
-            
             $scope.system1.defaultColumns = data.ts1List;
             $scope.system2.defaultColumns = data.ts2List;
+            $scope.system1.defineColumns = [];
+            $scope.system2.defineColumns = [];
 
         });
     };
@@ -320,17 +324,18 @@ console.log(data);
 //        }
 //    ]; 
     
-    $scope.system1.defineColumns = [
-    ];
-    
-   
-    $scope.system2.defineColumns = [
-    ];
+//    $scope.system1.defineColumns = [
+//    ];
+//    
+//   
+//    $scope.system2.defineColumns = [
+//    ];
 
     $scope.addColumns= function(defaultColumns, defineColumns){
         var result = defineColumns;
         var colSelected = 0;
-      
+console.log(defaultColumns);        
+console.log(defineColumns);      
         for (var i =0; i<defaultColumns.length; i++)
         {
             if (defaultColumns[i].selected){  
@@ -339,7 +344,7 @@ console.log(data);
                 if (typeof defineColumns != 'undefined'){
                     var flagElementAlreadyAdded = false;
                     for (var j=0; j<=defineColumns.length; j++){
-                        if (typeof defineColumns[j] != 'undefined' && (defineColumns[j].name == defaultColumns[i].name)){
+                        if (typeof defineColumns[j] != 'undefined' && (defineColumns[j].columnHeader == defaultColumns[i].columnHeader)){
                             flagElementAlreadyAdded = true;
                         };
                     }

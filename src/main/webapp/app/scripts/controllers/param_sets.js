@@ -225,9 +225,9 @@ console.log("$scope.set_of_objects_flag = "+$scope.set_of_objects_flag);
 //    };
     
     $scope.saveParamset = function(object){
-console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);
-console.log("$scope.editParamset_flag = "+$scope.editParamset_flag);        
-console.log("$scope.createByTemplate_flag = "+$scope.createByTemplate_flag);                
+//console.log("In saveParamset. $scope.createParamset_flag = "+$scope.createParamset_flag);
+//console.log("$scope.editParamset_flag = "+$scope.editParamset_flag);        
+//console.log("$scope.createByTemplate_flag = "+$scope.createByTemplate_flag);                
         var table="";
         
         var tmp = $scope.selectedObjects.map(function(elem){
