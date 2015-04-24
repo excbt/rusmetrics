@@ -70,7 +70,7 @@
                                                           <tr>
                                                             <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editParamSet(object,oldObject);" data-target="#createParamsetModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="setCurrentReportType(object);selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -137,7 +137,7 @@
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
-                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(oldObject)" ng-dblclick="">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(object, oldObject)" ng-dblclick="">
 
                                          <td class="col-md-12">
                                              <div class="col-md-1" style="width:45px;">
@@ -331,9 +331,13 @@
 			<h3 id="createParamsetLabel" ng-show="createParamset_flag">
 				Создание варианта отчета
 			</h3>
+            <label id="createParamsetLabel" ng-show="createByTemplate_flag">
+				Создание варианта отчета на основе архивного шаблона "{{archiveParamset.name}}"
+			</label>
             <h3 id="createParamsetLabel" ng-show="!createParamset_flag">
-				Редактирование варианта отчета
+				Вариант отчета
 			</h3>
+            
 		</div>
 		<div class="modal-body ">
             
@@ -438,7 +442,10 @@
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
-                                             <div ng-controller="DataRangeSettings">
+                                             <div ng-show="!editInterval">
+                                                 <input class="form-control" type="text" ng-model="intervalFormat" ng-click="editInterval=true">
+                                             </div>
+                                             <div ng-show="editInterval" ng-controller="DataRangeSettings">
                                                     <input ng-disabled="currentObject.common" style="font-size: 12px;width:329px" date-range-picker class="form-control date-picker"
                                                         type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
                                             </div>
