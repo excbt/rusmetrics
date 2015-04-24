@@ -9,7 +9,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class ReportSheduleController extends WebApiController {
 	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 		List<ReportShedule> result = reportSheduleService.selectReportShedule(
-				DateTime.now(), currentSubscriberService.getSubscriberId());
+				currentSubscriberService.getSubscriberId(), LocalDateTime.now());
 		return ResponseEntity.ok(result);
 	}
 

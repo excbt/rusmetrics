@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,8 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectShedule() {
 		List<ReportShedule> resultList = reportSheduleService
-				.selectReportShedule(DateTime.now(),
-						currentSubscriberService.getSubscriberId());
+				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now()
+						);
 
 		assertNotNull(resultList);
 	}

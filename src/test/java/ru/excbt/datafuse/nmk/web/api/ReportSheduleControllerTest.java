@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +62,9 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Test
 	public void testGetSheduleOne() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(DateTime.now(),
-						currentSubscriberService.getSubscriberId());
+				.selectReportShedule(
+						currentSubscriberService.getSubscriberId(),
+						LocalDateTime.now());
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
@@ -72,8 +74,9 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Test
 	public void testUndateShedule() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(DateTime.now(),
-						currentSubscriberService.getSubscriberId());
+				.selectReportShedule(
+						currentSubscriberService.getSubscriberId(),
+						LocalDateTime.now());
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
@@ -125,7 +128,6 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 			sReportParamset = reportParamsetList.get(0);
 		}
 
-		
 		ReportShedule rs = new ReportShedule();
 		rs.setReportSheduleTypeKey(ReportSheduleTypeKey.DAILY);
 		rs.setSheduleStartDate(new Date());
@@ -159,18 +161,16 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		testDeleteShedule(createdId);
 	}
 
-	
-	public void testDeleteShedule (long reportSheduleId) throws Exception {
-		
-		String urlStr = "/api/reportShedule/" + String.valueOf(reportSheduleId);
-		
-		
-		ResultActions deleteResultActions = mockMvc.perform(delete(urlStr)
-				.with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+	public void testDeleteShedule(long reportSheduleId) throws Exception {
 
-		deleteResultActions.andDo(MockMvcResultHandlers.print());			
-		deleteResultActions.andExpect(status().isOk());		
+		String urlStr = "/api/reportShedule/" + String.valueOf(reportSheduleId);
+
+		ResultActions deleteResultActions = mockMvc
+				.perform(delete(urlStr).with(testSecurityContext()).accept(
+						MediaType.APPLICATION_JSON));
+
+		deleteResultActions.andDo(MockMvcResultHandlers.print());
+		deleteResultActions.andExpect(status().isOk());
 	}
-	
+
 }

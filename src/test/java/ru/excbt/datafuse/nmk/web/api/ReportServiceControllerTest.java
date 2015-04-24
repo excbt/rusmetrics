@@ -14,20 +14,20 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class ReportTest extends AnyControllerTest {
+public class ReportServiceControllerTest extends AnyControllerTest {
 
 
-	public final static String API_REPORT_URL = "/api/report";	
+	public final static String API_REPORT_URL = "/api/reportService";	
 	
 	private static final Logger logger = LoggerFactory
-			.getLogger(ReportTest.class);
+			.getLogger(ReportServiceControllerTest.class);
 	
 	
 	
 	private void redirectOption(ReportOutputFileType reportType) throws Exception {
 		assertNotNull(reportType);
 		
-		String urlStr = String.format(API_REPORT_URL + "/commercial/%d/%s", 18811505, reportType.toLowerName());
+		String urlStr = String.format(API_REPORT_URL + "/commerce/%d/%s", 18811505, reportType.toLowerName());
 
 		ResultActions resultAction = mockMvc.perform(get(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)

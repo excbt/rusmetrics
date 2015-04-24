@@ -22,4 +22,7 @@ public interface ReportSheduleRepository extends
 	public List<ReportShedule> selectReportShedule(
 			@Param("subscriberId") long subscriberId,
 			@Param("sheduleDate") Date sheduleDate);
+
+	
+	public List<ReportShedule> findBySubscriberId(Long subscriberId);
 }
