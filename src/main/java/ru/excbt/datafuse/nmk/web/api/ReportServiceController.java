@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 
 @Controller
-@RequestMapping(value = "/api/report")
+@RequestMapping(value = "/api/reportService")
 public class ReportServiceController {
 
 	private static final Logger logger = LoggerFactory
@@ -36,6 +36,10 @@ public class ReportServiceController {
 	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
 			.forPattern(ReportService.DATE_TEMPLATE);
 
+	private final static String MIME_ZIP = "application/zip";
+	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
+	private final static String EXT_ZIP = ".zip";
+	
 	@Autowired
 	private ReportService reportService;
 
@@ -130,6 +134,13 @@ public class ReportServiceController {
 				beginDateS, endDateS);
 	}
 
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.GET)
 	public void doDowndloadCommerceReportZip(
 			@PathVariable("reportParamsetId") long reportParamsetId,
@@ -157,20 +168,18 @@ public class ReportServiceController {
 		
 		
 		// set content attributes for the response
-		response.setContentType("application/zip");
+		response.setContentType(MIME_ZIP); 
 		response.setContentLength(byteArray.length);
 
 		String outputFilename = reportParamset.getOutputFileNameTemplate();
 		if (outputFilename == null) {
-			outputFilename = "commerceReport.zip";
-		} else {
-			outputFilename = outputFilename + ".zip";
-		}
+			outputFilename = DEFAULT_COMMERCE_FILENAME;
+		} 
 
 		// set headers for the response
-		String headerKey = "Content-Disposition";
+		String headerKey = "Content-Disposition"; 
 		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename);
+				outputFilename + EXT_ZIP);
 		response.setHeader(headerKey, headerValue);
 		//
 		OutputStream outStream = response.getOutputStream();
