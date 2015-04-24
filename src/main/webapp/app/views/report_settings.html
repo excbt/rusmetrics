@@ -112,15 +112,10 @@
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> 
-
                                 <tr>
-
                                     <td ng-class="column.class">
-
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
-
                                             <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
-
                                         </div>
                                         <div class="col-md-10">
                                             <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
@@ -131,7 +126,6 @@
 
                                 </tr>
                                 <tr>
-
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
@@ -213,7 +207,6 @@
 					<label
 						class="text-warning"> ? </label>
 				</p>
-
 			</form>
 		</div>
 		<div class="modal-footer">
@@ -255,8 +248,7 @@
 			</h3>
 		</div>
 		<div class="modal-body ">
-            
-            
+    
             <div class="container-fluid">
                 <div class="row-fluid col-md-5">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
@@ -266,7 +258,6 @@
                                 </td>
                                 <td class="col-sm-9 textAlign_left">
                                     {{currentReportType.reportTypeName}}
-<!--                                    <input type=text disabled=true size="20" value="Коммерческий">-->
                                 </td>
                             </tr>
                             <tr>
@@ -281,15 +272,6 @@
                                 <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.description"></textarea>
                                 </td>
                             </tr>
-<!--
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
-                                </td>
-                            </tr>
--->
-
                             <tr>
                                 <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
                                 </td>
@@ -303,28 +285,15 @@
                                     <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" > 
                                 </td>
                                 
-                            </tr>
-                            
+                            </tr>              
                             <tr>
                                 <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
                                 </td>
                                 <td class="col-sm-9 textAlign_left">
-<!--                                    <input class="form-control marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat" disabled=true> -->
                                     {{endDateFormat}}
                                 </td>
-                            </tr>
-                            
-<!--
-                             <tr>
-                                <td class="col-sm-3"><label for="inputValue"></label>
-                                </td>
-                                 <td class="col-sm-9 textAlign_left"><i class="btn btn-xs glyphicon glyphicon-edit" ng-click="" data-target="" data-toggle="modal">Конструктор шаблона</i> 
-                                </td>
-                            </tr>
--->
-                            
+                            </tr>                            
                         </table>
-
                     </div>  
                     <div class="row-fluid">
                                 <div class="col-md-12 paddingLeft20">
@@ -337,33 +306,22 @@
                                 <label>Порядок систем в отчете</label>
                                     <div class="btn-group">
                                          <i title="Поменять системы местами" class="btn btn-default btn-xs" ng-click="changeSystemPosition()">Изменить порядок</i>
-                                     </div>
-                                
+                                     </div>        
                             </div>
                             <div class="col-md-7 onlyPaddingLeft15">
                                 <table class="table table-hover table-condensed">
-
-
                                     <tr ng-repeat="system in systems">
                                         <td>
-
                                            {{$index+1}}. {{system.columnHeader}}
                                         </td>
                                     </tr>
 
                                 </table>
                             </div>    
-                        </div>
-                        
-                     </div>
-                    
+                        </div>              
+                     </div>              
                 </div>
                 
-<!--
-                <div template-designer>
-                </div>
--->
-
                 <div class="row-fluid col-md-7">
 <!--                    <label>Конструктор шаблона</label>-->
                     <ul class="nav nav-tabs">
@@ -484,13 +442,8 @@
                                     </div>
                                 </div>
                             </div>
-                    </div>
-
-                
-                
-            </div>        
-
-			
+                    </div>            
+            </div>        		
 		</div>
         </div>
 		<div class="modal-footer">
@@ -529,12 +482,9 @@
 			 <label ng-show="createByTemplate_flag">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
             <h3 id="editTemplateLabel">
 				Шаблон отчета 
-			</h3>
-           
+			</h3>    
 		</div>
-		<div class="modal-body ">
-            
-            
+		<div class="modal-body ">         
             <div class="container">
                 <div class="row-fluid col-md-6">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
@@ -570,7 +520,6 @@
                                 </td>
                                 <td class="textAlign_left col-sm-9" ng-hide="createByTemplate_flag">
                                     {{currentObject.activeStartDate | date:'dd.MM.yyyy'}}
-<!--                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> -->
                                 </td>
                                 <td class="textAlign_left col-sm-9" ng-show="createByTemplate_flag">
                                     <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
@@ -582,16 +531,11 @@
                                 </td>
                                 <td class="col-sm-9 textAlign_left">
                                      {{currentObject.activeEndDate | date:'dd.MM.yyyy'}}
-<!--                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> -->
                                 </td>
-                            </tr>
-                            
+                            </tr>                     
                         </table>
-
-                    </div>  
-                    
-                </div>
-                			
+                    </div>                 
+                </div>                			
 		</div>
         </div>
 		<div class="modal-footer">
