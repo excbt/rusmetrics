@@ -138,7 +138,10 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
     };
     
     $scope.createReport = function(paramset){
-        alert("Поехали! Выбран вариант: "+paramset.name);
+//        alert("Поехали! Выбран вариант: "+paramset.name);
+        var url ="../api/reportService/commerce/"+paramset.id+"/download";
+        window.open(url);
+        
     };
 
 
