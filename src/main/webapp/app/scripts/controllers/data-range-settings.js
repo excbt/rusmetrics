@@ -2,8 +2,8 @@ var app = angular.module('portalNMK');
 app
     .controller('DataRangeSettings', function($scope, $rootScope){
                     $scope.navPlayerDates = {
-                            startDate : $rootScope.reportStart || moment().startOf('day'),
-                            endDate : $rootScope.reportEnd || moment().endOf('day'),
+                            startDate :  moment().startOf('day'),
+                            endDate :  moment().endOf('day'),
                         };
     
                     $scope.queryDateOptsRu = {
@@ -30,8 +30,8 @@ app
                                             moment().subtract(29, 'days').startOf('day'),
                                             moment().endOf('day') ]
                                 },
-                                startDate : $rootScope.reportStart || moment().startOf('day'),
-                                endDate : $rootScope.reportEnd || moment().endOf('day'),
+                                startDate : moment().startOf('day'),
+                                endDate : moment().endOf('day'),
 
                                 format : 'DD-MM-YYYY'
                                 ,separator: "  по  "

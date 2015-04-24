@@ -1,42 +1,12 @@
 //reports controller
 var app = angular.module('portalNMK');
 app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFactory', function($scope, crudGridDataFactory, notificationFactory){
-                    
-    
+                     
     $scope.currentObject = {};
-   
-    $scope.objects = [
-//        {
-//            "reportType":"COMMERCE_REPORT"
-//            ,"reportTypeName":"Коммерческий"
-//            ,"paramsetsCount": 0
-//            ,"paramsets": []
-//        }
-//        ,        {
-//            "reportType":"CONS_REPORT"
-//            ,"reportTypeName":"Сводный"
-//            ,"paramsetsCount":0
-//            ,"paramsets": []
-//        }
-//        ,        {
-//            "reportType":"EVENT_REPORT"
-//            ,"reportTypeName":"События"
-//            ,"paramsetsCount": 0
-//            ,"paramsets": []
-//        }
-    ];
-    
-    
+    $scope.objects = [];
     $scope.columns = [
         {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
-//        ,{"name":"templatesCount", "header":"Кол-во шаблонов", "class":"col-md-1"}
     ];
-    
-//    $scope.commerce = {};
-//    $scope.cons = {};
-//    $scope.event = {};
-    
-    
     $scope.crudTableName = "../api/reportParamset"; 
     
     //report types
@@ -51,25 +21,20 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
-                newObject.suffix = data[i].suffix;
-                
+                newObject.suffix = data[i].suffix;  
                 newObjects.push(newObject);
-            };
-            
+            };        
             $scope.objects = newObjects;
-            
             $scope.getActive();
         });
     };
     $scope.getReportTypes();
     
-
     $scope.oldColumns = [
         {"name":"name", "header":"Название варианта", "class":"col-md-5"}
         ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
     ];
-    
-    
+
     var successCallback = function (e) {
         notificationFactory.success();
     };
@@ -85,30 +50,7 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
         });
     };
       
-//    $scope.getCommerceParamsets = function (table) {
-//        crudGridDataFactory(table).query(function (data) {
-//            $scope.commerce.paramsets = data;
-//
-//            $scope.objects[0].paramsetsCount = $scope.commerce.paramsets.length;
-//            $scope.objects[0].paramsets = $scope.commerce.paramsets;
-//        });
-//    };
-//    $scope.getConsParamsets = function (table) {
-//        crudGridDataFactory(table).query(function (data) {
-//            $scope.cons.paramsets = data; 
-//
-//            $scope.objects[1].paramsetsCount = $scope.cons.paramsets.length;
-//            $scope.objects[1].paramsets = $scope.cons.paramsets;
-//        });
-//    };
-//    $scope.getEventParamsets = function (table) {
-//        crudGridDataFactory(table).query(function (data) {
-//            $scope.event.paramsets = data;
-//
-//            $scope.objects[2].paramsetsCount = $scope.event.paramsets.length;
-//            $scope.objects[2].paramsets = $scope.event.paramsets;
-//        });
-//    };
+
  //get templates   
 
     $scope.getActive = function(){
@@ -117,15 +59,9 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
         for (var i=0; i<$scope.objects.length; i++){
             $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
         };
-        
-//        $scope.getCommerceParamsets($scope.crudTableName+"/commerce");
-//        $scope.getConsParamsets($scope.crudTableName+"/cons");
-//        $scope.getEventParamsets($scope.crudTableName+"/event");
+
     };
-    
-//    $scope.getActive();
-    
-    
+
     $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
          curObject.showGroupDetails = !curObject.showGroupDetails;
     };
