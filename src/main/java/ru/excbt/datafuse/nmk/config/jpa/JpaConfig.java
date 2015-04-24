@@ -26,8 +26,7 @@ import ru.excbt.datafuse.nmk.config.PropertyConfig;
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data",
-		"ru.excbt.datafuse.nmk.report" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
 public class JpaConfig {
 
 	@Value("${dataSource.driverClassName}")
