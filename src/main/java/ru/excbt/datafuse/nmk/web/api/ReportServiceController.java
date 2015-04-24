@@ -103,8 +103,8 @@ public class ReportServiceController {
 	 * @param endDateS
 	 * @return
 	 */
-	@RequestMapping(value = "/commercial/{contObjectId}/html", method = RequestMethod.GET)
-	public Object commercialReportHtml(
+	@RequestMapping(value = "/commerce/{contObjectId}/html", method = RequestMethod.GET)
+	public Object commerceReportHtml(
 			@PathVariable("contObjectId") long contObjectId,
 			@RequestParam("beginDate") String beginDateS,
 			@RequestParam("endDate") String endDateS) {
@@ -122,8 +122,8 @@ public class ReportServiceController {
 	 * @param endDateS
 	 * @return
 	 */
-	@RequestMapping(value = "/commercial/{contObjectId}/pdf", method = RequestMethod.GET)
-	public Object commercialReportPdf(
+	@RequestMapping(value = "/commerce/{contObjectId}/pdf", method = RequestMethod.GET)
+	public Object commerceReportPdf(
 			@PathVariable("contObjectId") long contObjectId,
 			@RequestParam("beginDate") String beginDateS,
 			@RequestParam("endDate") String endDateS) {
