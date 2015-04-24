@@ -4,7 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
@@ -47,6 +51,25 @@ public class ReportServiceTest extends JpaSupportTest {
 			assertNotNull(serverUrl);
 		} else {
 			fail();
+		}
+		
+	}
+	
+	
+	@Test
+	public void testMakeCommerceReport() throws IOException {
+		FileOutputStream fos = new FileOutputStream("./out/testMakeCommerceReport.zip");
+		try {
+			//ByteArrayOutputStream os = new ByteArrayOutputStream();
+			reportService.makeCommerceReportZip(28618264, LocalDateTime.now(), fos);
+			//byte[] result = os.toByteArray();
+			
+			//assertNotNull(result);
+			//assertTrue(result.length > 0);
+			
+		} finally {
+			fos.flush();
+			fos.close();
 		}
 		
 	}
