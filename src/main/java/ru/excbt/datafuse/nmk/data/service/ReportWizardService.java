@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.report.service;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -26,8 +26,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.ReportMasterTemplateBodyService;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.report.model.ReportColumn;
 import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;

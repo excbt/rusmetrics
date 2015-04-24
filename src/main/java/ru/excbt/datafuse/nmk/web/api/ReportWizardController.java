@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.model.ReportWizardParam;
-import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 
 @Controller
 @RequestMapping(value = "/api/reportWizard")

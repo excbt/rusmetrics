@@ -14,7 +14,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
-import ru.excbt.datafuse.nmk.report.service.ReportWizardService;
 
 public class ReportWizardServiceTest extends JpaSupportTest {
 
