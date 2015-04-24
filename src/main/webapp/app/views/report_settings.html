@@ -377,6 +377,7 @@
                      <div id="systemsTabContent" class="tab-content">
                               <div role="tabpanel" class="tab-pane fade in active" id="system1" aria-labelledBy="system1-tab">
                                 <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <div>Доступные колонки</div>
                                     <table class="table table-striped table-hover table-condensed">
                                         <tr ng-repeat="defaultcolumn in system1.defaultColumns" class="noPadding" >
                                             <td style="padding:0;" ng-class="defaultcolumn.class">
@@ -398,6 +399,7 @@
                                     </div>
                                 </div>
                                 <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <div>Выбранные колонки</div>
                                     <table class="table table-striped table-hover table-condensed">
                                         <tr ng-repeat="definecolumn in system1.defineColumns" class="noPadding" >
                                             <td style="padding:0;" ng-class="definecolumn.class">
@@ -421,6 +423,7 @@
 <!--                 System 2        -->
                             <div role="tabpanel" class="tab-pane fade " id="system2" aria-labelledBy="system2-tab">
                                 <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <div>Доступные колонки</div>
                                     <table class="table table-striped table-hover table-condensed">
                                         <tr ng-repeat="defaultcolumn in system2.defaultColumns" class="noPadding" >
                                             <td style="padding:0;" ng-class="defaultcolumn.class">
@@ -442,6 +445,7 @@
                                     </div>
                                 </div>
                                 <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
+                                    <div>Выбранные колонки</div>
                                     <table class="table table-striped table-hover table-condensed">
                                         <tr ng-repeat="definecolumn in system2.defineColumns" class="noPadding" >
                                             <td style="padding:0;" ng-class="definecolumn.class">
@@ -477,7 +481,7 @@
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject()"
+								ng-click="saveTemplate()"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">

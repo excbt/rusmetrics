@@ -90,6 +90,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         notificationFactory.success();
         $('#editTemplateModal').modal('hide');
         $('#moveToArchiveModal').modal('hide');
+        $('#createTemplateModal').modal('hide');
         //$scope.currentObject={};
         if (!$scope.createByTemplate_flag){
             $scope.getActive();
@@ -100,6 +101,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 
     var errorCallback = function (e) {
         notificationFactory.error(e.data.ExceptionMessage);
+console.log(e);        
     };
     
     
@@ -206,6 +208,23 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 //        };
         crudGridDataFactory(table).update({reportTemplateId: object.id}, object, successCallback, errorCallback);
     };
+    
+    $scope.saveTemplate = function(){
+        var result = {};
+        result.reportTemplate = $scope.currentObject;
+        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+        result.reportTemplate._active = true;
+        result.reportColumnSettings = {};
+        result.reportColumnSettings.allTsList = $scope.systems;
+        result.reportColumnSettings.ts1List = $scope.system1.defineColumns;
+        result.reportColumnSettings.ts2List = $scope.system2.defineColumns;
+               
+        var table = "../api/reportWizard"+$scope.currentReportType.suffix;
+        crudGridDataFactory(table).save(result, successCallback, errorCallback);
+        
+        
+    };
+                     
     
     $scope.toArchive = function(url, id) {
         return $resource(url, {
