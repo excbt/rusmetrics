@@ -52,21 +52,17 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
       
 
  //get templates   
-
     $scope.getActive = function(){
-        
         if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
         for (var i=0; i<$scope.objects.length; i++){
             $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
         };
-
     };
 
     $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
          curObject.showGroupDetails = !curObject.showGroupDetails;
     };
     
-   
     $scope.selectedItem = function(item){      
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
@@ -74,47 +70,8 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
     };
     
     $scope.createReport = function(paramset){
-//        alert("Поехали! Выбран вариант: "+paramset.name);
         var url ="../api/reportService/commerce/"+paramset.id+"/download";
         window.open(url);
         
     };
-
-
-//                        $scope.getReport = function(queryDates) {
-//
-//                            var sessDateFrom = moment(queryDates.startDate).format('YYYY-MM-DD');
-//                            var sessDateTill = moment(queryDates.endDate).format('YYYY-MM-DD');
-//
-//                            $scope.loading = true;
-//                            
-//                            $scope.invokeReport().query({beginDate: sessDateFrom, endDate:sessDateTill}
-//                                                        ,function(data){
-//                                                            
-//                                                          }
-//                                                       );
-
-//                            terminalDataFactory("sessDateTerminalIdsPeriod").query({
-//                                sessDateFrom : sessDateFrom,
-//                                sessDateTill : sessDateTill
-//                            }, function(data) {
-//
-//                                $scope.setTerminals(data);
-//
-//                                console.log("data:" + data);
-//                                $scope.loading = false;                    
-//
-//                            }, errorCallback);
-//                        };
-    
-//                        $scope.invokeReport = function(type) {
-//                            return $resource(type, {beginDate: '@beginDate', endDate: '@endDate' 
-//                            }, {
-//
-//                                query: {method: 'GET', isArray: false}
-//
-//                            });
-//			             };   
-
-                    
-                }]);
+}]);

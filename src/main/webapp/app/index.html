@@ -13,16 +13,12 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css"/>
-<!--    <link rel="stylesheet" href="styles/angular.treeview.css"/>-->
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css"/>
       <link rel="stylesheet" href="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.min.css"/>
     <!-- endbuild -->
     
       <link rel="stylesheet" href="vendor_components/bootstrap-daterangepicker-master/daterangepicker-bs3.css"/>
-      
-<!--      //angular-datatable-->
-<!--      <link rel="stylesheet" href="bower_components/angular-datatables/dist/plugins/bootstrap/datatables.bootstrap.css"/>-->
-<!--      <link rel="stylesheet" href="vendor_components/DataTables-1.10.6/media/css/jquery.dataTables.css"/>-->
+    
       <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css"/>
       
   </head>
@@ -83,61 +79,26 @@
                             role="navigation" ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
-                                <!-- Home -->
-<!--
-                                <a class="list-group-item"
-
-                                    href="#/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Главная</a>
--->
    
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showMenuReport=false;showSettings=false">Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false;showIndicatorsParam=false">Объекты</a>
                                 
                                 <!-- Отчеты -->
-                                <a class="list-group-item noMarginBottom"
-
-                                    href="#/reports/" data-toggle="offcanvas" ng-click="showIndicatorsParam=false;showSettings=false">Отчеты</a>
-                                
-                                 <!-- Test -->
-<!--
                                 <a class="list-group-item"
 
-                                    href="#/test/" data-toggle="offcanvas">Test</a>
-                                
--->
-                                <!-- Меню отчетов -->
-                                <div class="list-group submenu hideM" ng-class="{'showM': showMenuReport, 'hideM': !showMenuReport}" id="sidebar-entries" >
-                                    <!-- Home -->
-<!--
-
-                                    <label class="list-group-item"
-
-                                       data-toggle="offcanvas"><b>Отчеты:</b></label>
--->
-
-                                    <a class="list-group-item"
-
-                                       href="#/reports/commercial_report/" data-toggle="offcanvas">Коммерческий отчет</a>
-
-                                    <a class="list-group-item"
-
-                                        href="#/" data-toggle="offcanvas">Сводный отчет</a>
-                                    <a class="list-group-item"
-
-                                        href="#/" data-toggle="offcanvas">События</a>
-                                </div>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="showIndicatorsParam=false;showSettings=false">Отчеты</a>
                                 
                                  <!-- Notices -->
                                 <a class="list-group-item"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Уведомления</a>                            
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="showIndicatorsParam=false;showSettings=false">Уведомления</a>                            
                                 
 <!--                                Настройки-->
                                 <a class="list-group-item noMarginBottom"
 
-                                    href="" data-toggle="offcanvas" ng-click="showSettings=true;showMenuReport=false">Настройки</a>
+                                    href="" data-toggle="offcanvas" ng-click="showSettings=true;showIndicatorsParam=false">Настройки</a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
@@ -149,20 +110,7 @@
                                     <a class="list-group-item"
 
                                         href="#/settings/reports/" data-toggle="offcanvas">Отчеты</a>
-<!--
-                                    <a class="list-group-item"
-
-                                        href="#/" data-toggle="offcanvas">И Еще какой-то</a>
--->
                                 </div>
-                                
-
-                                <!-- Журнал операций -->
-<!--
-                                <a class="list-group-item"
-
-                                    href="#/operationlog/" data-toggle="offcanvas" ng-click="showMenuReport=false;showIndicatorsParam=false;showSettings=false">Журнал операций</a>
--->
 
                             </div>
                         </nav>
@@ -189,7 +137,7 @@
             
                         <nav class="sidebar-nav hideM" ng-class="{'showM': showIndicatorsParam, 'hideM': !showIndicatorsParam}"
                             role="navigation"
-                             ng-show="showIndicatorsParam">
+                             >
 <!--                Параметры отображения показаний точек учета            -->
                             <div id="sidebar-entries" class="list-group">
                                 <div class="list-group-item">
@@ -233,17 +181,8 @@
                         
             
             </div>                
-<!--         <div class="col-xs-6 col-sm-2 well sidebar-offcanvas hideM menuWidth" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}">        -->
 
-<!--            </div>-->
-  
-<!--        <div ng-view="" ng-animate="{enter:'enter-animation'"></div>-->
         <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea main-scrollable-area1">
-<!--
-          <div class="container" ng-controller = "TableController">
-            <table-component-react table-def="tableDef" columns="columnDef" data="data"/>
-          </div>  					
--->
 					
 					<div id="main" ng-view></div>
         </div>
@@ -324,20 +263,7 @@
     <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
     <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
     <script src="vendor_components/angular-daterangepicker.js"></script>
-<!--    <script src="vendor_components/DataTables-1.10.6/media/js/jquery.dataTables.js"></script>  -->
     <script src="bower_components/ngReact/ngReact.js"></script>
-<!--
-      <script src="vendor_components/scroll/jquery.liimeBar.packed.js"></script>
-      <script src="vendor_components/scroll/jquery.mousewheel.min.js"></script>
-      
-<script type="text/javascript">
-        $(function(){
-            $('body').liimeBar();
-        });
-</script>      
--->
-
-    
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
      
@@ -367,12 +293,10 @@
     <script src="scripts/directives/crud-grid-directive-objects.js"></script>
     <script src="scripts/directives/crud-grid-directive-directories.js"></script>
 <script src="scripts/directives/crud-grid-paged-directive.js"></script>
-<!--    <script src="scripts/directives/template-designer.js"></script>-->
     <script src="scripts/directives/tree-model.js"></script>
       
       <!-- Services -->
       <script src="scripts/services/notification-factory.js"></script>      
-<!--        <script src="include/javascript-include.html"></script>-->
         <!-- endbuild -->
     
 <script src="scripts/controllers/data-range-settings.js"></script>

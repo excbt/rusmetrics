@@ -22,7 +22,6 @@
                                             <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                             </div>    
                                             <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
-<!--                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>-->
                                             </div>
                                         </div>
 
@@ -46,20 +45,15 @@
                                                           <tr>
                                                             <td>    <i title="Сформировать" class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="createReport(oldObject)"></i>
                                                             </td>
-<!--
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
-                                                            </td>
--->
-
                                                           </tr>
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-2 noPadding" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}}
+                                             <div class="col-md-7" ng-class="{'default': oldObject._default}">     
+                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}}
                                             </div>
-                                            <div class="col-md-7"  ng-class="{'default': oldObject._default}">     
-                                                    действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
+                                            <div class="col-md-2" ng-class="{'default': oldObject._default}">     
+                                                    действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
 

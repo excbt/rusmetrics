@@ -7,8 +7,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" ><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
     <li role="presentation" class="active"><a href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation"><a href="" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
-    
+    <li role="presentation"><a href="" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
   </ul>
 
   <!-- реализация вкладок -->
@@ -54,7 +53,6 @@
 
                                 </tr>
                                 <tr>
-
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
@@ -127,12 +125,10 @@
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
 
-
                                     </td>
 
                                 </tr>
                                 <tr>
-
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
@@ -163,10 +159,7 @@
 
                                      </tr>
                                     </table>         
-
                                 </tr>
-
-
                             </table>  
 
                     </td>     
@@ -195,132 +188,6 @@
 
 </div>
 
-<!-- Edit paramset-->
-<!--
-<div id="editParamsetModal" class="modal fade" role="dialog"
-	aria-labelledby="editParamsetLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="editParamsetLabel">
-				Редактирование варианта отчета {{currentObject.tariffPlanName}}
-			</h3>
-		</div>
-		<div class="modal-body ">
-            
-            
-            <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
-                            <tr>
-                                <td class="col-sm-3"><label for="inputType">Тип отчета</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input type=text disabled=true size="20" value="Коммерческий">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input id="inputName" type=text size="50" placeholder="Наименование варианта">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
-                                </td>
-                            </tr>
--->
-
-<!--
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
-                                </td>
-                            </tr>
--->
-<!--
-                            <tr>
-                                <td class="col-sm-3"><label for="inputPeriod">Период</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
-                                        <option>Вчера</option>
-                                        <option>Последний месяц</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputPeriod">Тип выходного файла</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputPeriod" placeholder="" style="width: 150px;">
-                                        <option>PDF</option>
-                                        <option>HTML</option>
-                                    </select>
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox >По умолчанию
-                                </td>
-
-                            </tr>                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Дата создания:</label>
-                                </td>
-                                <td class="textAlign_left col-sm-9">
-                                    
-                                    <input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
-                                </td>
-                                
-                            </tr>
-                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left"><input class="marginRight28" type="text" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat" disabled=true> 
-                                </td>
-                            </tr>
-                            
-                        </table>
-
-                    </div>    
-                    
-                </div>
-                
-            </div>        
-
-			
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								ng-click="saveObject()"
-								value="Сохранить" />
-						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject');clearTariffDateSet()">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
--->
-
 <!-- Create paramset-->
 <div id="createParamsetModal" class="modal fade" role="dialog"
 	aria-labelledby="createParamsetLabel" tabindex="-1">
@@ -340,24 +207,19 @@
             
 		</div>
 		<div class="modal-body ">
-            
-            
+                     
             <div role="tabpanel">
 
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active" id="main_properties_tab"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
                 <li role="presentation" id="set_of_objects_tab"><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
-<!--                <li role="presentation"><a href="" aria-controls="extra" data-target="#extra" role="tab" data-toggle="tab">Резерв</a></li>-->
-
               </ul>
 
               <!-- реализация вкладок -->
               <div class="tab-content">
             <!--      Варианты отчетов-->
-                <div role="tabpanel" class="tab-pane fade in active" id="main_properties">
-            
-            
+                <div role="tabpanel" class="tab-pane fade in active" id="main_properties">            
                     <div class="container-fluid">
                         <div class="row-fluid">
                             <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
@@ -366,13 +228,6 @@
                                         <td class="col-sm-3"><label for="inputType">Тип отчета</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">{{currentReportType.reportTypeName}}
-<!--
-                                            <select style="width: 150px;">
-                                                <option>Коммерческий</option>
-                                                <option>Сводный</option>
-                                                <option>Сведения</option>
-                                            </select>
--->
                                         </td>
                                     </tr>
 
@@ -382,13 +237,7 @@
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.reportTemplate.id==null)}">
                                             <select class="form-control "  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset" ng-disabled="currentObject.common">
-<!--
-                                                <option>Шаблон 1</option>
-                                                <option>Ш 2</option>
-                                                <option>Нолбаш E</option>
--->
-                                            </select>
-                                            
+                                            </select>                                            
                                             </div>
                                         </td>
                                     </tr>
@@ -404,51 +253,30 @@
                                         <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
                                         </td>
                                     </tr>
-
-        <!--
-                                    <tr>
-                                        <td><label for="inputComment" >Комментарий</label>
-                                        </td>
-                                        <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
-                                        </td>
-                                    </tr>
-        -->
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Период</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
                                                 <select ng-disabled="currentObject.common" class="form-control input-sm inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
-    <!--
-                                                    <option>Вчера</option>
-                                                    <option>Последний месяц</option>
-    -->
                                                 </select>
                                             </div>    
                                         </td>
                                     </tr>
-<!--                                    temp    -->
-<!--
-                                    <tr>
-                                        <td><label for="inputDescription" >Параметры периода:</label>
-                                        </td>
-                                        <td class="textAlign_left">
-                                            {{currentObject.reportPeriodKey}}, {{currentSign}}
-                                        </td>
-                                    </tr>
--->
-<!--                                    end temp-->
                                     <tr ng-show="currentSign==null">
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
-                                             <div ng-show="!editInterval">
-                                                 <input class="form-control" type="text" ng-model="intervalFormat" ng-click="editInterval=true">
-                                             </div>
-                                             <div ng-show="editInterval" ng-controller="DataRangeSettings">
-                                                    <input ng-disabled="currentObject.common" style="font-size: 12px;width:329px" date-range-picker class="form-control date-picker"
-                                                        type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
-                                            </div>
+                                            <div ng-disabled="currentObject.common">
+                                                <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                                <div class="col-sm-5">
+                                                    <input class="form-control inputData noMargin" type="date" ng-model="paramsetStartDateFormat"> 
+                                                </div>    
+                                                <div class="col-sm-1 paddingTop10"><label>по</label></div>
+                                                <div class="col-sm-5">
+                                                    <input class="form-control inputData noMargin" type="date" ng-model="paramsetEndDateFormat">
+                                                </div>
+                                            </div>    
 
                                         </td>
                                     </tr>
@@ -532,15 +360,6 @@
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
-<!--
-                    <div class="row" >
-                        <label>* - обязательно для заполнения</label>
-                    </div>
-                    <div class="row" ng-show="!set_of_objects_flag && createParamset_flag">
-                        <label>При переходе на вкладку выбора объектов текущий вариант отчета будет сохранен!</label>
-                    </div>
--->
-
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input ng-disabled="currentObject.common" type="submit" class="btn btn-primary btn-block btn-xs"
@@ -614,55 +433,3 @@
 		</span>
 	</div>
 </div>
-        
-<!--
-<div id="saveObjectModal" class="modal fade" role="dialog"
-	aria-labelledby="moveToArchiveLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content">
-
-		<div class="modal-header">
-			<h3 id="saveObjectLabel">
-				Сохранить вариант 
-			</h3>
-		</div>
-		<div class="modal-body">
-			<form name="saveContactForm" novalidate>
-				<p>
-					<label class="text-warning"> Перед выбором объектов необходимо сохранить вариант отчета!  
-					</label> 
-					<label class="text-primary">Сохранить {{currentObject.name}}</label> 
-					<label
-						class="text-warning"> ? </label>
-				</p>
-
-			</form>
-		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
-					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
-								ng-click="saveParamset(currentObject); set_of_objects=true;"
-								value="Сохранить" data-target="set_of_objects" data-toggle="tab"/>
-						</div>
-
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="closeSaveObjectModal();set_of_objects_flag=false" data-target="#main_properties" data-toggle="tab">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
--->
-
