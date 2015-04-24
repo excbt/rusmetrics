@@ -506,4 +506,11 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 	}
+	
+	
+	@Transactional(readOnly = true)
+	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
+		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
+	}
+	
 }

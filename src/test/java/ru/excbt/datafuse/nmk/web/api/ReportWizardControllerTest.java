@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Date;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,6 +24,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class ReportWizardControllerTest extends AnyControllerTest {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportWizardControllerTest.class);
+	
 	@Autowired
 	private ReportWizardService reportWizardService;
 	
@@ -41,6 +47,7 @@ public class ReportWizardControllerTest extends AnyControllerTest {
 				.getReportColumnSettings());
 		/// 
 		ReportTemplate reportTemplate = new ReportTemplate();
+		reportTemplate.setName("Шаблон111");
 		reportTemplate.setComment("Created By Wizard");
 		reportTemplate.setActiveStartDate(new Date());
 		reportTemplate.set_active(true);

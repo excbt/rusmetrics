@@ -71,13 +71,39 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsReportParamsetList() {
+	@RequestMapping(value = "/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsT1ReportParamsetList() {
 
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT, true,
+						currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok(reportParamsetList);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsT2ReportParamsetList() {
+		
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, true,
 						currentSubscriberService.getSubscriberId());
-
+		
+		return ResponseEntity.ok(reportParamsetList);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsReportParamsetList() {
+		
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, true,
+						currentSubscriberService.getSubscriberId());
+		
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
@@ -254,6 +280,32 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOneConsT1(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset) {
+		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+	}
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOneConsT2(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset) {
+		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+	}
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
 	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
@@ -330,6 +382,34 @@ public class ReportParamsetController extends WebApiController {
 		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
 	}
 
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t1", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createOneConsT1(
+			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) {
+		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+	}
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createOneConsT2(
+			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) {
+		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+	}
 	/**
 	 * 
 	 * @param reportTemplareId

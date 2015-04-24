@@ -93,4 +93,16 @@ public class JpaConfig {
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
+	public String getDatasourceUrl() {
+		return datasourceUrl;
+	}
+
+	public String getDatasourceUsername() {
+		return datasourceUsername;
+	}
+
+	public String getDatasourcePassword() {
+		return datasourcePassword;
+	}
+
 }
