@@ -126,7 +126,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetListArchCommerce() {
+	public ResponseEntity<?> getArchCommerceReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
@@ -139,13 +139,39 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetListArchCons() {
+	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsT1ReportParamsetList() {
 
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT, false,
+						currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok(reportParamsetList);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsT2ReportParamsetList() {
+		
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, false,
 						currentSubscriberService.getSubscriberId());
-
+		
+		return ResponseEntity.ok(reportParamsetList);
+	}
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsReportParamsetList() {
+		
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, false,
+						currentSubscriberService.getSubscriberId());
+		
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
@@ -154,7 +180,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetListArchEvent() {
+	public ResponseEntity<?> getArchEventReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
 				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT,
