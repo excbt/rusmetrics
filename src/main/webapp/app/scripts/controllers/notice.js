@@ -107,7 +107,7 @@ angular.module('portalNMK')
 
         //define columns
         $scope.dtColumns = [
-            DTColumnBuilder.newColumn('id').notVisible()
+            DTColumnBuilder.newColumn('id')
             ,DTColumnBuilder.newColumn('contEventType.name').withTitle('Тип').withClass($scope.tableDef.columns[0].headerClass)
             .renderWith(function(data, type, full){
                 if (full.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
