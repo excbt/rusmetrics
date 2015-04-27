@@ -20,10 +20,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
 console.log("Loading crudGridObjects directive.");                
                 
-                $scope.objects = angular.fromJson($attrs.datasource); 
+//                $scope.objects = angular.fromJson($attrs.datasource); 
                 
                 
-                $scope.lookups = [];
+//                $scope.lookups = [];
                 $scope.object = {};
                 $scope.columns = angular.fromJson($attrs.columns);
                 $scope.captions = angular.fromJson($attrs.captions);

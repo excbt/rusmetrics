@@ -4,20 +4,15 @@ var app = angular.module('portalNMK');
 app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $resource,crudGridDataFactory, notificationFactory){
     
     $scope.active_tab_active_templates = true;
-    
     $scope.currentObject = {};
     $scope.createByTemplate_flag = false;
     $scope.archiveTemplate = {};
     $scope.activeStartDateFormat = new Date();
-    $scope.currentReportType = {};
-    
-    $scope.objects = [];
-    
-    
+    $scope.currentReportType = {};  
+    $scope.objects = [];   
     $scope.columns = [
         {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
-    ];
-    
+    ];   
     $scope.crudTableName = "../api/reportTemplate"; 
     
     $scope.reportTypes = [];
@@ -49,8 +44,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         {"name":"name", "header":"Название шаблона", "class":"col-md-5"}
         ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
     ];
-    
-    
+   
     var successCallback = function (e) {
         notificationFactory.success();
         $('#editTemplateModal').modal('hide');
@@ -147,8 +141,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         $scope.currentObject.name = angular.copy(object.name);
         $scope.currentObject.description = angular.copy(object.description);
     };
-    
-    
+       
     //for template designer
     $scope.systems = [];
     $scope.system1 ={} ;

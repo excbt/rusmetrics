@@ -31,11 +31,6 @@
                 </div>
             </div>
         </td>
-<!--
-        <td ng-repeat="column in columns" >
-            {{object[column.name]}}
-        </td>
--->
         <td>
             {{object.tariffType.tariffTypeName}}
         </td>
@@ -56,8 +51,7 @@
         </td>
         <td>
             <div class="btn-toolbar">
-                <div class="btn-group">
-                    
+                <div class="btn-group">                   
                     <i class="btn btn-xs btn-default glyphicon glyphicon-trash" data-target="#deleteObjectModal" ng-click="selectedItem(object)" data-toggle="modal"></i>
                 </div>
             </div>
@@ -65,7 +59,7 @@
     </tr>
 </table>
 
-
+<!-- window: delete tariff-->
 <div id="deleteObjectModal" class="modal fade" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
@@ -85,7 +79,6 @@
 					<label
 						class="text-warning"> ? </label>
 				</p>
-
 			</form>
 		</div>
 		<div class="modal-footer">
@@ -118,17 +111,13 @@
 <!-- Edit tariff-->
 <div id="editTariffModal" class="modal fade" role="dialog"
 	aria-labelledby="editTariffLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content">
-
 		<div class="modal-header">
 			<h3 id="editTariffLabel">
 				Тариф <input type="text" ng-model="currentObject.tariffPlanName">
 			</h3>
 		</div>
-		<div class="modal-body ">
-            
-            
+		<div class="modal-body ">         
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
@@ -180,16 +169,8 @@
                                                 <div class="col-sm-5 paddingLeft10">
                                                     <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
                                                 </div>
-                                    
-                                    
-<!--
-                                    <input class="marginRight28 form-control" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat">
-                                    <label for="inputEndDate">по:</label><input class="marginLeft15 form-control" type="date" id="inputEndDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat">
--->
-                                </td>
-                                
-                            </tr>
-                            
+                                </td>                         
+                            </tr>                           
                             <tr>
                                 <td class="col-sm-3"><label for="inputValue">Стоимость</label>
                                 </td>
@@ -201,21 +182,14 @@
                                         руб <sub>(копейки указываются через точку)</sub> 
                                     </div>    
                                 </td>
-                            </tr>
-                            
+                            </tr> 
                         </table>
-
-                    </div>    
-                    
-                </div>
-                
-            </div>        
-
-			
+                    </div>        
+                </div>     
+            </div>        		
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
-
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
