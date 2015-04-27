@@ -111,6 +111,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(
+				SecuredRoles.SUBSCR_ROLE_USER));
+		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.SUBSCR_ROLE_ADMIN));
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(userName,

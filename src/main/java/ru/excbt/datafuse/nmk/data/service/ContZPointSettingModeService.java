@@ -86,7 +86,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	public ContZPointSettingMode save(ContZPointSettingMode arg) {
 		checkNotNull(arg);
 		checkNotNull(arg.getContZPoint().getId());
@@ -106,7 +106,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param entity
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	private void delete(ContZPointSettingMode entity) {
 		checkNotNull(entity);
 		settingModeRepository.delete(entity);
@@ -117,7 +117,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param id
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	private void delete(long id) {
 		checkArgument(id > 0);
 		settingModeRepository.delete(id);

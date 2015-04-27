@@ -122,7 +122,7 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
 			ReportColumnSettings reportColumnSettings, Subscriber subscriber) {
 

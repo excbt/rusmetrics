@@ -40,7 +40,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 //		return result; 
 //	}
 
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	@Transactional
 	public UDirectoryNode save(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
@@ -49,7 +49,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 		return result; 
 	}
 
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	@Transactional
 	public UDirectoryNode saveWithDictionary(final UDirectoryNode nodeDir, final long directoryId) {
 		checkNotNull(nodeDir);
@@ -70,7 +70,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 		return result; 
 	}
 
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void saveWithChildren(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
@@ -108,7 +108,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 		return result;
 	}
 
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
 	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
