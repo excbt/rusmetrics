@@ -1,8 +1,13 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URI;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,7 +116,7 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(
+	public ResponseEntity<?> updateOneDefault(
 			@PathVariable("tariffId") long tariffId,
 			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
 			@RequestParam(value = "tariffTypeId", required = false) Long tariffTypeId,
@@ -129,6 +134,11 @@ public class TariffPlanController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
+		if (tariffPlan.getTariffOptionKey() == null) {
+			return ResponseEntity.badRequest().body(
+					"Invalid TariffOptionKey");
+		}		
+		
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationRepository
 					.findOne(rsoOrganizationId);
@@ -148,6 +158,7 @@ public class TariffPlanController extends WebApiController {
 			tariffPlan.setTariffType(tt);
 		}
 
+		
 		TariffPlan resultEntity = null;
 
 		try {
@@ -171,12 +182,57 @@ public class TariffPlanController extends WebApiController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneDefault(
-			@PathVariable("tariffId") long tariffId,
-			@RequestParam("rsoOrganizationId") long rsoOrganizationId,
-			@RequestParam("contObjectId") long contObjectId,
-			@RequestParam("tariffTypeId") long tariffTypeId,
-			@RequestBody TariffPlan tariffPlan) {
-		return ResponseEntity.badRequest().build();
+			@RequestParam("rsoOrganizationId") Long rsoOrganizationId,
+			@RequestParam("tariffTypeId") Long tariffTypeId,
+			@RequestBody TariffPlan tariffPlan, HttpServletRequest request) {
+
+		checkNotNull(tariffPlan);
+		checkArgument(!tariffPlan.isNew());
+		checkArgument(rsoOrganizationId > 0);
+		checkArgument(tariffTypeId > 0);
+
+		if (tariffPlan.getTariffOptionKey() == null) {
+			return ResponseEntity.badRequest().body(
+					"Invalid TariffOptionKey");
+		}
+		
+		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
+			Organization rso = organizationRepository
+					.findOne(rsoOrganizationId);
+			if (rso == null) {
+				return ResponseEntity.badRequest().body(
+						"Invalid rsoOrganizationId");
+			}
+			tariffPlan.setRso(rso);
+		}
+
+		if (tariffTypeId != null && tariffTypeId > 0) {
+			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
+			if (tt == null) {
+				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
+			}
+			tariffPlan.setTariffType(tt);
+		}
+		
+		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
+
+		TariffPlan resultEntity = null;
+
+		try {
+			resultEntity = tariffPlanService.createOne(tariffPlan);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during create entity TariffPlan (id={}): {}",
+					tariffPlan.getId(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		URI location = URI.create(request.getRequestURI() + "/"
+				+ resultEntity.getId());
+
+		return ResponseEntity.created(location).body(resultEntity);
 	}
 
 }
