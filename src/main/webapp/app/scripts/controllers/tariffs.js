@@ -129,8 +129,9 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.getTariffOptions();
     
     $scope.saveObject = function(){
-console.log("Before.$scope.currentObject.endDate = "+$scope.currentObject.endDate);         
-        
+console.log("Before.$scope.currentObject.endDate = "+$scope.currentObject.endDate);    
+        $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
+        //$scope.currentObject.tariffOption = $scope.currentObject.tarriffOptionKey;
         $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || $scope.currentObject.startDate;
         $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;
 console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
@@ -139,9 +140,12 @@ console.log("$scope.currentObject.startDate = "+$scope.currentObject.startDate);
 console.log("$scope.startDateFormat = "+$scope.startDateFormat);   
 console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.currentObject.endDate);           
 console.log("In saving...");
+        
+console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);                   
         if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')){
             crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
         }else{
+console.log($scope.currentObject) ;           
             saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({}, $scope.currentObject, successPostCallback, errorCallback);
         };
     };
