@@ -183,7 +183,7 @@ public class TariffPlanController extends WebApiController {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "/", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
 			@RequestParam("rsoOrganizationId") Long rsoOrganizationId,
 			@RequestParam("tariffTypeId") Long tariffTypeId,
