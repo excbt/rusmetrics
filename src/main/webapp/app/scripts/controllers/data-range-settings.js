@@ -33,8 +33,8 @@ app
                                 startDate : moment().startOf('day'),
                                 endDate : moment().endOf('day'),
 
-                                format : 'DD-MM-YYYY'
-                                ,separator: "  по  "
+                                format : 'DD.MM.YYYY'
+                                ,separator: " по "
                             };
 
                         $scope.queryDateOptsEn = {
@@ -56,7 +56,7 @@ app
                                 startDate : moment().startOf('day'),
                                 endDate : moment().endOf('day'),
 
-                                format : 'DD-MM-YYYY'
+                                format : 'DD.MM.YYYY'
                         };
     
                         $scope.$watch('navPlayerDates', function (newDates) {

@@ -23,10 +23,10 @@ angular.module('portalNMK')
       
     //Определяем оформление для таблицы уведомлений
     $scope.tableDef = {
-					tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
-					hideHeader : false,
-					headerClassTR : "info",
-					columns : [ 
+        tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
+        hideHeader : false,
+        headerClassTR : "info",
+        columns : [ 
 //                        {
 //						fieldName : "noticeCat",
 //						header : "Категория",
@@ -34,32 +34,32 @@ angular.module('portalNMK')
 //						dataClass : "col-md-1",
 //						autoincrement : "false"
 //					}, 
-                    {
-						fieldName : "noticeTypeCaption",
-						header : "Тип",
-						headerClass : "col-md-3",
-						dataClass : "col-md-3"
-					}, {
-						fieldName : "noticeCaption",
-						header : "Уведомление",
-						headerClass : "col-md-4",
-						dataClass : "col-md-4"
-					}, {
-						fieldName : "noticeDate",
-						header : "Дата",
-						headerClass : "col-md-2",
-						dataClass : "col-md-2"
-					}, {
-						fieldName : "noticeObjectName",
-						header : "Объект",
-						headerClass : "col-md-2",
-						dataClass : "col-md-2"
-					} , {
-						fieldName : "noticeZpoint",
-						header : "Точка учета",
-						headerClass : "col-md-1",
-						dataClass : "col-md-1"
-					} ]
+        {
+            fieldName : "noticeTypeCaption",
+            header : "Тип",
+            headerClass : "col-md-3",
+            dataClass : "col-md-3"
+        }, {
+            fieldName : "noticeCaption",
+            header : "Уведомление",
+            headerClass : "col-md-4",
+            dataClass : "col-md-4"
+        }, {
+            fieldName : "noticeDate",
+            header : "Дата",
+            headerClass : "col-md-2",
+            dataClass : "col-md-2"
+        }, {
+            fieldName : "noticeObjectName",
+            header : "Объект",
+            headerClass : "col-md-2",
+            dataClass : "col-md-2"
+        } , {
+            fieldName : "noticeZpoint",
+            header : "Точка учета",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1"
+        } ]
 		};
  
         var getNotices = function(table, startDate, endDate, objectArray){
@@ -157,25 +157,22 @@ angular.module('portalNMK')
       //function get notices
           $scope.newPromise = newPromise;
       
-        DTInstances.getLast().then(function (dtInstance) {
-//console.log(dtInstance);              
-                $scope.dtInstance = dtInstance;
-          });
+    DTInstances.getLast().then(function (dtInstance) {            
+        $scope.dtInstance = dtInstance;
+    });
       
-          function newPromise(){
-//console.log("Run new promise");              
-              $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
-              $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
-              var table =  $scope.crudTableName+"/eventsFilter";
-              return getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(
-                            function(data){
-                                $scope.data = data.objects;
-                                $scope.totalElements = data.totalElements;
-                                $scope.totalPages = data.totalPages;})
-                    .$promise;
-          };
+      function newPromise(){          
+          $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
+          $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
+          var table =  $scope.crudTableName+"/eventsFilter";
+          return getNotices(table, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(
+                        function(data){
+                            $scope.data = data.objects;
+                            $scope.totalElements = data.totalElements;
+                            $scope.totalPages = data.totalPages;})
+                .$promise;
+      };
       
-          
       //function get notice details and show notice card to user
         $scope.getNotice = function(info){
             var tmp = $scope.data;
@@ -195,8 +192,7 @@ angular.module('portalNMK')
                                     $scope.currentObject.noticeObjectName = $scope.objects[i].fullName;
                                 };   
                             }  
-                    }
-                    
+                    }          
                     $scope.currentObject.noticeDate = info.eventTime;
                     $scope.currentObject.noticeZpoint = info.contServiceType;
                     $('#showNoticeModal').modal();
@@ -214,34 +210,25 @@ angular.module('portalNMK')
             });
             return nRow;
         };
-      
-      
          //get Objects
-        
         $scope.getObjects = function(){
             crudGridDataFactory($scope.crudTableName).query(function(data){
                 $scope.objects = data;
-                
                 //get Events
-   
                 if (($scope.dtInstance != {}) && (typeof $scope.dtInstance != 'undefined')){                   
                     $scope.dtInstance.changeData($scope.newPromise)
                 };
-              
             });
         };
         $scope.getObjects();     
-
   }]);
-
-
 
 //set DataTable loading param
 angular.module('portalNMK').
-factory('DTLoadingTemplate', dtLoadingTemplate);
-function dtLoadingTemplate() {
-    return {
-        html: '<h3>Загрузка...</h3>'
-    };
+    factory('DTLoadingTemplate', dtLoadingTemplate);
+    function dtLoadingTemplate() {
+        return {
+            html: '<h3>Загрузка...</h3>'
+        };
 }
 

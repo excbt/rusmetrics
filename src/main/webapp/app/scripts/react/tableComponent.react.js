@@ -52,8 +52,7 @@ var TableComponentReact = React.createClass( {displayName: "TableComponentReact"
 	   		var cbProcess = this.getTDRows;
 	   		var dataRows = this.props.data.map(function (row, i) {
 	   			var tdRows = cbProcess (row);
-            var reactTr = React.createElement("tr", {key: i}, tdRows);    
-console.log("REact row = "+reactTr);                
+            var reactTr = React.createElement("tr", {key: i}, tdRows);                  
 	   			return reactTr;
 	   		});
 

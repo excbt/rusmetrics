@@ -1,12 +1,5 @@
 <div>Портал / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>
 <h2>Показания &lt; {{contObject.fullName}} &gt; - &lt; {{contZPoint.zpointName}} &gt;</h2>
-<!--
-<div class="code">
-    <pre class="code">
-        {{tableDef}}
-    </pre>
-</div>
--->
 
 <div>
     <table-component-react table-def="tableDef" data="data"/>
@@ -16,20 +9,12 @@
 <!--Строка состояния-->
 <div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
                                                     <!--    navbar-fixed-bottom-->
-    <div id="navbar-container" class="container navbar-left">
-      
-            		
-              <ul class="nav navbar-nav ">
-				
+    <div id="navbar-container" class="container navbar-left">    		
+              <ul class="nav navbar-nav ">		
 				<li><p
 							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{data.length}}</b>  
 				    </p>
-                </li>
-                             
-                 
-				
-			</ul>
-                
-					
-			</div>
+                </li>	
+			</ul>		
+	</div>
 </div>
