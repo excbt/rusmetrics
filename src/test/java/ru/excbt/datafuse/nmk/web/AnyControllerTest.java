@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration (classes = {SpringMvcConfig.class})
-@WithMockUser(username = "admin", password = "admin", roles = { "ADMIN" })
+@WithMockUser(username = "admin", password = "admin", roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
 	
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();

@@ -158,8 +158,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		}
 
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(
-						currentSubscriberService.getSubscriberId());
+				.selectReportShedule(currentSubscriberService.getSubscriberId());
 
 		for (ReportShedule rs : reportSheduleList) {
 			logger.info("Shedule Id: {}, Report Id: {}", rs.getId(), rs
@@ -173,6 +172,41 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	}
 
+	
+	/**
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testReportTemplateLoadActiveBody() throws IOException {
+		File fileJasper = ResourceHelper
+				.findResource("jasper/nmk_com_report.jasper");
+		assertNotNull(fileJasper);
+		assertTrue(fileJasper.exists());
+		byte[] fileBytes = null;
+		InputStream is = new FileInputStream(fileJasper);
+		try {
+			fileBytes = IOUtils.toByteArray(is);
+		} finally {
+			is.close();
+		}
+
+		List<ReportTemplate> list = reportTemplateService
+				.selectActiveReportTemplates(ReportTypeKey.COMMERCE_REPORT);
+
+		for (ReportTemplate rt : list) {
+			logger.info("Report Id: {}", rt.getId());
+
+			reportTemplateService.saveReportTemplateBodyCompiled(rt.getId(),
+					fileBytes, fileJasper.getName());
+
+		}
+
+	}
+
+	/**
+	 * 
+	 */
 	@Test
 	public void testLoadedReportTemplateBody() {
 		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository

@@ -14,9 +14,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
@@ -30,6 +31,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private SubscriberService subscriberService;
 
+	@Autowired
+	private SubscrUserService subscrUserService;
+	
 	@Autowired
 	private SystemUserService systemUserService;
 
@@ -62,14 +66,17 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 			return null;
 		}
 
+		logger.info("Login Subscr User: {}", sUser.getUserName());
+		
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-		List<Subscriber> roles = subscriberService.selectSubscrRoles(sUser
+		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser
 				.getId());
 
-		for (Subscriber sr : roles) {
-			String roleName = sr.getName();
+		for (SubscrRole sr : roles) {
+			String roleName = sr.getRoleName();
 			grantedAuths.add(new SimpleGrantedAuthority(roleName));
+			logger.debug("Subscr User Role: {}", roleName);
 		}
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(name,
@@ -104,12 +111,14 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.SUBSCR_ROLE_ADMIN));
+				SecuredRoles.ROLE_SUBSCR_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(
+				SecuredRoles.ROLE_SUBSCR_USER));
 
 		Authentication auth = new UsernamePasswordAuthenticationToken(userName,
 				password, grantedAuths);
 		
-		logger.info("LOGIN as a SystemUser. Authentication complete. userName:{}", userName);
+		logger.debug("LOGIN as a SystemUser. Authentication complete. userName:{}", userName);
 		
 		return auth;
 

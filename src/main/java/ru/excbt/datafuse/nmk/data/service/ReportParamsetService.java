@@ -54,7 +54,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
@@ -69,7 +69,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity, Long[] contObjectIds) {
 
 		ReportParamset result = createOne(entity);
@@ -84,7 +84,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportParamset entity) {
 		checkNotNull(entity);
 		if (checkCanUpdate(entity.getId())) {
@@ -101,7 +101,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
@@ -123,7 +123,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset,
 			Long[] contObjectIds) {
 		ReportParamset result = updateOne(reportParamset);
@@ -138,7 +138,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
 			reportParamsetRepository.delete(id);
@@ -506,11 +506,10 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 	}
-	
-	
+
 	@Transactional(readOnly = true)
 	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
-	
+
 }

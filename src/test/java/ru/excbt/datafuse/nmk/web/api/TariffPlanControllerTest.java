@@ -78,8 +78,12 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		assertTrue(tariffPlanList.size() > 0);
 
 		TariffPlan testRec = tariffPlanList.get(0);
-		testRec.setTariffPlanValue(testRec.getTariffPlanValue().add(
-				BigDecimal.valueOf(0.1)));
+		if (testRec.getTariffPlanValue() != null) {
+			testRec.setTariffPlanValue(testRec.getTariffPlanValue().add(
+					BigDecimal.valueOf(0.1)));
+		} else {
+			testRec.setTariffPlanValue(BigDecimal.valueOf(0.1));
+		}
 		String urlStr = "/api/subscr/tariff/" + testRec.getId();
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(testRec);
 

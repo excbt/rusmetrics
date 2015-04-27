@@ -36,7 +36,6 @@ public class ReportTemplateService implements SecuredRoles {
 	@Autowired
 	private ReportParamsetService reportParamsetService;
 
-
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -54,7 +53,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate createOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
@@ -69,7 +68,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate updateOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -90,7 +89,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -200,7 +199,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveReportTemplateBody(long reportTemplateId, byte[] body,
 			String filename) {
 		saveReportTemplateBodyInternal(reportTemplateId, body, filename, false);
@@ -211,7 +210,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveReportTemplateBodyCompiled(long reportTemplateId,
 			byte[] body, String filename) {
 
@@ -223,7 +222,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate createByTemplate(long srcId,
 			ReportTemplate reportTemplate, Subscriber subscriber) {
 
@@ -270,7 +269,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
 		if (!checkCanUpdate(reportTemplateId)) {
@@ -303,8 +302,6 @@ public class ReportTemplateService implements SecuredRoles {
 
 	}
 
-	
-
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -313,6 +310,20 @@ public class ReportTemplateService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public ReportTemplateBody getReportTemplateBody(long reportTemplateId) {
 		return reportTemplateBodyRepository.findOne(reportTemplateId);
+	}
+	
+	
+
+	/**
+	 * 
+	 * @param reportTypeKey
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ReportTemplate> selectActiveReportTemplates(
+			ReportTypeKey reportTypeKey) {
+		return reportTemplateRepository.selectActiveTemplates(reportTypeKey,
+				true);
 	}
 
 }
