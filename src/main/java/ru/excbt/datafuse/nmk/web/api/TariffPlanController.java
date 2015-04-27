@@ -120,14 +120,14 @@ public class TariffPlanController extends WebApiController {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@RequestMapping(value = "/{tariffId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneDefault(
-			@PathVariable("tariffId") long tariffId,
+			@PathVariable("tariffPlanId") long tariffPlanId,
 			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
 			@RequestParam(value = "tariffTypeId", required = false) Long tariffTypeId,
 			@RequestBody TariffPlan tariffPlan) {
 
-		if (tariffId <= 0) {
+		if (tariffPlanId <= 0) {
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -244,6 +244,28 @@ public class TariffPlanController extends WebApiController {
 				+ resultEntity.getId());
 
 		return ResponseEntity.created(location).build();
+	}
+
+	/**
+	 * 
+	 * @param tariffPlan
+	 * @return
+	 */
+	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOne(
+			@PathVariable("tariffPlanId") long tariffPlanId) {
+		try {
+			tariffPlanService.deleteOne(tariffPlanId);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during delete entity TariffPlan (id={}): {}",
+					tariffPlanId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		return ResponseEntity.accepted().build();
 	}
 
 }

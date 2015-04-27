@@ -137,16 +137,23 @@ public class TariffPlanService implements SecuredRoles {
 	public TariffPlan updateOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
-		checkNotNull(tariffPlan.getId());
 		checkNotNull(tariffPlan.getTariffOptionKey(), "tariffOptionKey is NULL");
-		
-		TariffPlan currentRec = tariffPlanRepository.findOne(tariffPlan.getId());
-		
+
+		if (!canModifyTariffPlanId(tariffPlan.getId())) {
+			throw new PersistenceException(
+					String.format(
+							"TariffPlan(id=%d) can not be modified by currentSubscriberId",
+							tariffPlan.getId()));
+		}
+
+		TariffPlan currentRec = tariffPlanRepository
+				.findOne(tariffPlan.getId());
+
 		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
 		tariffPlan.setSubscriber(currentRec.getSubscriber());
 		tariffPlan.setContObject(currentRec.getContObject());
-		
+
 		return tariffPlanRepository.save(tariffPlan);
 	}
 
@@ -166,8 +173,49 @@ public class TariffPlanService implements SecuredRoles {
 		checkNotNull(tariffPlan.getTariffType(), "tariffType is NULL");
 		checkNotNull(tariffPlan.getStartDate(), "startDate is NULL");
 		checkNotNull(tariffPlan.getRso(), "rso is NULL");
-		
+
 		return tariffPlanRepository.save(tariffPlan);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param tariffPlan
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void deleteOne(TariffPlan tariffPlan) {
+		checkNotNull(tariffPlan);
+		checkArgument(!tariffPlan.isNew());
+		deleteOne(tariffPlan.getId());
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @param tariffPlan
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	public void deleteOne(long tariffPlanId) {
+		if (!canModifyTariffPlanId(tariffPlanId)) {
+			throw new PersistenceException(
+					String.format(
+							"TariffPlan(id=%d) can not be modified by currentSubscriberId",
+							tariffPlanId));
+		}
+		tariffPlanRepository.delete(tariffPlanId);
+	}
+
+	/**
+	 * 
+	 * @param tariffPlanId
+	 * @return
+	 */
+	public boolean canModifyTariffPlanId(long tariffPlanId) {
+		List<Long> ids = tariffPlanRepository.selectTariffPlanId(
+				currentSubscriberService.getSubscriberId(), tariffPlanId);
+		return ids.size() == 1;
 	}
 
 }
