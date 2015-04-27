@@ -94,15 +94,24 @@ public class ReportTemplateService implements SecuredRoles {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
 
-		if (checkCanUpdate(reportTemplate.getId())) {
-			if (reportTemplateBodyRepository.exists(reportTemplate.getId())) {
-				reportTemplateBodyRepository.delete(reportTemplate.getId());
+		deleteOne(reportTemplate.getId());
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 */
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public void deleteOne(long reportTemplateId) {
+
+		if (checkCanUpdate(reportTemplateId)) {
+			if (reportTemplateBodyRepository.exists(reportTemplateId)) {
+				reportTemplateBodyRepository.delete(reportTemplateId);
 			}
-			reportTemplateRepository.delete(reportTemplate);
+			reportTemplateRepository.delete(reportTemplateId);
 		} else {
 			throw new PersistenceException(String.format(
-					"Can't delete common template (id=%d)",
-					reportTemplate.getId()));
+					"Can't delete report template (id=%d)", reportTemplateId));
 		}
 
 	}
@@ -311,8 +320,6 @@ public class ReportTemplateService implements SecuredRoles {
 	public ReportTemplateBody getReportTemplateBody(long reportTemplateId) {
 		return reportTemplateBodyRepository.findOne(reportTemplateId);
 	}
-	
-	
 
 	/**
 	 * 
