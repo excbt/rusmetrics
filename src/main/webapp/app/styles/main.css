@@ -504,3 +504,7 @@ a.list-group-item:focus {
 .excbt_noLeftBorder {
     border-left-width: 0px;
 }
+
+.excbt_zpointButtonMargin {
+    margin-left:80%;
+}

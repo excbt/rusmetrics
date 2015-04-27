@@ -46,14 +46,28 @@
             <td ng-show="bGroupByObject || bObject" class="col-md-1 noMargin" style="padding:0;">
                 <div class="btn-toolbar marginLeft5">
 <!--                    <div  class="noMargin">-->
-                        <i ng-show="bGroupByObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i>
+<!--                        <i ng-show="bGroupByObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i>-->
 <!--                    </div>-->
     <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
     <!--                Эта кнопка доступна, когда отображаются объекты-->
 <!--                    <div  class="noMargin">-->
-                        <i ng-show="bObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                        
 <!--                    </div>-->
-                </div>                     
+                    <div class="btn-group">
+                        <table>
+                            <tr>
+                                <td><i ng-show="bObject" class="btn btn-default btn-xs noMargin glyphicon" ng-class="{'glyphicon glyphicon-chevron-down': object.showGroupDetails, 'glyphicon glyphicon-chevron-right': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object);selectedItem(object)"></i></td>
+<!--                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
+                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
+                            </tr>
+                        </table>    
+                    </div> 
+                </div> 
+<!--
+                <div class="btn-toolbar excbt_zpointButtonMargin">
+     
+                </div>
+-->
             </td>
 <!--
             <td ng-show="bReports">
@@ -109,16 +123,7 @@
             </td>
 <!-- Колонка для редактирования объектов                   -->
             <td ng-show="bObject" ng-hide="bReports || bList" class="col-md-1"> 
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <table>
-                            <tr>
-<!--                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
-                            </tr>
-                        </table>    
-                    </div>    
-                </div>
+
                 
             </td>
                     
@@ -147,22 +152,38 @@
 <!--                    <caption><b>Точки учета</b></caption>-->
                     <tr>
                         <!--       Шапка таблицы-->
+<!--                        Колонка для кнопок-->
+                        <th ng-show="bObject && !bList" class="col-md-1">
+                        </th>
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)" style="text-align: left;">
                             <div>
                                 {{oldColumn.header || oldColumn.name}}
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
                             </div>
                         </th>
-<!--                        Колонка для кнопок-->
-                        <th ng-show="bObject && !bList" class="col-md-1">
-                        </th>
+
                     </tr>
-                     <tr ng-repeat="oldObject in oldObjects | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
+                     <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
+                                                  <!-- Колонка для редактирования элементов                   -->
+                        <td ng-show="bObject && !bList" class="col-md-1"> 
+                                <div class="btn-toolbar excbt_zpointButtonMargin">
+                                    <div class="btn-group">
+                                        <table>
+                                            <tr>
+<!--                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
+                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
+                                            </tr>
+                                        </table>    
+                                    </div>    
+                                </div>
+                        </td>
+                         
                          <td ng-repeat="oldColumn in oldColumns">
                              <div ng-switch on="oldColumn.name">
     <!--                        Если в столбце должна отображаться категория, то...-->
-                            <span ng-switch-when="noticeCat">
+<!--                            <span ng-switch-when="noticeCat">-->
     <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
+<!--
                                 <div ng-switch on="oldObject[oldColumn.name]">
                                     <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
                                     <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
@@ -170,9 +191,10 @@
                                     <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
                                 </div>
                             </span> 
-                            <span ng-switch-when="zpointType" style="text-align: right;">
+-->
+                            <span ng-switch-when="zpointName" >
     <!--                                Смотрим какой тип у точки учета и выводим соответствующий значок-->
-                                <div ng-switch on="oldObject[oldColumn.name]">
+                                <div ng-switch on="oldObject['zpointType']">
                                     <span ng-switch-when="cw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png"></span>
                                     <span ng-switch-when="heat">
                                         <img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png">
@@ -182,7 +204,8 @@
                                     <span ng-switch-when="gas"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png"></span>
                                     <span ng-switch-when="el"><img height=16 width=16 src="images/es.png"></span>
                                     <span ng-switch-when="env"><img height=16 width=16 src="images/es.png"></span>
-                                    <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
+                                    <span ng-switch-default>{{oldObject['zpointType']}}</span>
+                                    {{oldObject[oldColumn.name]}}
                                 </div>
                             </span> 
                             <span ng-switch-when="zpointLastDataDate">
@@ -196,19 +219,7 @@
                         </div>
                          </td>
                          
-                         <!-- Колонка для редактирования элементов                   -->
-                            <td ng-show="bObject && !bList" class="col-md-1"> 
-                                <div class="btn-toolbar">
-                                    <div class="btn-group">
-                                        <table>
-                                            <tr>
-<!--                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
-                                            </tr>
-                                        </table>    
-                                    </div>    
-                                </div>
-                            </td>
+
                      </tr>
                     </table>         
                 </tr><!--    <tr> Уровень 3     -->                 
