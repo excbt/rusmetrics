@@ -54,7 +54,14 @@ public interface TariffPlanRepository extends CrudRepository<TariffPlan, Long> {
 	@Modifying
 	@Query("DELETE TariffPlan d "
 			+ "WHERE d.subscriber.id = :subscriberId AND d.rso.id = :rsoOrganizationId AND d.contObject.id IS NULL")
-	int deleteDefaultTariffPlan(@Param("subscriberId") long subscriberId,
+	public void deleteDefaultTariffPlan(
+			@Param("subscriberId") long subscriberId,
 			@Param("rsoOrganizationId") long rsoOrganizationId);
+
+	@Query("SELECT d FROM TariffPlan d "
+			+ "WHERE d.subscriber.id = :subscriberId and d.id = :tariffPlanId")
+	public List<Long> selectTariffPlanId(
+			@Param("subscriberId") long subscriberId,
+			@Param("tariffPlanId") long tariffPlanId);
 
 }
