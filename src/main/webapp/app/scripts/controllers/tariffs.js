@@ -151,4 +151,14 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         
     };
     
+    $scope.checkRequiredFields = function(){      
+        if ((typeof $scope.currentObject.tariffOption=='undefined')||($scope.currentObject.tariffOption==null)){
+            return false;
+        };       
+        return !(($scope.startDateFormat==null) ||
+        ($scope.currentObject.tariffOption.keyname==null) ||
+        ($scope.currentObject.rso.id==null) ||
+        ($scope.currentObject.tariffType.id==null));
+    };
+    
 }]);

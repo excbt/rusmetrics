@@ -137,22 +137,31 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputType">Вид услуги</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
-                                    </select>
+                                <td class="col-sm-9 textAlign_left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
+                                        <select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                        </select>
+                                    </div>    
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputRSO">РСО</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
-                                    </select>
+                                <td class="col-sm-9 textAlign_left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
+                                        <select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
+                                        </select>
+                                    </div>    
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputOption">Опция</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9"><select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
-                                    </select>
+                                <td class="textAlign_left col-sm-9">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffOption.keyname==null)}">
+                                        <select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                        </select>
+                                    </div>
                                 </td>
                             </tr>
                             
@@ -163,7 +172,9 @@
                                     
                                                 <div class="col-sm-1 paddingTop10"><label>c</label></div>
                                                 <div class="col-sm-5 noPadding">
-                                                    <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
+                                                        <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
+                                                    </div>    
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop10 paddingLeft5"><label>по</label></div>
                                                 <div class="col-sm-5 paddingLeft10">
@@ -192,7 +203,7 @@
 				<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+							<input ng-disabled="!checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="saveObject()"
 								value="Сохранить" />
 						</div>
