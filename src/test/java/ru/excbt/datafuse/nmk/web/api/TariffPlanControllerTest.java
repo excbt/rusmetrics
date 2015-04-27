@@ -8,9 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,9 +106,9 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		tariffPlan.setTariffOptionKey(TariffOptionKey.PREFERENTIAL);
 		tariffPlan.setTariffPlanValue(BigDecimal.valueOf(1.1));
 		tariffPlan.setTariffPlanComment("Created by REST");
-		tariffPlan.setStartDate(new Date());
+		tariffPlan.setStartDate(LocalDate.now().toDate());
 
-		String urlStr = "/api/subscr/tariff/";
+		String urlStr = "/api/subscr/tariff";
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(tariffPlan);
 
 		Iterable<Organization> orgList = subscriberRepository
