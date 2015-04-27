@@ -18,6 +18,19 @@ public interface ReportTemplateRepository extends
 	 * @param currentDate
 	 * @return
 	 */
+	@Query("SELECT rt FROM ReportTemplate rt "
+			+ "WHERE rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
+			+ "ORDER BY rt.activeStartDate, rt.name")
+	public List<ReportTemplate> selectActiveTemplates(
+			@Param("reportType") ReportTypeKey reportType,
+			@Param("isActive") boolean isActive);
+
+	/**
+	 * 
+	 * @param reportType
+	 * @param currentDate
+	 * @return
+	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber IS NULL AND "
 			+ "rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
