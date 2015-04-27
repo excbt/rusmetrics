@@ -31,7 +31,7 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
 
 	
 	@Column (name="subscriber_name")
-	private String name;
+	private String subscriberName;
 
 	@Column (name="subscriber_info")
 	private String info;
@@ -71,13 +71,6 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String role) {
-		this.name = role;
-	}
 
 	public String getInfo() {
 		return info;
@@ -133,6 +126,14 @@ public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setRsoOrganizations(Collection<Organization> rsoOrganizations) {
 		this.rsoOrganizations = rsoOrganizations;
+	}
+
+	public String getSubscriberName() {
+		return subscriberName;
+	}
+
+	public void setSubscriberName(String subscriberName) {
+		this.subscriberName = subscriberName;
 	}
 
 

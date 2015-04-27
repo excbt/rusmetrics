@@ -22,7 +22,7 @@ public class SubscrRole extends AbstractAuditableEntity<AuditUser, Long> {
 
 	
 	@Column (name="subscr_role_name")
-	private String name;
+	private String roleName;
 
 	@Column (name="subscr_role_info")
 	private String info;
@@ -33,13 +33,6 @@ public class SubscrRole extends AbstractAuditableEntity<AuditUser, Long> {
 	@Version
 	private int version;
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String role) {
-		this.name = role;
-	}
 
 	public String getInfo() {
 		return info;
@@ -63,6 +56,14 @@ public class SubscrRole extends AbstractAuditableEntity<AuditUser, Long> {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
 
 	

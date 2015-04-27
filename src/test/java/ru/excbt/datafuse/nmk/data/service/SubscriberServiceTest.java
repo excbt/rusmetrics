@@ -9,17 +9,21 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
-public class SubscriberServiceTest extends JpaSupportTest {
+public class SubscriberServiceTest extends JpaSupportTest implements SecuredRoles {
 
 	private final static String ARGON_19 = "test-argon19";
 	private final static String SIMPLE_PASSWORD = "12345";
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private SubscrUserService subscrUserService;
 
 	@Autowired
 	private PasswordService passwordService;
@@ -35,9 +39,11 @@ public class SubscriberServiceTest extends JpaSupportTest {
 		assertEquals(passwordService.passwordEncoder().encode(SIMPLE_PASSWORD),
 				user.getPassword());
 
-		List<Subscriber> subscrOrgs = subscriberService.selectSubscrRoles(user
+		List<SubscrRole> subscrRoles = subscrUserService.selectSubscrRoles(user
 				.getId());
-		assertTrue(subscrOrgs.size() == 1);
+		assertTrue(subscrRoles.size() == 1);
+		
+		assertEquals(SUBSCR_ROLE_ADMIN, subscrRoles.get(0).getRoleName());
 		// subscrOrgs.get(0)
 
 	}

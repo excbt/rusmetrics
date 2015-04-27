@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,17 +84,6 @@ public class SubscriberService {
 	@Transactional(readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
 		return subscrUserRepository.findByUserNameIgnoreCase(userName);
-	}
-
-	/**
-	 * 
-	 * @param subscrUserId
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public List<Subscriber> selectSubscrRoles(long subscrUserId) {
-		checkArgument(subscrUserId > 0);
-		return subscriberRepository.selectByUserId(subscrUserId);
 	}
 
 	/**
