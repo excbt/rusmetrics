@@ -107,7 +107,8 @@ angular.module('portalNMK')
 
         //define columns
         $scope.dtColumns = [
-            DTColumnBuilder.newColumn('id')
+            DTColumnBuilder.newColumn('contEventType.name').notVisible()
+            ,DTColumnBuilder.newColumn('message').notVisible()
             ,DTColumnBuilder.newColumn('contEventType.name').withTitle('Тип').withClass($scope.tableDef.columns[0].headerClass)
             .renderWith(function(data, type, full){
                 if (full.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
@@ -175,30 +176,28 @@ angular.module('portalNMK')
       
       //function get notice details and show notice card to user
         $scope.getNotice = function(info){
-            var tmp = $scope.data;
-            if ((tmp==[])||(typeof tmp == 'undefined')){
-                return;
-            };
-            for(var i=0; i<tmp.length; i++){
-                if (info.id == tmp[i].id){
-                    $scope.currentObject = {};
-                    $scope.currentObject.noticeType = tmp[i].contEventType.name;
-                    $scope.currentObject.noticeText = tmp[i].message;
-                    if (($scope.objects == []) || ($scope.objects.length==0)||(typeof $scope.objects=='undefined')){
-                         $scope.currentObject.noticeObjectName = info.contObjectId;
-                    }else{
-                        for (var i=0; i<$scope.objects.length; i++){                   
-                                if ($scope.objects[i].id == info.contObjectId ){
-                                    $scope.currentObject.noticeObjectName = $scope.objects[i].fullName;
-                                };   
-                            }  
-                    }          
-                    $scope.currentObject.noticeDate = info.eventTime;
-                    $scope.currentObject.noticeZpoint = info.contServiceType;
-                    $('#showNoticeModal').modal();
-                    break;
-                };
-            };
+            
+            $scope.currentObject = {};
+            $scope.currentObject.noticeType = info.contEventType.name;
+            $scope.currentObject.noticeText = info.message;
+            if (($scope.objects == []) || ($scope.objects.length==0)||(typeof $scope.objects=='undefined')){
+                 $scope.currentObject.noticeObjectName = info.contObjectId;
+            }else{
+                for (var i=0; i<$scope.objects.length; i++){                   
+                        if ($scope.objects[i].id == info.contObjectId ){
+                            $scope.currentObject.noticeObjectName = $scope.objects[i].fullName;
+                        };   
+                    }  
+            }          
+            $scope.currentObject.noticeDate = info.eventTime;
+            switch (info.contServiceType)
+                    {
+                            case "heat" : $scope.currentObject.noticeZpoint = "ТС"; break;
+                            case "hw" : $scope.currentObject.noticeZpoint = "ГВС"; break;
+                            case "cw" : $scope.currentObject.noticeZpoint = "ХВ"; break;
+                            default: $scope.currentObject.noticeZpoint  = info.contServiceType;
+                    }
+            $('#showNoticeModal').modal();     
         };
         
         function rowCallback(nRow, aData, iDisplayIndex, iDisplayIndexFull){
