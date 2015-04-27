@@ -10,7 +10,7 @@
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover">
     <tr class="info">
         <th class="col-md-1">
-            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="">Добавить</i></div>
+            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="" data-target="#editTariffModal" data-toggle="modal">Добавить</i></div>
         </th>
 
         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
@@ -136,51 +136,70 @@
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea id="inputDescription" placeholder="Описание" cols="51" ng-model="currentObject.tariffPlanDescription"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="textAlign_left"><textarea id="inputComment" placeholder="Комментарий" cols="51" ng-model="currentObject.tariffPlanComment"></textarea>
+                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputType">Вид услуги</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputType" style="width:329px;" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputRSO">РСО</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><select id="inputRSO" style="width:329px;" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
+                                <td class="col-sm-9 textAlign_left"><select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputOption">Опция</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9"><select id="inputOption" style="width:329px;" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                <td class="textAlign_left col-sm-9"><select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
                                     </select>
                                 </td>
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Срок действия с:</label>
+                                <td class="col-sm-3"><label for="inputStartDate">Срок действия</label>
                                 </td>
                                 <td class="textAlign_left col-sm-9">  
-                                    <input class="marginRight28" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat">
-                                    <label for="inputEndDate">по:</label><input class="marginLeft15" type="date" id="inputEndDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat">
+                                    
+                                                <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                                <div class="col-sm-5 noPadding">
+                                                    <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
+                                                </div>    
+                                                <div class="col-sm-1 paddingTop10 paddingLeft5"><label>по</label></div>
+                                                <div class="col-sm-5 paddingLeft10">
+                                                    <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
+                                                </div>
+                                    
+                                    
+<!--
+                                    <input class="marginRight28 form-control" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="startDateFormat">
+                                    <label for="inputEndDate">по:</label><input class="marginLeft15 form-control" type="date" id="inputEndDate" placeholder="дд.ММ.гггг"  ng-model="endDateFormat">
+-->
                                 </td>
                                 
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-6"><label for="inputValue">Стоимость</label>
+                                <td class="col-sm-3"><label for="inputValue">Стоимость</label>
                                 </td>
-                                <td class="col-sm-6 textAlign_left"><input type="text" id="inputValue" placeholder="" size="4" ng-model="currentObject.tariffPlanValue"> руб <sub>(копейки указываются через точку)</sub> 
+                                <td class="col-sm-9 textAlign_left">
+                                    <div class="col-sm-3 noPadding">
+                                        <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
+                                    </div>
+                                    <div class="col-sm-9 paddingTop10">
+                                        руб <sub>(копейки указываются через точку)</sub> 
+                                    </div>    
                                 </td>
                             </tr>
                             

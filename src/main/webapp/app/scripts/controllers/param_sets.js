@@ -30,6 +30,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             var newObjects = [];
             var newObject = {};
             for (var i = 0; i<data.length; i++){
+                if (!data[i]._enabled){
+                    continue;
+                };
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;

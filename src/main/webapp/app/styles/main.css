@@ -216,6 +216,14 @@ input[type="radio"]{
     padding-left: 20px;
 }
 
+.paddingLeft5 {
+    padding-left: 5px;
+}
+
+.paddingLeft10 {
+    padding-left: 10px;
+}
+
 .onlyPaddingLeft15 {
     padding-bottom: 0;
     padding-top: 0;
@@ -471,6 +479,7 @@ a.list-group-item:focus {
 .excbt_inputFormControl {
     font-size: 12px;
     height: 24px;
+    padding: 5px;
 }
 
 .excbt_selectObjectWindow > .modal-backdrop {
