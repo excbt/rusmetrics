@@ -143,7 +143,8 @@ public class TariffPlanService implements SecuredRoles {
 		
 		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
-		tariffPlan.setSubscriber(currentRec.getSubscriber());		
+		tariffPlan.setSubscriber(currentRec.getSubscriber());
+		tariffPlan.setContObject(currentRec.getContObject());
 		
 		return tariffPlanRepository.save(tariffPlan);
 	}

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
@@ -30,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -58,6 +60,9 @@ public class TariffPlanController extends WebApiController {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private ContObjectService contObjectService;
+	
 	/**
 	 * 
 	 * @return
@@ -181,9 +186,10 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOneDefault(
+	public ResponseEntity<?> createOne(
 			@RequestParam("rsoOrganizationId") Long rsoOrganizationId,
 			@RequestParam("tariffTypeId") Long tariffTypeId,
+			@RequestParam(value = "contObjectId", required = false) Long contObjectId,
 			@RequestBody TariffPlan tariffPlan, HttpServletRequest request) {
 
 		checkNotNull(tariffPlan);
@@ -212,6 +218,15 @@ public class TariffPlanController extends WebApiController {
 				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
 			}
 			tariffPlan.setTariffType(tt);
+		}
+		
+		
+		if (contObjectId != null) {
+			ContObject co = contObjectService.findOne(contObjectId);
+			if (co == null) {
+				return ResponseEntity.badRequest().body("Invalid contObjectId");
+			}
+			tariffPlan.setContObject(co);
 		}
 		
 		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
