@@ -5,6 +5,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -12,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
 
@@ -50,9 +54,13 @@ public class TariffPlan extends AbstractAuditableModel  {
 	@JoinColumn(name = "tariff_type_id")
 	private TariffType tariffType;
 	
-	@ManyToOne
-	@JoinColumn(name = "tariff_option")
+	@ManyToOne (fetch = FetchType.EAGER)
+	@JoinColumn(name = "tariff_option", insertable = false, updatable = false)
 	private TariffOption tariffOption;
+	
+	@Enumerated(EnumType.STRING)	
+	@Column(name="tariff_option")
+	private TariffOptionKey tariffOptionKey;
 	
 	@Column(name = "tariff_plan_value")
 	private BigDecimal tariffPlanValue;
@@ -162,6 +170,14 @@ public class TariffPlan extends AbstractAuditableModel  {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public TariffOptionKey getTariffOptionKey() {
+		return tariffOptionKey;
+	}
+
+	public void setTariffOptionKey(TariffOptionKey tariffOptionKey) {
+		this.tariffOptionKey = tariffOptionKey;
 	}
 	
 }

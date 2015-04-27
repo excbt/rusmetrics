@@ -7,4 +7,9 @@ public class TariffPlanConstant {
 	private TariffPlanConstant() {
 		
 	}
+	
+	
+	public enum TariffOptionKey {
+		DEFAULT, PREFERENTIAL
+	}
 }
