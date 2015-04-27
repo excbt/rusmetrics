@@ -1,8 +1,13 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URI;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
@@ -25,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -52,6 +59,9 @@ public class TariffPlanController extends WebApiController {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private ContObjectService contObjectService;
 
 	/**
 	 * 
@@ -111,7 +121,7 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(
+	public ResponseEntity<?> updateOneDefault(
 			@PathVariable("tariffId") long tariffId,
 			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
 			@RequestParam(value = "tariffTypeId", required = false) Long tariffTypeId,
@@ -127,6 +137,10 @@ public class TariffPlanController extends WebApiController {
 
 		if (tariffPlan.isNew()) {
 			return ResponseEntity.badRequest().build();
+		}
+
+		if (tariffPlan.getTariffOptionKey() == null) {
+			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
@@ -170,13 +184,66 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOneDefault(
-			@PathVariable("tariffId") long tariffId,
-			@RequestParam("rsoOrganizationId") long rsoOrganizationId,
-			@RequestParam("contObjectId") long contObjectId,
-			@RequestParam("tariffTypeId") long tariffTypeId,
-			@RequestBody TariffPlan tariffPlan) {
-		return ResponseEntity.badRequest().build();
+	public ResponseEntity<?> createOne(
+			@RequestParam("rsoOrganizationId") Long rsoOrganizationId,
+			@RequestParam("tariffTypeId") Long tariffTypeId,
+			@RequestParam(value = "contObjectId", required = false) Long contObjectId,
+			@RequestBody TariffPlan tariffPlan, HttpServletRequest request) {
+
+		checkNotNull(tariffPlan);
+		checkArgument(tariffPlan.isNew());
+		checkNotNull(rsoOrganizationId > 0);
+		checkNotNull(tariffTypeId > 0);
+
+		if (tariffPlan.getTariffOptionKey() == null) {
+			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
+		}
+
+		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
+			Organization rso = organizationRepository
+					.findOne(rsoOrganizationId);
+			if (rso == null) {
+				return ResponseEntity.badRequest().body(
+						"Invalid rsoOrganizationId");
+			}
+			tariffPlan.setRso(rso);
+		}
+
+		if (tariffTypeId != null && tariffTypeId > 0) {
+			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
+			if (tt == null) {
+				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
+			}
+			tariffPlan.setTariffType(tt);
+		}
+
+		if (contObjectId != null) {
+			ContObject co = contObjectService.findOne(contObjectId);
+			if (co == null) {
+				return ResponseEntity.badRequest().body("Invalid contObjectId");
+			}
+			tariffPlan.setContObject(co);
+		}
+
+		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
+
+		TariffPlan resultEntity = null;
+
+		try {
+			resultEntity = tariffPlanService.createOne(tariffPlan);
+		} catch (AccessDeniedException e) {
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		} catch (TransactionSystemException | PersistenceException e) {
+			logger.error("Error during create entity TariffPlan (id={}): {}",
+					tariffPlan.getId(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.build();
+		}
+
+		URI location = URI.create(request.getRequestURI() + "/"
+				+ resultEntity.getId());
+
+		return ResponseEntity.created(location).build();
 	}
 
 }
