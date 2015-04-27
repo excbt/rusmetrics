@@ -41,9 +41,8 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 
 		List<SubscrRole> subscrRoles = subscrUserService.selectSubscrRoles(user
 				.getId());
-		assertTrue(subscrRoles.size() == 1);
+		assertTrue(subscrRoles.size() == 2);
 		
-		assertEquals(SUBSCR_ROLE_ADMIN, subscrRoles.get(0).getRoleName());
 		// subscrOrgs.get(0)
 
 	}

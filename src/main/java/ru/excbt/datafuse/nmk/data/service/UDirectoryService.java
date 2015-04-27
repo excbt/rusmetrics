@@ -93,7 +93,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectory save(final UDirectory entity) {
 		checkNotNull(entity);
 		Subscriber currentSubscriber = currentSubscrRoleService.getSubscriber();
@@ -135,7 +135,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * @param directoryId
 	 */
 	@Transactional
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(final long directoryId) {
 		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		

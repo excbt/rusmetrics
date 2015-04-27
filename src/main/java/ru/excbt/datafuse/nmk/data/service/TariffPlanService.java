@@ -82,7 +82,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * 
 	 * @param rsoOrganizationId
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void initDefaultTariffPlan(long rsoOrganizationId) {
 		List<TariffPlan> currentTariffPlan = tariffPlanRepository
 				.selectDefaultTariffPlan(rsoOrganizationId);
@@ -121,7 +121,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * 
 	 * @param rsoOrganizationId
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteDefaultTariffPlan(long rsoOrganizationId) {
 		tariffPlanRepository.deleteDefaultTariffPlan(
 				currentSubscriberService.getSubscriberId(), rsoOrganizationId);
@@ -133,7 +133,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan updateOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
@@ -163,7 +163,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan createOne(TariffPlan tariffPlan) {
 
 		checkNotNull(tariffPlan);
@@ -183,7 +183,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
 	public void deleteOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
@@ -196,7 +196,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long tariffPlanId) {
 		if (!canModifyTariffPlanId(tariffPlanId)) {
 			throw new PersistenceException(

@@ -24,7 +24,7 @@ public class UDirectoryParamService implements SecuredRoles {
 	private UDirectoryParamRepository repository;
 	
 	@Transactional
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectoryParam save(UDirectoryParam arg) {
 		checkNotNull(arg);
 		
@@ -49,13 +49,13 @@ public class UDirectoryParamService implements SecuredRoles {
 	}
 
 	@Transactional
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(UDirectoryParam arg) {
 		repository.delete(arg);
 	}
 
 	@Transactional
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(long id) {
 		if (!repository.exists(id)) {
 			throw new PersistenceException();

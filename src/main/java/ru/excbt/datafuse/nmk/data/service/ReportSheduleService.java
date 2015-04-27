@@ -63,7 +63,7 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @param reportShedule
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
 	public ReportShedule createOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
 		checkArgument(reportShedule.isNew());
@@ -119,7 +119,7 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @param reportShedule
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportShedule updateOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
 		checkArgument(!reportShedule.isNew());
@@ -176,7 +176,7 @@ public class ReportSheduleService implements SecuredRoles {
 		return result;
 	}
 
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
 	public void deleteOne(long reportSheduleId) {
 		reportSheduleRepository.delete(reportSheduleId);
 	}

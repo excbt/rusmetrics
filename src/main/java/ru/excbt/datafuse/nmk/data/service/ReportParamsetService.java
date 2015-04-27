@@ -54,7 +54,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
@@ -69,7 +69,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity, Long[] contObjectIds) {
 
 		ReportParamset result = createOne(entity);
@@ -84,7 +84,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportParamset entity) {
 		checkNotNull(entity);
 		if (checkCanUpdate(entity.getId())) {
@@ -138,7 +138,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
 			reportParamsetRepository.delete(id);

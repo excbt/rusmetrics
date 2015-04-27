@@ -44,7 +44,8 @@ public class ContManagementService implements SecuredRoles {
 	 * @param beginDate
 	 * @return
 	 */
-	@Secured({ SUBSCR_ROLE_USER, SUBSCR_ROLE_ADMIN })
+
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	@Transactional
 	public ContManagement createManagement(long contObjectId,
 			long organizationId, final DateTime beginDate) {
