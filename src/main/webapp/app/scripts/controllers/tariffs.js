@@ -1,6 +1,6 @@
 'use strict';
 var app = angular.module('portalNMK');
-app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, crudGridDataFactory, notificationFactory){
+app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
     $scope.welcome = "Tariffs controller";
     
     $scope.crudTableName = "../api/subscr/tariff";
@@ -48,9 +48,14 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'n
     $scope.selectedItem = function (item) {
 		var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
+//console.log("===================================");        
+//console.log($scope.currentObject.startDate); 
+        
         $scope.startDateFormat = ($scope.currentObject.startDate == null) ? null : new Date($scope.currentObject.startDate);
         $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate);
-       
+//console.log($scope.currentObject.endDate);   
+//console.log($scope.endDateFormat);        
+//console.log("===================================>>>>>>>>>>>>>>>>>>>>>>>");               
      };
     
     $scope.setOrderBy = function (field) {
@@ -124,15 +129,36 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', 'crudGridDataFactory', 'n
     $scope.getTariffOptions();
     
     $scope.saveObject = function(){
-        $scope.currentObject.startDate = (new Date($scope.startDateFormat)) || $scope.currentObject.startDate;
-        $scope.currentObject.endDate = (new Date($scope.endDateFormat)) || $scope.currentObject.endDate;
+console.log("Before.$scope.currentObject.endDate = "+$scope.currentObject.endDate);         
+        
+        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || $scope.currentObject.startDate;
+        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;
 console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
 console.log("$scope.endDateFormat = "+$scope.endDateFormat);  
 console.log("$scope.currentObject.startDate = "+$scope.currentObject.startDate);  
 console.log("$scope.startDateFormat = "+$scope.startDateFormat);   
 console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.currentObject.endDate);           
-console.log("In saving...");        
-        crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
+console.log("In saving...");
+        if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')){
+            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
+        }else{
+            saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({}, $scope.currentObject, successPostCallback, errorCallback);
+        };
+    };
+    
+    $scope.addTariff = function(){
+        $scope.currentObject = {};
+        $scope.startDateFormat = null;
+        $scope.endDateFormat = null;
+    };
+    
+    var saveTariffOnServer = function(url, rsoOrganizationId, tariffTypeId){
+        console.log("New save="+url);
+        console.log((new Date(null)));
+        return $resource(url, {},{
+            save: {method: 'POST', params:{rsoOrganizationId: rsoOrganizationId, tariffTypeId: tariffTypeId}}
+        })
+        
     };
     
 }]);

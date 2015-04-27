@@ -10,7 +10,7 @@
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover">
     <tr class="info">
         <th class="col-md-1">
-            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="" data-target="#editTariffModal" data-toggle="modal">Добавить</i></div>
+            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="addTariff()" data-target="#editTariffModal" data-toggle="modal">Добавить</i></div>
         </th>
 
         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
