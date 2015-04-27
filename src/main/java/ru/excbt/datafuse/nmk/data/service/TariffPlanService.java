@@ -138,6 +138,7 @@ public class TariffPlanService implements SecuredRoles {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
 		checkNotNull(tariffPlan.getId());
+		checkNotNull(tariffPlan.getTariffOptionKey(), "tariffOptionKey is NULL");
 		
 		TariffPlan currentRec = tariffPlanRepository.findOne(tariffPlan.getId());
 		
@@ -160,11 +161,11 @@ public class TariffPlanService implements SecuredRoles {
 
 		checkNotNull(tariffPlan);
 		checkArgument(tariffPlan.isNew());
-		checkNotNull(tariffPlan.getSubscriber());
-		checkNotNull(tariffPlan.getTariffOption());
-		checkNotNull(tariffPlan.getTariffType());
-		checkNotNull(tariffPlan.getStartDate());
-		checkNotNull(tariffPlan.getRso());
+		checkNotNull(tariffPlan.getSubscriber(), "subscriber is NULL");
+		checkNotNull(tariffPlan.getTariffOptionKey(), "tariffOptionKey is NULL");
+		checkNotNull(tariffPlan.getTariffType(), "tariffType is NULL");
+		checkNotNull(tariffPlan.getStartDate(), "startDate is NULL");
+		checkNotNull(tariffPlan.getRso(), "rso is NULL");
 		
 		return tariffPlanRepository.save(tariffPlan);
 	}

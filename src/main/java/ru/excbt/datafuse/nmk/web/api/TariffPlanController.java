@@ -62,7 +62,7 @@ public class TariffPlanController extends WebApiController {
 
 	@Autowired
 	private ContObjectService contObjectService;
-	
+
 	/**
 	 * 
 	 * @return
@@ -140,10 +140,9 @@ public class TariffPlanController extends WebApiController {
 		}
 
 		if (tariffPlan.getTariffOptionKey() == null) {
-			return ResponseEntity.badRequest().body(
-					"Invalid TariffOptionKey");
-		}		
-		
+			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
+		}
+
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationRepository
 					.findOne(rsoOrganizationId);
@@ -163,7 +162,6 @@ public class TariffPlanController extends WebApiController {
 			tariffPlan.setTariffType(tt);
 		}
 
-		
 		TariffPlan resultEntity = null;
 
 		try {
@@ -193,15 +191,14 @@ public class TariffPlanController extends WebApiController {
 			@RequestBody TariffPlan tariffPlan, HttpServletRequest request) {
 
 		checkNotNull(tariffPlan);
-		checkArgument(!tariffPlan.isNew());
-		checkArgument(rsoOrganizationId > 0);
-		checkArgument(tariffTypeId > 0);
+		checkArgument(tariffPlan.isNew());
+		checkNotNull(rsoOrganizationId > 0);
+		checkNotNull(tariffTypeId > 0);
 
 		if (tariffPlan.getTariffOptionKey() == null) {
-			return ResponseEntity.badRequest().body(
-					"Invalid TariffOptionKey");
+			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
 		}
-		
+
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
 			Organization rso = organizationRepository
 					.findOne(rsoOrganizationId);
@@ -219,8 +216,7 @@ public class TariffPlanController extends WebApiController {
 			}
 			tariffPlan.setTariffType(tt);
 		}
-		
-		
+
 		if (contObjectId != null) {
 			ContObject co = contObjectService.findOne(contObjectId);
 			if (co == null) {
@@ -228,7 +224,7 @@ public class TariffPlanController extends WebApiController {
 			}
 			tariffPlan.setContObject(co);
 		}
-		
+
 		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
 
 		TariffPlan resultEntity = null;
@@ -247,7 +243,7 @@ public class TariffPlanController extends WebApiController {
 		URI location = URI.create(request.getRequestURI() + "/"
 				+ resultEntity.getId());
 
-		return ResponseEntity.created(location).body(resultEntity);
+		return ResponseEntity.created(location).build();
 	}
 
 }
