@@ -20,7 +20,7 @@ public class FullUserInfo implements Serializable {
 
 	@Id
 	@Column(name="id")
-	private long id;	
+	private Long id;	
 	
 	@Column(name = "user_name")
 	private String userName;
@@ -40,6 +40,22 @@ public class FullUserInfo implements Serializable {
 	@Column(name = "subscriber_id")
 	private Long subscriberId;
 
+	public FullUserInfo() {
+		
+	}
+	
+	public FullUserInfo(FullUserInfo src) {
+		if (src != null) {
+			this.id = src.id;
+			this.userName = src.userName;
+			this.firstName = src.firstName;
+			this.lastName = src.lastName;
+			this.version = src.version;
+			this._system = src._system;			
+			this.subscriberId = src.subscriberId;
+		}
+	}	
+	
 	public int getVersion() {
 		return version;
 	}
@@ -56,15 +72,11 @@ public class FullUserInfo implements Serializable {
 		this.userName = userName;
 	}
 
-	public FullUserInfo() {
-
-	}
-
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
