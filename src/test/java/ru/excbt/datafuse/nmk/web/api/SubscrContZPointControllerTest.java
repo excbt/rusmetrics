@@ -30,4 +30,12 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 		testJsonGet(url);
 		
 	}
+	
+	
+	@Test
+	public void testGetZPointV_01() throws Exception {
+		//http://localhost:8080/nmk-p/api/subscr/contObjects/20118678/contZPointsEx Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+		testJsonGet("/api/subscr/contObjects/20118678/contZPointsEx ");
+	}
+	
 }
