@@ -10,7 +10,7 @@
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover">
     <tr class="info">
         <th class="col-md-1">
-            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="addTariff()" data-target="#editTariffModal" data-toggle="modal">Добавить</i></div>
+            <div class="btn-toolbar"><i class="btn btn-xs btn-default" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить</i></div>
         </th>
 
         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
@@ -27,7 +27,7 @@
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">
-                    <i class="btn btn-xs btn-default glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#editTariffModal" data-toggle="modal"></i>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-edit" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
                 </div>
             </div>
         </td>
@@ -111,93 +111,139 @@
 <!-- Edit tariff-->
 <div id="editTariffModal" class="modal fade" role="dialog"
 	aria-labelledby="editTariffLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content" ng-class="{'modalWindow_wide': set_of_objects_flag}">
 		<div class="modal-header">
 			<h3 id="editTariffLabel">
 				Тариф <input type="text" ng-model="currentObject.tariffPlanName">
 			</h3>
 		</div>
-		<div class="modal-body ">         
-            <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputComment" >Комментарий</label>
-                                </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputType">Вид услуги</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
-                                        <select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
-                                        </select>
-                                    </div>    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputRSO">РСО</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
-                                        <select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
-                                        </select>
-                                    </div>    
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputOption">Опция</label>
-                                </td>
-                                <td class="textAlign_left col-sm-9">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffOption.keyname==null)}">
-                                        <select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            
-                            <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Срок действия</label>
-                                </td>
-                                <td class="textAlign_left col-sm-9">  
-                                    
-                                                <div class="col-sm-1 paddingTop10"><label>c</label></div>
-                                                <div class="col-sm-5 noPadding">
-                                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
-                                                        <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
-                                                    </div>    
-                                                </div>    
-                                                <div class="col-sm-1 paddingTop10 paddingLeft5"><label>по</label></div>
-                                                <div class="col-sm-5 paddingLeft10">
-                                                    <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
-                                                </div>
-                                </td>                         
-                            </tr>                           
-                            <tr>
-                                <td class="col-sm-3"><label for="inputValue">Стоимость</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left">
-                                    <div class="col-sm-3 noPadding">
-                                        <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
-                                    </div>
-                                    <div class="col-sm-9 paddingTop10">
-                                        руб <sub>(копейки указываются через точку)</sub> 
-                                    </div>    
-                                </td>
-                            </tr> 
-                        </table>
-                    </div>        
-                </div>     
-            </div>        		
+		<div class="modal-body "> 
+            
+            <div role="tabpanel">
+
+              <!-- Навигационная полоса для варианта отчета-->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="main_properties_tab"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;">Выбор объектов</a></li>
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Основные свойства-->
+                <div role="tabpanel" class="tab-pane fade in active" id="main_properties"> 
+            
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+                            <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                                    <tr>
+                                        <td><label for="inputDescription" >Описание</label>
+                                        </td>
+                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="inputComment" >Комментарий</label>
+                                        </td>
+                                        <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType">Вид услуги</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
+                                                <select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                                </select>
+                                            </div>    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputRSO">РСО</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
+                                                <select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
+                                                </select>
+                                            </div>    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputOption">Опция</label>
+                                        </td>
+                                        <td class="textAlign_left col-sm-9">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffOption.keyname==null)}">
+                                                <select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputStartDate">Срок действия</label>
+                                        </td>
+                                        <td class="textAlign_left col-sm-9">  
+
+                                                        <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                                        <div class="col-sm-5 noPadding">
+                                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
+                                                                <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
+                                                            </div>    
+                                                        </div>    
+                                                        <div class="col-sm-1 paddingTop10 paddingLeft5"><label>по</label></div>
+                                                        <div class="col-sm-5 paddingLeft10">
+                                                            <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
+                                                        </div>
+                                        </td>                         
+                                    </tr>                           
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputValue">Стоимость</label>
+                                        </td>
+                                        <td class="col-sm-9 textAlign_left">
+                                            <div class="col-sm-3 noPadding">
+                                                <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
+                                            </div>
+                                            <div class="col-sm-9 paddingTop10">
+                                                руб <sub>(копейки указываются через точку)</sub> 
+                                            </div>    
+                                        </td>
+                                    </tr> 
+                                </table>
+                            </div>        
+                        </div>     
+                    </div>   <!--container fluid-->   
+                                      </div>    
+                <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
+                    <div class="container-fluid">
+                        <div class="row-fluid">
+               
+                             <div class="col-md-6 object_list" id="object_list">
+                                 <div><label>Доступные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped" ng-disabled="currentObject.common">
+                                        <tr ng-repeat="object in availableObjects">
+                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-md-6 object_list" id="object_list">
+                                <div><label>Выбранные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped" >
+                                        <tr ng-repeat="object in selectedObjects">
+                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+              </div>
+            </div>
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">

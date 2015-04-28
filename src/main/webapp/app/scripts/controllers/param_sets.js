@@ -180,10 +180,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.currentSign = 9999;
         $scope.selectedObjects = [];
         //Устанавливаем активность вкладок по дефолту: Основные свойства - активная, Выбор объектов - неактивная
-        $('#main_properties_tab').addClass("active");
-        $('#main_properties').addClass("active");
-        $('#set_of_objects_tab').removeClass("active");
-        $('#set_of_objects').removeClass("active");
+//        $('#main_properties_tab').addClass("active");
+//        $('#main_properties').addClass("active");
+//        $('#set_of_objects_tab').removeClass("active");
+//        $('#set_of_objects').removeClass("active");
         
     };
     
@@ -193,7 +193,15 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.currentReportType.reportTypeName=object.reportTypeName;
         $scope.currentReportType.suffix=object.suffix;
     };
+    
+    var activateMainPropertiesTab = function(){
+        $('#main_properties_tab').addClass("active");
+        $('#set_of_objects_tab').removeClass("active");
+        $('#createParamsetModal').modal();
+    };
+    
     $scope.addParamSet = function(object){
+        $scope.set_of_objects_flag=false;
         $scope.setCurrentReportType(object);
         $scope.currentObject = {};
         $scope.createByTemplate_flag = false;
@@ -202,9 +210,16 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.getTemplates();
         $scope.getAvailableObjects(0); //Ноль используем для вновь созданных объектов - у нас нет другого способа получить доступные объекты для нового парамсета.
         $scope.selectedObjects = [];
+
+//settings for activate tab "Main options", when create window opened.        
+//        $('#main_properties_tab').addClass("active");
+//        $('#set_of_objects_tab').removeClass("active");
+//        $('#createParamsetModal').modal();
+        activateMainPropertiesTab();
     };
     $scope.editParamSet =function(parentObject,object){
 //        $scope.setCurrentReportType(parentObject);
+        
         $scope.selectedItem(parentObject, object);
         $scope.editParamset_flag = true;
         $scope.createByTemplate_flag = false;
@@ -216,6 +231,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
         }
+    //settings for activate tab "Main options", when edit window opened.
+        $scope.set_of_objects_flag=false;
+//        $('#main_properties_tab').addClass("active");
+//        $('#set_of_objects_tab').removeClass("active");
+//        $('#createParamsetModal').modal();
+        activateMainPropertiesTab();
     };
     
      //Account objects

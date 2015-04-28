@@ -37,11 +37,13 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         object.editMode = !object.editMode;
     };
     
+    
     $scope.selectedItem = function (item) {
 		var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.startDateFormat = ($scope.currentObject.startDate == null) ? null : new Date($scope.currentObject.startDate);
-        $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate);             
+        $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate);  
+
      };
     
     $scope.setOrderBy = function (field) {
@@ -136,10 +138,37 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         };
     };
     
+    var activateMainPropertiesTab = function(){
+        $('#main_properties_tab').addClass("active");
+        $('#set_of_objects_tab').removeClass("active");
+        $('#editTariffModal').modal();
+    };
+    
     $scope.addTariff = function(){
+        $scope.availableObjects = [];
+        $scope.selectedObjects = [];
         $scope.currentObject = {};
         $scope.startDateFormat = null;
         $scope.endDateFormat = null;
+        $scope.getAvailableObjects(0);
+        
+        $scope.set_of_objects_flag=false;
+        
+        //settings for activate tab "Main options", when create window opened.        
+//        $('#main_properties_tab').addClass("active");
+//        $('#set_of_objects_tab').removeClass("active");
+//        $('#editTariffModal').modal();
+        activateMainPropertiesTab();
+    };
+    
+    $scope.editTariff = function(object){
+        $scope.selectedItem(object);
+        $scope.getAvailableObjects(0);
+//        $scope.getSelectedObjects();
+        
+        //settings for activate tab "Main options", when edit window opened. 
+        $scope.set_of_objects_flag=false;
+        activateMainPropertiesTab();
     };
     
     var saveTariffOnServer = function(url, rsoOrganizationId, tariffTypeId){
@@ -159,6 +188,81 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         ($scope.currentObject.tariffOption.keyname==null) ||
         ($scope.currentObject.rso.id==null) ||
         ($scope.currentObject.tariffType.id==null));
+    };
+    
+    
+    //tariff objects
+    $scope.availableObjects = [];
+    $scope.selectedObjects = [];
+    
+    $scope.getAvailableObjects = function(tariffId){  
+        $scope.crudTableName1 = "../api/reportParamset";
+        var table=$scope.crudTableName1+"/"+tariffId+"/contObject/available";        
+        crudGridDataFactory(table).query(function(data){           
+            $scope.availableObjects = data;                     
+        });        
+    };
+//    $scope.getAvailableObjects();
+    $scope.getSelectedObjects = function(){
+        var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
+        crudGridDataFactory(table).query(function(data){
+            $scope.selectedObjects = data;
+        });
+    };
+    
+    var objectPerform = function(addObject_flag, currentObjectId){
+        var el = {};
+        var arr1 = [];
+        var arr2 = [];
+        var resultArr = [];
+        if ($scope.addObject_flag){           
+            arr1 = $scope.availableObjects;
+            arr2 = $scope.selectedObjects; 
+            resultArr = arr2;
+        }else{             
+            arr2 = $scope.availableObjects;
+            arr1 = $scope.selectedObjects;
+            resultArr = arr1;
+        };
+       
+        for (var i=0; i<arr1.length;i++){
+            if (arr1[i].id == $scope.currentObjectId) {               
+                el = angular.copy(arr1[i]);
+                el.selected = false;
+                arr1.splice(i,1);
+                break;
+            };
+        }
+        arr2.push(el);
+        
+        var tmp = resultArr.map(function(elem){
+            return elem.id;
+        });     
+        return tmp; //Возвращаем массив Id-шников выбранных объектов
+    };
+    
+    
+    $scope.getResource = function(url, id) {
+        return $resource(url, {
+            }, {
+                update: {method: 'PUT', params:{reportParamsetId:id}},
+                addObject: {method: 'POST', params:{contObjectId: id}},
+                removeObject: {method: 'DELETE'}
+            });
+    };
+ 
+    $scope.addObject = function(object){
+        $scope.addObject_flag = true;
+        $scope.currentObjectId = object.id;
+        objectPerform(true, object.id);
+
+    };
+    
+    $scope.removeObject = function(object){
+        $scope.addObject_flag = false;
+        $scope.currentObjectId = object.id;
+        objectPerform(false, object.id);
+
     };
     
 }]);
