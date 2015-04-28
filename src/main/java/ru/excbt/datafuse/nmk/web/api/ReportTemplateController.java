@@ -184,6 +184,73 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
+	/** */
+
+	private void deleteInternal(long reportTemplateId) {
+		reportTemplateService.deleteOne(reportTemplateId);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/commerce/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportTemplatesArchiveCommerce(
+			@RequestParam("reportTemplateId") long reportTemplateId) {
+
+		deleteInternal(reportTemplateId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportTemplatesArchiveConsT1(
+			@RequestParam("reportTemplateId") long reportTemplateId) {
+
+		deleteInternal(reportTemplateId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportTemplatesArchiveConsT2(
+			@RequestParam("reportTemplateId") long reportTemplateId) {
+		
+		deleteInternal(reportTemplateId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportTemplatesArchiveConsOld(
+			@RequestParam("reportTemplateId") long reportTemplateId) {
+		
+		deleteInternal(reportTemplateId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/event", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteReportTemplatesArchiveEvent(
+			@RequestParam("reportTemplateId") long reportTemplateId) {
+
+		deleteInternal(reportTemplateId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/** */
 	/**
 	 * 
 	 * @return
@@ -433,6 +500,5 @@ public class ReportTemplateController extends WebApiController {
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
-
 
 }
