@@ -48,22 +48,26 @@
 				<li><a href="#/"
 					title='help'><p
 							class="displayInLine"> <b>Подсказка</b>
-				</p></a></li>			
-			
-				
+				</p></a></li>						
 			</ul>
                 
-            <ul class="nav navbar-nav pull-right">
+            <ul class="nav navbar-nav pull-right">	
 				
-				<li><a href="#/private/"
-					title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false;showSettings=false"><p
-							class="displayInLine"> <b>Личный кабинет</b>
-				</p></a></li>			
-			
-				<li><a href="../logout"
-					title='logout'><p
-							class="displayInLine"> <b>Выход </b>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href=""><p
+							class="displayInLine"> <b>{{userInfo.userName}}</b>
+						</p></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#/private/"
+                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false;showSettings=false"><p> <b>Личный кабинет</b> 
+                        </p></a></li>			
+
+                        <li><a href="../logout"
+                            title='logout'><p> <b>Выход </b>
 						</p></a></li>
+                    </ul>    
+                    
+                </li>
 			</ul>					
 			</div>
   </div>  

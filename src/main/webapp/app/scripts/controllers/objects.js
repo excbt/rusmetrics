@@ -1,8 +1,16 @@
 'use strict';
 
 angular.module('portalNMK')
-.controller('ObjectsCtrl', function($scope){
-console.log("loading ObjectsCtrl.");    
+.controller('ObjectsCtrl', function($scope, $rootScope, $http){
+//console.log("loading ObjectsCtrl.");  
+    var url = "../api/systemInfo/fullUserInfo";
+    $http.get(url)
+        .success(function(data, satus, headers, config){
+            $rootScope.userInfo = data;
+//console.log($rootScope.userInfo);        
+        })
+        .error();
+//    $rootScope.userInfo = 
 //     $scope.navPlayerDates = {
 //                            startDate : moment().startOf('day'),
 //                            endDate : moment().endOf('day'),
