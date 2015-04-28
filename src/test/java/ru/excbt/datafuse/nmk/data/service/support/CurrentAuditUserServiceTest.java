@@ -5,16 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
-public class CurrentUserServiceTest extends JpaSupportTest {
+public class CurrentAuditUserServiceTest extends JpaSupportTest {
 
 	@Autowired
-	private CurrentUserService currentUserService;
+	private CurrentAuditUserService currentAuditUserService;
 	
 	@Test
-	public void testCurrentUser() {
-		AuditUser au = currentUserService.getCurrentAuditUser();
+	public void testCurrentAuditUser() {
+		AuditUser au = currentAuditUserService.getCurrentAuditUser();
 		//assertNotNull(au);
 	}
 }
