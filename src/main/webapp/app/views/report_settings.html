@@ -38,7 +38,7 @@
 
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">
@@ -115,7 +115,7 @@
                                 <tr>
                                     <td ng-class="column.class">
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
                                         </div>
                                         <div class="col-md-10">
                                             <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
@@ -152,6 +152,8 @@
                                             <div class="col-md-7">     
                                                     в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                             </div>
+                                         </td>
+                                         <td><i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
                                      </tr>
@@ -551,6 +553,55 @@
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete report template-->
+<div id="deleteObjectModal" class="modal fade" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="deleteObjectLabel">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label
+						class="text-warning"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="deleteObject(currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отмена
 							</button>
 						</div>
 					</div>

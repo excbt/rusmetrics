@@ -8,7 +8,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     $scope.columns = [
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
     ];
- 
+    
+    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
+    
     $scope.createParamset_flag = false;
     $scope.editParamset_flag = false;
     $scope.createByTemplate_flag = false;
@@ -71,6 +73,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
 
     var errorCallback = function (e) {
         notificationFactory.error(e.data.ExceptionMessage);
+    };
+    
+    $scope.deleteObject = function (object) {
+        var table = $scope.crudTableName + $scope.currentReportType.suffix;
+        crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
     };
        
     $scope.getParamsets = function(table, type){

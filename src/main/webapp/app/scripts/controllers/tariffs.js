@@ -11,7 +11,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         ,{"name":"tariffPlanValue", "header" : "Значение", "class":"col-md-1"}
         ,{"name":"tariffPlanDescription", "header" : "Описание", "class":"col-md-3"}
     ];
-    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "tariffPlanName", "deleteConfirmationProp":"tariffPlanName"};
+    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "tariffPlanName", "deleteConfirmationProp":"tariffPlanName"};    
     $scope.objects = [];
     $scope.rsos = [];
     $scope.tariffTypes = [];

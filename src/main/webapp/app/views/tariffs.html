@@ -52,7 +52,7 @@
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">                   
-                    <i class="btn btn-xs btn-default glyphicon glyphicon-trash" data-target="#deleteObjectModal" ng-click="selectedItem(object)" data-toggle="modal"></i>
+                    <i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                 </div>
             </div>
         </td>
@@ -73,9 +73,9 @@
 		<div class="modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning"> Вы хотите удалить  
+					<label class="text-warning marginLeft15"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label> 
+					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
 					<label
 						class="text-warning"> ? </label>
 				</p>

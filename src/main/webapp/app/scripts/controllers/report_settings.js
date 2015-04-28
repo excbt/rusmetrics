@@ -15,6 +15,8 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     ];   
     $scope.crudTableName = "../api/reportTemplate"; 
     
+    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
+    
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
@@ -58,6 +60,16 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
 
     var errorCallback = function (e) {
         notificationFactory.error(e.data.ExceptionMessage);       
+    };
+    
+    $scope.selectToDelete = function(parent, object){
+        $scope.setCurrentReportType(parent);
+        $scope.selectedItem(object);
+    };
+    
+    $scope.deleteObject = function (object) {
+        var table = $scope.crudTableName + $scope.currentReportType.suffix;
+        crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
     };
        
     $scope.getTemplates = function(table, type){
