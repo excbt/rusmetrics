@@ -14,13 +14,13 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
 
 @Service
-public class CurrentUserService {
+public class CurrentAuditUserService {
 
 	private final String DEVELOPER_USER_NAME = "developer_user";
 	// private final long DEVELOPER_USER_ID = 19748714L;
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(CurrentUserService.class);
+			.getLogger(CurrentAuditUserService.class);
 
 	private final static AuditUser EMPTY_USER = new AuditUser();
 

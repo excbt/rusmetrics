@@ -40,11 +40,16 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 	}
 
 	public Date getLastDataDate() {
-		return lastDataDate.toDate();
+		return lastDataDate != null ? lastDataDate.toDate() : null;
 	}
 
 	public void setLastDataDate(Date lastDataDate) {
-		this.lastDataDate = new DateTime(lastDataDate);
+		if (lastDataDate != null) {
+			this.lastDataDate = new DateTime(lastDataDate);	
+		} else {
+			this.lastDataDate = null;
+		}
+		
 	}
 
 }

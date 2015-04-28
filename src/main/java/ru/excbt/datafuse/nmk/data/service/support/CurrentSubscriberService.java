@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,11 +26,14 @@ public class CurrentSubscriberService {
 	private static final long SUBSCR_ORG_ID = 728;
 	private static final long NOT_LOGGED_ORG_ID = 728;
 
+	private static final long CLEAR_MAP_AFTER_GET = 100;
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(CurrentSubscriberService.class);
 
 	private final ThreadLocal<Map<String, FullUserInfo>> currentFullUserMap = new ThreadLocal<Map<String, FullUserInfo>>();
 	private final ThreadLocal<Map<String, Subscriber>> subscriberMap = new ThreadLocal<Map<String, Subscriber>>();
+	private final ThreadLocal<AtomicInteger> currentFullUserMapCounter = new ThreadLocal<AtomicInteger>();
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
@@ -38,7 +42,7 @@ public class CurrentSubscriberService {
 	private SubscriberService subscriberService;
 
 	@Autowired
-	private CurrentUserService currentUserService;
+	private CurrentAuditUserService currentAuditUserService;
 
 	@Autowired
 	private FullUserInfoRepository fullUserInfoRepository;
@@ -51,7 +55,14 @@ public class CurrentSubscriberService {
 		if (result == null) {
 			result = new HashMap<>();
 			currentFullUserMap.set(result);
+			currentFullUserMapCounter.set(new AtomicInteger());
 		}
+
+		if (currentFullUserMapCounter.get().incrementAndGet() > CLEAR_MAP_AFTER_GET) {
+			result.clear();
+			currentFullUserMapCounter.get().set(0);
+		}
+
 		return result;
 	}
 
@@ -73,29 +84,10 @@ public class CurrentSubscriberService {
 	 */
 	public long getSubscriberId() {
 
-		AuditUser auditUser = currentUserService.getCurrentAuditUser();
-		checkNotNull(auditUser, "AuditUser from currentUserService is NULL");
-
-		Long userId = auditUser.getId();
-
-		if (userId == null) {
-			return NOT_LOGGED_ORG_ID;
-		}
-
-		checkNotNull(userId);
-
-		FullUserInfo userInfo = getFullUserMap().get(userId.toString());
+		FullUserInfo userInfo = getFullUserInfo();
 
 		if (userInfo == null) {
-			userInfo = fullUserInfoRepository.findOne(currentUserService
-					.getCurrentAuditUser().getId());
-			if (userInfo != null) {
-				em.detach(userInfo);
-				getFullUserMap().put(userId.toString(), userInfo);
-			} else {
-				return NOT_LOGGED_ORG_ID;
-			}
-
+			return NOT_LOGGED_ORG_ID;
 		}
 
 		long result = userInfo.getSubscriberId() != null ? userInfo
@@ -123,4 +115,37 @@ public class CurrentSubscriberService {
 
 		return subscriber;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public FullUserInfo getFullUserInfo() {
+		AuditUser auditUser = currentAuditUserService.getCurrentAuditUser();
+		checkNotNull(auditUser, "AuditUser from currentUserService is NULL");
+
+		Long userId = auditUser.getId();
+
+		if (userId == null) {
+			return null;
+		}
+
+		FullUserInfo userInfo = getFullUserMap().get(userId.toString());
+
+		if (userInfo == null) {
+			userInfo = fullUserInfoRepository.findOne(currentAuditUserService
+					.getCurrentAuditUser().getId());
+			if (userInfo != null) {
+				em.detach(userInfo);
+				getFullUserMap().put(userId.toString(), userInfo);
+			} else {
+				return null;
+			}
+
+		}
+
+		return userInfo != null ? new FullUserInfo(userInfo) : null;
+
+	}
+
 }

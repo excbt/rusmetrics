@@ -75,35 +75,37 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getConsT1ReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT, true,
-						currentSubscriberService.getSubscriberId());
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT,
+						true, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getConsT2ReportParamsetList() {
-		
+
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, true,
-						currentSubscriberService.getSubscriberId());
-		
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
+						true, currentSubscriberService.getSubscriberId());
+
 		return ResponseEntity.ok(reportParamsetList);
 	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getConsReportParamsetList() {
-		
+
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, true,
-						currentSubscriberService.getSubscriberId());
-		
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
+						true, currentSubscriberService.getSubscriberId());
+
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
@@ -143,35 +145,37 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> getArchConsT1ReportParamsetList() {
 
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT, false,
-						currentSubscriberService.getSubscriberId());
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT,
+						false, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getArchConsT2ReportParamsetList() {
-		
+
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, false,
-						currentSubscriberService.getSubscriberId());
-		
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
+						false, currentSubscriberService.getSubscriberId());
+
 		return ResponseEntity.ok(reportParamsetList);
 	}
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getArchConsReportParamsetList() {
-		
+
 		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT, false,
-						currentSubscriberService.getSubscriberId());
-		
+				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
+						false, currentSubscriberService.getSubscriberId());
+
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
@@ -230,7 +234,8 @@ public class ReportParamsetController extends WebApiController {
 
 		ReportParamset resultEntity = null;
 		try {
-			resultEntity = reportParamsetService.updateOne(reportParamset, contObjectIds);
+			resultEntity = reportParamsetService.updateOne(reportParamset,
+					contObjectIds);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -271,7 +276,8 @@ public class ReportParamsetController extends WebApiController {
 
 		ReportParamset resultEntity = null;
 		try {
-			resultEntity = reportParamsetService.createOne(reportParamset, contObjectIds);
+			resultEntity = reportParamsetService.createOne(reportParamset,
+					contObjectIds);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -297,7 +303,7 @@ public class ReportParamsetController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
 	}
 
 	/**
@@ -311,8 +317,9 @@ public class ReportParamsetController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -324,8 +331,9 @@ public class ReportParamsetController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -337,7 +345,7 @@ public class ReportParamsetController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
 	}
 
 	/**
@@ -351,7 +359,7 @@ public class ReportParamsetController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset,contObjectIds);
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
 	}
 
 	/**
@@ -405,7 +413,8 @@ public class ReportParamsetController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
 	}
 
 	/**
@@ -420,8 +429,10 @@ public class ReportParamsetController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -434,8 +445,10 @@ public class ReportParamsetController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -448,7 +461,8 @@ public class ReportParamsetController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset,contObjectIds, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
 	}
 
 	/**
@@ -463,7 +477,8 @@ public class ReportParamsetController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds, request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
 	}
 
 	/**
@@ -632,6 +647,78 @@ public class ReportParamsetController extends WebApiController {
 		}
 
 		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOneCommerce(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset) {
+		deleteInternal(reportParamsetId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOneConsT1(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		deleteInternal(reportParamsetId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOneConsT2(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		deleteInternal(reportParamsetId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOneCons(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		deleteInternal(reportParamsetId);
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param reportTemplareId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteOneEvent(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		deleteInternal(reportParamsetId);
+		return ResponseEntity.accepted().build();
+	}
+
+	private void deleteInternal(Long reportTemplateId) {
+
 	}
 
 }
