@@ -42,8 +42,8 @@ angular.module('portalNMK')
             }, 
             "t_out":{
                 header : "Температура обработки, град C",
-                headerClass : "col-md-2",
-                dataClass : "col-md-2"
+                headerClass : "col-md-1",
+                dataClass : "col-md-1"
             } , 
             "t_cold":{
                 header : "Температура холодной воды, град C",
@@ -110,6 +110,23 @@ angular.module('portalNMK')
         headerClassTR : "info",
         columns : []
     };
+        
+        
+    function printDate() {
+        var temp = new Date();
+        var dateStr = padStr(temp.getFullYear()) +
+                      padStr(1 + temp.getMonth()) +
+                      padStr(temp.getDate()) +
+                      padStr(temp.getHours()) +
+                      padStr(temp.getMinutes()) +
+                      padStr(temp.getSeconds());
+//        debug (dateStr );
+    }
+
+    //helper for date formating
+    function padStr(i) {
+        return (i < 10) ? "0" + i : "" + i;
+    }    
 
       //Получаем показания
     $scope.columns = [];
@@ -124,6 +141,7 @@ angular.module('portalNMK')
                     var column = {};
                     column.header = listColumns[k].header || k; 
                     column.headerClass = listColumns[k].headerClass || "col-md-1";
+                    column.dataClass = listColumns[k].dataClass || "col-md-1";
                     column.fieldName = k; 
                     $scope.columns[iCol] = column;
                     iCol=iCol+1;                          
@@ -133,7 +151,19 @@ angular.module('portalNMK')
                 var tmp = data.map(function(el){
                     var result  = {};
                     if (typeof el.dataDate != 'undefined'){
-                        el.dataDate = (new Date(el.dataDate)).toLocaleString();
+                          var datad = new Date(el.dataDate);
+                          el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
+//                        moment().
+//                          el.dataDate = datad.toLocaleString("ru-RU", {year:"2-digit",  month:"numeric", day: "numeric", hour:"numeric", minute:"numeric"});
+//                    var dateStr = padStr(datad.getDate()) +"."+
+//                        padStr(1 + datad.getMonth()) +"."+
+//                        padStr(datad.getFullYear()) +" "+
+//                        padStr(datad.get.getHours()) +":"+
+//                        padStr(datad.getMinutes()) 
+//                    ;
+//                    el.dataDate = dateStr;
+                        
+//                    el.dataDate = (new Date(el.dataDate)).toLocaleString();    
                     }
                 });
                 $scope.data = data;
