@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
@@ -87,11 +88,26 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		String urlStr = "/api/subscr/tariff/" + testRec.getId();
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(testRec);
 
+		List<ContObject> tariffContObjects = tariffPlanService
+				.selectTariffPlanContObjects(
+						currentSubscriberService.getSubscriberId(),
+						testRec.getId());
+		long[] contObjects = new long[tariffContObjects.size()];
+		int idx = 0;
+		for (ContObject co : tariffContObjects) {
+			contObjects[idx] = co.getId();
+		}
+
 		ResultActions resultActionsAll;
 		try {
 			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-					.with(testSecurityContext())
+					.contentType(MediaType.APPLICATION_JSON)
+					.param("rsoOrganizationId",
+							testRec.getRso().getId().toString())
+					.param("tariffTypeId",
+							testRec.getTariffType().getId().toString())
+					.param("contObjectIds", arrayToString(contObjects))
+					.content(jsonBody).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
@@ -128,16 +144,31 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		assertTrue(tariffTypeList.size() > 0);
 		TariffType tt = tariffTypeList.get(0);
 
-		ResultActions resultAction = mockMvc
-				.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
-						.param("rsoOrganizationId", org.getId().toString())
-						.param("tariffTypeId", tt.getId().toString())
-						.content(jsonBody).with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
+		List<ContObject> tariffContObjects = tariffPlanService
+				.selectTariffPlanAvailableContObjects(
+						currentSubscriberService.getSubscriberId(), 0);
+
+		assertTrue(tariffContObjects.size() > 0);
+		long[] contObjectIds = new long[1];
+		contObjectIds[0] = tariffContObjects.get(0).getId();
+
+		ResultActions resultAction = mockMvc.perform(post(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("rsoOrganizationId", org.getId().toString())
+				.param("tariffTypeId", tt.getId().toString())
+				.param("contObjectIds", arrayToString(contObjectIds))
+				.content(jsonBody).with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isCreated());
 
 	}
+
+	@Test
+	public void testAvailableContObjects() throws Exception {
+		testJsonGet("/api/subscr/tariff/1/contObject/available");
+	}
+
 }

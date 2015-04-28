@@ -23,8 +23,8 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 @Service
 public class CurrentSubscriberService {
 
-	private static final long SUBSCR_ORG_ID = 728;
-	private static final long NOT_LOGGED_ORG_ID = 728;
+	public static final long DEV_SUBSCR_ORG_ID = 728;
+	public static final long NOT_LOGGED_SUBSCR_ORG_ID = 728;
 
 	private static final long CLEAR_MAP_AFTER_GET = 100;
 
@@ -87,11 +87,11 @@ public class CurrentSubscriberService {
 		FullUserInfo userInfo = getFullUserInfo();
 
 		if (userInfo == null) {
-			return NOT_LOGGED_ORG_ID;
+			return NOT_LOGGED_SUBSCR_ORG_ID;
 		}
 
 		long result = userInfo.getSubscriberId() != null ? userInfo
-				.getSubscriberId() : SUBSCR_ORG_ID;
+				.getSubscriberId() : NOT_LOGGED_SUBSCR_ORG_ID;
 		logger.trace("Current Subscriber ID: {}", result);
 
 		return result;

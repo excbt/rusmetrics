@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -8,18 +9,22 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class TariffPlanRepositoryTest extends JpaSupportTest {
 
 	@Autowired
-	private TariffPlanRepository tarifPlanRepository; 
-	
+	private TariffPlanRepository tariffPlanRepository;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
 	/**
 	 * 
 	 */
 	@Test
 	public void testSelectDefaultTarifPlan() {
-		List<?> result = tarifPlanRepository.selectDefaultTariffPlan(0, 0);
+		List<?> result = tariffPlanRepository.selectDefaultTariffPlan(0, 0);
 		assertTrue(result.size() == 0);
 	}
 
@@ -28,17 +33,33 @@ public class TariffPlanRepositoryTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSelectDefaultTarifPlanNoRSO() {
-		List<?> result = tarifPlanRepository.selectDefaultTariffPlan(0);
+		List<?> result = tariffPlanRepository.selectDefaultTariffPlan(0);
 		assertTrue(result.size() == 0);
 	}
 
 	/**
 	 * 
 	 */
+	// @Test
+	// public void testSelectTarifPlanNoRSO() {
+	// List<?> result = tarifPlanRepository.selectTariffPlan(0, 0, 0);
+	// assertTrue(result.size() == 0);
+	// }
+	//
+
 	@Test
-	public void testSelectTarifPlanNoRSO() {
-		List<?> result = tarifPlanRepository.selectTariffPlan(0, 0, 0);
-		assertTrue(result.size() == 0);
-	}	
-	
+	public void testSelectTarifPlanNoContObjects() {
+		List<?> result = tariffPlanRepository
+				.selectTariffPlanNoContObjects(currentSubscriberService
+						.getSubscriberId());
+		assertNotNull(result);
+	}
+
+	@Test
+	public void testAvailableTariffPlanContObjects() {
+		List<?> result = tariffPlanRepository.selectAvailableContObjects(
+				currentSubscriberService.getSubscriberId(), 0);
+		assertTrue(result.size() > 0);
+	}
+
 }
