@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant;
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
@@ -82,7 +83,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * 
 	 * @param rsoOrganizationId
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void initDefaultTariffPlan(long rsoOrganizationId) {
 		List<TariffPlan> currentTariffPlan = tariffPlanRepository
 				.selectDefaultTariffPlan(rsoOrganizationId);
@@ -121,7 +122,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * 
 	 * @param rsoOrganizationId
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteDefaultTariffPlan(long rsoOrganizationId) {
 		tariffPlanRepository.deleteDefaultTariffPlan(
 				currentSubscriberService.getSubscriberId(), rsoOrganizationId);
@@ -133,7 +134,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan updateOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
@@ -152,7 +153,6 @@ public class TariffPlanService implements SecuredRoles {
 		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
 		tariffPlan.setSubscriber(currentRec.getSubscriber());
-		tariffPlan.setContObject(currentRec.getContObject());
 
 		return tariffPlanRepository.save(tariffPlan);
 	}
@@ -163,7 +163,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan createOne(TariffPlan tariffPlan) {
 
 		checkNotNull(tariffPlan);
@@ -183,11 +183,19 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
-		deleteOne(tariffPlan.getId());
+
+		if (!canModifyTariffPlanId(tariffPlan.getId())) {
+			throw new PersistenceException(
+					String.format(
+							"TariffPlan(id=%d) can not be modified by currentSubscriberId",
+							tariffPlan.getId()));
+		}
+
+		tariffPlanRepository.delete(tariffPlan);
 	}
 
 	/**
@@ -196,15 +204,12 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long tariffPlanId) {
-		if (!canModifyTariffPlanId(tariffPlanId)) {
-			throw new PersistenceException(
-					String.format(
-							"TariffPlan(id=%d) can not be modified by currentSubscriberId",
-							tariffPlanId));
-		}
-		tariffPlanRepository.delete(tariffPlanId);
+		TariffPlan tariffPlan = tariffPlanRepository.findOne(tariffPlanId);
+		checkNotNull(tariffPlan);
+
+		deleteOne(tariffPlan);
 	}
 
 	/**
@@ -212,10 +217,25 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlanId
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public boolean canModifyTariffPlanId(long tariffPlanId) {
 		List<Long> ids = tariffPlanRepository.selectTariffPlanId(
 				currentSubscriberService.getSubscriberId(), tariffPlanId);
 		return ids.size() == 1;
+	}
+
+	@Transactional(readOnly = true)
+	public List<ContObject> selectTariffPlanContObjects(long subscriberId,
+			long tariffPlanId) {
+		return tariffPlanRepository.selectTariffPlanContObjects(subscriberId,
+				tariffPlanId);
+	}
+
+	@Transactional(readOnly = true)
+	public List<ContObject> selectTariffPlanAvailableContObjects(
+			long subscriberId, long tariffPlanId) {
+		return tariffPlanRepository.selectAvailableContObjects(subscriberId,
+				tariffPlanId);
 	}
 
 }

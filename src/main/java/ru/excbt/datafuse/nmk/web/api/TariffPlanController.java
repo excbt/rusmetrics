@@ -121,10 +121,11 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneDefault(
+	public ResponseEntity<?> updateOneTariff(
 			@PathVariable("tariffPlanId") long tariffPlanId,
-			@RequestParam(value = "rsoOrganizationId", required = false) Long rsoOrganizationId,
-			@RequestParam(value = "tariffTypeId", required = false) Long tariffTypeId,
+			@RequestParam(value = "rsoOrganizationId", required = true) Long rsoOrganizationId,
+			@RequestParam(value = "tariffTypeId", required = true) Long tariffTypeId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody TariffPlan tariffPlan) {
 
 		if (tariffPlanId <= 0) {
@@ -162,6 +163,19 @@ public class TariffPlanController extends WebApiController {
 			tariffPlan.setTariffType(tt);
 		}
 
+		if (contObjectIds != null) {
+
+			for (long contObjectId : contObjectIds) {
+				ContObject co = contObjectService.findOne(contObjectId);
+				if (co == null) {
+					return ResponseEntity.badRequest().body(
+							"Invalid ContObjectId");
+				}
+				checkNotNull(tariffPlan.getContObjects());
+				tariffPlan.getContObjects().add(co);
+			}
+		}
+
 		TariffPlan resultEntity = null;
 
 		try {
@@ -184,10 +198,10 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne(
-			@RequestParam("rsoOrganizationId") Long rsoOrganizationId,
-			@RequestParam("tariffTypeId") Long tariffTypeId,
-			@RequestParam(value = "contObjectId", required = false) Long contObjectId,
+	public ResponseEntity<?> createOneTariff(
+			@RequestParam(value = "rsoOrganizationId", required = true) Long rsoOrganizationId,
+			@RequestParam(value = "tariffTypeId", required = true) Long tariffTypeId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody TariffPlan tariffPlan, HttpServletRequest request) {
 
 		checkNotNull(tariffPlan);
@@ -217,12 +231,17 @@ public class TariffPlanController extends WebApiController {
 			tariffPlan.setTariffType(tt);
 		}
 
-		if (contObjectId != null) {
-			ContObject co = contObjectService.findOne(contObjectId);
-			if (co == null) {
-				return ResponseEntity.badRequest().body("Invalid contObjectId");
+		if (contObjectIds != null) {
+
+			for (long contObjectId : contObjectIds) {
+				ContObject co = contObjectService.findOne(contObjectId);
+				if (co == null) {
+					return ResponseEntity.badRequest().body(
+							"Invalid ContObjectId");
+				}
+				checkNotNull(tariffPlan.getContObjects());
+				tariffPlan.getContObjects().add(co);
 			}
-			tariffPlan.setContObject(co);
 		}
 
 		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
@@ -252,7 +271,7 @@ public class TariffPlanController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne(
+	public ResponseEntity<?> deleteOneTariff(
 			@PathVariable("tariffPlanId") long tariffPlanId) {
 		try {
 			tariffPlanService.deleteOne(tariffPlanId);
@@ -266,6 +285,40 @@ public class TariffPlanController extends WebApiController {
 		}
 
 		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @param tariffPlanId
+	 * @return
+	 */
+	@RequestMapping(value = "/{tariffPlanId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getTariffPlanContObjects(
+			@PathVariable("tariffPlanId") long tariffPlanId) {
+
+		List<ContObject> contObjectList = tariffPlanService
+				.selectTariffPlanContObjects(
+						currentSubscriberService.getSubscriberId(),
+						tariffPlanId);
+
+		return ResponseEntity.ok(contObjectList);
+	}
+
+	/**
+	 * 
+	 * @param tariffPlanId
+	 * @return
+	 */
+	@RequestMapping(value = "/{tariffPlanId}/contObject/available", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getTariffPlanAvailableContObjects(
+			@PathVariable("tariffPlanId") long tariffPlanId) {
+
+		List<ContObject> contObjectList = tariffPlanService
+				.selectTariffPlanAvailableContObjects(
+						currentSubscriberService.getSubscriberId(),
+						tariffPlanId);
+
+		return ResponseEntity.ok(contObjectList);
 	}
 
 }
