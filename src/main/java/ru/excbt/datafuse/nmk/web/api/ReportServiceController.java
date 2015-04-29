@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,6 +32,17 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController {
 
+	private interface ReportMaker {
+		void makeReport(long reportParamsetId, LocalDateTime dateTime,
+				OutputStream outputStream);
+
+		String mimeType();
+
+		String defaultFileName();
+
+		String ext();
+	}
+
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportServiceController.class);
 
@@ -37,9 +50,13 @@ public class ReportServiceController {
 			.forPattern(ReportService.DATE_TEMPLATE);
 
 	private final static String MIME_ZIP = "application/zip";
+	private final static String MIME_PDF = "application/pdf";
 	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
+	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
+	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
 	private final static String EXT_ZIP = ".zip";
-	
+	private final static String EXT_PDF = ".pdf";
+
 	@Autowired
 	private ReportService reportService;
 
@@ -165,19 +182,18 @@ public class ReportServiceController {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return;
 		}
-		
-		
+
 		// set content attributes for the response
-		response.setContentType(MIME_ZIP); 
+		response.setContentType(MIME_ZIP);
 		response.setContentLength(byteArray.length);
 
 		String outputFilename = reportParamset.getOutputFileNameTemplate();
 		if (outputFilename == null) {
 			outputFilename = DEFAULT_COMMERCE_FILENAME;
-		} 
+		}
 
 		// set headers for the response
-		String headerKey = "Content-Disposition"; 
+		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
 				outputFilename + EXT_ZIP);
 		response.setHeader(headerKey, headerValue);
@@ -186,4 +202,105 @@ public class ReportServiceController {
 		outStream.write(byteArray);
 		outStream.close();
 	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	private void doDowndloadInternalReport(long reportParamsetId,
+			ReportMaker reportMaker, HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+
+		checkNotNull(reportMaker);
+		checkNotNull(reportMaker.mimeType());
+		checkNotNull(reportMaker.defaultFileName());
+		checkNotNull(reportMaker.ext());
+
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+
+		if (reportParamset == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream();
+
+		reportMaker.makeReport(reportParamsetId, LocalDateTime.now(),
+				memoryOutputStream);
+
+		byte[] byteArray = memoryOutputStream.toByteArray();
+
+		if (byteArray == null || byteArray.length == 0) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return;
+		}
+
+		// set content attributes for the response
+		response.setContentType(reportMaker.mimeType());
+		response.setContentLength(byteArray.length);
+
+		String outputFilename = reportParamset.getOutputFileNameTemplate();
+		if (outputFilename == null) {
+			outputFilename = reportMaker.defaultFileName();
+		}
+
+		// set headers for the response
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"",
+				outputFilename + reportMaker.ext());
+		response.setHeader(headerKey, headerValue);
+		//
+		OutputStream outStream = response.getOutputStream();
+		outStream.write(byteArray);
+		outStream.close();
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/cons_T1/{reportParamsetId}/download", method = RequestMethod.GET)
+	public void doDowndloadConsT1ReportPdf(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		ReportMaker reportMaker = new ReportMaker() {
+
+			@Override
+			public void makeReport(long reportParamsetId,
+					LocalDateTime dateTime, OutputStream outputStream) {
+				//reportService.makeCommerceReportZip(reportParamsetId,
+				//		LocalDateTime.now(), outputStream);
+			}
+
+			@Override
+			public String mimeType() {
+				return MIME_PDF;
+			}
+
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_CONS_T1_FILENAME;
+			}
+
+			@Override
+			public String ext() {
+				return EXT_PDF;
+			}
+
+		};
+
+		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
+				response);
+
+	}
+
 }
