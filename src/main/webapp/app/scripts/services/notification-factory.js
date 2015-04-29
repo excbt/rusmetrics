@@ -4,7 +4,7 @@ angular.module('portalNMK').factory('notificationFactory', function () {
 	 
     return {
         success: function () {
-            toastr.success("Success");
+            toastr.success("Успешно сохранено.");
         },
         successInfo: function (text) {
         	toastr.success(text);
@@ -13,7 +13,7 @@ angular.module('portalNMK').factory('notificationFactory', function () {
         	toastr.success(text);
         },
         error: function (text) {
-            toastr.error(text, "Error!");
+            toastr.error(text, "Ошибка!");
         },
         warning : function (text) {
         	  toastr.warning(text);

@@ -360,6 +360,13 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                     var tableSummer = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
                     crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
                 };
+                
+                
+                //
+                $scope.isSystemuser = function(){
+                    $scope.userInfo = $rootScope.userInfo;
+                    return $scope.userInfo._system;
+                };
                
             }]
     };

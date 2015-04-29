@@ -132,7 +132,7 @@ angular.module('portalNMK')
     $scope.columns = [];
  //       $scope.data = {};
     $scope.getData = function () {
-        var table =  $scope.zpointTable;
+        var table =  $scope.zpointTable;      
         crudGridDataFactory(table).query(function (data) {
                 var iCol = 0;
                 var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
@@ -153,7 +153,8 @@ angular.module('portalNMK')
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
                           var datad = new Date(el.dataDate);
-                          el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
+                          el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
+//                            el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
 //                        moment().
 //                          el.dataDate = datad.toLocaleString("ru-RU", {year:"2-digit",  month:"numeric", day: "numeric", hour:"numeric", minute:"numeric"});
 //                    var dateStr = padStr(datad.getDate()) +"."+
