@@ -196,7 +196,7 @@ public class ReportTemplateController extends WebApiController {
 	 */
 	@RequestMapping(value = "/archive/commerce/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveCommerce(
-			@RequestParam("reportTemplateId") long reportTemplateId) {
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 
 		deleteInternal(reportTemplateId);
 		return ResponseEntity.accepted().build();
@@ -206,9 +206,9 @@ public class ReportTemplateController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons_t1/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsT1(
-			@RequestParam("reportTemplateId") long reportTemplateId) {
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 
 		deleteInternal(reportTemplateId);
 		return ResponseEntity.accepted().build();
@@ -218,9 +218,9 @@ public class ReportTemplateController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons_t2/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsT2(
-			@RequestParam("reportTemplateId") long reportTemplateId) {
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 		
 		deleteInternal(reportTemplateId);
 		return ResponseEntity.accepted().build();
@@ -230,9 +230,9 @@ public class ReportTemplateController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/cons", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsOld(
-			@RequestParam("reportTemplateId") long reportTemplateId) {
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 		
 		deleteInternal(reportTemplateId);
 		return ResponseEntity.accepted().build();
@@ -242,9 +242,9 @@ public class ReportTemplateController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/event", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/event/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveEvent(
-			@RequestParam("reportTemplateId") long reportTemplateId) {
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 
 		deleteInternal(reportTemplateId);
 		return ResponseEntity.accepted().build();
