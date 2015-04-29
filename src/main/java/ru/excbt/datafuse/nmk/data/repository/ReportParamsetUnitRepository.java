@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -42,4 +43,10 @@ public interface ReportParamsetUnitRepository extends
 	public List<Long> selectObjectIds(
 			@Param("reportParamsetId") long reportParamsetId);
 
+	@Modifying
+	@Query("DELETE ReportParamsetUnit d "
+			+ "WHERE d.reportParamset.id = :reportParamsetId ")
+	public void deleteReportParamsetUnit(
+			@Param("reportParamsetId") long reportParamsetId);	
+	
 }

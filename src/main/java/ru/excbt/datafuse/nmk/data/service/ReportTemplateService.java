@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -39,6 +40,9 @@ public class ReportTemplateService implements SecuredRoles {
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
+
+	@Autowired
+	private ReportTypeService reportTypeService;
 
 	/**
 	 * 
@@ -78,7 +82,30 @@ public class ReportTemplateService implements SecuredRoles {
 		checkArgument(!reportTemplate.isNew());
 
 		ReportTemplate result = null;
+
 		if (checkCanUpdate(reportTemplate.getId())) {
+			result = reportTemplateRepository.save(reportTemplate);
+		} else {
+			throw new PersistenceException(String.format(
+					"Can't update common template (id=%d)",
+					reportTemplate.getId()));
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN })
+	public ReportTemplate updateOneCommon(ReportTemplate reportTemplate) {
+		checkNotNull(reportTemplate);
+		checkArgument(!reportTemplate.isNew());
+
+		ReportTemplate result = null;
+		if (checkIsCommon(reportTemplate.getId())) {
 			result = reportTemplateRepository.save(reportTemplate);
 		} else {
 			throw new PersistenceException(String.format(
@@ -109,6 +136,37 @@ public class ReportTemplateService implements SecuredRoles {
 	public void deleteOne(long reportTemplateId) {
 
 		if (checkCanUpdate(reportTemplateId)) {
+			if (reportTemplateBodyRepository.exists(reportTemplateId)) {
+				reportTemplateBodyRepository.delete(reportTemplateId);
+			}
+			reportTemplateRepository.delete(reportTemplateId);
+		} else {
+			throw new PersistenceException(String.format(
+					"Can't delete report template (id=%d)", reportTemplateId));
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 */
+	@Secured({ ROLE_ADMIN })
+	public void deleteOneCommon(ReportTemplate reportTemplate) {
+		checkNotNull(reportTemplate);
+		checkArgument(!reportTemplate.isNew());
+
+		deleteOneCommon(reportTemplate.getId());
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 */
+	@Secured({ ROLE_ADMIN })
+	public void deleteOneCommon(long reportTemplateId) {
+
+		if (checkIsCommon(reportTemplateId)) {
 			if (reportTemplateBodyRepository.exists(reportTemplateId)) {
 				reportTemplateBodyRepository.delete(reportTemplateId);
 			}
@@ -180,6 +238,15 @@ public class ReportTemplateService implements SecuredRoles {
 	public boolean checkCanUpdate(long id) {
 		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
 		return ids.indexOf(id) == -1;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean checkIsCommon(long id) {
+		return !checkCanUpdate(id);
 	}
 
 	/**
@@ -378,4 +445,53 @@ public class ReportTemplateService implements SecuredRoles {
 		return resultIdx;
 	}
 
+	/**
+	 * 
+	 * @param reportTypeKey
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN })
+	public ReportTemplate createCommonReportTemplate(ReportTypeKey reportTypeKey) {
+
+		checkNotNull(reportTypeKey);
+
+		ReportMasterTemplateBody masterTemplateBody = reportMasterTemplateBodyService
+				.selectReportMasterTemplate(reportTypeKey);
+
+		if (masterTemplateBody == null) {
+			throw new PersistenceException(String.format(
+					"ReportMasterTemplateBody for report %s not found",
+					reportTypeKey.name()));
+		}
+
+		ReportTemplate reportTemplate = new ReportTemplate();
+
+		reportTemplate.setReportTypeKey(reportTypeKey);
+		ReportType reportType = reportTypeService.findByKeyname(reportTypeKey
+				.name());
+		if (reportType.getName() != null) {
+			reportTemplate.setName( reportType.getName() +" (ОБЩИЙ)");	
+		} else {
+			reportTemplate.setName( reportTypeKey.name() +" (ОБЩИЙ)");
+		}
+		
+		reportTemplate.set_active(true);
+		reportTemplate.set_default(true);
+		reportTemplate.setActiveEndDate(new Date());
+		ReportTemplate result = reportTemplateRepository.save(reportTemplate);
+
+		ReportTemplateBody reportTemplateBody = new ReportTemplateBody();
+		reportTemplateBody.setReportTemplateId(result.getId());
+		reportTemplateBody.setBody(masterTemplateBody.getBody());
+		reportTemplateBody
+				.setBodyCompiled(masterTemplateBody.getBodyCompiled());
+		reportTemplateBody
+				.setBodyFilename(masterTemplateBody.getBodyFilename());
+		reportTemplateBody.setBodyCompiledFilename(masterTemplateBody
+				.getBodyCompiledFilename());
+
+		reportTemplateBodyRepository.save(reportTemplateBody);
+
+		return result;
+	}
 }
