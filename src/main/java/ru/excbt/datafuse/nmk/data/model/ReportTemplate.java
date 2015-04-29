@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -14,7 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -26,8 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity 
 @Table(name = "report_template")
-@DynamicUpdate
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EntityListeners({AuditingEntityListener.class})
 public class ReportTemplate extends AbstractAuditableModel {
 
 	/**

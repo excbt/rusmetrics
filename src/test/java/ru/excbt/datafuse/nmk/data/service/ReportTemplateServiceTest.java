@@ -172,7 +172,6 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	}
 
-	
 	/**
 	 * 
 	 * @throws IOException
@@ -219,6 +218,14 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		byte[] fileBodyCompiled = reportTemplateBody.getBodyCompiled();
 		assertNotNull(fileBodyCompiled);
 		logger.info("fileBodyCompiled length: {}", fileBodyCompiled.length);
+	}
+
+	@Test
+	public void updateDefaultReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.EVENT_REPORT, true, true);
+		
+		assertTrue(result > 0);
 	}
 
 }
