@@ -12,12 +12,14 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ReportServiceTest extends JpaSupportTest {
 
@@ -27,8 +29,13 @@ public class ReportServiceTest extends JpaSupportTest {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportServiceTest.class);
 
+	private final static long EVENT_TEST_PARAMSET_ID = 28820616;
+	
 	@Autowired
 	private ReportService reportService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	@Test
 	public void testReportService() {
@@ -44,7 +51,7 @@ public class ReportServiceTest extends JpaSupportTest {
 
 		assertEquals(EXPECTED_URL, resultStr);
 	}
-	
+
 	@Test
 	public void testExternalServerSettings() {
 		if (reportService.externalJasperServerEnable()) {
@@ -53,31 +60,54 @@ public class ReportServiceTest extends JpaSupportTest {
 		} else {
 			fail();
 		}
-		
+
 	}
-	
-	
+
 	@Test
 	public void testMakeCommerceReport() throws IOException {
-		FileOutputStream fos = new FileOutputStream("./out/testMakeCommerceReport.zip");
+		FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeCommerceReport.zip");
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		try {
-			//ByteArrayOutputStream os = new ByteArrayOutputStream();
-			reportService.makeCommerceReportZip(28618264, LocalDateTime.now(), bos);
-			//byte[] result = os.toByteArray();
-			
-			//assertNotNull(result);
-			//assertTrue(result.length > 0);
+			// ByteArrayOutputStream os = new ByteArrayOutputStream();
+			reportService.makeCommerceReportZip(28618264, LocalDateTime.now(),
+					bos);
+			// byte[] result = os.toByteArray();
+
+			// assertNotNull(result);
+			// assertTrue(result.length > 0);
 			byte[] bytes = bos.toByteArray();
 			assertNotNull(bytes);
-			
+
 			fos.write(bytes);
-			
+
 		} finally {
 			fos.flush();
 			fos.close();
 		}
-		
+	}
+
+	@Test
+	@Ignore
+	public void testMakeEventReport() throws IOException {
+		FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeEventReport.pdf");
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		try {
+			// ByteArrayOutputStream os = new ByteArrayOutputStream();
+			reportService.makeEventsReportPdf(EVENT_TEST_PARAMSET_ID,
+					currentSubscriberService.getSubscriber().getOrganization()
+							.getId(), LocalDateTime.now(), bos);
+
+			byte[] bytes = bos.toByteArray();
+			assertNotNull(bytes);
+
+			fos.write(bytes);
+
+		} finally {
+			fos.flush();
+			fos.close();
+		}
 	}
 
 }
