@@ -22,7 +22,7 @@ public interface ReportTemplateRepository extends
 			+ "WHERE rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectActiveTemplates(
-			@Param("reportType") ReportTypeKey reportType,
+			@Param("reportType") ReportTypeKey reportTypeKey,
 			@Param("isActive") boolean isActive);
 
 	/**
@@ -35,7 +35,7 @@ public interface ReportTemplateRepository extends
 			+ "rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
 	public List<ReportTemplate> selectCommonTemplates(
-			@Param("reportType") ReportTypeKey reportType,
+			@Param("reportType") ReportTypeKey reportTypeKey,
 			@Param("isActive") boolean isActive);
 
 	/**

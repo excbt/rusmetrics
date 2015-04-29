@@ -719,8 +719,12 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.accepted().build();
 	}
 
+	/**
+	 * 
+	 * @param reportTemplateId
+	 */
 	private void deleteInternal(Long reportTemplateId) {
-
+		reportParamsetService.deleteOne(reportTemplateId);
 	}
 
 }

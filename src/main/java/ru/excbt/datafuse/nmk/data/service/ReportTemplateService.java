@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
@@ -35,6 +36,9 @@ public class ReportTemplateService implements SecuredRoles {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+
+	@Autowired
+	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
 	/**
 	 * 
@@ -331,6 +335,47 @@ public class ReportTemplateService implements SecuredRoles {
 			ReportTypeKey reportTypeKey) {
 		return reportTemplateRepository.selectActiveTemplates(reportTypeKey,
 				true);
+	}
+
+	/**
+	 * 
+	 * @param reportTypeKey
+	 * @param isActive
+	 * @param isCompiled
+	 */
+	public int updateCommonReportTemplateBody(ReportTypeKey reportTypeKey,
+			boolean isActive, boolean isCompiled) {
+		List<ReportTemplate> updateCadidates = reportTemplateRepository
+				.selectCommonTemplates(reportTypeKey, isActive);
+
+		if (updateCadidates.size() == 0) {
+			return 0;
+		}
+
+		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
+				.selectReportMasterTemplate(reportTypeKey);
+
+		byte[] srcBody;
+		String srcBodyFilename;
+		if (isCompiled) {
+			srcBody = reportMasterTemplateBody.getBodyCompiled();
+			srcBodyFilename = reportMasterTemplateBody
+					.getBodyCompiledFilename();
+		} else {
+			srcBody = reportMasterTemplateBody.getBody();
+			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
+		}
+
+		checkNotNull(srcBody);
+
+		int resultIdx = 0;
+		for (ReportTemplate rt : updateCadidates) {
+			saveReportTemplateBodyInternal(rt.getId(), srcBody,
+					srcBodyFilename, isCompiled);
+			resultIdx++;
+		}
+
+		return resultIdx;
 	}
 
 }
