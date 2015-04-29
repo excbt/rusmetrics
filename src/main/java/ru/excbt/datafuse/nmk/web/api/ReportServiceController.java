@@ -164,43 +164,35 @@ public class ReportServiceController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
+		ReportMaker reportMaker = new ReportMaker() {
 
-		if (reportParamset == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return;
-		}
+			@Override
+			public void makeReport(long reportParamsetId,
+					LocalDateTime dateTime, OutputStream outputStream) {
+				reportService.makeCommerceReportZip(reportParamsetId,
+						LocalDateTime.now(), outputStream);
+			}
 
-		ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream();
-		reportService.makeCommerceReportZip(reportParamsetId,
-				LocalDateTime.now(), memoryOutputStream);
+			@Override
+			public String mimeType() {
+				return MIME_ZIP;
+			}
 
-		byte[] byteArray = memoryOutputStream.toByteArray();
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_COMMERCE_FILENAME;
+			}
 
-		if (byteArray == null || byteArray.length == 0) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return;
-		}
+			@Override
+			public String ext() {
+				return EXT_ZIP;
+			}
 
-		// set content attributes for the response
-		response.setContentType(MIME_ZIP);
-		response.setContentLength(byteArray.length);
+		};
 
-		String outputFilename = reportParamset.getOutputFileNameTemplate();
-		if (outputFilename == null) {
-			outputFilename = DEFAULT_COMMERCE_FILENAME;
-		}
+		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
+				response);
 
-		// set headers for the response
-		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename + EXT_ZIP);
-		response.setHeader(headerKey, headerValue);
-		//
-		OutputStream outStream = response.getOutputStream();
-		outStream.write(byteArray);
-		outStream.close();
 	}
 
 	/**
@@ -277,8 +269,8 @@ public class ReportServiceController {
 			@Override
 			public void makeReport(long reportParamsetId,
 					LocalDateTime dateTime, OutputStream outputStream) {
-				//reportService.makeCommerceReportZip(reportParamsetId,
-				//		LocalDateTime.now(), outputStream);
+				// reportService.makeCommerceReportZip(reportParamsetId,
+				// LocalDateTime.now(), outputStream);
 			}
 
 			@Override
