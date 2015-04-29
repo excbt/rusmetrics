@@ -657,9 +657,8 @@ public class ReportParamsetController extends WebApiController {
 	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCommerce(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -673,6 +672,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT1(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -686,6 +686,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT2(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -699,6 +700,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
