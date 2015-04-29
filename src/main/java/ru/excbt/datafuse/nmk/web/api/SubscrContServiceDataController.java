@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class ContServiceDataController {
+public class SubscrContServiceDataController {
 
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
@@ -117,8 +117,11 @@ public class ContServiceDataController {
 							timeDetailType));
 		}
 
+		DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
+				.withSecondOfMinute(59).withMillisOfSecond(999);
+
 		List<ContServiceDataHWater> result = contServiceDataHWaterService
-				.selectByContZPoint(contZPointId, timeDetail, beginD, endD);
+				.selectByContZPoint(contZPointId, timeDetail, beginD, endOfDay);
 
 		return ResponseEntity.ok(result);
 

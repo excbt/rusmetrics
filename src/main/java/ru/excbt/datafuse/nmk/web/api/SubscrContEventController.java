@@ -106,10 +106,13 @@ public class SubscrContEventController extends WebApiController {
 										startDateStr, endDateStr));
 			}
 
+			DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
+					.withSecondOfMinute(59).withMillisOfSecond(999);
+
 			Page<ContEvent> resultPage = contEventService
 					.selectBySubscriberAndDateAndContObjectIds(
 							currentSubscriberService.getSubscriberId(), startD,
-							endD, contObjectList);
+							endOfDay, contObjectList);
 
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 

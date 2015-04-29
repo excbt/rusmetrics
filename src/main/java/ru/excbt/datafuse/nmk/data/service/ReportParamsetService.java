@@ -49,6 +49,9 @@ public class ReportParamsetService implements SecuredRoles {
 	@Autowired
 	private SubscriberService subscriberService;
 
+	@Autowired
+	private ReportSheduleService reportSheduleService;
+	
 	/**
 	 * 
 	 * @param entity
@@ -141,7 +144,8 @@ public class ReportParamsetService implements SecuredRoles {
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
-			reportParamsetUnitRepository.deleteReportParamsetUnit(id);
+			reportParamsetUnitRepository.deleteByReportParamset(id);
+			reportSheduleService.deleteByReportParamset(id);
 			reportParamsetRepository.delete(id);
 		} else {
 			throw new PersistenceException(String.format(
