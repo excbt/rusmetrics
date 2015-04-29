@@ -4,7 +4,7 @@ angular.module('portalNMK')
         $http.get(url)
                 .success(function(data, satus, headers, config){
                     $rootScope.userInfo = data;
-        console.log($rootScope.userInfo);        
+//        console.log($rootScope.userInfo);        
                 })
                 .error();
     

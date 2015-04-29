@@ -50,7 +50,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}}
+                                                    {{oldObject.name}}<span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> {{oldObject.outputFileType}} <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>{{oldObject.reportPeriod.caption}} <span ng-show="oldObject.reportTemplate!=null">,</span><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>{{oldObject.reportTemplate.name}}
                                             </div>
                                             <div class="col-md-2" ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}

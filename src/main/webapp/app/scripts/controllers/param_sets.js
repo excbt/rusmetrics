@@ -85,7 +85,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     };
     
     $scope.deleteObject = function (object) {
-        var table = $scope.crudTableName + $scope.currentReportType.suffix;
+        var table = $scope.crudTableName +"/archive"+ $scope.currentReportType.suffix;
+console.log(table);        
+console.log(object[$scope.extraProps.idColumnName]);        
         crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
     };
        
@@ -217,6 +219,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     };
     
     $scope.addParamSet = function(object){
+        $scope.paramsetStartDateFormat = (new Date());
+        $scope.paramsetEndDateFormat= (new Date());
+        $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
         $scope.set_of_objects_flag=false;
         $scope.setCurrentReportType(object);
         $scope.currentObject = {};

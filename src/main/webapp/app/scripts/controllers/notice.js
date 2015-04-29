@@ -10,8 +10,8 @@
 angular.module('portalNMK')
   .controller('NoticeCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'DTOptionsBuilder', 'DTColumnBuilder', 'DTInstances', function ($scope, $rootScope, $resource, crudGridDataFactory, DTOptionsBuilder, DTColumnBuilder, DTInstances) {
 
-    $scope.TEXT_CAPTION_LENGTH = 20*4; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
-    $scope.TYPE_CAPTION_LENGTH = 20*3; //length of type visible part  
+    $scope.TEXT_CAPTION_LENGTH = 20*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
+    $scope.TYPE_CAPTION_LENGTH = 20*3-3; //length of type visible part  
     $scope.crudTableName= "../api/subscr/contObjects";
       
     $scope.currentObject = {};  
