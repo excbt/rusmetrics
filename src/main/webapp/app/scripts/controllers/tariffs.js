@@ -131,7 +131,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 //        
 //console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);                   
         if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')){
-//            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
+            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
         }else{
 //console.log($scope.currentObject) ;           
             saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({}, $scope.currentObject, successPostCallback, errorCallback);
@@ -163,8 +163,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     $scope.editTariff = function(object){
         $scope.selectedItem(object);
-        $scope.getAvailableObjects(0);
-//        $scope.getSelectedObjects();
+        $scope.getAvailableObjects(object.id);
+        $scope.getSelectedObjects();
         
         //settings for activate tab "Main options", when edit window opened. 
         $scope.set_of_objects_flag=false;
@@ -196,10 +196,12 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(tariffId){  
-        $scope.crudTableName1 = "../api/reportParamset";
-        var table=$scope.crudTableName1+"/"+tariffId+"/contObject/available";        
+//        $scope.crudTableName1 = "../api/reportParamset";
+        var table=$scope.crudTableName+"/"+tariffId+"/contObject/available"; 
+console.log(table);        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;                     
+            $scope.availableObjects = data;    
+console.log(data);            
         });        
     };
 //    $scope.getAvailableObjects();

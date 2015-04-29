@@ -57,6 +57,15 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         };
         $scope.setDefault();
     };
+    
+    var successDeleteCallback = function (e) {     
+        notificationFactory.success();
+        
+        $('#deleteObjectModal').modal('hide');
+        $scope.getArchive();
+        $scope.setDefault();
+        
+    };
 
     var errorCallback = function (e) {
         notificationFactory.error(e.data.ExceptionMessage);       
@@ -68,8 +77,8 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
     };
     
     $scope.deleteObject = function (object) {
-        var table = $scope.crudTableName + $scope.currentReportType.suffix;
-        crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
+        var table = $scope.crudTableName +"/archive"+ $scope.currentReportType.suffix;
+        crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
     };
        
     $scope.getTemplates = function(table, type){

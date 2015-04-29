@@ -3,13 +3,7 @@
 angular.module('portalNMK')
 .controller('ObjectsCtrl', function($scope, $rootScope, $http){
 //console.log("loading ObjectsCtrl.");  
-    var url = "../api/systemInfo/fullUserInfo";
-    $http.get(url)
-        .success(function(data, satus, headers, config){
-            $rootScope.userInfo = data;
-//console.log($rootScope.userInfo);        
-        })
-        .error();
+
 //    $rootScope.userInfo = 
 //     $scope.navPlayerDates = {
 //                            startDate : moment().startOf('day'),
