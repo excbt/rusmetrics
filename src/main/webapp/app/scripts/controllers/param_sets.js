@@ -356,4 +356,9 @@ console.log(object[$scope.extraProps.idColumnName]);
               
     }, false);
     
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
+    };
+
 }]);

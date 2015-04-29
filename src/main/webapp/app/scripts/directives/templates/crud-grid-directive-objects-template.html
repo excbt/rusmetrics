@@ -58,7 +58,7 @@
                             <tr>
                                 <td><i ng-show="bObject" class="btn btn-default btn-xs noMargin glyphicon" ng-class="{'glyphicon glyphicon-chevron-down': object.showGroupDetails, 'glyphicon glyphicon-chevron-right': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object);selectedItem(object)"></i></td>
 <!--                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
+                                <td><i ng-show="!bList" class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
                             </tr>
                         </table>    
                     </div> 
@@ -153,7 +153,7 @@
                     <tr>
                         <!--       Шапка таблицы-->
 <!--                        Колонка для кнопок-->
-                        <th ng-show="bObject && !bList" class="col-md-1">
+                        <th ng-show="bObject || bList" class="col-md-1">
                         </th>
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)" style="text-align: left;">
                             <div>
@@ -176,6 +176,9 @@
                                         </table>    
                                     </div>    
                                 </div>
+                        </td>
+                         
+                        <td ng-show="bList" class="col-md-1">
                         </td>
                          
                          <td ng-repeat="oldColumn in oldColumns">

@@ -127,7 +127,7 @@ angular.module('portalNMK')
             })
             ,DTColumnBuilder.newColumn('eventTime').withTitle('Дата').withClass($scope.tableDef.columns[2].headerClass)
             .renderWith(function(data, type, full){
-                return moment(full.eventTime).format('YYYY-MM-DD HH:mm:ss')
+                return moment(full.eventTime).format('DD.MM.YYYY HH:mm:ss')
             })
             ,DTColumnBuilder.newColumn('contObjectId').withTitle('Объект').withClass($scope.tableDef.columns[3].headerClass)
             .renderWith(function(data, type, full){                

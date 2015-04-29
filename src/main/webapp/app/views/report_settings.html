@@ -77,7 +77,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-2" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}}
+                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> ({{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-7"  ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
@@ -147,7 +147,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-2">     
-                                                    {{oldObject.name}}
+                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> ({{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-7">     
                                                     в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}

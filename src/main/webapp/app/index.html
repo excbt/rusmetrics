@@ -54,8 +54,8 @@
                 
             <ul class="nav navbar-nav pull-right">	
 				
-                <li class="dropdown" ng-controller="UserinfoCtrl">
-                    <a class="dropdown-toggle " data-toggle="dropdown" href="" ><p
+                <li class="dropdown">
+                    <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><p
 							class="displayInLine hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}"> <b>{{userInfo.userName}}</b>
 						</p><p class="hideM" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.name}})</p></a>
                     <ul class="dropdown-menu">

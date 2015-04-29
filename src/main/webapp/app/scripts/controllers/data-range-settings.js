@@ -3,7 +3,7 @@ app
     .controller('DataRangeSettings', function($scope, $rootScope){
                     $scope.navPlayerDates = {
                             startDate :  moment().startOf('day'),
-                            endDate :  moment().startOf('day'),
+                            endDate :  moment().endOf('day'),
                         };
     
                     $scope.queryDateOptsRu = {

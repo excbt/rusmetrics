@@ -303,6 +303,11 @@ app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory
         $scope.getWizard();
         $scope.setDefault();
     };
+    
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
+    };
 
     
 }]);
