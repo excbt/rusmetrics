@@ -180,5 +180,10 @@ public class ReportSheduleService implements SecuredRoles {
 	public void deleteOne(long reportSheduleId) {
 		reportSheduleRepository.delete(reportSheduleId);
 	}
+	
+	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public void deleteByReportParamset(long reportParamsetId) {
+		reportSheduleRepository.deleteByReportParamset(reportParamsetId);
+	}
 
 }

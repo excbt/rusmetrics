@@ -46,7 +46,7 @@ public interface ReportParamsetUnitRepository extends
 	@Modifying
 	@Query("DELETE ReportParamsetUnit d "
 			+ "WHERE d.reportParamset.id = :reportParamsetId ")
-	public void deleteReportParamsetUnit(
+	public void deleteByReportParamset(
 			@Param("reportParamsetId") long reportParamsetId);	
 	
 }
