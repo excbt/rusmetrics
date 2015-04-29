@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMK');
 
-app.controller('ReportSettingsCtrl',['$scope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $resource,crudGridDataFactory, notificationFactory){
+app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
     
     $scope.active_tab_active_templates = true;
     $scope.currentObject = {};
