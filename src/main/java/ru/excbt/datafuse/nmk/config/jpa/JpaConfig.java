@@ -2,9 +2,12 @@ package ru.excbt.datafuse.nmk.config.jpa;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import javax.annotation.PreDestroy;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,6 +32,9 @@ import ru.excbt.datafuse.nmk.config.PropertyConfig;
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
 public class JpaConfig {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(JpaConfig.class);
+	
 	@Value("${dataSource.driverClassName}")
 	private String driverClassname;
 
@@ -105,4 +111,21 @@ public class JpaConfig {
 		return datasourcePassword;
 	}
 
+	@PreDestroy
+	public void contextdestroyed() {
+
+//		Enumeration<Driver> drivers = DriverManager.getDrivers();
+//		while (drivers.hasMoreElements()) {
+//			Driver driver = drivers.nextElement();
+//			try {
+//				DriverManager.deregisterDriver(driver);
+//				logger.info("deregistering jdbc driver: {}", driver);
+//			} catch (SQLException e) {
+//				logger.error("Error deregistering driver : {}", driver);
+//			}
+//
+//		}
+
+	}	
+	
 }
