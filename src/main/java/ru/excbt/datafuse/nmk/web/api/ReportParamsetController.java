@@ -655,7 +655,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCommerce(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 		
@@ -669,7 +669,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT1(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 		
@@ -683,7 +683,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT2(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 		
@@ -697,7 +697,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 		
@@ -711,7 +711,7 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/archive/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneEvent(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
