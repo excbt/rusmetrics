@@ -221,11 +221,71 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	@Test
-	public void updateDefaultReportTemplateTest() {
+	public void updateCommonEventReportTemplateTest() {
 		int result = reportTemplateService.updateCommonReportTemplateBody(
 				ReportTypeKey.EVENT_REPORT, true, true);
-		
-		assertTrue(result > 0);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.EVENT_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
+		}
+	}
+
+	@Test
+	public void updateCommonConsT1ReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.CONS_T1_REPORT, true, true);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.CONS_T1_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
+		}
+	}
+
+	@Test
+	public void updateCommonConsT2ReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.CONS_T2_REPORT, true, true);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.CONS_T2_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.CONS_T2_REPORT);
+		}
+
+	}
+
+	@Test
+	public void updateCommonCommerceReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.COMMERCE_REPORT, true, true);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.CONS_T2_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
+		}
+
+	}
+
+	@Test
+	public void createDeleteCommonEventReportTemplateTest() {
+		ReportTemplate result = reportTemplateService
+				.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
+		assertNotNull(result);
+
+		reportTemplateService.deleteOneCommon(result);
+
 	}
 
 }
