@@ -38,7 +38,7 @@ public class FullUserInfo implements Serializable {
 	@Column(name = "is_system")
 	private boolean _system;
 
-	@Column(name = "subscriber_id", updatable = false, insertable = false)
+	@Column(name = "subscriber_id")
 	private Long subscriberId;
 
 	@OneToOne
@@ -58,6 +58,7 @@ public class FullUserInfo implements Serializable {
 			this.version = src.version;
 			this._system = src._system;
 			this.subscriberId = src.subscriberId;
+			this.subscriber = src.subscriber;
 		}
 	}
 
