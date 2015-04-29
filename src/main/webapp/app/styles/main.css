@@ -366,7 +366,11 @@ tr > .active{
     width: 87%;
 }
 .menuWidth {
-    width: 200px;
+    width: 10%;
+}
+
+.excbt_a_list_group_item{
+    word-wrap: break-word;
 }
 
 .modalWindow_wide {
