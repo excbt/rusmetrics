@@ -55,9 +55,9 @@
             <ul class="nav navbar-nav pull-right">	
 				
                 <li class="dropdown">
-                    <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><p
-							class="displayInLine hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}"> <b>{{userInfo.userName}}</b>
-						</p><p class="hideM" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.name}})</p></a>
+                    <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
+							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}"> <b>{{userInfo.userName}}</b>
+						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
                             title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false;showSettings=false"><p> <b>Личный кабинет</b> 
