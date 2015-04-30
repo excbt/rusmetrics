@@ -129,12 +129,16 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 //console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.currentObject.endDate);           
 //console.log("In saving...");
 //        
-//console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);                   
+//console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);
+        
+        var tmp = $scope.selectedObjects.map(function(elem){
+            return elem.id;
+        });
         if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')){
-            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id}, $scope.currentObject, successPostCallback, errorCallback);
+            crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id, contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
         }else{
 //console.log($scope.currentObject) ;           
-            saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({}, $scope.currentObject, successPostCallback, errorCallback);
+            saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
         };
     };
     
