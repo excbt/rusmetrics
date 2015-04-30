@@ -117,109 +117,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
 			        $scope.currentObject = curObject;
 			    };
                 
-                
-                //Работа с уведомлениями
-//                    $scope.bGroupByObject = false;
-//                    $scope.oldObjects = $scope.objects;
-//                    $scope.oldColumns = $scope.columns;
-//                    $scope.oldCaptions = $scope.captions;
-//                    $scope.oldExtraProps = $scope.extraProps;
-//                
-//                $scope.cancelGroup = function(){
-//                    $scope.objects = $scope.oldObjects;
-//                    $scope.columns = $scope.oldColumns;
-//                    $scope.captions = $scope.oldCaptions;
-//                    $scope.extraProps = $scope.oldExtraProps;
-//                    $scope.bGroupByObject = false;
-//                };
-                
-                //
-//                $scope.groupByObject = function(){
-                    //1.сделать копию объектов
-                    //2.Найти уникальные объекты
-                    //3.Посчитать у каждого объекта количество уведомлений всех и каждого из видов в отдельности
-                    //4.Перестроить структуру и вывести объекты
-  //                 alert("groupByObject");
-
-//                     $scope.bGroupByObject = true;
-                    //1.
-//                    $scope.oldObjects = $scope.objects;
-//                    $scope.oldColumns = $scope.columns;
-//                    $scope.oldCaptions = $scope.captions;
-//                    $scope.oldExtraProps = $scope.extraProps;
-
-                    //2.
-//                    $scope.objectGroups = [];
-//                    $scope.groupsCount =0;   
-//                    for (var i=0;i<$scope.objects.length;i++){      
-//                        $scope.objectGroup = {"name":"", "commonCount":0, "critCount":0, "warnCount":0, "infoCount":0};
-//                        if ( $scope.objectGroups.length == 0){
-//                            $scope.objectGroup.name = $scope.objects[i].noticeObject;
-//                            $scope.objectGroup.commonCount = 1;
-//                            switch($scope.objects[i].noticeCat){
-//                                    case "Критическая": $scope.objectGroup.critCount=1; break;
-//                                    case "Предупреждение": $scope.objectGroup.warnCount=1; break;
-//                                    case "Информация": $scope.objectGroup.infoCount=1; break;
-//                                    
-//                            }
-//                            $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
-//                            $scope.groupsCount=$scope.groupsCount+1;
-//                        }else{
-//     
-//                            $scope.bNewGroup = false;
-//                            for(var j=0; j<$scope.objectGroups.length; j++){
-//
-//                                if ($scope.objectGroups[j].name==$scope.objects[i].noticeObject){
-//                                    $scope.objectGroups[j].commonCount=$scope.objectGroups[j].commonCount+1; //3.
-//                                    switch($scope.objects[i].noticeCat){
-//                                            case "Критическая": $scope.objectGroups[j].critCount=$scope.objectGroups[j].critCount+1; break;
-//                                            case "Предупреждение": $scope.objectGroups[j].warnCount=$scope.objectGroups[j].warnCount+1; break;
-//                                            case "Информация": $scope.objectGroups[j].infoCount=$scope.objectGroups[j].infoCount+1; break;
-//                                    
-//                                    }
-//                                    $scope.bNewGroup = false;
-//                                    break;
-//                                 
-//                                }else{
-//                                    $scope.bNewGroup = true;
-//                                }
-//                            }
-//                            
-//                            if($scope.bNewGroup){
-//                                $scope.objectGroup.name = $scope.objects[i].noticeObject;
-//                                    $scope.objectGroup.commonCount = 1;
-//                                     switch($scope.objects[i].noticeCat){
-//                                            case "Критическая": $scope.objectGroup.critCount=1; break;
-//                                            case "Предупреждение": $scope.objectGroup.warnCount=1; break;
-//                                            case "Информация": $scope.objectGroup.infoCount=1; break;
-//
-//                                    }
-//                                    $scope.objectGroups[$scope.groupsCount] = $scope.objectGroup;
-//                                    $scope.groupsCount=$scope.groupsCount+1;
-//                            }
-//
-//                            
-//                        }
-//                    }  
-                    //4.
-//                    $scope.columns = [ 
-//                                      {"name":"name", "header" : "Объект", "class":"col-md-3"}
-//                                    ,{"name":"commonCount", "header" : "Всего уведомлений", "class":"col-md-2"}
-//                                    ,{"name":"critCount", "header" : "Критические", "class":"col-md-1"}
-//                                    ,{"name":"warnCount", "header" : "Предупреждений", "class":"col-md-1"}
-//                                    ,{"name":"infoCount", "header" : "Информативных", "class":"col-md-1"}
-//                    ];
-//                    $scope.objects = $scope.objectGroups;
-                    
-//                }; 
-                     //End groupByObject
-
                 $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
-//                   for(var i=0;i<$scope.objects.length;i++){
-//                       if ($scope.objects[i]!=curObject && $scope.objects[i].showGroupDetails==true){
-//                           $scope.objects[i].showGroupDetails=false;
-//                       }
-//                   }
                     curObject.showGroupDetails = !curObject.showGroupDetails;
                 };
                 
@@ -269,13 +167,6 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                     });
                 };
                 //for page "Objects"
-//                $scope.showObjectDetails = function(obj){
-//                    $scope.oldObjects = [];
-//                    var zps = angular.fromJson($attrs.zpointdata);
-//                    var mas = [];
-//                    $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);               
-//                    $scope.getZpointsDataByObject(obj, "Ex");  
-//                };
                 
                 //Фильтр "Только непросмотренные"
                 $scope.onlyNoRead = false;

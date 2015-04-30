@@ -45,14 +45,6 @@
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
             <td ng-show="bGroupByObject || bObject" class="col-md-1 noMargin" style="padding:0;">
                 <div class="btn-toolbar marginLeft5">
-<!--                    <div  class="noMargin">-->
-<!--                        <i ng-show="bGroupByObject" class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="toogleShowGroupDetails(object); selectedItem(object)"></i>-->
-<!--                    </div>-->
-    <!--                data-target="#showObjectDetailModal" data-toggle="modal"-->           
-    <!--                Эта кнопка доступна, когда отображаются объекты-->
-<!--                    <div  class="noMargin">-->
-                        
-<!--                    </div>-->
                     <div class="btn-group">
                         <table>
                             <tr>
@@ -63,17 +55,7 @@
                         </table>    
                     </div> 
                 </div> 
-<!--
-                <div class="btn-toolbar excbt_zpointButtonMargin">
-     
-                </div>
--->
             </td>
-<!--
-            <td ng-show="bReports">
-                <div ng-show="bObject" class="btn-toolbar noMargin"><input type="checkbox" ng-click="toggleSelectObject(object)"></div>
-            </td>
--->
             
     <!--  Выводим данные в соответствующие столбцы таблицы  -->
             <td ng-repeat="column in columns" ng-class="column.class" ng-switch on="object.editMode" >
@@ -129,23 +111,6 @@
 
                 
             </td>
-                    
-<!-- Колонка для формирования отчетов по объектам                   -->
-<!--
-            <td ng-show="bObject" ng-hide="!bReports" class="col-md-1"> 
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <table>
-                            <tr>
-                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="getReport(object, 'html')" title="Сформировать"></i> </td>
-                                <td><i class="btn btn-default btn-xs glyphicon" ng-click="getReport(object, 'pdf')">PDF</i></td>                                
-                            </tr>
-                        </table>    
-                    </div>    
-                </div>
-                
-            </td>
--->
                 </tr><!--    </tr> Уровень 3     -->
                 <tr><!--    <tr> Уровень 3     -->
                     
@@ -255,14 +220,6 @@
 				    </p>
                 </li>
                   <li>
-<!--
-                      <div class="pull-right btn-toolbar" ng-show="bReports">
-                        <div class="btn-group">
-                            <i class="btn btn-default btn-sm glyphicon" ng-click="getReports()" ng-disabled="{{selectedObjectsCount>0}}"> Сформировать отчеты в формате PDF для выбранных обеъектов</i>  
-                        </div>    
-				    
-                        </div>
--->
                   </li>
 			</ul>				
     </div>
