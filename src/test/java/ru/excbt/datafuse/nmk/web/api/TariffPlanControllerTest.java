@@ -90,12 +90,16 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		List<ContObject> tariffContObjects = tariffPlanService
 				.selectTariffPlanContObjects(
-						
 						testRec.getId(), currentSubscriberService.getSubscriberId());
+		
+		for (ContObject co : tariffContObjects) {
+			logger.info("ContObject (id={}). FullAddress: {}", co.getId(), co.getFullAddress());
+		}
+		
 		long[] contObjects = new long[tariffContObjects.size()];
 		int idx = 0;
 		for (ContObject co : tariffContObjects) {
-			contObjects[idx] = co.getId();
+			contObjects[idx++] = co.getId();
 		}
 
 		ResultActions resultActionsAll;
