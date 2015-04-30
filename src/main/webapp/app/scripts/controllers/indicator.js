@@ -2,7 +2,17 @@
 angular.module('portalNMK')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', 'crudGridDataFactory',function($scope, $rootScope, crudGridDataFactory){
     
-    $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+    var checkInputParams = function(){
+        if (($rootScope.contObject==null) || (typeof $rootScope.contObject=='undefined')){
+            window.location.replace("#/objects_edit/");
+            return false;
+        };
+        return true;
+    };
+        
+   // checkInputParams();    
+    
+    
     //Определяем оформление для таблицы показаний прибора
         
         //Определеяю названия колонок
@@ -12,9 +22,7 @@ angular.module('portalNMK')
                 header : "Дата",
                 headerClass : "col-md-2",
                 dataClass : "col-md-2"
-
             }, 
-
             "workTime":{
                 header : "Время наработки, час",
                 headerClass : "col-md-1",
@@ -112,26 +120,26 @@ angular.module('portalNMK')
     };
         
         
-    function printDate() {
-        var temp = new Date();
-        var dateStr = padStr(temp.getFullYear()) +
-                      padStr(1 + temp.getMonth()) +
-                      padStr(temp.getDate()) +
-                      padStr(temp.getHours()) +
-                      padStr(temp.getMinutes()) +
-                      padStr(temp.getSeconds());
-//        debug (dateStr );
-    }
-
     //helper for date formating
-    function padStr(i) {
-        return (i < 10) ? "0" + i : "" + i;
-    }    
+//    function padStr(i) {
+//        return (i < 10) ? "0" + i : "" + i;
+//    }   
+        
+        var setUrl = function(){
+        if (checkInputParams()){
+           
+        }
+    };
+    setUrl();        
 
       //Получаем показания
     $scope.columns = [];
  //       $scope.data = {};
     $scope.getData = function () {
+         if (!checkInputParams()){
+            return;   
+         }
+         $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         var table =  $scope.zpointTable;      
         crudGridDataFactory(table).query(function (data) {
                 var iCol = 0;
@@ -152,7 +160,7 @@ angular.module('portalNMK')
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-                          var datad = new Date(el.dataDate);
+//                          var datad = new Date(el.dataDate);
                           el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
 //                            el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
 //                        moment().
