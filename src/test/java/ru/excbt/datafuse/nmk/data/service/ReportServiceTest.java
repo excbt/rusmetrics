@@ -12,7 +12,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +87,6 @@ public class ReportServiceTest extends JpaSupportTest {
 	}
 
 	@Test
-	@Ignore
 	public void testMakeEventReport() throws IOException {
 		FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeEventReport.pdf");
