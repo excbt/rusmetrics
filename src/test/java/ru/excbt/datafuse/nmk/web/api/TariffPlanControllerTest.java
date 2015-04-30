@@ -71,7 +71,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	public void testUpdate() throws Exception {
 
 		List<TariffPlan> tariffPlanList = tariffPlanService
-				.getDefaultTariffPlanList();
+				.selectTariffPlanList();
 		if (tariffPlanList.size() == 0) {
 			logger.warn("Skip Tarif Plan List");
 			// return;
@@ -90,8 +90,8 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		List<ContObject> tariffContObjects = tariffPlanService
 				.selectTariffPlanContObjects(
-						currentSubscriberService.getSubscriberId(),
-						testRec.getId());
+						
+						testRec.getId(), currentSubscriberService.getSubscriberId());
 		long[] contObjects = new long[tariffContObjects.size()];
 		int idx = 0;
 		for (ContObject co : tariffContObjects) {
@@ -145,8 +145,8 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		TariffType tt = tariffTypeList.get(0);
 
 		List<ContObject> tariffContObjects = tariffPlanService
-				.selectTariffPlanAvailableContObjects(
-						currentSubscriberService.getSubscriberId(), 0);
+				.selectTariffPlanAvailableContObjects(0,
+						currentSubscriberService.getSubscriberId());
 
 		assertTrue(tariffContObjects.size() > 0);
 		long[] contObjectIds = new long[1];
