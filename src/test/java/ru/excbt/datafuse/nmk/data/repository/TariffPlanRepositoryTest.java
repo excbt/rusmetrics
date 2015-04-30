@@ -24,7 +24,7 @@ public class TariffPlanRepositoryTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSelectDefaultTarifPlan() {
-		List<?> result = tariffPlanRepository.selectDefaultTariffPlan(0, 0);
+		List<?> result = tariffPlanRepository.selectTariffPlanList(0, 0);
 		assertTrue(result.size() == 0);
 	}
 
@@ -33,7 +33,7 @@ public class TariffPlanRepositoryTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSelectDefaultTarifPlanNoRSO() {
-		List<?> result = tariffPlanRepository.selectDefaultTariffPlan(0);
+		List<?> result = tariffPlanRepository.selectTariffPlanList(0);
 		assertTrue(result.size() == 0);
 	}
 
@@ -59,6 +59,13 @@ public class TariffPlanRepositoryTest extends JpaSupportTest {
 	public void testAvailableTariffPlanContObjects() {
 		List<?> result = tariffPlanRepository.selectAvailableContObjects(
 				currentSubscriberService.getSubscriberId(), 0);
+		assertTrue(result.size() > 0);
+	}
+
+	@Test
+	public void testAvailableTariffPlanContObjects2() {
+		List<?> result = tariffPlanRepository.selectAvailableContObjects(
+				currentSubscriberService.getSubscriberId(), 28761612);
 		assertTrue(result.size() > 0);
 	}
 

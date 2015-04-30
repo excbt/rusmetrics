@@ -98,7 +98,7 @@ public class TariffPlanController extends WebApiController {
 	 */
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
-		List<?> resultList = tariffPlanService.getDefaultTariffPlanList();
+		List<?> resultList = tariffPlanService.selectTariffPlanList();
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -111,7 +111,7 @@ public class TariffPlanController extends WebApiController {
 	public ResponseEntity<?> listDefaultAll(
 			@RequestParam("rsoOrganizationId") long rsoOrganizationId) {
 		List<?> resultList = tariffPlanService
-				.getDefaultTariffPlanList(rsoOrganizationId);
+				.selectTariffPlanList(rsoOrganizationId);
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -298,8 +298,7 @@ public class TariffPlanController extends WebApiController {
 
 		List<ContObject> contObjectList = tariffPlanService
 				.selectTariffPlanContObjects(
-						currentSubscriberService.getSubscriberId(),
-						tariffPlanId);
+				tariffPlanId, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
 	}
@@ -314,9 +313,8 @@ public class TariffPlanController extends WebApiController {
 			@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService
-				.selectTariffPlanAvailableContObjects(
-						currentSubscriberService.getSubscriberId(),
-						tariffPlanId);
+				.selectTariffPlanAvailableContObjects(tariffPlanId,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
 	}

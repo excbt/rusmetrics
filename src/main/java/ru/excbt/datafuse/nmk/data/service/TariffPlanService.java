@@ -52,9 +52,9 @@ public class TariffPlanService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<TariffPlan> getDefaultTariffPlanList() {
+	public List<TariffPlan> selectTariffPlanList() {
 		return tariffPlanRepository
-				.selectDefaultTariffPlan(currentSubscriberService
+				.selectTariffPlanList(currentSubscriberService
 						.getSubscriberId());
 	}
 
@@ -63,8 +63,8 @@ public class TariffPlanService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<TariffPlan> getDefaultTariffPlanList(long rsoOrganizationId) {
-		return tariffPlanRepository.selectDefaultTariffPlan(
+	public List<TariffPlan> selectTariffPlanList(long rsoOrganizationId) {
+		return tariffPlanRepository.selectTariffPlanList(
 				currentSubscriberService.getSubscriberId(), rsoOrganizationId);
 	}
 
@@ -75,7 +75,7 @@ public class TariffPlanService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public List<TariffPlan> getContObjectTariffPlanList(long rsoOrganizationId,
 			long contObjectId) {
-		return tariffPlanRepository.selectDefaultTariffPlan(
+		return tariffPlanRepository.selectTariffPlanList(
 				currentSubscriberService.getSubscriberId(), contObjectId);
 	}
 
@@ -86,7 +86,7 @@ public class TariffPlanService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void initDefaultTariffPlan(long rsoOrganizationId) {
 		List<TariffPlan> currentTariffPlan = tariffPlanRepository
-				.selectDefaultTariffPlan(rsoOrganizationId);
+				.selectTariffPlanList(rsoOrganizationId);
 		if (currentTariffPlan.size() > 0) {
 			throw new PersistenceException(
 					String.format(
@@ -124,7 +124,7 @@ public class TariffPlanService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteDefaultTariffPlan(long rsoOrganizationId) {
-		tariffPlanRepository.deleteDefaultTariffPlan(
+		tariffPlanRepository.deleteTariffPlan(
 				currentSubscriberService.getSubscriberId(), rsoOrganizationId);
 	}
 
@@ -225,17 +225,22 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ContObject> selectTariffPlanContObjects(long subscriberId,
-			long tariffPlanId) {
+	public List<ContObject> selectTariffPlanContObjects(long tariffPlanId,
+			long subscriberId) {
 		return tariffPlanRepository.selectTariffPlanContObjects(subscriberId,
 				tariffPlanId);
 	}
 
 	@Transactional(readOnly = true)
 	public List<ContObject> selectTariffPlanAvailableContObjects(
-			long subscriberId, long tariffPlanId) {
+			long tariffPlanId, long subscriberId) {
 		return tariffPlanRepository.selectAvailableContObjects(subscriberId,
 				tariffPlanId);
+	}
+
+	@Transactional(readOnly = true)
+	public TariffPlan findOne(long tariffPlanId) {
+		return tariffPlanRepository.findOne(tariffPlanId);
 	}
 
 }
