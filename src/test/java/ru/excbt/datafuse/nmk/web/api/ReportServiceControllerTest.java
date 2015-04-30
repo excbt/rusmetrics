@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -44,18 +43,6 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		
 	}
 	
-	@Test
-	public void testReportHtmlRedirect() throws Exception {
-		redirectOption(ReportOutputFileType.HTML);
-	}
-
-	@Test
-	public void testReportPdfRedirect() throws Exception {
-		redirectOption(ReportOutputFileType.PDF);
-	}
-	
-	
-
 	
 
 }
