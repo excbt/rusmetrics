@@ -15,7 +15,7 @@
 
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-minus': object.showGroupDetails, 'glyphicon-plus': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">
@@ -32,7 +32,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataЗaramsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
@@ -43,7 +43,7 @@
                                                     <div class="btn-group" style="width:45px;">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Сформировать" class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="createReport(oldObject)"></i>
+                                                            <td>    <i title="Сформировать" class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="createReport(object,oldObject)"></i>
                                                             </td>
                                                           </tr>
                                                       </table>

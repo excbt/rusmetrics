@@ -69,8 +69,8 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
       
     };
     
-    $scope.createReport = function(paramset){
-        var url ="../api/reportService/commerce/"+paramset.id+"/download";
+    $scope.createReport = function(type,paramset){
+        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
         window.open(url);
         
     };
