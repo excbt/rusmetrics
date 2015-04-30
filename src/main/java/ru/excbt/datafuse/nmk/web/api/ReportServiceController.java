@@ -1,10 +1,12 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,13 +29,14 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController {
 
 	private interface ReportMaker {
-		void makeReport(long reportParamsetId, LocalDateTime dateTime,
+		boolean makeReport(long reportParamsetId, LocalDateTime dateTime,
 				OutputStream outputStream);
 
 		String mimeType();
@@ -54,6 +57,7 @@ public class ReportServiceController {
 	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
+	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
 	private final static String EXT_ZIP = ".zip";
 	private final static String EXT_PDF = ".pdf";
 
@@ -62,6 +66,9 @@ public class ReportServiceController {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
@@ -167,10 +174,11 @@ public class ReportServiceController {
 		ReportMaker reportMaker = new ReportMaker() {
 
 			@Override
-			public void makeReport(long reportParamsetId,
+			public boolean makeReport(long reportParamsetId,
 					LocalDateTime dateTime, OutputStream outputStream) {
 				reportService.makeCommerceReportZip(reportParamsetId,
 						LocalDateTime.now(), outputStream);
+				return true;
 			}
 
 			@Override
@@ -267,10 +275,11 @@ public class ReportServiceController {
 		ReportMaker reportMaker = new ReportMaker() {
 
 			@Override
-			public void makeReport(long reportParamsetId,
+			public boolean makeReport(long reportParamsetId,
 					LocalDateTime dateTime, OutputStream outputStream) {
 				// reportService.makeCommerceReportZip(reportParamsetId,
 				// LocalDateTime.now(), outputStream);
+				return true;
 			}
 
 			@Override
@@ -295,4 +304,53 @@ public class ReportServiceController {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker eventReportMaker() {
+		return new ReportMaker() {
+
+			@Override
+			public boolean makeReport(long reportParamsetId,
+					LocalDateTime dateTime, OutputStream outputStream) {
+				checkArgument(reportParamsetId > 0);
+				checkNotNull(outputStream);
+				checkNotNull(dateTime);
+				boolean result = true;
+				ZipOutputStream zipOutputStream = new ZipOutputStream(
+						outputStream);
+				try {
+					reportService.makeReport(reportParamsetId,
+							currentSubscriberService.getSubscriberId(),
+							dateTime, zipOutputStream);
+				} finally {
+					try {
+						zipOutputStream.flush();
+						zipOutputStream.close();
+					} catch (IOException e) {
+						result = false;
+					}
+
+				}
+				return result;
+			}
+
+			@Override
+			public String mimeType() {
+				return MIME_ZIP;
+			}
+
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_EVENT_FILENAME;
+			}
+
+			@Override
+			public String ext() {
+				return EXT_ZIP;
+			}
+
+		};
+	}
 }

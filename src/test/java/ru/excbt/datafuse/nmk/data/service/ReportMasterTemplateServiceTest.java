@@ -14,12 +14,12 @@ import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 
 public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 
-	private static final String COMM_FILE_COMPILED = "jasper/nmk_com_report.jasper";
-	private static final String COMM_FILE_JRXML = "jasper/nmk_com_report.jrxml";
+	private static final String COMM_FILE_COMPILED = "jasper_reports/nmk_com_report.jasper";
+	private static final String COMM_FILE_JRXML = "jasper_reports/nmk_com_report.jrxml";
 
-	private static final String EVENT_FILE_COMPILED = "jasper/nmk_event_report.jasper";
-	private static final String CONS_T1_FILE_COMPILED = "jasper/nmk_consolidated_report_1.jasper";
-	private static final String CONS_T2_FILE_COMPILED = "jasper/nmk_consolidated_report_2.jasper";
+	private static final String EVENT_FILE_COMPILED = "jasper_reports/nmk_event_report.jasper";
+	private static final String CONS_T1_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_1.jasper";
+	private static final String CONS_T2_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_2.jasper";
 
 	private static final boolean IS_COMPILED = true;
 	private static final boolean IS_NOT_COMPILED = false;
@@ -82,13 +82,13 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	}
 
 	@Test
-	public void testLoadContT1Report() throws Exception {
+	public void testLoadConsT1Report() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
 				CONS_T1_FILE_COMPILED, IS_COMPILED);
 	}
 
 	@Test
-	public void testLoadContT2Report() throws Exception {
+	public void testLoadConsT2Report() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
 				CONS_T2_FILE_COMPILED, IS_COMPILED);
 	}

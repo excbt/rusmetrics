@@ -271,7 +271,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		if (result == 0) {
 			logger.info(
 					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
-					ReportTypeKey.CONS_T2_REPORT);
+					ReportTypeKey.COMMERCE_REPORT);
 			reportTemplateService
 					.createCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
 		}
@@ -286,6 +286,12 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 		reportTemplateService.deleteOneCommon(result);
 
+	}
+
+	@Test
+	public void updateCommerce263() {
+		reportTemplateService.updateTemplateBodyFromMaster(
+				ReportTypeKey.COMMERCE_REPORT, 28618263, true);
 	}
 
 }

@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,9 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 @Transactional
 public class ReportTemplateService implements SecuredRoles {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportTemplateService.class);
 
 	@Autowired
 	private ReportTemplateRepository reportTemplateRepository;
@@ -264,6 +269,7 @@ public class ReportTemplateService implements SecuredRoles {
 			rtb = new ReportTemplateBody();
 			rtb.setReportTemplateId(reportTemplateId);
 		}
+
 		if (isCompiled) {
 			rtb.setBodyCompiled(body);
 			rtb.setBodyCompiledFilename(filename);
@@ -271,6 +277,7 @@ public class ReportTemplateService implements SecuredRoles {
 			rtb.setBody(body);
 			rtb.setBodyFilename(filename);
 		}
+
 		reportTemplateBodyRepository.save(rtb);
 	}
 
@@ -419,6 +426,10 @@ public class ReportTemplateService implements SecuredRoles {
 			return 0;
 		}
 
+		for (ReportTemplate rt : updateCadidates) {
+			logger.info("Cadidate to update: {}", rt.getId());
+		}
+
 		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
 				.selectReportMasterTemplate(reportTypeKey);
 
@@ -432,11 +443,15 @@ public class ReportTemplateService implements SecuredRoles {
 			srcBody = reportMasterTemplateBody.getBody();
 			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
 		}
+		logger.info("MasterTemplateBody size length: {}", srcBody.length);
+		logger.info("MasterTemplateBody file name  : {}", srcBodyFilename);
 
 		checkNotNull(srcBody);
 
 		int resultIdx = 0;
 		for (ReportTemplate rt : updateCadidates) {
+			logger.info("Updating ReportTemplate:{}", rt.getId());
+
 			saveReportTemplateBodyInternal(rt.getId(), srcBody,
 					srcBodyFilename, isCompiled);
 			resultIdx++;
@@ -470,11 +485,11 @@ public class ReportTemplateService implements SecuredRoles {
 		ReportType reportType = reportTypeService.findByKeyname(reportTypeKey
 				.name());
 		if (reportType.getName() != null) {
-			reportTemplate.setName( reportType.getName() +" (ОБЩИЙ)");	
+			reportTemplate.setName(reportType.getName() + " (ОБЩИЙ)");
 		} else {
-			reportTemplate.setName( reportTypeKey.name() +" (ОБЩИЙ)");
+			reportTemplate.setName(reportTypeKey.name() + " (ОБЩИЙ)");
 		}
-		
+
 		reportTemplate.set_active(true);
 		reportTemplate.set_default(true);
 		reportTemplate.setActiveEndDate(new Date());
@@ -494,4 +509,43 @@ public class ReportTemplateService implements SecuredRoles {
 
 		return result;
 	}
+
+	/**
+	 * 
+	 * @param reportTypeKey
+	 * @param isActive
+	 * @param isCompiled
+	 */
+	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey,
+			long reportTemplateId, boolean isCompiled) {
+
+		ReportTemplate reportTemplate = reportTemplateRepository
+				.findOne(reportTemplateId);
+		checkNotNull(reportTemplate);
+
+		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
+				.selectReportMasterTemplate(reportTypeKey);
+
+		byte[] srcBody;
+		String srcBodyFilename;
+		if (isCompiled) {
+			srcBody = reportMasterTemplateBody.getBodyCompiled();
+			srcBodyFilename = reportMasterTemplateBody
+					.getBodyCompiledFilename();
+		} else {
+			srcBody = reportMasterTemplateBody.getBody();
+			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
+		}
+		logger.info("MasterTemplateBody size length: {}", srcBody.length);
+		logger.info("MasterTemplateBody file name  : {}", srcBodyFilename);
+
+		checkNotNull(srcBody);
+
+		logger.info("Updating ReportTemplate:{}", reportTemplate);
+
+		saveReportTemplateBodyInternal(reportTemplate.getId(), srcBody,
+				srcBodyFilename, isCompiled);
+
+	}
+
 }
