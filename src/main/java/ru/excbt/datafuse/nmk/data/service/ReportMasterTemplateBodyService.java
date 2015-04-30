@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -20,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportMasterTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
 @Service
 @Transactional
@@ -70,10 +70,10 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	public boolean saveReportMasterTemplateBody(
 			long reportMasterTemplateBodyId, String fileResource,
 			boolean isCompiled) throws IOException {
-		File file = ResourceHelper.findResource(fileResource);
+		File file = new File (fileResource);
 
 		if (!file.exists()) {
-			return false;
+			throw new FileNotFoundException(fileResource);
 		}
 
 		byte[] fileBytes = null;
@@ -92,6 +92,10 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 			return false;
 		}
 
+		logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
+		byte [] bb = entity.getBodyCompiled();
+		logger.info("Current Report Template Body size {}", bb != null ? bb.length : 0);
+		
 		if (isCompiled) {
 			entity.setBodyCompiled(fileBytes);
 			entity.setBodyCompiledFilename(file.getName());

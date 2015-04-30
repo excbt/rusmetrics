@@ -1,10 +1,12 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,19 +23,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController {
 
 	private interface ReportMaker {
-		void makeReport(long reportParamsetId, LocalDateTime dateTime,
+		boolean makeReport(long reportParamsetId, LocalDateTime dateTime,
 				OutputStream outputStream);
 
 		String mimeType();
@@ -42,7 +44,77 @@ public class ReportServiceController {
 
 		String ext();
 	}
+	
+	
+	private abstract class ZipReportMaker implements ReportMaker {
+	
+		@Override
+		public boolean makeReport(long reportParamsetId,
+				LocalDateTime dateTime, OutputStream outputStream) {
+			checkArgument(reportParamsetId > 0);
+			checkNotNull(outputStream);
+			checkNotNull(dateTime);
+			boolean result = true;
+			ZipOutputStream zipOutputStream = new ZipOutputStream(
+					outputStream);
+			try {
+				reportService.makeReport(reportParamsetId,
+						currentSubscriberService.getSubscriberId(),
+						dateTime, zipOutputStream);
+			} finally {
+				try {
+					zipOutputStream.flush();
+					zipOutputStream.close();
+				} catch (IOException e) {
+					result = false;
+				}
 
+			}
+			return result;
+		}
+		
+		@Override
+		public String mimeType() {
+			return MIME_ZIP;
+		}
+		
+		@Override
+		public String ext() {
+			return EXT_ZIP;
+		}
+	}
+
+	private abstract class PdfReportMaker implements ReportMaker {
+		@Override
+		public boolean makeReport(long reportParamsetId,
+				LocalDateTime dateTime, OutputStream outputStream) {
+			checkArgument(reportParamsetId > 0);
+			checkNotNull(outputStream);
+			checkNotNull(dateTime);
+			boolean result = true;
+			try {
+				reportService.makeReport(reportParamsetId,
+						currentSubscriberService.getSubscriberId(),
+						dateTime, outputStream);
+			} finally {
+			}
+			return result;
+		}
+		
+		@Override
+		public String mimeType() {
+			return MIME_PDF;
+		}
+		
+		@Override
+		public String ext() {
+			return EXT_PDF;
+		}
+		
+		
+	}
+
+	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportServiceController.class);
 
@@ -54,6 +126,7 @@ public class ReportServiceController {
 	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
+	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
 	private final static String EXT_ZIP = ".zip";
 	private final static String EXT_PDF = ".pdf";
 
@@ -62,6 +135,9 @@ public class ReportServiceController {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
@@ -113,43 +189,43 @@ public class ReportServiceController {
 		return sb.toString();
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{contObjectId}/html", method = RequestMethod.GET)
-	public Object commerceReportHtml(
-			@PathVariable("contObjectId") long contObjectId,
-			@RequestParam("beginDate") String beginDateS,
-			@RequestParam("endDate") String endDateS) {
+//	/**
+//	 * 
+//	 * @param contObjectId
+//	 * @param beginDateS
+//	 * @param endDateS
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/commerce/{contObjectId}/html", method = RequestMethod.GET)
+//	public Object commerceReportHtml(
+//			@PathVariable("contObjectId") long contObjectId,
+//			@RequestParam("beginDate") String beginDateS,
+//			@RequestParam("endDate") String endDateS) {
+//
+//		logger.trace("Fire commercialReportHtml");
+//
+//		return processRequest(ReportOutputFileType.HTML, contObjectId,
+//				beginDateS, endDateS);
+//	}
 
-		logger.trace("Fire commercialReportHtml");
-
-		return processRequest(ReportOutputFileType.HTML, contObjectId,
-				beginDateS, endDateS);
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param beginDateS
-	 * @param endDateS
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{contObjectId}/pdf", method = RequestMethod.GET)
-	public Object commerceReportPdf(
-			@PathVariable("contObjectId") long contObjectId,
-			@RequestParam("beginDate") String beginDateS,
-			@RequestParam("endDate") String endDateS) {
-
-		logger.trace("Fire commercialReportPdf");
-
-		return processRequest(ReportOutputFileType.PDF, contObjectId,
-				beginDateS, endDateS);
-	}
+//	/**
+//	 * 
+//	 * @param contObjectId
+//	 * @param beginDateS
+//	 * @param endDateS
+//	 * @return
+//	 */
+//	@RequestMapping(value = "/commerce/{contObjectId}/pdf", method = RequestMethod.GET)
+//	public Object commerceReportPdf(
+//			@PathVariable("contObjectId") long contObjectId,
+//			@RequestParam("beginDate") String beginDateS,
+//			@RequestParam("endDate") String endDateS) {
+//
+//		logger.trace("Fire commercialReportPdf");
+//
+//		return processRequest(ReportOutputFileType.PDF, contObjectId,
+//				beginDateS, endDateS);
+//	}
 
 	/**
 	 * 
@@ -164,35 +240,30 @@ public class ReportServiceController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		ReportMaker reportMaker = new ReportMaker() {
-
-			@Override
-			public void makeReport(long reportParamsetId,
-					LocalDateTime dateTime, OutputStream outputStream) {
-				reportService.makeCommerceReportZip(reportParamsetId,
-						LocalDateTime.now(), outputStream);
-			}
-
-			@Override
-			public String mimeType() {
-				return MIME_ZIP;
-			}
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_COMMERCE_FILENAME;
-			}
-
-			@Override
-			public String ext() {
-				return EXT_ZIP;
-			}
-
-		};
+		ReportMaker reportMaker = commerceReportMaker();
 
 		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
 				response);
 
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.GET)
+	public void doDowndloadEventReportZip(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+					throws IOException {
+		
+		ReportMaker reportMaker = eventReportMaker();
+		
+		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
+				response);
 	}
 
 	/**
@@ -258,41 +329,98 @@ public class ReportServiceController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/cons_T1/{reportParamsetId}/download", method = RequestMethod.GET)
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.GET)
 	public void doDowndloadConsT1ReportPdf(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
-		ReportMaker reportMaker = new ReportMaker() {
-
-			@Override
-			public void makeReport(long reportParamsetId,
-					LocalDateTime dateTime, OutputStream outputStream) {
-				// reportService.makeCommerceReportZip(reportParamsetId,
-				// LocalDateTime.now(), outputStream);
-			}
-
-			@Override
-			public String mimeType() {
-				return MIME_PDF;
-			}
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_CONS_T1_FILENAME;
-			}
-
-			@Override
-			public String ext() {
-				return EXT_PDF;
-			}
-
-		};
+		ReportMaker reportMaker = consT1ReportMaker();
 
 		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
 				response);
 
 	}
 
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.GET)
+	public void doDowndloadConsT2ReportPdf(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+					throws IOException {
+		
+		ReportMaker reportMaker = consT2ReportMaker();
+		
+		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
+				response);
+		
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker eventReportMaker() {
+		return new ZipReportMaker() {
+
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_EVENT_FILENAME;
+			}
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker commerceReportMaker() {
+		return new ZipReportMaker() {
+
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_COMMERCE_FILENAME;
+			}
+			
+			
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker consT1ReportMaker() {
+		return new PdfReportMaker() {
+			
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_CONS_T1_FILENAME;
+			}
+			
+			
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker consT2ReportMaker() {
+		return new PdfReportMaker() {
+			
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_CONS_T2_FILENAME;
+			}
+			
+			
+		};
+	}
 }
