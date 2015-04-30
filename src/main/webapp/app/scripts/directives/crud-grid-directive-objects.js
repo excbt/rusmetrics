@@ -16,8 +16,8 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', 'crudGridDataFactory', 'notificationFactory',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, crudGridDataFactory, notificationFactory) {
                 $scope.object = {};
                 $scope.columns = angular.fromJson($attrs.columns);
                 $scope.captions = angular.fromJson($attrs.captions);
@@ -92,12 +92,16 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
 
                 $scope.getData = function (cb) {
                     crudGridDataFactory($scope.crudTableName).query(function (data) {
-                        var tmp = data;                       
+                        var tmp = data;    
+                        var curObjId = $cookies.contObject;
+//console.log(curObjId);                        
                         for (var i=0; i<tmp.length; i++){                                                    
                             $scope.getZpointsDataByObject(tmp[i], "Ex");  
-                            
+//console.log(tmp[i].id);                               
+                            if (tmp[i].id == curObjId){tmp[i].showGroupDetails=true};
                         }
                         $scope.objects = tmp;
+                        $cookies.contObject = null;
                         if (cb) cb();
                     });
                 };
@@ -117,7 +121,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
 			        $scope.currentObject = curObject;
 			    };
                 
-                $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
+                $scope.toggleShowGroupDetails = function(curObject){//switch option: current goup details
                     curObject.showGroupDetails = !curObject.showGroupDetails;
                 };
                 
@@ -193,11 +197,23 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
 
                 // Показания точек учета
                 $scope.getIndicators = function(object){
+//console.log($cookies);                    
+//                    $cookies.put('contZPoint',object);
+//                    $cookies.put('contObject',$scope.currentObject);
+//                    $cookies.put('showIndicatorsParam',true);
+//                    $cookies.put('timeDetailType',"1h");
+                    $cookies.contZPoint = object.id;
+                    $cookies.contObject=$scope.currentObject.id;
+                    $cookies.contZPointName = object.zpointName;
+                    $cookies.contObjectName=$scope.currentObject.fullName;
+                    $cookies.showIndicatorsParam=true;
+                    $cookies.timeDetailType="1h";
+                    
                     $rootScope.showIndicatorsParam = true;
-                    $rootScope.contObject =  $scope.currentObject;
-                    $rootScope.contZPoint = object;
-                    $rootScope.timeDetailType = "1h";                   
-                    window.location.replace("#/objects/indicators/");
+//                    $rootScope.contObject =  $scope.currentObject;
+//                    $rootScope.contZPoint = object;
+//                    $rootScope.timeDetailType = "1h";                   
+                    window.location.assign("#/objects/indicators/");
                 };
                 
                 //Свойства точки учета
