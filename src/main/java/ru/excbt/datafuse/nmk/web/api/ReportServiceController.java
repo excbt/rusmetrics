@@ -397,7 +397,7 @@ public class ReportServiceController {
 	 * @return
 	 */
 	private ReportMaker consT1ReportMaker() {
-		return new ZipReportMaker() {
+		return new PdfReportMaker() {
 			
 			@Override
 			public String defaultFileName() {
@@ -413,7 +413,7 @@ public class ReportServiceController {
 	 * @return
 	 */
 	private ReportMaker consT2ReportMaker() {
-		return new ZipReportMaker() {
+		return new PdfReportMaker() {
 			
 			@Override
 			public String defaultFileName() {
