@@ -31,22 +31,22 @@
                 </div>
             </div>
         </td>
-        <td>
-            {{object.tariffType.tariffTypeName}}
+        <td ng-class="{'default': object._default}">
+            {{object.tariffType.tariffTypeName}} 
         </td>
-        <td>
-            {{object.tariffPlanName}}
+        <td ng-class="{'default': object._default}">
+            {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span>
         </td>
-        <td>
+        <td ng-class="{'default': object._default}">
             {{object.rso.organizationFullName}}
         </td>
-        <td>
+        <td ng-class="{'default': object._default}">
             {{object.tariffOption.tariffOptionName}}
         </td> 
-        <td>
+        <td ng-class="{'default': object._default}">
             {{object.tariffPlanValue}}
         </td>
-        <td>
+        <td ng-class="{'default': object._default}">
             {{object.tariffPlanDescription}}
         </td>
         <td>
@@ -206,6 +206,10 @@
                                             <div class="col-sm-9 paddingTop10">
                                                 руб <sub>(копейки указываются через точку)</sub> 
                                             </div>    
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
                                         </td>
                                     </tr> 
                                 </table>

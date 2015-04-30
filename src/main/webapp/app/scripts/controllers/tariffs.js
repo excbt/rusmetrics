@@ -78,10 +78,6 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         crudGridDataFactory($scope.crudTableName).delete({ id: object[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
     };
 
-//    $scope.updateObject = function (object) {
-//        crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
-//    };
-
     $scope.getTariffs = function (cb) {
         var table = $scope.crudTableName+"/default";
         crudGridDataFactory(table).query(function (data) {
@@ -116,10 +112,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.getTariffTypes();
     $scope.getTariffOptions();
     
-    $scope.saveObject = function(){
-//console.log("Before.$scope.currentObject.endDate = "+$scope.currentObject.endDate);    
+    $scope.saveObject = function(){   
         $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
-        //$scope.currentObject.tariffOption = $scope.currentObject.tarriffOptionKey;
         $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || $scope.currentObject.startDate;
         $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;
 //console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
@@ -136,8 +130,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         });
         if (($scope.currentObject.id != null) && (typeof $scope.currentObject.id != 'undefined')){
             crudGridDataFactory($scope.crudTableName).update({ rsoOrganizationId: $scope.currentObject.rso.id, tariffTypeId: $scope.currentObject.tariffType.id, contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
-        }else{
-//console.log($scope.currentObject) ;           
+        }else{        
             saveTariffOnServer($scope.crudTableName, $scope.currentObject.rso.id, $scope.currentObject.tariffType.id).save({contObjectIds: tmp}, $scope.currentObject, successPostCallback, errorCallback);
         };
     };
@@ -159,9 +152,6 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $scope.set_of_objects_flag=false;
         
         //settings for activate tab "Main options", when create window opened.        
-//        $('#main_properties_tab').addClass("active");
-//        $('#set_of_objects_tab').removeClass("active");
-//        $('#editTariffModal').modal();
         activateMainPropertiesTab();
     };
     
@@ -176,8 +166,6 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     };
     
     var saveTariffOnServer = function(url, rsoOrganizationId, tariffTypeId){
-//        console.log("New save="+url);
-//        console.log((new Date(null)));
         return $resource(url, {},{
             save: {method: 'POST', params:{rsoOrganizationId: rsoOrganizationId, tariffTypeId: tariffTypeId}}
         })
@@ -200,15 +188,11 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(tariffId){  
-//        $scope.crudTableName1 = "../api/reportParamset";
-        var table=$scope.crudTableName+"/"+tariffId+"/contObject/available"; 
-console.log(table);        
+        var table=$scope.crudTableName+"/"+tariffId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;    
-console.log(data);            
+            $scope.availableObjects = data;                
         });        
     };
-//    $scope.getAvailableObjects();
     $scope.getSelectedObjects = function(){
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
@@ -269,6 +253,11 @@ console.log(data);
         $scope.currentObjectId = object.id;
         objectPerform(false, object.id);
 
+    };
+    
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
     };
     
 }]);

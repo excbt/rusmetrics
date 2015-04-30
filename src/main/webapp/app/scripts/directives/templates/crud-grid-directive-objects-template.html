@@ -103,6 +103,9 @@
                             <span ng-switch-when="commonCount">
                                 Всего: {{object[column.name]}}
                             </span>
+                            <span ng-switch-when="fullName">
+                                {{object[column.name]}} <span ng-show="isSystemuser()"> (id = {{object['id']}}) </span>                               
+                            </span>
 
     <!--                        По дефолту выводим содержимое данной ячейки-->
                             <span ng-switch-default>
@@ -208,7 +211,7 @@
                                     <span ng-switch-when="el"><img height=16 width=16 src="images/es.png"></span>
                                     <span ng-switch-when="env"><img height=16 width=16 src="images/es.png"></span>
                                     <span ng-switch-default>{{oldObject['zpointType']}}</span>
-                                    {{oldObject[oldColumn.name]}} <span ng-show="isSystemuser()"> ({{oldObject['id']}})</span>
+                                    {{oldObject[oldColumn.name]}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                 </div>
                             </span> 
                             <span ng-switch-when="zpointLastDataDate">

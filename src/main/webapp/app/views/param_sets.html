@@ -76,7 +76,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> ({{oldObject['id']}})</span>
+                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-2" ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
@@ -150,7 +150,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7 " >     
-                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> ({{oldObject['id']}})</span>
+                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-2">     
                                                     в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
