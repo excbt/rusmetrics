@@ -1,6 +1,6 @@
 
 angular.module('portalNMK')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', 'crudGridDataFactory',function($scope, $rootScope, crudGridDataFactory){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
     
     var checkInputParams = function(){
         if (($rootScope.contObject==null) || (typeof $rootScope.contObject=='undefined')){
@@ -125,21 +125,32 @@ angular.module('portalNMK')
 //        return (i < 10) ? "0" + i : "" + i;
 //    }   
         
-        var setUrl = function(){
-        if (checkInputParams()){
-           
-        }
-    };
-    setUrl();        
+//        var setUrl = function(){
+//        if (checkInputParams()){
+//           
+//        }
+//    };
+//    setUrl();        
 
       //Получаем показания
     $scope.columns = [];
  //       $scope.data = {};
     $scope.getData = function () {
-         if (!checkInputParams()){
-            return;   
-         }
-         $scope.zpointTable = "../api/subscr/"+$rootScope.contObject.id+"/service/"+$rootScope.timeDetailType+"/"+$rootScope.contZPoint.id+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+//         if (!checkInputParams()){
+//            return;   
+//         }
+//         var contZPoint = $cookies.get('contZPoint');
+//         var contObject = $cookies.get('contObject');
+//         var showIndicatorsParam = $cookies.get('showIndicatorsParam');
+//         var timeDetailType = $cookies.get('timeDetailType');   
+         var contZPoint = $cookies.contZPoint;
+         $scope.contZPointName = $cookies.contZPointName;
+         var contObject = $cookies.contObject;
+         $scope.contObjectName = $cookies.contObjectName;
+         $rootScope.showIndicatorsParam = $cookies.showIndicatorsParam;
+         var timeDetailType = $rootScope.timeDetailType || $cookies.timeDetailType;  
+         
+         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         var table =  $scope.zpointTable;      
         crudGridDataFactory(table).query(function (data) {
                 var iCol = 0;

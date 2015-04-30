@@ -1,7 +1,13 @@
 'use strict';
 
 angular.module('portalNMK')
-.controller('ObjectsCtrl', function($scope, $rootScope, $http){
+.controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http){
+    
+//        $cookies.contZPoint = null;
+//        $cookies.contObject=null;
+//        $cookies.contZPointName = null;
+//        $cookies.contObjectName=null;
+    
 //console.log("loading ObjectsCtrl.");  
 
 //    $rootScope.userInfo = 
