@@ -147,6 +147,16 @@ public class TariffPlanService implements SecuredRoles {
 							tariffPlan.getId()));
 		}
 
+		checkNotNull(tariffPlan.getStartDate());
+
+		if (tariffPlan.getEndDate() != null
+				&& tariffPlan.getStartDate().after(tariffPlan.getEndDate())) {
+			throw new IllegalArgumentException(
+					String.format(
+							"TariffPlan(id=%d) can not be modified. endDate is before startDate",
+							tariffPlan.getId()));
+		}
+
 		TariffPlan currentRec = tariffPlanRepository
 				.findOne(tariffPlan.getId());
 
