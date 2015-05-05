@@ -121,9 +121,12 @@ public class ReportShedule extends AbstractAuditableModel {
 	@Column(name = "report_shedule_action5_param")
 	private String sheduleAction5Param;
 
+	@Column(name = "report_shedule_name")
+	private String name;
+
 	@Column(name = "report_shedule_comment")
 	private String comment;
-
+	
 	@Column(name = "report_shedule_description")
 	private String description;
 
@@ -345,6 +348,14 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
