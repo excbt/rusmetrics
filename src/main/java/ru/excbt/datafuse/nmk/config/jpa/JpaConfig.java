@@ -2,6 +2,11 @@ package ru.excbt.datafuse.nmk.config.jpa;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManagerFactory;
 
@@ -34,7 +39,7 @@ public class JpaConfig {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(JpaConfig.class);
-	
+
 	@Value("${dataSource.driverClassName}")
 	private String driverClassname;
 
@@ -114,18 +119,18 @@ public class JpaConfig {
 	@PreDestroy
 	public void contextdestroyed() {
 
-//		Enumeration<Driver> drivers = DriverManager.getDrivers();
-//		while (drivers.hasMoreElements()) {
-//			Driver driver = drivers.nextElement();
-//			try {
-//				DriverManager.deregisterDriver(driver);
-//				logger.info("deregistering jdbc driver: {}", driver);
-//			} catch (SQLException e) {
-//				logger.error("Error deregistering driver : {}", driver);
-//			}
-//
-//		}
+		Enumeration<Driver> drivers = DriverManager.getDrivers();
+		while (drivers.hasMoreElements()) {
+			Driver driver = drivers.nextElement();
+			try {
+				DriverManager.deregisterDriver(driver);
+				logger.info("deregistering jdbc driver: {}", driver);
+			} catch (SQLException e) {
+				logger.error("Error deregistering driver : {}", driver);
+			}
 
-	}	
-	
+		}
+
+	}
+
 }
