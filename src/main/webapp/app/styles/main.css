@@ -259,7 +259,7 @@ input[type="radio"]{
 }
 
 .hideM {
-    display:none;
+    display:none !important;
 }
 
 .angular-ui-tree-handle {
