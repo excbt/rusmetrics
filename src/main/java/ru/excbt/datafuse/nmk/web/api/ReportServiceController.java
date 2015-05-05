@@ -61,7 +61,7 @@ public class ReportServiceController {
 			try {
 				reportService.makeReport(reportParamsetId,
 						currentSubscriberService.getSubscriberId(),
-						dateTime, zipOutputStream);
+						dateTime, zipOutputStream, true);
 			} finally {
 				try {
 					zipOutputStream.flush();
@@ -96,7 +96,7 @@ public class ReportServiceController {
 			try {
 				reportService.makeReport(reportParamsetId,
 						currentSubscriberService.getSubscriberId(),
-						dateTime, outputStream);
+						dateTime, outputStream, false);
 			} finally {
 			}
 			return result;

@@ -54,7 +54,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try {
 			reportService.makeReport(EVENT_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), zipOutputStream);
+					LocalDateTime.now(), zipOutputStream, true);
 			zipOutputStream.close();
 		} finally {
 			fos.close();
@@ -70,7 +70,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try {
 			reportService.makeReport(COMMERCE_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), zipOutputStream);
+					LocalDateTime.now(), zipOutputStream, true);
 			zipOutputStream.close();
 		} finally {
 			fos.close();
@@ -85,7 +85,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try {
 			reportService.makeReport(CONS_T1_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), fos);
+					LocalDateTime.now(), fos, false);
 		} finally {
 			fos.close();
 		}
@@ -99,7 +99,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try {
 			reportService.makeReport(CONS_T2_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), fos);
+					LocalDateTime.now(), fos, false);
 		} finally {
 			fos.close();
 		}
