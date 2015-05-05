@@ -69,9 +69,8 @@ public class SubscrContEventTest extends AnyControllerTest {
 
 
 	@Test
-	@Ignore
 	public void testSubscrContObjectEventsPaged() throws Exception {
-		testJsonGet ("/api/subscr/contObjects/events/paged");
+		testJsonGet ("/api/subscr/contObjects/eventsFilterPaged?page=0&size=20");
 	}
 	
 	
