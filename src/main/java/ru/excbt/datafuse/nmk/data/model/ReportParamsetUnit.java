@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="report_paramset_unit")
-@SQLDelete(sql="UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and and version = ?")
+@SQLDelete(sql="UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause="deleted <> 1")
 public class ReportParamsetUnit extends AbstractAuditableModel {
 

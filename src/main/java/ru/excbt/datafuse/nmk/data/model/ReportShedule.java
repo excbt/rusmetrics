@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_shedule")
-@SQLDelete(sql="UPDATE report_shedule SET deleted = 1 WHERE id = ? and and version = ?")
+@SQLDelete(sql="UPDATE report_shedule SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause="deleted <> 1")
 @JsonIgnoreProperties (ignoreUnknown = true)
 public class ReportShedule extends AbstractAuditableModel {
