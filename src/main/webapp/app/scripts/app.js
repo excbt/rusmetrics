@@ -21,6 +21,7 @@ var app = angular
     'ui.tree',
     'daterangepicker'
       ,'datatables'
+      ,'angularUtils.directives.dirPagination'
   ]);
 
 app.config(function ($routeProvider) {
@@ -38,6 +39,8 @@ app.config(function ($routeProvider) {
       .when('/notice', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl'
+//        templateUrl: 'views/notice_alter.html',
+//        controller: 'NoticeAlterCtrl'
       })
       .when('/operationlog', {
         templateUrl: 'views/operationlog.html',

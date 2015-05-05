@@ -16,7 +16,7 @@
         </div>    
     </div>
     <div class="col-md-10 btn-toolbar">
-        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="dtInstance.changeData(newPromise)">Применить</i>
+        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="getResultsPage(1)">Применить</i>
         </div>
     </div>
     
@@ -30,37 +30,55 @@
     
 </div>
 </div>    
-</div>    
-
-<!--++++++++++++++++++++++++++++ Notices: angular-datatable -->
-<!--<div ng-init="getObjects()">-->
-    <table  datatable="" dt-options="dtOptions" dt-columns="dtColumns" ng-class="tableDef.tableClass">
-
-    </table>
-<!--</div>    -->
-<!--++++++++++++++++++++++++++++-->
-
-<!--Строка состояния-->
-<div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">
-                                                    <!--    navbar-fixed-bottom-->
-    <div id="navbar-container" class="container navbar-left">
-      
-            		
-              <ul class="nav navbar-nav ">
-				
-				<li>
-                    <div ng-show="totalPages>1">
-                        По вашему запросу найдено {{totalElements}} уведомлений. Для комфортной работы с системой отображены только последние 1000 уведомлений. Для просмотра остальных уведомлений сузьте область поиска в фильтре.
-                    </div>
-                </li>
-                             
-                 
-				
-			</ul>
-                
-					
-			</div>
 </div>
+
+<div >
+    <table ng-class="tableDef.tableClass">
+        <tr ng-class="tableDef.headerClassTR">
+            <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
+                {{column.header}}
+            </th>
+            
+        </tr>
+        <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-click="selectedItem(notice)" data-target="#showNoticeModal" data-toggle="modal">
+            <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                {{notice[column.fieldName]}}
+            </td>
+            
+<!--
+            <td>{{ notice.contServiceType }}</td>
+            <td>{{ notice.message }}</td>
+-->
+<!--            <td>{{notice.eventTime | date:'dd.MM.yyyy HH:mm:ss'}}</td>-->
+<!--            <td>{{dateFormat(notice.eventTime)}}</td>-->
+        </tr>
+    </table>
+    <div class="col-md-6">
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+    </div>
+    <div class="col-md-2">
+        <label for="search">Записей на странице:</label>
+<!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+        <select class="form-control inputDigitalData" ng-model="noticesPerPage"    >
+            <option>5</option>
+            <option>10</option>
+            <option>20</option>
+            <option>25</option>
+            <option>50</option>
+<!--            <option>100</option>-->
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label for="search">Всего:</label>
+         <input type="number" disabled class="form-control inputDigitalData" ng-model="totalNotices">
+    </div>
+    <div class="col-md-2">
+<!--        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>-->
+         <input type="text"  class="form-control"  ng-model="noticefilter">
+    </div>
+</div>
+
+
 
 <!--Окно выбора объектов-->
 <div id="selectObjectsModal" class="modal excbt_selectObjectWindow " role="dialog"
@@ -136,7 +154,7 @@
                             <tr>
                                 <td><label for="inputComment" >Текст</label>
                                 </td>
-                                <td class="textAlign_left">{{currentObject.noticeText}}
+                                <td class="textAlign_left">{{currentObject.noticeMessage}}
 
                                 </td>
                             </tr>
@@ -183,4 +201,3 @@
 
 	</div>
 </div>
-
