@@ -591,6 +591,8 @@ public class ReportService {
 		long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
 				.toArray(new Long[0]));
 
+		checkNotNull(objectIds, "ContObject for report is not set");
+		
 		NmkReport rep = null;
 		try {
 

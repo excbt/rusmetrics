@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +57,7 @@ public class ReportServiceController {
 			checkNotNull(dateTime);
 			boolean result = true;
 			ZipOutputStream zipOutputStream = new ZipOutputStream(
-					outputStream);
+					outputStream, Charset.forName("UTF-8"));
 			try {
 				reportService.makeReport(reportParamsetId,
 						currentSubscriberService.getSubscriberId(),
