@@ -24,14 +24,11 @@ public interface ReportSheduleRepository extends
 			@Param("subscriberId") long subscriberId,
 			@Param("sheduleDate") Date sheduleDate);
 
-	
 	public List<ReportShedule> findBySubscriberId(Long subscriberId);
-	
-	
+
 	@Modifying
-	@Query("DELETE ReportShedule rs "
-			+ "WHERE rs.reportParamset.id = :reportParamsetId ")
-	public void deleteByReportParamset(
-			@Param("reportParamsetId") long reportParamsetId);		
-	
+	@Query("UPDATE ReportShedule rs SET deleted = 1 WHERE rs.reportParamset.id = :reportParamsetId ")
+	public void softDeleteByReportParamset(
+			@Param("reportParamsetId") long reportParamsetId);
+
 }

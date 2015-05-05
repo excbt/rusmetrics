@@ -144,7 +144,7 @@ public class ReportParamsetService implements SecuredRoles {
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
-			reportParamsetUnitRepository.deleteByReportParamset(id);
+			reportParamsetUnitRepository.softDeleteByReportParamset(id);
 			reportSheduleService.deleteByReportParamset(id);
 			reportParamsetRepository.delete(id);
 		} else {
