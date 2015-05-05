@@ -44,9 +44,11 @@ public interface ReportParamsetUnitRepository extends
 			@Param("reportParamsetId") long reportParamsetId);
 
 	@Modifying
-	@Query("DELETE ReportParamsetUnit d "
-			+ "WHERE d.reportParamset.id = :reportParamsetId ")
-	public void deleteByReportParamset(
-			@Param("reportParamsetId") long reportParamsetId);	
-	
+	@Query("UPDATE ReportParamsetUnit pu SET deleted = 1 WHERE pu.reportParamset.id = :reportParamsetId ")
+	public void softDeleteByReportParamset(
+			@Param("reportParamsetId") long reportParamsetId);
+
+	/**
+	 * 
+	 */
 }

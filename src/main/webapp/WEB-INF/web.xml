@@ -42,6 +42,10 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+	<session-config>
+    	<session-timeout>1440</session-timeout> <!-- Value in minutes: 60 minutes * 24 hours -->
+	</session-config>
+
 	<!-- MIME MAPPING -->
 
 	<mime-mapping>

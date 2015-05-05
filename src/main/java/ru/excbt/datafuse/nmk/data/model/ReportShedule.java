@@ -14,6 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportActionKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -21,9 +24,13 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportActionType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_shedule")
+@SQLDelete(sql="UPDATE report_shedule SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause="deleted <> 1")
+@JsonIgnoreProperties (ignoreUnknown = true)
 public class ReportShedule extends AbstractAuditableModel {
 
 	/**

@@ -15,6 +15,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
@@ -27,6 +29,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity 
 @Table(name = "report_template")
+@SQLDelete(sql="UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause="deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EntityListeners({AuditingEntityListener.class})
 public class ReportTemplate extends AbstractAuditableModel {

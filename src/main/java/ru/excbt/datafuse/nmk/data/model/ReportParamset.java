@@ -14,6 +14,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
+
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -24,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_paramset")
+@SQLDelete(sql="UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause="deleted <> 1")
 @JsonIgnoreProperties (ignoreUnknown = true)
 public class ReportParamset extends AbstractAuditableModel {
 
