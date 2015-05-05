@@ -38,12 +38,14 @@ import ru.excbt.nmk.reports.NmkReport.ReportType;
 @Service
 public class ReportService {
 
-	private interface ReportRunner {
-		void runReport(ReportParamset reportParamset, LocalDateTime reportDate,
-				InputStream inputStream, OutputStream outputStream);
-	}
+//	private interface ReportRunner {
+//		void runReport(ReportParamset reportParamset, LocalDateTime reportDate,
+//				InputStream inputStream, OutputStream outputStream);
+//	}
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
+	public final static boolean IS_ZIP_TRUE = true;
+	public final static boolean IS_ZIP_FALSE = !IS_ZIP_TRUE;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportService.class);
@@ -528,7 +530,7 @@ public class ReportService {
 	 * @param reportParamsetId
 	 */
 	public void makeReport(long reportParamsetId, long subscriberId,
-			LocalDateTime reportDate, OutputStream outputStream) {
+			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
 		checkArgument(subscriberId > 0);
@@ -542,7 +544,7 @@ public class ReportService {
 
 		InputStream is = getReportParamsetTemplateBody(reportParamset
 				.getReportTemplate().getId());
-		makeReport(reportParamset, subscriberId, reportDate, is, outputStream);
+		makeReport(reportParamset, subscriberId, reportDate, is, outputStream, isZip);
 	}
 
 	/**
@@ -552,7 +554,7 @@ public class ReportService {
 	 */
 	public void makeReport(ReportParamset reportParamset, long subscriberId,
 			LocalDateTime reportDate, InputStream inputStream,
-			OutputStream outputStream) {
+			OutputStream outputStream, boolean isZip) {
 
 		checkArgument(subscriberId > 0);		
 		checkNotNull(inputStream);
@@ -612,7 +614,7 @@ public class ReportService {
 
 			rep.nmkGetReport(destReportType, inputStream,
 					outputStream, subscriberId, dtStart.toDate(),
-					dtEnd.toDate(), objectIds, FileType.PDF);
+					dtEnd.toDate(), objectIds, FileType.PDF, isZip);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
