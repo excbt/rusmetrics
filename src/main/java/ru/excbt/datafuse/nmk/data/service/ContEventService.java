@@ -9,6 +9,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,20 @@ public class ContEventService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId) {
+		return selectEventsBySubscriber(subscriberId,
+				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContEvent> selectEventsBySubscriber(long subscriberId,
+			Pageable pageable) {
 		Page<ContEvent> result = contEventRepository.selectBySubscriber(
-				subscriberId, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+				subscriberId, pageable);
 		return result;
 	}
 
@@ -45,8 +58,20 @@ public class ContEventService {
 	 */
 	@Transactional(readOnly = true)
 	public List<ContEvent> findEventsByContObjectId(long contObjectId) {
-		return contEventRepository.findByContObjectId(contObjectId,
+		return findEventsByContObjectId(contObjectId,
 				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContEvent> findEventsByContObjectId(long contObjectId,
+			Pageable pageable) {
+		return contEventRepository
+				.findByContObjectId(contObjectId, pageable);
 	}
 
 	/**
@@ -59,12 +84,26 @@ public class ContEventService {
 	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndDate(long subscriberId,
 			DateTime startDate, DateTime endDate) {
+		return selectBySubscriberAndDate(subscriberId, startDate, endDate,
+				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContEvent> selectBySubscriberAndDate(long subscriberId,
+			DateTime startDate, DateTime endDate, Pageable pageable) {
 		checkNotNull(startDate);
 		checkNotNull(endDate);
 		checkArgument(subscriberId > 0);
+		checkNotNull(pageable);
 		return contEventRepository.selectBySubscriberAndDate(subscriberId,
-				startDate.toDate(), endDate.toDate(),
-				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+				startDate.toDate(), endDate.toDate(), pageable);
 	}
 
 	/**
@@ -79,19 +118,36 @@ public class ContEventService {
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(
 			long subscriberId, DateTime startDate, DateTime endDate,
 			List<Long> contObjectIds) {
+		return selectBySubscriberAndDateAndContObjectIds(subscriberId,
+				startDate, endDate, contObjectIds,
+				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param startDate
+	 * @param endDate
+	 * @param contObjectIds
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(
+			long subscriberId, DateTime startDate, DateTime endDate,
+			List<Long> contObjectIds, Pageable pageable) {
 		checkNotNull(startDate);
 		checkNotNull(endDate);
 		checkArgument(subscriberId > 0);
+		checkNotNull(pageable);
 
 		if (contObjectIds == null || contObjectIds.size() == 0) {
 			return contEventRepository.selectBySubscriberAndDate(subscriberId,
-					startDate.toDate(), endDate.toDate(),
-					DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+					startDate.toDate(), endDate.toDate(), pageable);
 		}
 
 		return contEventRepository.selectBySubscriberAndDateAndContObjects(
 				subscriberId, startDate.toDate(), endDate.toDate(),
-				contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+				contObjectIds, pageable);
 	}
 
 	/**
@@ -101,19 +157,33 @@ public class ContEventService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public Page<ContEvent> selectBySubscriberAndContObjectIds(long subscriberId,
-			List<Long> contObjectIds) {
+	public Page<ContEvent> selectBySubscriberAndContObjectIds(
+			long subscriberId, List<Long> contObjectIds) {
+		return selectBySubscriberAndContObjectIds(subscriberId, contObjectIds,
+				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param pageRequest
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContEvent> selectBySubscriberAndContObjectIds(
+			long subscriberId, List<Long> contObjectIds, Pageable pageable) {
 
 		checkArgument(subscriberId > 0);
 		checkNotNull(contObjectIds);
+		checkNotNull(pageable);
 
 		if (contObjectIds.size() == 0) {
-			contEventRepository.selectBySubscriber(subscriberId,
-					DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+			contEventRepository.selectBySubscriber(subscriberId, pageable);
 		}
 
 		return contEventRepository.selectBySubscriberAndContObjects(
-				subscriberId, contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST);
+				subscriberId, contObjectIds, pageable);
 
 	}
 
