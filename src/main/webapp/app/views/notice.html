@@ -15,12 +15,6 @@
                 type="text" ng-model="navPlayerDates" options="queryDateOptsRu"/>
         </div>    
     </div>
-<!--
-    <div class="col-md-10 btn-toolbar">
-        <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="getResultsPage(1)">Применить</i>
-        </div>
-    </div>
--->
 </div> 
 </div>
  <div class="row">
@@ -31,13 +25,12 @@
 
         </div>
     </div>
-<!--    </div>    -->
      <div class="col-md-4 paddingTop15">    
  
          <div class="col-md-7">
             <label>Записей на странице:</label>
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <select class="form-control inputDigitalData" ng-model="noticesPerPage"    >
+            <select class="form-control inputDigitalData excbt_inputFormControl" ng-model="noticesPerPage"    >
                 <option>5</option>
                 <option>10</option>
                 <option>20</option>
@@ -48,10 +41,8 @@
         </div>
         <div class="col-md-5">
             <label >Всего:</label>
-             <input type="text" disabled class="form-control excbt_viewDataCount" ng-model="totalNotices">
+             <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalNotices">
         </div>
-
-    
     </div>
 </div>    
 </div>
@@ -61,20 +52,12 @@
         <tr ng-class="tableDef.headerClassTR">
             <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}
-            </th>
-            
+            </th>       
         </tr>
         <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-click="selectedItem(notice)" data-target="#showNoticeModal" data-toggle="modal">
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
                 {{notice[column.fieldName]}}
             </td>
-            
-<!--
-            <td>{{ notice.contServiceType }}</td>
-            <td>{{ notice.message }}</td>
--->
-<!--            <td>{{notice.eventTime | date:'dd.MM.yyyy HH:mm:ss'}}</td>-->
-<!--            <td>{{dateFormat(notice.eventTime)}}</td>-->
         </tr>
     </table>
     <div class="col-md-9">
@@ -87,8 +70,6 @@
             </div>     
     </div> 
 </div>
-
-
 
 <!--Окно выбора объектов-->
 <div id="selectObjectsModal" class="modal excbt_selectObjectWindow " role="dialog"
@@ -137,7 +118,6 @@
 	</div>
         </div>
 </div>
-
 
 <!-- Карточка уведомления-->
 <div id="showNoticeModal" class="modal fade" role="dialog"

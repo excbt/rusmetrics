@@ -5,9 +5,11 @@
     <div class="row">   
         <div class="col-md-12 noPadding marginBottom10">
             <div class="col-md-4 noPadding">
-                <label class="col-md-4">
+                <div class="col-md-4 paddingTop5">
+                    <label >
 
-                     Задайте интервал дат</label>
+                        Задайте интервал дат</label>
+                </div>    
                 <div ng-controller="DataRangeSettings" class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon excbt_inputGroupAddon">с</span>
@@ -18,45 +20,23 @@
 
             </div>
             <div class="col-md-3">
-<!--                <div class="">-->
-<!--                    <div class="">-->
+                    <div class="col-md-3 paddingTop5">            
                             <label >
-
                                  Показания</label>
-<!--
                     </div>
-                    <div class="">
--->
-                            <select class="form-control" ng-model="timeDetailType" ng-change="getData()">
-                                <option value="24h">Суточные</option>
-                                <option selected value="1h">Часовые</option>
-                            </select>
-<!--                            <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="24h" checked> Суточные-->
-<!--
+                    <div class="col-md-9">
+                        <select class="form-control excbt_inputFormControl inputData" ng-model="timeDetailType" ng-change="getData()">
+                            <option value="24h">Суточные</option>
+                            <option selected value="1h">Часовые</option>
+                        </select>
                     </div>
-                    <div class="">
--->
-<!--                            <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="1h"> Часовые-->
-<!--                    </div>-->
-    <!--
-                    <div class="row">
-                        <i class="btn btn-default" data-target="#/objects/indicators/" >Показать</i>
-                    </div>
-    -->
-<!--                </div>-->
             </div>
-<!--
-            <div class="col-md-4">
-                <div class="btn-group"><i class="btn btn-xs btn-default btn-primary" ng-click="getData()">Применить</i>
-                </div>
-            </div>
--->
-              <div class="col-md-5 paddingTop15">    
+              <div class="col-md-5">    
  
                  <div class="col-md-7">
                     <label>Записей на странице:</label>
             <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-                    <select class="form-control inputDigitalData" ng-model="indicatorsPerPage"    >
+                    <select class="form-control inputDigitalData excbt_inputFormControl" ng-model="indicatorsPerPage"    >
                         <option>5</option>
                         <option>10</option>
                         <option>20</option>
@@ -67,20 +47,13 @@
                 </div>
                 <div class="col-md-5">
                     <label >Всего:</label>
-                     <input type="text" disabled class="form-control excbt_viewDataCount" ng-model="totalIndicators">
+                     <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalIndicators">
                 </div>
 
 
             </div>
     </div>    
 </div>
-
-<!--
-<div>
-    <table-component-react table-def="tableDef" data="data"/>
--->
-<!--    <my-table cols="cols" rows="data" />-->
-<!--</div>-->
     
 <div >
     <table ng-class="tableDef.tableClass">
@@ -92,15 +65,8 @@
         </tr>
         <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                {{notice[column.fieldName]}}
+                {{indicator[column.fieldName]}}
             </td>
-            
-<!--
-            <td>{{ notice.contServiceType }}</td>
-            <td>{{ notice.message }}</td>
--->
-<!--            <td>{{notice.eventTime | date:'dd.MM.yyyy HH:mm:ss'}}</td>-->
-<!--            <td>{{dateFormat(notice.eventTime)}}</td>-->
         </tr>
     </table>
     <div class="col-md-9">
@@ -113,19 +79,3 @@
             </div>     
     </div> 
 </div>    
-
-
-<!--Строка состояния-->
-<!--<div class="navbar navbar-default  " style="margin-bottom:60px; margin-top:20px;">-->
-                                                    <!--    navbar-fixed-bottom-->
-<!--
-    <div id="navbar-container" class="container navbar-left">    		
-              <ul class="nav navbar-nav ">		
-				<li><p
-							 style="margin-right:5px;padding-top:15px;"> <b>Всего: {{data.length}}</b>  
-				    </p>
-                </li>	
-			</ul>		
-	</div>
-</div>
--->

@@ -1,19 +1,8 @@
 
 angular.module('portalNMK')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
-    
-    var checkInputParams = function(){
-        if (($rootScope.contObject==null) || (typeof $rootScope.contObject=='undefined')){
-            window.location.replace("#/objects_edit/");
-            return false;
-        };
-        return true;
-    };
-        
-   // checkInputParams();    
-    
-    
-    //Определяем оформление для таблицы показаний прибора
+
+        //Определяем оформление для таблицы показаний прибора
         
         //Определеяю названия колонок
         
@@ -111,7 +100,6 @@ angular.module('portalNMK')
         }
         ;    
     
-        
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover excbt_tableIndicators",
         hideHeader : false,
@@ -119,47 +107,28 @@ angular.module('portalNMK')
         columns : []
     };
         
-//    $scope.notices = [];
     $scope.totalIndicators = 0;
     $scope.indicatorsPerPage = 10; // this should match however many results your API puts on one page    
+    $scope.timeDetailType = "1h";    
         
-        
-    //helper for date formating
-//    function padStr(i) {
-//        return (i < 10) ? "0" + i : "" + i;
-//    }   
-        
-//        var setUrl = function(){
-//        if (checkInputParams()){
-//           
-//        }
-//    };
-//    setUrl();        
+    $scope.pagination = {
+        current: 1
+    };         
 
       //Получаем показания
     $scope.columns = [];
- //       $scope.data = {};
     $scope.getData = function (pageNumber) {
-console.log("getData");
-//         if (!checkInputParams()){
-//            return;   
-//         }
-//         var contZPoint = $cookies.get('contZPoint');
-//         var contObject = $cookies.get('contObject');
-//         var showIndicatorsParam = $cookies.get('showIndicatorsParam');
-//         var timeDetailType = $cookies.get('timeDetailType');   
+        $scope.pagination.current = pageNumber;   
          var contZPoint = $cookies.contZPoint;
          $scope.contZPointName = $cookies.contZPointName;
          var contObject = $cookies.contObject;
          $scope.contObjectName = $cookies.contObjectName;
-//         $rootScope.showIndicatorsParam = $cookies.showIndicatorsParam;
-         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;  
+
+         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"page="+(pageNumber-1)+"size="+$scope.indicatorsPerPage;
-        var table =  $scope.zpointTable;   
-console.log(table);        
-        crudGridDataFactory(table).query(function (data) {
-            
+         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
+        var table =  $scope.zpointTable;          
+        crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
                 var iCol = 0;
                 var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
@@ -175,67 +144,31 @@ console.log(table);
                 };
                 $scope.tableDef.columns = $scope.columns;
 
-                var tmp = data.map(function(el){
+                var tmp = data.objects.map(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
 //                          var datad = new Date(el.dataDate);
                           el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
-//                            el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
-//                        moment().
-//                          el.dataDate = datad.toLocaleString("ru-RU", {year:"2-digit",  month:"numeric", day: "numeric", hour:"numeric", minute:"numeric"});
-//                    var dateStr = padStr(datad.getDate()) +"."+
-//                        padStr(1 + datad.getMonth()) +"."+
-//                        padStr(datad.getFullYear()) +" "+
-//                        padStr(datad.get.getHours()) +":"+
-//                        padStr(datad.getMinutes()) 
-//                    ;
-//                    el.dataDate = dateStr;
-                        
-//                    el.dataDate = (new Date(el.dataDate)).toLocaleString();  
+  
                             continue;
                         }
-//console.log($scope.columns[i].fieldName);                        
-//console.log(el[$scope.columns[i].fieldName]); 
-//console.log(typeof el[$scope.columns[i].fieldName]);
                         if (el[$scope.columns[i].fieldName]!=null){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(2);
                         };
                         
-                    };
-                    
-//                    if (typeof el.dataDate != 'undefined'){
-//                          var datad = new Date(el.dataDate);
-//                          el.dataDate = moment(el.dataDate).subtract(1, 'hours').format("DD.MM.YY HH:mm");
-//                        moment().
-//                          el.dataDate = datad.toLocaleString("ru-RU", {year:"2-digit",  month:"numeric", day: "numeric", hour:"numeric", minute:"numeric"});
-//                    var dateStr = padStr(datad.getDate()) +"."+
-//                        padStr(1 + datad.getMonth()) +"."+
-//                        padStr(datad.getFullYear()) +" "+
-//                        padStr(datad.get.getHours()) +":"+
-//                        padStr(datad.getMinutes()) 
-//                    ;
-//                    el.dataDate = dateStr;
-//                    el.dataDate = (new Date(el.dataDate)).toLocaleString();  
-//                        }
-                    
+                    };                    
                 });
                 $scope.data = data.objects;
         });
     };
 
-//    
-        
-    $scope.pageChanged = function(newPage) {
-//console.log("New page = "+ newPage);        
-        $scope.getData(1);
+    $scope.pageChanged = function(newPage) { 
+        $scope.getData(newPage);
     };  
         
     $scope.$watch('reportStart', function (newDates) {
-console.log("Indicator controller. New date");
-        $scope.getData(1); 
-//        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-//        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $scope.getData(1);                              
     }, false);    
 
 }]);
