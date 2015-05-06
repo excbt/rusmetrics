@@ -529,3 +529,7 @@ a.list-group-item:focus {
 .excbt_tarea {
     resize: none;
 }
+
+.excbt_Caption {
+    font-size: 14px;
+}

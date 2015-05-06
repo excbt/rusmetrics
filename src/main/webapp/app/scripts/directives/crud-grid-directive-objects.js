@@ -197,22 +197,12 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
 
                 // Показания точек учета
                 $scope.getIndicators = function(object){
-//console.log($cookies);                    
-//                    $cookies.put('contZPoint',object);
-//                    $cookies.put('contObject',$scope.currentObject);
-//                    $cookies.put('showIndicatorsParam',true);
-//                    $cookies.put('timeDetailType',"1h");
                     $cookies.contZPoint = object.id;
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = object.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
-                    $cookies.showIndicatorsParam=true;
                     $cookies.timeDetailType="1h";
-                    
-                    $rootScope.showIndicatorsParam = true;
-//                    $rootScope.contObject =  $scope.currentObject;
-//                    $rootScope.contZPoint = object;
-//                    $rootScope.timeDetailType = "1h";                   
+                                      
                     window.location.assign("#/objects/indicators/");
                 };
                 

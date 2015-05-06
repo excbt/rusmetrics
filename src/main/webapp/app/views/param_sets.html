@@ -55,7 +55,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
 
@@ -131,7 +131,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(object, oldObject)" ng-dblclick="">
 

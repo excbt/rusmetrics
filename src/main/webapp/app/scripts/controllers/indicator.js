@@ -127,7 +127,7 @@ angular.module('portalNMK')
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
          $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
-        var table =  $scope.zpointTable;          
+        var table =  $scope.zpointTable;       
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
                 var iCol = 0;
@@ -163,11 +163,14 @@ angular.module('portalNMK')
         });
     };
 
-    $scope.pageChanged = function(newPage) { 
+    $scope.pageChanged = function(newPage) {       
         $scope.getData(newPage);
     };  
         
     $scope.$watch('reportStart', function (newDates) {
+        if( (typeof $scope.reportStart == 'undefined') || ($scope.reportStart==null) ){
+            return;
+        }
         $scope.getData(1);                              
     }, false);    
 
