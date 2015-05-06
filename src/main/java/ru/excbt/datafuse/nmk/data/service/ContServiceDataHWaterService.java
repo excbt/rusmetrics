@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +57,29 @@ public class ContServiceDataHWaterService {
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(readOnly = false)
+	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetail timeDetail, DateTime beginDate, DateTime endDate,
+			Pageable pageable) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(beginDate, "beginDate is null");
+		checkNotNull(endDate, "endDate is null");
+		checkArgument(beginDate.compareTo(endDate) <= 0);
+		checkNotNull(pageable);
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate(),
+				pageable);
 	}
 
 	/**

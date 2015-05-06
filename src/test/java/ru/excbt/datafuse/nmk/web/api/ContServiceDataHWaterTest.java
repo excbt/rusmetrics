@@ -32,5 +32,19 @@ public class ContServiceDataHWaterTest extends AnyControllerTest {
 		
 		resultAction.andDo(MockMvcResultHandlers.print());
 	}
+
+	@Test
+	public void testHWater24hPaged() throws Exception {
+		
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/paged?page=0&size=100", CONT_OBJECT_ID, CONT_ZPOINT_ID);
+		
+		ResultActions resultAction = mockMvc.perform(get(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", "2013-10-01")
+				.param("endDate", "2013-10-31")
+				.with(testSecurityContext()));
+		
+		resultAction.andDo(MockMvcResultHandlers.print());
+	}
 	
 }
