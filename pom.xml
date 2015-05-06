@@ -317,22 +317,28 @@
 		<!-- -->
 
 		<dependency>
-			<groupId>groupId</groupId>
-			<artifactId>artifactId</artifactId>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>6.0.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ru.excbt.jasper</groupId>
+			<artifactId>fonts_rus</artifactId>
 			<version>1.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/fonts_rus.jar</systemPath>
 		</dependency>
 
 	</dependencies>
 
 
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>spring-milestones</id> -->
-<!-- 			<url>http://repo.springsource.org/libs-milestone/</url> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
+	<repositories>
+		<repository>
+			<id>in-project</id>
+			<name>In Project Repo</name>
+			<url>file://${project.basedir}/libs</url>
+		</repository>
+	</repositories>
+
 
 	<build>
 		<plugins>
@@ -358,13 +364,6 @@
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>org.test.int1.Main</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
