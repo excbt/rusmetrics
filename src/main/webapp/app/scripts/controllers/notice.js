@@ -64,43 +64,24 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                          {'get':{method:'GET', params:{startDate: startDate, endDate: endDate, contObjectIds: objectArray}}
         });
     }; 
-    
-//    getResultsPage(1);
-
     $scope.pagination = {
         current: 1
     };
 
-    $scope.pageChanged = function(newPage) {
-//console.log("New page = "+ newPage);        
+    $scope.pageChanged = function(newPage) {       
         $scope.getResultsPage(newPage);
     };
     
-
-
     $scope.getResultsPage = function(pageNumber) {
-        $scope.pagination.current = pageNumber;
-console.log("getResult");        
-        // this is just an example, in reality this stuff should be in a service
-        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;
-console.log(url);        
-//        $http.get(url)
-//            .then(function(result) {
-//                $scope.notices = result.data.objects;
-//                $scope.totalNotices = result.data.totalElements;
-//            });
+        $scope.pagination.current = pageNumber;        
+        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
-        $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
-console.log($scope.startDate);        
-     
-        getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function(data){
-// console.log("new data");                   
+        $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');   
+        getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function(data){                  
                         var result = [];
                         var oneNotice = {};
-//                        var tmp_objects = data.objects;
                         $scope.totalNotices = data.totalElements;
                         var tmp = data.objects.map(function(el){
-//                        for (var i=0; i<tmp_objects.length;i++){
                             oneNotice = {};
                             oneNotice.noticeType = el.contEventType.name;
                             oneNotice.noticeMessage = el.message;
@@ -133,7 +114,6 @@ console.log($scope.startDate);
                                         default: oneNotice.noticeZpoint  = data;
                              }
                             return oneNotice;
-//                        }
                         });
                         $scope.notices = tmp;
                     });
@@ -142,8 +122,7 @@ console.log($scope.startDate);
     $scope.dateFormat = function(date){
         return (new Date(date)).toLocaleString();
     };
-    
-      
+
       $scope.selectObjectsClick = function(){
           $('#selectObjectsModal').modal('show');
       };
@@ -168,52 +147,15 @@ console.log($scope.startDate);
   
       };
     
-    
-          //function get notice details and show notice card to user
-//     $scope.getNotice = function(info){
-//            
-//            $scope.currentObject = {};
-//            $scope.currentObject.noticeType = info.contEventType.name;
-//            $scope.currentObject.noticeText = info.message;
-//            if (($scope.objects == []) || ($scope.objects.length==0)||(typeof $scope.objects=='undefined')){
-//                 $scope.currentObject.noticeObjectName = info.contObjectId;
-//            }else{
-//                for (var i=0; i<$scope.objects.length; i++){                   
-//                        if ($scope.objects[i].id == info.contObjectId ){
-//                            $scope.currentObject.noticeObjectName = $scope.objects[i].fullName;
-//                        };   
-//                    }  
-//            }          
-//            $scope.currentObject.noticeDate = info.eventTime;
-//            switch (info.contServiceType)
-//                    {
-//                            case "heat" : $scope.currentObject.noticeZpoint = "ТС"; break;
-//                            case "hw" : $scope.currentObject.noticeZpoint = "ГВС"; break;
-//                            case "cw" : $scope.currentObject.noticeZpoint = "ХВ"; break;
-//                            default: $scope.currentObject.noticeZpoint  = info.contServiceType;
-//                    }
-//            $('#showNoticeModal').modal();     
-//    };
-    
              //get Objects
     $scope.getObjects = function(){
         crudGridDataFactory($scope.crudTableName).query(function(data){
             $scope.objects = data;
-            //get Events
-//            if (($scope.dtInstance != {}) && (typeof $scope.dtInstance != 'undefined')){                   
-//                $scope.dtInstance.changeData($scope.newPromise)
-//            };
               $scope.getResultsPage(1);
         });
     };
-//    $scope.getObjects(); 
     
     $scope.$watch('reportStart', function (newDates) {
-console.log("Notice controller. New date");
-        $scope.getObjects();
-//        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-//        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $scope.getObjects();                              
     }, false);
-    
-    
 });

@@ -60,7 +60,7 @@
 						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
-                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showIndicatorsParam=false;showSettings=false"><p> <b>Личный кабинет</b> 
+                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
                         </p></a></li>			
 
                         <li><a href="../logout"
@@ -88,22 +88,22 @@
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item excbt_a_list_group_item"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false;showIndicatorsParam=false">Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false">Объекты</a>
                                 
                                 <!-- Отчеты -->
                                 <a class="list-group-item excbt_a_list_group_item"
 
-                                    href="#/reports/" data-toggle="offcanvas" ng-click="showIndicatorsParam=false;showSettings=false">Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="showSettings=false">Отчеты</a>
                                 
                                  <!-- Notices -->
                                 <a class="list-group-item excbt_a_list_group_item"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="showIndicatorsParam=false;showSettings=false">Уведомления</a>                            
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="showSettings=false">Уведомления</a>                            
                                 
 <!--                                Настройки-->
                                 <a class="list-group-item noMarginBottom excbt_a_list_group_item"
 
-                                    href="" data-toggle="offcanvas" ng-click="showSettings=true;showIndicatorsParam=false">Настройки</a>
+                                    href="" data-toggle="offcanvas" ng-click="showSettings=true">Настройки</a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
@@ -138,53 +138,7 @@
                                     href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
 
                             </div>
-                        </nav>  
-            
-                        <nav class="sidebar-nav hideM" 
-                            role="navigation"
-                             >
-<!--                            ng-class="{'showM': showIndicatorsParam, 'hideM': !showIndicatorsParam}"-->
-<!--                Параметры отображения показаний точек учета            -->
-                            <div id="sidebar-entries" class="list-group">
-                                <div class="list-group-item excbt_a_list_group_item">
-                                    <label >
-
-                                         Задайте интервал дат</label>
-                                    <div ng-controller="DataRangeSettings">
-                                            <div class="input-group">
-                                                <span style="font-size:8px;" class="input-group-addon excbt_inputGroupAddon">с</span>
-                                                <input style="font-size:8px;" date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
-                                                    type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
-                                            </div>
-                                    </div>
-                                
-                                </div>
-                                <div class="list-group-item excbt_a_list_group_item">
-                                    <div class="container">
-                                        <div class="row excbt_a_list_group_item">
-                                                <label >
-
-                                                     Показания</label>
-                                        </div>
-                                        <div class="row">
-                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="24h" checked> Суточные
-                                        </div>
-                                        <div class="row">
-                                                <input type=radio name="indicatorsKind" ng-model="timeDetailType" value="1h"> Часовые
-                                        </div>
-<!--
-                                        <div class="row">
-                                            <i class="btn btn-default" data-target="#/objects/indicators/" >Показать</i>
-                                        </div>
--->
-                                    </div>
-                                </div>
-                                <a class="list-group-item excbt_a_list_group_item"
-
-                                     data-toggle="offcanvas" ng-click="getData()">Показать</a>
-                            </div>
-                        </nav>    
-                        
+                        </nav>                      
             
             </div>                
 

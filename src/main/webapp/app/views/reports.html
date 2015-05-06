@@ -32,7 +32,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin " ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
@@ -50,7 +50,10 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}}<span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> {{oldObject.outputFileType}} <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>{{oldObject.reportPeriod.caption}} <span ng-show="oldObject.reportTemplate!=null">,</span><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>{{oldObject.reportTemplate.name}}
+                                                   <p class="excbt_Caption"> {{oldObject.name}} </p>
+                                                 <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label> Шаблон: {{oldObject.reportTemplate.name}}
+                                                 <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>Период: {{oldObject.reportPeriod.caption}}
+                                                 <span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> Тип файла: {{oldObject.outputFileType || "не задан"}}  
                                             </div>
                                             <div class="col-md-2" ng-class="{'default': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
