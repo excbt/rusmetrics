@@ -19,16 +19,38 @@
         <div class="btn-group paddingTop15"><i class="btn btn-xs btn-default btn-primary" ng-click="getResultsPage(1)">Применить</i>
         </div>
     </div>
-    
-    <div class="col-md-12 noPadding">
+</div> 
+</div>
+ <div class="row">
+    <div class="col-md-8 noPadding marginBottom10">
         <div>по объектам:</div>
         <div class="">
             <textarea  class="form-control excbt_inputFormControl" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
 
         </div>
     </div>
+<!--    </div>    -->
+     <div class="col-md-4 paddingTop15">    
+ 
+         <div class="col-md-7">
+            <label>Записей на странице:</label>
+    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+            <select class="form-control inputDigitalData" ng-model="noticesPerPage"    >
+                <option>5</option>
+                <option>10</option>
+                <option>20</option>
+                <option>25</option>
+                <option>50</option>
+    <!--            <option>100</option>-->
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label >Всего:</label>
+             <input type="number" disabled class="form-control inputDigitalData" ng-model="totalNotices">
+        </div>
+
     
-</div>
+    </div>
 </div>    
 </div>
 
@@ -53,29 +75,15 @@
 <!--            <td>{{dateFormat(notice.eventTime)}}</td>-->
         </tr>
     </table>
-    <div class="col-md-6">
+    <div class="col-md-9">
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
     </div>
-    <div class="col-md-2">
-        <label for="search">Записей на странице:</label>
-<!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-        <select class="form-control inputDigitalData" ng-model="noticesPerPage"    >
-            <option>5</option>
-            <option>10</option>
-            <option>20</option>
-            <option>25</option>
-            <option>50</option>
-<!--            <option>100</option>-->
-        </select>
-    </div>
-    <div class="col-md-2">
-        <label for="search">Всего:</label>
-         <input type="number" disabled class="form-control inputDigitalData" ng-model="totalNotices">
-    </div>
-    <div class="col-md-2">
-<!--        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>-->
-         <input type="text"  class="form-control"  ng-model="noticefilter">
-    </div>
+    <div class="col-md-3 noPadding">
+             <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                 <input type="text"  class="form-control"  ng-model="noticefilter">
+            </div>     
+    </div> 
 </div>
 
 
