@@ -119,6 +119,10 @@ angular.module('portalNMK')
         columns : []
     };
         
+//    $scope.notices = [];
+    $scope.totalIndicators = 0;
+    $scope.indicatorsPerPage = 10; // this should match however many results your API puts on one page    
+        
         
     //helper for date formating
 //    function padStr(i) {
@@ -135,7 +139,8 @@ angular.module('portalNMK')
       //Получаем показания
     $scope.columns = [];
  //       $scope.data = {};
-    $scope.getData = function () {
+    $scope.getData = function (pageNumber) {
+console.log("getData");
 //         if (!checkInputParams()){
 //            return;   
 //         }
@@ -147,15 +152,18 @@ angular.module('portalNMK')
          $scope.contZPointName = $cookies.contZPointName;
          var contObject = $cookies.contObject;
          $scope.contObjectName = $cookies.contObjectName;
-         $rootScope.showIndicatorsParam = $cookies.showIndicatorsParam;
-         var timeDetailType = $rootScope.timeDetailType || $cookies.timeDetailType;  
+//         $rootScope.showIndicatorsParam = $cookies.showIndicatorsParam;
+         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;  
          
-         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
-        var table =  $scope.zpointTable;      
+         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"page="+(pageNumber-1)+"size="+$scope.indicatorsPerPage;
+        var table =  $scope.zpointTable;   
+console.log(table);        
         crudGridDataFactory(table).query(function (data) {
+            
+                $scope.totalIndicators = data.totalElements;
                 var iCol = 0;
                 var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
-                for (var k in data[0]){ 
+                for (var k in data.objects[0]){ 
                     if (notUserColumns.has(k)){continue;};      
                     var column = {};
                     column.header = listColumns[k].header || k; 
@@ -212,10 +220,22 @@ angular.module('portalNMK')
 //                        }
                     
                 });
-                $scope.data = data;
+                $scope.data = data.objects;
         });
     };
 
-    $scope.getData();    
+//    
+        
+    $scope.pageChanged = function(newPage) {
+//console.log("New page = "+ newPage);        
+        $scope.getData(1);
+    };  
+        
+    $scope.$watch('reportStart', function (newDates) {
+console.log("Indicator controller. New date");
+        $scope.getData(1); 
+//        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+//        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+    }, false);    
 
 }]);

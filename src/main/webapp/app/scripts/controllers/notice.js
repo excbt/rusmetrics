@@ -80,10 +80,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 
     $scope.getResultsPage = function(pageNumber) {
         $scope.pagination.current = pageNumber;
-//console.log("getResult");        
+console.log("getResult");        
         // this is just an example, in reality this stuff should be in a service
         var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;
-//console.log(url);        
+console.log(url);        
 //        $http.get(url)
 //            .then(function(result) {
 //                $scope.notices = result.data.objects;
@@ -91,7 +91,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 //            });
         $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
         $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');
-//console.log($scope.startDate);        
+console.log($scope.startDate);        
      
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function(data){
 // console.log("new data");                   
@@ -158,6 +158,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                   $scope.selectedObjects.push(el.id);
               }
           });
+          $scope.getResultsPage(1);
          
       };
       
@@ -205,5 +206,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
               $scope.getResultsPage(1);
         });
     };
-    $scope.getObjects(); 
+//    $scope.getObjects(); 
+    
+    $scope.$watch('reportStart', function (newDates) {
+console.log("Notice controller. New date");
+        $scope.getObjects();
+//        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+//        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+    }, false);
+    
+    
 });
