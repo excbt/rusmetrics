@@ -164,11 +164,10 @@ public class ReportSheduleController extends WebApiController {
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
 			@RequestBody ReportShedule reportShedule) {
 
+		checkNotNull(reportTemplateId);
+		checkNotNull(reportParamsetId);		
 		checkNotNull(reportShedule);
 		checkArgument(!reportShedule.isNew());
-
-		checkNotNull(reportShedule.getReportTemplate());
-		checkNotNull(reportShedule.getReportParamset());
 
 		ReportParamset checkParamset = reportParamsetService
 				.findOne(reportParamsetId);
@@ -176,11 +175,6 @@ public class ReportSheduleController extends WebApiController {
 		if (checkParamset == null) {
 			return ResponseEntity.badRequest().body(
 					"ReportParamset is not found");
-		}
-
-		if (!reportTemplateId.equals(checkParamset.getReportTemplate().getId())) {
-			return ResponseEntity.badRequest().body(
-					"Invalid reportTemplateId & reportParamsetId");
 		}
 
 		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
