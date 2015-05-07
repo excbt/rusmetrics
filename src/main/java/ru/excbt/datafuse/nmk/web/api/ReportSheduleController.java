@@ -56,8 +56,20 @@ public class ReportSheduleController extends WebApiController {
 	 */
 	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
+		LocalDateTime nowDate = LocalDateTime.now().withMillisOfDay(0);
 		List<ReportShedule> result = reportSheduleService.selectReportShedule(
-				currentSubscriberService.getSubscriberId(), LocalDateTime.now());
+				currentSubscriberService.getSubscriberId(), nowDate);
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportShedule() {
+		List<ReportShedule> result = reportSheduleService
+				.selectReportShedule(currentSubscriberService.getSubscriberId());
 		return ResponseEntity.ok(result);
 	}
 
@@ -116,8 +128,9 @@ public class ReportSheduleController extends WebApiController {
 		}
 
 		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
-		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
-		
+		reportShedule.setSubscriberId(currentSubscriberService
+				.getSubscriberId());
+
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
 

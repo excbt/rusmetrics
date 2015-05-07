@@ -15,6 +15,12 @@ import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 public interface ReportSheduleRepository extends
 		CrudRepository<ReportShedule, Long> {
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param activeDate
+	 * @return
+	 */
 	@Query("SELECT rs FROM ReportShedule rs "
 			+ "LEFT JOIN FETCH rs.reportTemplate LEFT JOIN FETCH rs.reportParamset "
 			+ "WHERE rs.subscriber.id = :subscriberId AND "
@@ -22,7 +28,8 @@ public interface ReportSheduleRepository extends
 			+ "( rs.sheduleEndDate IS NULL OR rs.sheduleEndDate >= :sheduleDate)")
 	public List<ReportShedule> selectReportShedule(
 			@Param("subscriberId") long subscriberId,
-			@Param("sheduleDate") Date sheduleDate);
+			@Param("sheduleDate") Date activeDate);
+
 
 	public List<ReportShedule> findBySubscriberId(Long subscriberId);
 

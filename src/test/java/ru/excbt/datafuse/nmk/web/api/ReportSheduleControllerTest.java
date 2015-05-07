@@ -60,6 +60,11 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testGetShedule() throws Exception {
+		testJsonGet("/api/reportShedule");
+	}
+
+	@Test
 	public void testGetSheduleOne() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
 				.selectReportShedule(
