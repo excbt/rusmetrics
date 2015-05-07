@@ -93,8 +93,13 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 
 		try {
 			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-					.with(testSecurityContext())
+					.contentType(MediaType.APPLICATION_JSON)
+					.param("reportTemplateId",
+							rs.getReportTemplate().getId().toString())
+					.param("reportParamsetId",
+							rs.getReportParamset().getId().toString())
+
+					.content(jsonBody).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());

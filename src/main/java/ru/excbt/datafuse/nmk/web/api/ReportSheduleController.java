@@ -160,6 +160,8 @@ public class ReportSheduleController extends WebApiController {
 	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneShedule(
 			@PathVariable(value = "reportSheduleId") Long reportSheduleId,
+			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
 			@RequestBody ReportShedule reportShedule) {
 
 		checkNotNull(reportShedule);
@@ -168,35 +170,36 @@ public class ReportSheduleController extends WebApiController {
 		checkNotNull(reportShedule.getReportTemplate());
 		checkNotNull(reportShedule.getReportParamset());
 
-		ReportShedule checkReportShedule = reportSheduleService
-				.findOne(reportSheduleId);
-		if (checkReportShedule == null) {
-			return ResponseEntity.badRequest().body(
-					"ReportShedule is not found");
-		}
-
-		if (!checkReportShedule.getSubscriberId().equals(
-				currentSubscriberService.getSubscriberId())) {
-			return ResponseEntity.badRequest().body("Invalid subscriber");
-		}
-
 		ReportParamset checkParamset = reportParamsetService
-				.findOne(reportShedule.getReportParamset().getId());
+				.findOne(reportParamsetId);
 
 		if (checkParamset == null) {
 			return ResponseEntity.badRequest().body(
 					"ReportParamset is not found");
 		}
 
-		if (!reportShedule.getReportTemplate().getId()
-				.equals(checkParamset.getReportTemplate().getId())) {
+		if (!reportTemplateId.equals(checkParamset.getReportTemplate().getId())) {
 			return ResponseEntity.badRequest().body(
 					"Invalid reportTemplateId & reportParamsetId");
 		}
 
 		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
+		reportShedule.setSubscriberId(currentSubscriberService
+				.getSubscriberId());
+
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
+
+		ReportShedule checkShedule = reportSheduleService.findOne(reportShedule
+				.getId());
+		if (checkShedule == null) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		if (checkShedule.getSubscriberId() != currentSubscriberService
+				.getSubscriberId()) {
+			return ResponseEntity.badRequest().build();
+		}
 
 		ReportShedule resultEntity = null;
 		try {
