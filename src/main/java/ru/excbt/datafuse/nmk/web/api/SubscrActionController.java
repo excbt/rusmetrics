@@ -74,6 +74,17 @@ public class SubscrActionController extends WebApiController {
 	/**
 	 * 
 	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/groups/{id}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> findOneGroupUsers(@PathVariable("id") long id) {
+		return ResponseEntity.ok(subscrActionService.selectGroupUsers(
+				currentSubscriberService.getSubscriberId(), id));
+	}
+
+	/**
+	 * 
+	 * @param id
 	 * @param entity
 	 * @return
 	 */
@@ -178,6 +189,17 @@ public class SubscrActionController extends WebApiController {
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findOneUser(@PathVariable("id") long id) {
 		return ResponseEntity.ok(subscrActionUserService.findOne(id));
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/users/{id}/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> findOneUserGroups(@PathVariable("id") long id) {
+		return ResponseEntity.ok(subscrActionService.selectUserGroups(
+				currentSubscriberService.getSubscriberId(), id));
 	}
 
 	/**

@@ -22,7 +22,8 @@ public class SubscrActionGroupService implements SecuredRoles {
 
 	@Autowired
 	private SubscrActionGroupRepository subscrActionGroupRepository;
-
+	
+	
 	/**
 	 * 
 	 * @param subscriberId

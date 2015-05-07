@@ -6,6 +6,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +43,9 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testCreateDeleteUser() throws Exception {
+		
+		List<SubscrActionGroup> grp = null;
+		
 		String urlStr = "/api/subscr/subscrAction/users";
 
 		
