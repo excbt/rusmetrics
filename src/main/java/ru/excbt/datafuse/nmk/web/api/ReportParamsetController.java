@@ -371,6 +371,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(
 			@PathVariable(value = "srcId") Long srcId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request) {
 
@@ -382,7 +383,8 @@ public class ReportParamsetController extends WebApiController {
 
 		try {
 			resultEntity = reportParamsetService.createByTemplate(srcId,
-					reportParamset, currentSubscriberService.getSubscriber());
+					reportParamset, contObjectIds,
+					currentSubscriberService.getSubscriber());
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
@@ -658,7 +660,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCommerce(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -672,7 +674,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT1(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -686,7 +688,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT2(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
@@ -700,7 +702,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		deleteInternal(reportParamsetId);
 		return ResponseEntity.accepted().build();
 	}
