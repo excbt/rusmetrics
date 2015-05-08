@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -28,18 +29,18 @@ import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration (classes = {SpringMvcConfig.class})
-@WithMockUser(username = "admin", password = "admin", roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER" })
+@ContextConfiguration(classes = { SpringMvcConfig.class })
+@WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
+		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
-	
+
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	@Autowired
 	private WebApplicationContext wac;
-	
+
 	@Autowired
 	private Filter springSecurityFilterChain;
 
@@ -50,43 +51,61 @@ public class AnyControllerTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
 				.addFilters(springSecurityFilterChain).build();
 	}
-	
+
 	@Test
 	public void testInit() {
 		checkNotNull(mockMvc);
 	}
-	
+
 	/**
 	 * 
 	 * @param urlTemplate
 	 * @throws Exception
 	 */
 	protected void testJsonGet(String urlTemplate) throws Exception {
-		ResultActions resultActionsAll = mockMvc.perform(get(
-				urlTemplate).with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+		ResultActions resultActionsAll = mockMvc.perform(get(urlTemplate).with(
+				testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(WebApiController.APPLICATION_JSON_UTF8));		
+				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+	}
+
+	/**
+	 * 
+	 * @param a
+	 * @return
+	 */
+	protected static String arrayToString(long[] a) {
+		if (a == null)
+			return "null";
+		int iMax = a.length - 1;
+		if (iMax == -1)
+			return "";
+
+		StringBuilder b = new StringBuilder();
+		for (int i = 0;; i++) {
+			b.append(a[i]);
+			if (i == iMax)
+				return b.toString();
+			b.append(", ");
+		}
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @throws Exception
+	 */
+	protected void testJsonDelete(String urlStr) throws Exception {
+
+		ResultActions deleteResultActions = mockMvc
+				.perform(delete(urlStr).with(testSecurityContext()).accept(
+						MediaType.APPLICATION_JSON));
+
+		deleteResultActions.andDo(MockMvcResultHandlers.print());
+		deleteResultActions.andExpect(status().isOk());
 	}
 	
-
-	
-    public static String arrayToString(long[] a) {
-        if (a == null)
-            return "null";
-        int iMax = a.length - 1;
-        if (iMax == -1)
-            return "";
-
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; ; i++) {
-            b.append(a[i]);
-            if (i == iMax)
-                return b.toString();
-            b.append(", ");
-        }
-    }	
 }
