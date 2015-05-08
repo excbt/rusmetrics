@@ -94,6 +94,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/delivery.html',
         controller: 'DlvrCtrl'
       })
+    .when('/private/contacts', {
+        templateUrl: 'views/contacts.html',
+        controller: 'MainCtrl'
+      })
 //    .when('/test', {
 //        templateUrl: 'views/test.html',
 //        controller: 'TestCtrl'
