@@ -90,6 +90,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/param_sets.html',
         controller: 'ParamSetsCtrl'
       })
+    .when('/settings/delivery', {
+        templateUrl: 'views/delivery.html',
+        controller: 'DlvrCtrl'
+      })
 //    .when('/test', {
 //        templateUrl: 'views/test.html',
 //        controller: 'TestCtrl'
