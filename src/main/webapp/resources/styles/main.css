@@ -113,3 +113,8 @@ body {
     border-bottom: 0;
   }
 }
+
+.paddingTop10PC {
+	
+	padding-top: 10%;
+}

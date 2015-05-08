@@ -22,7 +22,7 @@
 <!-- 						<i class="btn btn-large glyphicon glyphicon-home"></i> -->
 <!-- 				</div> -->
 <!-- 			</div> -->
-			<div class="row" ng-controller="LoginController">
+			<div class="row paddingTop10PC" ng-controller="LoginController">
 				<div class="well col-md-offset-4 col-md-4">
 					<h3>НМК Портал</h3>
 
