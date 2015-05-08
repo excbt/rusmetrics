@@ -51,13 +51,13 @@ public class ReportParamsetService implements SecuredRoles {
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
-	
+
 	/**
 	 * 
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
@@ -72,7 +72,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset entity, Long[] contObjectIds) {
 
 		ReportParamset result = createOne(entity);
@@ -87,7 +87,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportParamset entity) {
 		checkNotNull(entity);
 		if (checkCanUpdate(entity.getId())) {
@@ -104,7 +104,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
@@ -141,7 +141,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
 			reportParamsetUnitRepository.softDeleteByReportParamset(id);
@@ -237,7 +237,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public ReportParamset createByTemplate(long srcId,
-			ReportParamset reportParamset, Subscriber subscriber) {
+			ReportParamset reportParamset, Long[] contObjectIds,
+			Subscriber subscriber) {
 
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
@@ -259,7 +260,9 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset result = reportParamsetRepository.save(rp);
 
-		copyReportParamsetUnit(srcId, result.getId());
+		if (contObjectIds != null) {
+			updateUnitToParamset(result.getId(), contObjectIds);
+		}		
 
 		return result;
 	}
@@ -402,7 +405,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param dstReportParamsetId
 	 * @return
 	 */
-	public void copyReportParamsetUnit(long srcReportParamsetId,
+	@Deprecated
+	public void copyReportParamsetUnit222(long srcReportParamsetId,
 			long dstReportParamsetId) {
 
 		List<?> checkList = reportParamsetUnitRepository

@@ -62,7 +62,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		// rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
 		rp.setReportPeriodKey(ReportPeriodKey.TODAY);
 		ReportParamset result = reportParamsetService.createByTemplate(
-				TEMPLATE_PARAMSET_ID, rp,
+				TEMPLATE_PARAMSET_ID, rp, null,
 				currentSubscriberService.getSubscriber());
 		assertNotNull(result);
 
@@ -103,9 +103,8 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	@Test
 	public void testParamsetAvailableContObjectUnits() {
 		List<ReportTemplate> reportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(
-				ReportTypeKey.COMMERCE_REPORT, true,
-						currentSubscriberService.getSubscriberId());
+				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
+						true, currentSubscriberService.getSubscriberId());
 		assertTrue(reportTemplates.size() > 0);
 		ReportTemplate rt = reportTemplates.get(0);
 
@@ -123,13 +122,13 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		logger.info("Found {} Available ContObjects", contObjects.size());
 	}
 
-	
 	@Test
 	public void testParamsetUpdateUnitObjects() {
 
-		Long[] objectIds = {1L,2L,3L,4L,55L};
-		
-		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID, objectIds);
-		
+		Long[] objectIds = { 1L, 2L, 3L, 4L, 55L };
+
+		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID,
+				objectIds);
+
 	}
 }
