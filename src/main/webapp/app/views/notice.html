@@ -1,3 +1,11 @@
+<!--
+<script>
+    $(window).resize(function() {
+        location.reload();
+    });
+</script>
+-->
+
 <div>Портал / Уведомления</div>
 <h2>Уведомления</h2>
 
@@ -48,7 +56,7 @@
 </div>
 
 <div >
-    <table ng-class="tableDef.tableClass">
+    <table class="excbt_table_oneLineData" ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
             <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}

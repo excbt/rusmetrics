@@ -28,6 +28,10 @@
 
 /* Space out content a bit */
 body {
+
+    background: url(../images/title_bg.jpg);
+    background-size: 100%;
+
   padding-top: 20px;
   padding-bottom: 20px;
     font-size: 12px;

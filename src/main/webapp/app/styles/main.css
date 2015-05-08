@@ -317,7 +317,8 @@ input[type="radio"]{
     }
 
 .main-scrollable-area1 {
-	height: 865px; 
+    height: 85%;
+/*	height: 865px; */
 /*    overflow: hidden;*/
     overflow-y: auto;	
 }
@@ -532,4 +533,10 @@ a.list-group-item:focus {
 
 .excbt_Caption {
     font-size: 14px;
+}
+
+table.excbt_table_oneLineData > tbody > tr> td {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
+    text-overflow: ellipsis;/* Добавляем многоточие*/
 }

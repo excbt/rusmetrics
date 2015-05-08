@@ -12,15 +12,16 @@
 <title>НМК</title>
 
 </head>
-<body>
+<body class="excbt_login_body">
 
 	<div id="wrap">
 		<div class="container">
-			<div class="row">
-				<div class="jumbotron center-block bg-white text-center">
-					<h1>TITLE</h1>
-				</div>
-			</div>
+<!-- 			<div class="row"> -->
+<!-- 				<div class="jumbotron center-block bg-white text-center"> -->
+<!-- 					<img src="resources/images/title_bg.jpg"> -->
+<!-- 						<i class="btn btn-large glyphicon glyphicon-home"></i> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
 			<div class="row" ng-controller="LoginController">
 				<div class="well col-md-offset-4 col-md-4">
 					<h3>НМК Портал</h3>
@@ -53,7 +54,7 @@
 		<div class="container">
 			<div class="text-left">
 				<p>
-					<b>LOGO</b>
+<!-- 					<b>LOGO</b> -->
 				</p>
 			</div>
 		</div>

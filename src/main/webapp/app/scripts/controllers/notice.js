@@ -3,6 +3,16 @@
 var app = angular.module('portalNMK');
 
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory){
+//console.log("$('#div-main-area').width()=");    
+//console.log($('#div-main-area').width()); 
+//    
+//console.log("$('td.col-md-4').width()=");    
+//console.log(Math.round($('#div-main-area').width()*8.333/100*4));  
+//    
+//console.log("$('td.col-md-3').width()=");    
+//console.log(Math.round($('#div-main-area').width()*8.333/100*3));     
+//    Math.round($('#div-main-area').width()*8.333/100)= 130 = 20*x; => x= 130/20
+    //Math.round($('#div-main-area').width()*8.333/100/6.5) //dynamic coef
     $scope.TEXT_CAPTION_LENGTH = 20*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-3; //length of type visible part 
     $scope.crudTableName= "../api/subscr/contObjects";
@@ -52,6 +62,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         } ]
     };
     
+    $scope.data = {};
+    
     $scope.currentObject = {};
     $scope.selectedObjects = [];
     
@@ -72,6 +84,55 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         $scope.getResultsPage(newPage);
     };
     
+    var dataParse = function(arr){
+        var oneNotice = {};
+        var tmp = arr.map(function(el){
+            oneNotice = {};
+            oneNotice.noticeType = el.contEventType.name;
+            oneNotice.noticeMessage = el.message;                        
+            if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
+                    oneNotice.noticeTypeCaption= el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+                }else{
+                     oneNotice.noticeTypeCaption= el.contEventType.name;
+            };
+
+            if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
+                    oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+                }else{
+                     oneNotice.noticeCaption= el.message;
+            };
+
+            for (var i=0; i<$scope.objects.length; i++){                       
+                if ($scope.objects[i].id == el.contObjectId ){
+                    oneNotice.noticeObjectName = $scope.objects[i].fullName;  
+                };   
+            };
+
+            oneNotice.noticeDate = $scope.dateFormat(el.eventTime);
+
+            switch (el.contServiceType)
+            {
+                        case "heat" : oneNotice.noticeZpoint = "ТС"; break;
+                        case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
+                        case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
+                        default: oneNotice.noticeZpoint  = data;
+             }
+            return oneNotice;
+        });
+        return tmp;
+    };
+    
+//    $(window).resize(function() {
+//        $scope.TEXT_CAPTION_LENGTH = Math.round($('#div-main-area').width()*8.333/100/6.5)*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
+//        $scope.TYPE_CAPTION_LENGTH = Math.round($('#div-main-area').width()*8.333/100/6.5)*3-3; //length of type visible part 
+//console.log("Re parse");
+//console.log($scope.TEXT_CAPTION_LENGTH);  
+//console.log($scope.TYPE_CAPTION_LENGTH);         
+//        var tmp =dataParse($scope.data.objects);
+//        $scope.notices = tmp;
+//       
+//    });
+    
     $scope.getResultsPage = function(pageNumber) {
         $scope.pagination.current = pageNumber;        
         var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
@@ -79,42 +140,43 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');   
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function(data){                  
                         var result = [];
+                        $scope.data= data;
                         var oneNotice = {};
                         $scope.totalNotices = data.totalElements;
-                        var tmp = data.objects.map(function(el){
-                            oneNotice = {};
-                            oneNotice.noticeType = el.contEventType.name;
-                            oneNotice.noticeMessage = el.message;
-                            
-                            if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
-                                    oneNotice.noticeTypeCaption= el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-                                }else{
-                                     oneNotice.noticeTypeCaption= el.contEventType.name;
-                            };
-                            
-                            if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
-                                    oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
-                                }else{
-                                     oneNotice.noticeCaption= el.message;
-                            };
-                            
-                            for (var i=0; i<$scope.objects.length; i++){                       
-                                if ($scope.objects[i].id == el.contObjectId ){
-                                    oneNotice.noticeObjectName = $scope.objects[i].fullName;  
-                                };   
-                            };
-                            
-                            oneNotice.noticeDate = $scope.dateFormat(el.eventTime);
-                            
-                            switch (el.contServiceType)
-                            {
-                                        case "heat" : oneNotice.noticeZpoint = "ТС"; break;
-                                        case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
-                                        case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
-                                        default: oneNotice.noticeZpoint  = data;
-                             }
-                            return oneNotice;
-                        });
+                        var tmp = dataParse(data.objects);
+//                        var tmp = data.objects.map(function(el){
+//                            oneNotice = {};
+//                            oneNotice.noticeType = el.contEventType.name;
+//                            oneNotice.noticeMessage = el.message;                        
+//                            if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
+//                                    oneNotice.noticeTypeCaption= el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+//                                }else{
+//                                     oneNotice.noticeTypeCaption= el.contEventType.name;
+//                            };
+//                            
+//                            if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
+//                                    oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+//                                }else{
+//                                     oneNotice.noticeCaption= el.message;
+//                            };
+//                            
+//                            for (var i=0; i<$scope.objects.length; i++){                       
+//                                if ($scope.objects[i].id == el.contObjectId ){
+//                                    oneNotice.noticeObjectName = $scope.objects[i].fullName;  
+//                                };   
+//                            };
+//                            
+//                            oneNotice.noticeDate = $scope.dateFormat(el.eventTime);
+//                            
+//                            switch (el.contServiceType)
+//                            {
+//                                        case "heat" : oneNotice.noticeZpoint = "ТС"; break;
+//                                        case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
+//                                        case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
+//                                        default: oneNotice.noticeZpoint  = data;
+//                             }
+//                            return oneNotice;
+//                        });
                         $scope.notices = tmp;
                     });
     };
