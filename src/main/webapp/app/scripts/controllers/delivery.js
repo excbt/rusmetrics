@@ -6,7 +6,7 @@ app.controller(
 				var slct_rep_type = document.getElementById('slct_rep_tmpl_var');
 				var tmpl_id = slct_rep_type[slct_rep_type.selectedIndex].id;
 				var paramset_id = slct_rep_type.value;
-				alert(tmpl_id);
+//				alert(tmpl_id);
 				// Подготовка данных для сохранения
 				var dlvr_data = new Object ();
 				dlvr_data['name'] = document.getElementById('inp_dlvr_name').value;
@@ -48,13 +48,21 @@ app.controller(
 								//Добавляем новый элемент в массив ...
 								addDelivery(data);
 								// ... и в таблицу
-								var tbl_dlvr = document.getElementById('table_deliveries');
+							/*	-- вариант с наименьшим трафиком. Надо доделать.
+                            var tbl_dlvr = document.getElementById('table_deliveries');
 								newRow = tbl_dlvr.insertRow();
 								newRow.id = "dlvr_id_" + data['id'];
 								newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delDlvrTd(" + data['id'] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=dlvrEditWindow(" + data['id'] + ") data-target='#div_edit_delivery' data-toggle='modal'></i>";
 								newRow.insertCell().innerHTML = data['name'];
-								newRow.insertCell().innerHTML = data['description'];
-								$('#div_edit_delivery').modal('hide');
+								newRow.insertCell().innerHTML = data['description'];*/
+
+                                document.getElementById('table_deliveries').innerHTML = '<tr id="tr_dlv_header" class="info">\
+                                    <th class="col-md-1">#</th>\
+                                    <th class="col-md-2">Название</th>\
+                                    <th class="col-md-9">Описание</th>\
+                                    </tr>';
+                                dlvrTableInit();
+                                $('#div_edit_delivery').modal('hide');
 								}
 							);
 				}
@@ -65,7 +73,13 @@ app.controller(
 							'../api/reportShedule/' + dlvr_data['id'] + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + paramset_id,
 							dlvr_data)
 							.success(function(data){
-								alert("Sucess!!");
+//								updateDeliveryDetails(data); -- вариант с наименьшим трафиком. Надо доделать.
+                                document.getElementById('table_deliveries').innerHTML = '<tr id="tr_dlv_header" class="info">\
+                                    <th class="col-md-1">#</th>\
+                                    <th class="col-md-2">Название</th>\
+                                    <th class="col-md-9">Описание</th>\
+                                    </tr>';
+                                dlvrTableInit();
 								$('#div_edit_delivery').modal('hide');
 							});
 				}

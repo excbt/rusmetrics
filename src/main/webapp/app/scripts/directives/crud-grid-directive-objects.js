@@ -148,7 +148,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                             zpoint.id = $scope.zPointsByObject[i].id;
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointRSO = $scope.zPointsByObject[i].rso.organizationFullName;
+                            zpoint.zpointRSO = $scope.zPointsByObject[i].rso.organizationFullName || $scope.zPointsByObject[i].rso.organizationName;
                             zpoint.checkoutTime = $scope.zPointsByObject[i].checkoutTime;
                             zpoint.checkoutDay = $scope.zPointsByObject[i].checkoutDay;
                             if(typeof $scope.zPointsByObject[i].doublePipe == 'undefined'){

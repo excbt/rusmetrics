@@ -64,6 +64,15 @@
 		if (deliveries[zx]['id'] == dlvr_id) return deliveries[zx];
 	}
 }
+    
+ 	function updateDeliveryDetails(dlvr){
+	for(zx = 0; zx < deliveries.length; zx++){
+		if (deliveries[zx]['id'] == dlvr['id']){
+            deliveries[zx] = dlvr;
+            return;
+        };
+	}
+}
 
 /************************************
  * Функции для работы с интерфейсом *
@@ -73,7 +82,7 @@
 		// Получаем список рассылок с сервера
 		$.ajax({
 			type: 'GET',
-			url: '../api/reportShedule/active',
+			url: '../api/reportShedule',
 			dataType: 'json',
 			async: false,
 			success: function(data){
@@ -163,6 +172,8 @@ function dlvrEditWindow(dlvr_id) {
 		// Обнуляем значения всех полей
 		document.getElementById('inp_dlvr_name').value = "";
 		document.getElementById('txtarea_dlvr_descr').value = "";
+        document.getElementById('inp_dlvr_begin').value = "";
+        document.getElementById('inp_dlvr_end').value = "";
 		var slct_rep_tmpl_var = document.getElementById('slct_rep_tmpl_var');
 		slct_rep_tmpl_var.disabled = true;
 		slct_rep_tmpl_var.innerHTML = "<option selected>Выберите вариант шаблона</option>";
@@ -244,6 +255,15 @@ function dlvrEditWindow(dlvr_id) {
 				rcptActivate();
 			}
 		}
+        
+        Date.prototype.toDateInputValue = (function() {
+            var local = new Date(this);
+            local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+            return local.toJSON().slice(0,10);
+        });
+        
+        var inp_dlvr_begin = document.getElementById('inp_dlvr_begin'); 
+        inp_dlvr_begin.value = new Date(dlvr_details['sheduleStartDate']).toDateInputValue();        
 	}
 }
 
@@ -379,76 +399,11 @@ function delDlvrTd(dlvr_id){
 	});
 }
 
-// Добавление и изменение рассылки
-// function dlvrSave(id){
-// 	var slct_rep_type = document.getElementById('slct_rep_tmpl_var');
-// 	var tmpl_id = slct_rep_type[slct_rep_type.selectedIndex].id;
-// 	var paramset_id = slct_rep_type.value;
-// 	// Подготовка данных для сохранения
-// 	var dlvr_data = new Object ();
-// 	dlvr_data['name'] = document.getElementById('inp_dlvr_name').value;
-// 	dlvr_data['description'] = document.getElementById('txtarea_dlvr_descr').value;
-// 	// Формируем расписание
-// 	var slct_period = document.getElementById('slct_period');
-// 	dlvr_data['reportSheduleTypeKey'] = slct_period.value;
-// 	dlvr_data['sheduleTimeTemplate'] = document.getElementById('inp_minute').value + " " + document.getElementById('inp_hour').value;
-// 	switch (slct_period.value) {
-// 	case "SINGLE":
-// 		var day_date = document.getElementById('inp_day_date').value.split(".");
-// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " " + day_date[0] + " " + day_date[1] + " *";
-// 		break
-// 	case "DAILY":
-// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " * * *";
-// 		break
-// 	case "WEEKLY":
-// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " * * " + document.getElementById('slct_day_of_week').value;
-// 		break
-// 	case "MONTHLY":
-// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " " + document.getElementById('inp_day').value + " * *";
-// 		break
-// 	default:
-// 		alert("Пожалуйста, укажите периодичность отчёта!");
-// 		break
-// 	}
-// 	// Получаем тип рассылки и список получателей
-// 	dlvr_data['sheduleAction1Key'] = document.getElementById('slct_dlvr_type').value;
-// 	dlvr_data['sheduleAction1Param'] = document.getElementById('inp_rcpt_email').value;
-// 	// Получаем дату начала и конца
-// 	dlvr_data['sheduleStartDate'] = document.getElementById('inp_dlvr_begin').value;
-// 	dlvr_data['sheduleEndDate'] = document.getElementById('inp_dlvr_end').value;
-	
-
-	
-/*	alert("template_id:" + tmpl_id);
-	alert("paramser_id:" + slct_rep_type.value);
-	alert("name: "+dlvr_data['name']+", descr: "+dlvr_data['description']);
-	alert("repShKey: "+dlvr_data['reportSheduleTypeKey']+"shTimeTmpl: "+dlvr_data['sheduleTimeTemplate']);
-	alert("actionKey: "+dlvr_data['sheduleAction1Key']+"ActParam: "+dlvr_data['sheduleAction1Param']);*/
-/*	$.ajax({
-		type: 'POST',
-		url: '../api/reportShedule/',
-		contentType: 'application/json; charset=utf-8',
-//		data: '{"reportTemplateId":"'+tmpl_id+'"}&'+$.toJSON(dlvr_data),
-	headers: {
-		'reportTemplateId': tmpl_id,
-		'reportParamsetId': paramset_id
-	},
-		data: //"reportTemplateId="+tmpl_id+"&reportParamsetId="+paramset_id+"&"+$.toJSON(dlvr_data),
-	{
-			content: $.toJSON(dlvr_data)
-		},
-		success: function(data){
-			alert(data['id']);
-		}
-	});*/
-//}
-
 /***************************
  * Вспомогательные функции *
  ***************************/
 // Проверка введённого времени на корректность
 function timeVerify(time){
-	alert("elkjwhelkjqw");
 	var inp_hour = document.getElementById('inp_hour');
 	var inp_minute = document.getElementById('inp_minute');
 	if(time == 'hour'){
@@ -491,10 +446,6 @@ dlvrTableInit();
         
             <!-- Содержимое вкладки с рассылками -->
     <div id="div_contacts">
-		<ul class="breadcrumb">
-			<li><a href="/#/">Портал</a> <span class="divider"></span></li>
-			<li class="active">Рассылки</li>
-		</ul>
 		<h2>Рассылки</h2>
 		<!-- Кнопка добавления рассылок -->
 		<div class="btn-group">
