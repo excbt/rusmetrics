@@ -145,7 +145,9 @@ console.log(object[$scope.extraProps.idColumnName]);
         if ($scope.createByTemplate_flag){
             object.id = null;          
             object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
-            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;    
+            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;  
+console.log("$scope.createByTemplate_flag"); 
+console.log(tmp);            
             crudGridDataFactory(table).save({contObjectIds: tmp}, object, successCallback, errorCallback);
             return;
         };
@@ -172,8 +174,9 @@ console.log(object[$scope.extraProps.idColumnName]);
         $scope.toArchive(table, object.id).update({}, object, successCallback, errorCallback);
     };
     
-    $scope.createByTemplate =  function(object){
+    $scope.createByTemplate =  function(parentObject, object){
 //        Установка объектов при создании варианта по архивному шаблону
+        $scope.selectedItem(parentObject, object);
         $scope.createByTemplate_flag = true;
         $scope.archiveParamset = {};
         $scope.archiveParamset.id = object.id;
@@ -183,6 +186,9 @@ console.log(object[$scope.extraProps.idColumnName]);
         $scope.currentObject._active = true;
         $scope.getAvailableObjects(object.id);
         $scope.selectedObjects = [];
+//console.log($scope.currentObject.common || !$scope.currentObject._active); 
+        $scope.set_of_objects_flag = false;
+        activateMainPropertiesTab();
     };
     
     $scope.setDefault = function(){
@@ -225,6 +231,7 @@ console.log(object[$scope.extraProps.idColumnName]);
         $scope.set_of_objects_flag=false;
         $scope.setCurrentReportType(object);
         $scope.currentObject = {};
+        $scope.currentObject._active = true;
         $scope.createByTemplate_flag = false;
         $scope.createParamset_flag = true;
         $scope.currentSign = 9999;
@@ -360,5 +367,18 @@ console.log(object[$scope.extraProps.idColumnName]);
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+    
+    $scope.isDisabled = function(){
+//console.log($scope.currentObject.common || !$scope.currentObject._active);        
+        return $scope.currentObject.common || !$scope.currentObject._active;
+    };
+    
+//    $scope.$watch('currentObject',function(data){
+//console.log($scope.currentObject.common || !$scope.currentObject._active); 
+//console.log($scope.currentObject);        
+//console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaattttttttttttttttttttttaaaaaaaaaaaaaaaaaa");        
+//console.log(data);        
+//console.log("===============================================================================");        
+//    },false);
 
 }]);

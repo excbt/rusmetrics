@@ -1,0 +1,671 @@
+<style type="text/css">
+<!--
+
+-->
+.align-left {
+	align: left;
+}
+</style>
+
+<!-- <script type="text/javascript" src="https://github.com/Krinkle/jquery-json/blob/master/src/jquery.json.js"></script> -->
+<script type="text/javascript" src="../vendor_components/jquery.json.js"></script>
+<script>
+
+</script>
+
+<script type="text/javascript">
+
+/******************
+ *  Эмулятор БД   *
+ ******************/
+ 
+ var deliveries = [];
+                   
+/**********************************************
+ * Функции для работы с глобальными массивами *
+ **********************************************/
+ 
+ // Функция получения списка рассылок
+ // Если num=0, то вернёт все контакты
+	function getDeliveries(first, num){
+		var local_dlvr = [];
+		// Получаем индекс рассылки с id first
+		for(var zxa = 0; zxa < deliveries.length; zxa++){
+			if (first == deliveries[zxa][0]) break;
+		}
+		switch(num) {
+		case 0:
+			return deliveries;
+			break
+		case 1:
+			local_dlvr = deliveries[zxa];
+			break
+		default:
+			for (var zx = zxa; zx < zxa+num; zx++){
+				local_dlvr.push(deliveries[zx]);
+			}
+		}
+		return local_dlvr;
+	}
+
+// Функция записи массива с рассылками
+	function setDeliveries(data){
+	deliveries = data;
+}
+
+// Функция добавления данных к массиву
+	function addDelivery(data){
+	deliveries.push(data);
+}
+
+// Функция, возвращающая подробности рассылки по её id
+	function getDeliveryDetails(dlvr_id){
+	for(zx = 0; zx < deliveries.length; zx++){
+		if (deliveries[zx]['id'] == dlvr_id) return deliveries[zx];
+	}
+}
+
+/************************************
+ * Функции для работы с интерфейсом *
+ ************************************/
+	// Функция инициализации таблицы со списком рассылок
+	function dlvrTableInit () {
+		// Получаем список рассылок с сервера
+		$.ajax({
+			type: 'GET',
+			url: '../api/reportShedule/active',
+			dataType: 'json',
+			async: false,
+			success: function(data){
+				setDeliveries(data);
+			}
+		});
+		var dlvr_for_table = getDeliveries(0, 0);
+		var tbl_dlvr = document.getElementById('table_deliveries');
+		// Заполняем таблицу
+		var newRow;
+		for (var zx = 0; zx < dlvr_for_table.length; zx++) {
+			newRow = tbl_dlvr.insertRow();
+			newRow.id = "dlvr_id_" + deliveries[zx]['id'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delDlvrTd(" + dlvr_for_table[zx]['id'] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=dlvrEditWindow(" + dlvr_for_table[zx]['id'] + ") data-target='#div_edit_delivery' data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML = deliveries[zx]['name'];
+			newRow.insertCell().innerHTML = deliveries[zx]['description'];
+		}
+	}
+
+// Функция подготовки окна редактирования рассылки
+function dlvrEditWindow(dlvr_id) {
+	// Передаём id через свойства модального окна
+	var div_edit = document.getElementById('div_edit_delivery');
+	div_edit.dlvr_id = dlvr_id;
+	// Получаем с сервера список типов отчётов
+	$.ajax({
+		type: 'GET',
+		url: "../api/reportSettings/reportType",
+		dataType: 'json',
+		async: false,
+		success: function(data){
+			// Готовим селект для выбора типов отчётов
+			var slct_rep_type = document.getElementById('slct_rep_type');
+			// Сначала обнуляем список в селекте
+			slct_rep_type.innerHTML='<option selected>Выберите тип отчёта</option>';
+			// Формируем новый список из полученного с сервера
+			for(zx = 0; zx < data.length; zx++){
+				var new_opt = document.createElement('option');
+				new_opt.value = data[zx]['suffix'];
+				new_opt.innerHTML = data[zx]['caption'];
+				slct_rep_type.appendChild(new_opt);
+			}
+		}
+	});
+	// Получаем с сервера список периодов
+	$.ajax({
+		type: 'GET',
+		url: "../api/reportSettings/reportActionType",
+		dataType: 'json',
+		async: false,
+		success: function(data){
+			// Готовим список для выбора периодичности
+			var slct_period = document.getElementById('slct_period');
+			// Сначала обнуляем список в селекте
+			slct_period.innerHTML='<option selected>Выберите периодичность</option>';
+			// Формируем новый список из полученного с сервера
+			for(zx = 0; zx < data.length; zx++){
+				var new_opt = document.createElement('option');
+				new_opt.value = data[zx]['keyname'];
+				new_opt.innerHTML = data[zx]['caption'];
+				slct_period.appendChild(new_opt);
+			}
+		}
+	});
+	// Получаем список способов доставки
+	$.ajax({
+		type: 'GET',
+		url: "../api/reportSettings/reportSheduleType",
+		dataType: 'json',
+		async: false,
+		success: function(data){
+			// Готовим список для выбора способов доставки
+			var slct_dlvr_type = document.getElementById('slct_dlvr_type');
+			// Сначала обнуляем список в селекте
+			slct_dlvr_type.innerHTML='<option selected>Выберите способ доставки</option>';
+			// Формируем новый список из полученного с сервера
+			for(zx = 0; zx < data.length; zx++){
+				var new_opt = document.createElement('option');
+				new_opt.value = data[zx]['keyname'];
+				new_opt.innerHTML = data[zx]['caption'];
+				slct_dlvr_type.appendChild(new_opt);
+			}
+		}
+	});
+	// Проверяем, создаётся ли новая рассылка или редактируется имеющаяся
+	if(dlvr_id == 'new_dlvr'){
+		// Обнуляем значения всех полей
+		document.getElementById('inp_dlvr_name').value = "";
+		document.getElementById('txtarea_dlvr_descr').value = "";
+		var slct_rep_tmpl_var = document.getElementById('slct_rep_tmpl_var');
+		slct_rep_tmpl_var.disabled = true;
+		slct_rep_tmpl_var.innerHTML = "<option selected>Выберите вариант шаблона</option>";
+		document.getElementById('div_day').innerHTML = '\
+			<div id="div_day_of_month" style="display:none">\
+					<label for="inp_day">Число:</label>\
+					<input id="inp_day" type="text" disabled placeholder="Введите число месяца..." class="form-control input-sm">\
+				</div>\
+				<div id="div_day_of_week">\
+				<label for="slct_day_of_week">День:</label>\
+					<select id="slct_day_of_week" disabled class="form-control input-sm">\
+						<option value = "-1" selected>Укажите день недели</option>\
+						<option value = "1">Понедельник</option>\
+						<option value = "2">Вторник</option>\
+						<option value = "3">Среда</option>\
+						<option value = "4">Четверг</option>\
+						<option value = "5">Пятница</option>\
+						<option value = "6">Суббота</option>\
+						<option value = "7">Воскресенье</option>\
+					</select>\
+				</div>\
+				<div id="div_day_date" style="display:none">\
+					<label for="inp_day_date">Дата:</label>\
+					<input id="inp_day_date" type="date" disabled placeholder="Укажите дату..." class="form-control input-sm">\
+				</div>\
+			<div id="div_daily" style="display:none">&nbsp</div>';
+		document.getElementById('div_time').innerHTML = '<input id="inp_hour" type="text" disabled placeholder="Час" class="form-control input-sm">\
+				<span class="input-group-addon">:</span>\
+				<input id="inp_minute" type="text" disabled placeholder="Минута" class="form-control input-sm">';
+		document.getElementById('div_rcpt_email').style.display = 'none';
+		document.getElementById('div_rcpt_slct').style.display = 'block';
+		var slct_rcpt = document.getElementById('slct_rcpt');
+		slct_rcpt.disabled = true;
+		slct_rcpt.innerHTML = '<option selected>Выберите получателей</option>\
+	   	               		<option>Сантехники</option>\
+	   	               		<option>Электрики</option>\
+	   	               		<option>Уборщицы</option>';
+	}
+	else{
+		var dlvr_details = getDeliveryDetails(dlvr_id);
+		div_edit.version = dlvr_details['version'];
+		document.getElementById('inp_dlvr_name').value = dlvr_details['name'];
+		document.getElementById('txtarea_dlvr_descr').value = dlvr_details['description'];
+		var slct_rep_type = document.getElementById('slct_rep_type');
+		for(zx = 0; zx < slct_rep_type.length; zx++){
+			// Находим в списке типов отчётов тот, который указан для текущего расписания
+			if (slct_rep_type[zx]['text'] == dlvr_details['reportTemplate']['reportType']['name']){
+				slct_rep_type[zx].selected = true;
+				// Проверка отчёта: активный или архивный
+				if(dlvr_details['reportParamset']['_active']){
+					tmplVarActivate(dlvr_details['reportParamset']['id']);
+				}
+				else {
+					var slct_rep_tmpl_var = document.getElementById("slct_rep_tmpl_var");
+					slct_rep_tmpl_var[slct_rep_tmpl_var.selectedIndex]['text'] = dlvr_details['reportParamset']['name'];
+					slct_rep_tmpl_var.disabled = true;
+				}
+			}
+		}
+		var slct_period = document.getElementById('slct_period');
+		for(zxa = 0; zxa < slct_period.length; zxa++){
+			if(slct_period[zxa]['text'] == dlvr_details['reportSheduleType']['name']){
+				slct_period[zxa].selected = true;
+				timeActivate();
+				var time = dlvr_details['sheduleTimeTemplate'].split(' ');
+				document.getElementById("inp_minute").value = time[0];
+				document.getElementById("inp_hour").value = time [1];
+				//document.getElementById("div_day_date")
+				//document.getElementById("slct_day_of_week")
+				document.getElementById("inp_day").value = time [2];
+				// !!!!!!!! Доделать выбор дня недели и даты !!!!!!!!!!!!!!!
+			}
+		}
+		var slct_dlvr_type = document.getElementById('slct_dlvr_type');
+		for(zxb = 0; zxb < slct_dlvr_type.length; zxb++){
+			if(slct_dlvr_type[zxb]['text'] == dlvr_details['sheduleAction1']['caption']){
+				slct_dlvr_type[zxb].selected = true;
+				document.getElementById('inp_rcpt_email').value = dlvr_details['sheduleAction1Param'];
+				rcptActivate();
+			}
+		}
+	}
+}
+
+// Активация списка выбора парамсетов в окне редактирования рассылки
+function tmplVarActivate(selected_optn) {
+	var slct_rep_tmpl_var = document.getElementById("slct_rep_tmpl_var");
+	slct_rep_tmpl_var.disabled = false;
+	// Обнуляем список в селекте
+	slct_rep_tmpl_var.innerHTML='<option selected>Выберите вариант шаблона</option>';
+	// Получаем с сервера список вариантов в зависимости от выбранного типа отчёта
+	var slct_rep_type = document.getElementById('slct_rep_type');
+	$.getJSON("../api/reportParamset" + slct_rep_type.value, function(data){
+		// Готовим список для выбора парамсетов
+		// Формируем новый список из полученного с сервера
+		for(zx = 0; zx < data.length; zx++){
+			var new_opt = document.createElement('option');
+			new_opt.value = data[zx]['id'];
+			new_opt.id = data[zx]['reportTemplate']['id'];
+			new_opt.innerHTML = data[zx]['name'];
+			slct_rep_tmpl_var.appendChild(new_opt);
+			if (new_opt.value == selected_optn) {
+				new_opt.selected = true;
+			}
+		}
+	});
+}
+
+// Активация времени доставки после выбора периодичности
+function timeActivate() {
+	// Активируем поля ввода времени
+	document.getElementById("inp_hour").disabled = false;
+	document.getElementById("inp_minute").disabled = false;
+	// Определяем, какая периодичность выбрана
+	switch (document.getElementById('slct_period').value) {
+	case "SINGLE":
+		document.getElementById("div_day_of_month").style.display = "none";
+		document.getElementById("div_day_of_week").style.display = "none";
+		document.getElementById("div_day_date").style.display = "block";
+		document.getElementById("div_daily").style.display = "none";
+		document.getElementById("inp_day_date").disabled=false;
+		break
+	case "DAILY":
+		document.getElementById("div_day_of_month").style.display = "none";
+		document.getElementById("div_day_of_week").style.display = "none";
+		document.getElementById("div_day_date").style.display = "none";
+		document.getElementById("div_daily").style.display = "block";
+		break
+	case "WEEKLY":
+		document.getElementById("div_day_of_month").style.display = "none";
+		document.getElementById("div_day_of_week").style.display = "block";
+		document.getElementById("div_day_date").style.display = "none";
+		document.getElementById("div_daily").style.display = "none";
+		document.getElementById("slct_day_of_week").disabled=false;
+		break
+	case "MONTHLY":
+		document.getElementById("div_day_of_month").style.display = "block";
+		document.getElementById("div_day_of_week").style.display = "none";
+		document.getElementById("div_day_date").style.display = "none";
+		document.getElementById("div_daily").style.display = "none";
+		document.getElementById("inp_day").disabled=false;
+		break
+	default:
+		alert("Пожалуйста, укажите периодичность отчёта!");
+		break
+	}
+}
+
+// Активация получателя после выбора способа доставки
+function rcptActivate() {
+	// Определяем, какой способ доставки выбран
+	switch (document.getElementById('slct_dlvr_type').value) {
+	case "EMAIL_LIST_DELIVERY":
+		document.getElementById("div_rcpt_slct").style.display = "block";
+		document.getElementById("div_rcpt_email").style.display = "none";
+		document.getElementById("slct_rcpt").disabled = false;
+		break
+	case "EMAIL_RAW_DELIVERY":
+		document.getElementById("div_rcpt_slct").style.display = "none";
+		document.getElementById("div_rcpt_email").style.display = "block";
+		document.getElementById("inp_rcpt_email").disabled = false;
+		break
+	default:
+		alert("Пожалуйста, выберите способ доставки!")
+		break
+	}
+}
+
+// Добавление ещё одной пары "способ доставки" - "получатель"
+function addRcpt() {
+	// Активируем кнопочку удаления
+	var i_rcpt_del = document.getElementById("i_rcpt_del");
+	i_rcpt_del.disabled = false;
+
+	var div_rcpt_form_inps_new = document.createElement('div');
+	div_rcpt_form_inps_new.innerHTML = '\
+		<div id="div_rcpt_form_inps">\
+			<div id="div_dlvr_type_slct" class="form-group pull-left col-sm-6">\
+				<label for="slct_dlvr_type">Тип расписания:</label>\
+				<select id="slct_dlvr_type" onchange="rcptActivate()" class="form-control input-sm">\
+					<option selected>Выберите тип расписания</option>\
+				</select>\
+			</div>\
+			<div id="div_rcpt_slct" class = "form-group col-sm-5">\
+				<label for = "slct_rcpt">Списки получателей:</label>\
+				<select id = "slct_rcpt" disabled class = "form-control input-sm">\
+					<option selected>Выберите получателей</option>\
+					<option>Сантехники</option>\
+					<option>Электрики</option>\
+					<option>Уборщицы</option>\
+				</select>\
+			</div>\
+			<div id="div_rcpt_email" class="form-group col-sm-5" style="display:none">\
+				<label for="inp_rcpt_email">Адрес электронной почты:</label>\
+				<input id="inp_rcpt_email" type="email" disabled placeholder="Введите e-mail..." class="form-control input-sm">\
+			</div>\
+			<div id="div_rcpt_del" class = "form-group col-sm-1">\
+				<label for="i_rcpt_del">&nbsp</label>\
+				<i id="i_rcpt_del" title="Удалить" class="btn btn-default btn-sm glyphicon glyphicon-trash"l onclick = delRcpt()></i>\
+			</div>\
+		</div>';
+	div_rcpt_form.appendChild(div_rcpt_form_inps_new);
+}
+
+// Удаление рассылки из списка
+function delDlvrTd(dlvr_id){
+	$.ajax({
+		url: "../api/reportShedule/" + dlvr_id,
+		type: 'delete',
+		success: function (){
+			var dlvr_td = document.getElementById("dlvr_id_" + dlvr_id);
+			dlvr_td.parentNode.removeChild(dlvr_td);
+		}
+	});
+}
+
+// Добавление и изменение рассылки
+// function dlvrSave(id){
+// 	var slct_rep_type = document.getElementById('slct_rep_tmpl_var');
+// 	var tmpl_id = slct_rep_type[slct_rep_type.selectedIndex].id;
+// 	var paramset_id = slct_rep_type.value;
+// 	// Подготовка данных для сохранения
+// 	var dlvr_data = new Object ();
+// 	dlvr_data['name'] = document.getElementById('inp_dlvr_name').value;
+// 	dlvr_data['description'] = document.getElementById('txtarea_dlvr_descr').value;
+// 	// Формируем расписание
+// 	var slct_period = document.getElementById('slct_period');
+// 	dlvr_data['reportSheduleTypeKey'] = slct_period.value;
+// 	dlvr_data['sheduleTimeTemplate'] = document.getElementById('inp_minute').value + " " + document.getElementById('inp_hour').value;
+// 	switch (slct_period.value) {
+// 	case "SINGLE":
+// 		var day_date = document.getElementById('inp_day_date').value.split(".");
+// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " " + day_date[0] + " " + day_date[1] + " *";
+// 		break
+// 	case "DAILY":
+// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " * * *";
+// 		break
+// 	case "WEEKLY":
+// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " * * " + document.getElementById('slct_day_of_week').value;
+// 		break
+// 	case "MONTHLY":
+// 		dlvr_data['sheduleTimeTemplate'] = dlvr_data['sheduleTimeTemplate'] + " " + document.getElementById('inp_day').value + " * *";
+// 		break
+// 	default:
+// 		alert("Пожалуйста, укажите периодичность отчёта!");
+// 		break
+// 	}
+// 	// Получаем тип рассылки и список получателей
+// 	dlvr_data['sheduleAction1Key'] = document.getElementById('slct_dlvr_type').value;
+// 	dlvr_data['sheduleAction1Param'] = document.getElementById('inp_rcpt_email').value;
+// 	// Получаем дату начала и конца
+// 	dlvr_data['sheduleStartDate'] = document.getElementById('inp_dlvr_begin').value;
+// 	dlvr_data['sheduleEndDate'] = document.getElementById('inp_dlvr_end').value;
+	
+
+	
+/*	alert("template_id:" + tmpl_id);
+	alert("paramser_id:" + slct_rep_type.value);
+	alert("name: "+dlvr_data['name']+", descr: "+dlvr_data['description']);
+	alert("repShKey: "+dlvr_data['reportSheduleTypeKey']+"shTimeTmpl: "+dlvr_data['sheduleTimeTemplate']);
+	alert("actionKey: "+dlvr_data['sheduleAction1Key']+"ActParam: "+dlvr_data['sheduleAction1Param']);*/
+/*	$.ajax({
+		type: 'POST',
+		url: '../api/reportShedule/',
+		contentType: 'application/json; charset=utf-8',
+//		data: '{"reportTemplateId":"'+tmpl_id+'"}&'+$.toJSON(dlvr_data),
+	headers: {
+		'reportTemplateId': tmpl_id,
+		'reportParamsetId': paramset_id
+	},
+		data: //"reportTemplateId="+tmpl_id+"&reportParamsetId="+paramset_id+"&"+$.toJSON(dlvr_data),
+	{
+			content: $.toJSON(dlvr_data)
+		},
+		success: function(data){
+			alert(data['id']);
+		}
+	});*/
+//}
+
+/***************************
+ * Вспомогательные функции *
+ ***************************/
+// Проверка введённого времени на корректность
+function timeVerify(time){
+	alert("elkjwhelkjqw");
+	var inp_hour = document.getElementById('inp_hour');
+	var inp_minute = document.getElementById('inp_minute');
+	if(time == 'hour'){
+		if(inp_hour.value < 0 && inp_hour.value > 24){
+			alert("Время введено некорректно!");
+		}
+	}
+	else{
+		if(inp_minute.value < 0 && inp_minute.value > 60){l
+			alert("Время введено некорректно!");
+		}
+	}
+}
+
+// Запускаем функции
+dlvrTableInit();
+</script>
+
+
+<div>Портал / Настройки / Отчеты</div>
+<h2>Отчеты</h2>
+
+<div role="tabpanel"l>
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" ><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation" ><a href="#/settings/paramsets/" aria-controls="param_sets" data-target="" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation" class="active"><a href="" aria-controls="timetables" data-target="#timetables" role="tab" data-toggle="tab">Расписания</a></li>
+    
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!-- ???     Расписания-->
+    <div role="tabpanel" class="tab-pane fade in active" id="timetables">
+	</div>
+</div>
+        <!-- >>>>>>>>>>>>>>>>>> Код писать в этом div <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+        
+            <!-- Содержимое вкладки с рассылками -->
+    <div id="div_contacts">
+		<ul class="breadcrumb">
+			<li><a href="/#/">Портал</a> <span class="divider"></span></li>
+			<li class="active">Рассылки</li>
+		</ul>
+		<h2>Рассылки</h2>
+		<!-- Кнопка добавления рассылок -->
+		<div class="btn-group">
+			<button class="btn btn-primary" data-target="#div_edit_delivery" data-toggle="modal" onclick="dlvrEditWindow('new_dlvr')">Добавить рассылку</button>
+		</div><br><br>		
+		<!-- Таблица со списком рассылок -->
+   		<table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover">
+    		<tr id="tr_dlv_header" class="info">
+    			<th class="col-md-1">#</th>
+    			<th class="col-md-2">Название</th>
+    			<th class="col-md-9">Описание</th>
+       		</tr>
+    	</table>
+    </div>
+</div>
+
+<!-- Вспомогательные элементы -->
+    <!-- Модальное окно редактирования списка контактов -->
+    <div ng-controller="DlvrCtrl" id="div_edit_delivery" class="modal fade" role="dialog"
+		aria-labelledby="showObjOptionLabel" tabindex="-1">
+		<div class="modal-dialog  modal-content">
+			<div class="modal-header">
+				<h3 id="div_dlvr_edit_w_header">Изменение рассылки</h3>
+			</div>
+    		<div class="modal_body">
+    		<br>
+ 	        	<div class="container-fluid">
+ 	            	<div class="row-fluid">
+   	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+   	               			<form>
+		   	               		<table class="table table-lighter table-hover table-condensed table-striped">
+	   	               				<tr>
+	   	               					<td>
+		   	               					<div class="form-group col-sm-12">
+		    									<label for="inp_dlvr_name">Название:</label>
+		   										<input id="inp_dlvr_name" type="text" placeholder="Введите название расписания..." class="form-control" />
+		   	               					</div>
+	   	               					</td>
+	   	               				</tr>
+	   	               				<tr>
+	   	               					<td>
+	   	               						<div class="form-group col-sm-12">
+	   	               							<label for="inp_dlvr_descr">Описание:</label>
+	   	               							<textarea id="txtarea_dlvr_descr" type="textarea" placeholder="Введите описание для расписания..." class="form-control" />
+	   	               						</div>
+	   	               					</td>
+	   	               				</tr>
+	   	               				<tr>
+	   	               					<td>
+		   	               					<div class="form-group pull-left col-sm-6">
+		   	               						<label for="slct_rep_type">Тип отчёта:</label>
+		   	               							<select id="slct_rep_type" onchange="tmplVarActivate()" class="form-control input-sm">
+		   	               								<option selected>Выберите тип отчёта</option>
+		   	               							</select>
+		   	               					</div>
+		   	               					<div class="form-group col-sm-6">
+		   	               						<label for="slct_rep_tmpl_var">Вариант шаблона:</label>
+		   	               						<select id="slct_rep_tmpl_var" disabled class="form-control input-sm">
+		   	               							<option selected>Выберите вариант шаблона</option>
+		   	               						</select>
+		   	               					</div>
+	   	               					</td>
+	   	               				</tr>
+	   	               				<tr>
+	   	               					<td>
+		   	               					<div class="form-group pull-left col-sm-6">
+		   	               						<label for="slct_period">Периодичность запуска</label>
+		   	               							<select id="slct_period" onchange="timeActivate()" class="form-control input-sm"></select>
+		   	               					</div>
+	   	               						<div id ="div_day" class="form-group col-sm-3">
+	   	               							<div id="div_day_of_month" style="display:none">
+	   	               							<label for="inp_day">Число:</label>
+	   	               								<input id="inp_day" type="text" disabled placeholder="Введите число месяца..." class="form-control input-sm">
+	   	               							</div>
+	   	               							<div id="div_day_of_week">
+	   	               							<label for="slct_day_of_week">День:</label>
+	   	               								<select id="slct_day_of_week" disabled class="form-control input-sm">
+	   	               									<option value = "-1" selected>Укажите день недели</option>
+	   	               									<option value = "1">Понедельник</option>
+	   	               									<option value = "2">Вторник</option>
+	   	               									<option value = "3">Среда</option>
+	   	               									<option value = "4">Четверг</option>
+	   	               									<option value = "5">Пятница</option>
+	   	               									<option value = "6">Суббота</option>
+	   	               									<option value = "7">Воскресенье</option>
+	   	               								</select>
+	   	               							</div>
+	   	               							<div id="div_day_date" style="display:none">
+	   	               								<label for="inp_day_date">Дата:</label>
+	   	               								<input id="inp_day_date" type="date" disabled placeholder="Укажите дату..." class="form-control input-sm">
+	   	               							</div>
+	   	               							<div id="div_daily" style="display:none">&nbsp</div> 
+	   	               						</div>
+	   	               						<label for="div_time">Время:</label>
+	   	               						<div id="div_time" class="input-group col-sm-3">
+	   	               							<input id="inp_hour" type="text" disabled placeholder="Час" class="form-control input-sm" onchange="timeVerify('hour')">
+	   	               							<span class="input-group-addon">:</span>
+   	               								<input id="inp_minute" type="text" disabled placeholder="Минута" class="form-control input-sm" onchange="timeVerify('minute')">
+	   	               						</div>
+	   	               					</td>
+	   	               				</tr>
+	   	               				<tr>
+	   	               					<td id="td_rcpt">
+	   	               						<div id="div_rcpt_form" class="form-group">
+	   	               							<div id="div_rcpt_form_inps">
+	   	               								<div id="div_dlvr_type_slct" class="form-group pull-left col-sm-6">
+	   	               									<label for="slct_dlvr_type">Тип рассылки:</label>
+	   	               									<select id="slct_dlvr_type" onchange="rcptActivate()" class="form-control input-sm">
+		   	               									<option selected>Выберите тип расписания</option>
+				   	               						</select>
+				   	               					</div>
+	   		    	           						<div id="div_rcpt_slct" class = "form-group col-sm-6">	   	               						
+		   		    	           						<label for = "slct_rcpt">Списки получателей:</label>
+	   	        	    	   							<select id = "slct_rcpt" disabled class = "form-control input-sm">
+	   	            	   									<option selected>Выберите получателей</option>
+	   	               										<option>Сантехники</option>
+	   	               										<option>Электрики</option>
+	   	               										<option>Уборщицы</option>
+	   	               									</select>
+	   	               								</div>
+	   	               								<div id="div_rcpt_email" class="form-group col-sm-6" style="display:none">
+	   	               									<label for="inp_rcpt_email">Адрес электронной почты:</label>
+	   	               									<input id="inp_rcpt_email" type="email" disabled placeholder="Введите e-mail..." class="form-control input-sm">
+		   	               							</div>
+		   	               					<!--	<div id="div_rcpt_del" class = "form-group col-sm-1">
+	   		               								<label for="i_rcpt_del">&nbsp</label>
+	   	    	           								<i id="i_rcpt_del" title='Удалить' disabled class='btn btn-default btn-sm glyphicon glyphicon-trash' onclick = delRcpt()></i>
+	   	        	       							</div> --> 
+	   	               							</div>
+	   	               						</div>
+	   	               				<!-- 		<div class="form-group col-sm-12">
+	   	               							<button type = "button" onclick = "addRcpt()" class = "btn btn-primary btn-xs">Добавить...</button>
+	   	               						</div> -->
+	   	               					</td>
+	   	               				</tr>
+	   	               				<tr>
+	   	               					<td id="td_dlvr_begin">
+	   	               						<div id="div_dlvr_begin" class="form-group">
+	   	               							<div id="div_dlvr_begin_input" class="form-group pull-left col-sm-6">
+	   	               							<label for="inp_dlvr_begin">Начало действия рассылки:</label>
+	   	               								<input id="inp_dlvr_begin" type="date" placeholder="Укажите дату..." class="form-control input-sm"">
+	   	               							</div>
+	   	               							<div id="div_dlvr_end_input" class="form-group pull-left col-sm-6">
+	   	               							<label for="inp_dlvr_begin">Окончание действия рассылки:</label>
+	   	               								<input id="inp_dlvr_end" type="date" placeholder="Укажите дату..." class="form-control input-sm"">
+	   	               							</div>
+	   	               						</div>
+	   	               					</td>
+	   	               				</tr>
+   	               				</table>
+   	               			</form>   	               			
+     					</div>
+    				</div>
+    			</div>
+    		</div>
+	    	<div class="modal-footer">
+    			<div class="container-fluid dialogMarginButtons">
+					<div class="row">
+                       	<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+								ng-click="dlvrSave()"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+	    	</div>
+    	</div>
+    </div>

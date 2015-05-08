@@ -7,7 +7,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" ><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
     <li role="presentation" class="active"><a href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation"><a href="" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
+    <li role="presentation"><a href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Расписания</a></li>   
   </ul>
 
   <!-- реализация вкладок -->
@@ -133,16 +133,19 @@
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin " ng-show="object.showGroupDetails">
 
-                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="selectedItem(object, oldObject)" ng-dblclick="">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;width:55px;">
+                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+<!--                                                  width:55px;-->
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать новый действующий вариант на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(oldObject)" data-target="#createParamsetModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Просмотреть" class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                                            </td>  
+                                                            <td>    <i title="Создать новый действующий вариант на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
                                                             </td>
 
                                                           </tr>
@@ -287,7 +290,7 @@
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.reportTemplate.id==null)}">
-                                            <select class="form-control "  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset" ng-disabled="currentObject.common">
+                                            <select class="form-control "  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset" ng-disabled="isDisabled()">
                                             </select>                                            
                                             </div>
                                         </td>
@@ -295,13 +298,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputName">Наименование</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование варианта" ng-model="currentObject.name" ng-disabled="currentObject.common">
+                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование варианта" ng-model="currentObject.name" ng-disabled="isDisabled()">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><label for="inputDescription" >Описание</label>
                                         </td>
-                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
+                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="isDisabled()"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -309,7 +312,7 @@
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
-                                                <select ng-disabled="currentObject.common" class="form-control input-sm inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+                                                <select ng-disabled="isDisabled()" class="form-control input-sm inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
                                                 </select>
                                             </div>    
                                         </td>
@@ -318,14 +321,14 @@
                                         <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
-                                            <div ng-disabled="currentObject.common">
+                                            <div ng-disabled="isDisabled()">
                                                 <div class="col-sm-1 paddingTop10"><label>c</label></div>
                                                 <div class="col-sm-5">
-                                                    <input class="form-control inputData noMargin" type="date" ng-model="paramsetStartDateFormat"> 
+                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetStartDateFormat"> 
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop10"><label>по</label></div>
                                                 <div class="col-sm-5">
-                                                    <input class="form-control inputData noMargin" type="date" ng-model="paramsetEndDateFormat">
+                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetEndDateFormat">
                                                 </div>
                                             </div>    
 
@@ -334,13 +337,13 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без расширения</small>)</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileNameTemplate" ng-disabled="currentObject.common">
+                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileNameTemplate" ng-disabled="isDisabled()">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod">Тип файла</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="currentObject.common"> 
+                                        <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
                                             </select>
@@ -356,7 +359,7 @@
                                         </td>
                                         <td class="textAlign_left col-sm-9">
 
-                                            <input class="form-control input-sm marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
+                                            <input class="form-control input-sm marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
                                         </td>
 
                                     </tr>
@@ -381,9 +384,9 @@
                              <div class="col-md-6 object_list" id="object_list">
                                  <div><label>Доступные объекты</label></div>
                                 <div>
-                                    <table class="table table-condensed table-striped" ng-disabled="currentObject.common">
+                                    <table class="table table-condensed table-striped" ng-disabled="isDisabled()">
                                         <tr ng-repeat="object in availableObjects">
-                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -394,7 +397,7 @@
                                 <div>
                                     <table class="table table-condensed table-striped" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -411,7 +414,7 @@
 				<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
-							<input ng-disabled="currentObject.common" type="submit" class="btn btn-primary btn-block btn-xs"
+							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
                                 ng-disabled="(currentObject.reportTemplate.id==null)||(currentObject.reportPeriodKey==null)"  data-target="#main_properties" data-toggle="tab" />
