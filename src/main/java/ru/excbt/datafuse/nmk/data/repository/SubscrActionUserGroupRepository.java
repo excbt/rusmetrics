@@ -20,10 +20,19 @@ public interface SubscrActionUserGroupRepository extends
 	 * @return
 	 */
 	@Query("SELECT ug.subscrActionUser FROM SubscrActionUserGroup ug "
-			+ " WHERE ug.subscrActionGroup.subscriber.id = :subscriberId AND "
-			+ " ug.subscrActionGroup.id = :subscrActionGroupId")
-	public List<SubscrActionUser> selectGroupUsers(
-			@Param("subscriberId") long subscriberId,
+			+ " WHERE ug.subscrActionGroup.id = :subscrActionGroupId")
+	public List<SubscrActionUser> selectUsersByGroup(
+			@Param("subscrActionGroupId") long subscrActionGroupId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrActionGroupId
+	 * @return
+	 */
+	@Query("SELECT ug.subscrActionUser.id FROM SubscrActionUserGroup ug "
+			+ " WHERE ug.subscrActionGroup.id = :subscrActionGroupId")
+	public List<Long> selectUserIdsByGroup(
 			@Param("subscrActionGroupId") long subscrActionGroupId);
 
 	/**
@@ -33,11 +42,32 @@ public interface SubscrActionUserGroupRepository extends
 	 * @return
 	 */
 	@Query("SELECT ug.subscrActionGroup FROM SubscrActionUserGroup ug "
-			+ " WHERE ug.subscrActionUser.subscriber.id = :subscriberId AND "
-			+ " ug.subscrActionUser.id = :subscrActionUserId")
-	public List<SubscrActionGroup> selectUserGroups(
-			@Param("subscriberId") long subscriberId,
+			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId")
+	public List<SubscrActionGroup> selectGroupsByUser(
 			@Param("subscrActionUserId") long subscrActionUserId);
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrActionUserId
+	 * @return
+	 */
+	@Query("SELECT ug.subscrActionGroup.id FROM SubscrActionUserGroup ug "
+			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId")
+	public List<Long> selectGroupIdsByUser(
+			@Param("subscrActionUserId") long subscrActionUserId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrActionUserId
+	 * @return
+	 */
+	@Query("SELECT ug.id FROM SubscrActionUserGroup ug "
+			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId AND "
+			+ " ug.subscrActionGroup.id = :subscrActionGroupId")
+	public List<Long> selectSubscrActionUserGroupIds(
+			@Param("subscrActionUserId") long subscrActionUserId,
+			@Param("subscrActionGroupId") long subscrActionGroupId);
 
 }

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
-import ru.excbt.datafuse.nmk.data.service.SubscrActionService;
+import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractUserAction;
@@ -39,9 +39,6 @@ public class SubscrActionController extends WebApiController {
 			.getLogger(SubscrActionController.class);
 
 	@Autowired
-	private SubscrActionService subscrActionService;
-
-	@Autowired
 	private SubscrActionGroupService subscrActionGroupService;
 
 	@Autowired
@@ -49,6 +46,9 @@ public class SubscrActionController extends WebApiController {
 
 	@Autowired
 	private SubscrActionUserService subscrActionUserService;
+
+	@Autowired
+	private SubscrActionUserGroupService subscrActionUserGroupService;
 
 	/**
 	 * 
@@ -77,9 +77,9 @@ public class SubscrActionController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/groups/{id}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> findOneGroupUsers(@PathVariable("id") long id) {
-		return ResponseEntity.ok(subscrActionService.selectGroupUsers(
-				currentSubscriberService.getSubscriberId(), id));
+	public ResponseEntity<?> findUsersByGroup(@PathVariable("id") long id) {
+		return ResponseEntity.ok(subscrActionUserGroupService
+				.selectUsersByGroup(id));
 	}
 
 	/**
@@ -100,13 +100,14 @@ public class SubscrActionController extends WebApiController {
 
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
+		final Long[] actionIds = subscrUserIds;
+		
 		UserAction userAction = new AbstractUserActionResult<SubscrActionGroup>(
 				entity) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionGroupService
-						.createOne(getActionEntity()));
+				setResultEntity(subscrActionGroupService.updateOne(entity, actionIds));
 			}
 
 		};
@@ -132,13 +133,14 @@ public class SubscrActionController extends WebApiController {
 
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
+		final Long[] actionIds = subscrUserIds;
+		
 		UserActionLocation userAction = new AbtractUserActionLocation<SubscrActionGroup, Long>(
 				entity, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionGroupService
-						.createOne(getActionEntity()));
+				setResultEntity(subscrActionGroupService.createOne(entity, actionIds ));
 			}
 
 			@Override
@@ -197,9 +199,9 @@ public class SubscrActionController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/users/{id}/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> findOneUserGroups(@PathVariable("id") long id) {
-		return ResponseEntity.ok(subscrActionService.selectUserGroups(
-				currentSubscriberService.getSubscriberId(), id));
+	public ResponseEntity<?> findGroupsByUser(@PathVariable("id") long id) {
+		return ResponseEntity.ok(subscrActionUserGroupService
+				.selectGroupsByUser(id));
 	}
 
 	/**
@@ -220,13 +222,15 @@ public class SubscrActionController extends WebApiController {
 
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
+		final Long[] actionGroupIds = subscrGroupIds;
+
 		UserAction userAction = new AbstractUserActionResult<SubscrActionUser>(
 				entity) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionUserService
-						.createOne(getActionEntity()));
+				setResultEntity(subscrActionUserService.updateOne(entity,
+						actionGroupIds));
 			}
 
 		};
@@ -251,13 +255,15 @@ public class SubscrActionController extends WebApiController {
 
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
+		final Long[] actionGroupIds = subscrGroupIds;
+
 		UserActionLocation userAction = new AbtractUserActionLocation<SubscrActionUser, Long>(
 				entity, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionUserService
-						.createOne(getActionEntity()));
+				setResultEntity(subscrActionUserService.createOne(entity,
+						actionGroupIds));
 			}
 
 			@Override

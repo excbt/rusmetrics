@@ -2,15 +2,11 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 public abstract class AbstractUserActionResult<T> extends AbstractUserAction {
 
-	private final T entity;
+	protected final T entity;
 	private T resultEntity;
 
 	public AbstractUserActionResult(T entity) {
 		this.entity = entity;
-	}
-
-	protected T getActionEntity() {
-		return entity;
 	}
 
 	protected T getResultEntity() {

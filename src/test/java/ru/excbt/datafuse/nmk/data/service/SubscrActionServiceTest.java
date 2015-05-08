@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.data.JpaSupportTest;
 public class SubscrActionServiceTest extends JpaSupportTest {
 
 	@Autowired
-	private SubscrActionService subscrActionService;
+	private SubscrActionUserGroupService subscrActionService;
 	
 	@Test
 	public void testInit() {

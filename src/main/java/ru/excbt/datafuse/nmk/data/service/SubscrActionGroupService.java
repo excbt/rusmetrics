@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -20,10 +22,15 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Transactional
 public class SubscrActionGroupService implements SecuredRoles {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SubscrActionGroupService.class);
+	
 	@Autowired
 	private SubscrActionGroupRepository subscrActionGroupRepository;
-	
-	
+
+	@Autowired
+	private SubscrActionUserGroupService subscrActionUserGroupService;
+
 	/**
 	 * 
 	 * @param subscriberId
@@ -62,10 +69,53 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public SubscrActionGroup updateOne(SubscrActionGroup entity, Long[] userIds) {
+		checkArgument(!entity.isNew());
+		checkNotNull(entity.getSubscriber());
+
+		SubscrActionGroup resultEntity = subscrActionGroupRepository
+				.save(entity);
+
+		if (userIds != null) {
+			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(),
+					userIds);
+		}
+
+		return resultEntity;
+
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionGroup createOne(SubscrActionGroup entity) {
 		checkArgument(entity.isNew());
 		checkNotNull(entity.getSubscriber());
 		return subscrActionGroupRepository.save(entity);
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public SubscrActionGroup createOne(SubscrActionGroup entity, Long[] userIds) {
+		checkArgument(entity.isNew());
+		checkNotNull(entity.getSubscriber());
+
+		SubscrActionGroup resultEntity = subscrActionGroupRepository
+				.save(entity);
+
+		if (userIds != null) {
+			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(),
+					userIds);
+		}
+
+		return resultEntity;
 	}
 
 	/**
@@ -87,6 +137,7 @@ public class SubscrActionGroupService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (subscrActionGroupRepository.exists(id)) {
+			subscrActionUserGroupService.deleteByGroup(id);
 			subscrActionGroupRepository.delete(id);
 		} else {
 			throw new PersistenceException(String.format(
@@ -96,6 +147,4 @@ public class SubscrActionGroupService implements SecuredRoles {
 
 	}
 
-	
-	
 }
