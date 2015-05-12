@@ -28,7 +28,7 @@ angular.module('portalNMK')
                 dataClass : "col-md-1"
             }, 
             "m_out":{
-                header : "Масса обработки, т",
+                header : "Масса обратки, т",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             }, 
@@ -38,7 +38,7 @@ angular.module('portalNMK')
                 dataClass : "col-md-1"
             }, 
             "t_out":{
-                header : "Температура обработки, град C",
+                header : "Температура обратки, град C",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             } , 
@@ -63,7 +63,7 @@ angular.module('portalNMK')
                 dataClass : "col-md-1"
             },
             "v_out":{
-                header : "Объем обработки, м3",
+                header : "Объем обратки, м3",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             },
@@ -88,7 +88,7 @@ angular.module('portalNMK')
                 dataClass : "col-md-1"
             },
             "p_out":{
-                header : "Давление на обработке, Мпа",
+                header : "Давление на обратке, Мпа",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             },
@@ -107,10 +107,13 @@ angular.module('portalNMK')
         columns : []
     };
         
-    $scope.totalIndicators = 0;
-    $scope.indicatorsPerPage = 10; // this should match however many results your API puts on one page    
-    $scope.timeDetailType = "1h";    
+    $rootScope.reportStart = moment().format('YYYY-MM-DD');
+    $rootScope.reportEnd = moment().format('YYYY-MM-DD');
         
+    $scope.totalIndicators = 0;
+    $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page    
+    $scope.timeDetailType = "1h";    
+    $scope.data = [];    
     $scope.pagination = {
         current: 1
     };         
@@ -127,7 +130,7 @@ angular.module('portalNMK')
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
          $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
-        var table =  $scope.zpointTable;       
+        var table =  $scope.zpointTable;
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
                 var iCol = 0;
@@ -167,11 +170,10 @@ angular.module('portalNMK')
         $scope.getData(newPage);
     };  
         
-    $scope.$watch('reportStart', function (newDates) {
-        if( (typeof $scope.reportStart == 'undefined') || ($scope.reportStart==null) ){
+    $scope.$watch('reportStart', function (newDates) {  
+        if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
             return;
         }
         $scope.getData(1);                              
     }, false);    
-
 }]);

@@ -18,7 +18,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.crudTableName= "../api/subscr/contObjects";
     
     $scope.tableDef = {
-        tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
+        tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped excbt_tableIndicators",
         hideHeader : false,
         headerClassTR : "info",
         columns : [ 
@@ -69,7 +69,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     
     $scope.notices = [];
     $scope.totalNotices = 0;
-    $scope.noticesPerPage = 10; // this should match however many results your API puts on one page
+    $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
     
     var getNotices = function(table, startDate, endDate, objectArray){
         return $resource(table, {},

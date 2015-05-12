@@ -14,7 +14,7 @@
                         <div class="input-group">
                             <span class="input-group-addon excbt_inputGroupAddon">с</span>
                             <input date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
-                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" ng-change="getData()"/>
+                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
                         </div>
                 </div>
 
@@ -25,7 +25,7 @@
                                  Показания</label>
                     </div>
                     <div class="col-md-9">
-                        <select class="form-control excbt_inputFormControl inputData" ng-model="timeDetailType" ng-change="getData()">
+                        <select class="form-control excbt_inputFormControl inputData" ng-model="timeDetailType" ng-change="getData(1)">
                             <option value="24h">Суточные</option>
                             <option selected value="1h">Часовые</option>
                         </select>
