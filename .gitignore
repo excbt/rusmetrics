@@ -32,8 +32,7 @@ local.properties
 .cproject
 
 # JDT-specific (Eclipse Java Development Tools)
-# Need for an Eclipse import form git
-# .classpath
+.classpath
 
 # PDT-specific
 .buildpath
