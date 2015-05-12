@@ -19,7 +19,8 @@ local.properties
 .loadpath
 
 # Eclipse Core
-.project
+# Need for an Eclipse import form git
+## .project
 
 # External tool builders
 .externalToolBuilders/
