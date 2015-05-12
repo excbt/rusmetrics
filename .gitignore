@@ -19,7 +19,8 @@ local.properties
 .loadpath
 
 # Eclipse Core
-.project
+# Need for an Eclipse import form git
+## .project
 
 # External tool builders
 .externalToolBuilders/
@@ -31,7 +32,8 @@ local.properties
 .cproject
 
 # JDT-specific (Eclipse Java Development Tools)
-.classpath
+# Need for an Eclipse import form git
+# .classpath
 
 # PDT-specific
 .buildpath
