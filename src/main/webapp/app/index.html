@@ -19,8 +19,6 @@
     <!-- endbuild -->
     
       <link rel="stylesheet" href="vendor_components/bootstrap-daterangepicker-master/daterangepicker-bs3.css"/>
-    
-      <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.css"/>
       
   </head>
   <body ng-app="portalNMK">
@@ -29,7 +27,6 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-<!--<div ng-controller="MainCtrl"    >-->
 <div id="wrap">
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-fixed-top" style="background-color: white;">
@@ -214,11 +211,7 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
-    <script src="bower_components/react/react.js"></script>
     <script src="bower_components/toastr/toastr.js"></script>
-      <script src="bower_components/angular-datatables/dist/angular-datatables.js"></script>
-      <script src="bower_components/datatables/media/js/jquery.dataTables.js"></script>
-<!--      <script src="bower_components/"></script>-->
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -227,23 +220,17 @@
     <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
     <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
     <script src="vendor_components/angular-daterangepicker.js"></script>
-    <script src="bower_components/ngReact/ngReact.js"></script>
       <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
      
  		        
         <script src="scripts/app.js"></script>
- 		<script src="scripts/react/tableComponent.react.js"></script>
-
-        
+    
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
-      
         <script src="scripts/controllers/notice.js"></script>
       
     <script src="scripts/controllers/directory.js"></script>
-    <script src="scripts/controllers/operationlog.js"></script>
     <script src="scripts/controllers/objects.js"></script>
     <script src="scripts/controllers/reports.js"></script>
     <script src="scripts/controllers/indicator.js"></script>
@@ -252,25 +239,18 @@
       <script src="scripts/controllers/param_sets.js"></script>
       <script src="scripts/controllers/user-info.js"></script>
       <script src="scripts/controllers/delivery.js"></script>
+      <script src="scripts/controllers/contacts.js"></script>
       
       <!-- Directives -->
-<script src="scripts/directives/crud-data-factory.js"></script>
-<script src="scripts/directives/crud-grid-data-factory.js"></script>
-<script src="scripts/directives/crud-grid-paged-data-factory.js"></script>
-<script src="scripts/directives/crud-grid-directive.js"></script>
-    <script src="scripts/directives/crud-grid-directive-operationlog.js"></script>
-    <script src="scripts/directives/crud-grid-directive-notice.js"></script>
+    <script src="scripts/directives/crud-grid-data-factory.js"></script>
     <script src="scripts/directives/crud-grid-directive-objects.js"></script>
     <script src="scripts/directives/crud-grid-directive-directories.js"></script>
-<script src="scripts/directives/crud-grid-paged-directive.js"></script>
-      
-<!--    <script src="scripts/directives/tree-model.js"></script>-->
       
       <!-- Services -->
       <script src="scripts/services/notification-factory.js"></script>      
         <!-- endbuild -->
     
-<script src="scripts/controllers/data-range-settings.js"></script>
+      <script src="scripts/controllers/data-range-settings.js"></script>
 
 </body>
 </html>
