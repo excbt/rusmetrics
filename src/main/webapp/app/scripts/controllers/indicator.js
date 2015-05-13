@@ -108,8 +108,10 @@ angular.module('portalNMK')
     };
     
     $scope.summary = {};
-    $scope.summary.intotal = [5,1,2,3,4];
-    $scope.summary.integrators = [[1,1],[2,1],[3,1],[4,1],[5,2]];    
+//    $scope.summary.intotal ={};// [5,1,2,3,4];
+//    $scope.summary.integrators = [[1,1],[2,1],[3,1],[4,1],[5,2]];    
+//    $scope.summary.firstData = {};
+//    $scope.summary.lastData = {};    
         
     $rootScope.reportStart = moment().format('YYYY-MM-DD');
     $rootScope.reportEnd = moment().format('YYYY-MM-DD');
@@ -135,6 +137,7 @@ angular.module('portalNMK')
          
          $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
         var table =  $scope.zpointTable;
+        
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
                 var iCol = 0;
@@ -168,6 +171,13 @@ angular.module('portalNMK')
                 });
                 $scope.data = data.objects;
         });
+        
+        // get summary
+        var table_summary = table.replace("paged", "summary");
+        crudGridDataFactory(table_summary).get(function(data){
+                $scope.summary = data;
+console.log(data);            
+        });
     };
 
     $scope.pageChanged = function(newPage) {       
@@ -181,8 +191,14 @@ angular.module('portalNMK')
         $scope.getData(1);                              
     }, false); 
     
-    $scope.setTitle = function(object){
-        return "Start = "+object[1] + "; End = "+object[0];
+    $scope.setTitle = function(fieldName){ 
+        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
+            return;
+        };
+        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
+            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+")" +"\n"+
+                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
+            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
     }; 
     
     $scope.intotalColumns = [

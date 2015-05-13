@@ -94,14 +94,15 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="indic in summary.intotal">
-                    {{indic}}
+                <td ng-repeat="column in intotalColumns">
+                    {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
-                <td ng-repeat="integrator in summary.integrators" ng-attr-title="{{setTitle(integrator)}}">
-                    {{integrator[0]-integrator[1]}}
+                <td ng-repeat="column in intotalColumns" 
+                    ng-attr-title="{{setTitle(column.name)}}">
+                    {{summary.lastData[column.name] - summary.firstData[column.name]}}
                 </td>
             </tr>   
         </table>    
