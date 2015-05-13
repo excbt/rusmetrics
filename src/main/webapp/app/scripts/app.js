@@ -11,7 +11,6 @@
 
 var app = angular
   .module('portalNMK', [
-	'react',
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -20,7 +19,6 @@ var app = angular
     'ngTouch',
     'ui.tree',
     'daterangepicker'
-      ,'datatables'
       ,'angularUtils.directives.dirPagination'
   ]);
 
@@ -29,22 +27,10 @@ app.config(function ($routeProvider) {
       .when('/', {
         templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl'
-//        templateUrl: 'views/main.html',
-//        controller: 'MainCtrl'
       })
-//      .when('/about', {
-//        templateUrl: 'views/about.html',
-//        controller: 'AboutCtrl'
-//      })
       .when('/notice', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl'
-//        templateUrl: 'views/notice_alter.html',
-//        controller: 'NoticeAlterCtrl'
-      })
-      .when('/operationlog', {
-        templateUrl: 'views/operationlog.html',
-        controller: 'OperationlogCtrl'
       })
       .when('/private', {
         templateUrl: 'views/private_office.html',
@@ -66,42 +52,38 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/directories.html',
         controller: 'DirectoryCtrl'
       })
-    .when('/reports', {
+      .when('/reports', {
         templateUrl: 'views/reports.html',
         controller: 'ReportsCtrl'
       })
-    .when('/reports/commercial_report', {
+      .when('/reports/commercial_report', {
         templateUrl: 'views/commercial_report.html',
         controller: 'MainCtrl'
       })
-    .when('/objects/indicators', {
+      .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
         controller: 'IndicatorsCtrl'
       })
-    .when('/settings/tariffs', {
+      .when('/settings/tariffs', {
         templateUrl: 'views/tariffs.html',
         controller: 'TariffsCtrl'
       })
-    .when('/settings/reports', {
+      .when('/settings/reports', {
         templateUrl: 'views/report_settings.html',
         controller: 'ReportSettingsCtrl'
       })
-    .when('/settings/paramsets', {
+      .when('/settings/paramsets', {
         templateUrl: 'views/param_sets.html',
         controller: 'ParamSetsCtrl'
       })
-    .when('/settings/delivery', {
+      .when('/settings/delivery', {
         templateUrl: 'views/delivery.html',
         controller: 'DlvrCtrl'
       })
-    .when('/private/contacts', {
+      .when('/private/contacts', {
         templateUrl: 'views/contacts.html',
         controller: 'MainCtrl'
       })
-//    .when('/test', {
-//        templateUrl: 'views/test.html',
-//        controller: 'TestCtrl'
-//      })
       .otherwise({
         redirectTo: '/'
       });
