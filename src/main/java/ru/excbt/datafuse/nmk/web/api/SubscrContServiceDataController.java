@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
+import ru.excbt.datafuse.nmk.data.constant.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -114,7 +118,7 @@ public class SubscrContServiceDataController extends WebApiController {
 							beginDateS, endDateS));
 		}
 
-		TimeDetail timeDetail = TimeDetail.searchKeyname(timeDetailType);
+		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return ResponseEntity.badRequest().body(
 					String.format("Invalid parameters timeDetailType:{}",
@@ -199,7 +203,7 @@ public class SubscrContServiceDataController extends WebApiController {
 							beginDateS, endDateS));
 		}
 
-		TimeDetail timeDetail = TimeDetail.searchKeyname(timeDetailType);
+		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return ResponseEntity.badRequest().body(
 					String.format("Invalid parameters timeDetailType:{}",
@@ -218,4 +222,99 @@ public class SubscrContServiceDataController extends WebApiController {
 
 	}
 
+	/**
+	 * 
+	 * @param serviceType
+	 * @param zPointId
+	 * @param timeDetailType
+	 * @param beginDateS
+	 * @param endDateS
+	 * @return
+	 */
+	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> serviceDataHWaterSummary(
+			@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId,
+			@PathVariable("timeDetailType") String timeDetailType,
+			@RequestParam("beginDate") String beginDateS,
+			@RequestParam("endDate") String endDateS) {
+
+		checkArgument(contObjectId > 0);
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetailType);
+		checkNotNull(beginDateS);
+		checkNotNull(endDateS);
+
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+
+		if (contZPoint == null) {
+			return ResponseEntity.badRequest().body(
+					String.format("contZPointId (id=%d) not found",
+							contZPointId));
+		}
+
+		if (contZPoint.getContObject() == null
+				|| contZPoint.getContObject().getId() != contObjectId) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("contZPointId (id=%d) is not valid for contObject (id=%d)",
+									contZPointId, contObjectId));
+		}
+
+		String serviceType = contZPoint.getContServiceType().getKeyname();
+
+		if (!SUPPORTED_SERVICES.contains(serviceType)) {
+			return ResponseEntity.badRequest().body(
+					String.format("Service type %s is not supported yet",
+							serviceType));
+		}
+
+		LocalDateTime beginD = null;
+		LocalDateTime endD = null;
+		try {
+			beginD = DATE_FORMATTER.parseLocalDateTime(beginDateS);
+			endD = DATE_FORMATTER.parseLocalDateTime(endDateS);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters beginDateS:{}, endDateS:{}",
+							beginDateS, endDateS));
+		}
+
+		if (beginD.compareTo(endD) > 0) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters beginDateS:{}, endDateS:{}",
+							beginDateS, endDateS));
+		}
+
+		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
+		if (timeDetail == null) {
+			return ResponseEntity.badRequest().body(
+					String.format("Invalid parameters timeDetailType:{}",
+							timeDetailType));
+		}
+
+		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(endD);
+
+		ContServiceDataHWaterTotals totals = contServiceDataHWaterService
+				.selectContZPointTotals(contZPointId, timeDetail, beginD,
+						endOfDay);
+
+		ContServiceDataHWater firstAbs = contServiceDataHWaterService
+				.selectLastAbsData(contZPointId, beginD);
+
+		ContServiceDataHWater lastAbs = contServiceDataHWaterService
+				.selectLastAbsData(contZPointId, endOfDay);
+
+		
+		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
+		result.setTotals(totals);
+		result.setFirstData(firstAbs);
+		result.setLastData(lastAbs);
+		
+		
+		return ResponseEntity.ok(result);
+	}
 }
