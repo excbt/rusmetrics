@@ -203,16 +203,6 @@
 		return localCnt;
 	}
 	
-	//  Функция получения общего количества контактов
-	function getContactsNum() {
-		return contacts.length;
-	}
-	
-	//  Функция получения общего количества списков контактов
-	function getContactListsNum() {
-		return lists.length;
-	}
-	
 	// Функция для получения списков контактов с сервера
 	function getContactLists (first, num) {
 		var local_lst = [];
@@ -383,7 +373,7 @@
 	// Функция инициализации таблицы контактов
 	function cntTableInit () {
 		// Получаем контакты с сервера
-		var cntForTable = getContacts(0, getContactsNum());
+		var cntForTable = getContacts(0, 0);
 		var cntTable = document.getElementById('table_contacts');
 		// Заполняем таблицу
 		var newRow;
