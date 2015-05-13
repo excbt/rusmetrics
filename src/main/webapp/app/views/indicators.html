@@ -72,10 +72,37 @@
     <div class="col-md-9">
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
     </div>
+
+<!--
     <div class="col-md-3 noPadding">
              <div class="input-group">
                 <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
                  <input type="text"  class="form-control"  ng-model="indicatorsfilter">
             </div>     
     </div> 
+-->
 </div>    
+<!--    In total-->
+    <div ng-show="data.length >0">
+        <table class="crud-grid table table-lighter table-condensed table-hover excbt_tableIndicators">
+            <tr class="info">
+                <th class="col-md-1">
+                </th>
+                <th ng-repeat="column in intotalColumns" ng-class="column.class">
+                    {{column.header}}
+                </th>
+            </tr>
+            <tr>
+                <td class="col-md-1">итого:</td>
+                <td ng-repeat="indic in summary.intotal">
+                    {{indic}}
+                </td>
+            </tr> 
+            <tr>
+                <td class="col-md-1">интеграторы:</td>
+                <td ng-repeat="integrator in summary.integrators" ng-attr-title="{{setTitle(integrator)}}">
+                    {{integrator[0]-integrator[1]}}
+                </td>
+            </tr>   
+        </table>    
+    </div>    

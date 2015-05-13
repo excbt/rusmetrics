@@ -106,6 +106,10 @@ angular.module('portalNMK')
         headerClassTR : "info",
         columns : []
     };
+    
+    $scope.summary = {};
+    $scope.summary.intotal = [5,1,2,3,4];
+    $scope.summary.integrators = [[1,1],[2,1],[3,1],[4,1],[5,2]];    
         
     $rootScope.reportStart = moment().format('YYYY-MM-DD');
     $rootScope.reportEnd = moment().format('YYYY-MM-DD');
@@ -175,5 +179,33 @@ angular.module('portalNMK')
             return;
         }
         $scope.getData(1);                              
-    }, false);    
+    }, false); 
+    
+    $scope.setTitle = function(object){
+        return "Start = "+object[1] + "; End = "+object[0];
+    }; 
+    
+    $scope.intotalColumns = [
+        {"name": "m_in",
+         "header":"Масса подачи",
+         "class":"col-md-1"
+        },
+        {"name": "m_out",
+         "header":"Масса обратки",
+         "class":"col-md-1"
+        },
+        {"name": "v_in",
+         "header":"Объем подачи",
+         "class":"col-md-1"
+        },
+        {"name": "v_out",
+         "header":"Объем обратки",
+         "class":"col-md-1"
+        },
+        {"name": "h_delta",
+         "header":"ГКал отопления",
+         "class":"col-md-1"
+        }
+    ];    
+        
 }]);
