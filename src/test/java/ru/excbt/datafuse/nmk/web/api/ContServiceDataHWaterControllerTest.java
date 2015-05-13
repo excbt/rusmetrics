@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class ContServiceDataHWaterTest extends AnyControllerTest {
+public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 
 	
 	public final static String API_SERVICE_URL = "/api/subscr";	
@@ -42,6 +42,20 @@ public class ContServiceDataHWaterTest extends AnyControllerTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.param("beginDate", "2013-10-01")
 				.param("endDate", "2013-10-31")
+				.with(testSecurityContext()));
+		
+		resultAction.andDo(MockMvcResultHandlers.print());
+	}
+
+	@Test
+	public void testHWaterSummary() throws Exception {
+		
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary", CONT_OBJECT_ID, CONT_ZPOINT_ID);
+		
+		ResultActions resultAction = mockMvc.perform(get(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", "2014-10-01")
+				.param("endDate", "2014-10-31")
 				.with(testSecurityContext()));
 		
 		resultAction.andDo(MockMvcResultHandlers.print());

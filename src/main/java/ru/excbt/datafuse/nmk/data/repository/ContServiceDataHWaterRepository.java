@@ -43,7 +43,19 @@ public interface ContServiceDataHWaterRepository extends
 	@Query("SELECT d FROM ContServiceDataHWater d "
 			+ " WHERE d.contZPoint.id = :contZPointId "
 			+ " ORDER BY d.dataDate desc")
-	public List<ContServiceDataHWater> selectLastDetailByZPoint(
+	public List<ContServiceDataHWater> selectLastDataByZPoint(
 			@Param("contZPointId") long contZPointId, Pageable pageable);
 
+	
+	@Query("SELECT d FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " AND time_detail_type = :timeDetailType "
+			+ " ORDER BY d.dataDate desc ")
+	public List<ContServiceDataHWater> selectLastDataByZPoint(
+			@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String timeDetailType,
+			@Param("dataDate") Date dataDate,
+			Pageable pageable);
+	
+	
 }

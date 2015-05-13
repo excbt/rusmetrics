@@ -1,0 +1,47 @@
+package ru.excbt.datafuse.nmk.data.model.support;
+
+import java.io.Serializable;
+
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+
+public class ContServiceDataHWaterSummary implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7928358602878254237L;
+
+	private ContServiceDataHWaterTotals totals;
+	
+	private ContServiceDataHWater firstData; 
+
+	private ContServiceDataHWater lastData;
+
+	public ContServiceDataHWater getFirstData() {
+		return firstData;
+	}
+
+	public void setFirstData(ContServiceDataHWater firstData) {
+		this.firstData = firstData;
+	}
+
+	public ContServiceDataHWater getLastData() {
+		return lastData;
+	}
+
+	public void setLastData(ContServiceDataHWater lastData) {
+		this.lastData = lastData;
+	}
+
+	public ContServiceDataHWaterTotals getTotals() {
+		return totals;
+	}
+
+	public void setTotals(ContServiceDataHWaterTotals totals) {
+		this.totals = totals;
+	}
+
+
+
+	
+}

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
@@ -15,8 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.TimeDetail;
+import ru.excbt.datafuse.nmk.data.constant.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 
 public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 
@@ -31,7 +33,7 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectByZPoint() {
 		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
-				TimeDetail.TYPE_24H);
+				TimeDetailKey.TYPE_24H);
 		assertTrue(resultList.size() > 0);
 		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID,
 				resultList.size());
@@ -46,7 +48,7 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 		DateTime endDate = srcDate.dayOfMonth().withMaximumValue();
 
 		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
-				TimeDetail.TYPE_24H, beginDate, endDate);
+				TimeDetailKey.TYPE_24H, beginDate, endDate);
 		assertTrue(resultList.size() > 0);
 
 		logger.info("ZPoint (ID:{}) Found {} records on period: [{}...{}]",
@@ -58,6 +60,16 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 	public void testLastData() {
 		ContServiceDataHWater resultList = service.selectLastData(ZPOINT_ID);
 		assertNotNull(resultList);
-	}	
-	
+	}
+
+	@Test
+	public void testTotals() {
+		ContServiceDataHWaterTotals result = service.selectContZPointTotals(
+				ZPOINT_ID, TimeDetailKey.TYPE_1H,
+				LocalDateTime.now().minusMonths(1).withDayOfMonth(1),
+				LocalDateTime.now().withDayOfMonth(1).minusDays(1));
+		assertNotNull(result);
+		assertNotNull(result.getM_in());
+	}
+
 }
