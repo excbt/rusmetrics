@@ -12,8 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 
-import ru.excbt.datafuse.nmk.web.api.support.UserAction;
-import ru.excbt.datafuse.nmk.web.api.support.UserActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 public class WebApiHelper {
 
@@ -49,13 +49,13 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceUserAction(
-			UserAction userAction, HttpStatus successStatus) {
+	public static <T> ResponseEntity<?> processResponceApiAction(
+			ApiAction action, HttpStatus successStatus) {
 
-		checkNotNull(userAction);
+		checkNotNull(action);
 
 		try {
-			userAction.process();
+			action.process();
 		} catch (AccessDeniedException e) {
 			logger.error("Error during process UserAction: {}", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -74,15 +74,15 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceUserActionUpdate(
-			UserAction userAction, HttpStatus successStatus) {
+	public static <T> ResponseEntity<?> processResponceApiActionUpdate(
+			ApiAction action, HttpStatus successStatus) {
 
-		checkNotNull(userAction);
+		checkNotNull(action);
 		checkArgument(successStatus != HttpStatus.CREATED,
 				"HttpStatus.CREATED is not supported");
 
 		try {
-			userAction.process();
+			action.process();
 		} catch (AccessDeniedException e) {
 			logger.error("Error during process UserAction: {}", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -93,7 +93,7 @@ public class WebApiHelper {
 		}
 
 		return ResponseEntity.status(successStatus)
-				.body(userAction.getResult());
+				.body(action.getResult());
 	}
 
 	/**
@@ -102,13 +102,13 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceUserActionCreate(
-			UserActionLocation userAction) {
+	public static <T> ResponseEntity<?> processResponceApiActionCreate(
+			ApiActionLocation action) {
 
-		checkNotNull(userAction);
+		checkNotNull(action);
 
 		try {
-			userAction.process();
+			action.process();
 		} catch (AccessDeniedException e) {
 			logger.error("Error during process UserAction: {}", e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -118,8 +118,8 @@ public class WebApiHelper {
 					.build();
 		}
 
-		return ResponseEntity.created(userAction.getLocation()).body(
-				userAction.getResult());
+		return ResponseEntity.created(action.getLocation()).body(
+				action.getResult());
 	}
 
 }
