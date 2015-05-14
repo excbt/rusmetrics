@@ -14,6 +14,7 @@ import org.springframework.transaction.TransactionSystemException;
 
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 public class WebApiHelper {
 
@@ -58,11 +59,12 @@ public class WebApiHelper {
 			action.process();
 		} catch (AccessDeniedException e) {
 			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+					ApiResult.error(e, "Access Denied"));
 		} catch (TransactionSystemException | PersistenceException e) {
 			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+					ApiResult.error(e));
 		}
 
 		return ResponseEntity.status(successStatus).build();
@@ -92,8 +94,7 @@ public class WebApiHelper {
 					.build();
 		}
 
-		return ResponseEntity.status(successStatus)
-				.body(action.getResult());
+		return ResponseEntity.status(successStatus).body(action.getResult());
 	}
 
 	/**
