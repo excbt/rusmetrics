@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 public class ApiResult {
 
 	private final ApiResultCode resultCode;
@@ -27,21 +29,53 @@ public class ApiResult {
 		return resultCode.isOk();
 	}
 
+	/**
+	 * 
+	 * @param code
+	 * @return
+	 */
+	public static ApiResult build(ApiResultCode code) {
+		checkNotNull(code);
+		return new ApiResult(code, code.getDescription());
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @param description
+	 * @return
+	 */
+	public static ApiResult build(ApiResultCode code, String description) {
+		checkNotNull(code);
+		return new ApiResult(code, description);
+	}
+
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
 	public static ApiResult ok(String description) {
-		ApiResult result = new ApiResult(ApiResultCode.OK, description);
-		return result;
+		return build(ApiResultCode.OK, description);
 	}
 
+	/**
+	 * 
+	 * @param e
+	 * @return
+	 */
 	public static ApiResult error(Exception e) {
-		ApiResult result = new ApiResult(ApiResultCode.describeException(e),
-				null);
-		return result;
+		return build(ApiResultCode.describeException(e));
 	}
 
+	/**
+	 * 
+	 * @param e
+	 * @param description
+	 * @return
+	 */
 	public static ApiResult error(Exception e, String description) {
-		ApiResult result = new ApiResult(ApiResultCode.describeException(e),
-				description);
-		return result;
+		return build(ApiResultCode.describeException(e), description);
 	}
 
 }
