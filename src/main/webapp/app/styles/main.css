@@ -485,6 +485,11 @@ a.list-group-item:focus {
     display: inline;
 }
 
+.excbt_inputDigitalData-sm {
+    width: 40px;
+    display: inline;
+}
+
 .excbt_viewDataCount {
     width: 100px;
     display: inline;

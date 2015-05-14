@@ -85,7 +85,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.deleteObject = function (tableName, objId) {
                     crudGridDataFactory(tableName).delete({ id: objId }, successCallback, errorCallback);
                 };
-
+                                
                 $scope.updateObject = function (object) {
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
                 };
@@ -267,6 +267,61 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.isSystemuser = function(){
                     $scope.userInfo = $rootScope.userInfo;
                     return $scope.userInfo._system;
+                };
+                
+                //checkers
+                
+                $scope.checkEmptyNullValue = function(numvalue){                    
+                    var result = false;
+                    if ((numvalue === "") || (numvalue==null)){
+                        result = true;
+                        return result;
+                    }
+                    return result;
+                };
+                
+                $scope.checkNumericValue = function(numvalue){                         
+                    var result = true;
+                    if ($scope.checkEmptyNullValue(numvalue)){
+                        return result;
+                    }
+                    if (isNaN(parseInt(numvalue))){
+                        result = false;
+                        return result;
+                    };
+                    return result;
+                };
+                
+                $scope.checkPositiveNumberValue = function(numvalue){                    
+                    var result = true;
+                    result = $scope.checkNumericValue(numvalue)
+                    if (!result){
+                        //if numvalue is not number -> return false
+                        return result;
+                    }
+                    result = parseInt(numvalue)>=0?true:false;
+                    return result;
+                };
+                
+                $scope.checkNumericInterval = function(leftBorder, rightBorder){  
+                     if (($scope.checkEmptyNullValue(leftBorder))||( $scope.checkEmptyNullValue(rightBorder))){                                     
+                         return false;
+                     };
+                     if (!(($scope.checkNumericValue(leftBorder))&&( $scope.checkNumericValue(rightBorder)))){                         
+                         return false;
+                     };
+                     if(parseInt(rightBorder)>=parseInt(leftBorder)){                        
+                         return true;
+                     };
+                     return false;
+                };
+                
+                $scope.checkObjectPropertiesForm = function(object){
+//                    if ((object==null)||(object.cwTemp === undefined)){
+                    if ((object==null)||(!object.hasOwnProperty('cwTemp'))||(!object.hasOwnProperty('heatArea'))){
+                        return true;
+                    };
+                    return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
                
             }]
