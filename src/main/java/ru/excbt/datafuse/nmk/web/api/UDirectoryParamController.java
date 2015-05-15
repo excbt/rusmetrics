@@ -27,10 +27,15 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryParamController {
+public class UDirectoryParamController extends WebApiController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryParamController.class);
@@ -46,7 +51,7 @@ public class UDirectoryParamController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll(
 			@PathVariable("directoryId") long directoryId) {
 		List<UDirectoryParam> result = directoryParamService
@@ -59,7 +64,7 @@ public class UDirectoryParamController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(
 			@PathVariable("directoryId") long directoryId,
 			@PathVariable("id") long id) {
@@ -75,93 +80,94 @@ public class UDirectoryParamController {
 	 * 
 	 * @param directoryId
 	 * @param id
-	 * @param entity
+	 * @param uDirectoryParam
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.PUT, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(
 			@PathVariable("directoryId") long directoryId,
-			@PathVariable("id") long id, @RequestBody UDirectoryParam entity) {
+			@PathVariable("id") long id,
+			@RequestBody UDirectoryParam uDirectoryParam) {
 
-		checkNotNull(entity);
-		checkArgument(entity.getId().longValue() == id);
+		checkNotNull(uDirectoryParam);
+		checkArgument(uDirectoryParam.getId().longValue() == id);
 
 		UDirectory directory = directoryService.findOne(directoryId);
 		checkNotNull(directory);
 
-		entity.setDirectory(directory);
+		uDirectoryParam.setDirectory(directory);
 
-		try {
-			directoryParamService.save(entity);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during update entity UDirectoryParam (id={}): {}",
-					id, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiAction action = new AbstractEntityApiAction<UDirectoryParam>(
+				uDirectoryParam) {
 
-		return ResponseEntity.accepted().build();
+			@Override
+			public void process() {
+				setResultEntity(directoryParamService.save(entity));
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 	/**
 	 * 
 	 * @param directoryId
-	 * @param entity
+	 * @param uDirectoryParam
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.POST, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/param", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
 			@PathVariable("directoryId") long directoryId,
-			@RequestBody UDirectoryParam entity, HttpServletRequest request) {
+			@RequestBody UDirectoryParam uDirectoryParam,
+			HttpServletRequest request) {
 
-		checkNotNull(entity);
+		checkNotNull(uDirectoryParam);
 
 		UDirectory directory = directoryService.findOne(directoryId);
 		checkNotNull(directory);
 
-		entity.setDirectory(directory);
+		uDirectoryParam.setDirectory(directory);
 
-		UDirectoryParam resultEntity = null;
-		try {
-			resultEntity = directoryParamService.save(entity);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during create entity UDirectoryParam (directoryId={}): {}",
-					directoryId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectoryParam, Long>(
+				uDirectoryParam, request) {
 
-		checkNotNull(resultEntity);
+			@Override
+			public void process() {
+				setResultEntity(directoryParamService.save(entity));
+			}
 
-		URI location = URI.create(request.getRequestURI() + "/"
-				+ resultEntity.getId());
-		return ResponseEntity.created(location).body(resultEntity);
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 
-	@RequestMapping(value = "/{directoryId}/param/{id}", method = RequestMethod.DELETE, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	/**
+	 * 
+	 * @param directoryId
+	 * @param paramId
+	 * @return
+	 */
+	@RequestMapping(value = "/{directoryId}/param/{paramId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(
 			@PathVariable("directoryId") long directoryId,
-			@PathVariable("id") long id) {
+			@PathVariable("paramId") final long paramId) {
 
-		try {
-			directoryParamService.delete(id);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during delete entity UDirectoryParam (id={}): {}",
-					id, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
-		return ResponseEntity.ok().build();
+		ApiAction action = new AbstractApiAction() {
+
+			@Override
+			public void process() {
+				directoryParamService.delete(paramId);
+
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }

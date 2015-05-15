@@ -29,8 +29,8 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiActionResult;
-import ru.excbt.datafuse.nmk.web.api.support.AbtractApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -202,8 +202,7 @@ public class ReportTemplateController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiAction(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -356,7 +355,7 @@ public class ReportTemplateController extends WebApiController {
 
 		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiAction action = new AbstractApiActionResult<ReportTemplate>(
+		ApiAction action = new AbstractEntityApiAction<ReportTemplate>(
 				reportTemplate) {
 			@Override
 			public void process() {
@@ -364,8 +363,7 @@ public class ReportTemplateController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionBody(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
 
@@ -450,7 +448,7 @@ public class ReportTemplateController extends WebApiController {
 
 		checkNotNull(reportTemplateId);
 
-		ApiAction action = new AbstractApiActionResult<ReportTemplate>() {
+		ApiAction action = new AbstractEntityApiAction<ReportTemplate>() {
 			@Override
 			public void process() {
 				setResultEntity(reportTemplateService
@@ -459,11 +457,11 @@ public class ReportTemplateController extends WebApiController {
 		};
 
 		ResponseEntity<?> responeResult = WebApiHelper
-				.processResponceApiActionBody(action, HttpStatus.ACCEPTED);
+				.processResponceApiActionUpdate(action);
 
 		if (action.getResult() == null) {
 			responeResult = ResponseEntity
-					.status(HttpStatus.NOT_ACCEPTABLE)
+					.status(HttpStatus.FAILED_DEPENDENCY)
 					.body(ApiResult
 							.build(ApiResultCode.ERR_BRM_VALIDATION,
 									"Report Template have active ReportParamset. Moving to archive is impossible"));
@@ -488,7 +486,7 @@ public class ReportTemplateController extends WebApiController {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ApiActionLocation action = new AbtractApiActionLocation<ReportTemplate, Long>(
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportTemplate, Long>(
 				reportTemplate, request) {
 
 			@Override
@@ -513,7 +511,7 @@ public class ReportTemplateController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreated(action);
+		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 

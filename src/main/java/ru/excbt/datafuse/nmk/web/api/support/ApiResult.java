@@ -61,6 +61,15 @@ public class ApiResult {
 
 	/**
 	 * 
+	 * @param description
+	 * @return
+	 */
+	public static ApiResult validationError(String description) {
+		return build(ApiResultCode.ERR_VALIDATION, description);
+	}
+
+	/**
+	 * 
 	 * @param e
 	 * @return
 	 */
