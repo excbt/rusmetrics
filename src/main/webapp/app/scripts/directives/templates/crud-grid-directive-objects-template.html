@@ -368,11 +368,13 @@
                                             <input type="checkbox" title="T1" class="" ng-model="zpointSettings.summer.wm_T1_chk"/>T1
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max)}"> <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding ">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T1_chk" ng-model="zpointSettings.summer.wm_T1_max"> &deg;C
+                                            </span>
                                         </div>
 
                                     </div> 
@@ -382,11 +384,13 @@
                                             <input type="checkbox" title="T2" class="" ng-model="zpointSettings.summer.wm_T2_chk"/>T2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T2_chk" ng-model="zpointSettings.summer.wm_T2_max"> &deg;C
+                                            </span>
                                         </div>
 
                                     </div> 
@@ -396,11 +400,12 @@
                                             <input type="checkbox" title="P1" class="" ng-model="zpointSettings.summer.wm_P1_chk"/>P1
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_max"> ат
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P1_chk" ng-model="zpointSettings.summer.wm_P1_max"> ат
                                         </div>
 
                                     </div> 
@@ -409,11 +414,13 @@
                                             <input type="checkbox" title="P2" class="" ng-model="zpointSettings.summer.wm_P2_chk"/>P2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_max"> ат
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P2_chk" ng-model="zpointSettings.summer.wm_P2_max"> ат
+                                            </span>
                                         </div>
 
                                     </div> 
