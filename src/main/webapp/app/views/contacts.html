@@ -324,7 +324,6 @@
 			});
 		}
 		else {
-			alert(lst_data['version']);
 			$.ajax({
 				type: 'PUT',
 				contentType: "application/json",
@@ -474,10 +473,7 @@
 		for (var zx = 0; zx < cntForTable.length; zx++) {
 			newRow = cntTable.insertRow();
 			newRow.id = "cnt_id_" + cntForTable[zx]['id'];
-			newRow.insertCell().innerHTML = "<i title='Удалить'\
-												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
-												onclick = delCntTd(" + cntForTable[zx]['id'] + ")></i> \
-											<i title='Изменить' \
+			newRow.insertCell().innerHTML = "<i title='Изменить' \
 												class='btn btn-default btn-xs glyphicon glyphicon-edit' \
 												onclick=cntEditWindow(" + cntForTable[zx]['id'] + ") \
 												data-target='#edit_contact' \
@@ -485,6 +481,9 @@
 			newRow.insertCell().innerHTML = cntForTable[zx]['userName'];
 			newRow.insertCell().innerHTML = cntForTable[zx]['userPhone'];
 			newRow.insertCell().innerHTML = cntForTable[zx]['userEmail'];
+			newRow.insertCell().innerHTML = "<i title='Удалить'\
+												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
+												onclick = delCntTd(" + cntForTable[zx]['id'] + ")></i>";
 		}
 	}
 	
@@ -497,15 +496,16 @@
 		for (var zx = 0; zx < cntlForTable.length; zx++){
 			newRow = cntlTable.insertRow();
 			newRow.id = "lst_id_" + cntlForTable[zx]['id'];
-			newRow.insertCell().innerHTML = "<i title='Удалить' \
-												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
-												onclick = delLstTd(" + cntlForTable[zx]['id'] + ")></i> \
-											<i title='Изменить' \
+			newRow.insertCell().innerHTML = "<i title='Изменить' \
 												class='btn btn-default btn-xs glyphicon glyphicon-edit' \
 												onclick=lstEditWindow(" + cntlForTable[zx]['id'] + ") \
 												data-target='#edit_list' \
 												data-toggle='modal'></i>";
 			newRow.insertCell().innerHTML=cntlForTable[zx]['groupName'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
+												onclick = delLstTd(" + cntlForTable[zx]['id'] + ")></i>"; 
+
 		}
 	}
 	
@@ -636,13 +636,6 @@
     <div role="tabpanel" class="tab-pane fade in active" id="timetables">
 	</div>
 </div>
-<!--
-	<form>
-		<p><input type="radio" name="contacts_select" value="contacts" onchange="selectContacts()" checked>Контакты</p>
-		<p><input type="radio" name="contacts_select" value="contact_lists" onchange="selectLists()">Списки контактов</p>
-	</form>
--->
-	
     <!-- Содержимое вкладки с контактами -->
     <div id="div_contacts">
 
@@ -657,17 +650,12 @@
     			<th class="col-md-1"></th>
     			<th class="col-md-4">Имя</th>
     			<th class="col-md-3">Телефон</th>
-    			<th class="col-md-4">Электронная почта</th>
+    			<th class="col-md-3">Электронная почта</th>
+    			<th class="col-md-1"></th>
     		</tr>
     	</table>
     </div>
     <div id="div_contact_lists" class="hidden_tab">
-<!--
-		<ul class="breadcrumb">
-			<li><a href="/#/">Портал</a> <span class="divider"></span></li>
-			<li class="active">Контакты</li>
-		</ul>
--->
 		<h2>Списки контактов</h2>
 		<!-- Кнопка добавления списков -->
 		<div class="btn-group">
@@ -676,7 +664,8 @@
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover">
 			<tr id="tr_cnt_header" class="info">
 				<th class="col-md-1"></th>
-    			<th class="col-md-11">Имя списка</th>
+    			<th class="col-md-10">Имя списка</th>
+    			<th class="col-md-1"></th>
     		</tr>
 		</table>	
     </div>
