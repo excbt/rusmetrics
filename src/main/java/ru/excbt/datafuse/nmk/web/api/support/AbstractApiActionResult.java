@@ -1,18 +1,19 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
-public abstract class AbstractUserActionResult<T> extends AbstractUserAction {
+public abstract class AbstractApiActionResult<T> extends AbstractApiAction {
 
 	protected final T entity;
 	private T resultEntity;
 
-	public AbstractUserActionResult(T entity) {
+	public AbstractApiActionResult(T entity) {
 		this.entity = entity;
 	}
 
+	public AbstractApiActionResult() {
+		this.entity = null;
+	}
+
 	protected T getResultEntity() {
-		if (resultEntity == null) {
-			throw new IllegalStateException("resultEntity is not processed");
-		}
 		return resultEntity;
 	}
 
@@ -22,8 +23,7 @@ public abstract class AbstractUserActionResult<T> extends AbstractUserAction {
 
 	@Override
 	public Object getResult() {
-		Object result = getResultEntity();
-		return result != null ? result : EMPTY_RESULT;
+		return getResultEntity();
 	}
 
 }

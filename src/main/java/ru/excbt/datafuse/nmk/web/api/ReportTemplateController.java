@@ -6,7 +6,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -14,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +28,13 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiActionResult;
+import ru.excbt.datafuse.nmk.web.api.support.AbtractApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
@@ -184,10 +188,22 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
-	/** */
+	/**
+	 * 
+	 * @param reportTemplateId
+	 * @return
+	 */
+	private ResponseEntity<?> deleteInternal(final long reportTemplateId) {
 
-	private void deleteInternal(long reportTemplateId) {
-		reportTemplateService.deleteOne(reportTemplateId);
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				reportTemplateService.deleteOne(reportTemplateId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiAction(action,
+				HttpStatus.ACCEPTED);
 	}
 
 	/**
@@ -198,8 +214,7 @@ public class ReportTemplateController extends WebApiController {
 	public ResponseEntity<?> deleteReportTemplatesArchiveCommerce(
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
-		deleteInternal(reportTemplateId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportTemplateId);
 	}
 
 	/**
@@ -210,8 +225,7 @@ public class ReportTemplateController extends WebApiController {
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsT1(
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
-		deleteInternal(reportTemplateId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportTemplateId);
 	}
 
 	/**
@@ -221,9 +235,8 @@ public class ReportTemplateController extends WebApiController {
 	@RequestMapping(value = "/archive/cons_t2/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsT2(
 			@PathVariable("reportTemplateId") long reportTemplateId) {
-		
-		deleteInternal(reportTemplateId);
-		return ResponseEntity.accepted().build();
+
+		return deleteInternal(reportTemplateId);
 	}
 
 	/**
@@ -233,9 +246,8 @@ public class ReportTemplateController extends WebApiController {
 	@RequestMapping(value = "/archive/cons/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportTemplatesArchiveConsOld(
 			@PathVariable("reportTemplateId") long reportTemplateId) {
-		
-		deleteInternal(reportTemplateId);
-		return ResponseEntity.accepted().build();
+
+		return deleteInternal(reportTemplateId);
 	}
 
 	/**
@@ -246,8 +258,7 @@ public class ReportTemplateController extends WebApiController {
 	public ResponseEntity<?> deleteReportTemplatesArchiveEvent(
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
-		deleteInternal(reportTemplateId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportTemplateId);
 	}
 
 	/** */
@@ -345,19 +356,17 @@ public class ReportTemplateController extends WebApiController {
 
 		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ReportTemplate resultEntity = null;
-		try {
-			resultEntity = reportTemplateService.updateOne(reportTemplate);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save entity ReportTemplate (id={}): {}",
-					reportTemplateId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiAction action = new AbstractApiActionResult<ReportTemplate>(
+				reportTemplate) {
+			@Override
+			public void process() {
+				setResultEntity(reportTemplateService.updateOne(entity));
+			}
+		};
 
-		return ResponseEntity.accepted().body(resultEntity);
+		return WebApiHelper.processResponceApiActionBody(action,
+				HttpStatus.ACCEPTED);
+
 	}
 
 	/**
@@ -437,30 +446,30 @@ public class ReportTemplateController extends WebApiController {
 	 */
 	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId) {
+			@RequestParam(value = "reportTemplateId", required = true) final Long reportTemplateId) {
 
 		checkNotNull(reportTemplateId);
 
-		ReportTemplate resultEntity = null;
+		ApiAction action = new AbstractApiActionResult<ReportTemplate>() {
+			@Override
+			public void process() {
+				setResultEntity(reportTemplateService
+						.moveToArchive(reportTemplateId));
+			}
+		};
 
-		try {
-			resultEntity = reportTemplateService
-					.moveToArchive(reportTemplateId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during move to archive entity ReportTemplate (id={}): {}",
-					reportTemplateId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+		ResponseEntity<?> responeResult = WebApiHelper
+				.processResponceApiActionBody(action, HttpStatus.ACCEPTED);
+
+		if (action.getResult() == null) {
+			responeResult = ResponseEntity
+					.status(HttpStatus.NOT_ACCEPTABLE)
+					.body(ApiResult
+							.build(ApiResultCode.ERR_BRM_VALIDATION,
+									"Report Template have active ReportParamset. Moving to archive is impossible"));
 		}
 
-		if (resultEntity == null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-		}
-
-		return ResponseEntity.accepted().body(resultEntity);
+		return responeResult;
 	}
 
 	/**
@@ -471,7 +480,7 @@ public class ReportTemplateController extends WebApiController {
 	 */
 	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createByTemplate(
-			@PathVariable(value = "srcId") Long srcId,
+			@PathVariable(value = "srcId") final Long srcId,
 			@RequestBody ReportTemplate reportTemplate,
 			HttpServletRequest request) {
 
@@ -479,26 +488,33 @@ public class ReportTemplateController extends WebApiController {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ReportTemplate resultEntity = null;
+		ApiActionLocation action = new AbtractApiActionLocation<ReportTemplate, Long>(
+				reportTemplate, request) {
 
-		try {
-			resultEntity = reportTemplateService.createByTemplate(srcId,
-					reportTemplate, currentSubscriberService.getSubscriber());
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during create entity by ReportTemplate (id={}): {}",
-					srcId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+			@Override
+			public void process() {
+				setResultEntity(reportTemplateService.createByTemplate(srcId,
+						entity, currentSubscriberService.getSubscriber()));
+			}
 
-		URI location = URI.create("/api/reportTemplate"
-				+ ReportConstants.getReportTypeURL(resultEntity
-						.getReportTypeKey()) + "/" + +resultEntity.getId());
+			@Override
+			protected Long getLocationId() {
+				checkNotNull(getResultEntity());
+				return getResultEntity().getId();
+			}
 
-		return ResponseEntity.created(location).body(resultEntity);
+			@Override
+			public URI getLocation() {
+				checkNotNull(getResultEntity());
+				return URI.create("/api/reportTemplate"
+						+ ReportConstants.getReportTypeURL(getResultEntity()
+								.getReportTypeKey()) + "/" + getLocationId());
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionCreated(action);
+
 	}
 
 }

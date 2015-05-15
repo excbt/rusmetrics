@@ -7,12 +7,12 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
-public abstract class AbtractUserActionLocation<T, K> extends
-		AbstractUserActionResult<T> implements UserActionLocation {
+public abstract class AbtractApiActionLocation<T, K> extends
+		AbstractApiActionResult<T> implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
-	public AbtractUserActionLocation(T entity, HttpServletRequest request) {
+	public AbtractApiActionLocation(T entity, HttpServletRequest request) {
 		super(entity);
 		this.request = request;
 	}
