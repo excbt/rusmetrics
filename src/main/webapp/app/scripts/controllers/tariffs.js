@@ -67,7 +67,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     };
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
+        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
 
     $scope.addObject = function () {

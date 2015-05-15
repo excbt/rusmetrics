@@ -81,13 +81,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
 
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
+        notificationFactory.errorInfo(e.statusText,e.data.description);
     };
     
     $scope.deleteObject = function (object) {
         var table = $scope.crudTableName +"/archive"+ $scope.currentReportType.suffix;
-console.log(table);        
-console.log(object[$scope.extraProps.idColumnName]);        
+//console.log(table);        
+//console.log(object[$scope.extraProps.idColumnName]);        
         crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
     };
        
@@ -146,8 +146,8 @@ console.log(object[$scope.extraProps.idColumnName]);
             object.id = null;          
             object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;  
-console.log("$scope.createByTemplate_flag"); 
-console.log(tmp);            
+//console.log("$scope.createByTemplate_flag"); 
+//console.log(tmp);            
             crudGridDataFactory(table).save({contObjectIds: tmp}, object, successCallback, errorCallback);
             return;
         };

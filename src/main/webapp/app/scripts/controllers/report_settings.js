@@ -47,7 +47,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
     ];
    
-    var successCallback = function (e) {
+    var successCallback = function (e) {      
         notificationFactory.success();
         $('#editTemplateModal').modal('hide');
         $('#moveToArchiveModal').modal('hide');
@@ -67,8 +67,8 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         
     };
 
-    var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);       
+    var errorCallback = function (e) {      
+        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
     $scope.selectToDelete = function(parent, object){

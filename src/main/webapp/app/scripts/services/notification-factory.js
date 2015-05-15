@@ -15,6 +15,9 @@ angular.module('portalNMK').factory('notificationFactory', function () {
         error: function (text) {
             toastr.error(text, "Ошибка!");
         },
+        errorInfo: function (header,text) {
+            toastr.error(text,header);
+        },
         warning : function (text) {
         	  toastr.warning(text);
         },
