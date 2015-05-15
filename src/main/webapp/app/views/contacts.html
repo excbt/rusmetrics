@@ -1,3 +1,6 @@
+<!-- Я остановился на добавлении галочек в чекбоксах
+в окне редактирования контактов и групп контактов -->
+
 <style type="text/css">
 .main_tab_container {
 	padding: 5px;
@@ -179,140 +182,191 @@
 	******************/
 	
 	// Функция для получения контактов с сервера
-	// Параметры: first - id первого контакта
+	// Параметры: id - id первого контакта
 	//				num - общее количество контактов
-	function getContacts (first, num) {
+	//				если id=all, то возвращаются все контакты
+	//				в любом другом случае возвращается контакт с id = id
+	function getContacts (id) {
 		var localCnt = [];
-		// Получаем индекс контакта с id first
-		for(var zxa = 0; zxa < contacts.length; zxa++){
-			if (first == contacts[zxa][0]) break;
-		}
-		// Если надо получить всего один ID
-		switch(num) {
-		case 0:
-			return contacts;
-			break
-		case 1:
-			localCnt = contacts[zxa];
+		switch(id) {
+		case 'all':
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/users',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					localCnt = data;
+				}
+			});
 			break
 		default:
-			for (var zx = zxa; zx < zxa+num; zx++){
-				localCnt.push(contacts[zx]);
-			}
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/users' + "/" + id,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					localCnt = data;
+				}
+			});
 		}
-		return localCnt;
+	return localCnt;
 	}
 	
 	// Функция для получения списков контактов с сервера
-	function getContactLists (first, num) {
+	function getContactLists (id) {
 		var local_lst = [];
-		// Получаем индекс контакта с id first
-		for(var zxa = 0; zxa < lists.length; zxa++){
-			if (first == lists[zxa][0]) break;
-		}
-		// Если надо получить всего один ID
-		switch(num) {
-		case 0:
-			return lists;
-			break
-		case 1:
-			local_lst = lists[zxa];
+		switch(id) {
+		case 'all':
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/groups',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					local_lst = data;
+				}
+			});
 			break
 		default:
-			for (var zx = zxa; zx < zxa+num; zx++){
-				local_lst.push(lists[zx]);
-			}
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/groups' + '/' + id,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					local_lst = data;
+				}
+			});
 		}
 		return local_lst;
-
-/*		var localListCnt = [];
-		for (var zx = first; zx < last; zx++){
-			localListCnt.push(lists[zx]);
-		}
-		return localListCnt;*/
 	}
-	
+
 	// Функция удаления контакта с сервера
-	function delContacts(id){
-		for(var zx = 0; zx < contacts.length; zx++){
-			if(contacts[zx][0] == id) {
-				contacts.splice(zx, 1);
-			}
+	function delContacts(type, id){
+		var result;
+		if (type == 'contact'){
+			$.ajax({
+				type: 'DELETE',
+				url: '../api/subscr/subscrAction/users' + '/' + id,
+				dataType: 'json',
+				async: true,
+				success: function(){
+					result = 0;
+				}
+			});
+		}
+		else {
+			$.ajax({
+				type: 'DELETE',
+				url: '../api/subscr/subscrAction/groups' + '/' + id,
+				dataType: 'json',
+				async: true,
+				success: function(){
+					result = 0;
+				}
+			});
 		}
 		return 0;
 	}
 	
 	// Функция добавления контакта на сервер
-	// Возвращает 1, если создан новый контакт
-	// 2, если изменён старый
-	function addContact(cnt_data){
-		var new_cnt_flag = true;
-		var tmp_id = 0;
-		// Если такой id уже есть, обновляем его
-		// Если нет - создаём новый
-		if(cnt_data[0]=='new_cnt'){
-			// Находим самый большой id
-			for(var zxa = 0; zxa < contacts.length; zxa++){
-				if(contacts[zxa][0] > tmp_id){
-					tmp_id = contacts[zxa][0];
-				}
-			}
-			// Присваиваем элементу самый большой id + 1
-			cnt_data[0] = tmp_id + 1;
-			contacts.push(cnt_data);
+	function addContact(cnt_data, cnt_lst){
+		var result = new Object();
+		// Проверяем, создаётся новый контакт или редактируется имеющийся
+		if(cnt_data['id'] == 'new_cnt'){
+			cnt_data['id'] = null;
+			$.ajax({
+				type: 'POST',
+				contentType: "application/json",
+				url: '../api/subscr/subscrAction/users' + '?' + 'subscrGroupIds=' + cnt_lst,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					result = data;
+				},
+				data: JSON.stringify(cnt_data)
+			});
 		}
-		else{
-			for(var zx = 0; zx < contacts.length; zx++){
-				if(cnt_data[0] == contacts[zx][0]){
-					new_cnt_flag = false;
-					contacts[zx] = cnt_data;
-					return cnt_data[0];
-				}
-			}
+		else {
+			$.ajax({
+				type: 'PUT',
+				contentType: "application/json",
+				url: '../api/subscr/subscrAction/users' + '/' + cnt_data['id'] + '?' + 'subscrGroupIds=' + cnt_lst,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					result = data;
+				},
+				data: JSON.stringify(cnt_data)
+			});
 		}
-		return cnt_data[0];
+		return result;
 	}
-	
+
+	// Функция добавления списка на сервер
+	function addList(lst_data, lst_cnt){
+		var result = new Object();
+		// Проверяем, создаётся новый контакт или редактируется имеющийся
+		if(lst_data['id'] == 'new_lst'){
+			lst_data['id'] = null;
+			$.ajax({
+				type: 'POST',
+				contentType: "application/json",
+				url: '../api/subscr/subscrAction/groups' + '?' + 'subscrUserIds=' + lst_cnt,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					result = data;
+				},
+				data: JSON.stringify(lst_data)
+			});
+		}
+		else {
+			alert(lst_data['version']);
+			$.ajax({
+				type: 'PUT',
+				contentType: "application/json",
+				url: '../api/subscr/subscrAction/groups' + '/' + lst_data['id'] + '?' + 'subscrUserIds=' + lst_cnt,
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					result = data;
+				},
+				data: JSON.stringify(lst_data)
+			});
+		}
+		return result;
+	}
+
 	// Функция получения связей контакт-список
 	// type: "group" или "contact".
-	// id
 	function getCntLst(type, id){
 		var cnt_list_local = [];
 		if(type == 'contact'){
-			for(var zx = 0; zx < cnt_lst.length; zx++){
-				if(cnt_lst[zx][1] == id) cnt_list_local.push(cnt_lst[zx][2]);
-			}
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/users' + '/' + id + '/' + 'groups',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					cnt_list_local = data;
+				}
+			});
 		}
 		else {
-			for(var zx = 0; zx < cnt_lst.length; zx++){
-				if(cnt_lst[zx][2] == id) cnt_list_local.push(cnt_lst[zx][1]);
-			}
+			$.ajax({
+				type: 'GET',
+				url: '../api/subscr/subscrAction/groups' + '/' + id + '/' + 'users',
+				dataType: 'json',
+				async: false,
+				success: function(data){
+					cnt_list_local = data;
+				}
+			});
 		}
 		return cnt_list_local
-	}
-	
-	// Функция добавления связей контакт-список
-	function addCntLst(cnt_id, cnt_lst_local){
-		//cnt_list_local[0] = 0;
-		// Вычисляем id
-		//for(var zx = 0; zx < cnt_lst.length; zx++){
-		//	if (cnt_list_local[0] < cnt_lst[zx][0]) cnt_list_local[0] = cnt_lst[zx][0]; 
-		//}
-		var tmp = [];
-		var tmp_id;
-		for(var zx = 0; zx < cnt_lst_local; zx++){
-			// Находим самый большой id
-			for(var zxa = 0; zxa < cnt_lst.length; zxa++){
-				if(cnt_lst[zxa][0] > tmp_id){
-					tmp_id = cnt_lst[zxa][0];
-				}
-			}
-			// Присваиваем элементу самый большой id + 1
-			tmp[0] = tmp_id + 1;
-			tmp[1] = cnt_id;
-			tmp[2] = cnt_lst_local[zx];
-			cnt_lst.push(tmp);
-		}		
 	}
 	
 	/************************************
@@ -322,18 +376,18 @@
 	// Функция обновления контакта
 	// Функция добавления нового контакта
 	function cntEdit() {
-		// !!!! Функцию надо переосмыслить после подключения к API
-		// !!!! в части получения id отмеченного чекбокса.
-		var cnt_local = [];
+		var cnt_local = new Object();
 		var cnt_list_local = [];
 		// Получаем ID объекта из свойств DIV'а
-		cnt_local[0] = document.getElementById("edit_contact").cnt_id;
+		var wnd_edit_contact = document.getElementById("edit_contact");
+		cnt_local['id'] = wnd_edit_contact.cnt_id;
+		cnt_local['version'] = wnd_edit_contact.ver;
 		// Присваиваем имя, телефон, емейл
-		cnt_local[1] = document.getElementById('inp_cnt_name').value;
-		cnt_local[2] = document.getElementById('inp_cnt_tel').value;
-		cnt_local[3] = document.getElementById('inp_cnt_email').value;
+		cnt_local['userName'] = document.getElementById('inp_cnt_name').value;
+		cnt_local['userPhone'] = document.getElementById('inp_cnt_tel').value;
+		cnt_local['userEmail'] = document.getElementById('inp_cnt_email').value;
 		// Проверяем, заполнены ли обязательные поля
-		if(cnt_local[1]=='') {
+		if(cnt_local['userName']=='') {
 			alert("Пожалуйста, заполните поле \"Имя\". Оно не должно быть пустым.");
 			return 0;
 		}
@@ -346,95 +400,163 @@
 			}
 		}
 		// Отправляем данные контакта на сервер
-		cnt_local[0] = addContact(cnt_local);
-		// Добавляем на сервер связь контакт-список
-		addCntLst(cnt_local[0], cnt_list_local);
+		cnt_local = addContact(cnt_local, cnt_list_local);
 		// Перестраиваем таблицу с контактами
-		var newRow = document.getElementById("cnt_id_" + cnt_local[0]);
+		var newRow = document.getElementById("cnt_id_" + cnt_local['id']);
 		// Если row с таким id уже есть, то меняем содержимое его cell'ов.
 		// Если нет - то создаём новый
 		if(!newRow){
 			newRow =  document.getElementById('table_contacts').insertRow();
-			newRow.id = "cnt_id_" + cnt_local[0];
-			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delCntTd(" + cnt_local[0] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=cntEditWindow(" + cnt_local[0] + ") data-target='#edit_contact' data-toggle='modal'></i>";
-			newRow.insertCell().innerHTML = cnt_local[1];
-			newRow.insertCell().innerHTML = cnt_local[2];
-			newRow.insertCell().innerHTML = cnt_local[3];
+			newRow.id = "cnt_id_" + cnt_local['id'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delCntTd(" + cnt_local['id'] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=cntEditWindow(" + cnt_local['id'] + ") data-target='#edit_contact' data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML = cnt_local['userName'];
+			newRow.insertCell().innerHTML = cnt_local['userPhone'];
+			newRow.insertCell().innerHTML = cnt_local['userEmail'];
 		}
 		else {
-			newRow.cells[1].innerHTML = cnt_local[1];
-			newRow.cells[2].innerHTML = cnt_local[2];
-			newRow.cells[3].innerHTML = cnt_local[3];
+			newRow.cells[1].innerHTML = cnt_local['userName'];
+			newRow.cells[2].innerHTML = cnt_local['userPhone'];
+			newRow.cells[3].innerHTML = cnt_local['userEmail'];
 		}
 		// Закрываем окно редактирования контакта
 		$('#edit_contact').modal('hide');
 	}
 	
+	// Функция обновления списка контактов
+	// Функция добавления нового списка контактов
+	function lstEdit() {
+		var lst_local = new Object();
+		var cnt_list_local = [];
+		// Получаем ID и version объекта из свойств DIV'а
+		var wnd_edit_list = document.getElementById("edit_list");
+		lst_local['id'] = wnd_edit_list.lst_id;
+		lst_local['version'] = wnd_edit_list.ver;
+		// Присваиваем имя, телефон, емейл
+		lst_local['groupName'] = document.getElementById('inp_lst_name').value;
+		// Проверяем, заполнены ли обязательные поля
+		if(lst_local['groupName']=='') {
+			alert("Пожалуйста, заполните поле \"Имя\". Оно не должно быть пустым.");
+			return 0;
+		}
+		// Проверяем, у каких списков стоят чекбоксы и добавляем связи
+		var table_list = document.getElementById("table_contacts_in_window");
+		for(var zxa = 0; zxa < table_list.rows.length; zxa++){
+			if(table_list.rows[zxa].cells[0].childNodes[0].checked){
+				cnt_list_local.push(table_list.rows[zxa].cells[0].childNodes[0].id.split("_")[2]);
+			}
+		}
+		// Отправляем данные контакта на сервер
+		lst_local = addList(lst_local, cnt_list_local);
+		// Перестраиваем таблицу с контактами
+		var newRow = document.getElementById("lst_id_" + lst_local['id']);
+		// Если row с таким id уже есть, то меняем содержимое его cell'ов.
+		// Если нет - то создаём новый
+		if(!newRow){
+			newRow =  document.getElementById('table_contact_lists').insertRow();
+			newRow.id = "lst_id_" + lst_local['id'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delLstTd(" + lst_local['id'] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=lstEditWindow(" + lst_local['id'] + ") data-target='#edit_list' data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML = lst_local['groupName'];
+		}
+		else {
+			newRow.cells[1].innerHTML = lst_local['groupName'];
+		}
+		// Закрываем окно редактирования контакта
+		$('#edit_list').modal('hide');
+	}
+
 	// Функция инициализации таблицы контактов
 	function cntTableInit () {
 		// Получаем контакты с сервера
-		var cntForTable = getContacts(0, 0);
+		var cntForTable = getContacts("all");
 		var cntTable = document.getElementById('table_contacts');
 		// Заполняем таблицу
 		var newRow;
 		for (var zx = 0; zx < cntForTable.length; zx++) {
 			newRow = cntTable.insertRow();
-			newRow.id = "cnt_id_" + cntForTable[zx][0];
-			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delCntTd(" + cntForTable[zx][0] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=cntEditWindow(" + cntForTable[zx][0] + ") data-target='#edit_contact' data-toggle='modal'></i>";
-			newRow.insertCell().innerHTML = cntForTable[zx][1];
-			newRow.insertCell().innerHTML = cntForTable[zx][2];
-			newRow.insertCell().innerHTML = cntForTable[zx][3];
+			newRow.id = "cnt_id_" + cntForTable[zx]['id'];
+			newRow.insertCell().innerHTML = "<i title='Удалить'\
+												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
+												onclick = delCntTd(" + cntForTable[zx]['id'] + ")></i> \
+											<i title='Изменить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-edit' \
+												onclick=cntEditWindow(" + cntForTable[zx]['id'] + ") \
+												data-target='#edit_contact' \
+												data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML = cntForTable[zx]['userName'];
+			newRow.insertCell().innerHTML = cntForTable[zx]['userPhone'];
+			newRow.insertCell().innerHTML = cntForTable[zx]['userEmail'];
 		}
 	}
 	
 	// Инициализация таблицы списков контактов
 	function cntListTableInit() {
 		// Получаем списки контактов с сервера
-		var cntlForTable = getContactLists(0, 0);
+		var cntlForTable = getContactLists('all');
 		var cntlTable = document.getElementById('table_contact_lists');
+		var newRow;
 		for (var zx = 0; zx < cntlForTable.length; zx++){
 			newRow = cntlTable.insertRow();
-			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delCntTd(" + cntlForTable[zx][0] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=lstEditWindow(" + cntlForTable[zx][0] + ") data-target='#edit_list' data-toggle='modal'></i>";
-			newRow.insertCell().innerHTML=cntlForTable[zx][1];
+			newRow.id = "lst_id_" + cntlForTable[zx]['id'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
+												onclick = delLstTd(" + cntlForTable[zx]['id'] + ")></i> \
+											<i title='Изменить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-edit' \
+												onclick=lstEditWindow(" + cntlForTable[zx]['id'] + ") \
+												data-target='#edit_list' \
+												data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML=cntlForTable[zx]['groupName'];
 		}
 	}
 	
-	// Удаление строки таблицы с контактом
-	function delCntTd(cnt_id){
-		delContacts(cnt_id);
-		var cnt_td = document.getElementById("cnt_id_" + cnt_id)
+	// Удаление контакта
+	function delCntTd(id){
+		delContacts('contact', id);
+		var cnt_td = document.getElementById("cnt_id_" + id);
 		cnt_td.parentNode.removeChild(cnt_td);
 	}
 	
+	// Удаление группы
+	function delLstTd(id){
+		delContacts('list', id);
+		var lst_td = document.getElementById("lst_id_" + id);
+		lst_td.parentNode.removeChild(lst_td);
+
+	}
 	// Функция подготовки таблицы в окне редактирования свойств контакта или группы
 	// Параметры: type - "list" или "contact" - указать, кого редактируем, а не того, кого показываем.
 	// id - id группы-контакта или "clear"
 	function cntTablesInWindow(type, id){
 		var ids_links = [];
 		var cntlForTable = [];
+		var newRow;
 		// Получаем связи контакт-список
-		ids_links = getCntLst(type, id);
+		if (id != 'new_lst' && id != 'new_cnt') ids_links = getCntLst(type, id);
 		// Получаем списки контактов с сервера
 		if (type == 'list'){
-			var cntlForTable = getContacts(0, 0);
+			var cntlForTable = getContacts("all");
 			var cntlTable = document.getElementById('table_contacts_in_window');
+			// Сначала чистим таблицу
+			cntlTable.innerHTML = '';
+			for (var zx = 0; zx < cntlForTable.length; zx++){
+				newRow = cntlTable.insertRow();
+				newRow.insertCell().innerHTML = "<input type='checkbox' id='chkbx_id_"+ cntlForTable[zx]['id'] +"' />";
+				newRow.insertCell().innerHTML=cntlForTable[zx]['userName'];
+			}
 		}
 		else {
-			var cntlForTable = getContactLists(0, 0);
+			var cntlForTable = getContactLists('all');
 			var cntlTable = document.getElementById('table_lists_in_window');
-		}		
-
-		// Сначала удаляем из таблицы всё
-		for(var zxb = cntlTable.rows.length-1; zxb >= 0; zxb--){
-			cntlTable.deleteRow(zxb);
+			cntlTable.innerHTML = '';
+			for (var zx = 0; zx < cntlForTable.length; zx++){
+				newRow = cntlTable.insertRow();
+				newRow.insertCell().innerHTML = "<input type='checkbox' id='chkbx_id_"+ cntlForTable[zx]['id'] +"' />";
+				newRow.insertCell().innerHTML=cntlForTable[zx]['groupName'];
+			}
 		}
-		for (var zx = 0; zx < cntlForTable.length; zx++){
-			newRow = cntlTable.insertRow();
-			newRow.insertCell().innerHTML = "<input type='checkbox' id='chkbx_id_"+ cntlForTable[zx][0] +"' />";
-			newRow.insertCell().innerHTML=cntlForTable[zx][1];
-			// Ставим галочки в чекбоксах
-			if(ids_links.indexOf(cntlForTable[zx][0]) == -1) document.getElementById('chkbx_id_' + cntlForTable[zx][0]).checked=false;
-			else document.getElementById('chkbx_id_' + cntlForTable[zx][0]).checked=true;
+		// Ставим галочки в чекбоксах
+		for (var zxa = 0; zxa < ids_links.length; zxa++){
+			document.getElementById('chkbx_id_' + ids_links[zxa]['id']).checked=true;
 		}
 	}
 	
@@ -442,47 +564,51 @@
 	// для создания нового контакта надо передать в id значение "new_cnt"
 	function cntEditWindow(id){
 		// Передаём id редактируемого объекта в свойство div'а с редактором
-		document.getElementById("edit_contact").cnt_id = id;
+		var wnd_edit_contact = document.getElementById("edit_contact")
+		wnd_edit_contact.cnt_id = id;
 		var local_cnt = new Array();
 		// Если это не новый контакт, то получаем данные контакта по ид
 		// если новый - то заполняем поля пустыми данными и изменяем заголовок окна
 		if(id != 'new_cnt'){
-			local_cnt = getContacts(id, 1);
+			local_cnt = getContacts(id);
 			document.getElementById("cnt_edit_w_header").innerHTML="Изменение контакта";
+			wnd_edit_contact.ver = local_cnt['version'];
 		}
 		else {
 			for (var zx=0; zx<=3; zx++){
-				local_cnt[zx] = '';
+				local_cnt['userName'] = '';
+				local_cnt['userPhone'] = '';
+				local_cnt['userEmail'] = '';
 				}
 			document.getElementById("cnt_edit_w_header").innerHTML="Создание контакта";
 		}
 		// Заполняем поля форм данными контакта
-		document.getElementById('inp_cnt_name').value = local_cnt[1];
-		document.getElementById('inp_cnt_tel').value = local_cnt[2];
-		document.getElementById('inp_cnt_email').value = local_cnt[3];
+		document.getElementById('inp_cnt_name').value = local_cnt['userName'];
+		document.getElementById('inp_cnt_tel').value = local_cnt['userPhone'];
+		document.getElementById('inp_cnt_email').value = local_cnt['userEmail'];
 		cntTablesInWindow('contact', id);
 	}
-	
+
 	// Функция подготовки окна редактирования списка контактов
 	function lstEditWindow(id){
 		// Передаём id редактируемого объекта в свойство div'а с редактором
-		document.getElementById("edit_list").lst_id = id;
+		var wnd_edit_list = document.getElementById("edit_list");
+		wnd_edit_list.lst_id = id;
 		var local_lst = new Array();
 		// Если это не новый список, то получаем данные списка по ид
 		// если новый - то заполняем поля пустыми данными и изменяем заголовок окна
 		if(id != 'new_lst'){
-			local_lst = getContactLists(id, 1);
-			document.getElementById('inp_lst_name').value = local_lst[1];
+			local_lst = getContactLists(id);
+			document.getElementById('inp_lst_name').value = local_lst['groupName'];
 			document.getElementById("lst_edit_w_header").innerHTML="Изменение списка контактов";
+			wnd_edit_list.ver = local_lst['version'];
 		}
 		else {
-			for (var zx=0; zx <=1; zx++){
-				local_lst[zx] = '';
-				}
+			local_lst['groupName'] = '';
 			document.getElementById("lst_edit_w_header").innerHTML="Создание списка контактов";
 		}
 		// Заполняем поля форм данными контакта
-		document.getElementById('inp_lst_name').value = local_lst[1];
+		document.getElementById('inp_lst_name').value = local_lst['groupName'];
 		cntTablesInWindow('list', id);
 	}
 	
@@ -617,7 +743,7 @@
 		aria-labelledby="showObjOptionLabel" tabindex="-1">
 		<div class="modal-dialog  modal-content">
 			<div class="modal-header">
-				<h3 id="lst_edit_w_header">Изменение контакта</h3>
+				<h3 id="lst_edit_w_header">Изменение списка контактов</h3>
 			</div>
     		<div class="modal_body">
     		<br>
@@ -644,7 +770,7 @@
 					<div class="row">
                        	<div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-								onclick="cntEdit()"
+								onclick="lstEdit()"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
