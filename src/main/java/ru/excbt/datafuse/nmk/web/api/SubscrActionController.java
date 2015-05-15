@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractUserActionResult;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiActionResult;
 import ru.excbt.datafuse.nmk.web.api.support.AbtractApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -102,7 +102,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionIds = subscrUserIds;
 		
-		ApiAction action = new AbstractUserActionResult<SubscrActionGroup>(
+		ApiAction action = new AbstractApiActionResult<SubscrActionGroup>(
 				entity) {
 
 			@Override
@@ -112,7 +112,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action,
+		return WebApiHelper.processResponceApiActionBody(action,
 				HttpStatus.ACCEPTED);
 
 	}
@@ -150,7 +150,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return WebApiHelper.processResponceApiActionCreated(action);
 
 	}
 
@@ -224,7 +224,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiAction action = new AbstractUserActionResult<SubscrActionUser>(
+		ApiAction action = new AbstractApiActionResult<SubscrActionUser>(
 				entity) {
 
 			@Override
@@ -235,7 +235,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action,
+		return WebApiHelper.processResponceApiActionBody(action,
 				HttpStatus.ACCEPTED);
 	}
 
@@ -273,7 +273,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(userAction);
+		return WebApiHelper.processResponceApiActionCreated(userAction);
 
 	}
 

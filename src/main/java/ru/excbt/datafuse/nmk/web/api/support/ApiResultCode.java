@@ -12,10 +12,11 @@ public enum ApiResultCode {
 	OK(true, "OK"), ERR_UNCKNOWN_ERROR(false, "Unknown Error"), ERR_ACCESS_DENIED(
 			false, "Access Denied"), ERR_UNPROCESSABLE_TRANSACTION(false,
 			"Unprocessable Transaction"), ERR_DATABASE_ERROR(false,
-			"Database Error");
+			"Database Error"), ERR_BRM_VALIDATION(false,
+			"Buisiness Rule Validation Error");
 
 	private final boolean ok;
-	
+
 	private final String description;
 
 	private ApiResultCode(boolean ok, String description) {
@@ -29,8 +30,8 @@ public enum ApiResultCode {
 
 	public String getDescription() {
 		return description;
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param e
@@ -56,7 +57,5 @@ public enum ApiResultCode {
 
 		return result;
 	}
-
-
 
 }
