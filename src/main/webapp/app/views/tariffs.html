@@ -200,7 +200,7 @@
                                         <td class="col-sm-3"><label for="inputValue">Стоимость</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
-                                            <div class="col-sm-3 noPadding">
+                                            <div class="col-sm-3 noPadding form-group" ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
                                                 <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
                                             </div>
                                             <div class="col-sm-9 paddingTop10">

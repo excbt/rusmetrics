@@ -269,9 +269,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                     return $scope.userInfo._system;
                 };
                 
-                //checkers
-                $scope.checkZpointSettings_flag = false;
-                
+                //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    
                     var result = false;
                     if ((numvalue === "") || (numvalue==null)){
@@ -281,12 +279,16 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                     return result;
                 };
                 
-                $scope.checkNumericValue = function(numvalue){                         
+                function isNumeric(n) {
+                  return !isNaN(parseFloat(n)) && isFinite(n);
+                }
+                
+                $scope.checkNumericValue = function(numvalue){ 
                     var result = true;
                     if ($scope.checkEmptyNullValue(numvalue)){
                         return result;
                     }
-                    if (isNaN(parseInt(numvalue))){
+                    if (!isNumeric(numvalue)){
                         result = false;
                         return result;
                     };

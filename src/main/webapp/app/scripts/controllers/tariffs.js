@@ -141,7 +141,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $('#editTariffModal').modal();
     };
     
-    $scope.addTariff = function(){
+    $scope.addTariff = function(){       
         $scope.availableObjects = [];
         $scope.selectedObjects = [];
         $scope.currentObject = {};
@@ -179,7 +179,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         return !(($scope.startDateFormat==null) ||
         ($scope.currentObject.tariffOption.keyname==null) ||
         ($scope.currentObject.rso.id==null) ||
-        ($scope.currentObject.tariffType.id==null));
+        ($scope.currentObject.tariffType.id==null))
+        &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue);
     };
     
     
@@ -259,5 +260,44 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+    
+            //checkers            
+    $scope.checkEmptyNullValue = function(numvalue){                    
+        var result = false;
+        if ((numvalue === "") || (numvalue==null)){
+            result = true;
+            return result;
+        }
+        return result;
+    };
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    $scope.checkNumericValue = function(numvalue){ 
+        var result = true;
+        if ($scope.checkEmptyNullValue(numvalue)){
+            return result;
+        }
+        if (!isNumeric(numvalue)){
+            result = false;
+            return result;
+        };
+        return result;
+    };
+
+    $scope.checkPositiveNumberValue = function(numvalue){                    
+        var result = true;
+        result = $scope.checkNumericValue(numvalue)
+        if (!result){
+            //if numvalue is not number -> return false
+            return result;
+        }
+        result = parseInt(numvalue)>=0?true:false;
+        return result;
+    };
+    
+    
     
 }]);
