@@ -9,7 +9,7 @@ import javax.persistence.PersistenceException;
 import org.springframework.transaction.TransactionSystemException;
 
 public enum ApiResultCode {
-	OK(true, "OK"), ERR_UNCKNOWN_ERROR(false, "Unknown Error"), ERR_ACCESS_DENIED(
+	OK(true, "OK"), ERR_UNCKNOWN(false, "Unknown Error"), ERR_ACCESS_DENIED(
 			false, "Access Denied"), ERR_UNPROCESSABLE_TRANSACTION(false,
 			"Unprocessable Transaction"), ERR_DATABASE_ERROR(false,
 			"Database Error"), ERR_BRM_VALIDATION(false,
@@ -41,7 +41,7 @@ public enum ApiResultCode {
 
 		checkNotNull(e);
 
-		ApiResultCode result = ERR_UNCKNOWN_ERROR;
+		ApiResultCode result = ERR_UNCKNOWN;
 
 		if (e.getClass().equals(AccessDeniedException.class)) {
 			result = ERR_ACCESS_DENIED;
