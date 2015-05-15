@@ -50,8 +50,8 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceApiAction(
-			ApiAction action, HttpStatus successStatus) {
+	private static ResponseEntity<?> processResponceApiAction(ApiAction action,
+			HttpStatus successStatus) {
 
 		checkNotNull(action);
 
@@ -78,7 +78,7 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceApiActionBody(
+	private static ResponseEntity<?> processResponceApiActionBody(
 			ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
@@ -115,7 +115,7 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceApiActionCreated(
+	public static ResponseEntity<?> processResponceApiActionCreate(
 			ApiActionLocation action) {
 
 		checkNotNull(action);
@@ -141,6 +141,49 @@ public class WebApiHelper {
 					action.getResult());
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @param successStatus
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionOkBody(
+			ApiAction action) {
+		return processResponceApiActionBody(action, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @param successStatus
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionOk(ApiAction action) {
+		return processResponceApiAction(action, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @param successStatus
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionDelete(
+			ApiAction action) {
+		return processResponceApiAction(action, HttpStatus.NO_CONTENT);
+	}
+
+	/**
+	 * 
+	 * @param action
+	 * @param successStatus
+	 * @return
+	 */
+	public static ResponseEntity<?> processResponceApiActionUpdate(
+			ApiAction action) {
+		return processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
 }

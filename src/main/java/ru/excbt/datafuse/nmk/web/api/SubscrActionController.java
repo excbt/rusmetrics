@@ -26,8 +26,8 @@ import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiActionResult;
-import ru.excbt.datafuse.nmk.web.api.support.AbtractApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
@@ -102,7 +102,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionIds = subscrUserIds;
 		
-		ApiAction action = new AbstractApiActionResult<SubscrActionGroup>(
+		ApiAction action = new AbstractEntityApiAction<SubscrActionGroup>(
 				entity) {
 
 			@Override
@@ -112,8 +112,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionBody(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
 
@@ -135,7 +134,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionIds = subscrUserIds;
 		
-		ApiActionLocation action = new AbtractApiActionLocation<SubscrActionGroup, Long>(
+		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrActionGroup, Long>(
 				entity, request) {
 
 			@Override
@@ -150,7 +149,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreated(action);
+		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 
@@ -169,7 +168,7 @@ public class SubscrActionController extends WebApiController {
 			}
 		};
 		return WebApiHelper
-				.processResponceApiAction(action, HttpStatus.OK);
+				.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -224,7 +223,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiAction action = new AbstractApiActionResult<SubscrActionUser>(
+		ApiAction action = new AbstractEntityApiAction<SubscrActionUser>(
 				entity) {
 
 			@Override
@@ -235,8 +234,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionBody(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -257,7 +255,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiActionLocation userAction = new AbtractApiActionLocation<SubscrActionUser, Long>(
+		ApiActionLocation userAction = new AbstractEntityApiActionLocation<SubscrActionUser, Long>(
 				entity, request) {
 
 			@Override
@@ -273,7 +271,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreated(userAction);
+		return WebApiHelper.processResponceApiActionCreate(userAction);
 
 	}
 
@@ -294,7 +292,7 @@ public class SubscrActionController extends WebApiController {
 		};
 
 		return WebApiHelper
-				.processResponceApiAction(action, HttpStatus.OK);
+				.processResponceApiActionDelete(action);
 	}
 
 }

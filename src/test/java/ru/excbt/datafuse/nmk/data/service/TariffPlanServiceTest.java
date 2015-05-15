@@ -46,6 +46,10 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 				.selectTariffPlanAvailableContObjects(tp.getId(),
 						currentSubscriberService.getSubscriberId());
 
+		if (contObjects.size() == 0) {
+			return;
+		}
+		
 		assertTrue(contObjects.size() > 0);
 
 		tp.getContObjects().add(contObjects.get(0));

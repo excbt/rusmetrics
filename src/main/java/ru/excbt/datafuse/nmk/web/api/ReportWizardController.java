@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.model.ReportWizardParam;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 
 @Controller
 @RequestMapping(value = "/api/reportWizard")
@@ -52,7 +55,7 @@ public class ReportWizardController extends WebApiController {
 	 */
 	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createWizardCommerceReport(
-			@RequestBody ReportWizardParam reportWizardParam) {
+			@RequestBody final ReportWizardParam reportWizardParam) {
 
 		checkNotNull(reportWizardParam);
 		checkNotNull(reportWizardParam.getReportTemplate());
@@ -62,22 +65,18 @@ public class ReportWizardController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ReportTemplate resultEntity = null;
-		try {
-			resultEntity = reportWizardService.createCommerceWizard(
-					reportWizardParam.getReportTemplate(),
-					reportWizardParam.getReportColumnSettings(),
-					currentSubscriberService.getSubscriber());
-
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during Create WIzardCommerceReport: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
-
-		return ResponseEntity.accepted().body(resultEntity);
+		ApiAction action = new AbstractEntityApiAction<ReportTemplate>() {
+			@Override
+			public void process() {
+				setResultEntity(reportWizardService.createCommerceWizard(
+						reportWizardParam.getReportTemplate(),
+						reportWizardParam.getReportColumnSettings(),
+						currentSubscriberService.getSubscriber()));
+			}
+		};		
+		
+		return WebApiHelper.processResponceApiActionUpdate(action);
+		
 	}
 
 }

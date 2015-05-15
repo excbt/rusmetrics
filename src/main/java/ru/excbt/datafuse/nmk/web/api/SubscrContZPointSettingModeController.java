@@ -24,6 +24,8 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -50,15 +52,15 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		logger.debug("Fire All");
-		
-//		if (!contZPointService.checkContZPointOwnership(contZPointId,
-//				contObjectId)) {
-//			return ResponseEntity
-//					.badRequest()
-//					.body(String
-//							.format("ContZPoint (id=%d) is not own to ContZObject(id=%d)",
-//									contZPointId, contObjectId));
-//		}
+
+		// if (!contZPointService.checkContZPointOwnership(contZPointId,
+		// contObjectId)) {
+		// return ResponseEntity
+		// .badRequest()
+		// .body(String
+		// .format("ContZPoint (id=%d) is not own to ContZObject(id=%d)",
+		// contZPointId, contObjectId));
+		// }
 
 		logger.debug("Fire Result List");
 		List<ContZPointSettingMode> resultList = contZPointSettingModeService
@@ -71,7 +73,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param id
-	 * @param entity
+	 * @param settingMode
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
@@ -79,13 +81,13 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("id") long id,
-			@RequestBody ContZPointSettingMode entity) {
+			@RequestBody ContZPointSettingMode settingMode) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
 		checkArgument(id > 0);
-		checkNotNull(entity);
-		checkNotNull(entity.getId());
+		checkNotNull(settingMode);
+		checkNotNull(settingMode.getId());
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
@@ -109,26 +111,25 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (currentSetting.getId().longValue() != entity.getId().longValue()) {
+		if (currentSetting.getId().longValue() != settingMode.getId()
+				.longValue()) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		entity.setContZPoint(contZPoint);
-		prepareAuditableProps(currentSetting, entity);
+		settingMode.setContZPoint(contZPoint);
+		prepareAuditableProps(currentSetting, settingMode);
 
-		try {
-			contZPointSettingModeService.save(entity);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during save entity ContZPointSettingMode (id={}): {}",
-					id, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiAction action = new AbstractEntityApiAction<ContZPointSettingMode>(
+				settingMode) {
 
-		return ResponseEntity.accepted().build();
+			@Override
+			public void process() {
+				setResultEntity(contZPointSettingModeService.save(entity));
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 }

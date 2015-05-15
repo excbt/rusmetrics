@@ -73,7 +73,7 @@ public class UDirectoryTest extends AnyControllerTest {
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isAccepted());
+		resultActionsAll.andExpect(status().isOk());
 	}
 
 	
@@ -108,30 +108,13 @@ public class UDirectoryTest extends AnyControllerTest {
 
 		logger.info("Testing delete Param id: {}", createdId);		
 		
-		internalDeleteParamAction (createdId);
+		
+		String urlStrDelete = String.format(DIRECTORY_URL_API + "/%d",
+				createdId);
+		
+		testJsonDelete(urlStrDelete);
 		
 	}
-	
-	/**
-	 * 
-	 * @param id
-	 * @throws Exception
-	 */
-	private void internalDeleteParamAction(long id) throws Exception {
-		
-		String urlStr = String.format(DIRECTORY_URL_API + "/%d",
-				id);
-		
-		
-		ResultActions deleteResultActions = mockMvc.perform(delete(urlStr)
-				.with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
-
-		deleteResultActions.andDo(MockMvcResultHandlers.print());			
-		deleteResultActions.andExpect(status().isOk());
-
-	}
-	
 	
 
 }

@@ -63,7 +63,7 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isAccepted());		
+		resultActionsAll.andExpect(status().isOk());		
 		
 	}
 	
