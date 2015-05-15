@@ -58,11 +58,13 @@ public class WebApiHelper {
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction: {}", e);
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
 					ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction: {}", e);
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
 					ApiResult.error(e));
 		}
@@ -76,7 +78,7 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceApiActionUpdate(
+	public static <T> ResponseEntity<?> processResponceApiActionBody(
 			ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
@@ -86,15 +88,25 @@ public class WebApiHelper {
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
+
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+					ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+					ApiResult.error(e));
 		}
 
-		return ResponseEntity.status(successStatus).body(action.getResult());
+		if (action.getResult() == null) {
+			return ResponseEntity.status(successStatus).build();
+		} else {
+			return ResponseEntity.status(successStatus)
+					.body(action.getResult());
+		}
+
 	}
 
 	/**
@@ -103,7 +115,7 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static <T> ResponseEntity<?> processResponceApiActionCreate(
+	public static <T> ResponseEntity<?> processResponceApiActionCreated(
 			ApiActionLocation action) {
 
 		checkNotNull(action);
@@ -111,16 +123,24 @@ public class WebApiHelper {
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+					ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}",
+					action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+					ApiResult.error(e));
 		}
 
-		return ResponseEntity.created(action.getLocation()).body(
-				action.getResult());
+		if (action.getResult() == null) {
+			return ResponseEntity.created(action.getLocation()).build();
+		} else {
+			return ResponseEntity.created(action.getLocation()).body(
+					action.getResult());
+		}
+
 	}
 
 }

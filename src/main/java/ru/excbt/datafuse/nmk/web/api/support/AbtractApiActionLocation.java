@@ -8,7 +8,7 @@ import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 
 public abstract class AbtractApiActionLocation<T, K> extends
-		AbstractUserActionResult<T> implements ApiActionLocation {
+		AbstractApiActionResult<T> implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
