@@ -105,7 +105,7 @@ public class AnyControllerTest {
 						MediaType.APPLICATION_JSON));
 
 		deleteResultActions.andDo(MockMvcResultHandlers.print());
-		deleteResultActions.andExpect(status().isOk());
+		deleteResultActions.andExpect(status().isNoContent());
 	}
 	
 }

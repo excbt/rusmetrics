@@ -30,6 +30,11 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 @Controller
 @RequestMapping(value = "/api/reportShedule")
@@ -92,9 +97,16 @@ public class ReportSheduleController extends WebApiController {
 	 */
 	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportShedule(
-			@PathVariable(value = "reportSheduleId") Long reportSheduleId) {
-		reportSheduleService.deleteOne(reportSheduleId);
-		return ResponseEntity.ok().build();
+			@PathVariable(value = "reportSheduleId") final Long reportSheduleId) {
+
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				reportSheduleService.deleteOne(reportSheduleId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -134,21 +146,21 @@ public class ReportSheduleController extends WebApiController {
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
 
-		ReportShedule resultEntity = null;
-		try {
-			resultEntity = reportSheduleService.createOne(reportShedule);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save new entity ReportShedule: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportShedule, Long>(
+				reportShedule, request) {
 
-		URI location = URI.create(request.getRequestURI()
-				+ resultEntity.getId());
+			@Override
+			public void process() {
+				setResultEntity(reportSheduleService.createOne(entity));
+			}
 
-		return ResponseEntity.created(location).body(resultEntity);
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -165,7 +177,7 @@ public class ReportSheduleController extends WebApiController {
 			@RequestBody ReportShedule reportShedule) {
 
 		checkNotNull(reportTemplateId);
-		checkNotNull(reportParamsetId);		
+		checkNotNull(reportParamsetId);
 		checkNotNull(reportShedule);
 		checkArgument(!reportShedule.isNew());
 
@@ -195,18 +207,18 @@ public class ReportSheduleController extends WebApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ReportShedule resultEntity = null;
-		try {
-			resultEntity = reportSheduleService.updateOne(reportShedule);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save entity ReportShedule: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiAction action = new AbstractEntityApiAction<ReportShedule>(
+				reportShedule) {
 
-		return ResponseEntity.accepted().body(resultEntity);
+			@Override
+			public void process() {
+				setResultEntity(reportSheduleService.updateOne(entity));
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 }

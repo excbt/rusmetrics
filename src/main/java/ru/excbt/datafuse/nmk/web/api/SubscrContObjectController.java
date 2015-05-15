@@ -23,6 +23,8 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -62,29 +64,25 @@ public class SubscrContObjectController extends WebApiController {
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObject(
 			@PathVariable("contObjectId") Long contObjectId,
-			@RequestBody ContObject entity) {
+			@RequestBody ContObject contObject) {
 
 		checkNotNull(contObjectId);
-		checkNotNull(entity);
+		checkNotNull(contObject);
 
-		if (entity.isNew()) {
+		if (contObject.isNew()) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ContObject resultEntity = null;
+		ApiAction action = new AbstractEntityApiAction<ContObject>(contObject) {
+			@Override
+			public void process() {
+				setResultEntity(contObjectService.updateOne(entity));
 
-		try {
-			resultEntity = contObjectService.updateOne(entity);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during update ContObject (id={}): {}",
-					entity.getId(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+			}
+		};
 
-		return ResponseEntity.accepted().body(resultEntity);
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 }

@@ -35,8 +35,8 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiActionResult;
-import ru.excbt.datafuse.nmk.web.api.support.AbtractApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -240,7 +240,7 @@ public class ReportParamsetController extends WebApiController {
 
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiAction action = new AbstractApiActionResult<ReportParamset>(
+		ApiAction action = new AbstractEntityApiAction<ReportParamset>(
 				reportParamset) {
 			@Override
 			public void process() {
@@ -249,8 +249,7 @@ public class ReportParamsetController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionBody(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
 
@@ -280,7 +279,7 @@ public class ReportParamsetController extends WebApiController {
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 		reportParamset.set_active(true);
 
-		ApiActionLocation action = new AbtractApiActionLocation<ReportParamset, Long>(
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(
 				reportParamset, request) {
 
 			@Override
@@ -296,7 +295,7 @@ public class ReportParamsetController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionCreated(action);
+		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 
@@ -600,7 +599,7 @@ public class ReportParamsetController extends WebApiController {
 
 		checkNotNull(reportParamsetId);
 
-		ApiAction action = new AbstractApiActionResult<ReportParamset>() {
+		ApiAction action = new AbstractEntityApiAction<ReportParamset>() {
 			@Override
 			public void process() {
 				setResultEntity(reportParamsetService
@@ -609,10 +608,10 @@ public class ReportParamsetController extends WebApiController {
 		};
 
 		ResponseEntity<?> responeResult = WebApiHelper
-				.processResponceApiActionBody(action, HttpStatus.ACCEPTED);
+				.processResponceApiActionOkBody(action);
 
 		if (action.getResult() == null) {
-			responeResult = ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
 					.body(ApiResult.build(ApiResultCode.ERR_UNCKNOWN));
 		}
 
@@ -734,8 +733,7 @@ public class ReportParamsetController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiAction(action,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }

@@ -104,7 +104,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-			resultActionsAll.andExpect(status().isAccepted());
+			resultActionsAll.andExpect(status().isOk());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -168,19 +168,9 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		logger.info("createdId: {}", createdId);
 
-		testDeleteShedule(createdId);
+		String urlStrDelete = "/api/reportShedule/" + String.valueOf(createdId);
+		testJsonDelete(urlStrDelete);
 	}
 
-	public void testDeleteShedule(long reportSheduleId) throws Exception {
-
-		String urlStr = "/api/reportShedule/" + String.valueOf(reportSheduleId);
-
-		ResultActions deleteResultActions = mockMvc
-				.perform(delete(urlStr).with(testSecurityContext()).accept(
-						MediaType.APPLICATION_JSON));
-
-		deleteResultActions.andDo(MockMvcResultHandlers.print());
-		deleteResultActions.andExpect(status().isOk());
-	}
 
 }
