@@ -96,9 +96,16 @@
 		for (var zx = 0; zx < dlvr_for_table.length; zx++) {
 			newRow = tbl_dlvr.insertRow();
 			newRow.id = "dlvr_id_" + deliveries[zx]['id'];
-			newRow.insertCell().innerHTML = "<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' onclick = delDlvrTd(" + dlvr_for_table[zx]['id'] + ")></i> <i title='Изменить' class='btn btn-default btn-xs glyphicon glyphicon-edit' onclick=dlvrEditWindow(" + dlvr_for_table[zx]['id'] + ") data-target='#div_edit_delivery' data-toggle='modal'></i>";
+			newRow.insertCell().innerHTML =	"<i title='Изменить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-edit' \
+												onclick=dlvrEditWindow(" + dlvr_for_table[zx]['id'] + ") \
+												data-target='#div_edit_delivery' \
+												data-toggle='modal'></i>";
 			newRow.insertCell().innerHTML = deliveries[zx]['name'];
 			newRow.insertCell().innerHTML = deliveries[zx]['description'];
+			newRow.insertCell().innerHTML = "<i title='Удалить' \
+												class='btn btn-default btn-xs glyphicon glyphicon-trash' \
+												onclick = delDlvrTd(" + dlvr_for_table[zx]['id'] + ")></i>";
 		}
 	}
 
@@ -456,7 +463,8 @@ dlvrTableInit();
     		<tr id="tr_dlv_header" class="info">
     			<th class="col-md-1">&nbsp</th>
     			<th class="col-md-2">Название</th>
-    			<th class="col-md-9">Описание</th>
+    			<th class="col-md-8">Описание</th>
+    			<th class="col-md-1">&nbsp</th>
        		</tr>
     	</table>
     </div>
