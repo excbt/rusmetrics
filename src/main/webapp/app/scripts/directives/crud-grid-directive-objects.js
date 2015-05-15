@@ -270,6 +270,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 };
                 
                 //checkers
+                $scope.checkZpointSettings_flag = false;
                 
                 $scope.checkEmptyNullValue = function(numvalue){                    
                     var result = false;
@@ -314,6 +315,45 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                          return true;
                      };
                      return false;
+                };
+                
+                $scope.checkHHmm = function(hhmmValue){
+//console.log(hhmmValue);                    
+                    if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
+                        return true;
+                    };
+                    return false;
+                };
+                
+                $scope.checkZpointSettingsFrom = function(zpointSettings){              
+                    if((zpointSettings == null)||(!zpointSettings.hasOwnProperty('summer'))||(!zpointSettings.hasOwnProperty('winter'))){
+                        return true;
+                    };
+                    return $scope.checkPositiveNumberValue(zpointSettings.summer.ov_BalanceM_ctrl) && 
+                        $scope.checkPositiveNumberValue(zpointSettings.winter.ov_BalanceM_ctrl)&&
+                        $scope.checkHHmm(zpointSettings.summer.ov_Worktime)&&
+                        $scope.checkHHmm(zpointSettings.winter.ov_Worktime)&&
+                        $scope.checkPositiveNumberValue(zpointSettings.summer.leak_Gush)&&
+                        $scope.checkPositiveNumberValue(zpointSettings.winter.leak_Gush)&&
+                        $scope.checkPositiveNumberValue(zpointSettings.summer.leak_Night)&&
+                        $scope.checkPositiveNumberValue(zpointSettings.winter.leak_Night)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_M2_min, zpointSettings.summer.wm_M2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)&&
+                        $scope.checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max);
+                        
                 };
                 
                 $scope.checkObjectPropertiesForm = function(object){

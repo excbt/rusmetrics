@@ -430,11 +430,12 @@
                                             <input type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.summer.wm_deltaQ_chk"/>&Delta;Q
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал/сут
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk" ng-model="zpointSettings.summer.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал/сут </span>
                                         </div>
 
                                     </div> 
@@ -443,11 +444,13 @@
                                             <input type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.summer.wm_deltaT_chk"/>&Delta;T
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaT_chk" ng-model="zpointSettings.summer.wm_deltaT_max"> &deg;C
+                                            </span>
                                         </div>
                                     </div>                                    
                                 </div>  
@@ -487,7 +490,9 @@
                                     </div>
                                     <div class="row-fluid">
                                         <div class="col-xs-7 ">
-                                            <input type="checkbox" title="Tраб" class="" ng-model="zpointSettings.summer.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.summer.ov_Worktime_chk" ng-model="zpointSettings.summer.ov_Worktime"> чч:мм
+                                            <span class="form-group" ng-class="{'has-error':!checkHHmm(zpointSettings.summer.ov_Worktime)}">
+                                            <input type="checkbox" title="Tраб" class="" ng-model="zpointSettings.summer.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" ng-disabled="!zpointSettings.summer.ov_Worktime_chk" ng-model="zpointSettings.summer.ov_Worktime"> чч:мм
+                                            </span>
                                         </div>
                                         <div class="col-xs-5">
                                            <input type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.summer.ov_OverheatCool_chk"/> Перегрев / недогрев
@@ -548,10 +553,12 @@
                                             <input type="checkbox" title="M1" class="" ng-model="zpointSettings.winter.wm_M1_chk"/>М1
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_min">
+                                            </span>
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_max"> т/час
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M1_chk" ng-model="zpointSettings.winter.wm_M1_max"> т/час
+                                            </span>
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -559,11 +566,13 @@
                                             <input type="checkbox" title="M2" class="" ng-model="zpointSettings.winter.wm_M2_chk"/>М2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_max"> т/час
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M2_chk" ng-model="zpointSettings.winter.wm_M2_max"> т/час
+                                            </span>
                                         </div>
                                     </div> 
                                      <div class="row-fluid">
@@ -571,10 +580,12 @@
                                             <input type="checkbox" title="T1" class="" ng-model="zpointSettings.winter.wm_T1_chk"/>T1
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_min">
+                                            </span>
                                         </div>
                                         <div class="col-xs-5 noPadding ">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T1_chk" ng-model="zpointSettings.winter.wm_T1_max"> &deg;C
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="row-fluid">
@@ -582,11 +593,13 @@
                                             <input type="checkbox" title="T2" class="" ng-model="zpointSettings.winter.wm_T2_chk"/>T2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T2_chk" ng-model="zpointSettings.winter.wm_T2_max"> &deg;C
+                                            </span>
                                         </div>
 
                                     </div> 
@@ -596,11 +609,13 @@
                                             <input type="checkbox" title="P1" class="" ng-model="zpointSettings.winter.wm_P1_chk"/>P1
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_max"> ат
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P1_chk" ng-model="zpointSettings.winter.wm_P1_max"> ат
+                                            </span>
                                         </div>
 
                                     </div> 
@@ -609,11 +624,13 @@
                                             <input type="checkbox" title="P2" class="" ng-model="zpointSettings.winter.wm_P2_chk"/>P2
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_min">
+                                            </span>
 
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_max"> ат
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P2_chk" ng-model="zpointSettings.winter.wm_P2_max"> ат
+                                            </span>
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -621,10 +638,12 @@
                                             <input type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.winter.wm_deltaQ_chk"/>&Delta;Q
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_min">
+                                            </span>
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_max"> ГКал/сут
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk" ng-model="zpointSettings.winter.wm_deltaQ_max"> ГКал/сут
+                                            </span>
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -632,10 +651,12 @@
                                             <input type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.winter.wm_deltaT_chk"/>&Delta;T
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            от <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_min">
+                                            </span>
                                         </div>
                                         <div class="col-xs-5 noPadding">
-                                            до <input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_max"> &deg;C
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max)}"><input class="form-control inputDigitalData span2 excbt_inputFormControl" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaT_chk" ng-model="zpointSettings.winter.wm_deltaT_max"> &deg;C
+                                            </span>
                                         </div>
                                     </div>
                                 </div>  
@@ -650,14 +671,18 @@
                                     <div class="row-fluid">
                                         <div class="col-xs-12">
                                             <input type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Night_chk"/>Утечки, если ночной расход больше
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.leak_Night)}">
                                             <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Night_chk" ng-model="zpointSettings.winter.leak_Night">
+                                            </span>
                                             &#37; от среднечасового расхода за сутки
                                         </div>
                                     </div>
                                     <div class="row-fluid">
                                         <div class="col-xs-12">
                                             <input type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Gush_chk"/>Порыв / сброс, если расход в 
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.leak_Gush)}">
                                             <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Gush_chk" ng-model="zpointSettings.winter.leak_Gush" style="margin-left: 0px;">
+                                            </span>
                                             раза больше обычного
                                         </div>
                                     </div>
@@ -671,7 +696,9 @@
                                     </div>
                                     <div class="row-fluid">
                                         <div class="col-xs-7 ">
+                                            <span class="form-group" ng-class="{'has-error':!checkHHmm(zpointSettings.winter.ov_Worktime)}">
                                             <input type="checkbox" title="Tраб" class="" ng-model="zpointSettings.winter.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_Worktime_chk" ng-model="zpointSettings.winter.ov_Worktime"> чч:мм
+                                            </span>
                                         </div>
                                         <div class="col-xs-5">
                                            <input type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.winter.ov_OverheatCool_chk"/> Перегрев / недогрев
@@ -680,7 +707,7 @@
                                     <div class="row-fluid">
                                         <div class="col-xs-7 ">
                                            <input type="checkbox" title="Контроль баланса масс" class="" ng-model="zpointSettings.winter.ov_BalanceM_ctrl_chk"/>
-                                            Контроль баланса масс <input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_BalanceM_ctrl_chk" ng-model="zpointSettings.winter.ov_BalanceM_ctrl"> &#37;
+                                            Контроль баланса масс <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.ov_BalanceM_ctrl)}"><input class="form-control excbt_inputDigitalData-sm span1 excbt_inputFormControl" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_BalanceM_ctrl_chk" ng-model="zpointSettings.winter.ov_BalanceM_ctrl"></span> &#37;
                                         </div>
                                         <div class="col-xs-5">
                                                <input type="checkbox" title="&Delta;M" class="" ng-model="zpointSettings.winter.ov_deltaM_chk"/>&Delta;M &lt; 0 
@@ -704,6 +731,7 @@
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                                ng-disabled="!checkZpointSettingsFrom(zpointSettings)"   
 								ng-click="updateZpointSettings()"
 								value="Сохранить" />
 						</div>
