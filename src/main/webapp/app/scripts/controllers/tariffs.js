@@ -180,7 +180,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         ($scope.currentObject.tariffOption.keyname==null) ||
         ($scope.currentObject.rso.id==null) ||
         ($scope.currentObject.tariffType.id==null))
-        &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue);
+        &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue)
+        &&$scope.checkDateIntervalWithRightNull($scope.startDateFormat, $scope.endDateFormat);
     };
     
     
@@ -298,6 +299,9 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         return result;
     };
     
-    
+    $scope.checkDateIntervalWithRightNull = function(left, right){     
+        if (right == null){return true;};
+        return right>=left;
+    };
     
 }]);
