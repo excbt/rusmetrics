@@ -31,14 +31,14 @@
             aria-labelledby="warnLabel" tabindex="-1">
                   <div class="modal-dialog  modal-content">
                       <div class="modal-header">
-                       <h3 id="warnLabel">Завершение сессии.</h3>
+                       <h3 id="warnLabel">Автоматический выход из системы.</h3>
                       </div>
                       <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body">
                           <div class="progress">
                               <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{progressbar(countdown)}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (progressbar(countdown*3.33)+'%')}">
                               </div>
                             </div>
-                          <p class="paddingLeft10">Сессия будет закрыта через {{countdown}} секунд(ы).</p>
+                          <p class="paddingLeft10">Выход из системы будет произведен через {{countdown}} секунд(ы). Для отмены нажмите любую кнопку мыши/клавиатуры.</p>
                       </div>
                   </div>      
               </div>

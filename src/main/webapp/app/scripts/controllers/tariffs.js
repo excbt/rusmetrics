@@ -114,17 +114,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     $scope.saveObject = function(){   
         $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
-        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || $scope.currentObject.startDate;
-        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;
-//console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
-//console.log("$scope.endDateFormat = "+$scope.endDateFormat);  
-//console.log("$scope.currentObject.startDate = "+$scope.currentObject.startDate);  
-//console.log("$scope.startDateFormat = "+$scope.startDateFormat);   
-//console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.currentObject.endDate);           
-//console.log("In saving...");
-//        
-//console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);
-        
+        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
+        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
         var tmp = $scope.selectedObjects.map(function(elem){
             return elem.id;
         });

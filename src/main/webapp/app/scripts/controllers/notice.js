@@ -24,6 +24,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         columns : [ 
 
         {
+            fieldName : "noticeDate",
+            header : "Дата",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1"
+        },{
             fieldName : "noticeType",
             header : "Тип",
             headerClass : "col-md-1 hideM",
@@ -44,12 +49,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
             header : "Уведомление",
             headerClass : "col-md-4",
             dataClass : "col-md-4"
-        }, {
-            fieldName : "noticeDate",
-            header : "Дата",
-            headerClass : "col-md-2",
-            dataClass : "col-md-2"
-        }, {
+        },  {
             fieldName : "noticeObjectName",
             header : "Объект",
             headerClass : "col-md-2",
