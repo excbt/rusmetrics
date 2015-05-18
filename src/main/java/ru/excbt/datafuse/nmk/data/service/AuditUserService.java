@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.slf4j.Logger;
@@ -55,21 +56,25 @@ public class AuditUserService {
 	 */
 	public AuditUser findByUserName(String userName) {
 
-		Query query = em
-				.createQuery("from AuditUser s where s.userName = :arg1", AuditUser.class);
+		Query query = em.createQuery(
+				"from AuditUser s where s.userName = :arg1", AuditUser.class);
 		query.setParameter("arg1", userName);
 		List<?> auditUsers = query.getResultList();
 
-		if (auditUsers.size() == 1) {
-			AuditUser result = (AuditUser) auditUsers.get(0);
-			em.detach(result);
-			return result;
-		} else if (auditUsers.size() > 0) {
+		if (auditUsers.size() > 1) {
 			logger.error(
 					"There is more than 1 AuditUser in system (user_name={})",
 					userName);
+			throw new PersistenceException(String.format(
+					"Audit UserName %s is not UNIQE", userName));
+		} else if (auditUsers.size() == 0) {
+			logger.error("Audit UserName (user_name={}) is not FOUND", userName);
+			throw new PersistenceException(String.format(
+					"Audit UserName %s is not FOUND", userName));
 		}
-		return null;
+
+		AuditUser result = (AuditUser) auditUsers.get(0);
+		return new AuditUser(result);
 	}
 
 	/**
