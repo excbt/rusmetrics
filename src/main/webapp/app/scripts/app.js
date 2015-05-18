@@ -20,8 +20,10 @@ var app = angular
     'ui.tree',
     'daterangepicker'
       ,'angularUtils.directives.dirPagination'
+      ,'ngIdle'
   ]);
 
+//routing config
 app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {
@@ -88,3 +90,14 @@ app.config(function ($routeProvider) {
         redirectTo: '/'
       });
   });
+
+//config for ngIdle
+app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, IdleProvider) {
+  IdleProvider.idle(3600); //idle time in seconds
+  IdleProvider.timeout(30); //
+  KeepaliveProvider.interval(10);
+}]);
+//start Idle service
+app.run(['Idle', function(Idle) {
+  Idle.watch();
+}]);

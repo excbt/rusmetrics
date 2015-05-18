@@ -10,6 +10,9 @@
 var app = angular.module('portalNMK');
   app.controller('MainCtrl', ['$scope','$rootScope', 'crudGridDataFactory', function ($scope, $rootScope, crudGridDataFactory) {
     
+//    $scope.$on('IdleEnd', function() {
+//        window.location.assign('/logout');
+//    });
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
       
