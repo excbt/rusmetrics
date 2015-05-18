@@ -23,4 +23,10 @@ angular.module('portalNMK')
             window.location.assign('../logout');
         });
     
+        $scope.progressbar = function(progress){
+console.log("1");            
+            var result = "{width:"+Math.round(progress)+"%}";
+console.log(result);                        
+            return result;
+        }
 });

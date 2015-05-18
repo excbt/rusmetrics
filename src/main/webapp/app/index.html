@@ -58,8 +58,15 @@
               <div class="modal-header">
                <h3 id="warnLabel">Завершение сессии.</h3>
               </div>
-              <div idle-countdown="countdown" ng-init="countdown=5" class="modal-body">
-               <progressbar max="5" value="5" animate="false" class="progress-striped active">Сессия будет закрыта через {{countdown}} секунд(ы).</progressbar>
+              <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body">
+<!--               <progressbar max="30" value="30" animate="false" class="progress-striped active">Сессия будет закрыта через {{countdown}} секунд(ы).</progressbar>-->
+                  
+                  <div class="progress">
+                      <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" ng-style="progressbar(countdown)">
+<!--                        <span class="sr-only">20% Complete</span>-->
+                      </div>
+                    </div>
+                  <p class="paddingLeft10">Сессия будет закрыта через {{countdown}} секунд(ы).</p>
               </div>
           </div>      
       </div>

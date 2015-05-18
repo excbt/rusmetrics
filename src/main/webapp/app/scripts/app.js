@@ -93,7 +93,7 @@ app.config(function ($routeProvider) {
 
 //config for ngIdle
 app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, IdleProvider) {
-  IdleProvider.idle(3600); //idle time in seconds
+  IdleProvider.idle(6); //idle time in seconds
   IdleProvider.timeout(30); //
   KeepaliveProvider.interval(10);
 }]);
