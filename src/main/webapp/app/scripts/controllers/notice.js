@@ -209,6 +209,13 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
   
       };
     
+    $scope.showNoticeDetail = function(object){
+        $scope.selectedItem(object);
+        $('#showNoticeModal').modal();
+    };
+    
+        
+    
              //get Objects
     $scope.getObjects = function(){
         crudGridDataFactory($scope.crudTableName).query(function(data){

@@ -62,7 +62,7 @@
                 {{column.header}}
             </th>       
         </tr>
-        <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-click="selectedItem(notice)" data-target="#showNoticeModal" data-toggle="modal">
+        <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
                 {{notice[column.fieldName]}}
             </td>
