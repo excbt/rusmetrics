@@ -25,54 +25,25 @@
     <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-
-
       
-<div ng-controller="IdleCtrl">
-<!--
-    <script type="text/ng-template" id="warning-dialog.html">
-      <div class="modal-header">
-       <h3>Завершение сессии.</h3>
-      </div>
-      <div idle-countdown="countdown" ng-init="countdown=5" class="modal-body">
-       <progressbar max="5" value="5" animate="false" class="progress-striped active">Сессия будет закрыта через {{countdown}} секунд(ы).</progressbar>
-      </div>
-
-    </script>
-    <script type="text/ng-template" id="timedout-dialog.html">
-      <div class="modal-header">
-       <h3>Время сессии вышло!</h3>
-      </div>
-      <div class="modal-body">
-       <p>
-          
-       </p>
-     </div>
-    </script>
--->
-    
-    <!--    <script type="text/ng-template" id="warning-dialog.html">-->
-      <div id="warnDialogModal" class="modal fade" role="dialog"
-	aria-labelledby="warnLabel" tabindex="-1">
-          <div class="modal-dialog  modal-content">
-              <div class="modal-header">
-               <h3 id="warnLabel">Завершение сессии.</h3>
-              </div>
-              <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body">
-<!--               <progressbar max="30" value="30" animate="false" class="progress-striped active">Сессия будет закрыта через {{countdown}} секунд(ы).</progressbar>-->
-                  
-                  <div class="progress">
-                      <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" ng-style="progressbar(countdown)">
-<!--                        <span class="sr-only">20% Complete</span>-->
+        <div ng-controller="IdleCtrl">
+              <div id="warnDialogModal" class="modal fade" role="dialog"
+            aria-labelledby="warnLabel" tabindex="-1">
+                  <div class="modal-dialog  modal-content">
+                      <div class="modal-header">
+                       <h3 id="warnLabel">Завершение сессии.</h3>
                       </div>
-                    </div>
-                  <p class="paddingLeft10">Сессия будет закрыта через {{countdown}} секунд(ы).</p>
+                      <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body">
+                          <div class="progress">
+                              <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{progressbar(countdown)}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (progressbar(countdown*3.33)+'%')}">
+                              </div>
+                            </div>
+                          <p class="paddingLeft10">Сессия будет закрыта через {{countdown}} секунд(ы).</p>
+                      </div>
+                  </div>      
               </div>
-          </div>      
-      </div>
-<!--    </script>      -->
-    
-</div>
+
+        </div>
     <!-- Add your site or application content here -->
 <div id="wrap">
 <!--    Навигационная строка в верху страницы-->
