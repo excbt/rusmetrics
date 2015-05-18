@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -10,6 +11,7 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -19,6 +21,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name="report_paramset_unit")
 @SQLDelete(sql="UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause="deleted <> 1")
+@EntityListeners({ AuditingEntityListener.class })
 public class ReportParamsetUnit extends AbstractAuditableModel {
 
 	/**
