@@ -22,8 +22,6 @@ public class CurrentAuditUserService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(CurrentAuditUserService.class);
 
-	private final static AuditUser EMPTY_USER = new AuditUser();
-
 	@Autowired
 	private AuditUserService auditUserService;
 
@@ -49,7 +47,7 @@ public class CurrentAuditUserService {
 
 		String userName = null;
 
-		Authentication auth = getUserAuth();
+		Authentication auth = getContextAuth();
 		if (auth == null) {
 			logger.warn(
 					"Authentication of Spring security is NULL. Using developer user:{}",
@@ -71,8 +69,7 @@ public class CurrentAuditUserService {
 			// scrObject = auditUserService.findOne(DEVELOPER_USER_ID);
 		}
 		// return safe copy of scrObject
-		return srcUser != null ? new AuditUser(srcUser) : new AuditUser(
-				EMPTY_USER);
+		return srcUser != null ? new AuditUser(srcUser) : null;
 
 	}
 
@@ -80,7 +77,7 @@ public class CurrentAuditUserService {
 	 * 
 	 * @return
 	 */
-	public Authentication getUserAuth() {
+	public Authentication getContextAuth() {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
