@@ -3,6 +3,9 @@ package ru.excbt.datafuse.nmk.data.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -35,6 +38,17 @@ public class SystemUser extends AbstractAuditableEntity<AuditUser, Long> {
     @Version
     private int version;
 
+	@OneToOne (fetch = FetchType.EAGER)
+	@JoinColumn(name="subscriber_id")
+	private Subscriber subscriber; 
+    
+	public Subscriber getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
+	}
 
 	public int getVersion() {
 		return version;

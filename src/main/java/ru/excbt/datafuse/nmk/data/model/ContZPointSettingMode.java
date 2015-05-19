@@ -1,14 +1,16 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
+
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
 
@@ -17,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "cont_zpoint_setting_mode")
-//@EntityListeners({AuditingEntityListener.class})
+@EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContZPointSettingMode extends
 		AbstractAuditableEntity<AuditUser, Long> {

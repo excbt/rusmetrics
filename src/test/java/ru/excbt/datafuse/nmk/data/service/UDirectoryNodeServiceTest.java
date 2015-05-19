@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 
 public class UDirectoryNodeServiceTest extends JpaSupportTest {
