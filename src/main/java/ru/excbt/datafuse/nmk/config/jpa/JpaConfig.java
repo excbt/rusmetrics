@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
 
 @Configuration
-@Import({ PropertyConfig.class, JpaAuditConfig.class })
+@Import({ PropertyConfig.class})
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")

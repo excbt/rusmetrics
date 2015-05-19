@@ -35,18 +35,21 @@ public class CurrentSubscriberService {
 	private final ThreadLocal<Map<String, Subscriber>> subscriberMap = new ThreadLocal<Map<String, Subscriber>>();
 	private final ThreadLocal<AtomicInteger> currentFullUserMapCounter = new ThreadLocal<AtomicInteger>();
 
-	@PersistenceContext(unitName = "nmk-p")
+	@PersistenceContext
 	private EntityManager em;
 
 	@Autowired
 	private SubscriberService subscriberService;
 
 	@Autowired
-	private CurrentAuditUserService currentAuditUserService;
+	private CurrentUserService currentUserService;
 
 	@Autowired
 	private FullUserInfoRepository fullUserInfoRepository;
 
+	@Autowired
+	private MockSubscriberService mockSubscriberService;
+	
 	/**
 	 * 
 	 */
@@ -121,7 +124,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public FullUserInfo getFullUserInfo() {
-		AuditUser auditUser = currentAuditUserService.getCurrentAuditUser();
+		AuditUser auditUser = currentUserService.getCurrentAuditUser();
 		checkNotNull(auditUser, "AuditUser from currentUserService is NULL");
 
 		Long userId = auditUser.getId();
@@ -133,7 +136,7 @@ public class CurrentSubscriberService {
 		FullUserInfo userInfo = getFullUserMap().get(userId.toString());
 
 		if (userInfo == null) {
-			userInfo = fullUserInfoRepository.findOne(currentAuditUserService
+			userInfo = fullUserInfoRepository.findOne(currentUserService
 					.getCurrentAuditUser().getId());
 			if (userInfo != null) {
 				em.detach(userInfo);

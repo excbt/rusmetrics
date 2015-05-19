@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.servlet.Filter;
 
 import org.junit.Before;
@@ -24,30 +26,50 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import ru.excbt.datafuse.nmk.config.jpa.JpaAuditTestConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
+import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
+import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { SpringMvcConfig.class })
+@ContextConfiguration(classes = { SpringMvcConfig.class, JpaAuditTestConfig.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
 
+	private final static long TEST_AUDIT_USER = 1;	
+	
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
+	@PersistenceContext
+	protected EntityManager entityManager;
+	
 	@Autowired
 	private WebApplicationContext wac;
 
 	@Autowired
 	private Filter springSecurityFilterChain;
 
+	@Autowired
+	protected MockAuditorAware auditorAware;	
+	
+	@Autowired
+	protected MockUserService mockUserService;
+	
 	protected MockMvc mockMvc;
 
 	@Before
 	public void setup() {
+		this.auditorAware.setAuditUser(entityManager.getReference(AuditUser.class,
+				TEST_AUDIT_USER));
+		
+		this.mockUserService.setMockUserId(TEST_AUDIT_USER);
+		
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
 				.addFilters(springSecurityFilterChain).build();
 	}

@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
+
 @Entity
 @Table(name = "audit_user")
 public class AuditUser implements Serializable {
@@ -20,9 +22,9 @@ public class AuditUser implements Serializable {
 	private static final long serialVersionUID = 3252857396837049517L;
 
 	@Id
-	@Column(name="id")
-	private long id;	
-	
+	@Column(name = "id")
+	private long id;
+
 	@Column(name = "user_name")
 	private String userName;
 
@@ -61,7 +63,14 @@ public class AuditUser implements Serializable {
 		this._system = srcObject._system;
 	}
 
+	public AuditUser(AuditUserPrincipal srcObject) {
+		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
 
+		this.userName = srcObject.getUserName();
+		this.version = srcObject.getVersion();
+		this.id = srcObject.getId();
+		this._system = srcObject.is_system();
+	}
 
 	public long getId() {
 		return id;
