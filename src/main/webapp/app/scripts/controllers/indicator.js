@@ -222,6 +222,30 @@ console.log(data);
          "header":"ГКал отопления",
          "class":"col-md-1"
         }
-    ];    
+    ];
+        
+    $scope.setBgColor = function(columnName){
+        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
+            return;
+        };
+console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
+console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
+console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
+console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
+        var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName])-$scope.summary.totals[columnName]))*100;
+console.log("Diff ="+diff);        
+        if ((diff >=0)&&(diff <= 3))
+        {
+            return 'green';
+        };
+        if ((diff >3)&&(diff <= 20))
+        {
+            return 'yellow';
+        };
+        if ((diff >20))
+        {
+            return 'red';
+        };
+    };   
         
 }]);

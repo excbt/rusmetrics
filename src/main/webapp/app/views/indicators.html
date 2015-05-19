@@ -1,5 +1,8 @@
 <div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>
-<h2>Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2>
+<div class="col-md-11"><h2>Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
+<div class="col-md-1">
+    <i ng-disabled="data.length==0" class="btn btn-lg glyphicon glyphicon-download" ></i>
+</div>  
 
 <div class="container-fluid">
     <div class="row">   
@@ -49,8 +52,7 @@
                     <label >Всего:</label>
                      <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalIndicators">
                 </div>
-
-
+                
             </div>
     </div>    
 </div>
@@ -94,15 +96,15 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns">
-                    {{summary.totals[column.name]}}
+                <td ng-repeat="column in intotalColumns" ng-style="{'background-color': setBgColor(column.name)}">
+                    {{summary.totals[column.name].toFixed(2)}}
                 </td>
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
                 <td ng-repeat="column in intotalColumns" 
-                    ng-attr-title="{{setTitle(column.name)}}">
-                    {{summary.lastData[column.name] - summary.firstData[column.name]}}
+                    ng-attr-title="{{setTitle(column.name)}} " ng-style="{'background-color': setBgColor(column.name)}">
+                    {{(summary.lastData[column.name] - summary.firstData[column.name]).toFixed(2)}}
                 </td>
             </tr>   
         </table>    
