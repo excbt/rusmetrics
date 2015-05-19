@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaAuditTestConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
@@ -42,7 +43,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
 
-	private final static long TEST_AUDIT_USER = 1;	
+	private final static long TEST_AUDIT_USER = 1;
+	public static final long DEV_SUBSCR_ORG_ID = 728;	
 	
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -61,6 +63,9 @@ public class AnyControllerTest {
 	@Autowired
 	protected MockUserService mockUserService;
 	
+	@Autowired
+	protected MockSubscriberService mockSubscriberService;
+	
 	protected MockMvc mockMvc;
 
 	@Before
@@ -69,6 +74,7 @@ public class AnyControllerTest {
 				TEST_AUDIT_USER));
 		
 		this.mockUserService.setMockUserId(TEST_AUDIT_USER);
+		this.mockSubscriberService.setMockSubscriberId(DEV_SUBSCR_ORG_ID);
 		
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
 				.addFilters(springSecurityFilterChain).build();

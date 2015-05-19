@@ -16,7 +16,9 @@ public class MockSubscriberService {
 	private static final Logger logger = LoggerFactory
 			.getLogger(MockSubscriberService.class);
 
-	private Long mockSubscriberId;
+	public static final long DEV_SUBSCR_ORG_ID = 728;	
+	
+	private Long mockSubscriberId = DEV_SUBSCR_ORG_ID;
 
 	@Autowired
 	private SubscriberService subscriberService;

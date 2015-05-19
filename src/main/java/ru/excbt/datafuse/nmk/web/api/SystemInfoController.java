@@ -7,22 +7,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
-import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 @Controller
 @RequestMapping(value = "/api/systemInfo")
 public class SystemInfoController extends WebApiController {
 
 	@Autowired
-	private FullUserInfoRepository fullUserInfoRepository;
+	private CurrentUserService currentUserService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getFullUserInfo() {
-		FullUserInfo result = currentSubscriberService.getFullUserInfo();
+
+		FullUserInfo result = currentUserService.getFullUserInfo();
 		if (result == null) {
 			return ResponseEntity.notFound().build();
 		}

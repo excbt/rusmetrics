@@ -21,6 +21,9 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 	
+	@Autowired
+	private CurrentUserService currentUserService;
+	
 	@Test
 	public void testSubscriberId() {
 		assertTrue(currentSubscriberService.getSubscriberId() > 0); 
@@ -28,7 +31,7 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 	
 	@Test
 	public void testFullUserInfo() {
-		FullUserInfo result = currentSubscriberService.getFullUserInfo();
+		FullUserInfo result = currentUserService.getFullUserInfo();
 		assertNotNull(result);
 		
 		logger.info("userId = {}", result.getId());
