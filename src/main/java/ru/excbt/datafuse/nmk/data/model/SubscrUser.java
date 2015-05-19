@@ -56,7 +56,7 @@ public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
     inverseJoinColumns=@JoinColumn(name="subscr_role_id"))
 	private Collection<SubscrRole> subscrRoles;	
 
-	@OneToOne
+	@OneToOne (fetch = FetchType.EAGER)
 	@JoinColumn(name="subscriber_id")
 	private Subscriber subscriber; 
 	

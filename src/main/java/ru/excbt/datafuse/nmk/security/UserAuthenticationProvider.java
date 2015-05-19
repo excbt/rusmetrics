@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
@@ -47,6 +48,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication)
 			throws AuthenticationException {
 
+		logger.info("UserAuthenticationProvider.authenticate");
+		
 		String name = authentication.getName();
 		String password = authentication.getCredentials().toString();
 		List<SubscrUser> subscrUsers = subscriberService
@@ -79,7 +82,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 			logger.debug("Subscr User Role: {}", roleName);
 		}
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(name,
+		AuditUserPrincipal auditUserPrincipal = new AuditUserPrincipal(sUser);
+		
+		Authentication auth = new UsernamePasswordAuthenticationToken(auditUserPrincipal,
 				password, grantedAuths);
 		return auth;
 
@@ -115,7 +120,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.ROLE_SUBSCR_USER));
 
-		Authentication auth = new UsernamePasswordAuthenticationToken(userName,
+		AuditUserPrincipal auditUserPrincipal = new AuditUserPrincipal(systemUser);
+		
+		Authentication auth = new UsernamePasswordAuthenticationToken(auditUserPrincipal,
 				password, grantedAuths);
 		
 		logger.debug("LOGIN as a SystemUser. Authentication complete. userName:{}", userName);
