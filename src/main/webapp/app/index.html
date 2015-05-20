@@ -1,6 +1,9 @@
 <!doctype html>
 <html class="no-js">
   <head>
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <meta charset="utf-8">
     <title></title>
     <meta name="description" content="">
@@ -131,6 +134,22 @@
 
                                         href="#/settings/reports/" data-toggle="offcanvas">Отчеты</a>
                                 </div>
+                               
+                                
+                                <!--                                Администрирование-->
+                                <a class="list-group-item noMarginBottom excbt_a_list_group_item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
+
+                                    href="" data-toggle="offcanvas" ng-click="showAdminSettings=true">Администрирование</a>                                                                <!-- Меню администратора -->
+                                <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
+
+                                    <a class="list-group-item excbt_a_list_group_item"
+
+                                       href="#/" data-toggle="offcanvas">Метаданные</a>
+
+                                    <a class="list-group-item excbt_a_list_group_item"
+
+                                        href="#/" data-toggle="offcanvas">Объекты</a>
+                                </div>
 
                             </div>
                         </nav>
@@ -240,6 +259,10 @@
     <script src="vendor_components/angular-daterangepicker.js"></script>
       <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
       <script src="bower_components/ng-idle/angular-idle.min.js"></script>
+      <script src="vendor_components/Chart.js-master/Chart.js"></script>
+      <script src="https://www.google.com/jsapi"></script>
+      <script src="vendor_components/flot/jquery.flot.js"></script>
+      <script src="vendor_components/flot/jquery.flot.pie.js"></script>
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
      
