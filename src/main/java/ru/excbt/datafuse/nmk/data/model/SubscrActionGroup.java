@@ -8,13 +8,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "subscr_action_group")
-public class SubscrActionGroup extends AbstractAuditableEntity<AuditUser, Long> {
+public class SubscrActionGroup extends AbstractAuditableModel {
 
 	/**
 	 * 

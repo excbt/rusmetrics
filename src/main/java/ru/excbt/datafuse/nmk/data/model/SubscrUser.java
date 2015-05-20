@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -14,16 +13,14 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Where;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 
 @Entity
 @Table(name="subscr_user")
-@EntityListeners({AuditingEntityListener.class})
 @Where(clause="id > 0 and deleted = 0")
-public class SubscrUser extends AbstractAuditableEntity<AuditUser, Long> {
+public class SubscrUser extends AbstractAuditableModel {
 
 	/**
 	 * 

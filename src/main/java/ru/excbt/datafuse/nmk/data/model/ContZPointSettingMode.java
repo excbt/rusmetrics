@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
@@ -10,19 +9,15 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "cont_zpoint_setting_mode")
-@EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContZPointSettingMode extends
-		AbstractAuditableEntity<AuditUser, Long> {
+public class ContZPointSettingMode extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -124,10 +119,10 @@ public class ContZPointSettingMode extends
 
 	@Column(name = "wm_delta_t_chk")
 	private boolean wm_deltaT_chk;
-	
+
 	@Column(name = "wm_delta_t_min")
 	private double wm_deltaT_min;
-	
+
 	@Column(name = "wm_delta_t_max")
 	private double wm_deltaT_max;
 
@@ -161,20 +156,18 @@ public class ContZPointSettingMode extends
 	@Column(name = "ov_delta_m_chk")
 	private boolean ov_deltaM_chk;
 
-	//@Column(name = "ov_delta_m_min")
-	//private double ov_deltaM_min;
-	
-	//@Column(name = "wm_delta_m_max")
-	//private double ov_deltaM_max;
+	// @Column(name = "ov_delta_m_min")
+	// private double ov_deltaM_min;
 
-	
-	
+	// @Column(name = "wm_delta_m_max")
+	// private double ov_deltaM_max;
+
 	@Version
 	private int version;
 
-//	@Column(name="cont_zpoint_id", insertable = false, updatable = false)
-//	private Long contZPointId;
-	
+	// @Column(name="cont_zpoint_id", insertable = false, updatable = false)
+	// private Long contZPointId;
+
 	public ContZPoint getContZPoint() {
 		return contZPoint;
 	}
@@ -527,12 +520,12 @@ public class ContZPointSettingMode extends
 		this.ov_deltaM_chk = ov_deltaM_chk;
 	}
 
-//	public Long getContZPointId() {
-//		return contZPointId;
-//	}
-//
-//	public void setContZPointId(Long contZPointId) {
-//		this.contZPointId = contZPointId;
-//	}
+	// public Long getContZPointId() {
+	// return contZPointId;
+	// }
+	//
+	// public void setContZPointId(Long contZPointId) {
+	// this.contZPointId = contZPointId;
+	// }
 
 }

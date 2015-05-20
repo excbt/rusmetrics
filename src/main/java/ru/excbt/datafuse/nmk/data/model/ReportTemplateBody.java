@@ -6,6 +6,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,12 +19,14 @@ import javax.persistence.Version;
 import org.hibernate.annotations.DynamicUpdate;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Auditable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "report_template_body")
 @DynamicUpdate
+@EntityListeners({ AuditingEntityListener.class })
 public class ReportTemplateBody implements Serializable,
 		Auditable<AuditUser, Long> {
 
@@ -50,7 +54,7 @@ public class ReportTemplateBody implements Serializable,
 	@Column(name = "report_template_body_compiled_filename")
 	private String bodyCompiledFilename;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "created_by", updatable = false)
 	@JsonIgnore
 	private AuditUser createdBy;
@@ -60,7 +64,7 @@ public class ReportTemplateBody implements Serializable,
 	@JsonIgnore
 	private Date createdDate;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "last_modified_by")
 	@JsonIgnore
 	private AuditUser lastModifiedBy;
@@ -151,12 +155,12 @@ public class ReportTemplateBody implements Serializable,
 
 	@Override
 	public DateTime getCreatedDate() {
-		return new DateTime(createdDate);
+		return createdDate == null ? null : new DateTime(createdDate);
 	}
 
 	@Override
 	public void setCreatedDate(DateTime creationDate) {
-		this.createdDate = creationDate != null ? creationDate.toDate() : null;
+		this.createdDate = creationDate == null ? null : creationDate.toDate();
 	}
 
 	@Override
@@ -171,12 +175,12 @@ public class ReportTemplateBody implements Serializable,
 
 	@Override
 	public DateTime getLastModifiedDate() {
-		return new DateTime(lastModifiedDate);
+		return lastModifiedDate == null ? null : new DateTime(lastModifiedDate);
 	}
 
 	@Override
 	public void setLastModifiedDate(DateTime lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate != null ? lastModifiedDate
-				.toDate() : null;
+		this.lastModifiedDate = lastModifiedDate == null ? null
+				: lastModifiedDate.toDate();
 	}
 }
