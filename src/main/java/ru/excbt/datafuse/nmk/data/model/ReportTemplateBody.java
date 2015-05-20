@@ -155,12 +155,12 @@ public class ReportTemplateBody implements Serializable,
 
 	@Override
 	public DateTime getCreatedDate() {
-		return new DateTime(createdDate);
+		return createdDate == null ? null : new DateTime(createdDate);
 	}
 
 	@Override
 	public void setCreatedDate(DateTime creationDate) {
-		this.createdDate = creationDate != null ? creationDate.toDate() : null;
+		this.createdDate = creationDate == null ? null : creationDate.toDate();
 	}
 
 	@Override
@@ -175,12 +175,12 @@ public class ReportTemplateBody implements Serializable,
 
 	@Override
 	public DateTime getLastModifiedDate() {
-		return new DateTime(lastModifiedDate);
+		return lastModifiedDate == null ? null : new DateTime(lastModifiedDate);
 	}
 
 	@Override
 	public void setLastModifiedDate(DateTime lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate != null ? lastModifiedDate
-				.toDate() : null;
+		this.lastModifiedDate = lastModifiedDate == null ? null
+				: lastModifiedDate.toDate();
 	}
 }
