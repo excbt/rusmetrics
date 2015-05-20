@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
@@ -17,7 +16,6 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -32,7 +30,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @SQLDelete(sql="UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause="deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EntityListeners({AuditingEntityListener.class})
 public class ReportTemplate extends AbstractAuditableModel {
 
 	/**

@@ -12,12 +12,12 @@ import javax.persistence.Version;
 import org.hibernate.annotations.DynamicUpdate;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name = "report_master_template_body")
 @DynamicUpdate
-public class ReportMasterTemplateBody extends AbstractAuditableEntity<AuditUser, Long> {
+public class ReportMasterTemplateBody extends AbstractAuditableModel {
 
 	/**
 	 * 

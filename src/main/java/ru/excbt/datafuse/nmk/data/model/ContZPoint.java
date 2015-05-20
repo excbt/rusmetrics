@@ -6,7 +6,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -18,17 +17,14 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cont_zpoint")
-@EntityListeners({ AuditingEntityListener.class })
-public class ContZPoint extends AbstractAuditableEntity<AuditUser, Long> {
+public class ContZPoint extends AbstractAuditableModel {
 
 	/**
 	 * 

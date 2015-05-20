@@ -6,7 +6,6 @@ import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -15,18 +14,15 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "u_directory_node")
-@EntityListeners({AuditingEntityListener.class})
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UDirectoryNode extends AbstractAuditableEntity<AuditUser,Long> {
+public class UDirectoryNode extends AbstractAuditableModel {
 
 	/**
 	 * 

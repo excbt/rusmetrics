@@ -5,24 +5,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
-@EntityListeners({ AuditingEntityListener.class })
-public class ContServiceDataHWater extends
-		AbstractAuditableEntity<AuditUser, Long> {
+public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	/**
 	 * 

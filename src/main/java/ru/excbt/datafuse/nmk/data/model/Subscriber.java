@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -13,16 +12,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="subscriber")
-@EntityListeners({AuditingEntityListener.class})
-public class Subscriber extends AbstractAuditableEntity<AuditUser, Long> {
+public class Subscriber extends AbstractAuditableModel {
 
 	/**
 	 * 
