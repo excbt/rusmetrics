@@ -64,8 +64,9 @@ public class JpaConfig {
 		dataSource.setUsername(datasourceUsername);
 		dataSource.setPassword(datasourcePassword);
 		dataSource.setMaxWait(100);
-		dataSource.setMaxActive(10);
-		dataSource.setMaxIdle(3);
+		dataSource.setMaxActive(30);
+		dataSource.setMinIdle(10);
+		dataSource.setMaxIdle(20);
 		return dataSource;
 	}
 
