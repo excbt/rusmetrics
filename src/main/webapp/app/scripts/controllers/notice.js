@@ -227,4 +227,77 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.$watch('reportStart', function (newDates) {
         $scope.getObjects();                              
     }, false);
+    
+    
+    //chart
+    $scope.runChart = function(){
+        var data = [], series = Math.floor(Math.random() * 6) + 3;
+
+//		for (var i = 0; i < series; i++) {
+//			data[i] = {
+//				label: "Series" + (i + 1),
+//				data: Math.floor(Math.random() * 100) + 1
+//			}
+//		};
+        var noticeTypes = [];
+        var noticeCountEveryType = [];
+//        get notice types.
+        for (var i = 0; i< $scope.notices.length; i++){
+            if (noticeTypes.length>0){
+                var flag = false;
+                for (var j = 0; j<noticeTypes.length; j++){
+//console.log("noticeType = "+noticeTypes[j]);
+//console.log("$scope.notices =");
+//console.log($scope.notices[i]);                    
+                    if(noticeTypes[j]===$scope.notices[i].noticeType){
+                        noticeCountEveryType[j] +=1;
+                        flag =true;
+                        continue;
+                    };
+                };
+                if (!flag){
+                    noticeTypes.push($scope.notices[i].noticeType);
+                    noticeCountEveryType.push(1);
+                };
+            }else{
+                noticeTypes.push($scope.notices[i].noticeType);
+                noticeCountEveryType.push(1);
+            };
+        };
+        for (var i = 0; i < noticeTypes.length; i++) {
+			data[i] = {
+				label: noticeTypes[i],
+				data: noticeCountEveryType[i]
+			}
+		};
+        
+        // выводим график
+        $("#noticeChart-area").width(300);
+        $("#noticeChart-area").height(300);
+        $("#chartModal.modal-dialog").width(700);
+        $('#chartModal').modal();
+        
+        $.plot('#noticeChart-area', data,{
+            series: {
+                pie: {
+                    show: true,
+                    label :{
+                        show : false,
+                        formatter: labelFormatter
+                    }
+                }
+            },
+            legend: {
+                show: true,
+                labelFormatter: labelFormatter,
+                position: "ne",
+                margin: [-400, 0]
+            }
+        });
+        
+    };
+    
+    function labelFormatter(label, series) {
+		return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label + " (" + Math.round(series.percent) + "%)</div>";
+	}
 });

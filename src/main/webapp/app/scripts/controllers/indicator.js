@@ -196,7 +196,7 @@ console.log(data);
             return;
         };
         return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+")" +"\n"+
+            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
                 "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
             (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
     }; 
@@ -232,20 +232,30 @@ console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[c
 console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
 console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
 console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
-        var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName])-$scope.summary.totals[columnName]))*100;
-console.log("Diff ="+diff);        
-        if ((diff >=0)&&(diff <= 3))
+        var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName]).toFixed(2)-$scope.summary.totals[columnName].toFixed(2)));
+console.log("Diff ="+diff); 
+//        diff = diff.toFixed(2);
+        if ((diff >=0)&&(diff < 0.005))
         {
-            return 'green';
+            return '#66CC00';
         };
-        if ((diff >3)&&(diff <= 20))
+        if ((diff >=0.005)&&(diff <= 1))
         {
             return 'yellow';
         };
-        if ((diff >20))
+        if ((diff >1))
         {
             return 'red';
         };
-    };   
+    }; 
+    
+    $scope.toggleDetail = function(object){
+        object.detail = !object.detail;
+        return object.detail;
+    };
+        
+    $scope.saveIndicatorsToFile = function(){
+        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
+    };    
         
 }]);
