@@ -2,18 +2,14 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name="subscr_role")
-@EntityListeners({AuditingEntityListener.class})
-public class SubscrRole extends AbstractAuditableEntity<AuditUser, Long> {
+public class SubscrRole extends AbstractAuditableModel {
 
 	/**
 	 * 

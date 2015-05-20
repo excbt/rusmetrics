@@ -27,7 +27,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tariff_plan")
-//@EntityListeners({AuditingEntityListener.class})
 public class TariffPlan extends AbstractAuditableModel  {
 
 	/**
