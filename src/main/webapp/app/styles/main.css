@@ -196,6 +196,11 @@ input[type="radio"]{
     padding-bottom: 10px;
 }
 
+.paddingBottom40 {
+    padding-bottom: 40px;
+}
+
+
 .paddingTop10 {
     padding-top: 10px;
 }
@@ -376,6 +381,7 @@ tr > .active{
 
 .excbt_a_list_group_item{
     word-wrap: break-word;
+    padding-right: 10px;
 }
 
 .modalWindow_wide {
@@ -486,7 +492,7 @@ a.list-group-item:focus {
 }
 
 .excbt_inputDigitalData-sm {
-    width: 40px;
+    width: 50px;
     display: inline;
 }
 

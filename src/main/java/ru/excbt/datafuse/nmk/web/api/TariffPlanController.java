@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
@@ -34,6 +35,13 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 @RestController
 @RequestMapping(value = "/api/subscr/tariff")
@@ -141,7 +149,8 @@ public class TariffPlanController extends WebApiController {
 		}
 
 		if (tariffPlan.getTariffOptionKey() == null) {
-			return ResponseEntity.badRequest().body("Invalid TariffOptionKey");
+			return ResponseEntity.badRequest().body(
+					ApiResult.validationError("Invalid TariffOptionKey"));
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
@@ -149,7 +158,7 @@ public class TariffPlanController extends WebApiController {
 					.findOne(rsoOrganizationId);
 			if (rso == null) {
 				return ResponseEntity.badRequest().body(
-						"Invalid rsoOrganizationId");
+						ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
 			tariffPlan.setRso(rso);
 		}
@@ -157,7 +166,8 @@ public class TariffPlanController extends WebApiController {
 		if (tariffTypeId != null && tariffTypeId > 0) {
 			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
 			if (tt == null) {
-				return ResponseEntity.badRequest().body("Invalid tariffTypeId");
+				return ResponseEntity.badRequest().body(
+						ApiResult.validationError("Invalid tariffTypeId"));
 			}
 
 			tariffPlan.setTariffType(tt);
@@ -169,27 +179,24 @@ public class TariffPlanController extends WebApiController {
 				ContObject co = contObjectService.findOne(contObjectId);
 				if (co == null) {
 					return ResponseEntity.badRequest().body(
-							"Invalid ContObjectId");
+							ApiResult.validationError("Invalid ContObjectId"));
 				}
 				checkNotNull(tariffPlan.getContObjects());
 				tariffPlan.getContObjects().add(co);
 			}
 		}
 
-		TariffPlan resultEntity = null;
+		ApiAction action = new AbstractEntityApiAction<TariffPlan>(tariffPlan) {
 
-		try {
-			resultEntity = tariffPlanService.updateOne(tariffPlan);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during update entity TariffPlan (id={}): {}",
-					tariffPlan.getId(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+			@Override
+			public void process() {
+				setResultEntity(tariffPlanService.updateOne(entity));
 
-		return ResponseEntity.accepted().body(resultEntity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 	/**
@@ -246,23 +253,23 @@ public class TariffPlanController extends WebApiController {
 
 		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
 
-		TariffPlan resultEntity = null;
+		ApiActionLocation action = new AbstractEntityApiActionLocation<TariffPlan, Long>(
+				tariffPlan, request) {
 
-		try {
-			resultEntity = tariffPlanService.createOne(tariffPlan);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during create entity TariffPlan (id={}): {}",
-					tariffPlan.getId(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+			@Override
+			public void process() {
+				setResultEntity(tariffPlanService.createOne(entity));
+			}
 
-		URI location = URI.create(request.getRequestURI() + "/"
-				+ resultEntity.getId());
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
 
-		return ResponseEntity.created(location).build();
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+
 	}
 
 	/**
@@ -272,19 +279,19 @@ public class TariffPlanController extends WebApiController {
 	 */
 	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneTariff(
-			@PathVariable("tariffPlanId") long tariffPlanId) {
-		try {
-			tariffPlanService.deleteOne(tariffPlanId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during delete entity TariffPlan (id={}): {}",
-					tariffPlanId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+			@PathVariable("tariffPlanId") final long tariffPlanId) {
 
-		return ResponseEntity.accepted().build();
+		ApiAction action = new AbstractApiAction() {
+
+			@Override
+			public void process() {
+				tariffPlanService.deleteOne(tariffPlanId);
+
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+
 	}
 
 	/**
@@ -297,8 +304,8 @@ public class TariffPlanController extends WebApiController {
 			@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService
-				.selectTariffPlanContObjects(
-				tariffPlanId, currentSubscriberService.getSubscriberId());
+				.selectTariffPlanContObjects(tariffPlanId,
+						currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
 	}

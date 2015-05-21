@@ -25,10 +25,14 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryNodeController {
+public class UDirectoryNodeController extends WebApiController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UDirectoryNodeController.class);
@@ -44,18 +48,19 @@ public class UDirectoryNodeController {
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll(
 			@PathVariable("directoryId") long directoryId) {
 
 		logger.trace("getAll DirectoryNode ID {}", directoryId);
-		
+
 		UDirectory directory = directoryService.findOne(directoryId);
 		if (directory == null) {
 			return ResponseEntity.notFound().build();
 		}
-		
-		logger.trace("getAll DirectoryNode ID {}. getDirectoryNode", directoryId);
+
+		logger.trace("getAll DirectoryNode ID {}. getDirectoryNode",
+				directoryId);
 		UDirectoryNode directoryNode = directory.getDirectoryNode();
 
 		if (directoryNode == null) {
@@ -72,65 +77,71 @@ public class UDirectoryNodeController {
 	/**
 	 * 
 	 * @param directoryId
-	 * @param entity
+	 * @param uDirectoryNode
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(
-			@PathVariable("directoryId") long directoryId,
-			@PathVariable("id") long id, @RequestBody UDirectoryNode entity) {
+			@PathVariable("directoryId") final long directoryId,
+			@PathVariable("id") long id,
+			@RequestBody UDirectoryNode uDirectoryNode) {
 
-		checkNotNull(entity, "UDirectoryNode is empty");
+		checkNotNull(uDirectoryNode, "UDirectoryNode is empty");
 		checkArgument(directoryId > 0, "directoryId is not set");
 
-		if (entity.getId() != id) {
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(String.format("Can't change root node for Directory (id=%d)", directoryId));
-		}
-		
-		try {
-			directoryNodeService.saveWithDictionary(entity, directoryId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during update entity UDirectoryNode (id={}): {}", id, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+		if (uDirectoryNode.getId() != id) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
+					String.format(
+							"Can't change root node for Directory (id=%d)",
+							directoryId));
 		}
 
-		return ResponseEntity.accepted().build();
+		ApiAction action = new AbstractEntityApiAction<UDirectoryNode>(
+				uDirectoryNode) {
+
+			@Override
+			public void process() {
+				setResultEntity(directoryNodeService.saveWithDictionary(entity,
+						directoryId));
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 	/**
 	 * 
 	 * @param directoryId
-	 * @param entity
+	 * @param uDirectoryNode
 	 * @return
 	 */
-	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = WebApiConst.APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{directoryId}/node", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(
-			@PathVariable("directoryId") long directoryId,
-			@RequestBody UDirectoryNode entity, HttpServletRequest request) {
+			@PathVariable("directoryId") final long directoryId,
+			@RequestBody UDirectoryNode uDirectoryNode,
+			HttpServletRequest request) {
 
-		checkNotNull(entity, "UDirectoryNode is empty");
+		checkNotNull(uDirectoryNode, "UDirectoryNode is empty");
 		checkArgument(directoryId > 0, "directoryId is not set");
 
-		UDirectoryNode resultEntity = null;
-		try {
-			resultEntity = directoryNodeService.saveWithDictionary(entity, directoryId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during create entity UDirectoryNode (directoryId={}): {}", directoryId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectoryNode, Long>(
+				uDirectoryNode, request) {
 
-		
-		URI location = URI.create(request.getRequestURI() + "/"
-				+ resultEntity.getId());
-		return ResponseEntity.created(location).body(resultEntity);
+			@Override
+			public void process() {
+				setResultEntity(directoryNodeService.saveWithDictionary(
+						entity, directoryId));
+			}
 
+			@Override
+			protected Long getLocationId() {
+
+				return getResultEntity().getId();
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 }

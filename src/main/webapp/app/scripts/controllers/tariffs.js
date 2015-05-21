@@ -67,7 +67,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     };
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
+        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
 
     $scope.addObject = function () {
@@ -114,17 +114,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     $scope.saveObject = function(){   
         $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
-        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || $scope.currentObject.startDate;
-        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;
-//console.log("$scope.currentObject.endDate = "+$scope.currentObject.endDate);  
-//console.log("$scope.endDateFormat = "+$scope.endDateFormat);  
-//console.log("$scope.currentObject.startDate = "+$scope.currentObject.startDate);  
-//console.log("$scope.startDateFormat = "+$scope.startDateFormat);   
-//console.log("$scope.endDateFormat.getUTCMilliseconds() = "+$scope.currentObject.endDate);           
-//console.log("In saving...");
-//        
-//console.log("$scope.currentObject.tariffOptionKey = "+$scope.currentObject.tariffOptionKey);
-        
+        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
+        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
         var tmp = $scope.selectedObjects.map(function(elem){
             return elem.id;
         });
@@ -141,7 +132,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $('#editTariffModal').modal();
     };
     
-    $scope.addTariff = function(){
+    $scope.addTariff = function(){       
         $scope.availableObjects = [];
         $scope.selectedObjects = [];
         $scope.currentObject = {};
@@ -179,7 +170,9 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         return !(($scope.startDateFormat==null) ||
         ($scope.currentObject.tariffOption.keyname==null) ||
         ($scope.currentObject.rso.id==null) ||
-        ($scope.currentObject.tariffType.id==null));
+        ($scope.currentObject.tariffType.id==null))
+        &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue)
+        &&$scope.checkDateIntervalWithRightNull($scope.startDateFormat, $scope.endDateFormat);
     };
     
     
@@ -258,6 +251,48 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
+    };
+    
+            //checkers            
+    $scope.checkEmptyNullValue = function(numvalue){                    
+        var result = false;
+        if ((numvalue === "") || (numvalue==null)){
+            result = true;
+            return result;
+        }
+        return result;
+    };
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    $scope.checkNumericValue = function(numvalue){ 
+        var result = true;
+        if ($scope.checkEmptyNullValue(numvalue)){
+            return result;
+        }
+        if (!isNumeric(numvalue)){
+            result = false;
+            return result;
+        };
+        return result;
+    };
+
+    $scope.checkPositiveNumberValue = function(numvalue){                    
+        var result = true;
+        result = $scope.checkNumericValue(numvalue)
+        if (!result){
+            //if numvalue is not number -> return false
+            return result;
+        }
+        result = parseInt(numvalue)>=0?true:false;
+        return result;
+    };
+    
+    $scope.checkDateIntervalWithRightNull = function(left, right){     
+        if (right == null){return true;};
+        return right>=left;
     };
     
 }]);

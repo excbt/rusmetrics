@@ -196,7 +196,7 @@ console.log(data);
             return;
         };
         return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+")" +"\n"+
+            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
                 "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
             (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
     }; 
@@ -222,6 +222,92 @@ console.log(data);
          "header":"ГКал отопления",
          "class":"col-md-1"
         }
-    ];    
+    ];
+        
+    $scope.setBgColor = function(columnName){
+        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
+            return;
+        };
+//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
+//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
+//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
+//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
+        var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName]).toFixed(2)-$scope.summary.totals[columnName].toFixed(2)));
+//console.log("Diff ="+diff); 
+//        diff = diff.toFixed(2);
+        if ((diff >=0)&&(diff < 0.005))
+        {
+            return '#66CC00';
+        };
+        if ((diff >=0.005)&&(diff <= 1))
+        {
+            return 'yellow';
+        };
+        if ((diff >1))
+        {
+            return 'red';
+        };
+    }; 
+    
+    $scope.toggleDetail = function(object){
+        object.detail = !object.detail;
+        return object.detail;
+    };
+        
+    $scope.saveIndicatorsToFile = function(){
+        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
+    }; 
+        
+     //chart
+    $scope.runChart = function(){
+        var data = [];
+        for (var i=0; i<$scope.data.length; i++){
+            data.push([$scope.data[i].dataDate, $scope.data[i].h_delta]);
+//            data.push([i, $scope.data[i].h_delta]);
+        };
+//        for (var i = 0; i < 14; i += 0.5) {
+//			data.push([i, Math.sin(i)]);
+//		}
+//console.log("data before====================");
+//console.log(data);    
+//console.log("----------------------------------");        
+        for(var i = 0; i < data.length; i++){
+//console.log(Date.parse(data[i][0]));            
+//            data[i][0] = Date.parse(data[i][0]);
+//            moment(el.dataDate).format("DD.MM.YY HH:mm");
+console.log("====================");              
+console.log(moment(data[i][0], "DD.MM.YY HH:mm"));   
+console.log(moment.utc(data[i][0]));              
+console.log("====================");              
+            data[i][0] = moment.utc(data[i][0]);//moment(data[i][0], "DD.MM.YY HH:mm");
+        };
+//console.log("data after====================");        
+//console.log(data);
+//console.log("====================");                
+        // свойства графика
+        var plotConf = {
+         series: {
+           lines: {
+             show: true,
+             lineWidth: 2
+           }
+         },
+         xaxis: {
+           mode: "time",
+           timeformat: "%d.%m.%y %h:%M",
+         }
+        };
+        var plotData = [];
+        plotData.push(data);
+        // выводим график
+        $("#indicatorChart-area").width(600);
+        $("#indicatorChart-area").height(300);
+       // $("#chartModal.modal-dialog").width(700);
+        $('#chartModal').modal();
+        
+        $.plot('#indicatorChart-area', plotData, plotConf);
+        
+    };
+      
         
 }]);

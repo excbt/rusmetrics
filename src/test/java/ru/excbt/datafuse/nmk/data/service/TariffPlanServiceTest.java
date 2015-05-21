@@ -10,7 +10,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.JpaSupportTest;
+import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -46,6 +46,10 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 				.selectTariffPlanAvailableContObjects(tp.getId(),
 						currentSubscriberService.getSubscriberId());
 
+		if (contObjects.size() == 0) {
+			return;
+		}
+		
 		assertTrue(contObjects.size() > 0);
 
 		tp.getContObjects().add(contObjects.get(0));

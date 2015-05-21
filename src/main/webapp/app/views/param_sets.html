@@ -322,6 +322,7 @@
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
                                             <div ng-disabled="isDisabled()">
+                                                <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
                                                 <div class="col-sm-1 paddingTop10"><label>c</label></div>
                                                 <div class="col-sm-5">
                                                     <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetStartDateFormat"> 
@@ -330,6 +331,7 @@
                                                 <div class="col-sm-5">
                                                     <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetEndDateFormat">
                                                 </div>
+                                                </span>    
                                             </div>    
 
                                         </td>
@@ -346,6 +348,7 @@
                                         <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
+                                                <option>XLS</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -359,7 +362,7 @@
                                         </td>
                                         <td class="textAlign_left col-sm-9">
 
-                                            <input class="form-control input-sm marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+                                            <input class="form-control  marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
                                         </td>
 
                                     </tr>
@@ -414,10 +417,10 @@
 				<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
-							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs"
+							<input ng-disabled="isDisabled()||!checkRequiredFields();" type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
-                                ng-disabled="(currentObject.reportTemplate.id==null)||(currentObject.reportPeriodKey==null)"  data-target="#main_properties" data-toggle="tab" />
+                                data-target="#main_properties" data-toggle="tab" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
@@ -449,7 +452,7 @@
 		</div>
 		<div class="modal-body">
 			<form name="moveForm" novalidate>
-				<p>
+				<p class="paddingLeft10">
 					<label class="text-warning"> Вы хотите переместить в архив  
 					</label> 
 					<label class="text-primary">{{currentObject.name}}</label> 

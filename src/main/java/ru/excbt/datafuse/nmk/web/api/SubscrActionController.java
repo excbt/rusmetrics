@@ -25,11 +25,11 @@ import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractUserAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractUserActionResult;
-import ru.excbt.datafuse.nmk.web.api.support.AbtractUserActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.UserAction;
-import ru.excbt.datafuse.nmk.web.api.support.UserActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 
 @Controller
 @RequestMapping("/api/subscr/subscrAction")
@@ -102,7 +102,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionIds = subscrUserIds;
 		
-		UserAction userAction = new AbstractUserActionResult<SubscrActionGroup>(
+		ApiAction action = new AbstractEntityApiAction<SubscrActionGroup>(
 				entity) {
 
 			@Override
@@ -112,8 +112,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceUserActionUpdate(userAction,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
 
@@ -135,7 +134,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionIds = subscrUserIds;
 		
-		UserActionLocation userAction = new AbtractUserActionLocation<SubscrActionGroup, Long>(
+		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrActionGroup, Long>(
 				entity, request) {
 
 			@Override
@@ -150,7 +149,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceUserActionCreate(userAction);
+		return WebApiHelper.processResponceApiActionCreate(action);
 
 	}
 
@@ -162,14 +161,14 @@ public class SubscrActionController extends WebApiController {
 	 */
 	@RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneGroup(@PathVariable("id") final long id) {
-		UserAction userAction = new AbstractUserAction() {
+		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
 				subscrActionGroupService.deleteOne(id);
 			}
 		};
 		return WebApiHelper
-				.processResponceUserAction(userAction, HttpStatus.OK);
+				.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -224,7 +223,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		UserAction userAction = new AbstractUserActionResult<SubscrActionUser>(
+		ApiAction action = new AbstractEntityApiAction<SubscrActionUser>(
 				entity) {
 
 			@Override
@@ -235,8 +234,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceUserActionUpdate(userAction,
-				HttpStatus.ACCEPTED);
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -257,7 +255,7 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		UserActionLocation userAction = new AbtractUserActionLocation<SubscrActionUser, Long>(
+		ApiActionLocation userAction = new AbstractEntityApiActionLocation<SubscrActionUser, Long>(
 				entity, request) {
 
 			@Override
@@ -273,7 +271,7 @@ public class SubscrActionController extends WebApiController {
 
 		};
 
-		return WebApiHelper.processResponceUserActionCreate(userAction);
+		return WebApiHelper.processResponceApiActionCreate(userAction);
 
 	}
 
@@ -286,7 +284,7 @@ public class SubscrActionController extends WebApiController {
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneUser(@PathVariable("id") long id) {
 		final long finalId = id;
-		UserAction userAction = new AbstractUserAction() {
+		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
 				subscrActionUserService.deleteOne(finalId);
@@ -294,7 +292,7 @@ public class SubscrActionController extends WebApiController {
 		};
 
 		return WebApiHelper
-				.processResponceUserAction(userAction, HttpStatus.OK);
+				.processResponceApiActionDelete(action);
 	}
 
 }

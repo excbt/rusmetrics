@@ -96,7 +96,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-			resultActionsAll.andExpect(status().isAccepted());
+			resultActionsAll.andExpect(status().isOk());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,7 +138,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-			resultActionsAll.andExpect(status().isAccepted());
+			resultActionsAll.andExpect(status().isOk());
 
 		} catch (Exception e) {
 			e.printStackTrace();

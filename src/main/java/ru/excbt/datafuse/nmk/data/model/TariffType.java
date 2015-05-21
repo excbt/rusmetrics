@@ -2,16 +2,12 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
 import javax.persistence.Table;
-
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name = "tariff_type")
-@EntityListeners({ AuditingEntityListener.class })
 public class TariffType extends AbstractAuditableModel {
 
 	/**

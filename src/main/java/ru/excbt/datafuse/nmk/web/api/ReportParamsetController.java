@@ -29,10 +29,18 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 @Controller
 @RequestMapping(value = "/api/reportParamset")
@@ -222,8 +230,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	private ResponseEntity<?> updateInternal(Long reportParamsetId,
-			ReportParamset reportParamset, Long[] contObjectIds) {
+	private ResponseEntity<?> updateInternal(final Long reportParamsetId,
+			final ReportParamset reportParamset, final Long[] contObjectIds) {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -232,20 +240,17 @@ public class ReportParamsetController extends WebApiController {
 
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ReportParamset resultEntity = null;
-		try {
-			resultEntity = reportParamsetService.updateOne(reportParamset,
-					contObjectIds);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save entity ReportParamset (id={}): {}",
-					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiAction action = new AbstractEntityApiAction<ReportParamset>(
+				reportParamset) {
+			@Override
+			public void process() {
+				setResultEntity(reportParamsetService.updateOne(entity,
+						contObjectIds));
+			}
+		};
 
-		return ResponseEntity.accepted().body(resultEntity);
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 	/**
@@ -255,8 +260,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	private ResponseEntity<?> createInternal(Long reportTemplateId,
-			ReportParamset reportParamset, Long[] contObjectIds,
+	private ResponseEntity<?> createInternal(final Long reportTemplateId,
+			final ReportParamset reportParamset, final Long[] contObjectIds,
 			HttpServletRequest request) {
 
 		checkNotNull(reportTemplateId);
@@ -274,22 +279,24 @@ public class ReportParamsetController extends WebApiController {
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 		reportParamset.set_active(true);
 
-		ReportParamset resultEntity = null;
-		try {
-			resultEntity = reportParamsetService.createOne(reportParamset,
-					contObjectIds);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during save new entity ReportParamset: {}", e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
-		}
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(
+				reportParamset, request) {
 
-		URI location = URI.create(request.getRequestURI() + "/"
-				+ +resultEntity.getId());
+			@Override
+			public void process() {
+				setResultEntity(reportParamsetService.createOne(reportParamset,
+						contObjectIds));
+			}
 
-		return ResponseEntity.created(location).body(resultEntity);
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+
 	}
 
 	/**
@@ -588,30 +595,27 @@ public class ReportParamsetController extends WebApiController {
 	 */
 	@RequestMapping(value = "/archive/move", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> moveToArchive(
-			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId) {
+			@RequestParam(value = "reportParamsetId", required = true) final Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
 
-		ReportParamset resultEntity = null;
+		ApiAction action = new AbstractEntityApiAction<ReportParamset>() {
+			@Override
+			public void process() {
+				setResultEntity(reportParamsetService
+						.moveToArchive(reportParamsetId));
+			}
+		};
 
-		try {
-			resultEntity = reportParamsetService
-					.moveToArchive(reportParamsetId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during move to archive entity ReportParamset (id={}): {}",
-					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+		ResponseEntity<?> responeResult = WebApiHelper
+				.processResponceApiActionOkBody(action);
+
+		if (action.getResult() == null) {
+			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
+					.body(ApiResult.build(ApiResultCode.ERR_UNCKNOWN));
 		}
 
-		if (resultEntity == null) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
-		}
-
-		return ResponseEntity.accepted().body(resultEntity);
+		return responeResult;
 	}
 
 	/**
@@ -661,8 +665,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> deleteOneCommerce(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		deleteInternal(reportParamsetId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
@@ -675,8 +678,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> deleteOneConsT1(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		deleteInternal(reportParamsetId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
@@ -689,8 +691,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> deleteOneConsT2(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		deleteInternal(reportParamsetId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
@@ -703,8 +704,7 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> deleteOneCons(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		deleteInternal(reportParamsetId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
@@ -717,16 +717,23 @@ public class ReportParamsetController extends WebApiController {
 	public ResponseEntity<?> deleteOneEvent(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		deleteInternal(reportParamsetId);
-		return ResponseEntity.accepted().build();
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
 	 * 
-	 * @param reportTemplateId
+	 * @param id
 	 */
-	private void deleteInternal(Long reportTemplateId) {
-		reportParamsetService.deleteOne(reportTemplateId);
+	private ResponseEntity<?> deleteInternal(final Long id) {
+
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				reportParamsetService.deleteOne(id);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }

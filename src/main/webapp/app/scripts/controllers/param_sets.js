@@ -81,13 +81,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
 
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
+        notificationFactory.errorInfo(e.statusText,e.data.description);
     };
     
     $scope.deleteObject = function (object) {
         var table = $scope.crudTableName +"/archive"+ $scope.currentReportType.suffix;
-console.log(table);        
-console.log(object[$scope.extraProps.idColumnName]);        
+//console.log(table);        
+//console.log(object[$scope.extraProps.idColumnName]);        
         crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
     };
        
@@ -146,8 +146,8 @@ console.log(object[$scope.extraProps.idColumnName]);
             object.id = null;          
             object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;  
-console.log("$scope.createByTemplate_flag"); 
-console.log(tmp);            
+//console.log("$scope.createByTemplate_flag"); 
+//console.log(tmp);            
             crudGridDataFactory(table).save({contObjectIds: tmp}, object, successCallback, errorCallback);
             return;
         };
@@ -371,6 +371,28 @@ console.log(tmp);
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
         return $scope.currentObject.common || !$scope.currentObject._active;
+    };
+    
+    //checkers
+    $scope.checkDateInterval = function(left, right){
+        if ((left==null)|| (right==null)){return false;};
+        return right>=left;
+    };
+    
+    $scope.checkRequiredFields = function(){              
+        if (!($scope.currentObject.hasOwnProperty('reportPeriodKey'))||!($scope.currentObject.hasOwnProperty('reportTemplate'))){
+            return false;
+        };  
+        
+        var intervalValidate_flag = true;
+        if ($scope.currentSign==null){
+            intervalValidate_flag = $scope.checkDateInterval($scope.paramsetStartDateFormat, $scope.paramsetEndDateFormat);
+        };
+        
+        return !((($scope.currentObject.reportPeriodKey==null) ||   
+        ($scope.currentObject.reportTemplate.id==null)))
+        &&intervalValidate_flag
+        ;
     };
     
 //    $scope.$watch('currentObject',function(data){

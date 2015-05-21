@@ -3,6 +3,7 @@ var app = angular.module('portalNMK');
 
 app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
     
+    $scope.isPositionSystemChanged = false;
     $scope.active_tab_active_templates = true;
     $scope.currentObject = {};
     $scope.createByTemplate_flag = false;
@@ -47,7 +48,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
     ];
    
-    var successCallback = function (e) {
+    var successCallback = function (e) {      
         notificationFactory.success();
         $('#editTemplateModal').modal('hide');
         $('#moveToArchiveModal').modal('hide');
@@ -67,8 +68,8 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         
     };
 
-    var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);       
+    var errorCallback = function (e) {      
+        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
     $scope.selectToDelete = function(parent, object){
@@ -133,9 +134,13 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         result.reportTemplate._active = true;
         result.reportColumnSettings = {};
         result.reportColumnSettings.allTsList = $scope.systems;
-        result.reportColumnSettings.ts1List = $scope.system1.defineColumns;
-        result.reportColumnSettings.ts2List = $scope.system2.defineColumns;
-               
+        if ($scope.isPositionSystemChanged){
+            result.reportColumnSettings.ts1List = $scope.system2.defineColumns;
+            result.reportColumnSettings.ts2List = $scope.system1.defineColumns;
+        }else{
+            result.reportColumnSettings.ts1List = $scope.system1.defineColumns;
+            result.reportColumnSettings.ts2List = $scope.system2.defineColumns;
+        };             
         var table = "../api/reportWizard"+$scope.currentReportType.suffix;
         crudGridDataFactory(table).save(result, successCallback, errorCallback);        
     };
@@ -257,6 +262,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     };
     
     $scope.changeSystemPosition = function(){
+        $scope.isPositionSystemChanged = !$scope.isPositionSystemChanged;
        var tmp = $scope.systems[0]; 
         $scope.systems[0] = $scope.systems[1]; 
         $scope.systems[1] = tmp; 

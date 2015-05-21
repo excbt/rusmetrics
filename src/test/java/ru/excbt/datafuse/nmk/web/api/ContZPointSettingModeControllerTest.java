@@ -93,7 +93,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 
 				resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-				resultActionsAll.andExpect(status().isAccepted());
+				resultActionsAll.andExpect(status().isOk());
 
 			} catch (Exception e) {
 				e.printStackTrace();

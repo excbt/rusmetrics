@@ -1,5 +1,9 @@
 <div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>
-<h2>Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2>
+<div class="col-md-11"><h2>Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
+<div class="col-md-1">
+    <i ng-disabled="data.length==0" class="btn btn-lg glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
+    <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
+</div>  
 
 <div class="container-fluid">
     <div class="row">   
@@ -49,41 +53,40 @@
                     <label >Всего:</label>
                      <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalIndicators">
                 </div>
-
-
+                
             </div>
-    </div>    
-</div>
-    
-<div >
-    <table class="excbt_table_oneLineData" ng-class="tableDef.tableClass">
-        <tr ng-class="tableDef.headerClassTR">
-            <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
-                {{column.header}}
-            </th>
-            
-        </tr>
-        <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-            <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                {{indicator[column.fieldName]}}
-            </td>
-        </tr>
-    </table>
-    <div class="col-md-9">
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+        </div>    
     </div>
+    
+    <div class="row">
+        <table class="excbt_table_oneLineData" ng-class="tableDef.tableClass">
+            <tr ng-class="tableDef.headerClassTR">
+                <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
+                    {{column.header}}
+                </th>
 
-<!--
-    <div class="col-md-3 noPadding">
-             <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                 <input type="text"  class="form-control"  ng-model="indicatorsfilter">
-            </div>     
-    </div> 
--->
-</div>    
+            </tr>
+            <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
+                <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                    {{indicator[column.fieldName]}}
+                </td>
+            </tr>
+        </table>
+        <div class="col-md-9">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+        </div>
+
+    <!--
+        <div class="col-md-3 noPadding">
+                 <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+                     <input type="text"  class="form-control"  ng-model="indicatorsfilter">
+                </div>     
+        </div> 
+    -->
+    </div>    
 <!--    In total-->
-    <div ng-show="data.length >0">
+    <div class="row" ng-show="data.length >0">
         <table class="crud-grid table table-lighter table-condensed table-hover excbt_tableIndicators">
             <tr class="info">
                 <th class="col-md-1">
@@ -94,16 +97,60 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns">
+                <td ng-repeat="column in intotalColumns" ng-style="{'background-color': setBgColor(column.name)}">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
-                <td ng-repeat="column in intotalColumns" 
-                    ng-attr-title="{{setTitle(column.name)}}">
-                    {{summary.lastData[column.name] - summary.firstData[column.name]}}
+                <td ng-repeat="column in intotalColumns" ng-click="toggleDetail(summary.lastData)"
+                    ng-attr-title="{{setTitle(column.name)}} " ng-style="{'background-color': setBgColor(column.name)}">
+                    {{(summary.lastData[column.name] - summary.firstData[column.name])}}
+                    <div ng-show="summary.lastData.detail">
+                        <div>Начальное значение = {{summary.firstData[column.name]}}</div>
+                        <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>
+                        <div>Конечное значение = {{summary.lastData[column.name]}} </div>
+                        <div>(Дата = {{summary.lastData['dataDate'] | date: 'dd.MM.yyyy HH:mm'}});</div>
+                    </div>
                 </td>
             </tr>   
         </table>    
     </div>    
+</div>
+
+<!-- Окно с графиком-->
+<div id="chartModal" class="modal fade" role="dialog"
+	aria-labelledby="chartLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content modalWindow_moreWide">
+
+		<div class="modal-header">
+			<h3 id="showNoticeLabel">
+				График ГКал. 
+			</h3>
+		</div>
+		<div class="modal-body">
+            <div id="indicatorChart" class="paddingBottom40">
+                <div id="indicatorChart-area"></div>
+		  </div>
+ 
+
+        </div>     
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+
+
+						<div class="col-xs-offset-2 col-md-3 pull-right">
+							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
+								ng-click="exit();">
+								Ок
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+
+	</div>
+</div>

@@ -184,7 +184,8 @@
                                         </td>
                                         <td class="textAlign_left col-sm-9">  
 
-                                                        <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                            <span class="form-group" ng-class="{'has-error':!checkDateIntervalWithRightNull(startDateFormat, endDateFormat)}">
+                                            <div class="col-sm-1 paddingTop10"><label>c</label></div>
                                                         <div class="col-sm-5 noPadding">
                                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
                                                                 <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
@@ -194,13 +195,15 @@
                                                         <div class="col-sm-5 paddingLeft10">
                                                             <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
                                                         </div>
+                                            </span>                
+                                    
                                         </td>                         
                                     </tr>                           
                                     <tr>
                                         <td class="col-sm-3"><label for="inputValue">Стоимость</label>
                                         </td>
                                         <td class="col-sm-9 textAlign_left">
-                                            <div class="col-sm-3 noPadding">
+                                            <div class="col-sm-3 noPadding form-group" ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
                                                 <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
                                             </div>
                                             <div class="col-sm-9 paddingTop10">
@@ -259,7 +262,7 @@
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
-								ng-click="exit('#currentObject');clearTariffDateSet()">
+								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
 						</div>

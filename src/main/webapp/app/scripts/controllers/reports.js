@@ -40,7 +40,7 @@ app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFact
     };
 
     var errorCallback = function (e) {
-        notificationFactory.error(e.data.ExceptionMessage);
+        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
     $scope.getParamsets = function(table, type){
