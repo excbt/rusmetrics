@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration scan="true" scanPeriod="30 seconds">
+<configuration>
 
 
 	<!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under the 
 		key "bySecond" into the logger context. This value will be available to all 
 		subsequent configuration elements. -->
 
-	<timestamp key="bySecond" datePattern="yyyy-MM-dd_HHmmss" />
+    <timestamp key="bySecond" datePattern="yyyy-MM-dd_HHmmss" />
 
-	<appender name="file" class="ch.qos.logback.core.FileAppender">
-		<!-- use the previously created timestamp to create a uniquely named log 
-			file -->
-		<file>log/log-${bySecond}.txt</file>
-		<encoder>
+	<appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base:-.}/logs/nmk-logFile-${bySecond}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>nmk-logFile.%d{yyyy-MM-dd}.log</FileNamePattern>
+		</rollingPolicy>
+ 
+		<layout class="ch.qos.logback.classic.PatternLayout">
 			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
 			</pattern>
-		</encoder>
+		</layout>
 	</appender>
-
+	
 
 	<!-- To enable JMX Management -->
 	<!--<jmxConfigurator /> -->
