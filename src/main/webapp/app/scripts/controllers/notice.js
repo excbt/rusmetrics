@@ -231,7 +231,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     
     //chart
     $scope.runChart = function(){
-        var data = [], series = Math.floor(Math.random() * 6) + 3;
+        var data = [];//, series = Math.floor(Math.random() * 6) + 3;
 
 //		for (var i = 0; i < series; i++) {
 //			data[i] = {

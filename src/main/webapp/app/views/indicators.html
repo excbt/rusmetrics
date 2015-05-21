@@ -2,6 +2,7 @@
 <div class="col-md-11"><h2>Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
 <div class="col-md-1">
     <i ng-disabled="data.length==0" class="btn btn-lg glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
+    <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
 </div>  
 
 <div class="container-fluid">
@@ -115,4 +116,41 @@
             </tr>   
         </table>    
     </div>    
+</div>
+
+<!-- Окно с графиком-->
+<div id="chartModal" class="modal fade" role="dialog"
+	aria-labelledby="chartLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content modalWindow_moreWide">
+
+		<div class="modal-header">
+			<h3 id="showNoticeLabel">
+				График ГКал. 
+			</h3>
+		</div>
+		<div class="modal-body">
+            <div id="indicatorChart" class="paddingBottom40">
+                <div id="indicatorChart-area"></div>
+		  </div>
+ 
+
+        </div>     
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+
+
+						<div class="col-xs-offset-2 col-md-3 pull-right">
+							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
+								ng-click="exit();">
+								Ок
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+
+	</div>
 </div>
