@@ -7,12 +7,6 @@
 }
 </style>
 
-<!-- <script type="text/javascript" src="https://github.com/Krinkle/jquery-json/blob/master/src/jquery.json.js"></script> -->
-<!--<script type="text/javascript" src="../vendor_components/jquery.json.js"></script>-->
-<script>
-
-</script>
-
 <script type="text/javascript">
 
 /******************
@@ -426,7 +420,7 @@ function timeVerify(time){
 }
 
 // Запускаем функции
-dlvrTableInit();
+//dlvrTableInit();
 </script>
 
 
@@ -465,6 +459,12 @@ dlvrTableInit();
     			<th class="col-md-2">Название</th>
     			<th class="col-md-8">Описание</th>
     			<th class="col-md-1">&nbsp</th>
+       		</tr>
+       		<tr ng-repeat = "rep_shdl in rep_shdls">
+       			<td><i title='Изменить'	class='btn btn-default btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal'></i></td>
+       			<td>{{rep_shdl.name}}</td>
+       			<td>{{rep_shdl.description}}</td>
+       			<td><i title='Удалить'	class='btn btn-default btn-xs glyphicon glyphicon-trash'></i></td>
        		</tr>
     	</table>
     </div>
