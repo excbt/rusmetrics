@@ -55,6 +55,18 @@ public class SubscriberService {
 
 	/**
 	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
+		List<Long> result = subscriberRepository
+				.selectContObjectIds(subscriberId);
+		return result;
+	}
+
+	/**
+	 * 
 	 * @param contObjectId
 	 * @return
 	 */

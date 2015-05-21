@@ -38,10 +38,10 @@ import ru.excbt.nmk.reports.NmkReport.ReportType;
 @Service
 public class ReportService {
 
-//	private interface ReportRunner {
-//		void runReport(ReportParamset reportParamset, LocalDateTime reportDate,
-//				InputStream inputStream, OutputStream outputStream);
-//	}
+	// private interface ReportRunner {
+	// void runReport(ReportParamset reportParamset, LocalDateTime reportDate,
+	// InputStream inputStream, OutputStream outputStream);
+	// }
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
 	public final static boolean IS_ZIP_TRUE = true;
@@ -61,6 +61,9 @@ public class ReportService {
 
 	@Autowired
 	private JpaConfig jpaConfig;
+
+	@Autowired
+	private SubscriberService subscriberService;
 
 	/**
 	 * 
@@ -146,112 +149,112 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-//	public void makeCommerceReportZip(long reportParamsetId,
-//			LocalDateTime reportDate, OutputStream outputStream) {
-//
-//		checkNotNull(outputStream);
-//		ReportParamset reportParamset = reportParamsetService
-//				.findOne(reportParamsetId);
-//
-//		if (reportParamset == null) {
-//			throw new PersistenceException(String.format(
-//					"ReportParamset (id=%d) not found", reportParamsetId));
-//		}
-//
-//		InputStream is = getReportParamsetTemplateBody(reportParamset
-//				.getReportTemplate().getId());
-//		makeCommerceReportZip(reportParamset, reportDate, is, outputStream);
-//	}
+	// public void makeCommerceReportZip(long reportParamsetId,
+	// LocalDateTime reportDate, OutputStream outputStream) {
+	//
+	// checkNotNull(outputStream);
+	// ReportParamset reportParamset = reportParamsetService
+	// .findOne(reportParamsetId);
+	//
+	// if (reportParamset == null) {
+	// throw new PersistenceException(String.format(
+	// "ReportParamset (id=%d) not found", reportParamsetId));
+	// }
+	//
+	// InputStream is = getReportParamsetTemplateBody(reportParamset
+	// .getReportTemplate().getId());
+	// makeCommerceReportZip(reportParamset, reportDate, is, outputStream);
+	// }
 
 	/**
 	 * 
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-//	public void makeCommerceReportZip(ReportParamset reportParamset,
-//			LocalDateTime reportDate, InputStream inputStream,
-//			OutputStream outputStream) {
-//
-//		checkNotNull(inputStream);
-//		checkNotNull(outputStream);
-//		checkNotNull(reportParamset);
-//		checkArgument(!reportParamset.isNew());
-//		checkNotNull(reportParamset.getReportPeriodKey());
-//
-//		List<Long> reportParamsetObjectIds = reportParamsetService
-//				.selectReportParamsetObjectIds(reportParamset.getId());
-//
-//		LocalDateTime dtStart = null;
-//		LocalDateTime dtEnd = null;
-//		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-//			if (reportParamset.getParamsetStartDate() == null
-//					|| reportParamset.getParamsetEndDate() == null) {
-//				throw new IllegalArgumentException(
-//						String.format(
-//								"ReportParamset (id=%d) is invalid. "
-//										+ "ParamsetStartDate and ParamsetEndDat is not set correctly. "
-//										+ "ReportPeriodKey=%s",
-//								reportParamset.getId(),
-//								ReportPeriodKey.INTERVAL));
-//			}
-//			dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
-//			dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
-//
-//		} else {
-//			dtStart = ReportParamsetUtils.getStartDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//			dtEnd = ReportParamsetUtils.getEndDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//		}
-//
-//		long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
-//				.toArray(new Long[0]));
-//
-//		NmkReport rep = null;
-//		ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-//		try {
-//
-//			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
-//					jpaConfig.getDatasourceUsername(),
-//					jpaConfig.getDatasourcePassword());
-//
-//			logger.info(
-//					"Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;objectIds:{};)",
-//					dtStart, dtEnd, Arrays.toString(objectIds));
-//
-//			rep.nmkGetReport(ReportType.RPT_COMMERCE, inputStream,
-//					zipOutputStream, 0, dtStart.toDate(), dtEnd.toDate(),
-//					objectIds, FileType.PDF);
-//
-//		} catch (JRException | IOException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception: %s", e.getMessage()));
-//		} catch (ClassNotFoundException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new IllegalStateException("Can't initialize NmkReport");
-//		} catch (SQLException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception:", e.getMessage()));
-//		} finally {
-//			try {
-//				zipOutputStream.flush();
-//				zipOutputStream.close();
-//			} catch (IOException e) {
-//				logger.error("NmkReport exception: {}", e);
-//			}
-//
-//			if (rep != null) {
-//				try {
-//					rep.close();
-//				} catch (SQLException e) {
-//					logger.error("NmkReport exception: {}", e);
-//				}
-//			}
-//		}
-//
-//	}
+	// public void makeCommerceReportZip(ReportParamset reportParamset,
+	// LocalDateTime reportDate, InputStream inputStream,
+	// OutputStream outputStream) {
+	//
+	// checkNotNull(inputStream);
+	// checkNotNull(outputStream);
+	// checkNotNull(reportParamset);
+	// checkArgument(!reportParamset.isNew());
+	// checkNotNull(reportParamset.getReportPeriodKey());
+	//
+	// List<Long> reportParamsetObjectIds = reportParamsetService
+	// .selectReportParamsetObjectIds(reportParamset.getId());
+	//
+	// LocalDateTime dtStart = null;
+	// LocalDateTime dtEnd = null;
+	// if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
+	// if (reportParamset.getParamsetStartDate() == null
+	// || reportParamset.getParamsetEndDate() == null) {
+	// throw new IllegalArgumentException(
+	// String.format(
+	// "ReportParamset (id=%d) is invalid. "
+	// + "ParamsetStartDate and ParamsetEndDat is not set correctly. "
+	// + "ReportPeriodKey=%s",
+	// reportParamset.getId(),
+	// ReportPeriodKey.INTERVAL));
+	// }
+	// dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
+	// dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
+	//
+	// } else {
+	// dtStart = ReportParamsetUtils.getStartDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// dtEnd = ReportParamsetUtils.getEndDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// }
+	//
+	// long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
+	// .toArray(new Long[0]));
+	//
+	// NmkReport rep = null;
+	// ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+	// try {
+	//
+	// rep = new NmkReport(jpaConfig.getDatasourceUrl(),
+	// jpaConfig.getDatasourceUsername(),
+	// jpaConfig.getDatasourcePassword());
+	//
+	// logger.info(
+	// "Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;objectIds:{};)",
+	// dtStart, dtEnd, Arrays.toString(objectIds));
+	//
+	// rep.nmkGetReport(ReportType.RPT_COMMERCE, inputStream,
+	// zipOutputStream, 0, dtStart.toDate(), dtEnd.toDate(),
+	// objectIds, FileType.PDF);
+	//
+	// } catch (JRException | IOException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception: %s", e.getMessage()));
+	// } catch (ClassNotFoundException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new IllegalStateException("Can't initialize NmkReport");
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception:", e.getMessage()));
+	// } finally {
+	// try {
+	// zipOutputStream.flush();
+	// zipOutputStream.close();
+	// } catch (IOException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// }
+	//
+	// if (rep != null) {
+	// try {
+	// rep.close();
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// }
+	// }
+	// }
+	//
+	// }
 
 	/**
 	 * 
@@ -302,227 +305,228 @@ public class ReportService {
 		return is;
 	}
 
-//	/**
-//	 * 
-//	 * @param outputStream
-//	 * @param reportParamsetId
-//	 */
-//	public void makeEventsReportPdf(long reportParamsetId, long organizationId,
-//			LocalDateTime reportDate, OutputStream outputStream) {
-//
-//		checkNotNull(outputStream);
-//		ReportParamset reportParamset = reportParamsetService
-//				.findOne(reportParamsetId);
-//
-//		if (reportParamset == null) {
-//			throw new PersistenceException(String.format(
-//					"ReportParamset (id=%d) not found", reportParamsetId));
-//		}
-//
-//		InputStream is = getReportParamsetTemplateBody(reportParamset
-//				.getReportTemplate().getId());
-//		makeEventsReportPdf(reportParamset, reportDate, organizationId, is,
-//				outputStream);
-//	}
-//
-//	/**
-//	 * 
-//	 * @param outputStream
-//	 * @param reportParamsetId
-//	 */
-//	public void makeEventsReportPdf(ReportParamset reportParamset,
-//			LocalDateTime reportDate, long organizationId,
-//			InputStream inputStream, OutputStream outputStream) {
-//
-//		checkNotNull(inputStream);
-//		checkNotNull(outputStream);
-//		checkNotNull(reportParamset);
-//		checkArgument(!reportParamset.isNew());
-//		checkNotNull(reportParamset.getReportPeriodKey());
-//
-//		LocalDateTime dtStart = null;
-//		LocalDateTime dtEnd = null;
-//		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-//			if (reportParamset.getParamsetStartDate() == null
-//					|| reportParamset.getParamsetEndDate() == null) {
-//				throw new IllegalArgumentException(
-//						String.format(
-//								"ReportParamset (id=%d) is invalid. "
-//										+ "ParamsetStartDate and ParamsetEndDat is not set correctly. "
-//										+ "ReportPeriodKey=%s",
-//								reportParamset.getId(),
-//								ReportPeriodKey.INTERVAL));
-//			}
-//			dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
-//			dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
-//
-//		} else {
-//			dtStart = ReportParamsetUtils.getStartDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//			dtEnd = ReportParamsetUtils.getEndDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//		}
-//
-//		NmkReport rep = null;
-//		try {
-//
-//			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
-//					jpaConfig.getDatasourceUsername(),
-//					jpaConfig.getDatasourcePassword());
-//
-//			logger.info(
-//					"Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;)",
-//					dtStart, dtEnd);
-//
-//			rep.nmkGetReport(ReportType.RPT_ALERTS, inputStream, outputStream,
-//					organizationId, dtStart.toDate(), dtEnd.toDate(), null,
-//					FileType.PDF);
-//
-//		} catch (JRException | IOException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception: %s", e.getMessage()));
-//		} catch (ClassNotFoundException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new IllegalStateException("Can't initialize NmkReport");
-//		} catch (SQLException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception:", e.getMessage()));
-//		} finally {
-//
-//			if (rep != null) {
-//				try {
-//					rep.close();
-//				} catch (SQLException e) {
-//					logger.error("NmkReport exception: {}", e);
-//				}
-//			}
-//		}
-//	}
+	// /**
+	// *
+	// * @param outputStream
+	// * @param reportParamsetId
+	// */
+	// public void makeEventsReportPdf(long reportParamsetId, long
+	// organizationId,
+	// LocalDateTime reportDate, OutputStream outputStream) {
+	//
+	// checkNotNull(outputStream);
+	// ReportParamset reportParamset = reportParamsetService
+	// .findOne(reportParamsetId);
+	//
+	// if (reportParamset == null) {
+	// throw new PersistenceException(String.format(
+	// "ReportParamset (id=%d) not found", reportParamsetId));
+	// }
+	//
+	// InputStream is = getReportParamsetTemplateBody(reportParamset
+	// .getReportTemplate().getId());
+	// makeEventsReportPdf(reportParamset, reportDate, organizationId, is,
+	// outputStream);
+	// }
+	//
+	// /**
+	// *
+	// * @param outputStream
+	// * @param reportParamsetId
+	// */
+	// public void makeEventsReportPdf(ReportParamset reportParamset,
+	// LocalDateTime reportDate, long organizationId,
+	// InputStream inputStream, OutputStream outputStream) {
+	//
+	// checkNotNull(inputStream);
+	// checkNotNull(outputStream);
+	// checkNotNull(reportParamset);
+	// checkArgument(!reportParamset.isNew());
+	// checkNotNull(reportParamset.getReportPeriodKey());
+	//
+	// LocalDateTime dtStart = null;
+	// LocalDateTime dtEnd = null;
+	// if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
+	// if (reportParamset.getParamsetStartDate() == null
+	// || reportParamset.getParamsetEndDate() == null) {
+	// throw new IllegalArgumentException(
+	// String.format(
+	// "ReportParamset (id=%d) is invalid. "
+	// + "ParamsetStartDate and ParamsetEndDat is not set correctly. "
+	// + "ReportPeriodKey=%s",
+	// reportParamset.getId(),
+	// ReportPeriodKey.INTERVAL));
+	// }
+	// dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
+	// dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
+	//
+	// } else {
+	// dtStart = ReportParamsetUtils.getStartDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// dtEnd = ReportParamsetUtils.getEndDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// }
+	//
+	// NmkReport rep = null;
+	// try {
+	//
+	// rep = new NmkReport(jpaConfig.getDatasourceUrl(),
+	// jpaConfig.getDatasourceUsername(),
+	// jpaConfig.getDatasourcePassword());
+	//
+	// logger.info(
+	// "Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;)",
+	// dtStart, dtEnd);
+	//
+	// rep.nmkGetReport(ReportType.RPT_ALERTS, inputStream, outputStream,
+	// organizationId, dtStart.toDate(), dtEnd.toDate(), null,
+	// FileType.PDF);
+	//
+	// } catch (JRException | IOException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception: %s", e.getMessage()));
+	// } catch (ClassNotFoundException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new IllegalStateException("Can't initialize NmkReport");
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception:", e.getMessage()));
+	// } finally {
+	//
+	// if (rep != null) {
+	// try {
+	// rep.close();
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// }
+	// }
+	// }
+	// }
 
 	/**
 	 * 
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-//	public void makeConsTXReportPdf(long reportParamsetId, int tx,
-//			long organizationId, LocalDateTime reportDate,
-//			OutputStream outputStream) {
-//
-//		checkNotNull(outputStream);
-//		ReportParamset reportParamset = reportParamsetService
-//				.findOne(reportParamsetId);
-//
-//		if (reportParamset == null) {
-//			throw new PersistenceException(String.format(
-//					"ReportParamset (id=%d) not found", reportParamsetId));
-//		}
-//
-//		InputStream is = getReportParamsetTemplateBody(reportParamset
-//				.getReportTemplate().getId());
-//		makeConsTXReportPdf(reportParamset, tx, organizationId, reportDate, is,
-//				outputStream);
-//	}
+	// public void makeConsTXReportPdf(long reportParamsetId, int tx,
+	// long organizationId, LocalDateTime reportDate,
+	// OutputStream outputStream) {
+	//
+	// checkNotNull(outputStream);
+	// ReportParamset reportParamset = reportParamsetService
+	// .findOne(reportParamsetId);
+	//
+	// if (reportParamset == null) {
+	// throw new PersistenceException(String.format(
+	// "ReportParamset (id=%d) not found", reportParamsetId));
+	// }
+	//
+	// InputStream is = getReportParamsetTemplateBody(reportParamset
+	// .getReportTemplate().getId());
+	// makeConsTXReportPdf(reportParamset, tx, organizationId, reportDate, is,
+	// outputStream);
+	// }
 
 	/**
 	 * 
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-//	public void makeConsTXReportPdf(ReportParamset reportParamset, int tx,
-//			long organizationId, LocalDateTime reportDate,
-//			InputStream inputStream, OutputStream outputStream) {
-//
-//		checkNotNull(inputStream);
-//		checkNotNull(outputStream);
-//		checkNotNull(reportParamset);
-//		checkArgument(!reportParamset.isNew());
-//		checkNotNull(reportParamset.getReportPeriodKey());
-//		checkArgument(tx == 1 || tx == 2);
-//
-//		List<Long> reportParamsetObjectIds = reportParamsetService
-//				.selectReportParamsetObjectIds(reportParamset.getId());
-//
-//		LocalDateTime dtStart = null;
-//		LocalDateTime dtEnd = null;
-//		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-//			if (reportParamset.getParamsetStartDate() == null
-//					|| reportParamset.getParamsetEndDate() == null) {
-//				throw new IllegalArgumentException(
-//						String.format(
-//								"ReportParamset (id=%d) is invalid. "
-//										+ "ParamsetStartDate and ParamsetEndDat is not set correctly. "
-//										+ "ReportPeriodKey=%s",
-//								reportParamset.getId(),
-//								ReportPeriodKey.INTERVAL));
-//			}
-//			dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
-//			dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
-//
-//		} else {
-//			dtStart = ReportParamsetUtils.getStartDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//			dtEnd = ReportParamsetUtils.getEndDate(reportDate,
-//					reportParamset.getReportPeriodKey());
-//		}
-//
-//		long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
-//				.toArray(new Long[0]));
-//
-//		NmkReport rep = null;
-//		try {
-//
-//			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
-//					jpaConfig.getDatasourceUsername(),
-//					jpaConfig.getDatasourcePassword());
-//
-//			logger.info(
-//					"Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;objectIds:{};)",
-//					dtStart, dtEnd, Arrays.toString(objectIds));
-//
-//			switch (tx) {
-//			case 1: {
-//				rep.nmkGetReport(ReportType.RPT_CONSOLIDATED_1, inputStream,
-//						outputStream, organizationId, dtStart.toDate(),
-//						dtEnd.toDate(), objectIds, FileType.PDF);
-//
-//				break;
-//			}
-//			case 2: {
-//				rep.nmkGetReport(ReportType.RPT_CONSOLIDATED_2, inputStream,
-//						outputStream, organizationId, dtStart.toDate(),
-//						dtEnd.toDate(), objectIds, FileType.PDF);
-//
-//				break;
-//			}
-//			default: {
-//				throw new IllegalArgumentException();
-//			}
-//			}
-//
-//		} catch (JRException | IOException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception: %s", e.getMessage()));
-//		} catch (ClassNotFoundException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new IllegalStateException("Can't initialize NmkReport");
-//		} catch (SQLException e) {
-//			logger.error("NmkReport exception: {}", e);
-//			throw new PersistenceException(String.format(
-//					"NmkReport exception:", e.getMessage()));
-//		} finally {
-//			if (rep != null) {
-//				try {
-//					rep.close();
-//				} catch (SQLException e) {
-//					logger.error("NmkReport exception: {}", e);
-//				}
-//			}
-//		}
-//
-//	}
+	// public void makeConsTXReportPdf(ReportParamset reportParamset, int tx,
+	// long organizationId, LocalDateTime reportDate,
+	// InputStream inputStream, OutputStream outputStream) {
+	//
+	// checkNotNull(inputStream);
+	// checkNotNull(outputStream);
+	// checkNotNull(reportParamset);
+	// checkArgument(!reportParamset.isNew());
+	// checkNotNull(reportParamset.getReportPeriodKey());
+	// checkArgument(tx == 1 || tx == 2);
+	//
+	// List<Long> reportParamsetObjectIds = reportParamsetService
+	// .selectReportParamsetObjectIds(reportParamset.getId());
+	//
+	// LocalDateTime dtStart = null;
+	// LocalDateTime dtEnd = null;
+	// if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
+	// if (reportParamset.getParamsetStartDate() == null
+	// || reportParamset.getParamsetEndDate() == null) {
+	// throw new IllegalArgumentException(
+	// String.format(
+	// "ReportParamset (id=%d) is invalid. "
+	// + "ParamsetStartDate and ParamsetEndDat is not set correctly. "
+	// + "ReportPeriodKey=%s",
+	// reportParamset.getId(),
+	// ReportPeriodKey.INTERVAL));
+	// }
+	// dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
+	// dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
+	//
+	// } else {
+	// dtStart = ReportParamsetUtils.getStartDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// dtEnd = ReportParamsetUtils.getEndDate(reportDate,
+	// reportParamset.getReportPeriodKey());
+	// }
+	//
+	// long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
+	// .toArray(new Long[0]));
+	//
+	// NmkReport rep = null;
+	// try {
+	//
+	// rep = new NmkReport(jpaConfig.getDatasourceUrl(),
+	// jpaConfig.getDatasourceUsername(),
+	// jpaConfig.getDatasourcePassword());
+	//
+	// logger.info(
+	// "Call nmkGetReport with params (startDate:{};endDate:{};idParam:0;objectIds:{};)",
+	// dtStart, dtEnd, Arrays.toString(objectIds));
+	//
+	// switch (tx) {
+	// case 1: {
+	// rep.nmkGetReport(ReportType.RPT_CONSOLIDATED_1, inputStream,
+	// outputStream, organizationId, dtStart.toDate(),
+	// dtEnd.toDate(), objectIds, FileType.PDF);
+	//
+	// break;
+	// }
+	// case 2: {
+	// rep.nmkGetReport(ReportType.RPT_CONSOLIDATED_2, inputStream,
+	// outputStream, organizationId, dtStart.toDate(),
+	// dtEnd.toDate(), objectIds, FileType.PDF);
+	//
+	// break;
+	// }
+	// default: {
+	// throw new IllegalArgumentException();
+	// }
+	// }
+	//
+	// } catch (JRException | IOException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception: %s", e.getMessage()));
+	// } catch (ClassNotFoundException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new IllegalStateException("Can't initialize NmkReport");
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// throw new PersistenceException(String.format(
+	// "NmkReport exception:", e.getMessage()));
+	// } finally {
+	// if (rep != null) {
+	// try {
+	// rep.close();
+	// } catch (SQLException e) {
+	// logger.error("NmkReport exception: {}", e);
+	// }
+	// }
+	// }
+	//
+	// }
 
 	/**
 	 * 
@@ -544,7 +548,8 @@ public class ReportService {
 
 		InputStream is = getReportParamsetTemplateBody(reportParamset
 				.getReportTemplate().getId());
-		makeReport(reportParamset, subscriberId, reportDate, is, outputStream, isZip);
+		makeReport(reportParamset, subscriberId, reportDate, is, outputStream,
+				isZip);
 	}
 
 	/**
@@ -556,7 +561,7 @@ public class ReportService {
 			LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 
-		checkArgument(subscriberId > 0);		
+		checkArgument(subscriberId > 0);
 		checkNotNull(inputStream);
 		checkNotNull(outputStream);
 		checkNotNull(reportParamset);
@@ -566,6 +571,12 @@ public class ReportService {
 
 		List<Long> reportParamsetObjectIds = reportParamsetService
 				.selectReportParamsetObjectIds(reportParamset.getId());
+
+		// If NO selected Objects - Fill report with All Objects of subscriber
+		if (reportParamsetObjectIds.isEmpty()) {
+			reportParamsetObjectIds = subscriberService
+					.selectSubscriberContObjectIds(subscriberId);
+		}
 
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
@@ -594,14 +605,13 @@ public class ReportService {
 				.toArray(new Long[0]));
 
 		checkNotNull(objectIds, "ContObject for report is not set");
-		
+
 		NmkReport rep = null;
 		try {
 
 			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
 					jpaConfig.getDatasourceUsername(),
 					jpaConfig.getDatasourcePassword());
-
 
 			ReportTypeKey rptKey = reportParamset.getReportTemplate()
 					.getReportTypeKey();
@@ -610,11 +620,12 @@ public class ReportService {
 
 			logger.info(
 					"Call nmkGetReport with params (reportType:{}; startDate:{};endDate:{};idParam:{};objectIds:{};)",
-					destReportType, dtStart, dtEnd, subscriberId, Arrays.toString(objectIds));
+					destReportType, dtStart, dtEnd, subscriberId,
+					Arrays.toString(objectIds));
 
-			rep.nmkGetReport(destReportType, inputStream,
-					outputStream, subscriberId, dtStart.toDate(),
-					dtEnd.toDate(), objectIds, FileType.PDF, isZip);
+			rep.nmkGetReport(destReportType, inputStream, outputStream,
+					subscriberId, dtStart.toDate(), dtEnd.toDate(), objectIds,
+					FileType.PDF, isZip);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
