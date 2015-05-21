@@ -6,6 +6,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,7 +20,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
@@ -69,8 +69,7 @@ public class JpaTestConfiguration {
 	 * @throws NamingException
 	 */
 	@Bean
-	public DefaultPersistenceUnitManager persistentUnitManager()
-			throws NamingException {
+	public DefaultPersistenceUnitManager persistentUnitManager() {
 		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
 		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-test.xml");
 		pu.setDefaultDataSource(dataSource());
@@ -83,11 +82,9 @@ public class JpaTestConfiguration {
 	 * @throws NamingException
 	 */
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
-			throws NamingException {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setPersistenceUnitManager(persistentUnitManager());
-		emf.setPersistenceUnitName("nmk-p");
 		return emf;
 	}
 
@@ -97,6 +94,7 @@ public class JpaTestConfiguration {
 	 * @return
 	 */
 	@Bean
+	@Autowired
 	public PlatformTransactionManager transactionManager(
 			EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -137,5 +135,5 @@ public class JpaTestConfiguration {
 			}
 		};
 	}
-	
+
 }
