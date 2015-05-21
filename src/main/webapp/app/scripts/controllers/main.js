@@ -169,7 +169,12 @@ var app = angular.module('portalNMK');
 //          rows: $scope.notices
 //        };
 //                    
-      
+   
+      $scope.clickMenu = function(menu){
+          menu=!menu;
+//          var el = document.getElementById(el_id);
+//          el.className = el.className + "excbt_a_list_group_item_selected";
+      };
     
   }]);
 

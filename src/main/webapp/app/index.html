@@ -93,7 +93,7 @@
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
     
-    <div class="container-fluid noMargin">
+    <div class="container-fluid noMargin" ng-controller="MainCtrl">
 
     <div class="row row-offcanvas row-offcanvas-left">    
        
@@ -105,9 +105,9 @@
                             <div id="sidebar-entries" class="list-group">
    
                                 <!-- Объекты, редактирование -->
-                                <a class="list-group-item excbt_a_list_group_item"
+                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': object_menu}"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false;showAdminSettings=false">Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false;showAdminSettings=false;clickMenu(object_menu)">Объекты</a>
                                 
                                 <!-- Отчеты -->
                                 <a class="list-group-item excbt_a_list_group_item"
@@ -181,7 +181,7 @@
             
             </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main mainarea main-scrollable-area1">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea main-scrollable-area1">
 					
 					<div id="main" ng-view></div>
         </div>
