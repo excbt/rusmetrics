@@ -381,7 +381,8 @@ tr > .active{
 
 .excbt_a_list_group_item{
     word-wrap: break-word;
-    padding-right: 10px;
+    padding-right: 1px;
+    border: none;
 }
 
 .modalWindow_wide {

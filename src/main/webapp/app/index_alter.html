@@ -50,8 +50,7 @@
     <!-- Add your site or application content here -->
 <div id="wrap">
 <!--    Навигационная строка в верху страницы-->
-    <div class="header navbar navbar-default navbar-fixed-top" >
-<!--        style="background-color: white;"-->
+    <div class="header navbar navbar-fixed-top" style="background-color: white;">
 			<div id="navbar-container" class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
@@ -98,7 +97,7 @@
     <div class="row row-offcanvas row-offcanvas-left">    
        
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas menuWidth" >
+        <div class="col-xs-6 col-sm-2 well sidebar-offcanvas menuWidth" >
                         <nav class="sidebar-nav"
                             role="navigation" ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
@@ -107,7 +106,7 @@
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item excbt_a_list_group_item"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false;showAdminSettings=false">Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="showSettings=false">Объекты</a>
                                 
                                 <!-- Отчеты -->
                                 <a class="list-group-item excbt_a_list_group_item"
@@ -122,7 +121,7 @@
 <!--                                Настройки-->
                                 <a class="list-group-item noMarginBottom excbt_a_list_group_item"
 
-                                    href="" data-toggle="offcanvas" ng-click="showSettings=true"><i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i> Настройки</a>
+                                    href="" data-toggle="offcanvas" ng-click="showSettings=true">Настройки</a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
@@ -140,7 +139,7 @@
                                 <!--                                Администрирование-->
                                 <a class="list-group-item noMarginBottom excbt_a_list_group_item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
 
-                                   href="" data-toggle="offcanvas" ng-click="showAdminSettings=true"><i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i> Администрирование</a>                                                                <!-- Меню администратора -->
+                                    href="" data-toggle="offcanvas" ng-click="showAdminSettings=true">Администрирование</a>                                                                <!-- Меню администратора -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item excbt_a_list_group_item"
@@ -181,7 +180,7 @@
             
             </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main mainarea main-scrollable-area1">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well mainarea main-scrollable-area1">
 					
 					<div id="main" ng-view></div>
         </div>
