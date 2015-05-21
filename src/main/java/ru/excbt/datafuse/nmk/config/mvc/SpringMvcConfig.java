@@ -18,7 +18,6 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
 import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
 import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 
@@ -26,7 +25,7 @@ import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 @EnableWebMvc
 @EnableSpringDataWebSupport
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" })
-@Import({ PropertyConfig.class, JpaConfig.class, WebSecurityConfig.class })
+@Import({ PropertyConfig.class, WebSecurityConfig.class })
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired

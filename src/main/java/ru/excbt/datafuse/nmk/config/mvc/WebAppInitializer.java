@@ -5,14 +5,14 @@ import javax.servlet.Filter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import ru.excbt.datafuse.nmk.config.jpa.JpaAuditConfig;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
 
 public class WebAppInitializer extends
 		AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { SpringMvcConfig.class, JpaAuditConfig.class };
+		return new Class[] { SpringMvcConfig.class, JpaConfig.class};
 	}
 
 	@Override
