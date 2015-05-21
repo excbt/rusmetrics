@@ -5,13 +5,11 @@
 
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
- 		<non-jta-data-source>java:comp/env/jdbc/nmkDBctx</non-jta-data-source>
-
 		<properties>
 			<property name="hibernate.dialect" value="ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="validate" />
-			<property name="hibernate.show_sql" value="false"/>		
-			<property name="hibernate.format_sql" value="false"/>
+			<property name="hibernate.show_sql" value="true"/>		
+			<property name="hibernate.format_sql" value="true"/>
 			<property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>	
 		</properties>
 

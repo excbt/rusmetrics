@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
+import ru.excbt.datafuse.nmk.config.jpa.JasperDatabaseConnectionSettings;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
@@ -60,7 +60,7 @@ public class ReportService {
 	private ReportParamsetService reportParamsetService;
 
 	@Autowired
-	private JpaConfig jpaConfig;
+	private JasperDatabaseConnectionSettings jasperConfig;
 
 	/**
 	 * 
@@ -598,9 +598,9 @@ public class ReportService {
 		NmkReport rep = null;
 		try {
 
-			rep = new NmkReport(jpaConfig.getDatasourceUrl(),
-					jpaConfig.getDatasourceUsername(),
-					jpaConfig.getDatasourcePassword());
+			rep = new NmkReport(jasperConfig.getDatasourceUrl(),
+					jasperConfig.getDatasourceUsername(),
+					jasperConfig.getDatasourcePassword());
 
 
 			ReportTypeKey rptKey = reportParamset.getReportTemplate()
