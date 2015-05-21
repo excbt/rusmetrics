@@ -60,7 +60,6 @@ public class JpaTestConfiguration {
 		dataSource.setPassword(datasourcePassword);
 		dataSource.setMaxWait(100);
 		dataSource.setMaxActive(10);
-		dataSource.setMaxIdle(3);
 		return dataSource;
 	}
 
