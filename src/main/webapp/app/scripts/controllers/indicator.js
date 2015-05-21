@@ -279,7 +279,7 @@ console.log("====================");
 console.log(moment(data[i][0], "DD.MM.YY HH:mm"));   
 console.log(moment.utc(data[i][0]));              
 console.log("====================");              
-            data[i][0] = moment.utc(data[i][0]);//moment(data[i][0], "DD.MM.YY HH:mm");
+            data[i][0] = moment(data[i][0], "DD.MM.YY HH:mm");
         };
 //console.log("data after====================");        
 //console.log(data);
