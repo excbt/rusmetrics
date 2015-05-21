@@ -2,6 +2,7 @@
 
 # Log Generated files
 log/*
+logs/*
 out/*
 
 ### Eclipse ###
