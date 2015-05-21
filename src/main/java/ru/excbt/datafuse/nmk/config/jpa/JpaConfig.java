@@ -1,10 +1,9 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
+import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +14,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
@@ -50,28 +50,19 @@ public class JpaConfig {
 	 * org.apache.tomcat.jdbc.pool.DataSource
 	 * 
 	 * @return
+	 * @throws NamingException 
 	 */
-	@Bean(destroyMethod = "close")
-	public DataSource dataSource() {
-		checkNotNull(driverClassname);
-		checkNotNull(datasourceUrl);
-		checkNotNull(datasourceUsername);
-		checkNotNull(datasourcePassword);
+	@Bean
+	public DataSource dataSource() throws NamingException {
+		JndiTemplate jndiTemplate = new JndiTemplate();
+	    DataSource dataSource
+	            = (DataSource) jndiTemplate.lookup("java:comp/env/jdbc/nmkDBctx");
 
-		DataSource dataSource = new DataSource();
-		dataSource.setDriverClassName(driverClassname);
-		dataSource.setUrl(datasourceUrl);
-		dataSource.setUsername(datasourceUsername);
-		dataSource.setPassword(datasourcePassword);
-		dataSource.setMaxWait(100);
-		dataSource.setMaxActive(30);
-		dataSource.setMinIdle(10);
-		dataSource.setMaxIdle(20);
 		return dataSource;
 	}
 
 	@Bean
-	public DefaultPersistenceUnitManager persistentUnitManager() {
+	public DefaultPersistenceUnitManager persistentUnitManager() throws NamingException {
 		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
 		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence.xml");
 		pu.setDefaultDataSource(dataSource());
@@ -79,7 +70,7 @@ public class JpaConfig {
 	}
 
 	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory() throws NamingException {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setPersistenceUnitManager(persistentUnitManager());
 		emf.setPersistenceUnitName("nmk-p");
