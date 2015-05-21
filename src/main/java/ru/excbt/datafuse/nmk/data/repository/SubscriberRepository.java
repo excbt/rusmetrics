@@ -26,6 +26,9 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	@Query("SELECT co FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :id")
 	public List<ContObject> selectContObjects(@Param("id") long subscriberId);
 
+	@Query("SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :id")
+	public List<Long> selectContObjectIds(@Param("id") long subscriberId);
+
 	@Query("SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co "
 			+ "WHERE s.id = :id AND co.id = :contObjectId")
 	public List<Long> selectContObjectId(@Param("id") long subscriberId,

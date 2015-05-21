@@ -35,4 +35,31 @@ public class JodaTimeUtils {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param dateTime
+	 * @return
+	 */
+	public static DateTime startOfDay(DateTime dateTime) {
+		if (dateTime == null) {
+			return null;
+		}
+		DateTime result = dateTime.withMillisOfDay(0);
+		
+		return result;
+	}
+	/**
+	 * 
+	 * @param dateTime
+	 * @return
+	 */
+	public static LocalDateTime startOfDay(LocalDateTime dateTime) {
+		if (dateTime == null) {
+			return null;
+		}
+		LocalDateTime result = dateTime.withMillisOfDay(0);
+		
+		return result;
+	}
+
 }

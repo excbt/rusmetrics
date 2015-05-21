@@ -1,10 +1,11 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,16 +20,14 @@ import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
-@EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
-public class JpaConfig {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(JpaConfig.class);
+@EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
+public class JpaTestConfiguration {
 
 	@Value("${dataSource.driverClassName}")
 	private String driverClassname;
@@ -42,6 +41,28 @@ public class JpaConfig {
 	@Value("${dataSource.password}")
 	private String datasourcePassword;
 
+	/**
+	 * 
+	 * @return
+	 * @throws NamingException
+	 */
+	@Bean(destroyMethod = "close")
+	public DataSource dataSource() {
+		checkNotNull(driverClassname);
+		checkNotNull(datasourceUrl);
+		checkNotNull(datasourceUsername);
+		checkNotNull(datasourcePassword);
+
+		org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
+		dataSource.setDriverClassName(driverClassname);
+		dataSource.setUrl(datasourceUrl);
+		dataSource.setUsername(datasourceUsername);
+		dataSource.setPassword(datasourcePassword);
+		dataSource.setMaxWait(100);
+		dataSource.setMaxActive(10);
+		dataSource.setMaxIdle(3);
+		return dataSource;
+	}
 
 	/**
 	 * 
@@ -52,7 +73,8 @@ public class JpaConfig {
 	public DefaultPersistenceUnitManager persistentUnitManager()
 			throws NamingException {
 		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
-		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence.xml");
+		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-test.xml");
+		pu.setDefaultDataSource(dataSource());
 		return pu;
 	}
 
@@ -72,7 +94,7 @@ public class JpaConfig {
 
 	/**
 	 * 
-	 * @param emf
+	 * @param entityManagerFactory
 	 * @return
 	 */
 	@Bean
@@ -116,5 +138,5 @@ public class JpaConfig {
 			}
 		};
 	}
-
+	
 }

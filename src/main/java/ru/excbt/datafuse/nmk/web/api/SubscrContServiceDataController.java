@@ -296,6 +296,7 @@ public class SubscrContServiceDataController extends WebApiController {
 							timeDetailType));
 		}
 
+		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(endD.plusDays(1));
 		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(endD);
 
 		ContServiceDataHWaterTotals totals = contServiceDataHWaterService
@@ -306,15 +307,13 @@ public class SubscrContServiceDataController extends WebApiController {
 				.selectLastAbsData(contZPointId, beginD);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService
-				.selectLastAbsData(contZPointId, endOfDay);
+				.selectLastAbsData(contZPointId, endOfPeriod);
 
-		
 		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
 		result.setTotals(totals);
 		result.setFirstData(firstAbs);
 		result.setLastData(lastAbs);
-		
-		
+
 		return ResponseEntity.ok(result);
 	}
 }
