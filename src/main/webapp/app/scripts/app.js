@@ -84,7 +84,7 @@ app.config(function ($routeProvider) {
       })
       .when('/private/contacts', {
         templateUrl: 'views/contacts.html',
-        controller: 'MainCtrl'
+        controller: 'ContactsCtrl'
       })
       .otherwise({
         redirectTo: '/'
