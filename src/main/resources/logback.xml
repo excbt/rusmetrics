@@ -14,10 +14,10 @@
 			<FileNamePattern>nmk-logFile.%d{yyyy-MM-dd}.log</FileNamePattern>
 		</rollingPolicy>
  
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
-			</pattern>
-		</layout>
+		<encoder>
+    		<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+  		</encoder>
+ 
 	</appender>
 	
 
