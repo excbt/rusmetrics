@@ -8,15 +8,20 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
 import net.sf.jasperreports.engine.JRException;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -62,6 +67,10 @@ public class ReportService {
 	@Autowired
 	private SubscriberService subscriberService;
 
+	@PersistenceContext
+	private EntityManager em;
+	
+	
 	/**
 	 * 
 	 * @param contObjectId
@@ -311,4 +320,31 @@ public class ReportService {
 		return result;
 	}
 
+	
+	/**
+	 * 
+	 * @throws SQLException
+	 */
+	@Transactional (readOnly = true)
+	public void testConnection() throws SQLException {
+
+		checkState(em.isOpen());
+
+		Session sess = em.unwrap(Session.class);
+
+		sess.doWork(new Work() {
+
+			@Override
+			public void execute(Connection connection) throws SQLException {
+				// TODO Auto-generated method stub
+
+				logger.info("Connection: {}",connection.toString());
+			}
+		});
+
+		checkNotNull(sess);
+
+	}
+	
+	
 }
