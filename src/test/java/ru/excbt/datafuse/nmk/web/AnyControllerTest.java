@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import ru.excbt.datafuse.nmk.config.jpa.JpaTestConfiguration;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
@@ -38,7 +38,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { SpringMvcConfig.class, JpaTestConfiguration.class})
+@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class})
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {

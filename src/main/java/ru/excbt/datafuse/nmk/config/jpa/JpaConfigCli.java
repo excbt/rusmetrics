@@ -6,6 +6,7 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.postgresql.ds.PGPoolingDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
 @EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
-public class JpaTestConfiguration {
+public class JpaConfigCli {
 
 	@Value("${dataSource.driverClassName}")
 	private String driverClassname;
@@ -53,14 +54,13 @@ public class JpaTestConfiguration {
 		checkNotNull(datasourceUsername);
 		checkNotNull(datasourcePassword);
 
-		org.apache.tomcat.jdbc.pool.DataSource dataSource = new org.apache.tomcat.jdbc.pool.DataSource();
-		dataSource.setDriverClassName(driverClassname);
-		dataSource.setUrl(datasourceUrl);
-		dataSource.setUsername(datasourceUsername);
-		dataSource.setPassword(datasourcePassword);
-		dataSource.setMaxWait(100);
-		dataSource.setMaxActive(10);
-		return dataSource;
+		PGPoolingDataSource source = new PGPoolingDataSource();
+		source.setUrl(datasourceUrl);
+		source.setUser(datasourceUsername);
+		source.setPassword(datasourcePassword);
+		source.setMaxConnections(10);		
+		
+		return source;
 	}
 
 	/**
