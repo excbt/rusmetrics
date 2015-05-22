@@ -31,6 +31,9 @@ body {
   padding-top: 20px;
   padding-bottom: 20px;
     font-size: 12px;
+background-color:  #BEBEBE;
+/*    #DCDCDC;*/
+/*    #BEBEBE;    */
 }
 /*
 th {
@@ -263,6 +266,14 @@ input[type="radio"]{
     background-color: cadetblue;
 }
 
+.excbt_well-main {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+/*    border-radius: 0;*/
+    background-color: #EEEEEE;
+}
+
 .showM {
     display:inherit;
 }
@@ -379,16 +390,48 @@ tr > .active{
     width: 10%;
 }
 
+/*
+a.list-group-item:focus {
+    font-weight: bold;
+}
+*/
+/*
+a.list-group-item:active {
+    background-color: #f5f5f5;
+}
+*/
+a.list-group-item {
+    background-color: #DCDCDC;
+/*        #BEBEBE;*/
+}
+
 .excbt_a_list_group_item{
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
     margin-right: -30%;
+    margin-bottom: 2%;
+    font-size: 16px;
+    border-radius: 4px 0px 0px 4px;
+}
+.excbt_a_list_group_item_icon{
+    margin-right: 10px;
+}
+
+.excbt_a_list_group_item:focus, .excbt_a_list_group_item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
 }
 .excbt_a_list_group_item_selected{
-  color: #555;
+  font-weight: bold;
+  color: #555 !important;
   text-decoration: none;
-  background-color: #f5f5f5;
+  background-color: #EEEEEE !important;
+/*      #f9f9f9 !important;*/
+/*      #f5f5f5 !important;*/
 }
 .modalWindow_wide {
     width: 1200px;
@@ -469,9 +512,6 @@ mainTable {
 }*/
 
 
-a.list-group-item:focus {
-    font-weight: bold;
-}
 
 .div-checkbox {
     width:15px;
@@ -518,7 +558,7 @@ a.list-group-item:focus {
     padding: 5px;
 }
 .excbt_objectFilterInputGroup{
-    margin-top: -2%;
+    margin-top: -2.5%;
 }
 
 
@@ -534,9 +574,28 @@ a.list-group-item:focus {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
+.excbt_table > tbody > tr>td {
+    border: none;
+}
+
+.excbt_innerTable {
+    margin-left: 2%;
+    width: 97%;
+    border-radius: 4px;
+}
+.excbt_innerTable > thead> tr{
+     background-color: #BEBEBE;
+/*         #696969;*/
+};
+
 .excbt_table >tbody>tr>td{
     border-top: none;
     
+}
+
+.excbt_externalTable > tbody > tr:nth-of-type(odd) {
+    background-color: #EEEEEE;
+/*    background-color: #f5f5f5;*/
 }
 
 .excbt_inputGroupAddon {

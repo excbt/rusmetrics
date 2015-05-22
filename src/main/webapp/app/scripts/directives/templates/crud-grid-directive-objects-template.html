@@ -9,13 +9,17 @@
 -->
 
 <!-- Common filter-->
-<div class="col-md-7"></div>
-<div class="input-group col-md-5 filter marginBottom10 pull-left excbt_objectFilterInputGroup">   
-    <span class="input-group-addon excbt_inputFormControl"><i class="glyphicon glyphicon-search"></i></span>
-    <input type="text" class="form-control excbt_inputFormControlObjectFilter" ng-model="filter">
-    <span class="input-group-addon btn excbt_inputFormControl" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left excbt_objectFilterInputGroup">   
+        <span class="input-group-addon excbt_inputFormControl"><i class="glyphicon glyphicon-search"></i></span>
+        <input type="text" class="form-control excbt_inputFormControlObjectFilter" ng-model="filter">
+        <span class="input-group-addon btn excbt_inputFormControl" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+    </div>
+    <div class="col-md-6"></div>
 </div>
-
+</div>    
 <table id="datatabl" class="table table-condensed noMarginBottom excbt_table"> 
      <tr class="default" >
 <!--         отключить шапку для групп объектов-->       
@@ -41,7 +45,7 @@
 <!--  Постороение таблицы с данными  -->
     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="selectedItem(object)" ng-show="showRow(object)" ng-dblclick="showDetails(object)">
         <td style="padding:0;"><!--    <td> Уровень 1     -->
-            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table"> <!--    <table> Уровень 2     -->
+            <table class="crud-grid table table-lighter table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> <!--    <table> Уровень 2     -->
             
 
                 <tr><!--    <tr> Уровень 3     -->
@@ -119,8 +123,9 @@
                     
                     
                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover excbt_table" ng-show="object.showGroupDetails">
+				<table id="dataZpointTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover excbt_innerTable" ng-show="object.showGroupDetails">
 <!--                    <caption><b>Точки учета</b></caption>-->
+                    <thead>
                     <tr>
                         <!--       Шапка таблицы-->
 <!--                        Колонка для кнопок-->
@@ -134,6 +139,7 @@
                         </th>
 
                     </tr>
+                    </thead>    
                      <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
                                                   <!-- Колонка для редактирования элементов                   -->
                         <td ng-show="bObject && !bList" class="col-md-1"> 
