@@ -20,12 +20,12 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import ru.excbt.datafuse.nmk.config.jpa.JpaTestConfiguration;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = {SpringMvcConfig.class, JpaTestConfiguration.class})
+@ContextConfiguration(classes = {SpringMvcConfig.class, JpaConfigCli.class})
 public class WebTest {
 
 	public final static String CHARSET_UTF8 = "charset=UTF-8";
