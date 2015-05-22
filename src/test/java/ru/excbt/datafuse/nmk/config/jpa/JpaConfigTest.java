@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { PropertyConfig.class, JpaTestConfiguration.class })
+@ContextConfiguration(classes = { PropertyConfig.class, JpaConfigCli.class })
 public class JpaConfigTest {
 
 	private final static long TEST_AUDIT_USER = 1;
