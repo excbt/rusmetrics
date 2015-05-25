@@ -12,6 +12,8 @@ public class ContServiceDataHWaterSummary implements Serializable {
 	private static final long serialVersionUID = 7928358602878254237L;
 
 	private ContServiceDataHWaterTotals totals;
+
+	private ContServiceDataHWaterTotals diffs;
 	
 	private ContServiceDataHWater firstData; 
 
@@ -41,6 +43,13 @@ public class ContServiceDataHWaterSummary implements Serializable {
 		this.totals = totals;
 	}
 
+	public ContServiceDataHWaterTotals getDiffs() {
+		return diffs;
+	}
+
+	public void setDiffs(ContServiceDataHWaterTotals diffs) {
+		this.diffs = diffs;
+	}
 
 
 	
