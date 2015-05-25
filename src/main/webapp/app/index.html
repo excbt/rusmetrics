@@ -50,32 +50,31 @@
     <!-- Add your site or application content here -->
 <div id="wrap">
 <!--    Навигационная строка в верху страницы-->
-    <div class="header navbar navbar-default navbar-fixed-top" >
+    <div class="header navbar navbar-default navbar-fixed-top excbt_navbar" >
 <!--        style="background-color: white;"-->
-			<div id="navbar-container" class="container">
+			<div id="navbar-container" class="container-fluid">
 				<div class="navbar-header">
+<!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
 							class="icon-bar"></span> <span class="icon-bar"></span> <span
 							class="icon-bar"></span>
 					</button>
+-->
 					<a class="navbar-brand" href="#/">Портал НМК</a>
 					
 				</div>
 			
-              <ul class="nav navbar-nav">
+<!--              <ul class="nav navbar-nav">-->
 				
-				<li><a href=""
-					title='help'><p
-							class="displayInLine"> <b>Подсказка</b>
-				</p></a></li>						
-			</ul>
+<!--				<li><p align="center" style="font-size: 16px;"><span class="glyphicon"></span> (c) "НМК" 2015 </p></li>						-->
+<!--			</ul>-->
                 
             <ul class="nav navbar-nav pull-right">	
 				
                 <li class="dropdown">
                     <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
-							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}"> <b>{{userInfo.userName}}</b>
+							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
 						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
@@ -191,7 +190,7 @@
 
 </div> <!-- end id=wrap -->
       
-      <div class="footer navbar-fixed-bottom row-fluid" style="background-color: white;">
+      <div class="footer navbar-fixed-bottom row-fluid" style="background-color: #BEBEBE;">
           <div class="container" >
             
 			<p class="muted credit">

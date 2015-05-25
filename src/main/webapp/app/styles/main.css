@@ -18,12 +18,30 @@
 /*    width: 1920px;*/
 }
 
-#navbar-container {
-    width: 1024px;
-}
+/*#navbar-container {*/
+/*    width: 1024px;*/
+/*}*/
 
 #div-main-area {
     margin-left: 10pt;
+}
+
+hr {
+  -moz-border-bottom-colors: none;
+  -moz-border-image: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  border-color: black;
+/*      #EEEEEE;*/
+/*    -moz-use-text-color #FFFFFF;*/
+  border-style: solid none;
+  border-width: 1px 0;
+  margin: 10px 0;
+}
+
+.excbt_h2{
+    white-space: nowrap;
 }
 
 /* Space out content a bit */
@@ -78,10 +96,10 @@ input[type="radio"]{
 
 /* Custom page footer */
 .footer {
-    height: 60px;
+    height: 10px;
   padding-top: 19px;
-  color: #777;
-  border-top: 1px solid #e5e5e5;
+/*  color: #777;*/
+/*  border-top: 1px solid #e5e5e5;*/
 
 }
 
@@ -267,11 +285,13 @@ input[type="radio"]{
 }
 
 .excbt_well-main {
+    min-height: 900px;
     border: none;
     -webkit-box-shadow: none;
     box-shadow: none;
 /*    border-radius: 0;*/
     background-color: #EEEEEE;
+    padding-top: 10px;
 }
 
 .showM {
@@ -558,7 +578,7 @@ mainTable {
     padding: 5px;
 }
 .excbt_objectFilterInputGroup{
-    margin-top: -2.5%;
+/*    margin-top: -2.5%;*/
 }
 
 
@@ -630,6 +650,7 @@ table.excbt_table_oneLineData > tbody > tr> td {
     text-overflow: ellipsis;/* Добавляем многоточие*/
 }
 
+/*Classes for nav-tabs left*/
 .tabs-below > .nav-tabs,
 .tabs-right > .nav-tabs,
 .tabs-left > .nav-tabs {
@@ -733,4 +754,9 @@ table.excbt_table_oneLineData > tbody > tr> td {
 .tabs-right > .nav-tabs .active > a:focus {
   border-color: #ddd #ddd #ddd transparent;
   *border-left-color: #ffffff;
+}
+/*end of nav-tabs left*/
+.excbt_navbar{
+    background-color: #EEEEEE;
+    height: 5%;
 }

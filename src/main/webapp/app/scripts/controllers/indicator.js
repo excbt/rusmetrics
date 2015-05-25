@@ -235,10 +235,10 @@ console.log(data);
         var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName]).toFixed(2)-$scope.summary.totals[columnName].toFixed(2)));
 //console.log("Diff ="+diff); 
 //        diff = diff.toFixed(2);
-        if ((diff >=0)&&(diff < 0.005))
-        {
-            return '#66CC00';
-        };
+//        if ((diff >=0)&&(diff < 0.005))
+//        {
+//            return '#66CC00';
+//        };
         if ((diff >=0.005)&&(diff <= 1))
         {
             return 'yellow';
