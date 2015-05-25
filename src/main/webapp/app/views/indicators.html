@@ -104,8 +104,9 @@
             <tr>
                 <td class="col-md-1">интеграторы:</td>
                 <td ng-repeat="column in intotalColumns" ng-click="toggleDetail(summary.lastData)"
-                    ng-attr-title="{{setTitle(column.name)}} " class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
-                    {{(summary.lastData[column.name] - summary.firstData[column.name])}}
+                     class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
+<!--                    ng-attr-title="{{setTitle(column.name)}} "-->
+                    {{summary.difs[column.name]}}
                     <div ng-show="summary.lastData.detail">
                         <div>Начальное значение = {{summary.firstData[column.name]}}</div>
                         <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>

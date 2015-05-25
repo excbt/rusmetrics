@@ -9,7 +9,7 @@
  */
 var app = angular.module('portalNMK');
   app.controller('MainCtrl', ['$scope','$rootScope', 'crudGridDataFactory', function ($scope, $rootScope, crudGridDataFactory) {
-    
+//console.log((5000 - 1048)/100); //39.519999999999996    
 //    $scope.$on('IdleEnd', function() {
 //        window.location.assign('/logout');
 //    });

@@ -191,15 +191,15 @@ console.log(data);
         $scope.getData(1);                              
     }, false); 
     
-    $scope.setTitle = function(fieldName){ 
-        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
-            return;
-        };
-        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
-                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
-    }; 
+//    $scope.setTitle = function(fieldName){ 
+//        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
+//            return;
+//        };
+//        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
+//            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
+//                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
+//            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
+//    }; 
     
     $scope.intotalColumns = [
         {"name": "m_in",
