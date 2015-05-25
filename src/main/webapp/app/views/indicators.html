@@ -67,7 +67,7 @@
 
             </tr>
             <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-                <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                <td ng-repeat="column in tableDef.columns" class="textAlign_right" ng-class="column.dataClass || column.headerClass">
                     {{indicator[column.fieldName]}}
                 </td>
             </tr>
@@ -97,15 +97,16 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns" ng-style="{'background-color': setBgColor(column.name)}">
+                <td ng-repeat="column in intotalColumns" class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
                 <td ng-repeat="column in intotalColumns" ng-click="toggleDetail(summary.lastData)"
-                    ng-attr-title="{{setTitle(column.name)}} " ng-style="{'background-color': setBgColor(column.name)}">
-                    {{(summary.lastData[column.name] - summary.firstData[column.name])}}
+                     class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
+<!--                    ng-attr-title="{{setTitle(column.name)}} "-->
+                    {{summary.difs[column.name]}}
                     <div ng-show="summary.lastData.detail">
                         <div>Начальное значение = {{summary.firstData[column.name]}}</div>
                         <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>

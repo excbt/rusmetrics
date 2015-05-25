@@ -191,15 +191,15 @@ console.log(data);
         $scope.getData(1);                              
     }, false); 
     
-    $scope.setTitle = function(fieldName){ 
-        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
-            return;
-        };
-        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
-                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
-            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
-    }; 
+//    $scope.setTitle = function(fieldName){ 
+//        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
+//            return;
+//        };
+//        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
+//            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
+//                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
+//            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
+//    }; 
     
     $scope.intotalColumns = [
         {"name": "m_in",
@@ -235,10 +235,10 @@ console.log(data);
         var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName]).toFixed(2)-$scope.summary.totals[columnName].toFixed(2)));
 //console.log("Diff ="+diff); 
 //        diff = diff.toFixed(2);
-        if ((diff >=0)&&(diff < 0.005))
-        {
-            return '#66CC00';
-        };
+//        if ((diff >=0)&&(diff < 0.005))
+//        {
+//            return '#66CC00';
+//        };
         if ((diff >=0.005)&&(diff <= 1))
         {
             return 'yellow';

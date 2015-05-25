@@ -9,7 +9,7 @@
  */
 var app = angular.module('portalNMK');
   app.controller('MainCtrl', ['$scope','$rootScope', 'crudGridDataFactory', function ($scope, $rootScope, crudGridDataFactory) {
-    
+//console.log((5000 - 1048)/100); //39.519999999999996    
 //    $scope.$on('IdleEnd', function() {
 //        window.location.assign('/logout');
 //    });
@@ -169,7 +169,19 @@ var app = angular.module('portalNMK');
 //          rows: $scope.notices
 //        };
 //                    
-      
+      $scope.menuMassive = {};
+      $scope.menuMassive.object_menu_item = true;
+      $scope.menuMassive.notice_menu_item = false;
+      $scope.menuMassive.setting_menu_item = false;
+      $scope.menuMassive.admin_menu_item = false;
+      $scope.clickMenu = function(menu){
+          for (var k in $scope.menuMassive){
+              $scope.menuMassive[k] = false;
+          };
+         $scope.menuMassive[menu]=true;  
+//          var el = document.getElementById(el_id);
+//          el.className = el.className + "excbt_a_list_group_item_selected";
+      };
     
   }]);
 
