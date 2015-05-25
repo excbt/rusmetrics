@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.cli;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataJsonRepository;
+import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.utils.JsonCleaner;
 
 public class DBToolCli extends AbstractDBToolCli {
@@ -25,11 +27,16 @@ public class DBToolCli extends AbstractDBToolCli {
 	@Autowired
 	private DeviceObjectDataJsonRepository deviceObjectDataJsonRepository;
 
+	@Autowired
+	private ReportService dbService;
+
+	
 	/**
 	 * 
 	 * @param args
+	 * @throws SQLException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		DBToolCli app = new DBToolCli();
 		app.autowireBeans();
 		logger.info("Application Started");
@@ -38,6 +45,7 @@ public class DBToolCli extends AbstractDBToolCli {
 						: "entityManager NOT inititalized");
 
 		app.readJson();
+		app.dbService.testConnection();
 	}
 
 	/**
@@ -66,5 +74,9 @@ public class DBToolCli extends AbstractDBToolCli {
 		}
 
 	}
+	
 
+
+	
+	
 }

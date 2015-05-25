@@ -17,6 +17,8 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL + "/%d/service/24h/%d";	
 	public final static long CONT_OBJECT_ID = 18811504;
 	public final static long CONT_ZPOINT_ID = 18811557;
+	public final static long CONT_OBJECT2_ID = 18811519;
+	public final static long CONT_ZPOINT2_ID = 18811586;
 	
 	
 	@Test
@@ -50,12 +52,12 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 	@Test
 	public void testHWaterSummary() throws Exception {
 		
-		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary", CONT_OBJECT_ID, CONT_ZPOINT_ID);
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary", CONT_OBJECT2_ID, CONT_ZPOINT2_ID);
 		
 		ResultActions resultAction = mockMvc.perform(get(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2014-10-01")
-				.param("endDate", "2014-10-31")
+				.param("beginDate", "2015-05-19")
+				.param("endDate", "2015-05-25")
 				.with(testSecurityContext()));
 		
 		resultAction.andDo(MockMvcResultHandlers.print());
