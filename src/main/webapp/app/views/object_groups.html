@@ -1,0 +1,140 @@
+<div>Портал / Управление / Объекты</div>
+<h2 class="noMargin excbt_h2">Объекты</h2>
+<hr>
+<div role="tabpanel">
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"  class="active"><a href="" aria-controls="object_groups" data-target="#object_groups"  role="tab" data-toggle="tab">Группы объектов</a></li>
+<!--
+    <li role="presentation"><a href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation"><a href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
+-->
+  </ul>
+    
+    <div class="tab-content">
+<!--      Варианты отчетов-->
+        <div role="tabpanel" class="tab-pane fade in active" id="object_groups">
+            <div class="btn-group marginTop10">
+			<button class="btn btn-primary" data-target="#edit_group" data-toggle="modal" ng-click="addGroup()">Добавить группу объектов</button>
+		</div><br><br>    
+		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover">
+			<tr id="tr_cnt_header" class="info">
+				<th class="col-md-1"></th>
+    			<th class="col-md-10">Имя группы</th>
+    			<th class="col-md-1"></th>
+    		</tr>
+            <tr ng-repeat="group in groups">
+                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedGroup(group)" data-target="#edit_group" data-toggle="modal"></i>
+                </td>
+                <td>
+                    {{group.name}}
+                </td>
+                <td><i class="btn btn-default btn-xs glyphicon glyphicon-trash" ng-click="selectedGroup(group)" data-target="#deleteGroupModal" data-toggle="modal"></i>
+                </td>
+            </tr>
+		</table>
+        </div>
+    </div>
+</div>
+
+    <!-- Модальное окно редактирования группы объектов -->
+    <div id="edit_group" class="modal fade" role="dialog"
+		aria-labelledby="showObjOptionLabel" tabindex="-1">
+		<div class="modal-dialog  modal-content ">
+			<div class="modal-header">
+				<h3 id="lst_edit_w_header">Группа объектов</h3>
+			</div>
+    		<div class="modal_body modal-scrollable-area1">
+    		<br>
+ 	        	<div class="container-fluid">
+ 	            	<div class="row-fluid">
+   	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+   							<form>
+    							<label for = "inp_lst_name">Название группы:</label>
+   								<input id = "inp_lst_name" type="text" class="form-control" ng-model="currentGroup.name" />
+   							</form>
+   							<br>
+   							<label for = "contacts_in_window">Включить объекты в группу:</label>
+   							<div id = "contacts_in_window" class = "panel panel-default exbt_list_in_window">
+   								<table id="table_objects_in_window" class = "table table-striped table-condensed table-hover">
+                                    <tr ng-repeat="object in objects">
+                                        <td><input type="checkbox" ng-model="object.selected" ng-click="toggleSelected(object)">{{object.fullName}}
+                                        </td>
+                                    </tr>
+   								</table>
+   							</div>
+   							<br>
+     					</div>
+    				</div>
+    			</div>
+    		</div>
+	    	<div class="modal-footer">
+    			<div class="container-fluid dialogMarginButtons">
+					<div class="row">
+                       	<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                                ng-disabled="!checkForm()"   
+								ng-click="saveGroup()"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+	    	</div>
+    	</div>
+    </div>
+
+<!-- window: delete group-->
+<div id="deleteGroupModal" class="modal fade" role="dialog"
+	aria-labelledby="deleteGroupLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content">
+
+		<div class="modal-header">
+			<h3 id="deleteGroupLabel">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary">{{currentGroup.name}}</label>
+					<label
+						class="text-warning"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block"
+								ng-click="deleteGroup(currentGroup);"
+								value="Удалить" />
+						</div>
+
+						<div class="col-xs-offset-2 col-md-3">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteGroup');">
+								Отмена
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>

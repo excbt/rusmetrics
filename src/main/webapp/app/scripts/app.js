@@ -86,6 +86,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/contacts.html',
         controller: 'ContactsCtrl'
       })
+    .when('/control/object_groups', {
+        templateUrl: 'views/object_groups.html',
+        controller: 'ObjectGroupsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
