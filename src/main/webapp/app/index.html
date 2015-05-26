@@ -48,7 +48,7 @@
 
         </div>
     <!-- Add your site or application content here -->
-<div id="wrap">
+<div id="wrap" ng-controller="MainCtrl">
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-default navbar-fixed-top excbt_navbar" >
 <!--        style="background-color: white;"-->
@@ -92,7 +92,7 @@
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
     
-    <div class="container-fluid noMargin" ng-controller="MainCtrl">
+    <div class="container-fluid noMargin" >
 
     <div class="row row-offcanvas row-offcanvas-left">    
        
@@ -139,16 +139,16 @@
                                 <!--                                Администрирование-->
                                 <a class="list-group-item noMarginBottom excbt_a_list_group_item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
 
-                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench"></i> Администрирование <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
+                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench"></i> Управление <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item excbt_a_list_group_item"
+                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.metadata_control_menu_item}"
 
-                                       href="#/" data-toggle="offcanvas">Метаданные</a>
+                                    ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
 
-                                    <a class="list-group-item excbt_a_list_group_item"
+                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_control_menu_item}"
 
-                                        href="#/" data-toggle="offcanvas">Объекты</a>
+                                       ng-click="clickMenu('object_control_menu_item');" href="#/" data-toggle="offcanvas">Объекты</a>
                                 </div>
 
                             </div>
@@ -159,21 +159,21 @@
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
-                                <a class="list-group-item excbt_a_list_group_item"
+                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_menu_item}"
 
-                                    href="#/" data-toggle="offcanvas" ng-click="showPrivateOfficeMenu=false">Портал</a>
+                                ng-click="clickMenu('object_menu_item');showPrivateOfficeMenu=false" href="#/" data-toggle="offcanvas">Портал</a>
                                 <!-- Объекты, меню настройки объектов -->
-                                <a class="list-group-item excbt_a_list_group_item"
+                                <a  class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_menu_list_item}"
 
-                                    href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
+                                ng-click="clickMenu('object_menu_list_item');" href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
                                 <!-- Контакты -->
-                                <a class="list-group-item excbt_a_list_group_item"
+                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.contact_menu_item}"
 
-                                    href="#/private/contacts/" data-toggle="offcanvas">Контакты</a>
+                                   ng-click="clickMenu('contact_menu_item');" href="#/private/contacts/" data-toggle="offcanvas">Контакты</a>
                                 <!-- Справочники -->
-                                <a class="list-group-item excbt_a_list_group_item"
+                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.directory_menu_item}"
 
-                                    href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
+                                   ng-click="clickMenu('directory_menu_item');" href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
 
                             </div>
                         </nav>                      
