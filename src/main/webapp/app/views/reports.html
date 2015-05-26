@@ -1,13 +1,13 @@
 <div>Портал / Отчеты</div>
-<h2>Отчеты</h2>
-
+<h2 class="noMargin excbt_h2">Отчеты</h2>
+<hr>
 <div>
-    <table id="datatabl" class="table table-bordered table-striped  table-condensed noMarginBottom">
+    <table id="datatabl" class="table table-striped  table-condensed noMarginBottom excbt_table">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
                         <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom"> 
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
 
                                 <tr>
 
@@ -15,7 +15,7 @@
 
                                         <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
 
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">

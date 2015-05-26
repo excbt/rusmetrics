@@ -232,22 +232,47 @@ console.log(data);
 //console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
 //console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
 //console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
-        var diff = Math.abs((($scope.summary.lastData[columnName] - $scope.summary.firstData[columnName]).toFixed(2)-$scope.summary.totals[columnName].toFixed(2)));
+        var diff = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
 //console.log("Diff ="+diff); 
 //        diff = diff.toFixed(2);
 //        if ((diff >=0)&&(diff < 0.005))
 //        {
 //            return '#66CC00';
 //        };
-        if ((diff >=0.005)&&(diff <= 1))
+        if ((diff >=0.0000000000001)&&(diff <= 1))
         {
-            return 'yellow';
+            return '3px solid yellow';
         };
         if ((diff >1))
         {
-            return 'red';
+            return '3px solid red';
         };
     }; 
+        
+    $scope.setLiColor = function(columnName){
+        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
+            return;
+        };
+//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
+//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
+//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
+//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
+        var diff = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
+//console.log("Diff ="+diff); 
+//        diff = diff.toFixed(2);
+//        if ((diff >=0)&&(diff < 0.005))
+//        {
+//            return '#66CC00';
+//        };
+        if ((diff >=0.0000000000001)&&(diff <= 1))
+        {
+            return {display: 'inherit', color: 'yellow'};
+        };
+        if ((diff >1))
+        {
+            return {display: 'inherit', color: 'red'};
+        };
+    };     
     
     $scope.toggleDetail = function(object){
         object.detail = !object.detail;

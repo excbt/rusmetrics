@@ -97,16 +97,16 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns" class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
+                <td ng-repeat="column in intotalColumns" class="textAlign_right" ng-style="{'border-bottom': setBgColor(column.name)}">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
                 <td ng-repeat="column in intotalColumns" ng-click="toggleDetail(summary.lastData)"
-                     class="textAlign_right" ng-style="{'background-color': setBgColor(column.name)}">
+                     class="textAlign_right" ng-style="{'border-bottom': setBgColor(column.name)}">
 <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
-                    {{summary.difs[column.name]}}
+                    {{summary.diffs[column.name]}}
                     <div ng-show="summary.lastData.detail">
                         <div>Начальное значение = {{summary.firstData[column.name]}}</div>
                         <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>
