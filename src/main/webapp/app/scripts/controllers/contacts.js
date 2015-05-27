@@ -1,7 +1,3 @@
-/*
- *  Я закончил на том, что delete работает, но возвращает неизвестно что
- */
-
 var app = angular.module('portalNMK');
 app.controller(
 		'ContactsCtrl',
@@ -203,7 +199,6 @@ app.controller(
 										if($scope.small_contacts[zx].id == $scope.cnt_lst[zxa]) $scope.small_contacts[zx].checked = true;
 									}
 								}
-							//	$('#edit_list').modal();
 							}
 							else {
 								$scope.small_lists = $scope.lists;
@@ -221,14 +216,16 @@ app.controller(
 							 */
 							alert('Error in loading data!');
 						});
-					}
+				}
 				else {
 					if(type == 'contact'){
+						$scope.small_lists = $scope.lists;
 						for (var zxb = 0; zxb < $scope.small_lists.length; zxb++){
 							$scope.small_lists[zxb].checked = false;
 						}
 					}
 					else {
+						$scope.small_contacts = $scope.contacts;
 						for (var zxc = 0; zxc < $scope.small_contacts.length; zxc++){
 							$scope.small_contacts[zxc].checked = false;
 						}

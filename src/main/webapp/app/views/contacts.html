@@ -128,10 +128,6 @@
 
 <script type="text/javascript">
 /*
- * ToDo:
-- Сделать удаление списка контактов
-- Сделать добавление-удаление связей
-- Сделать функцию добавления списка на сервер
 - Удалить неиспользуемые стили
  */
 	// Переключение вкладок
@@ -167,8 +163,7 @@
 </div>
     <!-- Содержимое вкладки с контактами -->
     <div id="div_contacts">
-
-		<h2>Контакты</h2>
+    <br>
 		<!-- Кнопка добавления контактов -->
 		<div class="btn-group">
 			<button class="btn btn-primary" data-target="#edit_contact" data-toggle="modal" ng-click="editItem('new', 'contact')">Добавить контакт</button>
@@ -196,10 +191,10 @@
     	</table>
     </div>
     <div id="div_contact_lists" class="hidden_tab">
-		<h2>Списки контактов</h2>
+    <br>
 		<!-- Кнопка добавления списков -->
 		<div class="btn-group">
-			<button class="btn btn-primary" ng-click="editItem('new', 'list')" data-target="#edit_list" >Добавить список</button>
+			<button class="btn btn-primary" ng-click="editItem('new', 'list')" data-target="#edit_list" data-toggle="modal" >Добавить список</button>
 		</div><br><br>    
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover">
 			<tr id="tr_cnt_header" class="info">
