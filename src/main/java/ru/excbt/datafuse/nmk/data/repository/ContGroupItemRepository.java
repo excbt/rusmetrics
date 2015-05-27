@@ -15,14 +15,14 @@ public interface ContGroupItemRepository extends
 	@Query("SELECT co FROM ContObject co WHERE co.id IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci INNER JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) " + "ORDER BY co.name, co.id")
-	public List<ContObject> selectContObjects(
+	public List<ContObject> selectContGroupObjects(
 			@Param("contGroupId") long contGroupId);
 
 	@Query("SELECT co FROM Subscriber s LEFT JOIN s.contObjects co "
 			+ "WHERE s.id = :subscriberId AND co.id NOT IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci LEFT JOIN ci.contGroup cg "
 			+ "WHERE cg.id = :contGroupId ) " + "ORDER BY co.name, co.id")
-	public List<ContObject> selectAvailableContObjects(
+	public List<ContObject> selectAvailableContGroupObjects(
 			@Param("contGroupId") long contGroupId,
 			@Param("subscriberId") long subscriberId);
 

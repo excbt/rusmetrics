@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import javax.persistence.PersistenceException;
 
 import org.slf4j.Logger;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContGroup;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.repository.ContGroupItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContGroupRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -87,13 +90,46 @@ public class ContGroupService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param id
+	 * @param contGroupId
 	 * @return
 	 */
 	@Transactional(readOnly = true)
 	public ContGroup findOne(long contGroupId) {
 		ContGroup result = contGroupRepository.findOne(contGroupId);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param contGroupId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContObject> selectContGroupObjects(long contGroupId) {
+		return contGroupItemRepository.selectContGroupObjects(contGroupId);
+	}
+
+	/**
+	 * 
+	 * @param contGroupId
+	 * @param SubscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContObject> selectAvailableContGroupObjects(long contGroupId,
+			long subscriberId) {
+		return contGroupItemRepository.selectAvailableContGroupObjects(
+				contGroupId, subscriberId);
+	}
+
+	/**
+	 * 
+	 * @param SubscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContGroup> selectSubscriberGroups(long subscriberId) {
+		return contGroupRepository.findBySubscriberId(subscriberId);
 	}
 
 }
