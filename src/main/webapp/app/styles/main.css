@@ -61,6 +61,20 @@ th {
 }
 */
 
+/*color "Портал НМК"*/
+/*
+.excbt_navbar > .container-fluid> .navbar-header> .navbar-brand{
+    color: red !important;
+}
+*/
+
+/*color "Пользователь"*/
+/*
+.dropdown-toggle > span {
+    color: green;
+}
+*/
+
 /*main area - central part of window*/
 .excbt_well-main {
     min-height: 900px;
@@ -97,7 +111,19 @@ a.list-group-item {
 .excbt_innerTable > thead> tr{
      background-color: #BEBEBE; /*background color*/
 /*         #696969;*/
-};
+}
+
+/* Custom page footer */
+.footer {
+    height: 10px;
+  padding-top: 19px;
+    background-color: #BEBEBE;
+}
+
+.excbt_navbar{
+    background-color: #EEEEEE;
+    height: 5%;
+}
 
 /* **************************************************************** */
 
@@ -136,14 +162,6 @@ input[type="radio"]{
   padding-bottom: 19px;
 }
 
-/* Custom page footer */
-.footer {
-    height: 10px;
-  padding-top: 19px;
-/*  color: #777;*/
-/*  border-top: 1px solid #e5e5e5;*/
-
-}
 
 /* Customize container */
 @media (min-width: 768px) {
@@ -777,7 +795,3 @@ table.excbt_table_oneLineData > tbody > tr> td {
   *border-left-color: #ffffff;
 }
 /*end of nav-tabs left*/
-.excbt_navbar{
-    background-color: #EEEEEE;
-    height: 5%;
-}
