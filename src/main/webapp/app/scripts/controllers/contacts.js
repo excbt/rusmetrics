@@ -1,0 +1,258 @@
+var app = angular.module('portalNMK');
+app.controller(
+		'ContactsCtrl',
+		function($scope, $http){			
+			/*************************
+			 * Определяем переменные *
+			 *************************/
+			// Массивы с полной инфой о контактах и списках
+			$scope.contacts = [];
+			$scope.lists = [];
+			// Массив с текущим редактируемым элементом
+			$scope.currentItem = {};
+			// Массив с взаимосвязями группа-контакт
+			$scope.cnt_lst = [];
+			// Массивы для построения таблиц в списках с чекбоксами
+			$scope.small_lists = [];
+			$scope.small_contacts = [];
+			// Переменные с url'ами запросов
+			$scope.url_users = '../api/subscr/subscrAction/users';
+			$scope.url_groups = '../api/subscr/subscrAction/groups';
+				
+			/****************************
+			 * Функции для работы с API *
+			 ****************************/
+			
+			// Получение контактов с сервера
+			$scope.getContacts = function (){
+				$.ajax({
+					type: 'GET',
+					url: $scope.url_users,
+					dataType: 'json',
+					async: false,
+					success: function(data){
+						$scope.contacts = data;
+					}
+				});
+			}
+			
+			// Получение списков контактов с сервера
+			$scope.getLists = function (){
+				$.ajax({
+					type: 'GET',
+					url: $scope.url_groups,
+					dataType: 'json',
+					async: false,
+					success: function(data){
+						$scope.lists = data;
+					}
+				});
+			}
+			
+			// Добавление контакта на сервер
+			$scope.addContact = function (){
+				// Собираем отмеченные чекбоксы в списке групп
+				var table_list = document.getElementById("table_lists_in_window");
+				$scope.cnt_lst = [];
+				for(var zxa = 0; zxa < table_list.rows.length; zxa++){
+					if(table_list.rows[zxa].cells[0].childNodes[0].checked){
+						$scope.cnt_lst.push(table_list.rows[zxa].cells[0].childNodes[0].id);
+					}
+				}
+				// Если объект уже существует - делаем put
+				if(typeof $scope.currentItem.id !== 'undefined'){
+					var url = $scope.url_users + '/' + $scope.currentItem.id + '?subscrGroupIds=' + $scope.cnt_lst;
+					$http.put(url, $scope.currentItem)
+					.success(function(){
+						$scope.getContacts();
+						$('#edit_contact').modal('hide');
+					})
+					.error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not added to server!');
+					});
+				}
+				// Если не существует - делаем post
+				else {
+					var url = $scope.url_users + '?subscrGroupIds=' + $scope.cnt_lst;
+					$http.post(url, $scope.currentItem)
+					.success(function(){
+						$scope.getContacts();
+						$('#edit_contact').modal('hide');
+					})
+					.error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not added to server!');
+					});
+				}
+			}
+			
+			// Добавление списка на сервер
+			$scope.addList = function (){
+				// Собираем отмеченные чекбоксы в списке групп
+				var table_contacts = document.getElementById("table_contacts_in_window");
+				$scope.cnt_lst = [];
+				for(var zxa = 0; zxa < table_contacts.rows.length; zxa++){
+					if(table_contacts.rows[zxa].cells[0].childNodes[0].checked){
+						$scope.cnt_lst.push(table_contacts.rows[zxa].cells[0].childNodes[0].id);
+					}
+				}
+				// Если объект уже существует - делаем put
+				if(typeof $scope.currentItem.id !== 'undefined'){
+					var url = $scope.url_groups + '/' + $scope.currentItem.id  + '?subscrUserIds=' + $scope.cnt_lst;
+					$http.put(url, $scope.currentItem)
+					.success(function(){
+						$scope.getLists();
+						$('#edit_list').modal('hide');
+					})
+					.error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not added to server!');
+					});
+				}
+				// Если не существует - делаем post
+				else {
+					var url = $scope.url_groups + '?subscrUserIds=' + $scope.cnt_lst
+					$http.post(url, $scope.currentItem)
+					.success(function(){
+						$scope.getLists();
+						$('#edit_list').modal('hide');
+					})
+					.error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not added to server!');
+					});
+				}
+			}
+
+			// Удаление контакта
+			$scope.delContact = function (contact){
+				/*
+				 * Добавить окно с подтверждалкой
+				 */
+				var url = $scope.url_users + '/' + contact.id;
+				$http.delete(url).
+					success(function(){
+						$scope.getContacts();
+					}).
+					error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not deleted!');
+					});
+			}
+			
+			// Удаление списка контактов
+			$scope.delList = function (list){
+				/*
+				 * Добавить окно с подтверждалкой
+				 */
+				var url = $scope.url_groups + '/' + list.id;
+				$http.delete(url)
+					.success(function(){
+						$scope.getLists();
+					})
+					.error(function(){
+						/*
+						 * Переделать на красный стикер в правом верхнем углу!
+						 */
+						alert('Not deleted!');
+					});
+			}
+			
+			// Получение списка связей контакт-группа
+			// type - для кого получаем связи: contact или group
+			$scope.getCntLst = function (type, item){
+				// Сначала обнулим массив
+				$scope.cnt_lst = [];
+				// Проверяем, создаётся ли новый элемент или редактируется старый
+				if(item!='new'){
+					// Если надо получить список для контакта, то формируем один урл
+					if(type == 'contact'){
+						var url = $scope.url_users + '/' + item.id + '/groups';					
+					}
+					// Если для группы - то другой
+					else {
+						var url = $scope.url_groups + '/' + item.id + '/users';		
+					}
+					// Запрос на сервер
+					$http.get(url)
+					// В случае успеха запускаем функцию, которая, в числе прочего, формирует список с чекбоксами
+						.success(function(data){
+							for(var zx=0; zx < data.length; zx++){
+								$scope.cnt_lst.push(data[zx].id);
+							}
+							// Для редактора списков делаем таблицу с контактами, для редактора контактов - наоборот
+							if (type == 'list'){
+								$scope.small_contacts = $scope.contacts;
+								for (var zx = 0; zx < $scope.contacts.length; zx++){
+									for (var zxa = 0; zxa < $scope.cnt_lst.length; zxa++){
+										if($scope.small_contacts[zx].id == $scope.cnt_lst[zxa]) $scope.small_contacts[zx].checked = true;
+									}
+								}
+							}
+							else {
+								$scope.small_lists = $scope.lists;
+								for (var zx = 0; zx < $scope.lists.length; zx++){
+									$scope.small_lists[zx].checked = false;
+									for (var zxa = 0; zxa < $scope.cnt_lst.length; zxa++){
+										if($scope.small_lists[zx].id == $scope.cnt_lst[zxa]) $scope.small_lists[zx].checked = true;
+									}
+								}
+							}
+						})
+						.error(function(){
+							/*
+							 * Переделать на красный стикер в правом верхнем углу!
+							 */
+							alert('Error in loading data!');
+						});
+				}
+				else {
+					if(type == 'contact'){
+						$scope.small_lists = $scope.lists;
+						for (var zxb = 0; zxb < $scope.small_lists.length; zxb++){
+							$scope.small_lists[zxb].checked = false;
+						}
+					}
+					else {
+						$scope.small_contacts = $scope.contacts;
+						for (var zxc = 0; zxc < $scope.small_contacts.length; zxc++){
+							$scope.small_contacts[zxc].checked = false;
+						}
+					}
+				}
+			}
+			
+			/***************************
+			 * Вспомогательные функции *
+			 ***************************/
+			// Готовим элемент для окна редактирования контакта/группы
+			// type - тип редактируемого элемента (contact или list)
+			$scope.editItem = function(item, type){
+				// Если создаётся новый элемент - обнуляем объект и список связей контакт-группа
+				if (item == 'new'){
+					$scope.currentItem = {};
+				}
+				else {
+					$scope.currentItem = item;
+				}
+				$scope.getCntLst(type, item);
+			}
+			
+			/*********************
+			 * Запускаем функции *
+			 *********************/
+			$scope.getContacts();
+			$scope.getLists();
+		}
+);
