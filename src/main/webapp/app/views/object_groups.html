@@ -1,4 +1,11 @@
-<div>Портал / Управление / Объекты</div>
+<!--<div>Портал / Управление / Объекты</div>-->
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li>Управление <span class="divider"></span></li>
+        <li class="active">Объекты</li>
+    </ul>
+</div>
 <h2 class="noMargin excbt_h2">Объекты</h2>
 <hr>
 <div role="tabpanel">
@@ -56,6 +63,9 @@
    							</form>
    							<br>
    							<label for = "contacts_in_window">Включить объекты в группу:</label>
+                            <div class="pull-right">
+                                <input type="checkbox" ng-model="objectSelected_flag" />Только выбранные
+                            </div>
    							<div id = "contacts_in_window" class = "panel panel-default exbt_list_in_window">
    								<table id="table_objects_in_window" class = "table table-striped table-condensed table-hover">
                                     <tr ng-repeat="object in objects">

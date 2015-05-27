@@ -24,6 +24,16 @@ angular.module('portalNMK')
     var errorCallback = function (e) {
         notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
+    
+    function performObjectArray(){
+        var result = [];
+        for (var i=0; i<$scope.objects.length;i++){
+            if ($scope.objects[i].selected){
+                result.push($scope.objects[i].id);
+            };
+        };
+        return result;
+    };
 
     $scope.saveGroup = function () {
         crudGridDataFactory($scope.groupUrl).save($scope.object, successCallback, errorCallback);

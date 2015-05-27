@@ -280,7 +280,15 @@ console.log(data);
     };
         
     $scope.saveIndicatorsToFile = function(){
-        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
+        var csv = "hello text";
+console.log(csv);                
+        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+console.log(window.location.href);    
+//        window.open("",'_blank');
+        window.location.href = csvData;
+//        this.target = '_blank';
+//        this.download = 'filename.csv';
+//        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
     }; 
         
      //chart

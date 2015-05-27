@@ -1,4 +1,11 @@
-<div>Портал / Настройки / Тарифы</div>
+<!--<div>Портал / Настройки / Тарифы</div>-->
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li>Настройки<span class="divider"></span></li>
+        <li class="active">Тарифы</li>
+    </ul>
+</div>    
 <div class="container-fluid">
 <div class="row">
     <div class="col-md-3 noPadding">
@@ -18,10 +25,13 @@
 </div>    
 </div> 
 
+<div class="btn-toolbar marginBottom10">
+    <button class="btn btn-primary" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить тариф</button>
+</div>
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover">
     <tr class="info">
         <th class="col-md-1">
-            <div class="btn-toolbar"><button class="btn btn-xs btn-default" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить</button></div>
+      
         </th>
 
         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
