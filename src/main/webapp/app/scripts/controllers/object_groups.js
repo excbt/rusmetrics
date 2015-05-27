@@ -6,6 +6,8 @@ angular.module('portalNMK')
         {'name': "group 2"}
     ];
     $scope.objects = [];
+    $scope.availableObjects = [];
+    $scope.selectedObjects = [];
     $scope.objectsBackup = [];
     $scope.currentGroup = {};
     
@@ -27,9 +29,9 @@ angular.module('portalNMK')
     
     function performObjectArray(){
         var result = [];
-        for (var i=0; i<$scope.objects.length;i++){
-            if ($scope.objects[i].selected){
-                result.push($scope.objects[i].id);
+        for (var i=0; i<$scope.selectedObjects.length;i++){
+            if ($scope.selectedObjects[i].selected){
+                result.push($scope.selectedObjects[i].id);
             };
         };
         return result;
@@ -52,7 +54,7 @@ angular.module('portalNMK')
         crudGridDataFactory(url).query(function (data) {
             switch (type){
                 case "groups": $scope.groups = data; break;
-                case "objects": $scope.objects = data; $scope.objectsBackup=data; break;
+                case "objects": $scope.availableObjects = data; $scope.objectsBackup=data; break;
                 default: console.log("Data type is undefined.");
             }
         });
@@ -69,11 +71,21 @@ angular.module('portalNMK')
     
     $scope.addGroup = function(){
         $scope.currentGroup = {};
-        $scope.objects = $scope.objectsBackup;
+        $scope.availableObjects = $scope.objectsBackup;
     };
     
     $scope.checkForm = function(){       
         var result = !(($scope.currentGroup.name ==="")||($scope.currentGroup.name ==null));
         return result;
     };
+    
+    $scope.selectObject = function(object){
+        $scope.selectedObjects.push(object);
+        $scope.availableObjects.splice($scope.availableObjects.indexOf(object), 1);
+    };
+    
+    $scope.removeSelectedObject = function(object){
+        $scope.availableObjects.push(object);
+        $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+    }
 }]);

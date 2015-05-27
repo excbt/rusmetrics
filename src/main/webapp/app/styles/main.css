@@ -816,3 +816,24 @@ table.excbt_table_oneLineData > tbody > tr> td {
   *border-left-color: #ffffff;
 }
 /*end of nav-tabs left*/
+
+.excbt_availableObjectsModalWindow >.modal-backdrop.fade{
+    opacity: 0;   
+}
+
+.excbt_availableObjectsModalWindow {
+    margin-left:-52%;
+    margin-top: 11.3%;
+}
+
+.excbt_availableObjectsModalWindow_modal-body{
+    height: 475px;
+    overflow-y: scroll;
+}
+
+.excbt_availableObjectsModalWindow_modal-header{
+    padding: 0 0 0 5px;
+}
+.excbt_availableObjectsModalWindow_modal-header_title{
+    
+}
