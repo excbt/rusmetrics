@@ -8,7 +8,7 @@
 <h2 class="noMargin excbt_h2">Отчеты</h2>
 <hr>
 <div>
-    <table id="datatabl" class="table table-striped  table-condensed noMarginBottom excbt_table">
+    <table id="datatabl" class="table  table-condensed noMarginBottom excbt_table">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
@@ -38,7 +38,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin " ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
