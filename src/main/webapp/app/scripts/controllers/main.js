@@ -39,6 +39,9 @@ var app = angular.module('portalNMK');
       $scope.menuMassive.directory_menu_item= false;
       $scope.menuMassive.object_control_menu_item= false;
       $scope.menuMassive.metadata_control_menu_item= false;
+      $scope.menuMassive.setting_group_menu_item= false;
+      $scope.menuMassive.setting_tariff_menu_item= false;
+      $scope.menuMassive.setting_report_menu_item= false;
 //      set selected menu item
       $scope.clickMenu = function(menu){
           for (var k in $scope.menuMassive){

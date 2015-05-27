@@ -126,13 +126,16 @@
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item excbt_a_list_group_item"
+                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_tariff_menu_item}"
 
-                                       href="#/settings/tariffs/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-scale"></i> Тарифы</a>
+                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-scale"></i> Тарифы</a>
 
-                                    <a class="list-group-item excbt_a_list_group_item"
+                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_report_menu_item}"
 
-                                        href="#/settings/reports/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-blackboard"></i> Отчеты</a>
+                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-blackboard"></i> Отчеты</a>
+                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_group_menu_item}"
+
+                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-folder-open"></i>Группы</a>
                                 </div>
                                
                                 
@@ -146,9 +149,7 @@
 
                                     ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
 
-                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_control_menu_item}"
-
-                                       ng-click="clickMenu('object_control_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas">Объекты</a>
+                                    
                                 </div>
 
                             </div>

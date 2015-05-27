@@ -1,3 +1,4 @@
+/* index.html*/
 /* Wrapper for page content to push down footer */
 #wrap {
     min-height: 100%;
@@ -142,7 +143,6 @@ input[type="radio"]{
     margin-left: 15px;
 }
 
-
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -163,6 +163,24 @@ input[type="radio"]{
   padding-bottom: 19px;
 }
 
+/*стили шапки модального онка*/
+/*
+.modal-header{
+    background-color: green;
+}
+*/
+/*стили заголовка модального окна*/
+/*
+.modal-header > h3{
+    color:red;
+}
+*/
+/*стили подвала модального окна*/
+/*
+.modal-footer{
+    background-color: blue;
+}
+*/
 
 /* Customize container */
 @media (min-width: 768px) {
@@ -465,6 +483,8 @@ tr > .active{
 .col-sm-10-main {
     width: 87%;
 }
+
+/*main menu*/
 .menuWidth {
     width: 10%;
 }
