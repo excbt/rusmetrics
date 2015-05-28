@@ -32,8 +32,11 @@ public class ContGroup extends AbstractAuditableModel {
 	private Subscriber subscriber;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_group_type")
+	@JoinColumn(name = "cont_group_type", insertable = false, updatable = false)
 	private ContGroupType contGroupType;
+
+	@Column(name = "cont_group_type")
+	private String contGroupTypeKey;
 
 	@Column(name = "cont_group_name")
 	private String contGroupName;
@@ -93,6 +96,14 @@ public class ContGroup extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getContGroupTypeKey() {
+		return contGroupTypeKey;
+	}
+
+	public void setContGroupTypeKey(String contGroupTypeKey) {
+		this.contGroupTypeKey = contGroupTypeKey;
 	}
 
 }
