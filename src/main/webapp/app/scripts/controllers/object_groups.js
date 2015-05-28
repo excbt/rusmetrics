@@ -88,4 +88,34 @@ angular.module('portalNMK')
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
     }
+    
+    $scope.addSelectedObjects = function(){
+//console.log($scope.availableObjects);          
+        var tmpArray = angular.copy($scope.availableObjects);
+        for(var i =0; i<$scope.availableObjects.length; i++){
+            var curObject = $scope.availableObjects[i];
+
+            if (curObject.selected){
+console.log(curObject);                            
+ console.log("curObject is performanced");               
+                var elem = angular.copy(curObject);
+                elem.selected = null;
+console.log(tmpArray.indexOf(curObject));  
+                var elementIndex = -1;
+                tmpArray.some(function(element,index,array){
+                    if (element.fullName === curObject.fullName){
+                        elementIndex = index;
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+                tmpArray.splice(elementIndex, 1);
+                $scope.selectedObjects.push(elem);
+                curObject.selected = null;
+            };
+        }
+        $scope.availableObjects = tmpArray;
+        $scope.showAvailableObjects_flag=false;
+    };
 }]);

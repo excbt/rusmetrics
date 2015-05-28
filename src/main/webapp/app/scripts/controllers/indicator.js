@@ -5,6 +5,9 @@ angular.module('portalNMK')
         //Определяем оформление для таблицы показаний прибора
         
         //Определеяю названия колонок
+    var ALERT_IMG_PATH = "images/divergenceIndicatorAlert.png";
+    var CRIT_IMG_PATH = "images/divergenceIndicatorCrit.png";
+    var EMPTY_IMG_PATH = "images/plug.png";    
         
     var listColumns = {
             "dataDate":{
@@ -98,7 +101,40 @@ angular.module('portalNMK')
                 dataClass : "col-md-1"
             }
         }
-        ;    
+        ;
+      
+    $scope.intotalColumns = [
+        {"name": "m_in",
+         "header":"Масса подачи",
+         "class":"col-md-1",
+         "imgpath" : "",
+         "imgclass": ""
+        },
+        {"name": "m_out",
+         "header":"Масса обратки",
+         "class":"col-md-1"
+         ,"imgpath" : ""
+         ,"imgclass": ""
+        },
+        {"name": "v_in",
+         "header":"Объем подачи",
+         "class":"col-md-1"
+         ,"imgpath" : ""
+         ,"imgclass": ""
+        },
+        {"name": "v_out",
+         "header":"Объем обратки",
+         "class":"col-md-1"
+         ,"imgpath" : ""
+         ,"imgclass": ""
+        },
+        {"name": "h_delta",
+         "header":"ГКал отопления",
+         "class":"col-md-1"
+         ,"imgpath" : ""
+         ,"imgclass": ""
+        }
+    ];    
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover excbt_tableIndicators",
@@ -176,6 +212,53 @@ angular.module('portalNMK')
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){
                 $scope.summary = data;
+
+                if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')){
+                    return;
+                }
+                        //work with fractional part
+                //search the shortest fractional part
+                $scope.intotalColumns.forEach(function(element, index, array){
+                    var columnName = element.name;                      
+                    var lengthFractPart = 0;
+                    var diff = $scope.summary.diffs[columnName];
+                    var total = $scope.summary.totals[columnName];
+                    var diffStr = diff.toString();
+                    var tempStrArr = diffStr.split(".");
+                    var diffFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
+                    var totalStr = total.toString();
+                    tempStrArr = totalStr.split(".");
+                    var totalFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
+                    lengthFractPart = totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
+                    $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
+                    $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
+
+                    var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
+//            console.log("diff = "+$scope.summary.diffs[columnName]);           
+//            console.log("total = "+$scope.summary.totals[columnName]);           
+//            console.log("precision = "+precision);        
+
+                    var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
+//            console.log("difference = "+difference);         
+            //        var difference = Math.abs(total - diff);
+                    if ((difference >precision)&&(difference <= 1))
+                    {
+//            console.log(ALERT_IMG_PATH);         
+                       element.imgpath=  ALERT_IMG_PATH;
+                        element.imgclass= "divergenceIndicatorImg";
+                        return;
+
+                    };
+                    if ((difference >1))
+                    {  
+//            console.log(CRIT_IMG_PATH);            
+                        element.imgpath = CRIT_IMG_PATH;
+                        element.imgclass= "divergenceIndicatorImg";
+                        return;
+                    };
+                    element.imgpath = EMPTY_IMG_PATH;
+                    element.imgclass= "";
+                });
 console.log(data);            
         });
     };
@@ -201,28 +284,53 @@ console.log(data);
 //            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
 //    }; 
     
-    $scope.intotalColumns = [
-        {"name": "m_in",
-         "header":"Масса подачи",
-         "class":"col-md-1"
-        },
-        {"name": "m_out",
-         "header":"Масса обратки",
-         "class":"col-md-1"
-        },
-        {"name": "v_in",
-         "header":"Объем подачи",
-         "class":"col-md-1"
-        },
-        {"name": "v_out",
-         "header":"Объем обратки",
-         "class":"col-md-1"
-        },
-        {"name": "h_delta",
-         "header":"ГКал отопления",
-         "class":"col-md-1"
-        }
-    ];
+
+        
+    $scope.getIndicatorImage = function(columnName){        
+        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
+            return;
+        };
+//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
+//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
+//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
+//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));    
+        
+        //work with fractional part
+        //search the shortest fractional part
+        var lengthFractPart = 0;
+        var diff = $scope.summary.diffs[columnName];
+        var total = $scope.summary.totals[columnName];
+        var diffStr = diff.toString();
+        var tempStrArr = diffStr.split(".");
+        var diffFractPart = tempStrArr[1];
+        var totalStr = total.toString();
+        tempStrArr = totalStr.split(".");
+        var totalFractPart = tempStrArr[1];
+        lengthFractPart = totalFractPart.length>diffFractPart.length ? diffFractPart.length : totalFractPart.length;
+        $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
+        $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
+        
+        var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
+console.log("diff = "+$scope.summary.diffs[columnName]);           
+console.log("total = "+$scope.summary.totals[columnName]);           
+console.log("precision = "+precision);        
+        
+        var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
+console.log("difference = "+difference);         
+//        var difference = Math.abs(total - diff);
+        if ((difference >precision)&&(difference <= 1))
+        {
+console.log(ALERT_IMG_PATH);         
+            return ALERT_IMG_PATH;
+
+        };
+        if ((difference >1))
+        {  
+console.log(CRIT_IMG_PATH);            
+            return CRIT_IMG_PATH;
+        };
+
+    };    
         
     $scope.setBgColor = function(columnName){
         if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){

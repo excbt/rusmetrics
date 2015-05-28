@@ -50,10 +50,10 @@
     <!-- Add your site or application content here -->
 <div id="wrap" ng-controller="MainCtrl">
 <!--    Навигационная строка в верху страницы-->
-    <div class="header navbar navbar-default navbar-fixed-top excbt_navbar" >
+    <div class="header navbar navbar-default navbar-fixed-top nmkNavbar" >
 <!--        style="background-color: white;"-->
-			<div id="navbar-container" class="container-fluid">
-				<div class="navbar-header">
+			<div id="navbar-container" class="container-fluid nmkNavbarContainer">
+				<div class="navbar-header nmkNavbarContainerHeader">
 <!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
@@ -61,7 +61,7 @@
 							class="icon-bar"></span>
 					</button>
 -->
-					<a class="navbar-brand" href="#/">Портал НМК</a>
+					<a class="navbar-brand nmkNavbarBrand" href="#/">Портал НМК</a>
 					
 				</div>
 			
@@ -72,9 +72,9 @@
                 
             <ul class="nav navbar-nav pull-right">	
 				
-                <li class="dropdown">
+                <li class="dropdown nmkNavbarUserMenu">
                     <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
-							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
+							class="hideM nmkNavbarUser" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
 						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
@@ -97,55 +97,55 @@
     <div class="row row-offcanvas row-offcanvas-left">    
        
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas menuWidth" >
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmkMenu" >
                         <nav class="sidebar-nav"
                             role="navigation" ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
    
                                 <!-- Объекты, редактирование -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_item}"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showSettings=false;showAdminSettings=false;"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-list"></i>Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showSettings=false;showAdminSettings=false;"><i class="glyphicon glyphicon-list menuItemIcon"></i>Объекты</a>
                                 
                                 <!-- Отчеты -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.report_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.report_menu_item}"
 
-                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item');showSettings=false"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-file"></i>Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item');showSettings=false"><i class="glyphicon glyphicon-file menuItemIcon"></i>Отчеты</a>
                                 
                                  <!-- Notices -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.notice_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.notice_menu_item}"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item');showSettings=false"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-envelope"></i>Уведомления</a>                            
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item');showSettings=false"><i class="glyphicon glyphicon-envelope menuItemIcon"></i>Уведомления</a>                            
                                 
 <!--                                Настройки-->
-                                <a class="list-group-item noMarginBottom excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_menu_item}"
 
-                                    href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="excbt_a_list_group_item_icon glyphicon glyphicon-cog"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
+                                    href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog menuItemIcon"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_tariff_menu_item}"
+                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_tariff_menu_item}"
 
-                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-scale"></i> Тарифы</a>
+                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale menuItemIcon"></i> Тарифы</a>
 
-                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_report_menu_item}"
+                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_report_menu_item}"
 
-                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-blackboard"></i> Отчеты</a>
-                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.setting_group_menu_item}"
+                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard menuItemIcon"></i> Отчеты</a>
+                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_group_menu_item}"
 
-                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="excbt_a_list_group_item_icon glyphicon glyphicon-folder-open"></i>Группы</a>
+                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open menuItemIcon"></i>Группы</a>
                                 </div>
                                
                                 
                                 <!--                                Администрирование-->
-                                <a class="list-group-item noMarginBottom excbt_a_list_group_item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
+                                <a class="list-group-item noMarginBottom menuItem hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
 
-                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench"></i> Управление <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
+                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench menuItemIcon"></i>Управление<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.metadata_control_menu_item}"
+                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.metadata_control_menu_item}"
 
                                     ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
 
@@ -160,19 +160,19 @@
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_item}"
 
                                 ng-click="clickMenu('object_menu_item');showPrivateOfficeMenu=false" href="#/" data-toggle="offcanvas">Портал</a>
                                 <!-- Объекты, меню настройки объектов -->
-                                <a  class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.object_menu_list_item}"
+                                <a  class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_list_item}"
 
                                 ng-click="clickMenu('object_menu_list_item');" href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
                                 <!-- Контакты -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.contact_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.contact_menu_item}"
 
                                    ng-click="clickMenu('contact_menu_item');" href="#/private/contacts/" data-toggle="offcanvas">Контакты</a>
                                 <!-- Справочники -->
-                                <a class="list-group-item excbt_a_list_group_item" ng-class="{'excbt_a_list_group_item_selected': menuMassive.directory_menu_item}"
+                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.directory_menu_item}"
 
                                    ng-click="clickMenu('directory_menu_item');" href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
 
@@ -181,7 +181,7 @@
             
             </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 col-sm-10-main well excbt_well-main mainarea main-scrollable-area1">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmkFrame">
 					
 					<div id="main" ng-view></div>
         </div>

@@ -1,4 +1,181 @@
-/* index.html*/
+/* NMK portal window */
+	/*Top navigation bar*/
+.nmkNavbar{
+    background-color: #EEEEEE;
+    height: 5%;
+}
+	/*Navigation bar container*/
+.nmkNavbar > .nmkNavbarContainer{
+	
+}
+	/*Navigation bar header*/
+.nmkNavbar > .nmkNavbarContainer >.nmkNavbarContainerHeader {
+	
+}
+	/*Brand*/
+.nmkNavbar > .nmkNavbarContainer >.nmkNavbarContainerHeader >.nmkNavbarBrand{
+}
+	/*Navbar menu*/
+.nmkNavbar > .nmkNavbarContainer > ul{
+/*	padding: 5px;*/
+/*	background-color: yellow;*/
+}
+
+	/*Navbar default menu item*/
+.nmkNavbar > .nmkNavbarContainer > ul > li{
+/*	background-color: brown;*/
+}
+
+	/*Navbar opened menu item*/
+.nmkNavbar > .nmkNavbarContainer > ul > li.open > a{
+/*	background-color: orange;*/
+}
+
+.nmkNavbar > .nmkNavbarContainer > ul > li.open > a:focus{
+/*	background-color: orange;*/
+}
+
+
+	/*navbar user menu*/
+.nmkNavbarUserMenu {
+/*	background-color: white;*/
+/*	color: blue;*/
+}
+	/*navbar user*/
+.nmkNavbarUser {
+/*	color: margenta;*/
+}
+	/*navbar user menu list*/
+.nmkNavbarUserMenu > ul {
+/*	background-color: black;*/
+}
+	/*navbar user menu item*/
+.nmkNavbarUserMenu > ul > li{
+/*	background-color: yellow;*/
+}
+
+.nmkNavbarUserMenu > ul > li >a{
+/*	color: blue;*/
+}
+	/*navbar user menu item - hover*/
+.nmkNavbarUserMenu > ul > li >a:hover{
+/*	background-color: red;*/
+/*	color: green;*/
+}
+
+	/*main frame*/
+.nmkFrame {
+	 margin-left: 10pt;
+    width: 87%;
+	min-height: 900px;
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+/*    border-radius: 0;*/
+    background-color: #EEEEEE; /*background color of main area*/
+    padding-top: 10px;
+	height: 85%;
+/*	height: 865px; */
+/*    overflow: hidden;*/
+    overflow-y: auto;	
+}
+
+.nmkFooter {
+    
+}
+
+	/*main menu*/
+.nmkMenu{
+    width: 10%;
+}
+
+/*default menu settings*/
+/*a.list-group-item {*/
+    
+/*        #BEBEBE;*/
+/*}*/
+
+.menuItem {
+	word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+    font-size: 16px;
+    border-radius: 4px 0px 0px 4px;
+	background-color: #DCDCDC; /*background color of menu item*/
+}
+
+.menuItem > a:focus, .menuItem >a:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+	background-color: red;
+}
+
+.menuItemSelected{
+	font-weight: bold;
+	color: #555 !important;
+	text-decoration: none;
+	background-color: #EEEEEE !important;
+}
+
+.menuItemIcon {
+	margin-right: 10px;
+}
+
+.submenu{
+    margin-left: 20px;
+}
+
+.submenu > .menuItem {
+	border: 0px;
+}
+
+/*.submenu > 
+    .list-group-item{
+*/	
+/*        background-color: beige;*/
+/*        border: 0px;*/
+        
+ /*   }
+ */
+
+/*
+a.list-group-item:focus {
+    font-weight: bold;
+}
+*/
+/*
+a.list-group-item:active {
+    background-color: #f5f5f5;
+}
+*/
+
+/*.excbt_a_list_group_item{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+    font-size: 16px;
+    border-radius: 4px 0px 0px 4px;
+}
+*/
+/*.excbt_a_list_group_item_icon{
+    margin-right: 10px;
+}
+*/
+/*.excbt_a_list_group_item:focus, .excbt_a_list_group_item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+}	
+*/
 /* Wrapper for page content to push down footer */
 #wrap {
     min-height: 100%;
@@ -23,10 +200,10 @@
 /*    width: 1024px;*/
 /*}*/
 
-#div-main-area {
-    margin-left: 10pt;
+/*#div-main-area {
+   
 }
-
+*/
 /*Horizontal line under page title*/
 hr {
   -moz-border-bottom-colors: none;
@@ -77,32 +254,17 @@ th {
 }
 */
 
-/*main area - central part of window*/
-.excbt_well-main {
-    min-height: 900px;
-    border: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-/*    border-radius: 0;*/
-    background-color: #EEEEEE; /*background color of main area*/
-    padding-top: 10px;
-}
-
-/*default menu settings*/
-a.list-group-item {
-    background-color: #DCDCDC; /*background color of menu item*/
-/*        #BEBEBE;*/
-}
-
 /* selected menu item settings */
-.excbt_a_list_group_item_selected{
+/*.excbt_a_list_group_item_selected{
   font-weight: bold;
   color: #555 !important;
   text-decoration: none;
   background-color: #EEEEEE !important;
+ */ 
 /*      #f9f9f9 !important;*/
 /*      #f5f5f5 !important;*/
-}
+/*}
+*/
 
 /*external table*/
 .excbt_externalTable > tbody > tr:nth-of-type(odd) {
@@ -122,10 +284,7 @@ a.list-group-item {
     background-color: #BEBEBE;
 }
 
-.excbt_navbar{
-    background-color: #EEEEEE;
-    height: 5%;
-}
+
 
 /* **************************************************************** */
 
@@ -349,6 +508,7 @@ input[type="radio"]{
     padding-top: 0px;
 }
 
+/* */
 .textAlign_left {
     text-align: left;
 }
@@ -429,12 +589,6 @@ input[type="radio"]{
       overflow-y: scroll;
     }
 
-.main-scrollable-area1 {
-    height: 85%;
-/*	height: 865px; */
-/*    overflow: hidden;*/
-    overflow-y: auto;	
-}
 
 .modal-position-right {
 /*    position: relative;*/
@@ -481,45 +635,10 @@ tr > .active{
 }
 
 .col-sm-10-main {
-    width: 87%;
+    
 }
 
-/*main menu*/
-.menuWidth {
-    width: 10%;
-}
 
-/*
-a.list-group-item:focus {
-    font-weight: bold;
-}
-*/
-/*
-a.list-group-item:active {
-    background-color: #f5f5f5;
-}
-*/
-
-.excbt_a_list_group_item{
-    word-wrap: break-word;
-    padding-right: 1px;
-    border: none;
-    margin-right: -30%;
-    margin-bottom: 2%;
-    font-size: 16px;
-    border-radius: 4px 0px 0px 4px;
-}
-.excbt_a_list_group_item_icon{
-    margin-right: 10px;
-}
-
-.excbt_a_list_group_item:focus, .excbt_a_list_group_item:hover{
-    word-wrap: break-word;
-    padding-right: 1px;
-    border: none;
-    margin-right: -30%;
-    margin-bottom: 2%;
-}
 
 .modalWindow_wide {
     width: 1200px;
@@ -561,22 +680,14 @@ mainTable {
 /* border: 1px solid red;*/
  width: 100%;
 }
-.fld {
+/*.fld {
 }
-.mainMenu111 {
+*/
+/*.mainMenu111 {
     width: 200px;
 }
+*/
 
-.submenu{
-    margin-left: 20px;
-}
-
-.submenu > 
-    .list-group-item{
-/*        background-color: beige;*/
-        border: 0px;
-        
-    }
 
 .span2, .span1 {
         margin-left: 5px;
@@ -836,4 +947,21 @@ table.excbt_table_oneLineData > tbody > tr> td {
 }
 .excbt_availableObjectsModalWindow_modal-header_title{
     
+}
+
+.excbt_editGroupWindow_selectedObjects_area{
+     height: 423px;
+    overflow-y: scroll;
+}
+
+.excbt_editGroupWindow_btnAddObject{
+    margin-top: -5%;
+}
+
+/* Indicator's page*/
+.divergenceIndicatorImg{
+    width: 16px;
+    height: 16px;
+    border-image: 0;
+    border: none;
 }
