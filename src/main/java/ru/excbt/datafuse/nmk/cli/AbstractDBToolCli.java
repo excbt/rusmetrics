@@ -32,4 +32,11 @@ public abstract class AbstractDBToolCli {
 		appContext = new AnnotationConfigApplicationContext(
 				PropertyConfig.class, JpaConfigCli.class);
 	}
+	
+	public void showAppStatus() {
+		logger.info("Application Started");
+		logger.info("Status: {}",
+				entityManager != null ? "entityManager inititalized"
+						: "entityManager NOT inititalized");		
+	}
 }

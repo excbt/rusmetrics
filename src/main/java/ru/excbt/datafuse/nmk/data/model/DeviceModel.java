@@ -31,6 +31,12 @@ public class DeviceModel extends AbstractAuditableModel{
 
 	@Column(name="ex_code")
 	private String exCode;
+
+	@Column(name="ex_label")
+	private String exLabel;
+
+	@Column(name="ex_system")
+	private String exSystem;
 	
 	@Version
 	private int version;
@@ -74,6 +80,22 @@ public class DeviceModel extends AbstractAuditableModel{
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getExLabel() {
+		return exLabel;
+	}
+
+	public void setExLabel(String exLabel) {
+		this.exLabel = exLabel;
+	}
+
+	public String getExSystem() {
+		return exSystem;
+	}
+
+	public void setExSystem(String exSystem) {
+		this.exSystem = exSystem;
 	}
 	
 }
