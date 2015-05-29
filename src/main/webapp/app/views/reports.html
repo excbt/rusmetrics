@@ -5,7 +5,7 @@
         <li class="active">Отчеты</li>
     </ul>
 </div> 
-<h2 class="noMargin excbt_h2">Отчеты</h2>
+<h2 class="noMargin pageTitle">Отчеты</h2>
 <hr>
 <div>
     <table id="datatabl" class="table  table-condensed noMarginBottom excbt_table">
@@ -56,7 +56,7 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                   <p class="excbt_Caption"> {{oldObject.name}} </p>
+                                                   <p class="reportCaptionInList"> {{oldObject.name}} </p>
                                                  <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label> Шаблон: {{oldObject.reportTemplate.name}}
                                                  <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>Период: {{oldObject.reportPeriod.caption}}
                                                  <span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> Тип файла: {{oldObject.outputFileType || "не задан"}}  

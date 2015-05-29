@@ -1,5 +1,6 @@
-/* NMK portal window */
-	/*Top navigation bar*/
+/********************** NMK portal window *****************************************/
+/**********************************************************************************/
+/*********************************Top navigation bar*******************************/
 .nmkNavbar{
     background-color: #EEEEEE;
     height: 5%;
@@ -17,13 +18,18 @@
 }
 	/*Navbar menu*/
 .nmkNavbar > .nmkNavbarContainer > ul{
-/*	padding: 5px;*/
-/*	background-color: yellow;*/
+/*
+	padding: 5px;
+	background-color: yellow;
+*/
 }
 
 	/*Navbar default menu item*/
 .nmkNavbar > .nmkNavbarContainer > ul > li{
-/*	background-color: brown;*/
+/*
+	background-color: brown;
+    color: wheat;
+*/
 }
 
 	/*Navbar opened menu item*/
@@ -39,11 +45,11 @@
 	/*navbar user menu*/
 .nmkNavbarUserMenu {
 /*	background-color: white;*/
-/*	color: blue;*/
+/*	color: white;*/
 }
 	/*navbar user*/
 .nmkNavbarUser {
-/*	color: margenta;*/
+/*	color: white;*/
 }
 	/*navbar user menu list*/
 .nmkNavbarUserMenu > ul {
@@ -63,9 +69,10 @@
 /*	color: green;*/
 }
 
-	/*main frame*/
+/************************************ main frame *****************************************/
+
 .nmkFrame {
-	 margin-left: 10pt;
+	margin-left: 10pt;
     width: 87%;
 	min-height: 900px;
     border: none;
@@ -80,11 +87,15 @@
     overflow-y: auto;	
 }
 
+
+/*************************************** portal footer *****************************/
 .nmkFooter {
-    
+    height: 10px;
+    padding-top: 19px;
+    background-color: #BEBEBE;
 }
 
-	/*main menu*/
+/***************************************** main menu ******************************/
 .nmkMenu{
     width: 10%;
 }
@@ -106,13 +117,13 @@
 	background-color: #DCDCDC; /*background color of menu item*/
 }
 
-.menuItem > a:focus, .menuItem >a:hover{
+ a.menuItem:focus, a.menuItem:hover{
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
     margin-right: -30%;
     margin-bottom: 2%;
-	background-color: red;
+	background-color: #DCDCDC;
 }
 
 .menuItemSelected{
@@ -134,48 +145,18 @@
 	border: 0px;
 }
 
-/*.submenu > 
-    .list-group-item{
-*/	
-/*        background-color: beige;*/
-/*        border: 0px;*/
-        
- /*   }
- */
 
-/*
-a.list-group-item:focus {
-    font-weight: bold;
-}
-*/
-/*
-a.list-group-item:active {
-    background-color: #f5f5f5;
-}
-*/
+/* common styles*/
 
-/*.excbt_a_list_group_item{
-    word-wrap: break-word;
-    padding-right: 1px;
-    border: none;
-    margin-right: -30%;
-    margin-bottom: 2%;
-    font-size: 16px;
-    border-radius: 4px 0px 0px 4px;
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  font-size: 12px;
+  background-color: #BEBEBE; /*body background color*/
+/*    #DCDCDC;*/
+/*    #BEBEBE;    */
 }
-*/
-/*.excbt_a_list_group_item_icon{
-    margin-right: 10px;
-}
-*/
-/*.excbt_a_list_group_item:focus, .excbt_a_list_group_item:hover{
-    word-wrap: break-word;
-    padding-right: 1px;
-    border: none;
-    margin-right: -30%;
-    margin-bottom: 2%;
-}	
-*/
+
 /* Wrapper for page content to push down footer */
 #wrap {
     min-height: 100%;
@@ -196,14 +177,16 @@ a.list-group-item:active {
 /*    width: 1920px;*/
 }
 
-/*#navbar-container {*/
-/*    width: 1024px;*/
-/*}*/
 
-/*#div-main-area {
-   
+
+/************************************** Page window ****************************************/
+/*******************************************************************************************/
+
+/*page title*/
+.pageTitle{
+    white-space: nowrap;
 }
-*/
+
 /*Horizontal line under page title*/
 hr {
   -moz-border-bottom-colors: none;
@@ -219,26 +202,10 @@ hr {
   margin: 10px 0;
 }
 
-/*page title*/
-.excbt_h2{
-    white-space: nowrap;
+.pageSearchString{
+    
 }
 
-/* ***************************************************************** */
-/* Space out content a bit */
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
-    font-size: 12px;
-background-color:  #BEBEBE; /*body background color*/
-/*    #DCDCDC;*/
-/*    #BEBEBE;    */
-}
-/*
-th {
-    text-align: center;
-}
-*/
 
 /*color "Портал НМК"*/
 /*
@@ -254,17 +221,23 @@ th {
 }
 */
 
-/* selected menu item settings */
-/*.excbt_a_list_group_item_selected{
-  font-weight: bold;
-  color: #555 !important;
-  text-decoration: none;
-  background-color: #EEEEEE !important;
- */ 
-/*      #f9f9f9 !important;*/
-/*      #f5f5f5 !important;*/
-/*}
-*/
+/*************************************************** Tables *************************************/
+/************************************************************************************************/
+
+table {
+    border: 0px;
+}
+
+td {
+    vertical-align: middle !important;
+}
+
+/**/
+table.excbt_table_oneLineData > tbody > tr> td {
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
+    text-overflow: ellipsis;/* Добавляем многоточие*/
+}
 
 /*external table*/
 .excbt_externalTable > tbody > tr:nth-of-type(odd) {
@@ -277,20 +250,37 @@ th {
 /*         #696969;*/
 }
 
-/* Custom page footer */
-.footer {
-    height: 10px;
-  padding-top: 19px;
-    background-color: #BEBEBE;
+.excbt_table {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
 }
+.excbt_table > tbody > tr>td {
+    border: none;
+}
+
+/*
+.excbt_table >tbody>tr>td{
+    border-top: none;
+    
+}
+*/
+
+.excbt_innerTable {
+    margin-left: 2%;
+    width: 97%;
+    border-radius: 4px;
+}
+
 
 
 
 /* **************************************************************** */
 
+/*
 caption {
         padding-left: 20px;
     }
+*/
 
 input[type="checkbox"] {
     margin-right: 5px;
@@ -388,7 +378,8 @@ input[type="radio"]{
   }
 }
 
-/*custom padding and margin classes*/
+/******************************* customize padding and margin classes *********************************/
+/******************************************************************************************************/
 .noMarginTop {
     margin-top: 0;
 }
@@ -539,6 +530,7 @@ input[type="radio"]{
     display:none !important;
 }
 
+/*
 .angular-ui-tree-handle {
     background: #f8faff;
     border: 1px solid #dae2ea;
@@ -559,6 +551,7 @@ input[type="radio"]{
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+*/
 
 
 .group-title {
@@ -590,18 +583,12 @@ input[type="radio"]{
     }
 
 
-.modal-position-right {
+/*.modal-position-right {*/
 /*    position: relative;*/
 /*    right: 0;*/
-}
+/*}*/
 
-table {
-    border: 0px;
-}
 
-td {
-    vertical-align: middle !important;
-}
 
 /* Если нужна подсветка цветом для выделенных строк
 tr > .active{
@@ -634,9 +621,11 @@ tr > .active{
     }
 }
 
+/*
 .col-sm-10-main {
     
 }
+*/
 
 
 
@@ -654,6 +643,7 @@ tr > .active{
 
 
 /*Настройка главного окна*/
+/*
 mainTable {
 
  margin-left: auto;
@@ -662,12 +652,15 @@ mainTable {
  width: 100%;
  min-width: 5%;
 }
+*/
 
-.mainArea {
+/*.mainArea {*/
  
 /* border: 1px solid grey;*/
+/*
  width: 100%;
  }
+*/
 
 /*
 .mainarea {
@@ -675,11 +668,11 @@ mainTable {
 }
 */
 
-.button1 {
+/*.button1 {*/
  
 /* border: 1px solid red;*/
- width: 100%;
-}
+/* width: 100%;*/
+/*}*/
 /*.fld {
 }
 */
@@ -769,24 +762,7 @@ mainTable {
     margin-top: 200px;
 }
 
-.excbt_table {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-}
-.excbt_table > tbody > tr>td {
-    border: none;
-}
 
-.excbt_innerTable {
-    margin-left: 2%;
-    width: 97%;
-    border-radius: 4px;
-}
-
-.excbt_table >tbody>tr>td{
-    border-top: none;
-    
-}
 
 
 .excbt_inputGroupAddon {
@@ -802,28 +778,24 @@ mainTable {
 .excbt_zpointButtonMargin {
     margin-left:80%;
 }
-
-.excbt_tableIndicators > tbody > tr > td {
-    padding: 1px;
-}
-
-.excbt_tarea {
+/**************************************** Notice page **********************************************/
+/***************************************************************************************************/
+.objectListTArea {
     resize: none;
 }
 
-.excbt_Caption {
+/***************************************************** Report page **********************************/
+/****************************************************************************************************/
+.reportCaptionInList {
     font-size: 14px;
 }
 
-table.excbt_table_oneLineData > tbody > tr> td {
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: auto; /*Обрезаем все, что не вмещается*/
-    text-overflow: ellipsis;/* Добавляем многоточие*/
-}
+
 
 /*Classes for nav-tabs left*/
-.tabs-below > .nav-tabs,
-.tabs-right > .nav-tabs,
+/*.tabs-below > .nav-tabs,*/
+/*.tabs-right > .nav-tabs,*/
+/*
 .tabs-left > .nav-tabs {
   border-bottom: 0;
 }
@@ -899,7 +871,7 @@ table.excbt_table_oneLineData > tbody > tr> td {
 .tabs-left > .nav-tabs .active > a:hover,
 .tabs-left > .nav-tabs .active > a:focus {
   border-color: #ddd transparent #ddd #ddd;
-  *border-right-color: #ffffff;
+  border-right-color: #ffffff;
 }
 
 .tabs-right > .nav-tabs {
@@ -926,15 +898,17 @@ table.excbt_table_oneLineData > tbody > tr> td {
   border-color: #ddd #ddd #ddd transparent;
   *border-left-color: #ffffff;
 }
+*/
 /*end of nav-tabs left*/
 
-.excbt_availableObjectsModalWindow >.modal-backdrop.fade{
-    opacity: 0;   
-}
-
+/*************************************** Object group page ********************************/
+/******************************************************************************************/
 .excbt_availableObjectsModalWindow {
     margin-left:-52%;
     margin-top: 11.3%;
+}
+.excbt_availableObjectsModalWindow >.modal-backdrop.fade{
+    opacity: 0;   
 }
 
 .excbt_availableObjectsModalWindow_modal-body{
@@ -958,10 +932,13 @@ table.excbt_table_oneLineData > tbody > tr> td {
     margin-top: -5%;
 }
 
-/* Indicator's page*/
+/********************************************** Indicator's page ***********************************/
+/***************************************************************************************************/
+.excbt_tableIndicators > tbody > tr > td {
+    padding: 1px;
+}
+
 .divergenceIndicatorImg{
     width: 16px;
     height: 16px;
-    border-image: 0;
-    border: none;
 }
