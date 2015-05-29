@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -23,8 +24,11 @@ public class ContGroupItem extends AbstractAuditableModel {
 	private ContGroup contGroup;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id")
+	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
 	private ContObject contObject;
+
+	@Column(name = "cont_object_id")
+	private Long contObjectId;
 
 	@Version
 	private int version;
@@ -51,6 +55,14 @@ public class ContGroupItem extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public Long getContObjectId() {
+		return contObjectId;
+	}
+
+	public void setContObjectId(Long contObjectId) {
+		this.contObjectId = contObjectId;
 	}
 
 }

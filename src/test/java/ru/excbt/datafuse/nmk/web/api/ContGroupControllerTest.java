@@ -58,12 +58,16 @@ public class ContGroupControllerTest extends AnyControllerTest {
 			fail();
 		}
 
+		long[] objectIds = { 18811504L, 18811505L };
+
+		logger.info("Array of {}", arrayToString(objectIds));
 		logger.info("jsonBody: {}", jsonBody);
 
 		ResultActions resultAction = mockMvc
 				.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 						.post("/api/contGroup")
 						.contentType(MediaType.APPLICATION_JSON)
+						.param("contObjectIds", arrayToString(objectIds))
 						.content(jsonBody).with(testSecurityContext())
 						.accept(MediaType.APPLICATION_JSON));
 
@@ -76,6 +80,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		logger.info("createdId: {}", createdId);
 
+		testDeleteContGroup(createdId.longValue());
 	}
 
 	@Test
@@ -85,7 +90,16 @@ public class ContGroupControllerTest extends AnyControllerTest {
 						.getSubscriberId());
 
 		assertTrue(contGroups.size() > 0);
-		ContGroup cg = contGroups.get(0);
+		ContGroup cg;
+		if (contGroups.size() > 2) {
+			cg = contGroups.get(1);
+		} else {
+			cg = contGroups.get(0);
+		}
+
+		long[] objectIds = { 18811522L, 18811533L };
+
+		logger.info("Array of {}", arrayToString(objectIds));
 
 		cg.setContGroupComment("TEST AutoUpdate " + System.currentTimeMillis());
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(cg);
@@ -95,6 +109,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 		try {
 			resultActionsAll = mockMvc.perform(put(urlStr)
 					.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+					.param("contObjectIds", arrayToString(objectIds))
 					.with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
@@ -107,8 +122,11 @@ public class ContGroupControllerTest extends AnyControllerTest {
 			fail(e.toString());
 		}
 	}
+
 	/*
-	 * @Test public void testDeleteContGroup() throws Exception {
+	 * @Test
+	 * 
+	 * @Ignore public void testDeleteContGroup() throws Exception {
 	 * List<ContGroup> contGroups = contGroupService
 	 * .selectSubscriberGroups(currentSubscriberService .getSubscriberId());
 	 * 
@@ -116,4 +134,9 @@ public class ContGroupControllerTest extends AnyControllerTest {
 	 * 2) { cg = contGroups.get(1); } else { cg = contGroups.get(0); } String
 	 * urlStr = "/api/contGroup/" + cg.getId(); testJsonDelete(urlStr); }
 	 */
+
+	public void testDeleteContGroup(Long contGroupId) throws Exception {
+		testJsonDelete("/api/contGroup/" + contGroupId);
+	}
+
 }

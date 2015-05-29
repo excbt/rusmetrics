@@ -26,4 +26,17 @@ public interface ContGroupItemRepository extends
 			@Param("contGroupId") long contGroupId,
 			@Param("subscriberId") long subscriberId);
 
+	@Query("SELECT ci.contObjectId FROM ContGroupItem ci "
+			+ "WHERE ci.contGroup.id = :contGroupId ")
+	public List<Long> selectObjectIds(@Param("contGroupId") long contGroupId);
+
+	@Query("SELECT ci.id FROM ContGroupItem ci "
+			+ "WHERE ci.contGroup.id = :contGroupId AND ci.contObjectId = :objectId ")
+	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId,
+			@Param("objectId") long objectId);
+
+	@Query("SELECT ci.id FROM ContGroupItem ci "
+			+ "WHERE ci.contGroup.id = :contGroupId ")
+	public List<Long> selectItemIds(@Param("contGroupId") long contGroupId);
+
 }
