@@ -17,7 +17,7 @@ angular.module('portalNMK')
     var successCallback = function (e) {
         notificationFactory.success();
         $('#deleteGroupModal').modal('hide');
-        $('#edit_group').modal('hide');
+        $('#editGroupModal').modal('hide');
         $scope.currentGroup={};
         $scope.getData($scope.groupUrl, "groups");
 
