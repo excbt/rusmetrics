@@ -10,12 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.metadata.MetadataInfo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="device_metadata")
-public class DeviceMetadata extends AbstractPersistableEntity<Long> {
+public class DeviceMetadata extends AbstractPersistableEntity<Long> implements MetadataInfo {
 
 	/**
 	 * 
@@ -86,22 +87,27 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.deviceMetadataTypeKey = deviceMetadataTypeKey;
 	}
 
+	@Override
 	public String getSrcProp() {
 		return srcProp;
 	}
-
+	
+	@Override
 	public void setSrcProp(String srcProp) {
 		this.srcProp = srcProp;
 	}
 
+	@Override
 	public String getDestProp() {
 		return destProp;
 	}
 
+	@Override
 	public void setDestProp(String destProp) {
 		this.destProp = destProp;
 	}
 
+	@Override
 	public String getPropVars() {
 		return propVars;
 	}
@@ -110,6 +116,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.propVars = propVars;
 	}
 
+	@Override
 	public String getPropFunc() {
 		return propFunc;
 	}
@@ -118,6 +125,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.propFunc = propFunc;
 	}
 
+	@Override
 	public Boolean get_integrator() {
 		return _integrator;
 	}
@@ -126,6 +134,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this._integrator = _integrator;
 	}
 
+	@Override
 	public BigDecimal getSrcPropDivision() {
 		return srcPropDivision;
 	}
@@ -134,6 +143,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.srcPropDivision = srcPropDivision;
 	}
 
+	@Override
 	public BigDecimal getDestPropCapacity() {
 		return destPropCapacity;
 	}
@@ -142,6 +152,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.destPropCapacity = destPropCapacity;
 	}
 
+	@Override
 	public String getSrcMeasureUnitKey() {
 		return srcMeasureUnitKey;
 	}
@@ -150,6 +161,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.srcMeasureUnitKey = srcMeasureUnitKey;
 	}
 
+	@Override
 	public String getDestMeasureUnitKey() {
 		return destMeasureUnitKey;
 	}
@@ -158,6 +170,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.destMeasureUnitKey = destMeasureUnitKey;
 	}
 
+	@Override
 	public Integer getMetaNumber() {
 		return metaNumber;
 	}
@@ -166,6 +179,7 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> {
 		this.metaNumber = metaNumber;
 	}
 
+	@Override
 	public Integer getMetaOrder() {
 		return metaOrder;
 	}
