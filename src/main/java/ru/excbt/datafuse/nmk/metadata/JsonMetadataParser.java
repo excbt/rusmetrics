@@ -198,7 +198,7 @@ public class JsonMetadataParser {
 				}
 				MetadataFieldValue metaFieldValue = new MetadataFieldValue(
 						meta.getSrcProp(), meta.getDestProp(), totalResult,
-						MetadataFieldType.BIG_DECIMAL);
+						meta.getDestDbType());
 				result.add(metaFieldValue);
 
 				continue;
@@ -211,8 +211,7 @@ public class JsonMetadataParser {
 				continue;
 			}
 			MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(),
-					MetadataFieldType.STRING);
+					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(), meta.getDestDbType());
 			result.add(metaFieldValue);
 
 		}

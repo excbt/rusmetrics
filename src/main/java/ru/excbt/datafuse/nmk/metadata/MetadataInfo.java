@@ -14,6 +14,8 @@ public interface MetadataInfo extends MetadataProps {
 
 	public BigDecimal getDestPropCapacity();
 
+	public String getDestDbType();	
+	
 	public String getSrcMeasureUnitKey();
 
 	public String getDestMeasureUnitKey();
@@ -21,4 +23,5 @@ public interface MetadataInfo extends MetadataProps {
 	public Integer getMetaNumber();
 
 	public Integer getMetaOrder();
+	
 }

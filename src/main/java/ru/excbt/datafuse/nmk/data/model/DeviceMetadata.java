@@ -70,6 +70,8 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	@Column(name = "meta_comment")
 	private String metaComment;
 
+	@Column(name = "dest_db_type")
+	private String destDbType;	
 	
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -202,6 +204,15 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 
 	public void setMetaComment(String metaComment) {
 		this.metaComment = metaComment;
+	}
+
+	@Override
+	public String getDestDbType() {
+		return destDbType;
+	}
+
+	public void setDestDbType(String destDbType) {
+		this.destDbType = destDbType;
 	}
 	
 	
