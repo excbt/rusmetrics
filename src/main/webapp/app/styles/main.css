@@ -764,42 +764,45 @@ mainTable {
 */
 /*стили шапки модального онка*/
 .modalWindow {
-    background-color: aqua
+/*    background-color: aqua*/
 }
 
 .modalHeader{
+/*
     background-color: white;
-    height: 50px;
+*/   
+    height: 65px;
+
 }
 
 /*close cross*/
 .closeButton {
-    color: red;
+/*    color: red;*/
 }
 
 .closeButton:hover {
-    color: white;
+/*    color: white;*/
 }
 
 /*стили заголовка модального окна*/
 .modalHeader > h3{
-    color:red;
+/*    color:red;*/
 }
 
 .modalDialog{
-    background-color: aquamarine;
+/*    background-color: aquamarine;*/
 }
 
 .modalBody{
     padding: 0px;
     padding-top: 10px;
-    background-color: azure;
+/*    background-color: azure;*/
 }
 
 /*стили подвала модального окна*/
 .modalFooter{
     padding: 10px;
-    background-color: blue;
+/*    background-color: blue;*/
 }
 
 /*modal window with scrolling*/
@@ -841,12 +844,12 @@ mainTable {
     
 }
 
-.excbt_editGroupWindow_selectedObjects_area{
-     height: 423px;
+.editGroupWindowSelectedObjectsArea{
+     height: 415px;
     overflow-y: scroll;
 }
 
-.excbt_editGroupWindow_btnAddObject{
+.editGroupWindowBtnAddObject{
     margin-top: -5%;
 }
 
