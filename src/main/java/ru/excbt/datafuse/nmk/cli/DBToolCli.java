@@ -39,10 +39,7 @@ public class DBToolCli extends AbstractDBToolCli {
 	public static void main(String[] args) throws SQLException {
 		DBToolCli app = new DBToolCli();
 		app.autowireBeans();
-		logger.info("Application Started");
-		logger.info("Status: {}",
-				app.entityManager != null ? "entityManager inititalized"
-						: "entityManager NOT inititalized");
+		app.showAppStatus();
 
 		app.readJson();
 		app.dbService.testConnection();
@@ -54,7 +51,7 @@ public class DBToolCli extends AbstractDBToolCli {
 	private void readJson() {
 		checkNotNull(deviceObjectDataJsonRepository);
 		List<DeviceObjectDataJson> dataJsonList = deviceObjectDataJsonRepository
-				.selectByDeviceObject(DEVICE_OBJECT_ID, PAGE_LIMIT_1);
+				.selectByDeviceObject(DEVICE_OBJECT_ID, "24h", PAGE_LIMIT_1);
 
 		logger.info("Found Data: {}", dataJsonList.size());
 
