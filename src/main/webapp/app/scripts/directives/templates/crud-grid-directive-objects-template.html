@@ -26,10 +26,10 @@
     <div class="col-md-3 noPadding">
         <h2 class="noMargin pageTitle">Объекты учета</h2>
     </div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left excbt_objectFilterInputGroup">   
-        <span class="input-group-addon excbt_inputFormControl"><i class="glyphicon glyphicon-search"></i></span>
-        <input type="text" class="form-control excbt_inputFormControlObjectFilter" ng-model="filter">
-        <span class="input-group-addon btn excbt_inputFormControl" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left pageFilterString">   
+        <span class="input-group-addon pageFilterAddon"><i class="glyphicon glyphicon-filter"></i></span>
+        <input type="text" class="form-control pageFilter" ng-model="filter">
+        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
     </div>
     <div class="col-md-5"></div>
 </div>
@@ -77,7 +77,7 @@
                             <tr>
                                 <td><i ng-show="bObject" class="btn btn-xs noMargin glyphicon" ng-class="{'glyphicon glyphicon-chevron-down': object.showGroupDetails, 'glyphicon glyphicon-chevron-right': !object.showGroupDetails}" ng-click="toggleShowGroupDetails(object);selectedItem(object)"></i></td>
 <!--                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                <td><i ng-show="!bList" class="btn btn-xs glyphicon glyphicon-list" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
+                                <td><i ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(object)" data-target="#showObjOptionModal" data-toggle="modal"></i></td>                                
                             </tr>
                         </table>    
                     </div> 
@@ -168,7 +168,7 @@
                                         <table>
                                             <tr>
 <!--                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
+                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
                                             </tr>
                                         </table>    
                                     </div>    

@@ -202,10 +202,38 @@ hr {
   margin: 10px 0;
 }
 
-.pageSearchString{
+/*pageFilterString struct:
+    pageFilterString
+        pageFilterAddon
+        pageFilter
+        pageFilterAddon
+*/
+.pageFilterString{
     
 }
 
+.pageFilterAddon{
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
+}
+.pageFilter{
+    font-size: 12px;
+    height: 26px;
+    padding: 5px;
+}
+
+.excbt_inputFormControl {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
+}
+
+.excbt_inputFormControlObjectFilter {
+    font-size: 12px;
+    height: 26px;
+    padding: 5px;
+}
 
 /*color "Портал НМК"*/
 /*
@@ -710,19 +738,7 @@ mainTable {
     display: inline;
 }
 
-.excbt_inputFormControl {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
-}
-.excbt_inputFormControlObjectFilter {
-    font-size: 12px;
-    height: 26px;
-    padding: 5px;
-}
-.excbt_objectFilterInputGroup{
-/*    margin-top: -2.5%;*/
-}
+
 
 
 .excbt_selectObjectWindow > .modal-backdrop {
