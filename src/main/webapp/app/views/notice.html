@@ -1,11 +1,13 @@
 <!--<div>Портал / Уведомления</div>-->
+<!--
 <div>
     <ul class="breadcrumb marginBottom10">
         <li><a href="#/">Портал</a> <span class="divider"></span></li>
         <li class="active">Уведомления</li>
     </ul>
 </div>  
-<div class="col-md-11 noPadding"><h2 class="noMargin excbt_h2">Уведомления</h2></div>
+-->
+<div class="col-md-11 noPadding"><h2 class="noMargin pageTitle">Уведомления</h2></div>
 <div class="col-md-1">
     <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
 </div>  
@@ -32,7 +34,7 @@
     <div class="col-md-8 noPadding marginBottom10">
         <div>по объектам:</div>
         <div class="">
-            <textarea  class="form-control excbt_inputFormControl excbt_tarea" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
+            <textarea  class="form-control excbt_inputFormControl objectListTArea" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
 
         </div>
     </div>
