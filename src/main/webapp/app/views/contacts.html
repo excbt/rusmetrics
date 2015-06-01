@@ -1,170 +1,26 @@
-<!-- Я остановился на добавлении галочек в чекбоксах
-в окне редактирования контактов и групп контактов -->
-
-<style type="text/css">
-.main_tab_container {
-	padding: 5px;
-	background-color: #fff
-}
-
-.hidden_tab {
-	display: none
-}
-
-.contact_table {
-	width: 70%;
-}
-.contact_table tr td {
-	padding: 3px;
-	height: 40px;
-}
-
-.contact_table tr:nth-child(odd) {
-	background: #dbdbdb
-}
-
-.contact_table tr:nth-child(even)  {
-	background: #f5f5f5
-}
-
-.contact_table tr:hover {
-	background: #bde0ff
-}
-
-.contact_table td {
-	width: 30px;
-	text-align: left;
-}
-
-.contact_table th {
-	text-align: left;
-	background: #c2c2c2;
-	padding: 3px;
-	height: 40px;
-}
- 
-.contact_table td:first-child {
-	text-align: center;
-	width: 30px;
-}
-
-.contact_table_in_w {
-	width: 100%;
-}
-.contact_table_in_w tr td {
-	padding: 3px;
-	height: 30px;
-}
-
-.contact_table_in_w tr:hover {
-	background: #bde0ff;
-}
-
-.contact_table_in_w tr:nth-child(odd) {
-	background: #dbdbdb;
-}
-
-.contact_table_in_w tr:nth-child(even)  {
-	background: #f5f5f5;
-}
-
-.contact_table_in_w td {
-	text-align: left;
-}
-.contact_table_in_w td:first-child {
-	width: 15 px;
-	text-align: center;
-}
-
-.modal_window_bg {
-	position: fixed;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	background: rgba(0,0,0,0.8);
-	z-index: 99999;
-	transition: opacity 400ms ease-in;
-	display: block;
-	pointer-events: auto;
-}
-
-.modal_window {
-	width: 400px;
-	height: 700px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	margin-left: -200px;
-	margin-top: -300px;
-	padding: 50px;
-	background: #fff;
-	font-size: 14pt;
-}
-
-.half_screen {
-	float: left;
-	width: 30%;
-}
-
-.second_half_of_screen {
-	float: left;
-	width: 70%;
-}
-
-.list_in_window {
-	border: 1px solid;
-	border-color: #dddddd;
-	height: 194px;
-	background: #ffffff;
-	overflow: auto;
-}
-
-.exbt_list_in_window {
-	height: 180px;
-	overflow: auto;
-}
-</style>
-
 <script type="text/javascript">
-/*
-- Удалить неиспользуемые стили
- */
-	// Переключение вкладок
-	function selectContacts () {
-		document.getElementById('div_contacts').style.display = 'block';
-		document.getElementById('div_contact_lists').style.display = 'none';
-	}
-	
-	function selectLists () {
-		document.getElementById('div_contacts').style.display = 'none';
-		document.getElementById('div_contact_lists').style.display = 'block';
-	}
+	$(function (){
+		$('#ul_contacts_tabs a:first').tab('show')
+	});
 </script>
 
 <div>
-<!--
     <ul class="breadcrumb">
         <li><a href="/#/">Портал</a> <span class="divider"></span></li>
         <li class="active">Контакты</li>
     </ul>
--->
-<!-- Вкладки -->
+    <!-- Вкладки -->
 	<div role="tabpanel">
   	<!-- Навигационная полоса -->
-		<ul class="nav nav-tabs" role="tablist">
-    		<li role="presentation" class="active"><a href="" aria-controls="div_contacts"  role="tab" data-toggle="tab" onclick="selectContacts()">Контакты</a></li>
-    		<li role="presentation" ><a href="" aria-controls="div_contacts" data-target="" role="tab" data-toggle="tab" onclick="selectLists()">Списки контактов</a></li>
+		<ul id="ul_contacts_tabs" class="nav nav-tabs" role="tablist">
+     		<li class="active"><a href="" aria-controls="div_contacts" data-target="#div_contacts" data-toggle="tab">Контакты</a></li>
+    		<li><a href="" aria-controls="div_contact_lists" data-target="#div_contact_lists" data-toggle="tab">Списки контактов</a></li>
 		</ul>
 	</div>
-  <!-- реализация вкладок -->
+  <!-- содержимое вкладок -->
   <div class="tab-content">
-<!-- ???     Расписания-->
-    <div role="tabpanel" class="tab-pane fade in active" id="timetables">
-	</div>
-</div>
     <!-- Содержимое вкладки с контактами -->
-    <div id="div_contacts">
+    <div id="div_contacts" class="tab-pane active">
     <br>
 		<!-- Кнопка добавления контактов -->
 		<div class="btn-group">
@@ -192,7 +48,8 @@
     		</tr>
     	</table>
     </div>
-    <div id="div_contact_lists" class="hidden_tab">
+    <!-- Содержимое вкладки со списками контактов -->
+    <div id="div_contact_lists" class="tab-pane">
     <br>
 		<!-- Кнопка добавления списков -->
 		<div class="btn-group">
@@ -215,7 +72,7 @@
     		</tr>
 		</table>	
     </div>
-    
+  </div>  
     <!-- Вспомогательные элементы -->
     <!-- Модальное окно редактирования контакта -->
     <div id="edit_contact" class="modal fade" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
@@ -242,7 +99,7 @@
     						</div>
     						<div class="col-md-6">
     							<label for="list_in_window">Включить в группы:</label>
-    							<div id="list_in_window" class="panel panel-default exbt_list_in_window">
+    							<div id="list_in_window" class="panel panel-default e_list_in_window">
     								<table id="table_lists_in_window" class = "table table-striped table-condensed table-hover">
     								    <tr ng-repeat = "small_list in small_lists">
    											<td><input id={{small_list.id}} type='checkbox' ng-model = "small_list.checked" /></td>
@@ -293,7 +150,7 @@
    							</form>
    							<br>
    							<label for = "contacts_in_window">Включить контакты в список:</label>
-   							<div id = "contacts_in_window" class = "panel panel-default exbt_list_in_window">
+   							<div id = "contacts_in_window" class = "panel panel-default e_list_in_window">
    								<table id="table_contacts_in_window" class = "table table-striped table-condensed table-hover"> 
     								<tr ng-repeat="small_contact in small_contacts">
    										<td><input id={{small_contact.id}} type='checkbox' ng-model='small_contact.checked' /></td>
