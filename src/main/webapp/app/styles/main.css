@@ -1,23 +1,23 @@
 /********************** NMK portal window *****************************************/
 /**********************************************************************************/
 /*********************************Top navigation bar*******************************/
-.nmkNavbar{
+.e-nmk-navbar{
     background-color: #EEEEEE;
     height: 5%;
 }
 	/*Navigation bar container*/
-.nmkNavbar > .nmkNavbarContainer{
+.e-nmk-navbar > .e-nmk-navbar-container{
 	
 }
 	/*Navigation bar header*/
-.nmkNavbar > .nmkNavbarContainer >.nmkNavbarContainerHeader {
+.e-nmk-navbar > .e-nmk-navbar-container >.e-nmk-navbar-container-header {
 	
 }
 	/*Brand*/
-.nmkNavbar > .nmkNavbarContainer >.nmkNavbarContainerHeader >.nmkNavbarBrand{
+.nmk-navbar > .nmk-navbar-container >.nmk-navbar-container-header >.nmk-navbar-brand{
 }
 	/*Navbar menu*/
-.nmkNavbar > .nmkNavbarContainer > ul{
+.nmk-navbar > .nmk-navbar-container > ul{
 /*
 	padding: 5px;
 	background-color: yellow;
