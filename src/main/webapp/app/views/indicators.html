@@ -112,7 +112,7 @@
                         <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorAlert.png" ng-class="{'hideM':!divergenceIndicatorAlert_flag, 'showM':divergenceIndicatorAlert_flag}">
                         <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorCrit.png" ng-class="{'hideM':!divergenceIndicatorCrit_flag, 'showM':divergenceIndicatorCrit_flag}">
 -->
-                        <img ng-class="column.imgclass" ng-src="{{column.imgpath}}"/>
+                        <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.hint}}"/>
                 </th>
             </tr>
             <tr>
@@ -123,7 +123,7 @@
             </tr> 
             <tr>
                 <td class="col-md-1">интеграторы:</td>
-                <td ng-repeat="column in intotalColumns" ng-click="toggleDetail(summary.lastData)">
+                <td ng-repeat="column in intotalColumns" ng-dblclick="toggleDetail(summary.lastData)">
 <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                     {{summary.diffs[column.name]}}
                     <div ng-show="summary.lastData.detail">

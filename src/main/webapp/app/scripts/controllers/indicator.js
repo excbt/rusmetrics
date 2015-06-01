@@ -109,30 +109,35 @@ angular.module('portalNMK')
          "class":"col-md-1",
          "imgpath" : "",
          "imgclass": ""
+         ,"hint":""
         },
         {"name": "m_out",
          "header":"Масса обратки",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
+         ,"hint":""
         },
         {"name": "v_in",
          "header":"Объем подачи",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
+         ,"hint":""
         },
         {"name": "v_out",
          "header":"Объем обратки",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
+         ,"hint":""
         },
         {"name": "h_delta",
          "header":"ГКал отопления",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
+         ,"hint":""
         }
     ];    
     
@@ -246,6 +251,7 @@ angular.module('portalNMK')
 //            console.log(ALERT_IMG_PATH);         
                        element.imgpath=  ALERT_IMG_PATH;
                         element.imgclass= "divergenceIndicatorImg";
+                        element.hint = "Итого и показания интеграторов расходятся НЕ более чем на 1";
                         return;
 
                     };
@@ -254,10 +260,12 @@ angular.module('portalNMK')
 //            console.log(CRIT_IMG_PATH);            
                         element.imgpath = CRIT_IMG_PATH;
                         element.imgclass= "divergenceIndicatorImg";
+                        element.hint = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
                         return;
                     };
                     element.imgpath = EMPTY_IMG_PATH;
                     element.imgclass= "";
+                    element.hint = "";
                 });
 console.log(data);            
         });
