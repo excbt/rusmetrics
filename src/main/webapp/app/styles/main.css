@@ -861,12 +861,12 @@ mainTable {
 }
 
 .editGroupWindowSelectedObjectsArea{
-     height: 415px;
+     height: 410px;
     overflow-y: scroll;
 }
 
 .editGroupWindowBtnAddObject{
-    margin-top: -5%;
+/*    margin-top: -5%;*/
 }
 
 /********************************************** Indicator's page ***********************************/

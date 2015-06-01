@@ -113,9 +113,11 @@
    							</form>
    							<br>
    							<label for = "contacts_in_window">Объекты в группе:</label>
+<!--
                             <div class="btn-group pull-right">
                                 <button class="btn btn-primary btn-xs editGroupWindowBtnAddObject" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag">Добавить объекты</button>
                             </div>
+-->
                             
 
 
@@ -137,7 +139,11 @@
 	    	<div class="modal-footer modalFooter">
     			<div class="container-fluid dialogMarginButtons">
 					<div class="row">
-                       	<div class="col-xs-offset-5 col-md-3">
+                        <div class=" col-md-3">
+                             <button class="btn btn-primary btn-xs editGroupWindowBtnAddObject" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag">Добавить объекты</button>
+                        </div>
+                        
+                       	<div class="col-xs-offset-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
                                 ng-disabled="!checkForm()"   
 								ng-click="saveGroup()"
