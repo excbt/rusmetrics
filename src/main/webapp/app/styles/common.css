@@ -1,0 +1,385 @@
+/*
+ *  Файл со стилями, используемыми во всём интерфейсе
+ */
+
+/********************
+ * Разметка страницы
+ ********************/
+/* Шапка */
+.nmc-main-header {
+    background-color: #EEEEEE;
+    height: 5%;
+}
+
+	/* Брэнд ака Марка - надпись в левом верхнем углу*/
+.nmc-main-header-brand{
+}
+	/* Меню в строке заголовка*/
+.nmc-main-header-menu{
+/*
+	padding: 5px;
+	background-color: yellow;
+*/
+}
+
+	/* Пункт меню заголовка*/
+.nmc-main-header-menu > li{
+/*	background-color: brown;*/
+}
+    
+.nmc-main-header-menu > li > a{
+/*    color: wheat !important;*/
+}
+
+	/* Раскрытый пункт меню*/
+.nmc-main-header-menu > li.open {
+/*
+	background-color: orange;
+    color: white !important;
+*/
+}
+.nmc-main-header-menu > li.open > a{
+/*	background-color: orange !important;*/
+}
+    /* Пункт меню, на который наведен фокус*/
+.nmc-main-header-menu > li.open > a:focus{
+/*	background-color: red !important;*/
+}
+.nmc-main-header-menu > li.open > a:hover{
+/*	background-color: green !important;*/
+}
+
+    /* Раскрывающееся меню*/
+.nmc-main-header-menu > li > ul{
+/*	background-color: white ;*/
+}
+    /* Пункт раскрывающегося меню*/
+.nmc-main-header-menu > li > ul > li{
+/*	background-color: greenyellow ;*/
+}
+
+    /* Пункт раскрывающегося меню, на который наведен указатель*/
+.nmc-main-header-menu > li > ul > li > a:hover{
+/*	background-color: blueviolet !important;*/
+}
+
+    /* Пункт раскрывающегося меню, который в фокусе*/
+.nmc-main-header-menu > li > ul > li > a:focus{
+/*	background-color: aqua!important;*/
+}
+
+/* Основная рабочая область */
+.nmc-main-workspace {
+    margin-left: 10pt;
+    width: 87%;
+	min-height: 900px;
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+/*    border-radius: 0;*/
+    background-color: #EEEEEE; /*background color of main area*/
+    padding-top: 10px;
+	height: 85%;
+/*	height: 865px; */
+/*    overflow: hidden;*/
+    overflow-y: auto;	
+}
+
+/* Футер */
+.nmc-main-footer {
+    height: 10px;
+    padding-top: 19px;
+    background-color: #BEBEBE;
+}
+
+/* Заголовки интерфейсов в рабочей области */
+.nmc-main-workspace-header {
+}
+/* Горизонтальная линия в заголовке рабочей области*/
+.nmc-main-workspace-header hr{
+    
+}
+
+/*Футер рабочей области*/
+.nmc-main-workspace-footer{
+    
+}
+
+/* Фон главного окна */
+.nmc-main-window-background {
+}
+
+
+/***********************
+ * Элементы навигации 
+ ***********************/
+/* Главное меню */
+.nmc-main-menu {
+    width: 10%;
+}
+
+    /* Пункт главного меню - неактивный*/
+.nmc-main-menu-item{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+    font-size: 16px;
+    border-radius: 4px 0px 0px 4px;
+	background-color: #DCDCDC; /*background color of menu item*/
+}
+
+    /* Пункт главного меню */
+        /*в фокусе*/    /* на который наведен курсор*/
+.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+	background-color: #DCDCDC;
+}
+
+    /*Активный пункт главного меню*/
+.nmc-main-menu-item-active{
+    font-weight: bold;
+	color: #555 !important;
+	text-decoration: none;
+	background-color: #EEEEEE !important;
+}
+
+    /* Иконка пункта меню*/
+.nmc-main-menu-item-icon {
+    margin-right: 10px;
+}
+    
+.submenu{
+    margin-left: 20px;
+}
+
+.submenu > .nmc-main-menu-item {
+	border: 0px;
+}
+
+/* Вкладки рабочей области */
+.nmc-main-tab-panel {
+}
+.nmc-main-tab-button{
+}
+
+.nmc-main-tab-button-active{
+}
+
+
+/* Вкладки третьего уровня */
+.nmc-tab-panel {
+}
+
+.nmc-tab-button{
+}
+
+.nmc-tab-button-active{
+}
+
+ 
+/* Блок номеров страниц */
+.nmc-pages {
+}
+.nmc-pages-active{
+    
+}
+/***********
+ * Таблицы
+ ***********/
+/* Таблица в основной рабочей области */
+.nmc-main-table {
+ }
+
+/* Заголовок таблицы */
+.nmc-main-table-header {
+}
+
+/* Таблица первого уровня с вложенными таблицами */
+.nmc-parent-table {
+}
+ 
+/* Вложенная таблица */
+.nmc-child-table {
+}
+
+.nmc-child-table-header{
+}
+
+.nmc-child-table-without-header{
+}
+
+ 
+/* Таблица рабочей области модального окна */
+.nmc-modal-main-table {
+}
+ 
+/* Таблица с чекбоксами в модальном окне */
+.nmc-modal-table-with-chkbx {
+}
+  
+/*********
+ * Формы
+ *********/
+/* label поля ввода */
+.nmc-form-label {
+}
+ 
+/* поле поиска */
+.nmc-search-form {
+}
+
+.nmc-searh-form-button{
+}
+ 
+/* выпадающий список */
+.nmc-select-form {
+}
+ 
+/* дата */
+.nmc-date-input-form {
+}
+ 
+/* интервал дат */
+.nmc-date-interval-form {
+}
+ 
+/* ввод строки */
+.nmc-text-input-form {
+}
+ 
+/* ввод многострочного текстового поля */
+.nmc-textarea-form {
+}
+ 
+/* радиобатон */
+.nmc-radio-form {
+}
+ 
+/* чекбокс */
+.nmc-checkbox-form {
+}
+ 
+/* неактивная форма */
+.nmc-inactive-form {
+}
+ 
+/**********
+ * Кнопки
+ **********/
+/* Ок */
+.nmc-ok-button {
+}
+
+/* Сохранить */
+.nmc-save-button {
+}
+  
+/* Отмена */
+.nmc-cancel-button {
+}
+ 
+/* Добавить в заголовке рабочей области */
+.nmc-main-add-button {
+}
+ 
+/* Добавить в таблице */
+.nmc-add-button-in-table {
+}
+ 
+/* Добавить в модальном окне */
+.nmc-add-button-in-modal {
+}
+ 
+/* кнопка в таблице */
+.nmc-button-in-table {
+}
+ 
+/* Переключатель */
+.nmc-toggle {
+}
+
+.nmc-toggle-button {
+}
+
+.nmc-toggle-button-active {
+}
+
+ 
+/* Неактивная кнопка */
+.nmc-button-inactive {
+}
+ 
+/**************************************************************************************
+ *  Разметка модального окна
+ ****************************************************************************************/
+/* Заголовок */
+.nmc-modal-header {
+}
+ 
+/* Футер */
+.nmc-modal-footer {
+}
+ 
+/* Рабочая панель */
+.nmc-modal-panel {
+}
+
+/* Тело модального окна (фон)*/
+.nmc-modal-body{
+}
+ 
+/* Поле с таблицей */
+.nmc-modal-panel-with-table{
+}
+ 
+/*****************************
+ * Предупреждения и подсказки
+ *****************************/
+/* Ошибка */
+.nmc-error-alert {
+}
+ 
+/* Успех */
+.nmc-success-alert {
+}
+ 
+/* Всплывающая подсказка */
+.nmc-tooltip {
+}
+ 
+/* Неправильно введённое значение */
+.nmc-wrong-value {
+}
+  
+/**********************
+ * Вспомогательные
+ *********************/
+/* Шрифты */
+
+ 
+/* Заголовки */
+
+.nmc-h1 {
+}
+
+.nmc-h2 {
+}
+
+.nmc-h3 {
+}
+
+/* Панели */
+.nmc-panel {
+}
+
+/* Картинки*/
+.nmc-img1 {
+}
+.nmc-img2 {
+}
