@@ -6,218 +6,380 @@
  * Разметка страницы
  ********************/
 /* Шапка */
-.nmk-main-header {
+.nmc-main-header {
+    background-color: #EEEEEE;
+    height: 5%;
+}
+
+	/* Брэнд ака Марка - надпись в левом верхнем углу*/
+.nmc-main-header-brand{
+}
+	/* Меню в строке заголовка*/
+.nmc-main-header-menu{
+/*
+	padding: 5px;
+	background-color: yellow;
+*/
+}
+
+	/* Пункт меню заголовка*/
+.nmc-main-header-menu > li{
+/*	background-color: brown;*/
+}
+    
+.nmc-main-header-menu > li > a{
+/*    color: wheat !important;*/
+}
+
+	/* Раскрытый пункт меню*/
+.nmc-main-header-menu > li.open {
+/*
+	background-color: orange;
+    color: white !important;
+*/
+}
+.nmc-main-header-menu > li.open > a{
+/*	background-color: orange !important;*/
+}
+    /* Пункт меню, на который наведен фокус*/
+.nmc-main-header-menu > li.open > a:focus{
+/*	background-color: red !important;*/
+}
+.nmc-main-header-menu > li.open > a:hover{
+/*	background-color: green !important;*/
+}
+
+    /* Раскрывающееся меню*/
+.nmc-main-header-menu > li > ul{
+/*	background-color: white ;*/
+}
+    /* Пункт раскрывающегося меню*/
+.nmc-main-header-menu > li > ul > li{
+/*	background-color: greenyellow ;*/
+}
+
+    /* Пункт раскрывающегося меню, на который наведен указатель*/
+.nmc-main-header-menu > li > ul > li > a:hover{
+/*	background-color: blueviolet !important;*/
+}
+
+    /* Пункт раскрывающегося меню, который в фокусе*/
+.nmc-main-header-menu > li > ul > li > a:focus{
+/*	background-color: aqua!important;*/
 }
 
 /* Основная рабочая область */
-.nmk-main-workspace {
+.nmc-main-workspace {
+    margin-left: 10pt;
+    width: 87%;
+	min-height: 900px;
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+/*    border-radius: 0;*/
+    background-color: #EEEEEE; /*background color of main area*/
+    padding-top: 10px;
+	height: 85%;
+/*	height: 865px; */
+/*    overflow: hidden;*/
+    overflow-y: auto;	
 }
 
 /* Футер */
-.nmk-main-footer {
+.nmc-main-footer {
+    height: 10px;
+    padding-top: 19px;
+    background-color: #BEBEBE;
 }
 
 /* Заголовки интерфейсов в рабочей области */
-.nmk-main-workspace-header {
+.nmc-main-workspace-header {
+}
+/* Горизонтальная линия в заголовке рабочей области*/
+.nmc-main-workspace-header hr{
+    
+}
+
+/*Футер рабочей области*/
+.nmc-main-workspace-footer{
+    
 }
 
 /* Фон главного окна */
-.nmk-main-window-background {
+.nmc-main-window-background {
 }
+
 
 /***********************
  * Элементы навигации 
  ***********************/
 /* Главное меню */
-.nmk-main-menu {
+.nmc-main-menu {
+    width: 10%;
+}
+
+    /* Пункт главного меню - неактивный*/
+.nmc-main-menu-item{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+    font-size: 16px;
+    border-radius: 4px 0px 0px 4px;
+	background-color: #DCDCDC; /*background color of menu item*/
+}
+
+    /* Пункт главного меню */
+        /*в фокусе*/    /* на который наведен курсор*/
+.nmc-main-menu-item:focus, .nmc-main-menu-item:hover{
+    word-wrap: break-word;
+    padding-right: 1px;
+    border: none;
+    margin-right: -30%;
+    margin-bottom: 2%;
+	background-color: #DCDCDC;
+}
+
+    /*Активный пункт главного меню*/
+.nmc-main-menu-item-active{
+    font-weight: bold;
+	color: #555 !important;
+	text-decoration: none;
+	background-color: #EEEEEE !important;
+}
+
+    /* Иконка пункта меню*/
+.nmc-main-menu-item-icon {
+    margin-right: 10px;
+}
+    
+.submenu{
+    margin-left: 20px;
+}
+
+.submenu > .nmc-main-menu-item {
+	border: 0px;
 }
 
 /* Вкладки рабочей области */
-.nmk-main-tabs {
+.nmc-main-tab-panel {
 }
+.nmc-main-tab-button{
+}
+
+.nmc-main-tab-button-active{
+}
+
 
 /* Вкладки третьего уровня */
-.nmk-tabs {
-}
- 
-/* Блок номеров страниц */
-.nmk-pages {
+.nmc-tab-panel {
 }
 
+.nmc-tab-button{
+}
+
+.nmc-tab-button-active{
+}
+
+ 
+/* Блок номеров страниц */
+.nmc-pages {
+}
+.nmc-pages-active{
+    
+}
 /***********
  * Таблицы
  ***********/
 /* Таблица в основной рабочей области */
-.nmk-main-table {
+.nmc-main-table {
  }
 
+/* Заголовок таблицы */
+.nmc-main-table-header {
+}
+
 /* Таблица первого уровня с вложенными таблицами */
-.nmk-parent-table {
+.nmc-parent-table {
 }
  
 /* Вложенная таблица */
-.nmk-child-table {
+.nmc-child-table {
 }
- 
-/* Таблица с разделителями */
-.nmk-table-with-borders {
+
+.nmc-child-table-header{
 }
- 
-/* Заголовок таблицы */
-.nmk-table-header {
+
+.nmc-child-table-without-header{
 }
+
  
 /* Таблица рабочей области модального окна */
-.nmk-modal-main-table {
+.nmc-modal-main-table {
 }
  
 /* Таблица с чекбоксами в модальном окне */
-.nmk-modal-table-with-chkbx {
+.nmc-modal-table-with-chkbx {
 }
   
 /*********
  * Формы
  *********/
 /* label поля ввода */
-.nmk-form-label {
+.nmc-form-label {
 }
  
 /* поле поиска */
-.nmk-search-form {
+.nmc-search-form {
+}
+
+.nmc-searh-form-button{
 }
  
 /* выпадающий список */
-.nmk-select-form {
+.nmc-select-form {
 }
  
 /* дата */
-.nmk-date-input-form {
+.nmc-date-input-form {
 }
  
 /* интервал дат */
-.nmk-date-interval-form {
+.nmc-date-interval-form {
 }
  
 /* ввод строки */
-.nmk-text-input-form {
+.nmc-text-input-form {
 }
  
 /* ввод многострочного текстового поля */
-.nmk-textarea-form {
+.nmc-textarea-form {
 }
  
 /* радиобатон */
-.nmk-radio-form {
+.nmc-radio-form {
 }
  
 /* чекбокс */
-.nmk-checkbox-form {
+.nmc-checkbox-form {
 }
  
 /* неактивная форма */
-.nmk-inactive-form {
+.nmc-inactive-form {
 }
  
 /**********
  * Кнопки
  **********/
 /* Ок */
-.nmk-ok-button {
+.nmc-ok-button {
 }
 
-/* Да */
-.nmk-yes-button {
+/* Сохранить */
+.nmc-save-button {
 }
- 
-/* Нет */
-.nmk-no-button {
-}
- 
+  
 /* Отмена */
-.nmk-cancel-button {
+.nmc-cancel-button {
 }
  
 /* Добавить в заголовке рабочей области */
-.nmk-main-add-button {
+.nmc-main-add-button {
 }
  
 /* Добавить в таблице */
-.nmk-add-button-in-table {
+.nmc-add-button-in-table {
 }
  
 /* Добавить в модальном окне */
-.nmk-add-button-in-modal {
+.nmc-add-button-in-modal {
 }
  
 /* кнопка в таблице */
-.nmk-button-in-table {
+.nmc-button-in-table {
 }
  
-/* кнопка в дочерней раскрывающейся таблице */
-.nmk-button-in-child-table {
+/* Переключатель */
+.nmc-toggle {
 }
 
-/* Переключатель */
-.nmk-toggle-button {
+.nmc-toggle-button {
 }
+
+.nmc-toggle-button-active {
+}
+
  
 /* Неактивная кнопка */
-.nmk-inactive-button {
+.nmc-button-inactive {
 }
  
-/*******************
- * Модальные окна
- *******************/
+/**************************************************************************************
+ *  Разметка модального окна
+ ****************************************************************************************/
 /* Заголовок */
-.nmk-modal-header {
+.nmc-modal-header {
 }
  
 /* Футер */
-.nmk-modal-footer {
+.nmc-modal-footer {
 }
  
-/* Рабочая область */
-.nmk-modal-workspace {
+/* Рабочая панель */
+.nmc-modal-panel {
+}
+
+/* Тело модального окна (фон)*/
+.nmc-modal-body{
 }
  
 /* Поле с таблицей */
-.nmk-modal-panel-with-table{
+.nmc-modal-panel-with-table{
 }
  
 /*****************************
  * Предупреждения и подсказки
  *****************************/
 /* Ошибка */
-.nmk-error-alert {
+.nmc-error-alert {
 }
  
 /* Успех */
-.nmk-success-alert {
+.nmc-success-alert {
 }
  
 /* Всплывающая подсказка */
-.nmk-tooltip {
+.nmc-tooltip {
 }
  
 /* Неправильно введённое значение */
-.nmk-wrong-value {
+.nmc-wrong-value {
 }
   
 /**********************
  * Вспомогательные
  *********************/
 /* Шрифты */
+
  
 /* Заголовки */
-.nmk-h1 {
+
+.nmc-h1 {
 }
 
-.nmk-h2 {
+.nmc-h2 {
 }
 
-.nmk-h3 {
+.nmc-h3 {
 }
 
 /* Панели */
-.nmk-panel {
+.nmc-panel {
+}
+
+/* Картинки*/
+.nmc-img1 {
+}
+.nmc-img2 {
 }

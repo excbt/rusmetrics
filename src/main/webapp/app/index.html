@@ -17,6 +17,7 @@
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="bower_components/toastr/toastr.css"/>  
     <link rel="stylesheet" href="styles/main.css"/>
+    <link rel="stylesheet" href="styles/common.css"/>  
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css"/>
       <link rel="stylesheet" href="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.min.css"/>
     <!-- endbuild -->
@@ -50,10 +51,10 @@
     <!-- Add your site or application content here -->
 <div id="wrap" ng-controller="MainCtrl">
 <!--    Навигационная строка в верху страницы-->
-    <div class="header navbar navbar-default navbar-fixed-top nmkNavbar" >
+    <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
-			<div id="navbar-container" class="container-fluid nmkNavbarContainer">
-				<div class="navbar-header nmkNavbarContainerHeader">
+			<div id="navbar-container" class="container-fluid">
+				<div class="navbar-header">
 <!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
@@ -61,7 +62,7 @@
 							class="icon-bar"></span>
 					</button>
 -->
-					<a class="navbar-brand nmkNavbarBrand" href="#/">Портал НМК</a>
+					<a class="navbar-brand nmc-main-header-brand" href="#/">Портал НМК</a>
 					
 				</div>
 			
@@ -70,11 +71,11 @@
 <!--				<li><p align="center" style="font-size: 16px;"><span class="glyphicon"></span> (c) "НМК" 2015 </p></li>						-->
 <!--			</ul>-->
                 
-            <ul class="nav navbar-nav pull-right">	
+            <ul class="nav navbar-nav pull-right nmc-main-header-menu">	
 				
-                <li class="dropdown nmkNavbarUserMenu">
+                <li class="dropdown">
                     <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
-							class="hideM nmkNavbarUser" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
+							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
 						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
@@ -97,55 +98,55 @@
     <div class="row row-offcanvas row-offcanvas-left">    
        
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmkMenu" >
+        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu" >
                         <nav class="sidebar-nav"
                             role="navigation" ng-show="!showPrivateOfficeMenu">
 <!--                Основное меню            -->
                             <div id="sidebar-entries" class="list-group">
    
                                 <!-- Объекты, редактирование -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showSettings=false;showAdminSettings=false;"><i class="glyphicon glyphicon-list menuItemIcon"></i>Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showSettings=false;showAdminSettings=false;"><i class="glyphicon glyphicon-list nmc-main-menu-item-icon"></i>Объекты</a>
                                 
                                 <!-- Отчеты -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.report_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
 
-                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item');showSettings=false"><i class="glyphicon glyphicon-file menuItemIcon"></i>Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item');showSettings=false"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon"></i>Отчеты</a>
                                 
                                  <!-- Notices -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.notice_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item');showSettings=false"><i class="glyphicon glyphicon-envelope menuItemIcon"></i>Уведомления</a>                            
+                                    href="#/notice/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item');showSettings=false"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon"></i>Уведомления</a>                            
                                 
 <!--                                Настройки-->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
-                                    href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog menuItemIcon"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
+                                    href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
                                 
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_tariff_menu_item}"
+                                    <a class="list-group-item menuItem" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
 
-                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale menuItemIcon"></i> Тарифы</a>
+                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale nmc-main-menu-item-icon"></i> Тарифы</a>
 
-                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_report_menu_item}"
+                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_report_menu_item}"
 
-                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard menuItemIcon"></i> Отчеты</a>
-                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.setting_group_menu_item}"
+                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard nmc-main-menu-item-icon"></i> Отчеты</a>
+                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_group_menu_item}"
 
-                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open menuItemIcon"></i>Группы</a>
+                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open nmc-main-menu-item-icon"></i>Группы</a>
                                 </div>
                                
                                 
                                 <!--                                Администрирование-->
-                                <a class="list-group-item noMarginBottom menuItem hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
+                                <a class="list-group-item noMarginBottom nmc-main-menu-item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
 
-                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench menuItemIcon"></i>Управление<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
+                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"></i>Управление<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.metadata_control_menu_item}"
+                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.metadata_control_menu_item}"
 
                                     ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
 
@@ -181,7 +182,7 @@
             
             </div>                
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmkFrame">
+        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace">
 					
 					<div id="main" ng-view></div>
         </div>
@@ -191,7 +192,7 @@
 
 </div> <!-- end id=wrap -->
       
-      <div class="navbar-fixed-bottom row-fluid nmkFooter" >
+      <div class="navbar-fixed-bottom row-fluid nmc-main-footer" >
           <div class="container" >
             
 			<p class="muted credit">
