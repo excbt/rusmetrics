@@ -56,7 +56,13 @@ public class JsonMetadataParser {
 
 			if (data.getPropVars() != null
 					&& !srcMetadata.getPropVars().contains(propVarStr)) {
-				logger.trace("srcProp: {} SKIPPED", srcMetadata.getSrcProp());
+				logger.trace("srcProp: {} SKIPPED (by propVars)", srcMetadata.getSrcProp());
+				continue;
+			}
+
+			if (data.getMetaNumber() != null
+					&& !data.getMetaNumber().equals(propVar)) {
+				logger.trace("srcProp: {} SKIPPED (by metaNumber)", srcMetadata.getSrcProp());
 				continue;
 			}
 
@@ -172,7 +178,7 @@ public class JsonMetadataParser {
 
 		for (MetadataInfo meta : metadataInfoList) {
 			logger.trace("Process prop: {}", meta.getSrcProp());
-			if (meta.getSrcProp().contains(",")) {
+			if (meta.getSrcProp().contains(",") || meta.getSrcProp().contains("*")) {
 				String[] fieldPatterns = meta.getSrcProp().split(COMMA_STR);
 				BigDecimal totalResult = BigDecimal.ZERO;
 				for (String fPattern : fieldPatterns) {
@@ -206,12 +212,13 @@ public class JsonMetadataParser {
 
 			JsonNode valueNode = rootNode.findValue(meta.getSrcProp());
 			if (valueNode == null) {
-				logger.error("Node with Name {} is not found",
+				logger.error("!!! Node with Name {} is not found !!!",
 						meta.getSrcProp());
 				continue;
 			}
 			MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(), meta.getDestDbType());
+					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(),
+					meta.getDestDbType());
 			result.add(metaFieldValue);
 
 		}
