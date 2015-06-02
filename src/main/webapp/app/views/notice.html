@@ -7,7 +7,7 @@
     </ul>
 </div>  
 -->
-<div class="col-md-11 noPadding"><h2 class="noMargin pageTitle">Уведомления</h2></div>
+<div class="col-md-11 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Уведомления</h2></div>
 <div class="col-md-1">
     <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
 </div>  
@@ -77,9 +77,9 @@
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
     </div>
     <div class="col-md-3 noPadding">
-             <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                 <input type="text"  class="form-control"  ng-model="noticefilter">
+             <div class="input-group nmc-search-form">
+                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticefilter">
             </div>     
     </div> 
 </div>

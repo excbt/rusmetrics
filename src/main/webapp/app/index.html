@@ -16,7 +16,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="bower_components/toastr/toastr.css"/>  
-    <link rel="stylesheet" href="styles/main.css"/>
+<!--    <link rel="stylesheet" href="styles/main.css"/>-->
     <link rel="stylesheet" href="styles/common.css"/>  
       <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.css"/>
       <link rel="stylesheet" href="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.min.css"/>
@@ -25,7 +25,7 @@
       <link rel="stylesheet" href="vendor_components/bootstrap-daterangepicker-master/daterangepicker-bs3.css"/>
       
   </head>
-  <body ng-app="portalNMK">
+  <body class="nmc-main-window-background" ng-app="portalNMK">
     <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -49,7 +49,7 @@
 
         </div>
     <!-- Add your site or application content here -->
-<div id="wrap" ng-controller="MainCtrl">
+<div id="wrap" class="wrap" ng-controller="MainCtrl">
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
@@ -127,7 +127,7 @@
                                                                 <!-- Меню настроек -->
                                 <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
 
-                                    <a class="list-group-item menuItem" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
+                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
 
                                        ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale nmc-main-menu-item-icon"></i> Тарифы</a>
 
@@ -161,19 +161,19 @@
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
 
                                 ng-click="clickMenu('object_menu_item');showPrivateOfficeMenu=false" href="#/" data-toggle="offcanvas">Портал</a>
                                 <!-- Объекты, меню настройки объектов -->
-                                <a  class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.object_menu_list_item}"
+                                <a  class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_list_item}"
 
                                 ng-click="clickMenu('object_menu_list_item');" href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
                                 <!-- Контакты -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.contact_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.contact_menu_item}"
 
                                    ng-click="clickMenu('contact_menu_item');" href="#/private/contacts/" data-toggle="offcanvas">Контакты</a>
                                 <!-- Справочники -->
-                                <a class="list-group-item menuItem" ng-class="{'menuItemSelected': menuMassive.directory_menu_item}"
+                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.directory_menu_item}"
 
                                    ng-click="clickMenu('directory_menu_item');" href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
 

@@ -8,15 +8,17 @@
     </ul>
 </div> 
 -->
-<h2 class="noMargin pageTitle">Отчеты</h2>
-<hr>
-<div role="tabpanel">
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>    
+<div role="tabpanel" class="nmc-tab-panel">
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="" aria-controls="report_templates" data-target="#report_templates" role="tab" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation"><a href="#/settings/paramsets" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation"><a href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
+    <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="report_templates" data-target="#report_templates" role="tab" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/paramsets" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
     
   </ul>
 
@@ -25,21 +27,21 @@
 <!--      Шаблоны отчетов-->
     <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
         <!--       Активные / Архивные -->
-        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive()" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive()" style="width:108px;text-align:center">Архив</a></li>
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active" style=""><a class="nmc-toggle-button" href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive()" >Действующие</a></li>
+            <li role="presentation" class="nmc-toggle-archive" style=""><a class="nmc-toggle-button" href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive()" style="">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#editTemplateModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные шаблоны-->
             <div role="tabpanel" class="tab-pane fade in active" id="active_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
-                <table id="datatabl" class="table table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
                         <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
@@ -65,7 +67,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin nmc-child-table" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
