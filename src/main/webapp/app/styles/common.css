@@ -236,6 +236,7 @@
  * Таблицы
  ***********/
 
+/* Общие стили*/
 table {
     border: 0px;
 }
@@ -259,6 +260,7 @@ td {
 }
 .nmc-table-container > tbody > tr>td {
     border: none;
+    padding: 0 !important;
 }
 
     /* Таблица первого уровня с вложенными таблицами */
@@ -272,7 +274,7 @@ td {
 }
 
 .nmc-parent-table > tbody > tr:nth-of-type(odd) {
-    background-color: #EEEEEE;/*background color of external table row*/
+    background-color: #EEEEEE;/* цвет фона для нечетной строки родительской таблицы*/
 /*    background-color: #f5f5f5;*/
 }
  
@@ -281,6 +283,7 @@ td {
     margin-left: 2%;
     width: 97%;
     border-radius: 4px;
+/*    background-color: azure !mportant;*/
 }
 
 .nmc-child-table-header{
@@ -290,9 +293,6 @@ td {
 
 .nmc-child-table-without-header{
 }
-
-
-
  
     /* Таблица рабочей области модального окна */
 .nmc-modal-main-table {
@@ -368,10 +368,12 @@ td {
 
 /* Сохранить */
 .nmc-save-button {
+    max-width: 112px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
+    max-width: 142px;
 }
  
 /* Добавить в заголовке рабочей области */
@@ -388,6 +390,11 @@ td {
  
 /* кнопка в таблице */
 .nmc-button-in-table {
+}
+/* панель для кнопок в столбце таблице*/
+.nmc-btn-toolbar-in-table{
+    padding-left:5px !important;
+    width:50px !important;
 }
  
 /* Переключатель */
@@ -440,6 +447,25 @@ td {
 /**************************************************************************************
  *  Разметка модального окна
  ****************************************************************************************/
+.nmc-modal-window{
+}
+
+    /* Контейнер для шапки, тела и футера*/
+.nmc-modal-dialog{
+}
+
+.nmc-modal-wide-dialog{
+    width: 1200px; 
+}
+
+.nmc-modal-some-wide-dialog{
+    width: 700px; 
+}
+
+.nmc-modal-narrow-dialog{
+    width: 300px; 
+}
+
 /* Заголовок */
 .nmc-modal-header {
 }
@@ -643,4 +669,8 @@ td {
 
 .nmc-hideM {
     display:none !important;
+}
+
+.btn-toolbar {
+    width: 85px;
 }

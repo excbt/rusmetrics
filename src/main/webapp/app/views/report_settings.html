@@ -40,23 +40,23 @@
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
-                        <td style="padding:0;">
+                        <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
 
-                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                            <div class="col-md-2 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
-                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
-                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>
+                                            <div class="col-md-10" ng-show="object.reportType=='COMMERCE_REPORT'">
+                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</button>
                                             </div>
                                         </div>
 
@@ -67,32 +67,34 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin nmc-child-table" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td>    <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-2" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-7"  ng-class="{'default': oldObject._default}">     
-                                                    действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
-                                            </div>
+                                                 <div class="col-md-3" ng-class="{'default': oldObject._default}">     
+                                                        {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                                </div>
+                                                <div class="col-md-8"  ng-class="{'default': oldObject._default}">     
+                                                        действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
+                                                </div>
                                          </td>
 
                                      </tr>
@@ -117,16 +119,16 @@
 <!--            Архивные шаблоны-->
              <div role="tabpanel" class="tab-pane fade " id="arhive_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
-                <table id="datatabl" class="table table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
-                        <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                        <td>
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
                                 <tr>
                                     <td ng-class="column.class">
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
+                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
                                         </div>
                                         <div class="col-md-10">
                                             <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
@@ -139,18 +141,20 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;width:55px;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right" style="">
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -164,7 +168,7 @@
                                                     в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                             </div>
                                          </td>
-                                         <td><i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                         <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
                                      </tr>
@@ -201,39 +205,41 @@
 
 </div>
 
-<div id="moveToArchiveModal" class="modal fade" role="dialog"
+<div id="moveToArchiveModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="moveToArchiveLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="moveToArchiveLabel" class="nmc-h3">
 				Перемещение в архив 
 			</h3>
 		</div>
-		<div class="modal-body">
-			<form name="deleteContactForm" novalidate>
+		<div class="modal-body nmc-modal-body">
+			<form name="moveToArchiveForm" novalidate>
 				<p class="paddingLeft10">
-					<label class="text-warning"> Вы хотите переместить в архив  
+					<label class="text-warning nmc-form-label"> Вы хотите переместить в архив  
 					</label> 
-					<label class="text-primary">{{currentObject.name}}</label> 
+					<label class="text-primary nmc-form-label">{{currentObject.name}}</label> 
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+<!--                        <div class="col-md-3"></div>-->
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+<!--						<div class="col-xs-offset-2 col-md-3">-->
+                        <div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
 								Отменить
 							</button>
@@ -250,17 +256,17 @@
 </div>
 
 <!-- create template-->
-<div id="createTemplateModal" class="modal fade" role="dialog"
+<div id="createTemplateModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="createTemplateLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content modalWindow_wide">
+	<div class="modal-dialog  modal-content nmc-modal-wide-dialog modalWindow_wide">
 
-		<div class="modal-header">
-			<h3 id="createTemplateLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="createTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>
 		</div>
-		<div class="modal-body ">
+		<div class="modal-body nmc-modal-body">
     
             <div class="container-fluid">
                 <div class="row-fluid col-md-5">
@@ -459,17 +465,17 @@
             </div>        		
 		</div>
         </div>
-		<div class="modal-footer">
+		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-8 col-md-2">
+							<input type="submit" class="pull-right btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveTemplate()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class=" pull-right col-xs-offset-2 col-md-2 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
 							</button>
