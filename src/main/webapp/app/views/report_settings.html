@@ -584,39 +584,39 @@
 </div>
 
 <!-- window: delete report template-->
-<div id="deleteObjectModal" class="modal fade" role="dialog"
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="deleteObjectLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="deleteObjectLabel" class="nmc-h3">
 				Удаление 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label class="text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
 								Отмена
 							</button>
