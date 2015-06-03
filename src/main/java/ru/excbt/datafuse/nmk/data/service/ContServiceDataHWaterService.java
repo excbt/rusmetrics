@@ -3,7 +3,9 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 
@@ -207,6 +210,44 @@ public class ContServiceDataHWaterService {
 						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
 
 		return dataList.size() > 0 ? dataList.get(0) : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContServiceDataHWaterCsv> selectByContZPointCsvData(
+			long contZPointId, TimeDetailKey timeDetail, DateTime beginDate,
+			DateTime endDate) {
+
+		List<ContServiceDataHWater> srcDataList = selectByContZPoint(
+				contZPointId, timeDetail, beginDate, endDate);
+
+		List<ContServiceDataHWaterCsv> cvsDataList = new ArrayList<>();
+		try {
+
+			for (ContServiceDataHWater data : srcDataList) {
+				ContServiceDataHWaterCsv cvsData;
+				cvsData = ContServiceDataHWaterCsv.newInstance(data);
+				ContServiceDataHWater abs = selectLastAbsData(
+						data.getContZPointId(),
+						new LocalDateTime(data.getDataDate()));
+				cvsData.copyAbsData(abs);
+				cvsDataList.add(cvsData);
+			}
+
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			logger.error("Can't create intance of {}: {}",
+					ContServiceDataHWaterCsv.class, e);
+			cvsDataList.clear();
+		}
+
+		return cvsDataList;
 	}
 
 }

@@ -7,7 +7,7 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
-public class ContServiceDataHWaterCvs extends ContServiceDataHWater {
+public class ContServiceDataHWaterCsv extends ContServiceDataHWater {
 
 	/**
 	 * 
@@ -24,14 +24,14 @@ public class ContServiceDataHWaterCvs extends ContServiceDataHWater {
 
 	private BigDecimal h_delta_abs;
 
-	public ContServiceDataHWaterCvs() {
+	public ContServiceDataHWaterCsv() {
 
 	}
 
-	public static ContServiceDataHWaterCvs newInstance(
+	public static ContServiceDataHWaterCsv newInstance(
 			ContServiceDataHWater parent) throws IllegalAccessException,
 			InvocationTargetException {
-		ContServiceDataHWaterCvs result = new ContServiceDataHWaterCvs();
+		ContServiceDataHWaterCsv result = new ContServiceDataHWaterCsv();
 		BeanUtils.copyProperties(result, parent);
 		return result;
 	}
