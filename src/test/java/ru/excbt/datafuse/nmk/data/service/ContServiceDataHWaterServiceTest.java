@@ -69,7 +69,7 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 				LocalDateTime.now().minusMonths(1).withDayOfMonth(1),
 				LocalDateTime.now().withDayOfMonth(1).minusDays(1));
 		assertNotNull(result);
-		assertNotNull(result.getM_in());
+		//assertNotNull(result.getM_in());
 	}
 
 }
