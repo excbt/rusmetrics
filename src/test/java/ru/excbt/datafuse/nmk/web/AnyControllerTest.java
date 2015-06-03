@@ -1,9 +1,13 @@
 package ru.excbt.datafuse.nmk.web;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,6 +18,8 @@ import javax.servlet.Filter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -22,6 +28,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -34,23 +41,28 @@ import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class})
+@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(AnyControllerTest.class);
+
 	private final static long TEST_AUDIT_USER = 1;
-	public static final long DEV_SUBSCR_ORG_ID = 728;	
-	
+	public static final long DEV_SUBSCR_ORG_ID = 728;
+
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	@PersistenceContext
 	protected EntityManager entityManager;
-	
+
 	@Autowired
 	private WebApplicationContext wac;
 
@@ -58,24 +70,24 @@ public class AnyControllerTest {
 	private Filter springSecurityFilterChain;
 
 	@Autowired
-	protected MockAuditorAware auditorAware;	
-	
+	protected MockAuditorAware auditorAware;
+
 	@Autowired
 	protected MockUserService mockUserService;
-	
+
 	@Autowired
 	protected MockSubscriberService mockSubscriberService;
-	
+
 	protected MockMvc mockMvc;
 
 	@Before
 	public void setup() {
-		this.auditorAware.setAuditUser(entityManager.getReference(AuditUser.class,
-				TEST_AUDIT_USER));
-		
+		this.auditorAware.setAuditUser(entityManager.getReference(
+				AuditUser.class, TEST_AUDIT_USER));
+
 		this.mockUserService.setMockUserId(TEST_AUDIT_USER);
 		this.mockSubscriberService.setMockSubscriberId(DEV_SUBSCR_ORG_ID);
-		
+
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
 				.addFilters(springSecurityFilterChain).build();
 	}
@@ -135,5 +147,139 @@ public class AnyControllerTest {
 		deleteResultActions.andDo(MockMvcResultHandlers.print());
 		deleteResultActions.andExpect(status().isNoContent());
 	}
-	
+
+	/**
+	 * 
+	 * @param referencePeriod
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @return
+	 * @throws Exception
+	 */
+	protected Long testJsonCreate(String urlStr, Object referencePeriod,
+			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		String jsonBody = null;
+		try {
+			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		MockHttpServletRequestBuilder request = post(urlStr)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions resultAction = mockMvc.perform(request);
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+
+		resultAction.andExpect(status().isCreated());
+
+		String jsonContent = resultAction.andReturn().getResponse()
+				.getContentAsString();
+		Integer createdId = JsonPath.read(jsonContent, "$.id");
+		assertTrue(createdId > 0);
+		return Long.valueOf(createdId);
+
+	}
+
+	/**
+	 * 
+	 * @param referencePeriod
+	 * @return
+	 * @throws Exception
+	 */
+	protected Long testJsonCreate(String urlStr, Object referencePeriod)
+			throws Exception {
+		String jsonBody = null;
+		try {
+			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		MockHttpServletRequestBuilder request = post(urlStr)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		ResultActions resultAction = mockMvc.perform(request);
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+
+		resultAction.andExpect(status().isCreated());
+
+		String jsonContent = resultAction.andReturn().getResponse()
+				.getContentAsString();
+		Integer createdId = JsonPath.read(jsonContent, "$.id");
+		assertTrue(createdId > 0);
+		return Long.valueOf(createdId);
+	}
+
+	/**
+	 * 
+	 * @param referencePeriod
+	 * @param urlStr
+	 * @throws Exception
+	 */
+	protected void testJsonUpdate(String urlStr, Object referencePeriod)
+			throws Exception {
+		String jsonBody = null;
+		try {
+			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		MockHttpServletRequestBuilder request = put(urlStr)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		ResultActions resultAction = mockMvc.perform(request);
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+
+		resultAction.andExpect(status().isOk());
+	}
+
+	/**
+	 * 
+	 * @param referencePeriod
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void testJsonUpdate(String urlStr, Object referencePeriod,
+			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		String jsonBody = null;
+		try {
+			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+			fail();
+		}
+
+		MockHttpServletRequestBuilder request = put(urlStr)
+				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions resultAction = mockMvc.perform(request);
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+
+		resultAction.andExpect(status().isOk());
+	}
+
 }

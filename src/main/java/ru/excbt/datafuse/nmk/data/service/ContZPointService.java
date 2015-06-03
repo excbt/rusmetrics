@@ -21,7 +21,7 @@ public class ContZPointService {
 
 	@Autowired
 	private ContServiceDataHWaterService contServiceDataHWaterService;
-	
+
 	/**
 	 * /**
 	 * 
@@ -56,7 +56,8 @@ public class ContZPointService {
 				.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
 		for (ContZPoint zp : zPoints) {
-			Date d = contServiceDataHWaterService.selectLastDataDate(zp.getId()) ;
+			Date d = contServiceDataHWaterService
+					.selectLastDataDate(zp.getId());
 			result.add(new ContZPointEx(zp, d));
 		}
 
@@ -76,4 +77,13 @@ public class ContZPointService {
 		return checkIds.size() > 0;
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<Long> selectContZPointIds(long contObjectId) {
+		return contZPointRepository.selectCommonParamsetIds(contObjectId);
+	}
 }
