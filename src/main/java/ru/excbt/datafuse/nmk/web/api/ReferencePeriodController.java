@@ -55,13 +55,12 @@ public class ReferencePeriodController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/referencePeriod", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAllList(
+	public ResponseEntity<?> getLastReferencePeriod(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId) {
-		logger.debug("Fire listAll");
 
 		List<ReferencePeriod> resultList = referencePeriodService
-				.findReferencePeriod(
+				.selectLastReferencePeriod(
 						currentSubscriberService.getSubscriberId(),
 						contZPointId);
 

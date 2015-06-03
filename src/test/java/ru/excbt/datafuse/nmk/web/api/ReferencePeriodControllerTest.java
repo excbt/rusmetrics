@@ -50,7 +50,7 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 	 * 
 	 */
 	@Test
-	public void testGetAll() throws Exception {
+	public void testGetLast() throws Exception {
 
 		Long oId = getOId();
 		Long zpId = getZPointId(oId);
