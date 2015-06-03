@@ -89,10 +89,10 @@
                                                       </table>
                                                     </div>    
                                                 </div>
-                                                 <div class="col-md-3" ng-class="{'default': oldObject._default}">     
+                                                 <div class="col-md-3" ng-class="{'nmc-distinguish': oldObject._default}">     
                                                         {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                                 </div>
-                                                <div class="col-md-8"  ng-class="{'default': oldObject._default}">     
+                                                <div class="col-md-8"  ng-class="{'nmc-distinguish': oldObject._default}">     
                                                         действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
                                                 </div>
                                          </td>
@@ -211,6 +211,7 @@
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="moveToArchiveLabel" class="nmc-h3">
 				Перемещение в архив 
 			</h3>
@@ -262,6 +263,7 @@
 	<div class="modal-dialog  modal-content nmc-modal-wide-dialog nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="createTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>
@@ -355,7 +357,7 @@
                               <div role="tabpanel" class="tab-pane fade in active" id="system1" aria-labelledBy="system1-tab">
                                 <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
                                     <div><label class="nmc-form-label">Доступные колонки</label></div>
-                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chbx">
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="defaultcolumn in system1.defaultColumns" class="noPadding" >
                                             <td style="" ng-class="defaultcolumn.class">
                                                 <div class="col-md-1 noPadding noMargin nmc-div-with-checkbox">
@@ -498,7 +500,8 @@
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
-			 <label ng-show="createByTemplate_flag" class="nmc-form-label">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<label ng-show="createByTemplate_flag" class="nmc-form-label">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
             <h3 id="editTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>    
@@ -566,8 +569,8 @@
 								ng-click="updateTemplate(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
 							</button>
@@ -590,6 +593,7 @@
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteObjectLabel" class="nmc-h3">
 				Удаление 
 			</h3>
@@ -615,10 +619,10 @@
 								value="Удалить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
-								Отмена
+								Отменить
 							</button>
 						</div>
 					</div>

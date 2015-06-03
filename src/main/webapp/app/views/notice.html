@@ -9,22 +9,22 @@
 -->
 <div class="col-md-11 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Уведомления</h2></div>
 <div class="col-md-1">
-    <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
+    <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats nmc-button-in-header" ng-click="runChart()"></i>
 </div>  
-<div class="col-md-12 noPadding">
+<div class="col-md-12 noPadding nmc-main-workspace-header">
     <hr class="noMargin">
 </div>
 <div class="container-fluid">
 <div class="row">    
 <div class="col-md-12 noPadding marginBottom10">
     <div class="col-md-12 noPadding">
-        <b>Фильтры:</b>
+        <label class="nmc-form-label">Фильтры:</label>
     </div>     
     <div class="col-md-2 noPadding" ng-controller="DataRangeSettings">
         <div>по интервалу дат:</div>
         <div class="input-group">
-            <span class="input-group-addon excbt_inputGroupAddon">с</span>
-            <input date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
+            <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form"
                 type="text" ng-model="navPlayerDates" options="queryDateOptsRu"/>
         </div>    
     </div>

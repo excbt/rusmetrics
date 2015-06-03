@@ -75,11 +75,11 @@
 				
                 <li class="dropdown">
                     <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
-							class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
-						</span><span class="hideM" ng-class="{'hideM': userInfo==null, 'showM':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
+							class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
+						</span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#/private/"
-                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
+                            title='Private office' ng-click="showPrivateOfficeMenu=true;nmc-showenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
                         </p></a></li>			
 
                         <li><a href="../logout"
@@ -125,7 +125,7 @@
                                     href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
                                 
                                                                 <!-- Меню настроек -->
-                                <div class="list-group submenu hideM" ng-class="{'showM': showSettings, 'hideM': !showSettings}" id="sidebar-entries" >
+                                <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showSettings, 'nmc-hide': !showSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
 
@@ -141,10 +141,10 @@
                                
                                 
                                 <!--                                Администрирование-->
-                                <a class="list-group-item noMarginBottom nmc-main-menu-item hideM" ng-class="{'showM':userInfo._system, 'hideM':!userInfo._system}"
+                                <a class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system}"
 
                                    href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"></i>Управление<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
-                                <div class="list-group submenu hideM" ng-class="{'showM': showAdminSettings, 'hideM': !showAdminSettings}" id="sidebar-entries" >
+                                <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showAdminSettings, 'nmc-hide': !showAdminSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.metadata_control_menu_item}"
 
@@ -156,8 +156,8 @@
                             </div>
                         </nav>
             
-                        <nav class="sidebar-nav hideM "
-                            role="navigation" ng-class="{'showM':showPrivateOfficeMenu, 'hideM': !showPrivateOfficeMenu}"> 
+                        <nav class="sidebar-nav nmc-hide "
+                            role="navigation" ng-class="{'nmc-show':showPrivateOfficeMenu, 'nmc-hide': !showPrivateOfficeMenu}"> 
 <!--              Меню Личного кабинета              -->
                             <div id="sidebar-entries" class="list-group">
                                 <!-- Home -->

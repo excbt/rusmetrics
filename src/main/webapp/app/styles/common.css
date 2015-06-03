@@ -250,7 +250,8 @@ td {
  }
 
     /* Заголовок таблицы */
-.nmc-main-table-header {
+tr.nmc-main-table-header > th {
+    background-color: yellowgreen;
 }
 
     /*Таблица - контейнер для таблицы первого уровня*/
@@ -338,6 +339,17 @@ td {
  
 /* интервал дат */
 .nmc-date-interval-form {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
+    border-left-width: 0px;
+}
+
+    /* Приписка перед интервалом дат - изначально там буква "с"*/
+.nmc-date-interval-form-addon{
+    background-color: white;
+    padding: 0px 0px 0px 6px;
+    border-right-width: 0px;
 }
  
 /* ввод строки */
@@ -384,6 +396,10 @@ td {
     max-width: 142px;
 }
  
+    /* Кнопка в заголовке рабочей области*/
+ .nmc-button-in-header{
+ }
+
 /* Добавить в заголовке рабочей области */
 .nmc-main-add-button {
 }
@@ -480,6 +496,7 @@ td {
 
 /* Заголовок */
 .nmc-modal-header {
+    height: 50px;
 }
  
 /* Футер */
@@ -498,17 +515,20 @@ td {
 .nmc-modal-panel-with-table{
 }
 
+.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list{
+    overflow-y: scroll;
+}
+
+
     /* Вспогомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
         и вариантов отчетов
     */
     /* Высота листа доступных колонок отчета*/
 .nmc-column-list  {
-    overflow-y: scroll;
-    height: 382px;
+    height: 372px;
 }
     /* Высота листа доступных объектов*/
 .nmc-object-list  {
-    overflow-y: scroll;    
     height: 520px;
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
@@ -520,9 +540,9 @@ td {
    padding-top: 250px;
 }
     /* Включение скролинга */
-#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
+/*#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
       overflow-y: scroll;
-    }
+    }*/
 
  
 /*****************************
@@ -559,6 +579,7 @@ td {
 }
 
 .nmc-h3 {
+    margin-top: 0;
 }
 
 /* Панели */
@@ -702,14 +723,22 @@ td {
 }
 
     /* Управление отображением элементов*/
-.nmc-showM {
+.nmc-show {
     display:inherit;
 }
 
-.nmc-hideM {
+.nmc-hide {
     display:none !important;
 }
 
 .btn-toolbar {
     width: 85px;
+}
+    /* Выделить элемент по умолчанию*/
+.nmc-distinguish {
+    font-weight: bold;
+}
+    /* Снять выделение элемента*/
+.nmc-undistinguish {
+    font-weight: lighter;
 }
