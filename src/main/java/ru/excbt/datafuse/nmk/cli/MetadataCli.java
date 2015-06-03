@@ -36,9 +36,9 @@ public class MetadataCli extends AbstractDBToolCli {
 	private static final Logger logger = LoggerFactory
 			.getLogger(MetadataCli.class);
 
-	private final static long[] DEVICE_OBJECTS = { 22, 23, 408, 273, 270, 279,
-			537 };
-	// private final static long[] DEVICE_OBJECTS = { 537 };
+	//private final static long[] DEVICE_OBJECTS = { 22, 23, 408, 273, 270, 279,
+	//		537 };
+	 private final static long[] DEVICE_OBJECTS = { 22 };
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
