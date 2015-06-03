@@ -492,24 +492,24 @@
 </div>
 
 <!-- edit template-->
-<div id="editTemplateModal" class="modal fade" role="dialog"
+<div id="editTemplateModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editTemplateLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content ">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			 <label ng-show="createByTemplate_flag">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
-            <h3 id="editTemplateLabel">
+		<div class="modal-header nmc-modal-header">
+			 <label ng-show="createByTemplate_flag" class="nmc-form-label">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
+            <h3 id="editTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>    
 		</div>
-		<div class="modal-body ">         
+		<div class="modal-body nmc-modal-body">         
             <div class="container">
                 <div class="row-fluid col-md-6">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputType">Тип отчета</label>
+                                <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     {{currentReportType.reportTypeName}}
@@ -517,36 +517,36 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                <td class="col-sm-3"><label for="inputName" class="nmc-form-label">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputDescription" >Описание</label>
+                                <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common">По умолчанию
+                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common" class="nmc-checkbox-form">По умолчанию
                                 </td>
 
                             </tr>                            
                             <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Действует с:</label>
+                                <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Действует с:</label>
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9" ng-hide="createByTemplate_flag">
                                     {{currentObject.activeStartDate | date:'dd.MM.yyyy'}}
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9" ng-show="createByTemplate_flag">
-                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
+                                    <input class="form-control marginRight28 inputData nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
                                 </td>                                
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
+                                <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Дата отправки в архив:</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                      {{currentObject.activeEndDate | date:'dd.MM.yyyy'}}
@@ -557,16 +557,16 @@
                 </div>                			
 		</div>
         </div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateTemplate(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
