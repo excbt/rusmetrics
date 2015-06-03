@@ -301,6 +301,10 @@ td {
     /* Таблица с чекбоксами в модальном окне */
 .nmc-modal-table-with-chkbx {
 }
+
+.nmc-modal-table-with-chkbx > tbody > tr > td{
+    padding: 0 !important;
+}
   
 /*********
  * Формы
@@ -354,6 +358,10 @@ td {
 /* чекбокс */
 .nmc-checkbox-form {
 }
+
+.nmc-div-with-checkbox {
+    width:15px;
+}
  
 /* неактивная форма */
 .nmc-inactive-form {
@@ -396,11 +404,15 @@ td {
     padding-left:5px !important;
     width:50px !important;
 }
+    /* Кнопка в модальном окне*/
+.nmc-button-in-modal{
+
+}
  
 /* Переключатель */
 .nmc-toggle {
 }
-    /* Не активный переключатель*/
+    /* Неактивный переключатель*/
 .nmc-toggle-button {
 }
 
@@ -485,6 +497,33 @@ td {
 /* Поле с таблицей */
 .nmc-modal-panel-with-table{
 }
+
+    /* Вспогомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
+        и вариантов отчетов
+    */
+    /* Высота листа доступных колонок отчета*/
+.nmc-column-list  {
+    overflow-y: scroll;
+    height: 382px;
+}
+    /* Высота листа доступных объектов*/
+.nmc-object-list  {
+    overflow-y: scroll;    
+    height: 520px;
+}
+    /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
+.nmc-column-list-button {
+    padding-top: 150px;
+}
+    /* Отступ для кнопок-стрелок, которыми управляются объекты в списках*/
+.nmc-object-list-button  {
+   padding-top: 250px;
+}
+    /* Включение скролинга */
+#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
+      overflow-y: scroll;
+    }
+
  
 /*****************************
  * Предупреждения и подсказки
