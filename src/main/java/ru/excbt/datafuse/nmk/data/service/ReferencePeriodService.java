@@ -8,6 +8,8 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,8 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 @Transactional
 public class ReferencePeriodService implements SecuredRoles {
+
+	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
 	@Autowired
 	private ReferencePeriodRepository referencePeriodRepository;
@@ -32,6 +36,18 @@ public class ReferencePeriodService implements SecuredRoles {
 			long contZPointId) {
 		return referencePeriodRepository.findBySubscriberIdAndContZPointId(
 				subscriberId, contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ReferencePeriod> selectLastReferencePeriod(long subscriberId,
+			long contZPointId) {
+		return referencePeriodRepository.selectLastReferencePeriod(
+				subscriberId, contZPointId, PAGE_LIMIT_1);
 	}
 
 	/**
@@ -89,7 +105,7 @@ public class ReferencePeriodService implements SecuredRoles {
 		checkNotNull(referencePeriod);
 		checkState(!referencePeriod.isNew());
 
-		deleteOne (referencePeriod.getId());
+		deleteOne(referencePeriod.getId());
 
 	}
 
@@ -102,7 +118,9 @@ public class ReferencePeriodService implements SecuredRoles {
 		if (referencePeriodRepository.exists(referencePeriodId)) {
 			referencePeriodRepository.delete(referencePeriodId);
 		} else {
-			throw new PersistenceException(String.format("ReperencePeriod with id=%d is not found", referencePeriodId));
+			throw new PersistenceException(String.format(
+					"ReperencePeriod with id=%d is not found",
+					referencePeriodId));
 		}
 	}
 
