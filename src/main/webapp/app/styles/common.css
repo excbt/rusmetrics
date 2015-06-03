@@ -306,6 +306,16 @@ tr.nmc-main-table-header > th {
 .nmc-modal-table-with-chkbx > tbody > tr > td{
     padding: 0 !important;
 }
+
+/* Стиль, запрещающий многострочность в ячейке таблицы. Используются на страницах Уведомления и Показания для того,
+    чтобы данные внутри ячейки отображались в одну строку.
+*/
+.nmc-table-nowrap-data > tbody > tr > td{
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
+    text-overflow: ellipsis;/* Добавляем многоточие*/
+    padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
+ }   
   
 /*********
  * Формы
@@ -331,6 +341,9 @@ tr.nmc-main-table-header > th {
  
 /* выпадающий список */
 .nmc-select-form {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
 }
  
 /* дата */
@@ -361,6 +374,10 @@ tr.nmc-main-table-header > th {
  
 /* ввод многострочного текстового поля */
 .nmc-textarea-form {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
+    resize: none;
 }
  
 /* радиобатон */
@@ -371,12 +388,37 @@ tr.nmc-main-table-header > th {
 .nmc-checkbox-form {
 }
 
+/* див, содержаций в себе чексбокс*/
 .nmc-div-with-checkbox {
     width:15px;
 }
  
 /* неактивная форма */
 .nmc-inactive-form {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
+}
+
+/* Классы для задания размеров полей*/
+    /* общее поле ввода*/
+.nmc-input-data{
+    width: 150px;
+}
+    /* Поле ввода числовых данных*/
+.nmc-input-digital-data{
+    width: 80px;
+    display: inline;   
+}
+    /* Поле ввода числовых данных - укороченный вариант*/
+.nmc-input-digital-data-sm{
+    width: 50px;
+    display: inline;
+}
+    /* Поле, в котором отображается общее количество чего либо - страниц, записей и т.д.*/
+.nmc-view-allcount{
+    width: 100px;
+    display: inline;
 }
  
 /**********
@@ -543,6 +585,16 @@ tr.nmc-main-table-header > th {
 /*#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
       overflow-y: scroll;
     }*/
+
+    /* Разметка модального окна выбора объектов на странице Уведомления*/
+/*.excbt_selectObjectWindow > .modal-backdrop {*/
+.nmc-select-objects-window > .modal-backdrop{   
+    background-color: inherit;
+}
+
+.nmc-select-objects-window > .modal-dialog {
+    margin-top: 200px;
+}    
 
  
 /*****************************
