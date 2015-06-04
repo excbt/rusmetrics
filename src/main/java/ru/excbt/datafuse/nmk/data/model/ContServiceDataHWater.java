@@ -33,9 +33,13 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	private DeviceObject deviceObject;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_zpoint_id")
+	@JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private ContZPoint contZPoint;
+	
+	@Column(name = "cont_zpoint_id")
+	@JsonIgnore
+	private Long contZPointId;
 
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
@@ -268,6 +272,14 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	public void setWorkTime(BigDecimal workTime) {
 		this.workTime = workTime;
+	}
+
+	public Long getContZPointId() {
+		return contZPointId;
+	}
+
+	public void setContZPointId(Long contZPointId) {
+		this.contZPointId = contZPointId;
 	}
 
 }

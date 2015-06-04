@@ -17,6 +17,11 @@ public class WebApiController {
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
 			.forPattern(ReportService.DATE_TEMPLATE);
 	
+	public final static String MIME_ZIP = "application/zip";
+	public final static String MIME_PDF = "application/pdf";
+	public final static String MIME_CSV = "text/csv";
+	
+	public final static String MIME_CSV_EXT = ".csv";
 	
 	/**
 	 * 
