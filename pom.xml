@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<scope>runtime</scope>			
+			<scope>runtime</scope>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -329,6 +329,12 @@
 			<groupId>ru.excbt.jasper</groupId>
 			<artifactId>fonts_rus</artifactId>
 			<version>1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 
 	</dependencies>

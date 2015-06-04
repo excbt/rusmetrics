@@ -2,9 +2,10 @@ package ru.excbt.datafuse.nmk.data.constant;
 
 public enum TimeDetailKey {
 
-	TYPE_24H("24h"), TYPE_1H("1h"), TYPE_ABS ("abs");
+	TYPE_24H("24h"), TYPE_1H("1h"), TYPE_ABS("abs");
 
 	private final String keyname;
+	private final static String ABS_SUFFIX = "_abs";
 
 	private TimeDetailKey(String keyname) {
 		this.keyname = keyname;
@@ -28,5 +29,14 @@ public enum TimeDetailKey {
 			}
 		}
 		return result;
+	}
+
+	public String getAbsPair() {
+		if (this == TYPE_ABS) {
+			return "";
+		} else {
+
+			return this.keyname + ABS_SUFFIX;
+		}
 	}
 }

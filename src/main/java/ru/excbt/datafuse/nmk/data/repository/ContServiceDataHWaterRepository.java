@@ -56,6 +56,16 @@ public interface ContServiceDataHWaterRepository extends
 			@Param("timeDetailType") String timeDetailType,
 			@Param("dataDate") Date dataDate,
 			Pageable pageable);
+
+	@Query("SELECT d FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " AND time_detail_type IN (:timeDetailType) "
+			+ " ORDER BY d.dataDate DESC ")
+	public List<ContServiceDataHWater> selectLastDataByZPoint(
+			@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String[] timeDetailType,
+			@Param("dataDate") Date dataDate,
+			Pageable pageable);
 	
 	
 }
