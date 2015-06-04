@@ -237,17 +237,25 @@
 
 /* Вкладки рабочей области */
 .nmc-main-tab-panel {
-    
+    margin-bottom: 5px;
 }
     /* неактивная вкладка*/
 .nmc-main-tab-button{
+/*    background-color: #DCDCDC;*/
+    background: linear-gradient(to top, #C8C8C8, #EBEBEB);
+/*    margin-right: 15px;*/
 }
 
     /* активная вкладка */
 .nmc-main-tab-panel > ul > li.active > a{
     /*background-color: orange;*/
+/*    background-color: #FFFFFF !important;*/
+/*    background: linear-gradient(to bottom, #C8C8C8, #FFFFFF);*/
+    background: #FFFFFF;
+    color: black;
+    font-weight: bold;
+/*    margin-right: 15px;*/
 }
-
 
 /* Вкладки третьего уровня */
 .nmc-tab-panel {
@@ -256,6 +264,7 @@
 .nmc-tab-button{
     /*background-color: red;
     color: white;*/
+    border-radius: 0 45px 0 0 !important;
 }
 
     /* активная вкладка */
