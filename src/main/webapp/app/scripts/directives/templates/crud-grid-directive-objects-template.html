@@ -151,53 +151,38 @@
                         <th ng-show="bObject || bList" class="col-md-1">
                         </th>
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)" style="text-align: left;">
-                            <div>
                                 {{oldColumn.header || oldColumn.name}}
                                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{oldColumn.name}}'"></i>
-                            </div>
                         </th>
-
                     </tr>
                     </thead>    
-                     <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-click="selectedItem(oldObject)" ng-dblclick="getIndicators(oldObject)">
-                                                  <!-- Колонка для редактирования элементов                   -->
+                    <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators(oldObject)">
+                  <!-- Колонка для редактирования элементов                   -->
                         <td ng-show="bObject && !bList" class="col-md-1"> 
-                                <div class="btn-toolbar excbt_zpointButtonMargin">
-                                    <div class="btn-group">
-                                        <table>
-                                            <tr>
-<!--                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="" ></i> </td>-->
-                                                <td><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="selectedItem(oldObject);getZpointSettings(oldObject)" data-target="#showZpointOptionModal" data-toggle="modal"></i></td>
-                                            </tr>
-                                        </table>    
-                                    </div>    
-                                </div>
-                        </td>
-                         
-                        <td ng-show="bList" class="col-md-1">
-                        </td>
-                         
-                         <td ng-repeat="oldColumn in oldColumns">
-                             <div ng-switch on="oldColumn.name">
-    <!--                        Если в столбце должна отображаться категория, то...-->
-<!--                            <span ng-switch-when="noticeCat">-->
-    <!--                                Смотрим какая категория у уведомления и выводим соответствующий значок-->
-<!--
-                                <div ng-switch on="oldObject[oldColumn.name]">
-                                    <span ng-switch-when="Критическая"><img height=16 width=16 src="images/crit.png"></span>
-                                    <span ng-switch-when="Предупреждение"><img height=16 width=16 src="images/alert.png"></span>
-                                    <span ng-switch-when="Информация"><img height=16 width=16 src="images/info-icon.jpg"></span>
-                                    <span ng-switch-default>{{oldObject[oldColumn.name]}}</span>
-                                </div>
-                            </span> 
--->
-                            <span ng-switch-when="zpointName" >
-    <!--                                Смотрим какой тип у точки учета и выводим соответствующий значок-->
-                                <div ng-switch on="oldObject['zpointType']">
+	                        <i class="btn btn-default btn-xs glyphicon glyphicon-edit"
+	                        	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
+	                        	data-target="#showZpointOptionModal"
+	                        	data-toggle="modal"
+	                        	data-placement="bottom"
+    	                    	title="Свойства точки учёта">
+	                        </i>
+    	                    <i class="btn btn-default btn-xs"
+    	                    	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
+    	                    	data-target="#showZpointExplParameters"
+    	                    	data-toggle="modal"
+    	                    	data-placement="bottom"
+    	                    	title="Эксплуатационные параметры точки учёта">
+    	                    		<img class="nmc-zpoint-expl-settings-button-img" src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
+    	                    </i>
+    	                </td>
+                        <td ng-repeat="oldColumn in oldColumns">
+                            <div ng-switch on="oldColumn.name">
+        	                    <span ng-switch-when="zpointName" >
+    <!--       Смотрим какой тип у точки учета и выводим соответствующий значок-->
+      	                          <div ng-switch on="oldObject['zpointType']">
                                     <span ng-switch-when="cw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png"></span>
                                     <span ng-switch-when="heat">
                                         <img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png">
-<!--                                        <img height=16 width=16 src="images/ts.png">-->
                                     </span>
                                     <span ng-switch-when="hw"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png"></span>
                                     <span ng-switch-when="gas"><img height=16 width=16 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png"></span>
@@ -217,8 +202,6 @@
                             </span>
                         </div>
                          </td>
-                         
-
                      </tr>
                     </table>         
                 </tr><!--    <tr> Уровень 3     -->                 
@@ -304,7 +287,6 @@
                                 <td class="col-sm-3"><label for="inputPCO">РСО</label>
                                 </td>
                                 <td class="col-sm-9 textAlign_left"><input class="" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
-
                                 </td>
                             </tr>
                             <tr>
@@ -316,6 +298,80 @@
                         </table>
                     </div>    
                 </div>
+            <!-- Кнопка добавления эталонного интервала -->
+            <i id="i_ref_range_add"
+            	title="Указать эталонный интервал"
+            	class="btn btn-default btn-xs btn-primary"
+            	ng-click="showRefRange()">Указать эталонный интервал</i>
+            </div>
+
+        	<!-- Эталонный интервал -->
+        	<div id= "div_ref_range_edit" class="container-fluid" style="display:none">
+        	    <h3>Эталонный интервал</h3>
+        		<table class="table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table">
+        			<tr>
+        				<td>
+        					<div class="form-group col-sm-6">
+        						<label for="inp_ref_range_start">Начало периода:</label>
+        						<input id="inp_ref_range_start" type="date" class="form-control" />
+        					</div>
+        					<div class="form-group col-sm-6">
+        						<label for="inp_ref_range_end">Конец периода:</label>
+        						<input id="inp_ref_range_end" type="date" class="form-control" />
+        					</div>
+        				</td>
+        			</tr>
+        		    <tr>
+        		    	<td>
+        		    		<div class="form-group col-sm-12">
+        						<label for="txtarea_ref_range_descr">Описание:</label>
+        						<textarea id="txtarea_ref_range_descr" class="form-control" ng-model = "refRange.period_description"></textarea>
+        					</div>
+        				</td>
+        			</tr>
+        		</table>
+        	</div>
+		</div>
+		<div class="modal-footer">
+				<div class="container-fluid dialogMarginButtons">
+					<div class="row">
+                        <div class="col-xs-offset-2 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                                ng-click="addRefRange()"
+								value="Сохранить" />
+								<!-- ng-disabled="!checkZpointSettingsFrom(zpointSettings)"  -->
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- Zpoint's exploatation paramters editing -->
+<div id="showZpointExplParameters"
+		class="modal fade"
+		role="dialog"
+		tabindex="-1"
+		aria-labelledby="showZpointOptionLabel">
+
+	<div class="modal-dialog modal-content modalWindow_moreWide">
+		<div class="modal-header onlyPaddingLeft15">
+			<h3 id="showZpointOptionLabel">
+				Эксплуатационные параметры точки учета "{{zpointSettings.zpointName}}"
+			</h3>
+		</div>
+		<div class="modal-body">
                 <div class="row-fluid">                    
                     <div class="col-md-12">
                         <div class="bs-example bs-example-tabs" role="tabpanel" data-example-id="togglable-tabs">
@@ -745,17 +801,12 @@
                             </div> 
                         </div>
                     </div>
-                    </div><!-- /example -->
-
-                    </div>
-                </div>
-            </div>        
-
-			
+                 </div><!-- /example -->
+              </div>
+           </div>
 		</div>
 		<div class="modal-footer">
 				<div class="container-fluid dialogMarginButtons">
-
 					<div class="row">
                         <div class="col-xs-offset-2 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
@@ -763,7 +814,7 @@
 								ng-click="updateZpointSettings()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
+						<div class="pull-right col-xs-offset-2 col-md-3">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -772,11 +823,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 

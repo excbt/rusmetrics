@@ -69,29 +69,6 @@
 }
 
 /* Основная рабочая область */
-
-    /* Обертка для страницы, которая придавливает футер к низу экрана.
-                Wrapper for page content to push down footer */
-.wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    /* Negative indent footer by it's height */
-    margin: 0 auto -60px;
-    /* Pad bottom by footer height */
-    padding: 0 0 60px;
-}
-
-.wrap > .container-fluid {
-    padding-top: 50px;
-}
-
-.wrap > .container {
-    padding-top: 50px;
-/*    width: 1920px;*/
-}
-
-
 .nmc-main-workspace {
     margin-left: 10pt;
     width: 87%;
@@ -117,21 +94,10 @@
 
 /* Заголовки интерфейсов в рабочей области */
 .nmc-main-workspace-header {
-    
 }
 /* Горизонтальная линия в заголовке рабочей области*/
 .nmc-main-workspace-header hr{
-    -moz-border-bottom-colors: none;
-    -moz-border-image: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: black; /*line color*/
-    /*      #EEEEEE;*/
-    /*    -moz-use-text-color #FFFFFF;*/
-    border-style: solid none;
-    border-width: 1px 0;
-    margin: 10px 0;
+    
 }
 
 /*Футер рабочей области*/
@@ -141,10 +107,6 @@
 
 /* Фон главного окна */
 .nmc-main-window-background {
-    padding-top: 20px;
-    padding-bottom: 20px;
-    font-size: 12px;
-    background-color: #BEBEBE; /*body background color*/
 }
 
 
@@ -202,7 +164,6 @@
 
 /* Вкладки рабочей области */
 .nmc-main-tab-panel {
-    
 }
 .nmc-main-tab-button{
 }
@@ -214,15 +175,11 @@
 /* Вкладки третьего уровня */
 .nmc-tab-panel {
 }
-    /* неактивная вкладка*/
+
 .nmc-tab-button{
-    background-color: red;
-    color: white;
 }
 
-    /* активная вкладка */
-.nmc-tab-panel > ul > li.active > a{
-    background-color: orange;
+.nmc-tab-button-active{
 }
 
  
@@ -235,87 +192,36 @@
 /***********
  * Таблицы
  ***********/
-
-/* Общие стили*/
-table {
-    border: 0px;
-}
-
-td {
-    vertical-align: middle !important;
-}
-
-    /* Таблица в основной рабочей области */
+/* Таблица в основной рабочей области */
 .nmc-main-table {
  }
 
-    /* Заголовок таблицы */
-tr.nmc-main-table-header > th {
-    background-color: yellowgreen;
+/* Заголовок таблицы */
+.nmc-main-table-header {
 }
 
-    /*Таблица - контейнер для таблицы первого уровня*/
-.nmc-table-container {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-}
-.nmc-table-container > tbody > tr>td {
-    border: none;
-    padding: 0 !important;
-}
-
-    /* Таблица первого уровня с вложенными таблицами */
+/* Таблица первого уровня с вложенными таблицами */
 .nmc-parent-table {
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-}
-
-.nmc-parent-table > tbody > tr>td {
-    border: none;
-}
-
-.nmc-parent-table > tbody > tr:nth-of-type(odd) {
-    background-color: #EEEEEE;/* цвет фона для нечетной строки родительской таблицы*/
-/*    background-color: #f5f5f5;*/
 }
  
-    /* Вложенная таблица */
+/* Вложенная таблица */
 .nmc-child-table {
-    margin-left: 2%;
-    width: 97%;
-    border-radius: 4px;
-/*    background-color: azure !mportant;*/
 }
 
 .nmc-child-table-header{
-     background-color: #BEBEBE; /*background color*/
-/*         #696969;*/
 }
 
 .nmc-child-table-without-header{
 }
+
  
-    /* Таблица рабочей области модального окна */
+/* Таблица рабочей области модального окна */
 .nmc-modal-main-table {
 }
  
-    /* Таблица с чекбоксами в модальном окне */
+/* Таблица с чекбоксами в модальном окне */
 .nmc-modal-table-with-chkbx {
 }
-
-.nmc-modal-table-with-chkbx > tbody > tr > td{
-    padding: 0 !important;
-}
-
-/* Стиль, запрещающий многострочность в ячейке таблицы. Используются на страницах Уведомления и Показания для того,
-    чтобы данные внутри ячейки отображались в одну строку.
-*/
-.nmc-table-nowrap-data > tbody > tr > td{
-    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: auto; /*Обрезаем все, что не вмещается*/
-    text-overflow: ellipsis;/* Добавляем многоточие*/
-    padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
- }   
   
 /*********
  * Формы
@@ -327,23 +233,12 @@ tr.nmc-main-table-header > th {
 /* поле поиска */
 .nmc-search-form {
 }
-    /* приставка к строке поиска*/
-.nmc-search-form-addon{
-    font-size: 12px;
-    height: 24px;
-    padding: 4px;
-}
-    /* кнопка поиска*/
-.nmc-searh-form-button{
-    
-}
 
+.nmc-searh-form-button{
+}
  
 /* выпадающий список */
 .nmc-select-form {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
 }
  
 /* дата */
@@ -352,32 +247,14 @@ tr.nmc-main-table-header > th {
  
 /* интервал дат */
 .nmc-date-interval-form {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
-    border-left-width: 0px;
-}
-
-    /* Приписка перед интервалом дат - изначально там буква "с"*/
-.nmc-date-interval-form-addon{
-    background-color: white;
-    padding: 0px 0px 0px 6px;
-    border-right-width: 0px;
 }
  
 /* ввод строки */
 .nmc-text-input-form {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
 }
  
 /* ввод многострочного текстового поля */
 .nmc-textarea-form {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
-    resize: none;
 }
  
 /* радиобатон */
@@ -387,38 +264,9 @@ tr.nmc-main-table-header > th {
 /* чекбокс */
 .nmc-checkbox-form {
 }
-
-/* див, содержаций в себе чексбокс*/
-.nmc-div-with-checkbox {
-    width:15px;
-}
  
 /* неактивная форма */
 .nmc-inactive-form {
-    font-size: 12px;
-    height: 24px;
-    padding: 5px;
-}
-
-/* Классы для задания размеров полей*/
-    /* общее поле ввода*/
-.nmc-input-data{
-    width: 150px;
-}
-    /* Поле ввода числовых данных*/
-.nmc-input-digital-data{
-    width: 80px;
-    display: inline;   
-}
-    /* Поле ввода числовых данных - укороченный вариант*/
-.nmc-input-digital-data-sm{
-    width: 50px;
-    display: inline;
-}
-    /* Поле, в котором отображается общее количество чего либо - страниц, записей и т.д.*/
-.nmc-view-allcount{
-    width: 100px;
-    display: inline;
 }
  
 /**********
@@ -430,23 +278,12 @@ tr.nmc-main-table-header > th {
 
 /* Сохранить */
 .nmc-save-button {
-    max-width: 112px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
-    max-width: 142px;
-}
-
-/* Кнопка Удалить ака Красивый крестик*/
-.nmc-remove-button{
-    background: url(images/cross-512.png);
 }
  
-    /* Кнопка в заголовке рабочей области*/
- .nmc-button-in-header{
- }
-
 /* Добавить в заголовке рабочей области */
 .nmc-main-add-button {
 }
@@ -462,88 +299,26 @@ tr.nmc-main-table-header > th {
 /* кнопка в таблице */
 .nmc-button-in-table {
 }
-/* панель для кнопок в столбце таблице*/
-.nmc-btn-toolbar-in-table{
-    padding-left:5px !important;
-    width:50px !important;
-}
-    /* Кнопка в модальном окне*/
-.nmc-button-in-modal{
-
-}
  
 /* Переключатель */
 .nmc-toggle {
 }
-    /* Неактивный переключатель*/
+
 .nmc-toggle-button {
-}
-
-    /* Активный переключатель*/
-.nmc-toggle > li.active > a{
-    background-color: aqua;
-    color:red;
-}
-    /* Активный переключатель - наведен указатель на него*/
-.nmc-toggle > li.active > a:hover{
-    background-color: aqua;
-    color:red;
-}
-    /* Активный переключатель - установлен фокус*/
-.nmc-toggle > li.active > a:focus{
-    background-color: aqua;
-    color:red;
-}
-
-    /* Переключатель для действующих шаблонов/вариантов отчетов */
-.nmc-toggle-active{
-    border: 1px solid #ddd !important;
-    border-radius:4px !important;
-}
-    /* Переключатель для архивных шаблонов/вариантов отчетов */
-.nmc-toggle-archive{
-    border: 1px solid #ddd !important;
-    border-radius:4px !important; 
-    margin-left:0px !important;
-}
-.nmc-toggle-archive > a{
-    width:108px !important;
-    text-align:center !important;
 }
 
 .nmc-toggle-button-active {
 }
-
  
 /* Неактивная кнопка */
 .nmc-button-inactive {
 }
- 
+
 /**************************************************************************************
  *  Разметка модального окна
  ****************************************************************************************/
-.nmc-modal-window{
-}
-
-    /* Контейнер для шапки, тела и футера*/
-.nmc-modal-dialog{
-}
-
-.nmc-modal-wide-dialog{
-    width: 1200px; 
-}
-
-.nmc-modal-some-wide-dialog{
-    width: 700px; 
-}
-
-.nmc-modal-narrow-dialog{
-    width: 300px; 
-}
-
 /* Заголовок */
 .nmc-modal-header {
-    height: 50px;
 }
  
 /* Футер */
@@ -561,53 +336,6 @@ tr.nmc-main-table-header > th {
 /* Поле с таблицей */
 .nmc-modal-panel-with-table{
 }
-
-.nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list{
-    overflow-y: scroll;
-}
-
-
-    /* Вспогомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
-        и вариантов отчетов
-    */
-    /* Высота листа доступных колонок отчета*/
-.nmc-column-list  {
-    height: 372px;
-}
-    /* Высота листа доступных объектов*/
-.nmc-object-list  {
-    height: 520px;
-}
-    /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
-.nmc-column-list-button {
-    padding-top: 150px;
-}
-    /* Отступ для кнопок-стрелок, которыми управляются объекты в списках*/
-.nmc-object-list-button  {
-   padding-top: 250px;
-}
-    /* Включение скролинга */
-/*#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
-      overflow-y: scroll;
-    }*/
-
-    /* Разметка модального окна выбора объектов на странице Уведомления*/
-/*.excbt_selectObjectWindow > .modal-backdrop {*/
-.nmc-select-objects-window > .modal-backdrop{   
-    background-color: inherit;
-}
-
-.nmc-select-objects-window > .modal-dialog {
-    margin-top: 200px;
-}
-
-    /* Панель с выбранными объектами в модальном окне создания/редактирования группы объектов*/
-/*.editGroupWindowSelectedObjectsArea{*/
-.nmc-modal-panel-with-objects{  
-    height: 410px;
-    overflow-y: scroll;
-}    
-
  
 /*****************************
  * Предупреждения и подсказки
@@ -643,7 +371,6 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-h3 {
-    margin-top: 0;
 }
 
 /* Панели */
@@ -656,153 +383,9 @@ tr.nmc-main-table-header > th {
 .nmc-img2 {
 }
 
-/*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
-/******************************************************************************************************/
-.noMarginTop {
-    margin-top: 0;
-}
-.noMarginBottom {
-    margin-bottom: 0;
-}
-
-.marginBottom10 {
-    margin-bottom: 10px;
-}
-.marginBottom5 {
-    margin-bottom: 5px;
-}
-.marginBottom15 {
-    margin-bottom: 15px;
-}
-
-.marginLeft5 {
-    margin-left: 5px;
-}
-
-.marginLeft15 {
-    margin-left: 15px;
-}
-
-.marginTop10 {
-    margin-top: 10px;
-}
-
-.marginTop15 {
-    margin-top: 15px;
-}
-
-.margin10 {
-    margin:10px;
-}
-
-.marginRight15 {
-    margin-right:15px;
-}
-
-.marginRight28 {
-    margin-right:28px;
-}
-
-.marginLeft24 {
-    margin-left:24px;
-}
-
-.noMargin {
-    margin : 0;
-}
-
-.noPadding {
-    padding : 0;
-}
-
-.noPaddingBottom {
-    padding-bottom : 0;
-}
-
-.noPaddingRight {
-    padding-right : 0;
-}
-
-
-.paddingBottom10 {
-    padding-bottom: 10px;
-}
-
-.paddingBottom40 {
-    padding-bottom: 40px;
-}
-
-
-.paddingTop10 {
-    padding-top: 10px;
-}
-
-.paddingTop15 {
-    padding-top: 15px;
-}
-
-.paddingTop3 {
-    padding-top: 3px;
-}
-
-.paddingTop5 {
-    padding-top: 5px;
-}
-
-.noPaddingTop {
-    padding-top: 0px;
-}
-
-.paddingLeft20 {
-    padding-left: 20px;
-}
-
-.paddingLeft5 {
-    padding-left: 5px;
-}
-
-.paddingLeft10 {
-    padding-left: 10px;
-}
-
-.onlyPaddingLeft15 {
-    padding-bottom: 0;
-    padding-top: 0;
-    padding-right: 0;
-    padding-left: 15px;
-}
-
-
-.noPaddingTop {
-    padding-top: 0px;
-}
-
-/* Выравнивание текста по краю*/
-.nmc-text-align-left {
-    text-align: left !important;
-}
-
-.nmc-text-align-right {
-    text-align: right !important;
-}
-
-    /* Управление отображением элементов*/
-.nmc-show {
-    display:inherit;
-}
-
-.nmc-hide {
-    display:none !important;
-}
-
-.btn-toolbar {
-    width: 85px;
-}
-    /* Выделить элемент по умолчанию*/
-.nmc-distinguish {
-    font-weight: bold;
-}
-    /* Снять выделение элемента*/
-.nmc-undistinguish {
-    font-weight: lighter;
-}
+/* Картинка в нопка редактирования эксплуатационных параметров точки учёта
+в таблице второго уровня в интерфейсе управления объектами учёта*/
+.nmc-zpoint-expl-settings-button-img {
+	height: 5;
+	width: 5;
+} 

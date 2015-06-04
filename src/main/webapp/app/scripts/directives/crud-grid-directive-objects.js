@@ -16,8 +16,8 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', 'crudGridDataFactory', 'notificationFactory',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, crudGridDataFactory, notificationFactory) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', 'crudGridDataFactory', 'notificationFactory', '$http',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, crudGridDataFactory, notificationFactory, $http) {
                 $scope.object = {};
                 $scope.columns = angular.fromJson($attrs.columns);
                 $scope.captions = angular.fromJson($attrs.captions);
@@ -32,7 +32,10 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 $scope.bObject = angular.fromJson($attrs.bobject) || false; //Признак, что страница отображает объекты
                 $scope.bList = angular.fromJson($attrs.blist); //|| true; //Признак того, что объекты выводятся только для просмотра        
                 //zpoint column names
-                $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);               
+                $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
+                // Эталонный интервал
+                $scope.refRange = [];
+                $scope.urlRefRange = '../api/subscr/contObjects/';
                 
                 //Режимы функционирования (лето/зима)
                 $scope.cont_zpoint_setting_mode_check = [
@@ -242,19 +245,56 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                      $scope.zpointSettings = zps;
                     });
                 };
+                
+                /*
+                 * !!!!!!!! Доделать возвращение кнопки и уборку редактора интервала при активации модального окна
+                 *  Сделать загрузку интервала на сервер
+                 */
+                
+                // Активация редактора эталонного интервала
+                $scope.showRefRange = function () {
+                	getRefRange($scope.currentObject.id, $scope.zpointSettings.id);
+                	document.getElementById("div_ref_range_edit").style.display = "block";
+                	document.getElementById("i_ref_range_add").style.display = "none";
+                };
+                
+                // Запрос с сервера данных об эталонном интервале
+                var getRefRange = function (objectId, zpointId) {
+                	var url = $scope.urlRefRange + '/' + objectId + '/zpoints/' + zpointId + '/referencePeriod'; 
+                	$http.get(url)
+					.success(function(data){
+						$scope.refRange = data;
+						$scope.refRange.cont_zpoint_id = zpointId;
+					})
+					.error(function(e){
+						notificationFactory.errorInfo(e.statusText,e.description);
+					});
+                }
+                
+                // Отправка на сервер данных об эталонном интервале
+                $scope.addRefRange = function (){
+                	var url = $scope.urlRefRange + '/' + $scope.currentObject.id + '/zpoints/' + $scope.zpointSettings.id + '/referencePeriod';
+                console.log($scope.refRange);
+                	$http.post(url, $scope.refRange)
+					.success(function(data){
+						alert(data.id);
+					})
+					.error(function(e){
+						notificationFactory.errorInfo(e.statusText,e.description);
+					});
+                }
             
                 var successZpointSummerCallback = function (e) {
                     notificationFactory.success();
                     var tableWinter = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
                     crudGridDataFactory(tableWinter).update({ id: $scope.zpointSettings.winter.id }, $scope.zpointSettings.winter, successZpointWinterCallback, errorCallback);           
-                    
                 };
                 
                  var successZpointWinterCallback = function (e) {
                     notificationFactory.success();    
-                    $('#showZpointOptionModal').modal('hide');                    
+                    $('#showZpointOptionModal').modal('hide');
+                    $('#showZpointExplParameters').modal('hide');
                      $scope.zpointSettings={};
-                                
                 };
                 
                 $scope.updateZpointSettings = function(){                   
@@ -355,7 +395,6 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                         $scope.checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)&&
                         $scope.checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)&&
                         $scope.checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max);
-                        
                 };
                 
                 $scope.checkObjectPropertiesForm = function(object){
@@ -365,7 +404,6 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
-               
             }]
     };
 });
