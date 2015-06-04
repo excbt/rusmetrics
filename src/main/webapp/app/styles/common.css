@@ -487,6 +487,15 @@ tr.nmc-main-table-header > th {
     max-width: 142px;
 }
 
+/* Закрыть окно - крестик в правом верхнем углу модального окна */
+.nmc-close-button{
+    color: #FFFFFF;
+}
+    /* Крестик при наведенном на него курсоре*/
+.nmc-close-button:hover{
+    color: #FFFFFF;
+}
+
 /* Кнопка Удалить ака Красивый крестик*/
 .nmc-remove-button{
     width: 12px;
@@ -496,8 +505,8 @@ tr.nmc-main-table-header > th {
     background-repeat: no-repeat;
 }
  
-    /* Кнопка в заголовке рабочей области*/
- .nmc-button-in-header{
+    /* Кнопка в правом верхнем углу заголовка рабочей области*/
+.nmc-button-in-header{
  }
 
 /* Добавить в заголовке рабочей области */
@@ -602,6 +611,8 @@ tr.nmc-main-table-header > th {
 
 /* Заголовок */
 .nmc-modal-header {
+    background-color: #225685;
+    color: #FFFFFF;
     height: 50px;
 }
  
