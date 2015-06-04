@@ -12,20 +12,17 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
@@ -33,7 +30,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @Controller
 @RequestMapping(value = "/api/reportService")
-public class ReportServiceController {
+public class ReportServiceController extends WebApiController {
 
 	private interface ReportMaker {
 		boolean makeReport(long reportParamsetId, LocalDateTime dateTime,
@@ -122,8 +119,6 @@ public class ReportServiceController {
 	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
 			.forPattern(ReportService.DATE_TEMPLATE);
 
-	private final static String MIME_ZIP = "application/zip";
-	private final static String MIME_PDF = "application/pdf";
 	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";

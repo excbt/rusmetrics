@@ -3,8 +3,13 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
@@ -24,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.constant.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -31,6 +38,9 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -335,4 +345,109 @@ public class SubscrContServiceDataController extends WebApiController {
 
 		return ResponseEntity.ok(result);
 	}
+
+	/**
+	 * 
+	 * @param serviceType
+	 * @param zPointId
+	 * @param timeDetailType
+	 * @param beginDateS
+	 * @param endDateS
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.GET)
+	public void serviceDataHWaterCsvDownload(
+			@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId,
+			@PathVariable("timeDetailType") String timeDetailType,
+			@RequestParam("beginDate") String beginDateS,
+			@RequestParam("endDate") String endDateS,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		checkArgument(contObjectId > 0);
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetailType);
+		checkNotNull(beginDateS);
+		checkNotNull(endDateS);
+
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+
+		if (contZPoint == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		if (contZPoint.getContObject() == null
+				|| contZPoint.getContObject().getId() != contObjectId) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		String serviceType = contZPoint.getContServiceType().getKeyname();
+
+		if (!SUPPORTED_SERVICES.contains(serviceType)) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		DateTime beginD = null;
+		DateTime endD = null;
+		try {
+			beginD = DATE_FORMATTER.parseDateTime(beginDateS);
+			endD = DATE_FORMATTER.parseDateTime(endDateS);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		if (beginD.compareTo(endD) > 0) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
+		if (timeDetail == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+
+		DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
+				.withSecondOfMinute(59).withMillisOfSecond(999);
+
+		List<ContServiceDataHWaterCsv> cvsDataList = contServiceDataHWaterService
+				.selectByContZPointCsvData(contObjectId, timeDetail, beginD,
+						endOfDay);
+
+		CsvMapper mapper = new CsvMapper();
+
+		mapper.addMixInAnnotations(ContServiceDataHWaterCsv.class,
+				ContServiceDataHWaterCsvFormat.class);
+
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterCsv.class)
+				.withHeader();
+
+		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(cvsDataList);
+
+		response.setContentType(MIME_CSV);
+		response.setContentLength(byteArray.length);
+
+		String outputFilename = String.format(
+				"HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s)",
+				contObjectId, contObjectId, timeDetailType, beginDateS,
+				endDateS);
+
+		// set headers for the response
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"",
+				outputFilename + MIME_CSV_EXT);
+		response.setHeader(headerKey, headerValue);
+		//
+		OutputStream outStream = response.getOutputStream();
+		outStream.write(byteArray);
+		outStream.close();
+
+	}
+
 }

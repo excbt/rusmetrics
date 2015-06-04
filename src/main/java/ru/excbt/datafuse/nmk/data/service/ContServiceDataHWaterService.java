@@ -204,9 +204,33 @@ public class ContServiceDataHWaterService {
 
 		checkNotNull(localDateTime);
 
+		String[] timeDetails = { TimeDetailKey.TYPE_ABS.getKeyname() };
+
 		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-				.selectLastDataByZPoint(contZPointId,
-						TimeDetailKey.TYPE_ABS.getKeyname(),
+				.selectLastDataByZPoint(contZPointId, timeDetails,
+						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+
+		return dataList.size() > 0 ? dataList.get(0) : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param localDateTime
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+			TimeDetailKey timeDetail, LocalDateTime localDateTime) {
+
+		checkNotNull(localDateTime);
+		checkNotNull(timeDetail);
+
+		String[] timeDetails = { TimeDetailKey.TYPE_ABS.getKeyname(),
+				timeDetail.getAbsPair() };
+
+		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
+				.selectLastDataByZPoint(contZPointId, timeDetails,
 						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
 
 		return dataList.size() > 0 ? dataList.get(0) : null;
@@ -235,8 +259,8 @@ public class ContServiceDataHWaterService {
 				ContServiceDataHWaterCsv cvsData;
 				cvsData = ContServiceDataHWaterCsv.newInstance(data);
 				ContServiceDataHWater abs = selectLastAbsData(
-						data.getContZPointId(),
-						new LocalDateTime(data.getDataDate()));
+						data.getContZPointId(), timeDetail, new LocalDateTime(
+								data.getDataDate()));
 				cvsData.copyAbsData(abs);
 				cvsDataList.add(cvsData);
 			}
