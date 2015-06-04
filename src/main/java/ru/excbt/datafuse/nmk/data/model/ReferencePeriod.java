@@ -15,9 +15,11 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "reference_period")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReferencePeriod extends AbstractAuditableModel {
 
 	/**
