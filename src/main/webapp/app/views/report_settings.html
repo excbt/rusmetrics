@@ -56,7 +56,7 @@
                                             <div class="col-md-2 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
                                             <div class="col-md-10" ng-show="object.reportType=='COMMERCE_REPORT'">
-                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</button>
+                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</button>
                                             </div>
                                         </div>
 
@@ -67,7 +67,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
@@ -80,9 +80,9 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td><i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td><i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -141,7 +141,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
@@ -154,7 +154,7 @@
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td><i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>

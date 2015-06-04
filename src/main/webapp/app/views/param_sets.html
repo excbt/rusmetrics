@@ -8,15 +8,17 @@
     </ul>
 </div>
 -->
-<h2 class="noMargin pageTitle">Отчеты</h2>
-<hr>
-<div role="tabpanel">
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>    
+<div role="tabpanel" class="nmc-tab-panel">
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation" class="active"><a href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation"><a href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
+    <li role="presentation" ><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
   </ul>
 
   <!-- реализация вкладок -->
@@ -24,36 +26,36 @@
 <!--      Варианты отчетов-->
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
         <!--       Активные / Архивные -->
-        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_paramsets" data-target="#active_paramsets" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();" style="width:108px;text-align:center">Архив</a></li>
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#active_paramsets" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
+            <li role="presentation" class="nmc-toggle-archive"><a class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные варианты-->
             <div role="tabpanel" class="tab-pane fade in active" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
-                <table id="datatabl" class="table table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
+                                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
                                         <div class="col-md-3">
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
                                         <div class="col-md-2">
-                                             <button title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addParamSet(object)" data-target="#main_properties" data-toggle="tab">Добавить</button>
+                                             <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addParamSet(object)" data-target="#main_properties" data-toggle="tab">Добавить</button>
                                         </div>
                                         <div class="col-md-6">
                                             
@@ -64,30 +66,32 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                                            <td><i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td><i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                             <div class="col-md-7" ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                             </div>
-                                            <div class="col-md-2" ng-class="{'default': oldObject._default}">     
+                                            <div class="col-md-2" ng-class="{'nmc-distinguish': oldObject._default}">     
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
@@ -114,20 +118,20 @@
 <!--            Архивные шаблоны-->
              <div role="tabpanel" class="tab-pane fade " id="arhive_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
-                <table id="datatabl" class="table  table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
-                        <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                        <td>
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
+                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
                                         <div class="col-md-10">
@@ -140,21 +144,23 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
 <!--                                                  width:55px;-->
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Просмотреть" class="btn btn-default btn-xs glyphicon glyphicon-list" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                                            <td><i title="Просмотреть" class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
                                                             </td>  
-                                                            <td>    <i title="Создать новый действующий вариант на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
+                                                            <td><i title="Создать новый действующий вариант на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
                                                             </td>
 
                                                           </tr>
@@ -162,13 +168,13 @@
                                                     </div>    
                                                 </div>
                                              <div class="col-md-7 " >     
-                                                    {{oldObject.name}} <label class="marginLeft15" style="font-weight:normal;">тип файла: {{oldObject.outputFileType}}</label> <label class="marginLeft15" style="font-weight:normal;">интервал: {{oldObject.reportPeriod.caption}}</label><label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                                    {{oldObject.name}} <span class="marginLeft15">тип файла: {{oldObject.outputFileType}}</span> <span class="marginLeft15">интервал: {{oldObject.reportPeriod.caption}}</span><span class="marginLeft15"> </span>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-2">     
                                                     в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
-                                         <td><i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectedItem(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                         <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
                                      </tr>
@@ -203,28 +209,28 @@
 </div>
 
 <!-- window: delete paramset-->
-<div id="deleteObjectModal" class="modal fade" role="dialog"
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="deleteObjectLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="deleteObjectLabel" class="nmc-h3">
 				Удаление 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label class="text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
+		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
