@@ -5,22 +5,22 @@
 <!--Фильтр-->
 <!-- Common filter-->
 <div class="container-fluid">
-<div class="row">
-    <div class="col-md-3 noPadding">
-        <h2 class="noMargin pageTitle">Справочники</h2>
+    <div class="row nmc-main-workspace-header">
+        <div class="col-md-3 noPadding">
+            <h2 class="noMargin nmc-h2">Справочники</h2>
+        </div>
+        <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+            <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+            <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
+    <!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
+        </div>
+        <div class="col-md-5"></div>
     </div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left pageFilterString">   
-        <span class="input-group-addon pageFilterAddon"><i class="glyphicon glyphicon-filter"></i></span>
-        <input type="text" class="form-control pageFilter" ng-model="filter">
-        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
-    </div>
-    <div class="col-md-5"></div>
-</div>
-<div class="row">
-    <div class="col-md-12 noPadding">
-        <hr>
-    </div>
-</div>    
+    <div class="row">
+        <div class="col-md-12 noPadding nmc-main-workspace-header">
+            <hr>
+        </div>
+    </div>    
 </div> 
 
 <!-- Common filter-->
@@ -40,9 +40,9 @@
 </div>
 -->
 
-<table class="table table-bordered table-condensed noMarginBottom">
+<table class="table table-bordered table-condensed noMarginBottom nmc-table-container">
   
-     <tr class="info" >
+     <tr class="nmc-main-table-header" >
 <!--         ng-hide="bdirectories">-->
 <!--         off head for page Directories-->
          
@@ -50,13 +50,13 @@
 <!--         отключить шапку для групп объектов-->
          
          
-         <td style="padding:0;">
+         <td>
              <table class="crud-grid table table-lighter table-bordered table-condensed table-hover noMarginBottom">
-                 <tr class="info">
+                 <tr class="nmc-main-table-header">
 <!--                                          Если включена группировка и объект первый в массиве, то выводим шапку таблицы                       -->
                        <th class="col-md-1">
 <!--                          button "Add" for directories-->
-                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()" title="Создать справочник"></i>
+                           <i class="btn btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addMode, 'glyphicon-plus': !addMode}" ng-click="toggleAddMode()" title="Создать справочник"></i>
                                                      
                         </th>
                      
@@ -84,8 +84,8 @@
                     <td class="col-md-1">
                         <div class="btn-toolbar">
                             <div class="btn-group">
-                                <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="addObject()" title="Сохранить"></i>
-                                <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleAddMode()" title="Отменить"></i>
+                                <i class="btn btn-xs glyphicon glyphicon-save" ng-click="addObject()" title="Сохранить"></i>
+                                <i class="btn btn-xs glyphicon glyphicon-remove" ng-click="toggleAddMode()" title="Отменить"></i>
                             </div>
                         </div>
                     </td>
@@ -129,10 +129,10 @@
                     <div class="btn-group">
                         <table>
                             <tr>
-                                <td ng-show="!object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="toggleEditMode(object)" title="Редактировать справочник"></i> </td>                           
-                                <td ng-show="object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditMode(object)" title="Сохранить справочник"></i> </td>
-                                <td ng-show="object.editMode"><i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleEditMode(object)" ></i> </td>
-                                <td><i class="btn btn-default btn-sm fa fa-sitemap" ng-click="selectedItem(object);getCurDirNodes()" data-target="#showDirectoryStructModal" data-toggle="modal" title="Открыть справочник"></i></td>
+                                <td ng-show="!object.editMode"><i class="btn btn-xs glyphicon glyphicon-edit" ng-click="toggleEditMode(object)" title="Редактировать справочник"></i> </td>                           
+                                <td ng-show="object.editMode"><i class="btn btn-xs glyphicon glyphicon-save" ng-click="toggleEditMode(object)" title="Сохранить справочник"></i> </td>
+                                <td ng-show="object.editMode"><i class="btn btn-xs glyphicon glyphicon-remove" ng-click="toggleEditMode(object)" ></i> </td>
+                                <td><i class="btn btn-sm fa fa-sitemap" ng-click="selectedItem(object);getCurDirNodes()" data-target="#showDirectoryStructModal" data-toggle="modal" title="Открыть справочник"></i></td>
                                 
                             </tr>
                         </table>    
@@ -257,27 +257,27 @@
 
 
 <!-- Edit parametrs of directory-->
-<div id="editDirectoryParamsModal" class="modal fade" role="dialog"
+<div id="editDirectoryParamsModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editDirectoryParamsLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="editDirectoryParamsLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="editDirectoryParamsLabel" class="nmc-h3">
 				Параметры справочника "{{currentObject.directoryName}}" 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="editDirectoryParamsForm" novalidate>
 
                 
 <!--            Таблица с данными    -->
-				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover">
+				<table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-modal-main-table">
                     <tr>
                         <!--       Шапка таблицы-->
                         <th class="col-md-1"> 
 <!--                          button "Add" for param of cur directory-->
-                           <i class="btn btn-default btn-xs glyphicon glyphicon-plus" ng-class="{'glyphicon-minus': addParamMode, 'glyphicon-plus': !addParamMode}" ng-click="toggleAddParamMode()"></i>
+                           <i class="btn btn-xs glyphicon glyphicon-plus nmc-button-in-table" ng-class="{'glyphicon-minus': addParamMode, 'glyphicon-plus': !addParamMode}" ng-click="toggleAddParamMode()"></i>
 
                 
                         </th>
@@ -296,8 +296,8 @@
                         <td class="col-md-1">
                             <div class="btn-toolbar">
                                 <div class="btn-group">
-                                    <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="addParam()" title="Сохранить"></i>
-                                    <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="toggleAddParamMode()" title="Отменить"></i>
+                                    <i class="btn btn-xs glyphicon glyphicon-save nmc-button-in-table" ng-click="addParam()" title="Сохранить"></i>
+                                    <i class="btn btn-xs glyphicon glyphicon-remove nmc-button-in-table" ng-click="toggleAddParamMode()" title="Отменить"></i>
                                 </div>
                             </div>
                         </td>

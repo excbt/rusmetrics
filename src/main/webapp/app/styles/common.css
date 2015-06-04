@@ -640,7 +640,14 @@ tr.nmc-main-table-header > th {
  * Вспомогательные
  *********************/
 /* Шрифты */
-
+    /* Заголовок в 2х этажных полях*/
+.nmc-caption-in-field {
+    font-size: 14px;
+}
+    /* Общий текст в 2х этажных полях*/
+.nmc-common-text-in-field {
+    /*font-size: 14px;*/
+}
  
 /* Заголовки */
 
