@@ -1,3 +1,7 @@
+/*
+ * Управление контактами и группами контактов
+ */
+
 var app = angular.module('portalNMK');
 app.controller(
 		'ContactsCtrl',
