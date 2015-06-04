@@ -153,6 +153,7 @@
  ***********************/
 /* Главное меню */
 .nmc-main-menu {
+    min-width: 155px;
     width: 10%;
 }
 
@@ -293,6 +294,9 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-child-table-without-header{
+    margin-left: 2%;
+    width: 97%;
+    border-radius: 4px;
 }
  
     /* Таблица рабочей области модального окна */

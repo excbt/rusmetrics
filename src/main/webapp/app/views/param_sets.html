@@ -231,19 +231,19 @@
 			</form>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
-								Отмена
+								Отменить
 							</button>
 						</div>
 					</div>
@@ -258,31 +258,31 @@
 </div>
 
 <!-- Create paramset-->
-<div id="createParamsetModal" class="modal fade" role="dialog"
+<div id="createParamsetModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="createParamsetLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content" ng-class="{'modalWindow_wide': set_of_objects_flag}">
+	<div class="modal-dialog  modal-content nmc-modal-dialog" ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">
 
-		<div class="modal-header">
-			<h3 id="createParamsetLabel" ng-show="createParamset_flag">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="createParamsetLabel" ng-show="createParamset_flag" class="nmc-h3">
 				Создание варианта отчета
 			</h3>
-            <label id="createParamsetLabel" ng-show="createByTemplate_flag">
+            <label id="createParamsetLabel" ng-show="createByTemplate_flag" class="nmc-form-label">
 				Создание варианта отчета на основе архивного шаблона "{{archiveParamset.name}}"
 			</label>
-            <h3 id="createParamsetLabel" ng-show="!createParamset_flag">
+            <h3 id="createParamsetLabel" ng-show="!createParamset_flag" class="nmc-h3">
 				Вариант отчета
 			</h3>
             
 		</div>
-		<div class="modal-body ">
+		<div class="modal-body nmc-modal-body">
                      
-            <div role="tabpanel">
+            <div role="tabpanel" class="nmc-tab-panel">
 
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active" id="main_properties_tab"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" id="set_of_objects_tab"><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
+                <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
               </ul>
 
               <!-- реализация вкладок -->
@@ -291,60 +291,60 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="main_properties">            
                     <div class="container-fluid">
                         <div class="row-fluid">
-                            <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                            <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputType">Тип отчета</label>
+                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">{{currentReportType.reportTypeName}}
+                                        <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputType">Шаблон отчета</label>
+                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Шаблон отчета</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
+                                        <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.reportTemplate.id==null)}">
-                                            <select class="form-control "  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset" ng-disabled="isDisabled()">
+                                            <select class="form-control nmc-select-form"  ng-model="currentObject.reportTemplate.id" ng-options="template.id as template.name for template in templatesForCurrentParaset" ng-disabled="isDisabled()">
                                             </select>                                            
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                        <td class="col-sm-3"><label for="inputName" class="nmc-form-label">Наименование</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование варианта" ng-model="currentObject.name" ng-disabled="isDisabled()">
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><label for="inputDescription" >Описание</label>
-                                        </td>
-                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="isDisabled()"></textarea>
+                                        <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text  placeholder="Наименование варианта" ng-model="currentObject.name" ng-disabled="isDisabled()">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputPeriod">Период</label>
+                                        <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
+                                        <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="isDisabled()"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Период</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
-                                                <select ng-disabled="isDisabled()" class="form-control input-sm inputData" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+                                                <select ng-disabled="isDisabled()" class="form-control input-sm inputData nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
                                                 </select>
                                             </div>    
                                         </td>
                                     </tr>
                                     <tr ng-show="currentSign==null">
-                                        <td class="col-sm-3"><label for="inputPeriod">Укажите интервал</label>
+                                        <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Укажите интервал</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
+                                        <td class="col-sm-9 nmc-text-align-left">
                                             <div ng-disabled="isDisabled()">
                                                 <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
-                                                <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                                <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">c</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetStartDateFormat"> 
+                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
                                                 </div>    
-                                                <div class="col-sm-1 paddingTop10"><label>по</label></div>
+                                                <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin" type="date" ng-model="paramsetEndDateFormat">
+                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
                                                 </div>
                                                 </span>    
                                             </div>    
@@ -352,15 +352,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputFileTemplate">Шаблон имени файла (<small>без расширения</small>)</label>
+                                        <td class="col-sm-3"><label for="inputFileTemplate" class="nmc-form-label">Шаблон имени файла (<small>без расширения</small>)</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileNameTemplate" ng-disabled="isDisabled()">
+                                        <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputFileTemplate" type=text  placeholder="Шаблон имени файла" ng-model="currentObject.outputFileNameTemplate" ng-disabled="isDisabled()">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputPeriod">Тип файла</label>
+                                        <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Тип файла</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left"><select class="form-control inputData" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
+                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control inputData nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
                                                 <option>XLS</option>
@@ -369,22 +369,22 @@
                                     </tr>
 
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" class="nmc-checkbox-form">По умолчанию
                                         </td>
                                     </tr>                            
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputStartDate">Действует с:</label>
+                                        <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Действует с:</label>
                                         </td>
-                                        <td class="textAlign_left col-sm-9">
+                                        <td class="nmc-text-align-left col-sm-9">
 
-                                            <input class="form-control  marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+                                            <input class="form-control  marginRight28 inputData nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
                                         </td>
 
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
+                                        <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Дата отправки в архив:</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
+                                        <td class="col-sm-9 nmc-text-align-left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
                                         </td>
                                     </tr>
 
@@ -399,23 +399,23 @@
                     <div class="container-fluid">
                         <div class="row-fluid">
                
-                             <div class="col-md-6 object_list" id="object_list">
-                                 <div><label>Доступные объекты</label></div>
+                             <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
+                                <div><label class="nmc-form-label">Доступные объекты</label></div>
                                 <div>
-                                    <table class="table table-condensed table-striped" ng-disabled="isDisabled()">
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" ng-disabled="isDisabled()">
                                         <tr ng-repeat="object in availableObjects">
-                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="addObject(object)" class="nmc-checkbox-form">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-6 object_list" id="object_list">
-                                <div><label>Выбранные объекты</label></div>
+                            <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
+                                <div><label class="nmc-form-label">Выбранные объекты</label></div>
                                 <div>
-                                    <table class="table table-condensed table-striped" >
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -428,17 +428,17 @@
                 </div>
                 </div>	
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input ng-disabled="isDisabled()||!checkRequiredFields();" type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="isDisabled()||!checkRequiredFields();" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
                                 data-target="#main_properties" data-toggle="tab" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault();">
 								Отменить
 							</button>
@@ -455,40 +455,40 @@
 </div>
    
     
-<div id="moveToArchiveModal" class="modal fade" role="dialog"
+<div id="moveToArchiveModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="moveToArchiveLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="moveToArchiveLabel" class="nmc-h3">
 				Перемещение в архив 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="moveForm" novalidate>
 				<p class="paddingLeft10">
-					<label class="text-warning"> Вы хотите переместить в архив  
+					<label class="text-warning nmc-form-label"> Вы хотите переместить в архив  
 					</label> 
-					<label class="text-primary">{{currentObject.name}}</label> 
+					<label class="text-primary nmc-form-label">{{currentObject.name}}</label> 
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#moveToArchive');">
 								Отменить
 							</button>
