@@ -396,15 +396,25 @@ console.log(CRIT_IMG_PATH);
     };
         
     $scope.saveIndicatorsToFile = function(){
-        var csv = "hello text";
-console.log(csv);                
-        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
-console.log(window.location.href);    
+//        var csv = "hello text";
+//console.log(csv);                
+//        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+//console.log(window.location.href);    
 //        window.open("",'_blank');
-        window.location.href = csvData;
+//        window.location.href = csvData;
 //        this.target = '_blank';
 //        this.download = 'filename.csv';
 //        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
+          
+        var contZPoint = $cookies.contZPoint;
+//        $scope.contZPointName = $cookies.contZPointName;
+        var contObject = $cookies.contObject;
+//        $scope.contObjectName = $cookies.contObjectName;
+
+        var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
+         
+        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+        window.open(url);
     }; 
         
      //chart
