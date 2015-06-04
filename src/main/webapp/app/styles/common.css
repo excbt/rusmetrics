@@ -7,12 +7,14 @@
  ********************/
 /* Шапка */
 .nmc-main-header {
-    background-color: #EEEEEE;
+    background-color: #225685;
+    color: #FFFFFF;
     height: 5%;
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
 .nmc-main-header-brand{
+    color: #FFFFFF !important;
 }
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{
@@ -25,10 +27,12 @@
 	/* Пункт меню заголовка*/
 .nmc-main-header-menu > li{
 /*	background-color: brown;*/
+    
 }
     
 .nmc-main-header-menu > li > a{
 /*    color: wheat !important;*/
+    color: #FFFFFF !important;
 }
 
 	/* Раскрытый пункт меню*/
@@ -97,22 +101,33 @@
     width: 87%;
 	min-height: 900px;
     border: none;
-    -webkit-box-shadow: none;
-    box-shadow: none;
+    -webkit-box-shadow: 5px 5px 5px 0px #646263;
+/*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
 	height: 85%;
 /*	height: 865px; */
 /*    overflow: hidden;*/
-    overflow-y: auto;	
+    overflow-y: auto;
+    
+/*
+    min-height: 900px;
+    border: none;
+    -webkit-box-shadow: none;
+*/
+    /*box-shadow: none;*/
+    box-shadow: 5px 5px 5px 0px #646263;
+/*    border-radius: 0;*/
+    background-color: #FFFFFF; /*background color of main area*/
+/*    padding-top: 10px;*/
 }
 
 /* Футер */
 .nmc-main-footer {
     height: 10px;
     padding-top: 19px;
-    background-color: #BEBEBE;
+    background-color: 646263;
 }
 
 /* Заголовки интерфейсов в рабочей области */
@@ -145,6 +160,15 @@
     padding-bottom: 20px;
     font-size: 12px;
     background-color: #BEBEBE; /*body background color*/
+    
+/*
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 12px;
+    background-color: #BEBEBE;
+*/
+    background: linear-gradient(to left, #BEBEBE, #969696); /*#A0A0A0 #AAAAAA*/
+    /*background: linear-gradient(to left, #b5bdc8, /*#828c95 36%,*/ #28343b);*/
 }
 
 
@@ -167,6 +191,15 @@
     font-size: 16px;
     border-radius: 4px 0px 0px 4px;
 	background-color: #DCDCDC; /*background color of menu item*/
+    
+/*        background-color: #DCDCDC ; background color of menu item*/
+                      /* my1: #D3D4D6*/
+    /*background: linear-gradient(to top, #BFC0C2, #DDDEE0);*/
+    /*background: linear-gradient(to top, #DCDCDC, #EBEBEB);*/   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+    background: linear-gradient(to top, #C8C8C8, #EBEBEB);   /*#E6E6E6 --  #EBEBEB  --  #F0F0F0*/
+                                      /*  bottom  top  */
+
+/*ORG: #DCDCDC, #ECEDEF*/
 }
 
     /* Пункт главного меню */
@@ -177,15 +210,16 @@
     border: none;
     margin-right: -30%;
     margin-bottom: 2%;
-	background-color: #DCDCDC;
+    background-color: #DCDCDC;
 }
 
     /*Активный пункт главного меню*/
 .nmc-main-menu-item-active{
     font-weight: bold;
-	color: #555 !important;
-	text-decoration: none;
-	background-color: #EEEEEE !important;
+    color: #555 !important;
+    text-decoration: none;
+    background: none !important;
+    background-color: #FFFFFF !important;
 }
 
     /* Иконка пункта меню*/
@@ -255,17 +289,25 @@ td {
 
     /* Заголовок таблицы */
 tr.nmc-main-table-header > th {
-    background-color: yellowgreen;
+     background-color: #646263; /*background color*/
+     color: #FFFFFF;
 }
 
     /*Таблица - контейнер для таблицы первого уровня*/
 .nmc-table-container {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
+/*    background-color: #EEEEEE;*/
 }
 .nmc-table-container > tbody > tr>td {
     border: none;
     padding: 0 !important;
+}
+
+.nmc-table-container > tbody > tr:nth-of-type(odd) {
+/*    background-color: #FFFFFF;*/
+    /* цвет фона для нечетной строки таблицы*/
+/*    background-color: #f5f5f5;*/
 }
 
     /* Таблица первого уровня с вложенными таблицами */
@@ -279,7 +321,7 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-parent-table > tbody > tr:nth-of-type(odd) {
-    background-color: #EEEEEE;/* цвет фона для нечетной строки родительской таблицы*/
+    background-color: #FFFFFF;/* цвет фона для нечетной строки родительской таблицы*/
 /*    background-color: #f5f5f5;*/
 }
  
@@ -292,8 +334,8 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-child-table-header{
-     background-color: #BEBEBE; /*background color*/
-/*         #696969;*/
+     background-color: #646263; /*background color*/
+     color: #FFFFFF;
 }
 
 .nmc-child-table-without-header{
@@ -492,18 +534,24 @@ tr.nmc-main-table-header > th {
 
     /* Активный переключатель*/
 .nmc-toggle > li.active > a{
+/*
     background-color: aqua;
     color:red;
+*/
 }
     /* Активный переключатель - наведен указатель на него*/
 .nmc-toggle > li.active > a:hover{
+/*
     background-color: aqua;
     color:red;
+*/
 }
     /* Активный переключатель - установлен фокус*/
 .nmc-toggle > li.active > a:focus{
+/*
     background-color: aqua;
     color:red;
+*/
 }
 
     /* Переключатель для действующих шаблонов/вариантов отчетов */
@@ -658,6 +706,10 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-h2 {
+    /*white-space: nowrap;*/
+    color: #555555;
+    /*font-size: 200%;*/
+    font: bold 200% arial;
 }
 
 .nmc-h3 {
