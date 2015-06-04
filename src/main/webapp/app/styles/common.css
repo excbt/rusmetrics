@@ -659,7 +659,14 @@ tr.nmc-main-table-header > th {
 }
 
 /* Картинки*/
-.nmc-img1 {
+    /* Индикатор расхождения Итого и Интеграторов*/
+    /*  Пути к картинкам задаются в скрипте - файл indicator.js:
+    var ALERT_IMG_PATH = "images/divergenceIndicatorAlert.png";
+    var CRIT_IMG_PATH = "images/divergenceIndicatorCrit.png";
+    var EMPTY_IMG_PATH = "images/plug.png";  */
+.nmc-img-divergence-indicator {
+    width: 16px;
+    height: 16px;
 }
 .nmc-img2 {
 }
