@@ -437,6 +437,11 @@ tr.nmc-main-table-header > th {
 .nmc-cancel-button {
     max-width: 142px;
 }
+
+/* Кнопка Удалить ака Красивый крестик*/
+.nmc-remove-button{
+    background: url(images/cross-512.png);
+}
  
     /* Кнопка в заголовке рабочей области*/
  .nmc-button-in-header{
@@ -599,7 +604,7 @@ tr.nmc-main-table-header > th {
     /* Панель с выбранными объектами в модальном окне создания/редактирования группы объектов*/
 /*.editGroupWindowSelectedObjectsArea{*/
 .nmc-modal-panel-with-objects{  
-     height: 410px;
+    height: 410px;
     overflow-y: scroll;
 }    
 

@@ -127,7 +127,8 @@
                                     <tr ng-repeat="object in selectedObjects">
                                         <td>{{object.fullName}}
                                         </td>
-                                        <td><img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)"></i>
+                                        <td><button class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+<!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                         </td>
                                     </tr>
    								</table>
