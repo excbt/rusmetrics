@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK')
+angular.module('portalNMC')
 .controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http){
     
 //        $cookies.contZPoint = null;

@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK').directive('crudGridObjects', function () {
+angular.module('portalNMC').directive('crudGridObjects', function () {
     return {
         restrict: 'A',
         replace: false,

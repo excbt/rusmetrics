@@ -2,12 +2,12 @@
 
 /**
  * @ngdoc function
- * @name portalNMK.controller:MainCtrl
+ * @name portalNMC.controller:MainCtrl
  * @description
  * # MainCtrl
- * Controller of the portalNMK
+ * Controller of the portalNMC
  */
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
   app.controller('MainCtrl', ['$scope','$rootScope', 'crudGridDataFactory', function ($scope, $rootScope, crudGridDataFactory) {
 
     $scope.showPrivateOfficeMenu = false;

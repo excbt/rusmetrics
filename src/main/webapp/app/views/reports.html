@@ -7,23 +7,25 @@
     </ul>
 </div> 
 -->
-<h2 class="noMargin pageTitle">Отчеты</h2>
-<hr>
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>    
 <div>
-    <table id="datatabl" class="table  table-condensed noMarginBottom excbt_table">
+    <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
                         <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
+                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);selectedItem(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">
@@ -40,31 +42,33 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
-                                                    <div class="btn-group" style="width:45px;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
+                                                    <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Сформировать" class="btn btn-default btn-xs glyphicon glyphicon-play" ng-click="createReport(object,oldObject)"></i>
+                                                            <td><i title="Сформировать" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table" ng-click="createReport(object,oldObject)"></i>
                                                             </td>
                                                           </tr>
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-7" ng-class="{'default': oldObject._default}">     
-                                                   <p class="reportCaptionInList"> {{oldObject.name}} </p>
-                                                 <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label> Шаблон: {{oldObject.reportTemplate.name}}
-                                                 <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'default': oldObject._default}"> </label>Период: {{oldObject.reportPeriod.caption}}
-                                                 <span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> Тип файла: {{oldObject.outputFileType || "не задан"}}  
+                                             <div class="col-md-7" ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                   <p class="nmc-caption-in-field"> {{oldObject.name}} </p>
+                                                 <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label> <span class="nmc-common-text-in-field">Шаблон: {{oldObject.reportTemplate.name}}</span>
+                                                 <span ng-show="oldObject.reportPeriod!=null">,</span> <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label><span class="nmc-common-text-in-field">Период: {{oldObject.reportPeriod.caption}}</span>
+                                                 <span ng-show="oldObject.outputFileType!=null">,</span> <label class="marginLeft15"> </label> <span class="nmc-common-text-in-field">Тип файла: {{oldObject.outputFileType || "не задан"}}</span> 
                                             </div>
-                                            <div class="col-md-2" ng-class="{'default': oldObject._default}">     
-                                                    действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
+                                            <div class="col-md-2" ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                <span class="nmc-common-text-in-field">действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
                                             </div>
                                          </td>
 

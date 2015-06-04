@@ -8,6 +8,23 @@
     </ul>
 </div>    
 -->
+<!-- Вкладки рабочей области-->
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/reports/" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
 <div class="container-fluid nmc-main-workspace-header">
 <div class="row">
     <div class="col-md-3 noPadding">
@@ -136,7 +153,7 @@
 	aria-labelledby="editTariffLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog" ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">
 		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="editTariffLabel" class="nmc-h3">
 				Тариф 
 			</h3>

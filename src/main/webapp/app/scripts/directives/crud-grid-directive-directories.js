@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK').directive('crudGridDirectories', function () {
+angular.module('portalNMC').directive('crudGridDirectories', function () {
     return {
         restrict: 'A',
         replace: false,

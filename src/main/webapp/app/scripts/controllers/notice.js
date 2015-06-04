@@ -1,6 +1,6 @@
 'use strict'
 
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory){
 //console.log("$('#div-main-area').width()=");    

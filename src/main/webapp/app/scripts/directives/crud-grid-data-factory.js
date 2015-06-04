@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK').factory('crudGridDataFactory', [ '$http', '$resource',
+angular.module('portalNMC').factory('crudGridDataFactory', [ '$http', '$resource',
 		function($http, $resource) {
 			return function(type) {
 				return $resource(type + '/:id', {id: '@id' 

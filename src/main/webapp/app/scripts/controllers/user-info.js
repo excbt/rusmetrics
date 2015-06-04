@@ -1,4 +1,4 @@
-angular.module('portalNMK')
+angular.module('portalNMC')
     .controller('UserinfoCtrl', function($rootScope, $http){
         var url = "../api/systemInfo/fullUserInfo";
         $http.get(url)

@@ -1,6 +1,6 @@
 'use strict'
 
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller('DirectoryCtrl', function($scope, $resource){
 //    $scope.$watch( 'abc.currentNode', function( newObj, oldObj ) {
 //    if( $scope.abc && angular.isObject($scope.abc.currentNode) ) {

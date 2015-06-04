@@ -1,5 +1,5 @@
 //reports controller
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller('ReportsCtrl',['$scope', 'crudGridDataFactory', 'notificationFactory', function($scope, crudGridDataFactory, notificationFactory){
                      
     $scope.currentObject = {};

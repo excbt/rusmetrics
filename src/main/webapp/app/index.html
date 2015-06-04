@@ -25,7 +25,7 @@
       <link rel="stylesheet" href="vendor_components/bootstrap-daterangepicker-master/daterangepicker-bs3.css"/>
       
   </head>
-  <body class="nmc-main-window-background" ng-app="portalNMK">
+  <body class="nmc-main-window-background" ng-app="portalNMC">
     <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
@@ -122,9 +122,10 @@
 <!--                                Настройки-->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
-                                    href="" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i></a>
+                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 
                                                                 <!-- Меню настроек -->
+<!--
                                 <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showSettings, 'nmc-hide': !showSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
@@ -136,14 +137,18 @@
                                        ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard nmc-main-menu-item-icon"></i> Отчеты</a>
                                     <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_group_menu_item}"
 
-                                       ng-click="clickMenu('setting_group_menu_item');" href="#/control/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open nmc-main-menu-item-icon"></i>Группы</a>
+                                       ng-click="clickMenu('setting_group_menu_item');" href="#/settings/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open nmc-main-menu-item-icon"></i>Группы</a>
                                 </div>
+-->
                                
                                 
                                 <!--                                Администрирование-->
                                 <a class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system}"
 
-                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"></i>Управление<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i></a>                                                                <!-- Меню администратора -->
+                                   href="" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"></i>Управление
+                                    <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->
+                                </a>                                                                <!-- Меню администратора -->
+<!--
                                 <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showAdminSettings, 'nmc-hide': !showAdminSettings}" id="sidebar-entries" >
 
                                     <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.metadata_control_menu_item}"
@@ -152,6 +157,7 @@
 
                                     
                                 </div>
+-->
 
                             </div>
                         </nav>

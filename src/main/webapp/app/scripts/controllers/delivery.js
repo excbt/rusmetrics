@@ -1,7 +1,7 @@
 /*
  * Управление рассылками отчётов
  */
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller(
 		'DlvrCtrl',
 		function($scope, $http, notificationFactory){
