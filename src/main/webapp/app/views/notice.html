@@ -7,24 +7,32 @@
     </ul>
 </div>  
 -->
-<div class="col-md-11 noPadding"><h2 class="noMargin pageTitle">Уведомления</h2></div>
-<div class="col-md-1">
-    <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
-</div>  
-<div class="col-md-12 noPadding">
-    <hr class="noMargin">
-</div>
+<div class="container-fluid">
+    <div class="row ">
+        <div class="col-md-11 noPadding nmc-main-workspace-header">
+            <h2 class="noMargin nmc-h2">Уведомления</h2>
+        </div>
+        <div class="col-md-1">
+            <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats nmc-button-in-header" ng-click="runChart()"></i>
+        </div>  
+    </div>    
+    <div class="row">
+        <div class="col-md-12 noPadding nmc-main-workspace-header">
+            <hr>
+        </div>
+    </div>
+</div>    
 <div class="container-fluid">
 <div class="row">    
 <div class="col-md-12 noPadding marginBottom10">
     <div class="col-md-12 noPadding">
-        <b>Фильтры:</b>
+        <label class="nmc-form-label">Фильтры:</label>
     </div>     
     <div class="col-md-2 noPadding" ng-controller="DataRangeSettings">
         <div>по интервалу дат:</div>
         <div class="input-group">
-            <span class="input-group-addon excbt_inputGroupAddon">с</span>
-            <input date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
+            <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form"
                 type="text" ng-model="navPlayerDates" options="queryDateOptsRu"/>
         </div>    
     </div>
@@ -34,16 +42,16 @@
     <div class="col-md-8 noPadding marginBottom10">
         <div>по объектам:</div>
         <div class="">
-            <textarea  class="form-control excbt_inputFormControl objectListTArea" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
+            <textarea  class="form-control nmc-textarea-form" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>
 
         </div>
     </div>
      <div class="col-md-4 paddingTop15">    
  
          <div class="col-md-7">
-            <label>Записей на странице:</label>
+            <label class="nmc-form-label">Записей на странице:</label>
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <select class="form-control inputDigitalData excbt_inputFormControl" ng-model="noticesPerPage"    >
+            <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="noticesPerPage"    >
                 <option>5</option>
                 <option>10</option>
                 <option>20</option>
@@ -53,15 +61,15 @@
             </select>
         </div>
         <div class="col-md-5">
-            <label >Всего:</label>
-             <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalNotices">
+            <label class="nmc-form-label">Всего:</label>
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalNotices">
         </div>
     </div>
 </div>    
 </div>
 
 <div >
-    <table class="excbt_table_oneLineData" ng-class="tableDef.tableClass">
+    <table class="nmc-table-nowrap-data" ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
             <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}
@@ -77,49 +85,48 @@
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
     </div>
     <div class="col-md-3 noPadding">
-             <div class="input-group">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                 <input type="text"  class="form-control"  ng-model="noticefilter">
+             <div class="input-group nmc-search-form">
+                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticefilter">
             </div>     
     </div> 
 </div>
 
 <!--Окно выбора объектов-->
-<div id="selectObjectsModal" class="modal excbt_selectObjectWindow " role="dialog"
+<div id="selectObjectsModal" class="modal nmc-modal-window nmc-select-objects-window" role="dialog"
 	aria-labelledby="selectObjectsLabel" tabindex="-1">
 
-	<div class="modal-dialog ">
+	<div class="modal-dialog nmc-modal-dialog">
 <!--                modal-content">-->
-    <div class="modal-content modalWindow_lessWide">
+    <div class="modal-content nmc-modal-narrow-dialog">
 
-		<div class=" well modalWindow_lessWide noMarginBottom noPadding">
-            <div class="input-group col-md-12 filter marginBottom10">
-                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                <input type="text" class="form-control" ng-model="objectfilter">
-                <span class="input-group-addon btn btn-default" ng-disabled="objectfilter.length == 0" ng-click="objectfilter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+		<div class="modal-header well nmc-modal-header noMarginBottom noPadding">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
+                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
             </div>
 		</div>
-		<div class=" well modal-scrollable-area1 modalWindow_lessWide noMarginBottom noMarginTop noPadding">
-
-			<table class="table table-striped table-condensed table-hover">
+		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop noPadding nmc-object-list nmc-modal-panel-with-table">
+			<table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                 <tr ng-repeat="object in objects | filter: objectfilter">
-                    <td><input type="checkbox" ng-model="object.selected">{{object.fullName}}
+                    <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form">{{object.fullName}}
                     </td>    
                 </tr>    
             </table>
 		</div>
-		<div class=" well modalWindow_lessWide noMarginBottom noMarginTop noPadding">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop noPadding">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-4">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-4 col-md-4">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="selectObjects();"
 								value="Выбрать" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-4">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#selectObjectsModal');">
 								Отменить
 							</button>
@@ -133,50 +140,50 @@
 </div>
 
 <!-- Карточка уведомления-->
-<div id="showNoticeModal" class="modal fade" role="dialog"
+<div id="showNoticeModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showNoticeLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="showNoticeLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="showNoticeLabel" class="nmc-h3">
 				Уведомление 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-condensed table-hover noMarginBottom excbt_table">
+                    <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">Тип</label>
+                                <td class="col-sm-3"><label class="nmc-form-label" for="inputName">Тип</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeType}}
+                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeType}}
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputComment" >Текст</label>
+                                <td><label for="inputComment" class="nmc-form-label">Текст</label>
                                 </td>
-                                <td class="textAlign_left">{{currentObject.noticeMessage}}
+                                <td class="nmc-text-align-left">{{currentObject.noticeMessage}}
 
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputComment" >Объект</label>
+                                <td><label for="inputComment" class="nmc-form-label">Объект</label>
                                 </td>
-                                <td class="textAlign_left">{{currentObject.noticeObjectName}}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputAddress">Дата</label>
-                                </td>
-                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeDate | date:'dd.MM.yyyy HH:mm:ss'}}
+                                <td class="nmc-text-align-left">{{currentObject.noticeObjectName}}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputAddress">Точка учета</label>
+                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Дата</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">{{currentObject.noticeZpoint}}
+                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeDate | date:'dd.MM.yyyy HH:mm:ss'}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputAddress" class="nmc-form-label">Точка учета</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">{{currentObject.noticeZpoint}}
                                 </td>
                             </tr>
 
@@ -186,14 +193,14 @@
                 </div> 
 
             </div>     
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
 
 
 						<div class="col-xs-offset-2 col-md-3 pull-right">
-							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
+							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');">
 								Ок
 							</button>
@@ -206,31 +213,26 @@
 </div>
 
 <!-- Окно с графиком-->
-<div id="chartModal" class="modal fade" role="dialog"
+<div id="chartModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="chartLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content modalWindow_moreWide">
+	<div class="modal-dialog  modal-content nmc-modal-some-wide-dialog nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="showNoticeLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="showNoticeLabel" class="nmc-h3">
 				Диаграмма уведомлений 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
             <div id="noticeChart" class="paddingBottom40">
                 <div id="noticeChart-area"></div>
 		  </div>
- 
-
         </div>     
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
-
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 					<div class="row">
-
-
 						<div class="col-xs-offset-2 col-md-3 pull-right">
-							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
+							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
 								ng-click="exit();">
 								Ок
 							</button>

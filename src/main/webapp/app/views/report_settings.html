@@ -8,15 +8,17 @@
     </ul>
 </div> 
 -->
-<h2 class="noMargin pageTitle">Отчеты</h2>
-<hr>
-<div role="tabpanel">
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>    
+<div role="tabpanel" class="nmc-tab-panel">
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="" aria-controls="report_templates" data-target="#report_templates" role="tab" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation"><a href="#/settings/paramsets" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation"><a href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
+    <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="report_templates" data-target="#report_templates" role="tab" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/paramsets" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
     
   </ul>
 
@@ -25,36 +27,36 @@
 <!--      Шаблоны отчетов-->
     <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
         <!--       Активные / Архивные -->
-        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15" role="tablist">
-            <li role="presentation" class="active" style="border: 1px solid #ddd;border-radius:4px;"><a href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive()" >Действующие</a></li>
-            <li role="presentation" style="border: 1px solid #ddd;border-radius:4px; margin-left:0px;"><a href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive()" style="width:108px;text-align:center">Архив</a></li>
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active" style=""><a class="nmc-toggle-button" href="" aria-controls="active_templates" data-target="#active_templates" role="tab" data-toggle="tab" ng-click="getActive()" >Действующие</a></li>
+            <li role="presentation" class="nmc-toggle-archive" style=""><a class="nmc-toggle-button" href="" aria-controls="arhive_templates" data-target="#arhive_templates" role="tab" data-toggle="tab" ng-click="getArchive()" style="">Архив</a></li>
 <!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#editTemplateModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные шаблоны-->
             <div role="tabpanel" class="tab-pane fade in active" id="active_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
-                <table id="datatabl" class="table table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
-                        <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                        <td>
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
 
-                                            <i class="btn btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                            <div class="col-md-2 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
-                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
-                                                <i title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</i>
+                                            <div class="col-md-10" ng-show="object.reportType=='COMMERCE_REPORT'">
+                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary" ng-click="addTemplate(object)" data-target="#createTemplateModal" data-toggle="modal">Добавить</button>
                                             </div>
                                         </div>
 
@@ -65,32 +67,34 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Редактировать" class="btn btn-default btn-xs glyphicon glyphicon-edit" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
-                                                            <td>    <i title="В архив" class="btn btn-default btn-xs glyphicon glyphicon-arrow-right" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                                            <td>    <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
                                                       </table>
                                                     </div>    
                                                 </div>
-                                             <div class="col-md-2" ng-class="{'default': oldObject._default}">     
-                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-7"  ng-class="{'default': oldObject._default}">     
-                                                    действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
-                                            </div>
+                                                 <div class="col-md-3" ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                        {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                                </div>
+                                                <div class="col-md-8"  ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                        действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
+                                                </div>
                                          </td>
 
                                      </tr>
@@ -115,16 +119,16 @@
 <!--            Архивные шаблоны-->
              <div role="tabpanel" class="tab-pane fade " id="arhive_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
-                <table id="datatabl" class="table table-condensed noMarginBottom excbt_table">
+                <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
-                        <td style="padding:0;">
-                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom excbt_table excbt_externalTable"> 
+                        <td>
+                            <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
                                 <tr>
                                     <td ng-class="column.class">
-                                        <div class="btn-toolbar col-md-1" style="padding-left:5px;width:50px;">
-                                            <i class="btn btn-default btn-xs glyphicon noMargin" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
+                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
                                         </div>
                                         <div class="col-md-10">
                                             <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
@@ -137,18 +141,20 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover noMargin excbt_innerTable" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
                                          <td class="col-md-12">
+<!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
-                                              <div class="btn-toolbar col-md-2" style="text-align: right;width:55px;">
+-->
+                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right" style="">
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
-                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-default btn-xs glyphicon glyphicon-share" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                                            <td>    <i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
                                                             </td>
 
                                                           </tr>
@@ -162,7 +168,7 @@
                                                     в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                             </div>
                                          </td>
-                                         <td><i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                         <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
                                      </tr>
@@ -199,39 +205,42 @@
 
 </div>
 
-<div id="moveToArchiveModal" class="modal fade" role="dialog"
+<div id="moveToArchiveModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="moveToArchiveLabel">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="moveToArchiveLabel" class="nmc-h3">
 				Перемещение в архив 
 			</h3>
 		</div>
-		<div class="modal-body">
-			<form name="deleteContactForm" novalidate>
+		<div class="modal-body nmc-modal-body">
+			<form name="moveToArchiveForm" novalidate>
 				<p class="paddingLeft10">
-					<label class="text-warning"> Вы хотите переместить в архив  
+					<label class="text-warning nmc-form-label"> Вы хотите переместить в архив  
 					</label> 
-					<label class="text-primary">{{currentObject.name}}</label> 
+					<label class="text-primary nmc-form-label">{{currentObject.name}}</label> 
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+<!--                        <div class="col-md-3"></div>-->
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+<!--						<div class="col-xs-offset-2 col-md-3">-->
+                        <div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
 								Отменить
 							</button>
@@ -248,59 +257,60 @@
 </div>
 
 <!-- create template-->
-<div id="createTemplateModal" class="modal fade" role="dialog"
+<div id="createTemplateModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="createTemplateLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content modalWindow_wide">
+	<div class="modal-dialog  modal-content nmc-modal-wide-dialog nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="createTemplateLabel">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="createTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>
 		</div>
-		<div class="modal-body ">
+		<div class="modal-body nmc-modal-body">
     
             <div class="container-fluid">
                 <div class="row-fluid col-md-5">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputType">Тип отчета</label>
+                                <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
+                                <td class="col-sm-9 nmc-text-align-left">
                                     {{currentReportType.reportTypeName}}
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                <td class="col-sm-3"><label for="inputName" class="nmc-form-label">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text  placeholder="Наименование шаблона" ng-model="currentObject.name">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><label for="inputDescription" >Описание</label>
-                                </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.description"></textarea>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text  placeholder="Наименование шаблона" ng-model="currentObject.name">
                                 </td>
                             </tr>
                             <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
+                                <td><label for="inputDescription" class="nmc-form-label">Описание</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание"  ng-model="currentObject.description"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" class="nmc-checkbox-form">По умолчанию
                                 </td>
 
                             </tr>                            
                             <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Действует с :</label>
+                                <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Действует с :</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9">
+                                <td class="nmc-text-align-left col-sm-9">
                                     
-                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" > 
+                                    <input class="form-control marginRight28 inputData nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" > 
                                 </td>
                                 
                             </tr>              
                             <tr>
-                                <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
+                                <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Дата отправки в архив:</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
+                                <td class="col-sm-9 nmc-text-align-left">
                                     {{endDateFormat}}
                                 </td>
                             </tr>                            
@@ -308,19 +318,19 @@
                     </div>  
                     <div class="row-fluid">
                                 <div class="col-md-12 paddingLeft20">
-                                    <input type=checkbox ng-model="currentObject.integratorIncluded"> Включить интеграторы в отчет.
+                                    <input type=checkbox ng-model="currentObject.integratorIncluded" class="nmc-checkbox-form"> Включить интеграторы в отчет.
                                 </div>
                      </div>
                      <div class="row-fluid">
-                        <div class="col-md-12 well marginBottom10 noPaddingBottom">
+                        <div class="col-md-12 well marginBottom10 noPaddingBottom nmc-modal-panel-with-table">
                             <div class="col-md-5 noPadding">
-                                <label>Порядок систем в отчете</label>
+                                <label class="nmc-form-label">Порядок систем в отчете</label>
                                     <div class="btn-group">
-                                         <i title="Поменять системы местами" class="btn btn-default btn-xs" ng-click="changeSystemPosition()">Изменить порядок</i>
+                                         <button title="Поменять системы местами" class="btn btn-default btn-xs nmc-button-in-modal" ng-click="changeSystemPosition()">Изменить порядок</button>
                                      </div>        
                             </div>
                             <div class="col-md-7 onlyPaddingLeft15">
-                                <table class="table table-hover table-condensed">
+                                <table class="table table-hover table-condensed nmc-modal-main-table">
                                     <tr ng-repeat="system in systems">
                                         <td>
                                            {{$index+1}}. {{system.columnHeader}}
@@ -333,25 +343,25 @@
                      </div>              
                 </div>
                 
-                <div class="row-fluid col-md-7">
+                <div class="row-fluid col-md-7 nmc-tab-panel">
 <!--                    <label>Конструктор шаблона</label>-->
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a id="system1-tab" href="" data-target="#system1" data-toggle="tab">{{system1.columnHeader}}</a>
+                            <a class="nmc-tab-button" id="system1-tab" href="" data-target="#system1" data-toggle="tab">{{system1.columnHeader}}</a>
                         </li>
                         <li class="" ng-show="system2.defaultColumns.length>0">
-                            <a id="system2-tab" href="" data-target="#system2" data-toggle="tab">{{system2.columnHeader}}</a>
+                            <a class="nmc-tab-button" id="system2-tab" href="" data-target="#system2" data-toggle="tab">{{system2.columnHeader}}</a>
                         </li>
                     </ul>
                      <div id="systemsTabContent" class="tab-content">
                               <div role="tabpanel" class="tab-pane fade in active" id="system1" aria-labelledBy="system1-tab">
-                                <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
-                                    <div><b>Доступные колонки</b></div>
-                                    <table class="table table-striped table-hover table-condensed">
+                                <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
+                                    <div><label class="nmc-form-label">Доступные колонки</label></div>
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="defaultcolumn in system1.defaultColumns" class="noPadding" >
-                                            <td style="padding:0;" ng-class="defaultcolumn.class">
-                                                <div class="col-md-1 noPadding noMargin div-checkbox">
-                                                   <input type="checkbox" ng-model="defaultcolumn.selected">
+                                            <td style="" ng-class="defaultcolumn.class">
+                                                <div class="col-md-1 noPadding noMargin nmc-div-with-checkbox">
+                                                   <input type="checkbox" ng-model="defaultcolumn.selected" class="nmc-checkbox-form">
                                                 </div>        
                                                 <div class="col-md-10 noPadding noMargin paddingTop3" ng-click="selectColumn(defaultcolumn)">    
                                                     {{defaultcolumn.columnHeader}}
@@ -361,52 +371,52 @@
 
                                     </table>
                                 </div>
-                                <div class="col-md-1 column_list column_list_button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
                                     <div class="btn-group">
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-modal" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left nmc-button-in-modal" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
                                     </div>
                                 </div>
-                                <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
-                                    <div><b>Выбранные колонки</b></div>
-                                    <table class="table table-striped table-hover table-condensed">
+                                <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
+                                    <div><label class="nmc-form-label">Выбранные колонки</label></div>
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="definecolumn in system1.defineColumns" class="noPadding" >
-                                            <td style="padding:0;" ng-class="definecolumn.class">
-                                                <div class="col-md-1 noPadding noMargin div-checkbox">
-                                                   <input type="checkbox" ng-model="definecolumn.selected">
+                                            <td style="" ng-class="definecolumn.class">
+                                                <div class="col-md-1 noPadding noMargin nmc-div-with-checkbox">
+                                                   <input type="checkbox" ng-model="definecolumn.selected" class="nmc-checkbox-form">
                                                 </div>        
                                                 <div ng-show="!definecolumn.edit" class="col-md-10 noPadding noMargin paddingTop3" ng-click="selectColumn(definecolumn)" ng-dblclick="editColumnName(definecolumn)">    
                                                     {{definecolumn.columnHeader}}
                                                 </div>
                                                 <div ng-show="definecolumn.edit" class="col-md-11 noPadding noMargin paddingTop3" ng-click="selectColumn(definecolumn)">  
                                                     <div class="col-xs-4 noPadding">
-                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditColumnName(definecolumn)"></i>
-                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="cancelEditColumnName(definecolumn)"></i>
+                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-save nmc-button-in-modal" ng-click="toggleEditColumnName(definecolumn)"></i>
+                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-remove nmc-button-in-modal" ng-click="cancelEditColumnName(definecolumn)"></i>
                                                     </div>
                                                     <div class="col-xs-8 noPadding">
-                                                        <input model-change-blur class="form-control excbt_inputFormControl" type="text" ng-model="definecolumn.columnHeader">
+                                                        <input model-change-blur class="form-control nmc-text-input-form" type="text" ng-model="definecolumn.columnHeader">
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-1 column_list column_list_button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
                                     <div class="btn-group">
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up" ng-click="system1.defineColumns=moveColumnsUp(system1.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down" ng-click="system1.defineColumns=moveColumnsDown(system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up nmc-button-in-modal" ng-click="system1.defineColumns=moveColumnsUp(system1.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down nmc-button-in-modal" ng-click="system1.defineColumns=moveColumnsDown(system1.defineColumns)"></i>
                                     </div>
                                 </div>
                             </div> 
 <!--                 System 2        -->
                             <div role="tabpanel" class="tab-pane fade " id="system2" aria-labelledBy="system2-tab">
-                                <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
-                                    <div><b>Доступные колонки</b></div>
-                                    <table class="table table-striped table-hover table-condensed">
+                                <div id="system1_default_cols" class="col-md-5 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
+                                    <div><label class="nmc-form-label">Доступные колонки</label></div>
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="defaultcolumn in system2.defaultColumns" class="noPadding" >
-                                            <td style="padding:0;" ng-class="defaultcolumn.class">
-                                                <div class="col-md-1 noPadding noMargin div-checkbox">
-                                                   <input type="checkbox" ng-model="defaultcolumn.selected">
+                                            <td style="" ng-class="defaultcolumn.class">
+                                                <div class="col-md-1 noPadding noMargin nmc-div-with-checkbox">
+                                                   <input type="checkbox" ng-model="defaultcolumn.selected" class="nmc-checkbox-form">
                                                 </div>        
                                                 <div class="col-md-10 noPadding noMargin paddingTop3" ng-click="selectColumn(defaultcolumn)">    
                                                     {{defaultcolumn.columnHeader}}
@@ -416,40 +426,40 @@
 
                                     </table>
                                 </div>
-                                <div class="col-md-1 column_list column_list_button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
                                     <div class="btn-group">
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right" ng-click="system2.defineColumns=addColumns(system2.defaultColumns, system2.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left" ng-click="system2.defineColumns=removeColumns(system2.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-modal" ng-click="system2.defineColumns=addColumns(system2.defaultColumns, system2.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-left nmc-button-in-modal" ng-click="system2.defineColumns=removeColumns(system2.defineColumns)"></i>
                                     </div>
                                 </div>
-                                <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 column_list">
-                                    <div><b>Выбранные колонки</b></div>
-                                    <table class="table table-striped table-hover table-condensed">
+                                <div id="system1_define_cols" class="col-md-5 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
+                                    <div><label class="nmc-form-label">Выбранные колонки</label></div>
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="definecolumn in system2.defineColumns" class="noPadding" >
-                                            <td style="padding:0;" ng-class="definecolumn.class">
-                                                <div class="col-md-1 noPadding noMargin div-checkbox">
-                                                   <input type="checkbox" ng-model="definecolumn.selected">
+                                            <td style="" ng-class="definecolumn.class">
+                                                <div class="col-md-1 noPadding noMargin nmc-div-with-checkbox">
+                                                   <input type="checkbox" ng-model="definecolumn.selected" class="nmc-checkbox-form">
                                                 </div>        
                                                 <div ng-show="!definecolumn.edit" class="col-md-10 noPadding noMargin paddingTop3" ng-click="selectColumn(definecolumn)" ng-dblclick="editColumnName(definecolumn)">    
                                                     {{definecolumn.columnHeader}}
                                                 </div>
                                                 <div ng-show="definecolumn.edit" class="col-md-11 noPadding noMargin paddingTop3" ng-click="selectColumn(definecolumn)">  
                                                     <div class="col-xs-4 noPadding">
-                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-save" ng-click="toggleEditColumnName(definecolumn)"></i>
-                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-remove" ng-click="cancelEditColumnName(definecolumn)"></i>
+                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-save nmc-button-in-modal" ng-click="toggleEditColumnName(definecolumn)"></i>
+                                                        <i class="btn btn-default btn-xs glyphicon glyphicon-remove nmc-button-in-modal" ng-click="cancelEditColumnName(definecolumn)"></i>
                                                     </div>
                                                     <div class="col-xs-8 noPadding">
-                                                        <input model-change-blur class="form-control excbt_inputFormControl" type="text" ng-model="definecolumn.columnHeader">
+                                                        <input model-change-blur class="form-control nmc-text-input-form" type="text" ng-model="definecolumn.columnHeader">
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-1 column_list column_list_button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
                                     <div class="btn-group">
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up" ng-click="system2.defineColumns=moveColumnsUp(system2.defineColumns)"></i>
-                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down" ng-click="system2.defineColumns=moveColumnsDown(system2.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-up nmc-button-in-modal" ng-click="system2.defineColumns=moveColumnsUp(system2.defineColumns)"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-arrow-down nmc-button-in-modal" ng-click="system2.defineColumns=moveColumnsDown(system2.defineColumns)"></i>
                                     </div>
                                 </div>
                             </div>
@@ -457,17 +467,17 @@
             </div>        		
 		</div>
         </div>
-		<div class="modal-footer">
+		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-8 col-md-2">
+							<input type="submit" class="pull-right btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveTemplate()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class=" pull-right col-xs-offset-2 col-md-2 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
 							</button>
@@ -484,63 +494,64 @@
 </div>
 
 <!-- edit template-->
-<div id="editTemplateModal" class="modal fade" role="dialog"
+<div id="editTemplateModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editTemplateLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content ">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			 <label ng-show="createByTemplate_flag">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
-            <h3 id="editTemplateLabel">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<label ng-show="createByTemplate_flag" class="nmc-form-label">Создание шаблона отчета на основе "{{archiveTemplate.name}}"</label>
+            <h3 id="editTemplateLabel" class="nmc-h3">
 				Шаблон отчета 
 			</h3>    
 		</div>
-		<div class="modal-body ">         
+		<div class="modal-body nmc-modal-body">         
             <div class="container">
                 <div class="row-fluid col-md-6">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputType">Тип отчета</label>
+                                <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
+                                <td class="col-sm-9 nmc-text-align-left">
                                     {{currentReportType.reportTypeName}}
 <!--                                    <input type=text disabled=true size="20" value="Коммерческий">-->
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                <td class="col-sm-3"><label for="inputName" class="nmc-form-label">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputDescription" >Описание</label>
+                                <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common">По умолчанию
+                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common" class="nmc-checkbox-form">По умолчанию
                                 </td>
 
                             </tr>                            
                             <tr>
-                                <td class="col-sm-3"><label for="inputStartDate">Действует с:</label>
+                                <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Действует с:</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9" ng-hide="createByTemplate_flag">
+                                <td class="nmc-text-align-left col-sm-9" ng-hide="createByTemplate_flag">
                                     {{currentObject.activeStartDate | date:'dd.MM.yyyy'}}
                                 </td>
-                                <td class="textAlign_left col-sm-9" ng-show="createByTemplate_flag">
-                                    <input class="form-control marginRight28 inputData" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
+                                <td class="nmc-text-align-left col-sm-9" ng-show="createByTemplate_flag">
+                                    <input class="form-control marginRight28 inputData nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
                                 </td>                                
                             </tr>
                             
                             <tr>
-                                <td class="col-sm-3"><label for="inputValue">Дата отправки в архив:</label>
+                                <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Дата отправки в архив:</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
+                                <td class="col-sm-9 nmc-text-align-left">
                                      {{currentObject.activeEndDate | date:'dd.MM.yyyy'}}
                                 </td>
                             </tr>                     
@@ -549,17 +560,17 @@
                 </div>                			
 		</div>
         </div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateTemplate(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault()">
 								Отменить
 							</button>
@@ -576,41 +587,42 @@
 </div>
 
 <!-- window: delete report template-->
-<div id="deleteObjectModal" class="modal fade" role="dialog"
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="deleteObjectLabel">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
 				Удаление 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label class="text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
-								Отмена
+								Отменить
 							</button>
 						</div>
 					</div>

@@ -8,30 +8,30 @@
     </ul>
 </div>    
 -->
-<div class="container-fluid">
+<div class="container-fluid nmc-main-workspace-header">
 <div class="row">
     <div class="col-md-3 noPadding">
-        <h2 class="noMargin pageTitle">Тарифы</h2>
+        <h2 class="noMargin nmc-h2">Тарифы</h2>
     </div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left pageFilterString">
-        <span class="input-group-addon pageFilterAddon"><i class="glyphicon glyphicon-filter"></i></span>
-        <input type="text" class="form-control pageFilter" ng-model="filter">
-        <span class="input-group-addon btn btn-default pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+        <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
+<!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
     </div>
     <div class="col-md-5"></div>
 </div>
 <div class="row">
-    <div class="col-md-12 noPadding">
+    <div class="col-md-12 noPadding nmc-main-workspace-header">
         <hr>
     </div>
 </div>    
 </div> 
 
 <div class="btn-toolbar marginBottom10">
-    <button class="btn btn-primary" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить тариф</button>
+    <button class="btn btn-primary nmc-main-add-button" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить тариф</button>
 </div>
-<table class="crud-grid table table-lighter table-striped table-condensed table-hover">
-    <tr class="info">
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+    <tr class="nmc-main-table-header">
         <th class="col-md-1">
       
         </th>
@@ -50,32 +50,32 @@
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">
-                    <i class="btn btn-xs btn-default glyphicon glyphicon-edit" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
+                    <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
                 </div>
             </div>
         </td>
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.tariffType.tariffTypeName}} 
         </td>
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span>
         </td>
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.rso.organizationFullName}}
         </td>
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.tariffOption.tariffOptionName}}
         </td> 
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.tariffPlanValue}}
         </td>
-        <td ng-class="{'default': object._default}">
+        <td ng-class="{'nmc-distinguish': object._default}">
             {{object.tariffPlanDescription}}
         </td>
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">                   
-                    <i class="btn btn-xs btn-default glyphicon glyphicon-trash" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    <i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                 </div>
             </div>
         </td>
@@ -83,41 +83,41 @@
 </table>
 
 <!-- window: delete tariff-->
-<div id="deleteObjectModal" class="modal fade" role="dialog"
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
-		<div class="modal-header">
-			<h3 id="deleteObjectLabel">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="deleteObjectLabel" class="nmc-h3">
 				Удаление 
 			</h3>
 		</div>
-		<div class="modal-body">
+		<div class="modal-body nmc-modal-body">
 			<form name="deleteContactForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15"> Вы хотите удалить  
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label class="text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
 					<label
-						class="text-warning"> ? </label>
+						class="text-warning nmc-form-label"> ? </label>
 				</p>
 			</form>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block"
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>
 
-						<div class="col-xs-offset-2 col-md-3">
-							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#deleteObject');">
-								Отмена
+								Отменить
 							</button>
 						</div>
 					</div>
@@ -132,22 +132,23 @@
 </div>
 
 <!-- Edit tariff-->
-<div id="editTariffModal" class="modal fade" role="dialog"
+<div id="editTariffModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editTariffLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content" ng-class="{'modalWindow_wide': set_of_objects_flag}">
-		<div class="modal-header">
-			<h3 id="editTariffLabel">
-				Тариф <input type="text" ng-model="currentObject.tariffPlanName">
+	<div class="modal-dialog  modal-content nmc-modal-dialog" ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="editTariffLabel" class="nmc-h3">
+				Тариф 
 			</h3>
 		</div>
-		<div class="modal-body "> 
+		<div class="modal-body nmc-modal-body"> 
             
-            <div role="tabpanel">
+            <div role="tabpanel" class="nmc-tab-panel">
 
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active" id="main_properties_tab"><a href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
-                <li role="presentation" id="set_of_objects_tab"><a href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;">Выбор объектов</a></li>
+                <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;">Выбор объектов</a></li>
               </ul>
 
               <!-- реализация вкладок -->
@@ -157,77 +158,83 @@
             
                     <div class="container-fluid">
                         <div class="row-fluid">
-                            <div class="col-md-12 well noPaddingBottom marginBottom10" style="">
-                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom">
+                            <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
-                                        <td><label for="inputDescription" >Описание</label>
+                                        <td><label for="inputName" class="nmc-form-label">Наименование</label>
                                         </td>
-                                        <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
+                                        <td class="nmc-text-align-left"><input type="text" class="form-control nmc-text-input-form" id="inputName" placeholder="Наименование"  ng-model="currentObject.tariffPlanName"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><label for="inputComment" >Комментарий</label>
+                                        <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                         </td>
-                                        <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
+                                        <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputType">Вид услуги</label>
+                                        <td><label for="inputComment" class="nmc-form-label">Комментарий</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
+                                        <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Вид услуги</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
-                                                <select class="form-control" id="inputType" style="/*width:329px;*/" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                                <select class="form-control nmc-select-form" id="inputType" style="" ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
                                                 </select>
                                             </div>    
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputRSO">РСО</label>
+                                        <td class="col-sm-3"><label for="inputRSO" class="nmc-form-label">РСО</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
+                                        <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
-                                                <select class="form-control" id="inputRSO" style="/*width:329px;*/" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
+                                                <select class="form-control nmc-select-form" id="inputRSO" style="" ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationFullName for obj in rsos">
                                                 </select>
                                             </div>    
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputOption">Опция</label>
+                                        <td class="col-sm-3"><label for="inputOption" class="nmc-form-label">Опция</label>
                                         </td>
-                                        <td class="textAlign_left col-sm-9">
+                                        <td class="nmc-text-align-left col-sm-9">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffOption.keyname==null)}">
-                                                <select class="form-control" id="inputOption" style="/*width:329px;*/" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                                <select class="form-control nmc-select-form" id="inputOption" style="" ng-model="currentObject.tariffOption.keyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
                                                 </select>
                                             </div>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputStartDate">Срок действия</label>
+                                        <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Срок действия</label>
                                         </td>
-                                        <td class="textAlign_left col-sm-9">  
+                                        <td class="nmc-text-align-left col-sm-9">  
 
                                             <span class="form-group" ng-class="{'has-error':!checkDateIntervalWithRightNull(startDateFormat, endDateFormat)}">
-                                            <div class="col-sm-1 paddingTop10"><label>c</label></div>
+                                            <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">c</label></div>
                                                         <div class="col-sm-5 noPadding">
                                                             <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
-                                                                <input class="form-control inputData noMargin" type="date" ng-model="startDateFormat"> 
+                                                                <input class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="startDateFormat"> 
                                                             </div>    
                                                         </div>    
-                                                        <div class="col-sm-1 paddingTop10 paddingLeft5"><label>по</label></div>
+                                                        <div class="col-sm-1 paddingTop10 paddingLeft5"><label class="nmc-form-label">по</label></div>
                                                         <div class="col-sm-5 paddingLeft10">
-                                                            <input class="form-control inputData noMargin" type="date" ng-model="endDateFormat">
+                                                            <input class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="endDateFormat">
                                                         </div>
                                             </span>                
                                     
                                         </td>                         
                                     </tr>                           
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputValue">Стоимость</label>
+                                        <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Стоимость</label>
                                         </td>
-                                        <td class="col-sm-9 textAlign_left">
-                                            <div class="col-sm-3 noPadding form-group" ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
-                                                <input class="form-control inputDigitalData" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
+                                        <td class="col-sm-9 nmc-text-align-left">
+                                            <div class="col-sm-3 noMargin noPadding form-group" ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
+                                                <input class="form-control inputDigitalData nmc-text-input-form" type="text" id="inputValue" placeholder=""  ng-model="currentObject.tariffPlanValue">
                                             </div>
                                             <div class="col-sm-9 paddingTop10">
                                                 руб <sub>(копейки указываются через точку)</sub> 
@@ -235,7 +242,7 @@
                                         </td>
                                     </tr> 
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default">По умолчанию
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" class="nmc-checkbox-form">По умолчанию
                                         </td>
                                     </tr> 
                                 </table>
@@ -247,23 +254,23 @@
                     <div class="container-fluid">
                         <div class="row-fluid">
                
-                             <div class="col-md-6 object_list" id="object_list">
-                                 <div><label>Доступные объекты</label></div>
+                             <div class="col-md-6 nmc-object-list nmc-object-list nmc-modal-panel-with-table" id="object_list">
+                                 <div><label class="nmc-form-label">Доступные объекты</label></div>
                                 <div>
-                                    <table class="table table-condensed table-striped" ng-disabled="currentObject.common">
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" ng-disabled="currentObject.common">
                                         <tr ng-repeat="object in availableObjects">
-                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="addObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="addObject(object)" class="nmc-checkbox-form">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-6 object_list" id="object_list">
-                                <div><label>Выбранные объекты</label></div>
+                            <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
+                                <div><label class="nmc-form-label">Выбранные объекты</label></div>
                                 <div>
-                                    <table class="table table-condensed table-striped" >
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)">{{object.fullName}}
+                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">{{object.fullName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -275,16 +282,16 @@
               </div>
             </div>
 		</div>
-		<div class="modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid ">
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
-							<input ng-disabled="!checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs"
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="!checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveObject()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
 							</button>

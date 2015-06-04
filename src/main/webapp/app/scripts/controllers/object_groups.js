@@ -11,6 +11,8 @@ angular.module('portalNMK')
     $scope.objectsBackup = [];
     $scope.currentGroup = {};
     
+    $scope.orderBy = { field: "contGroupName", asc: true };
+    
     $scope.objectUrl = "../api/subscr/contObjects";
     $scope.groupUrl = "../api/contGroup";
     
@@ -142,6 +144,11 @@ angular.module('portalNMK')
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
+    };
+    
+    $scope.setOrderBy = function (field) {
+        var asc = $scope.orderBy.field === field ? !$scope.orderBy.asc : true;
+        $scope.orderBy = { field: field, asc: asc };
     };
     
      //get the list of groups

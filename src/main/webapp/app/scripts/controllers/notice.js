@@ -18,9 +18,9 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.crudTableName= "../api/subscr/contObjects";
     
     $scope.tableDef = {
-        tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped excbt_tableIndicators",
+        tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
         hideHeader : false,
-        headerClassTR : "info",
+        headerClassTR : "nmc-main-table-header",
         columns : [ 
 
         {
@@ -31,13 +31,13 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         },{
             fieldName : "noticeType",
             header : "Тип",
-            headerClass : "col-md-1 hideM",
-            dataClass : "col-md-1 hideM"
+            headerClass : "col-md-1 nmc-hide",
+            dataClass : "col-md-1 nmc-hide"
         }, {
             fieldName : "noticeMessage",
             header : "Уведомление",
-            headerClass : "col-md-1 hideM",
-            dataClass : "col-md-1 hideM"
+            headerClass : "col-md-1 nmc-hide",
+            dataClass : "col-md-1 nmc-hide"
         },
         {
             fieldName : "noticeTypeCaption",
