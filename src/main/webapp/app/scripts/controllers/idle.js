@@ -1,4 +1,4 @@
-angular.module('portalNMK')
+angular.module('portalNMC')
     .controller('IdleCtrl', function($scope){
         $scope.$on('IdleEnd', function() {          
             $('#warnDialogModal').modal('hide');   

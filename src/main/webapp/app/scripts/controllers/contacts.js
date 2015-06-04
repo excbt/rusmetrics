@@ -1,4 +1,4 @@
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller(
 		'ContactsCtrl',
 		function($scope, $http){			

@@ -205,10 +205,13 @@
 .nmc-main-tab-panel {
     
 }
+    /* неактивная вкладка*/
 .nmc-main-tab-button{
 }
 
-.nmc-main-tab-button-active{
+    /* активная вкладка */
+.nmc-main-tab-panel > ul > li.active > a{
+    /*background-color: orange;*/
 }
 
 
@@ -217,13 +220,13 @@
 }
     /* неактивная вкладка*/
 .nmc-tab-button{
-    background-color: red;
-    color: white;
+    /*background-color: red;
+    color: white;*/
 }
 
     /* активная вкладка */
 .nmc-tab-panel > ul > li.active > a{
-    background-color: orange;
+ /*   background-color: orange;*/
 }
 
  

@@ -2,15 +2,15 @@
 
 /**
  * @ngdoc overview
- * @name portalNMK
+ * @name portalNMC
  * @description
- * # portalNMK
+ * # portalNMC
  *
  * Main module of the application.
  */
 
 var app = angular
-  .module('portalNMK', [
+  .module('portalNMC', [
     'ngAnimate',
     'ngCookies',
     'ngResource',
@@ -86,7 +86,7 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/contacts.html',
         controller: 'ContactsCtrl'
       })
-    .when('/control/object_groups', {
+    .when('/settings/object_groups', {
         templateUrl: 'views/object_groups.html',
         controller: 'ObjectGroupsCtrl'
       })

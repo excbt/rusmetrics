@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK').factory('notificationFactory', function () {
+angular.module('portalNMC').factory('notificationFactory', function () {
 	 
     return {
         success: function () {

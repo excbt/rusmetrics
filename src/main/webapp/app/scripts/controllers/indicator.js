@@ -1,5 +1,5 @@
 
-angular.module('portalNMK')
+angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
 
         //Определяем оформление для таблицы показаний прибора

@@ -3,7 +3,7 @@
  * Разобраться с активными-неактивными вариантами шаблона
  * Списки получателей не появляются ни хуя
  */
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller(
 		'DlvrCtrl',
 		function($scope, $http, notificationFactory){

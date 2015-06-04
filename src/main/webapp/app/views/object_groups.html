@@ -8,6 +8,22 @@
     </ul>
 </div>
 -->
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/reports/" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
 <div class="nmc-main-workspace-header">
     <h2 class="noMargin nmc-h2">Группы объектов</h2>
     <hr>
@@ -26,7 +42,7 @@
     <div class="tab-content">
 <!--      Варианты отчетов-->
         <div role="tabpanel" class="tab-pane fade in active" id="object_groups">
-            <div class="btn-group marginTop10">
+            <div class="btn-group">
 			<button class="btn btn-primary" data-target="#editGroupModal" data-toggle="modal" ng-click="addGroup()">Добавить группу объектов</button>
 		</div><br><br>    
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
