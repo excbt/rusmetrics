@@ -15,6 +15,8 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,6 +47,9 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContServiceDataController extends WebApiController {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(SubscrContServiceDataController.class);
 
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
@@ -417,7 +422,7 @@ public class SubscrContServiceDataController extends WebApiController {
 				.withSecondOfMinute(59).withMillisOfSecond(999);
 
 		List<ContServiceDataHWaterCsv> cvsDataList = contServiceDataHWaterService
-				.selectByContZPointCsvData(contObjectId, timeDetail, beginD,
+				.selectByContZPointCsvData(contZPointId, timeDetail, beginD,
 						endOfDay);
 
 		CsvMapper mapper = new CsvMapper();
