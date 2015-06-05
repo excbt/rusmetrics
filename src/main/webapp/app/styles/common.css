@@ -598,6 +598,11 @@ tr.nmc-main-table-header > th {
 /* Добавить в модальном окне */
 .nmc-add-button-in-modal {
 }
+
+    /* Кнопка в модальном окне*/
+.nmc-button-in-modal{
+
+}
  
 /* кнопка в таблице */
 .nmc-button-in-table {
@@ -607,10 +612,7 @@ tr.nmc-main-table-header > th {
     padding-left:5px !important;
     width:50px !important;
 }
-    /* Кнопка в модальном окне*/
-.nmc-button-in-modal{
 
-}
  
 /* Переключатель */
     /*Панель с переключателями*/
