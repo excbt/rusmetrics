@@ -975,3 +975,15 @@ tr.nmc-main-table-header > th {
 .nmc-undistinguish {
     font-weight: lighter;
 }
+
+/*------------------------------------------*/
+.span2, .span1 {
+        margin-left: 5px;
+        margin-right: 5px;
+        text-align: right;
+    }
+    
+input[type="checkbox"] {
+    margin-right: 5px;
+    
+}
