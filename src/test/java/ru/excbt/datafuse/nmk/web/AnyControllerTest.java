@@ -140,6 +140,8 @@ public class AnyControllerTest {
 	 */
 	protected void testJsonDelete(String urlStr) throws Exception {
 
+		logger.info("Testing DELETE on URL: {}", urlStr);
+
 		ResultActions deleteResultActions = mockMvc
 				.perform(delete(urlStr).with(testSecurityContext()).accept(
 						MediaType.APPLICATION_JSON));
@@ -150,22 +152,26 @@ public class AnyControllerTest {
 
 	/**
 	 * 
-	 * @param referencePeriod
+	 * @param sendObject
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String urlStr, Object referencePeriod,
+	protected Long testJsonCreate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		logger.info("Testing CREATE on URL: {}", urlStr);
 
 		String jsonBody = null;
 		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+			jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			fail();
 		}
+
+		logger.info("Request JSON: {}", jsonBody);
 
 		MockHttpServletRequestBuilder request = post(urlStr)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
@@ -191,81 +197,38 @@ public class AnyControllerTest {
 
 	/**
 	 * 
-	 * @param referencePeriod
+	 * @param sendObject
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String urlStr, Object referencePeriod)
+	protected Long testJsonCreate(String urlStr, Object sendObject)
 			throws Exception {
-		String jsonBody = null;
-		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
 
-		MockHttpServletRequestBuilder request = post(urlStr)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
-
-		ResultActions resultAction = mockMvc.perform(request);
-
-		resultAction.andDo(MockMvcResultHandlers.print());
-
-		resultAction.andExpect(status().isCreated());
-
-		String jsonContent = resultAction.andReturn().getResponse()
-				.getContentAsString();
-		Integer createdId = JsonPath.read(jsonContent, "$.id");
-		assertTrue(createdId > 0);
-		return Long.valueOf(createdId);
+		return testJsonCreate(urlStr, sendObject, null);
 	}
 
 	/**
 	 * 
-	 * @param referencePeriod
-	 * @param urlStr
-	 * @throws Exception
-	 */
-	protected void testJsonUpdate(String urlStr, Object referencePeriod)
-			throws Exception {
-		String jsonBody = null;
-		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
-
-		MockHttpServletRequestBuilder request = put(urlStr)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
-
-		ResultActions resultAction = mockMvc.perform(request);
-
-		resultAction.andDo(MockMvcResultHandlers.print());
-
-		resultAction.andExpect(status().isOk());
-	}
-
-	/**
-	 * 
-	 * @param referencePeriod
+	 * @param sendObject
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String urlStr, Object referencePeriod,
+	protected void testJsonUpdate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		logger.info("Testing UPDATE on URL: {}", urlStr);
 
 		String jsonBody = null;
 		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(referencePeriod);
+			jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
 		} catch (JsonProcessingException e) {
+			logger.error("Can't create json: {}", e);
 			e.printStackTrace();
 			fail();
 		}
+
+		logger.info("Request JSON: {}", jsonBody);
 
 		MockHttpServletRequestBuilder request = put(urlStr)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
@@ -280,6 +243,17 @@ public class AnyControllerTest {
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isOk());
+	}
+
+	/**
+	 * 
+	 * @param sendObject
+	 * @param urlStr
+	 * @throws Exception
+	 */
+	protected void testJsonUpdate(String urlStr, Object sendObject)
+			throws Exception {
+		testJsonUpdate(urlStr, sendObject, null);
 	}
 
 }

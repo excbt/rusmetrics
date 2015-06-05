@@ -19,6 +19,9 @@ local.properties
 .settings/
 .loadpath
 
+.tern-project
+.eclipse-pmd
+
 # Eclipse Core
 # Need for an Eclipse import form git
 ## .project
