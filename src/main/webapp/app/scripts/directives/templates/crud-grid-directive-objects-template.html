@@ -43,7 +43,7 @@
 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container"> 
      <tr class="default" >     
          <td style="padding:0;">
-             <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom nmc-table-container hideM">
+             <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom nmc-table-container nmc-hide">
                  <tr class="default">
                 <!--       Шапка таблицы-->
                         <th>
@@ -159,20 +159,20 @@
                     <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators(oldObject)">
                   <!-- Колонка для редактирования элементов                   -->
                         <td ng-show="bObject && !bList" class="col-md-1"> 
-	                        <i class="btn btn-default btn-xs glyphicon glyphicon-edit nmc-button-in-table"
+	                        <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table"
 	                        	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
 	                        	data-target="#showZpointOptionModal"
 	                        	data-toggle="modal"
 	                        	data-placement="bottom"
     	                    	title="Свойства точки учёта">
 	                        </i>
-    	                    <i class="btn btn-default btn-xs nmc-button-in-table"
+    	                    <i class="btn btn-xs nmc-button-in-table"
     	                    	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
     	                    	data-target="#showZpointExplParameters"
     	                    	data-toggle="modal"
     	                    	data-placement="bottom"
     	                    	title="Эксплуатационные параметры точки учёта">
-    	                    		<img height=15 width=15 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
+    	                    		<img height=12 width=12 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
     	                    </i>
     	                </td>
                         <td ng-repeat="oldColumn in oldColumns">
@@ -238,15 +238,15 @@
 
 
 <!--Show Zpoint options-->
-<div id="showZpointOptionModal" class="modal fade" role="dialog"
+<div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showZpointOptionLabel" tabindex="-1">
-	<div class="modal-dialog modal-content modalWindow_moreWide nmc-modal-window">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
 			<h3 id="showZpointOptionLabel" class="nmc-h3">
 				Свойства точки учета "{{zpointSettings.zpointName}}"
 			</h3>
 		</div>
-		<div class="modal-body"><!--  nmc-modal-body"> -->
+		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
             <div class="container-fluid"><!--  nmc-modal-panel"> -->
                 <div class="row-fluid">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
@@ -255,22 +255,22 @@
                                 <td class="col-sm-3">
                                     <label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
-                                	<input disabled="true" class="nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
+                                <td class="col-sm-9 nmc-text-align-left">
+                                	<input disabled="true" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="textAlign_left ">
-                                	<textarea disabled="true" class="nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
+                                <td class="nmc-text-align-left ">
+                                	<textarea disabled="true" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                   <label for="inputType">Тип</label>
                                 </td>
-                                <td class="textAlign_left "><input class="nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
+                                <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
                                     <div ng-show="zpointSettings.piped">
                                         <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.singlePipe">Однотрубная
                                         <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.doublePipe">Двухтрубная
@@ -281,16 +281,16 @@
                                 <td class="col-sm-3">
                                 	<label for="inputDevice">Прибор</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left ">
-                                	<input class="nmc-text-input-form" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
+                                <td class="col-sm-9 nmc-text-align-left ">
+                                	<input class="form-control nmc-text-input-form" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3">
                                 	<label for="inputPCO">РСО</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
-                                	<input class="nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
+                                <td class="col-sm-9 nmc-text-align-left">
+                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
                                 </td>
                             </tr>
                             <tr>
@@ -302,14 +302,14 @@
                                 			type="text"
                                 			id="inputRh"
                                 			pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]"
-                                			class="marginRight15"
+                                			class="form-control marginRight15 nmc-input-digital-data nmc-text-input-form"
                                 			ng-model="zpointSettings.checkoutTime">
                                 	<label for="inputRd" style="margin-left: 23px">Расчётный день : </label>
                                 	<input disabled="true"
                                 			type="text"
                                 			id="inputRd"
                                 			pattern="\d[0-3]\d[0-9]"
-                                			class="margin10"
+                                			class="margin10 nmc-input-digital-data nmc-text-input-form"
                                 			size="19"
                                 			style="margin-right: 0px"
                                 			ng-model="zpointSettings.checkoutDay">
@@ -390,13 +390,13 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
+                        <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
                                 ng-click="addRefRange()"
 								value="Сохранить" />
 								<!-- ng-disabled="!checkZpointSettingsFrom(zpointSettings)"  -->
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 nmc-cancel-button">
+						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -415,7 +415,7 @@
 
 <!-- Zpoint's exploatation paramters editing -->
 <div id="showZpointExplParameters"
-		class="modal fade"
+		class="modal fade nmc-modal-window"
 		role="dialog"
 		tabindex="-1"
 		aria-labelledby="showZpointOptionLabel">
@@ -426,7 +426,7 @@
 				Эксплуатационные параметры точки учета "{{zpointSettings.zpointName}}"
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body">
+		<div class="modal-body paddingRight10 paddingLeft10 nmc-modal-body">
           <div class="nmc-tab-panel" role="tabpanel" data-example-id="togglable-tabs">
             <ul id="myTab" class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active">
@@ -906,16 +906,16 @@
               <!-- </div> -->
            <!-- </div> -->
 		</div>
-		<div class="modal-footer">
+		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
+                        <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
                                 ng-disabled="!checkZpointSettingsFrom(zpointSettings)"   
 								ng-click="updateZpointSettings()"
 								value="Сохранить" />
 						</div>
-						<div class="pull-right col-xs-offset-2 col-md-3">
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
@@ -928,77 +928,77 @@
 </div>
 
 <!--Show Object options-->
-<div id="showObjOptionModal" class="modal fade" role="dialog"
+<div id="showObjOptionModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showObjOptionLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content">
-		<div class="modal-header">
-			<h3 id="showObjOptionLabel">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+			<h3 id="showObjOptionLabel" class="nmc-h3">
 				Свойства объекта учета "{{currentObject.fullName}}"
 			</h3>
 		</div>
-		<div class="modal-body ">
+		<div class="modal-body nmc-modal-body">
             <div class="container-fluid">
-                <div class="row-fluid">
-                    <div class="col-md-12  noPaddingBottom marginBottom10" style="">
-                        <table class="table table-lighter table-condensed table-hover noMarginBottom excbt_table">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputCode">Код объекта</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
+                                <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="textAlign_left"><textarea class="form-control" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputAddress">Адрес</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left"><input class="form-control" type="text" disabled="true" ng-model="currentObject.contManagements[0].organization.organizationName">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject.contManagements[0].organization.organizationName">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9"><select class="form-control inputData" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
                                     </select>
                                 </td>
                             </tr>       
                             <tr>
                                 <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
                                 </td>
-                                <td class="textAlign_left col-sm-9">
+                                <td class="nmc-text-align-left col-sm-9">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input class="form-control nmc-input-digital-data" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> <label class="control-label">&deg; C </label>
+                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> <label class="control-label">&deg; C </label>
                                     </div>
                                 </td>                               
                             </tr>                           
                             <tr>
                                 <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
                                 </td>
-                                <td class="col-sm-9 textAlign_left">
+                                <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
-                                    <input class="form-control nmc-input-digital-data" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
+                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
                                     </div>        
                                 </td>
                             </tr>
@@ -1007,16 +1007,16 @@
                 </div>  
             </div>        
 		</div>
-		<div class="modal-footer">
+		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid dialogMarginButtons">
 
 					<div class="row">
-                        <div class="col-xs-offset-2 col-md-3">
+                        <div class="col-xs-offset-6 col-md-3">
 							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs"
 								ng-click="updateObject(currentObject)"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
