@@ -310,7 +310,7 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 // Активация редактора эталонного интервала
                 var refRangeEditorActivation = function (){
                 	document.getElementById("div_ref_range_edit").style.display = "block";
-                	document.getElementById("i_ref_range_add").style.display = "none";
+                	/*document.getElementById("i_ref_range_add").style.display = "none";*/
                 }
                 
                 // Деактивация редактора эталонного интервала

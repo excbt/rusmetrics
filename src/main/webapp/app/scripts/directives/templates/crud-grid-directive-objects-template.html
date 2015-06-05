@@ -290,20 +290,70 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3 "><label for="inputRh">Расчетный час : </label>
+                                <td class="col-sm-3 ">
+                                	<label for="inputRh">Расчётный час : </label>
                                 </td>
-                                <td class="col-sm-9"><input disabled="true" type="text" id="inputRh" pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]" class="marginRight15" ng-model="zpointSettings.checkoutTime"> <label for="inputRd" style="margin-left: 23px">Расчетный день : </label><input disabled="true" type="text" id="inputRd" pattern="\d[0-3]\d[0-9]" class="margin10" size="19" style="margin-right: 0px" ng-model="zpointSettings.checkoutDay">
+                                <td class="col-sm-9">
+                                	<input disabled="true"
+                                			type="text"
+                                			id="inputRh"
+                                			pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]"
+                                			class="marginRight15"
+                                			ng-model="zpointSettings.checkoutTime">
+                                	<label for="inputRd" style="margin-left: 23px">Расчётный день : </label>
+                                	<input disabled="true"
+                                			type="text"
+                                			id="inputRd"
+                                			pattern="\d[0-3]\d[0-9]"
+                                			class="margin10"
+                                			size="19"
+                                			style="margin-right: 0px"
+                                			ng-model="zpointSettings.checkoutDay">
                                 </td>
+                            </tr>
+                            <tr>
+                            	<td class="col-sm-3">
+                            		<label for="inp_ref_range">Эталонный интервал:</label>
+                            	</td>
+        						<td class="col-sm-9">
+                            	  <div class="col-sm-4">
+                            	 	<div class="input-group">
+           							<span class="input-group-addon nmc-date-interval-form-addon"></span>
+            							<input id="inp_ref_range"
+            									date-range-picker
+            									disabled
+            									class="form-control date-picker nmc-date-interval-form"
+                								type="text"
+                								ng-model="beginDate"
+                								options="queryDateOptsRu"/>
+        						 	</div>
+        						  </div>
+        						<div class="col-sm-3">
+        							<i id="i_ref_range_add"
+            							title="Изменить эталонный интервал"
+            							class="btn btn-default btn-xs btn-primary nmc-add-button-in-modal"
+            							ng-click="showRefRange('new')">Изменить</i>
+            						<i id="i_ref_range_save"
+            							style="display:none"
+            							title="Указать эталонный интервал"
+            							class="btn btn-default btn-xs btn-primary nmc-add-button-in-modal"
+            							ng-click="showRefRange('new')">Указать эталонный интервал</i>
+                            	</div>
+                            	<div class="col-sm-4">
+                            		<span class="btn btn-default btn-xs btn-default" disabled>Рассчитан автоматически</span>
+                            		<!-- <span class="btn btn-default btn-xs btn-default" disabled>    Указан вручную    </span> -->
+                            	</div>
+                            	</td>
                             </tr>
                         </table>
                     </div>    
                 </div>
             <!-- Кнопка добавления эталонного интервала -->
-            <i id="i_ref_range_add"
+            <!-- <i id="i_ref_range_add"
             	title="Указать эталонный интервал"
             	class="btn btn-default btn-xs btn-primary nmc-add-button-in-modal"
             	ng-click="showRefRange('new')">Указать эталонный интервал</i>
-            </div>
+            </div> -->
 
         	<!-- Эталонный интервал -->
         	<div id= "div_ref_range_edit" class="container-fluid nmc-modal-panel" style="display:none">
@@ -330,6 +380,7 @@
         				</td>
         			</tr>
         		</table>
+        		</div>
         	</div>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
@@ -400,7 +451,8 @@
                         <div class="row nmc-modal-panel">
                             Метрологический 
                             диапазон:
-                         </div>    
+                         </div>
+                         <form class="form-horizontal">
                          <div class="row">
                            <input type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход объема за мин значение" ng-model="zpointSettings.summer.md_V_minChk" /> V &lt; Vmin
                          </div> 
@@ -418,7 +470,8 @@
                          </div>
                          <div class="row">
                            <input type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход давления за макс значение" ng-model="zpointSettings.summer.md_P_maxChk"/> P &gt; Pmax
-                         </div> 
+                         </div>
+                         </form>
                        </div>
                      </div>
                      <div class="col-md-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10 nmc-modal-panel">
@@ -428,6 +481,7 @@
                          <div>Рабочий режим потребления:</div>
                        </div>
                      </div>
+                     <form class="form-horizontal">
                      <div class="row-fluid">
                        <div class="col-xs-2 ">
                          <input type="checkbox" title="M1" class="nmc-checkbox-form" ng-model="zpointSettings.summer.wm_M1_chk"/> М1
@@ -456,7 +510,8 @@
                           </span>
 
                         </div>
-                      </div> 
+                      </div>
+                      </form> 
                                     <div class="row-fluid">
                                         <div class="col-xs-2 ">
                                             <input type="checkbox" title="M2" class="" ng-model="zpointSettings.summer.wm_M2_chk"/>М2
@@ -854,15 +909,13 @@
 <!--Show Object options-->
 <div id="showObjOptionModal" class="modal fade" role="dialog"
 	aria-labelledby="showObjOptionLabel" tabindex="-1">
-
 	<div class="modal-dialog  modal-content">
-
 		<div class="modal-header">
 			<h3 id="showObjOptionLabel">
 				Свойства объекта учета "{{currentObject.fullName}}"
 			</h3>
 		</div>
-		<div class="modal-body ">     
+		<div class="modal-body ">
             <div class="container-fluid">
                 <div class="row-fluid">
                     <div class="col-md-12  noPaddingBottom marginBottom10" style="">
