@@ -8,15 +8,16 @@
     </ul>
 </div> 
 -->
-<div class="col-md-10 noPadding"><h2 class="noMargin pageTitle">Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
+
+<div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
 <div class="col-md-2">
     <div class="btn-group">
-        <i ng-disabled="data.length==0" class="btn btn-lg glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
-        <i ng-disabled="notices.length==0" class="btn btn-lg glyphicon glyphicon-stats" ng-click="runChart()"></i>
+        <i ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
+        <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats" ng-click="runChart()"></i>
     </div>    
 </div>  
-<div class="col-md-12 noPadding marginBottom10">
-    <hr class="noMargin">
+<div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
+    <hr>
 </div>
 
 <div class="container-fluid">
@@ -24,26 +25,26 @@
         <div class="col-md-12 noPadding marginBottom10">
             <div class="col-md-4 noPadding">
                 <div class="col-md-4 paddingTop5">
-                    <label >
+                    <label class="nmc-form-label">
 
                         Задайте интервал дат</label>
                 </div>    
                 <div ng-controller="DataRangeSettings" class="col-md-8">
                         <div class="input-group">
-                            <span class="input-group-addon excbt_inputGroupAddon">с</span>
-                            <input date-range-picker class="form-control excbt_inputFormControl date-picker excbt_noLeftBorder"
-                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" />
-                        </div>
+                            <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                            <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu"/>
+                        </div> 
                 </div>
 
             </div>
             <div class="col-md-3">
                     <div class="col-md-3 paddingTop5">            
-                            <label >
+                            <label class="nmc-form-label">
                                  Показания</label>
                     </div>
                     <div class="col-md-9">
-                        <select class="form-control excbt_inputFormControl inputData" ng-model="timeDetailType" ng-change="getData(1)">
+                        <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="getData(1)">
                             <option value="24h">Суточные</option>
                             <option selected value="1h">Часовые</option>
                         </select>
@@ -52,9 +53,9 @@
               <div class="col-md-5">    
  
                  <div class="col-md-7">
-                    <label>Записей на странице:</label>
+                    <label class="nmc-form-label">Записей на странице:</label>
             <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-                    <select class="form-control inputDigitalData excbt_inputFormControl" ng-model="indicatorsPerPage"    >
+                    <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="indicatorsPerPage"    >
                         <option>5</option>
                         <option>10</option>
                         <option>20</option>
@@ -64,8 +65,8 @@
                     </select>
                 </div>
                 <div class="col-md-5">
-                    <label >Всего:</label>
-                     <input type="text" disabled class="form-control excbt_viewDataCount excbt_inputFormControl" ng-model="totalIndicators">
+                    <label class="nmc-form-label">Всего:</label>
+                     <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalIndicators">
                 </div>
                 
             </div>
@@ -73,7 +74,7 @@
     </div>
     
     <div class="row">
-        <table class="excbt_table_oneLineData" ng-class="tableDef.tableClass">
+        <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
             <tr ng-class="tableDef.headerClassTR">
                 <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                     {{column.header}}
@@ -81,7 +82,7 @@
 
             </tr>
             <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-                <td ng-repeat="column in tableDef.columns" class="textAlign_right" ng-class="column.dataClass || column.headerClass">
+                <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.dataClass || column.headerClass">
                     {{indicator[column.fieldName]}}
                 </td>
             </tr>
@@ -101,8 +102,8 @@
     </div>    
 <!--    In total-->
     <div class="row" ng-show="data.length >0">
-        <table class="crud-grid table table-lighter table-condensed table-hover tableIndicators">
-            <tr class="info">
+        <table class="crud-grid table table-lighter table-condensed table-hover nmc-table-nowrap-data">
+            <tr class="nmc-main-table-header">
                 <th class="col-md-1">
                 </th>
                 <th ng-repeat="column in intotalColumns" ng-class="column.class">
@@ -112,7 +113,7 @@
                         <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorAlert.png" ng-class="{'hideM':!divergenceIndicatorAlert_flag, 'showM':divergenceIndicatorAlert_flag}">
                         <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorCrit.png" ng-class="{'hideM':!divergenceIndicatorCrit_flag, 'showM':divergenceIndicatorCrit_flag}">
 -->
-                        <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.hint}}"/>
+                        <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.title}}"/>
                 </th>
             </tr>
             <tr>

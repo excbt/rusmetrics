@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('portalNMK').factory('crudDataFactory', ['$resource',
+angular.module('portalNMC').factory('crudDataFactory', ['$resource',
 		function($resource) {
 			return function(type) {
 				return $resource(type + '/:id', {id: '@id' 

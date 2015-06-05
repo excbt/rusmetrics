@@ -1,5 +1,5 @@
 
-angular.module('portalNMK')
+angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
 
         //Определяем оформление для таблицы показаний прибора
@@ -109,42 +109,42 @@ angular.module('portalNMK')
          "class":"col-md-1",
          "imgpath" : "",
          "imgclass": ""
-         ,"hint":""
+         ,"title":""
         },
         {"name": "m_out",
          "header":"Масса обратки",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
-         ,"hint":""
+         ,"title":""
         },
         {"name": "v_in",
          "header":"Объем подачи",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
-         ,"hint":""
+         ,"title":""
         },
         {"name": "v_out",
          "header":"Объем обратки",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
-         ,"hint":""
+         ,"title":""
         },
         {"name": "h_delta",
          "header":"ГКал отопления",
          "class":"col-md-1"
          ,"imgpath" : ""
          ,"imgclass": ""
-         ,"hint":""
+         ,"title":""
         }
     ];    
     
     $scope.tableDef = {
-        tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover excbt_tableIndicators",
+        tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
         hideHeader : false,
-        headerClassTR : "info",
+        headerClassTR : "nmc-main-table-header",
         columns : []
     };
     
@@ -250,8 +250,8 @@ angular.module('portalNMK')
                     {
 //            console.log(ALERT_IMG_PATH);         
                        element.imgpath=  ALERT_IMG_PATH;
-                        element.imgclass= "divergenceIndicatorImg";
-                        element.hint = "Итого и показания интеграторов расходятся НЕ более чем на 1";
+                        element.imgclass= "nmc-img-divergence-indicator";
+                        element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
                         return;
 
                     };
@@ -259,13 +259,13 @@ angular.module('portalNMK')
                     {  
 //            console.log(CRIT_IMG_PATH);            
                         element.imgpath = CRIT_IMG_PATH;
-                        element.imgclass= "divergenceIndicatorImg";
-                        element.hint = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
+                        element.imgclass= "nmc-img-divergence-indicator";
+                        element.title = "Итого и показания интеграторов расходятся БОЛЕЕ чем на 1";
                         return;
                     };
                     element.imgpath = EMPTY_IMG_PATH;
                     element.imgclass= "";
-                    element.hint = "";
+                    element.title = "";
                 });
 console.log(data);            
         });

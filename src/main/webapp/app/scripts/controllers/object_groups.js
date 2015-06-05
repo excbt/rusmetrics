@@ -1,4 +1,4 @@
-angular.module('portalNMK')
+angular.module('portalNMC')
 .controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', function($scope, crudGridDataFactory, notificationFactory){
     //
     $scope.groups = [

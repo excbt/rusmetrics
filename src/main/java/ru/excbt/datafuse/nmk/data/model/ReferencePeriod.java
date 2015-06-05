@@ -66,7 +66,7 @@ public class ReferencePeriod extends AbstractAuditableModel {
 	private String periodDescription;
 
 	@Column(name = "period_comment")
-	private String periodComemnt;
+	private String periodComment;
 
 	@Version
 	private int version;
@@ -127,14 +127,6 @@ public class ReferencePeriod extends AbstractAuditableModel {
 		this.periodDescription = periodDescription;
 	}
 
-	public String getPeriodComemnt() {
-		return periodComemnt;
-	}
-
-	public void setPeriodComemnt(String periodComemnt) {
-		this.periodComemnt = periodComemnt;
-	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -165,6 +157,14 @@ public class ReferencePeriod extends AbstractAuditableModel {
 
 	public void setTimeDetailType(String timeDetailType) {
 		this.timeDetailType = timeDetailType;
+	}
+
+	public String getPeriodComment() {
+		return periodComment;
+	}
+
+	public void setPeriodComment(String periodComment) {
+		this.periodComment = periodComment;
 	}
 
 }

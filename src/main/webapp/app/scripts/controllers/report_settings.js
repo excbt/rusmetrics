@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 
 app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
     

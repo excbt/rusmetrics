@@ -2,7 +2,7 @@
 
 /** @jsx React.DOM */
 
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 
 var TableComponentReact = React.createClass( {
 	    propTypes: {

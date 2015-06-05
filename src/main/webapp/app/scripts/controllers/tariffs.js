@@ -1,5 +1,5 @@
 'use strict';
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
     //set default values
     $scope.crudTableName = "../api/subscr/tariff";    

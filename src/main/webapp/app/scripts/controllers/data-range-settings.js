@@ -1,9 +1,9 @@
-var app = angular.module('portalNMK');
+var app = angular.module('portalNMC');
 app
     .controller('DataRangeSettings', function($scope, $rootScope){
                     $scope.navPlayerDates = {
-                            startDate :  moment().startOf('day'),
-                            endDate :  moment().endOf('day'),
+                            startDate :  moment($rootScope.reportStart).startOf('day') || moment().startOf('day'),
+                            endDate :  moment($rootScope.reportEnd).endOf('day') || moment().endOf('day'),
                         };
     
                     $scope.queryDateOptsRu = {
@@ -29,6 +29,26 @@ app
                                     'Посл 30 дней' : [
                                             moment().subtract(29, 'days').startOf('day'),
                                             moment().endOf('day') ]
+                                },
+                                startDate : moment().startOf('day'),
+                                endDate : moment().endOf('day'),
+
+                                format : 'DD.MM.YYYY'
+                                ,separator: " по "
+                            };
+                    $scope.queryDateOptsRuNoRanges = {
+                                locale : {
+                                    applyClass : 'btn-green',
+                                    applyLabel : "Применить",
+                                    fromLabel : "с",
+                                    toLabel : "по",
+                                    cancelLabel : 'Отмена',
+                                    customRangeLabel : 'Период',
+                                    daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+                                    firstDay : 1,
+                                    monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                                            'Май', 'Июнь', 'Июль', 'Август', 'Сентабрь',
+                                            'Октябрь', 'Ноябрь', 'Декабрь' ]
                                 },
                                 startDate : moment().startOf('day'),
                                 endDate : moment().endOf('day'),

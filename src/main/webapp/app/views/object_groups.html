@@ -8,6 +8,22 @@
     </ul>
 </div>
 -->
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/reports/" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
 <div class="nmc-main-workspace-header">
     <h2 class="noMargin nmc-h2">Группы объектов</h2>
     <hr>
@@ -26,7 +42,7 @@
     <div class="tab-content">
 <!--      Варианты отчетов-->
         <div role="tabpanel" class="tab-pane fade in active" id="object_groups">
-            <div class="btn-group marginTop10">
+            <div class="btn-group">
 			<button class="btn btn-primary" data-target="#editGroupModal" data-toggle="modal" ng-click="addGroup()">Добавить группу объектов</button>
 		</div><br><br>    
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
@@ -55,7 +71,7 @@
 		aria-labelledby="showGroupLabel" tabindex="-1">
         <div class="col-md-2"></div> 
         <div class="col-md-2 col-sm-2" ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}"></div>
-        <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 nmc-modal-dialog nmc-hide" ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
+        <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 noPadding nmc-modal-dialog nmc-hide" ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
                 <div class="modal-header nmc-modal-header">
                     <h3 class="nmc-h3">Доступные объекты:</h3>
                 </div>
@@ -99,7 +115,7 @@
                 </div>
 
         </div>
-		<div class="modal-dialog  modal-content col-md-7 col-sm-7 nmc-modal-dialog">
+		<div class="modal-dialog  modal-content col-md-7 col-sm-7 noPadding nmc-modal-dialog">
             
 			<div class="modal-header nmc-modal-header">
                 <button type="button" class="close closeButton" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
