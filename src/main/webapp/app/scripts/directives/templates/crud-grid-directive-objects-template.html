@@ -158,7 +158,8 @@
                     </thead>    
                     <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators(oldObject)">
                   <!-- Колонка для редактирования элементов                   -->
-                        <td ng-show="bObject && !bList" class="col-md-1"> 
+                        <td ng-show="bObject && !bList" class="col-md-1">
+                        <div>
 	                        <i class="btn btn-default btn-xs glyphicon glyphicon-edit nmc-button-in-table"
 	                        	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
 	                        	data-target="#showZpointOptionModal"
@@ -172,8 +173,9 @@
     	                    	data-toggle="modal"
     	                    	data-placement="bottom"
     	                    	title="Эксплуатационные параметры точки учёта">
-    	                    		<img height=15 width=15 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
+    	                    		<img height=13 width=13 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
     	                    </i>
+    	                 </div>
     	                </td>
                         <td ng-repeat="oldColumn in oldColumns">
                             <div ng-switch on="oldColumn.name">
