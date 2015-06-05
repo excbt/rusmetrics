@@ -100,22 +100,28 @@
 <!--                modal-content">-->
     <div class="modal-content nmc-modal-narrow-dialog">
 
+<!--
 		<div class="modal-header well nmc-modal-header noMarginBottom noPadding">
+            
+            
+		</div>
+-->
+		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop noPadding">
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <div class="input-group col-md-12 marginBottom10 nmc-search-form">
                 <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
                  <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
             </div>
+            <div class="nmc-object-list nmc-modal-panel-with-table">
+                <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                    <tr ng-repeat="object in objects | filter: objectfilter">
+                        <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form">{{object.fullName}}
+                        </td>    
+                    </tr>    
+                </table>
+            </div>    
 		</div>
-		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop noPadding nmc-object-list nmc-modal-panel-with-table">
-			<table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
-                <tr ng-repeat="object in objects | filter: objectfilter">
-                    <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form">{{object.fullName}}
-                    </td>    
-                </tr>    
-            </table>
-		</div>
-		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop noPadding">
+		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop noPadding paddingTop5">
 				<div class="container-fluid">
 
 					<div class="row">
@@ -153,7 +159,7 @@
 		<div class="modal-body nmc-modal-body">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label class="nmc-form-label" for="inputName">Тип</label>
@@ -199,7 +205,7 @@
 					<div class="row">
 
 
-						<div class="col-xs-offset-2 col-md-3 pull-right">
+						<div class="col-xs-offset-2 col-md-3 pull-right noPadding">
 							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');">
 								Ок

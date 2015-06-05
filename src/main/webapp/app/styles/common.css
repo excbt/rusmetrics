@@ -582,6 +582,13 @@ tr.nmc-main-table-header > th {
 .nmc-main-add-button {
     padding: 5px 10px 5px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
+.nmc-main-add-button:hover {
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
 }
  
 /* Добавить в таблице */
@@ -941,6 +948,9 @@ tr.nmc-main-table-header > th {
     padding-left: 15px;
 }
 
+.paddingRight10{
+    padding-right: 10px;
+}
 
 .noPaddingTop {
     padding-top: 0px;
