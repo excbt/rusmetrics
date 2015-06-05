@@ -258,18 +258,75 @@
 }
 
 /* Вкладки третьего уровня */
+    /* Панель вкладок*/
 .nmc-tab-panel {
 }
+    /* Нижняя граница под вкладками*/
+.nmc-tab-panel > .nav-tabs{
+    border-bottom-color: #337ab7 !important;
+}
+
+
     /* неактивная вкладка*/
 .nmc-tab-button{
     /*background-color: red;
     color: white;*/
-    border-radius: 0 45px 0 0 !important;
+/*
+    border-radius: 0 10px 0 0 !important;
+    border-color: #337ab7 !important;
+    border-bottom-color: transparent !important;
+    padding: 5px 5px !important;
+*/
+    border: none !important;
+    border-radius: 0 !important;
+    position:relative;
+/*    width:480px;*/
+    padding:.5em 2em .5em 1em!important;
+/*    margin:2em auto;*/
+    color:#fff;
+    background:#337ab7;
+    overflow:hidden;
+}
+
+    /* Правый верхний уголок неактивной вкладки*/
+.nmc-tab-button:before {
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    border-width:0 16px 16px 0; /* Данный трюк устраняет ошибку в браузерах webkit (сдвиг)  */
+    border-style:solid;
+    border-color:#fff #fff #337ab7 #337ab7; /* Для работы с .rounded */
+    background:#658E15; /* Для Opera при применении border-radius */
+    display:block; width:0; /* Только для Firefox 3.0 для снятия ограничений */
+    /* Опционально: тени */
+    -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+       -moz-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+            box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
 }
 
     /* активная вкладка */
 .nmc-tab-panel > ul > li.active > a{
  /*   background-color: orange;*/
+/*    border-bottom: transparent !important;*/
+    border: 1px solid #337ab7 !important;
+    border-bottom-color: transparent !important;
+}
+    /* Правый верхний уголок активной вкладки - затираем его, создавая эффект раскрытия вкладки*/
+.nmc-tab-panel > ul > li.active > a:before {
+    content:"";
+    position:absolute;
+    top:0;
+    right:0;
+    border-width:0 0px 0px 0; /* Данный трюк устраняет ошибку в браузерах webkit (сдвиг)  */
+    border-style:solid;
+    border-color:#fff #fff #fff #fff; /* Для работы с .rounded */
+    background:#fff; /* Для Opera при применении border-radius */
+    display:block; width:0; /* Только для Firefox 3.0 для снятия ограничений */
+    /* Опционально: тени */
+    -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+       -moz-box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
+            box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
 }
 
  

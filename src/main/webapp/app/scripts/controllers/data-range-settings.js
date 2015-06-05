@@ -2,8 +2,8 @@ var app = angular.module('portalNMC');
 app
     .controller('DataRangeSettings', function($scope, $rootScope){
                     $scope.navPlayerDates = {
-                            startDate :  moment().startOf('day'),
-                            endDate :  moment().endOf('day'),
+                            startDate :  moment($rootScope.reportStart).startOf('day') || moment().startOf('day'),
+                            endDate :  moment($rootScope.reportEnd).endOf('day') || moment().endOf('day'),
                         };
     
                     $scope.queryDateOptsRu = {

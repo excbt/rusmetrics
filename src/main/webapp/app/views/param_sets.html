@@ -344,7 +344,7 @@
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" ng-class="{'has-error':(currentObject.reportPeriodKey==null)}">
-                                                <select ng-disabled="isDisabled()" class="form-control input-sm inputData nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
+                                                <select ng-disabled="isDisabled()" class="form-control input-sm nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.reportPeriodKey" ng-options="period.keyname as period.caption for period in reportPeriods">
                                                 </select>
                                             </div>    
                                         </td>
@@ -357,11 +357,11 @@
                                                 <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
                                                 <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">c</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
+                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control inputData noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
+                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
                                                 </div>
                                                 </span>    
                                             </div>    
@@ -377,7 +377,7 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Тип файла</label>
                                         </td>
-                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control inputData nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
+                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
                                                 <option>XLS</option>
@@ -394,7 +394,7 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
 
-                                            <input class="form-control  marginRight28 inputData nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
                                         </td>
 
                                     </tr>
