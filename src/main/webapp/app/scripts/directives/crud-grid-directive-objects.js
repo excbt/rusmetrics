@@ -34,8 +34,11 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 //zpoint column names
                 $scope.oldColumns = angular.fromJson($attrs.zpointcolumns);
                 // Эталонный интервал
-                $scope.refRange = [];
+                $scope.refRange = {};
                 $scope.urlRefRange = '../api/subscr/contObjects/';
+                // Промежуточные переменные для начала и конца интервала
+                $scope.beginDate;
+                $scope.endDate;
                 
                 //Режимы функционирования (лето/зима)
                 $scope.cont_zpoint_setting_mode_check = [
@@ -240,9 +243,11 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                                 zps.winter = data[i];
                             }else if(data[i].settingMode == "summer"){
                                 zps.summer=data[i];
-                            }  
+                            }
                         };                 
-                     $scope.zpointSettings = zps;
+                        $scope.zpointSettings = zps;
+                        // Вызываем редактор эталонного периода
+                        $scope.showRefRange();
                     });
                 };
                 
@@ -251,11 +256,16 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                  *  Сделать загрузку интервала на сервер
                  */
                 
-                // Активация редактора эталонного интервала
-                $scope.showRefRange = function () {
-                	getRefRange($scope.currentObject.id, $scope.zpointSettings.id);
-                	document.getElementById("div_ref_range_edit").style.display = "block";
-                	document.getElementById("i_ref_range_add").style.display = "none";
+                // Подготовка редактора эталонного интервала
+                $scope.showRefRange = function (status) {
+                	if (status == 'new'){
+                		$scope.refRange = {};
+                		$scope.refRange.cont_zpoint_id = $scope.zpointSettings.id;
+                		refRangeEditorActivation();
+                	}
+                	else {
+                		getRefRange($scope.currentObject.id, $scope.zpointSettings.id);
+                	}
                 };
                 
                 // Запрос с сервера данных об эталонном интервале
@@ -263,25 +273,50 @@ angular.module('portalNMK').directive('crudGridObjects', function () {
                 	var url = $scope.urlRefRange + '/' + objectId + '/zpoints/' + zpointId + '/referencePeriod'; 
                 	$http.get(url)
 					.success(function(data){
-						$scope.refRange = data;
-						$scope.refRange.cont_zpoint_id = zpointId;
+						if(data[0] != null){
+							$scope.refRange = data[0];
+							$scope.refRange.cont_zpoint_id = zpointId;
+							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
+							$scope.endDate =  new Date($scope.refRange.periodEndDate);
+							refRangeEditorActivation();
+						}
+						else {
+							$scope.refRange.cont_zpoint_id = 'clear';
+							refRangeEditorDeactivation();
+						}
 					})
 					.error(function(e){
 						notificationFactory.errorInfo(e.statusText,e.description);
 					});
-                }
+                };
                 
                 // Отправка на сервер данных об эталонном интервале
                 $scope.addRefRange = function (){
                 	var url = $scope.urlRefRange + '/' + $scope.currentObject.id + '/zpoints/' + $scope.zpointSettings.id + '/referencePeriod';
                 console.log($scope.refRange);
+                	$scope.refRange.id = '';
+                	$scope.refRange.periodBeginDate = $scope.beginDate.getTime();
+                	$scope.refRange.periodEndDate = $scope.endDate.getTime();
                 	$http.post(url, $scope.refRange)
 					.success(function(data){
-						alert(data.id);
 					})
 					.error(function(e){
 						notificationFactory.errorInfo(e.statusText,e.description);
 					});
+                // Закрываем окно
+                	$('#showZpointOptionModal').modal('hide');
+                };
+                
+                // Активация редактора эталонного интервала
+                var refRangeEditorActivation = function (){
+                	document.getElementById("div_ref_range_edit").style.display = "block";
+                	document.getElementById("i_ref_range_add").style.display = "none";
+                }
+                
+                // Деактивация редактора эталонного интервала
+                var refRangeEditorDeactivation = function (){
+                	document.getElementById("div_ref_range_edit").style.display = "none";
+                	document.getElementById("i_ref_range_add").style.display = "block";
                 }
             
                 var successZpointSummerCallback = function (e) {
