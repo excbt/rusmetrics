@@ -463,6 +463,9 @@ tr.nmc-main-table-header > th {
  
 /* дата */
 .nmc-date-input-form {
+    font-size: 12px;
+    height: 24px;
+    padding: 5px;
 }
  
 /* интервал дат */
@@ -577,6 +580,8 @@ tr.nmc-main-table-header > th {
 
 /* Добавить в заголовке рабочей области */
 .nmc-main-add-button {
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
 }
  
 /* Добавить в таблице */
@@ -601,10 +606,13 @@ tr.nmc-main-table-header > th {
 }
  
 /* Переключатель */
+    /*Панель с переключателями*/
 .nmc-toggle {
 }
     /* Неактивный переключатель*/
 .nmc-toggle-button {
+/*    background: linear-gradient(to top, #FF6802,#FF811B);*/
+    padding: 5px 10px 5px 10px !important;
 }
 
     /* Активный переключатель*/
@@ -613,6 +621,8 @@ tr.nmc-main-table-header > th {
     background-color: aqua;
     color:red;
 */
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
 }
     /* Активный переключатель - наведен указатель на него*/
 .nmc-toggle > li.active > a:hover{
@@ -663,6 +673,7 @@ tr.nmc-main-table-header > th {
 .nmc-modal-dialog{
 }
 
+    /* Классы задающие ширину модального окна*/
 .nmc-modal-wide-dialog{
     width: 1200px; 
 }
@@ -679,11 +690,14 @@ tr.nmc-main-table-header > th {
 .nmc-modal-header {
     background-color: #225685;
     color: #FFFFFF;
-    height: 50px;
+    height: 30px;
+    padding-top: 7px;
 }
  
 /* Футер */
 .nmc-modal-footer {
+    padding-top: 5px;
+    height: 30px;
 }
  
 /* Рабочая панель */
@@ -692,12 +706,15 @@ tr.nmc-main-table-header > th {
 
 /* Тело модального окна (фон)*/
 .nmc-modal-body{
+    padding-right: 0;
+    padding-left: 0;
 }
  
 /* Поле с таблицей */
 .nmc-modal-panel-with-table{
 }
-
+/* поле с таблицей колонок*/    /* поле с таблицей объектов*/
+/* устанавливаем у них прокрутку*/
 .nmc-modal-panel-with-table.nmc-column-list, .nmc-modal-panel-with-table.nmc-object-list{
     overflow-y: scroll;
 }
@@ -706,11 +723,11 @@ tr.nmc-main-table-header > th {
     /* Вспогомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
         и вариантов отчетов
     */
-    /* Высота листа доступных колонок отчета*/
+    /* Высота листа с колоноками отчета*/
 .nmc-column-list  {
     height: 372px;
 }
-    /* Высота листа доступных объектов*/
+    /* Высота листа с объектами*/
 .nmc-object-list  {
     height: 520px;
 }
@@ -722,10 +739,6 @@ tr.nmc-main-table-header > th {
 .nmc-object-list-button  {
    padding-top: 250px;
 }
-    /* Включение скролинга */
-/*#system1_default_cols, #system1_define_cols, #system2_default_cols, #system2_define_cols, #object_list     {
-      overflow-y: scroll;
-    }*/
 
     /* Разметка модального окна выбора объектов на странице Уведомления*/
 /*.excbt_selectObjectWindow > .modal-backdrop {*/
@@ -782,14 +795,16 @@ tr.nmc-main-table-header > th {
 .nmc-h1 {
 }
 
+    /*Заголовок страниц*/
 .nmc-h2 {
     /*white-space: nowrap;*/
     color: #555555;
     /*font-size: 200%;*/
     font: bold 200% arial;
 }
-
+    /* Заголовок модального окна*/
 .nmc-h3 {
+    font-size: 14px;
     margin-top: 0;
 }
 

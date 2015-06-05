@@ -36,6 +36,26 @@ app
                                 format : 'DD.MM.YYYY'
                                 ,separator: " по "
                             };
+                    $scope.queryDateOptsRuNoRanges = {
+                                locale : {
+                                    applyClass : 'btn-green',
+                                    applyLabel : "Применить",
+                                    fromLabel : "с",
+                                    toLabel : "по",
+                                    cancelLabel : 'Отмена',
+                                    customRangeLabel : 'Период',
+                                    daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+                                    firstDay : 1,
+                                    monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                                            'Май', 'Июнь', 'Июль', 'Август', 'Сентабрь',
+                                            'Октябрь', 'Ноябрь', 'Декабрь' ]
+                                },
+                                startDate : moment().startOf('day'),
+                                endDate : moment().endOf('day'),
+
+                                format : 'DD.MM.YYYY'
+                                ,separator: " по "
+                            };
 
                         $scope.queryDateOptsEn = {
                                 locale : {
