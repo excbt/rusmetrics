@@ -70,13 +70,12 @@
     <div id="editGroupModal" class="modal fade nmc-modal-window" role="dialog"
 		aria-labelledby="showGroupLabel" tabindex="-1">
         <div class="col-md-2"></div> 
-        <div class="col-md-2 col-sm-2" ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}"></div>
+        <div class="modal-sm col-md-2 col-sm-2" ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}"></div>
         <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 noPadding nmc-modal-dialog nmc-hide" ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
                 <div class="modal-header nmc-modal-header">
                     <h3 class="nmc-h3">Доступные объекты:</h3>
                 </div>
                 <div class="modal-body nmc-modal-body">
-                <br>
                     <div class="container-fluid">
                         <div class="row-fluid">
                             <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" style="">
@@ -118,11 +117,10 @@
 		<div class="modal-dialog  modal-content col-md-7 col-sm-7 noPadding nmc-modal-dialog">
             
 			<div class="modal-header nmc-modal-header">
-                <button type="button" class="close closeButton" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h3 class="nmc-h3">Группа объектов</h3>
 			</div>
     		<div class="modal-body nmc-modal-body">
-    		<br>
  	        	<div class="container-fluid">
  	            	<div class="row-fluid">
    	               		<div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel" style="">
@@ -187,6 +185,7 @@
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 
 		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteGroupLabel" class="nmc-h3">
 				Удаление 
 			</h3>

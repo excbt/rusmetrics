@@ -678,6 +678,7 @@ tr.nmc-main-table-header > th {
 
     /* Контейнер для шапки, тела и футера*/
 .nmc-modal-dialog{
+    margin-top: 130px;
 }
 
     /* Классы задающие ширину модального окна*/
@@ -703,8 +704,8 @@ tr.nmc-main-table-header > th {
  
 /* Футер */
 .nmc-modal-footer {
-    padding-top: 5px;
-    height: 30px;
+    padding-top: 6px;
+    height: 35px;
 }
  
 /* Рабочая панель */
@@ -713,8 +714,7 @@ tr.nmc-main-table-header > th {
 
 /* Тело модального окна (фон)*/
 .nmc-modal-body{
-    padding-right: 0;
-    padding-left: 0;
+    padding: 10px 0 0 0;
 }
  
 /* Поле с таблицей */
@@ -732,7 +732,7 @@ tr.nmc-main-table-header > th {
     */
     /* Высота листа с колоноками отчета*/
 .nmc-column-list  {
-    height: 372px;
+    height: 346px;
 }
     /* Высота листа с объектами*/
 .nmc-object-list  {
@@ -950,6 +950,11 @@ tr.nmc-main-table-header > th {
 
 .paddingRight10{
     padding-right: 10px;
+}
+
+.paddingLeftRight15{
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .noPaddingTop {
