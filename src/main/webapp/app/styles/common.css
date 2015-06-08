@@ -776,9 +776,16 @@ tr.nmc-main-table-header > th {
     /* Панель с выбранными объектами в модальном окне создания/редактирования группы объектов*/
 /*.editGroupWindowSelectedObjectsArea{*/
 .nmc-modal-panel-with-objects{  
-    height: 378px;
+    height: 380px;
     overflow-y: scroll;
-}    
+}
+
+    /* Панель с выбранными объектами в модальном окне создания/редактирования тарифов/вариантов отчета */
+/*.editGroupWindowSelectedObjectsArea{*/
+.nmc-modal-panel-with-objects-tp{  
+    height: 500px;
+    overflow-y: scroll;
+}  
 
  
 /*****************************

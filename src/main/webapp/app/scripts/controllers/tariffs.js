@@ -141,6 +141,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $scope.getAvailableObjects(0);
         
         $scope.set_of_objects_flag=false;
+        $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
         
         //settings for activate tab "Main options", when create window opened.        
         activateMainPropertiesTab();
@@ -153,6 +154,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         
         //settings for activate tab "Main options", when edit window opened. 
         $scope.set_of_objects_flag=false;
+        $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
         activateMainPropertiesTab();
     };
     
@@ -248,10 +250,51 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 
     };
     
+    $scope.removeSelectedObject = function(object){
+        $scope.availableObjects.push(object);
+        $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+    }
+    
+    $scope.addSelectedObjects = function(){
+    //console.log($scope.availableObjects);          
+        var tmpArray = angular.copy($scope.availableObjects);
+        for(var i =0; i<$scope.availableObjects.length; i++){
+            var curObject = $scope.availableObjects[i];
+
+            if (curObject.selected){
+    //console.log(curObject);                            
+    // console.log("curObject is performanced");               
+                var elem = angular.copy(curObject);
+                elem.selected = null;
+    //console.log(tmpArray.indexOf(curObject));  
+                var elementIndex = -1;
+                tmpArray.some(function(element,index,array){
+                    if (element.fullName === curObject.fullName){
+                        elementIndex = index;
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+                tmpArray.splice(elementIndex, 1);
+                $scope.selectedObjects.push(elem);
+                curObject.selected = null;
+            };
+        }
+        $scope.availableObjects = tmpArray;
+        $scope.showAvailableObjects_flag=false;
+    };    
+    
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+    
+    $scope.showAddObjectButton = function(){
+//console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
+//console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
+        return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
+    }
     
             //checkers            
     $scope.checkEmptyNullValue = function(numvalue){                    

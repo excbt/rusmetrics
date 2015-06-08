@@ -152,7 +152,55 @@
 <!-- Edit tariff-->
 <div id="editTariffModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editTariffLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content nmc-modal-dialog" ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">
+    
+    <div class="col-md-2"></div> 
+    <div class="modal-sm col-md-2 col-sm-2" ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}"></div>
+    <div class="modal-dialog modal-content modal-sm col-md-2 col-sm-2 noPadding nmc-modal-dialog nmc-hide" ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
+            <div class="modal-header nmc-modal-header">
+                <h3 class="nmc-h3">Доступные объекты:</h3>
+            </div>
+            <div class="modal-body nmc-modal-body">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" style="">
+
+<!--                                    <div id = "available_objects" class = "">-->
+                                    <table id="table_objects_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                                        <tr ng-repeat="object in availableObjects">
+                                            <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form"/>{{object.fullName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+<!--                                    </div>-->
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer nmc-modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-5 noPadding">
+                            <input type="submit" class="btn btn-primary btn-block btn-xs nmc-add-button-in-modal"
+
+                                ng-click="addSelectedObjects()"
+                                value="Добавить" />
+                        </div>
+                        <div class=" pull-right col-xs-offset-2 col-md-4 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button"
+                                ng-click="showAvailableObjects_flag=false">
+                                Закрыть
+                            </button>
+                        </div>
+
+                    </div>
+                </div>		
+            </div>
+
+    </div>
+    
+	<div class="modal-dialog  modal-content col-md-7 col-xs-7 noPadding nmc-modal-dialog">
+<!--        ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">-->
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="editTariffLabel" class="nmc-h3">
@@ -165,7 +213,7 @@
 
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false">Основные свойства</a></li>
+                <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Основные свойства</a></li>
                 <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;">Выбор объектов</a></li>
               </ul>
 
@@ -175,8 +223,8 @@
                 <div role="tabpanel" class="tab-pane fade in active" id="main_properties"> 
             
                     <div class="container-fluid noPadding">
-                        <div class="row-fluid">
-                            <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                            <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                     <tr>
                                         <td><label for="inputName" class="nmc-form-label">Наименование</label>
@@ -269,9 +317,10 @@
                     </div>   <!--container fluid-->   
                                       </div>    
                 <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
-                    <div class="container-fluid">
+                    <div class="container-fluid noPadding">
                         <div class="row-fluid">
                
+<!--
                              <div class="col-md-6 nmc-object-list nmc-object-list nmc-modal-panel-with-table" id="object_list">
                                  <div><label class="nmc-form-label">Доступные объекты</label></div>
                                 <div>
@@ -283,12 +332,18 @@
                                     </table>
                                 </div>
                             </div>
-                            <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
+-->
+                            <div class="col-md-12 nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
                                 <div><label class="nmc-form-label">Выбранные объекты</label></div>
                                 <div>
                                     <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">{{object.fullName}}
+                                            <td>
+<!--                                                <input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
+                                                {{object.fullName}}
+                                            </td>
+                                            <td><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+<!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                             </td>
                                         </tr>
                                     </table>
@@ -303,7 +358,10 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid ">
 					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
+                        <div class=" col-md-3">
+                             <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>
+                        </div>
+                        <div class="col-xs-offset-3 col-md-3">
 							<input ng-disabled="!checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveObject()"
 								value="Сохранить" />
