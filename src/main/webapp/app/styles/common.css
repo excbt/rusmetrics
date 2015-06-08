@@ -603,6 +603,12 @@ tr.nmc-main-table-header > th {
     color: #fff;
 }
 
+.nmc-add-button-in-modal:hover {
+/*    padding: 5px 10px 5px 10px;*/
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
     /* Кнопка в модальном окне*/
 .nmc-button-in-modal{
     padding: 5px 10px 5px 10px;
@@ -610,6 +616,13 @@ tr.nmc-main-table-header > th {
     color: #fff;
 }
 
+.nmc-button-in-modal:hover{
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
+    /* Кнопка-стрелка управления объектом в модальном окне*/
 .nmc-arrow-button-in-modal{
 /*
     padding: 5px 10px 5px 10px;
@@ -834,6 +847,7 @@ tr.nmc-main-table-header > th {
 }
     /* Заголовок модального окна*/
 .nmc-h3 {
+    font-weight: bold;
     font-size: 14px;
     margin-top: 0;
 }
