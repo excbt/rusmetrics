@@ -328,12 +328,11 @@
                    					</div>
                    				  </div>
                    				</div>
-                            	<span class="col-sm-12">&nbsp</span>
         						<div class="form-group col-sm-12 noPadding">
         								<div class="col-sm-1">
         									<label for="inp_ref_range_start">c:</label>
         								</div>
-        								<div class="col-sm-4">
+        								<div class="col-sm-3  noPadding">
         									<input id="inp_ref_range_start"
         											type="date"
         											class="form-control nmc-date-input-form"
@@ -343,14 +342,14 @@
         								<div class="form-group col-sm-1">
         									<label for="inp_ref_range_end">по:</label>
         								</div>
-        								<div class="col-sm-4">
+        								<div class="col-sm-3  noPadding">
         									<input id="inp_ref_range_end"
         											type="date"
         											class="form-control nmc-date-input-form"
         											ng-model="endDate"
         											disabled />
         								</div>
-        								<div class="col-sm-2 noPadding">
+        								<div class="col-sm-4">
         							    	<i id="i_ref_range_add"
 		            							title="Изменить эталонный интервал"
     		        							class="btn btn-default btn-xs btn-primary nmc-add-button-in-modal"
@@ -362,41 +361,8 @@
             									ng-click="addRefRange()">Сохранить</i>
                             			</div>
                             	</div>
-                    </div>    
-                </div>
-            <!-- Кнопка добавления эталонного интервала -->
-            <!-- <i id="i_ref_range_add"
-            	title="Указать эталонный интервал"
-            	class="btn btn-default btn-xs btn-primary nmc-add-button-in-modal"
-            	ng-click="showRefRange('new')">Указать эталонный интервал</i>
-            </div> -->
-
-        	<!-- Эталонный интервал -->
-<!--         	<div id= "div_ref_range_edit" class="container-fluid nmc-modal-panel" style="display:none">
-        	    <h3>Эталонный интервал</h3>
-        		<table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-        			<tr>
-        				<td>
-        					<div class="form-group col-sm-6">
-        						<label for="inp_ref_range_start">Начало периода:</label>
-        						<input id="inp_ref_range_start" type="date" class="form-control nmc-date-input-form" ng-model="beginDate" />
-        					</div>
-        					<div class="form-group col-sm-6">
-        						<label for="inp_ref_range_end">Конец периода:</label>
-        						<input id="inp_ref_range_end" type="date" class="form-control nmc-date-input-fotm" ng-model="endDate" />
-        					</div>
-        				</td>
-        			</tr>
-        		    <tr>
-        		    	<td>
-        		    		<div class="form-group col-sm-12">
-        						<label for="txtarea_ref_range_descr">Описание:</label>
-        						<textarea id="txtarea_ref_range_descr" class="form-control nmc-textarea-form" ng-model="refRange.periodDescription"></textarea>
-        					</div>
-        				</td>
-        			</tr>
-        		</table>
-        		</div> -->
+                       </div>    
+                 </div>
         	</div>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
