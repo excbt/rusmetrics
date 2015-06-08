@@ -348,6 +348,7 @@
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Основные свойства</a></li>
+                <li role="presentation" id="extra_properties_tab"><a class="nmc-tab-button" href="" aria-controls="extra_properties" data-target="#extra_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Дополнительные свойства</a></li>  
                 <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
               </ul>
 
@@ -454,6 +455,14 @@
                                         <td class="col-sm-9 nmc-text-align-left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject.???" class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject.???" class="nmc-checkbox-form">Упаковывать файлы отчета в ZIP архив.
+                                        </td>
+                                    </tr> 
 
                                 </table>
 
@@ -461,10 +470,27 @@
                         </div>
 
                     </div>
-                  </div>    
+                  </div> 
+<!--                  Вкладка с дополнительными свойствами -->
+                  <div role="tabpanel" class="tab-pane fade " id="extra_properties">
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
+                            <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
+                                        </td>
+                                    </tr>
+                            </table>    
+
+                        </div>
+                    </div>
+                </div>   
+<!--               Вкладка с выбранными объектами   -->
                 <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
                     <div class="container-fluid noPadding">
-                        <div class="row-fluid">
+                        <div class="row-fluid ">
                
 <!--
                              <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
