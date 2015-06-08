@@ -70,9 +70,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column(name="report_period")
 	private ReportPeriodKey reportPeriodKey;
 	
-	@Column(name = "report_paramset_date")
+	@Column(name = "report_paramset_one_date")
 	@Temporal (TemporalType.TIMESTAMP)
-	private Date paramsetDate;
+	private Date paramsetOneDate;
 	
 	@Column(name = "report_paramset_start_date")
 	@Temporal (TemporalType.TIMESTAMP)
@@ -140,15 +140,6 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setOutputFileType(ReportOutputFileType outputFileType) {
 		this.outputFileType = outputFileType;
-	}
-
-
-	public Date getParamsetDate() {
-		return paramsetDate;
-	}
-
-	public void setParamsetDate(Date paramsetDate) {
-		this.paramsetDate = paramsetDate;
 	}
 
 	public Date getParamsetStartDate() {
@@ -250,6 +241,14 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setReportPeriod(ReportPeriod reportPeriod) {
 		this.reportPeriod = reportPeriod;
+	}
+
+	public Date getParamsetOneDate() {
+		return paramsetOneDate;
+	}
+
+	public void setParamsetOneDate(Date paramsetOneDate) {
+		this.paramsetOneDate = paramsetOneDate;
 	}
 	
 }
