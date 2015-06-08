@@ -77,6 +77,7 @@ angular.module('portalNMC')
 //    };
     
     $scope.selectedGroup = function(group){
+        $scope.showAvailableObjects_flag = false;
         $scope.currentGroup = group;
         //get group objects
         var selectedObjectUrl = $scope.groupUrl+"/"+group.id+"/contObject";
@@ -90,6 +91,7 @@ angular.module('portalNMC')
     $scope.addGroup = function(){
         $scope.currentGroup = {};
         $scope.selectedObjects = [];
+        $scope.showAvailableObjects_flag = false;
         //get available objects
         var availableObjectUrl = $scope.groupUrl+"/0/contObject/available";
         $scope.getData(availableObjectUrl, "availableObjects");
@@ -101,10 +103,10 @@ angular.module('portalNMC')
         return result;
     };
     
-    $scope.selectObject = function(object){
-        $scope.selectedObjects.push(object);
-        $scope.availableObjects.splice($scope.availableObjects.indexOf(object), 1);
-    };
+//    $scope.selectObject = function(object){
+//        $scope.selectedObjects.push(object);
+//        $scope.availableObjects.splice($scope.availableObjects.indexOf(object), 1);
+//    };
     
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);

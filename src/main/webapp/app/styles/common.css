@@ -593,15 +593,29 @@ tr.nmc-main-table-header > th {
  
 /* Добавить в таблице */
 .nmc-add-button-in-table {
+    
 }
  
 /* Добавить в модальном окне */
 .nmc-add-button-in-modal {
+/*    padding: 5px 10px 5px 10px;*/
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
 }
 
     /* Кнопка в модальном окне*/
 .nmc-button-in-modal{
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
 
+.nmc-arrow-button-in-modal{
+/*
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+*/
 }
  
 /* кнопка в таблице */

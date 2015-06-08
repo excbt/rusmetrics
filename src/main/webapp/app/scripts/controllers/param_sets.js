@@ -3,7 +3,8 @@ var app = angular.module('portalNMC');
 
 app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDataFactory','notificationFactory',function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
     
-    $scope.set_of_objects_flag = false;
+    $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
+    $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
     $scope.columns = [
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
@@ -188,6 +189,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.selectedObjects = [];
 //console.log($scope.currentObject.common || !$scope.currentObject._active); 
         $scope.set_of_objects_flag = false;
+        $scope.showAvailableObjects_flag = false;
         activateMainPropertiesTab();
     };
     
@@ -201,6 +203,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.createParamset_flag = false;
         $scope.editParamset_flag = false;
         $scope.set_of_objects_flag = false;
+        $scope.showAvailableObjects_flag = false;
         $scope.currentSign = 9999;
         $scope.selectedObjects = [];
         //Устанавливаем активность вкладок по дефолту: Основные свойства - активная, Выбор объектов - неактивная
@@ -229,6 +232,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.paramsetEndDateFormat= (new Date());
         $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
         $scope.set_of_objects_flag=false;
+        $scope.showAvailableObjects_flag = false;
         $scope.setCurrentReportType(object);
         $scope.currentObject = {};
         $scope.currentObject._active = true;
@@ -261,6 +265,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         }
     //settings for activate tab "Main options", when edit window opened.
         $scope.set_of_objects_flag=false;
+        $scope.showAvailableObjects_flag = false;
 //        $('#main_properties_tab').addClass("active");
 //        $('#set_of_objects_tab').removeClass("active");
 //        $('#createParamsetModal').modal();
@@ -326,11 +331,46 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             });
     };
  
-    $scope.addObject = function(object){
-        $scope.addObject_flag = true;
-        $scope.currentObjectId = object.id;
-        objectPerform(true, object.id);
+//    $scope.addObject = function(object){
+//        $scope.addObject_flag = true;
+//        $scope.currentObjectId = object.id;
+//        objectPerform(true, object.id);
+//
+//    };
+    
+    $scope.removeSelectedObject = function(object){
+        $scope.availableObjects.push(object);
+        $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+    }
+    
+    $scope.addSelectedObjects = function(){
+    //console.log($scope.availableObjects);          
+        var tmpArray = angular.copy($scope.availableObjects);
+        for(var i =0; i<$scope.availableObjects.length; i++){
+            var curObject = $scope.availableObjects[i];
 
+            if (curObject.selected){
+    //console.log(curObject);                            
+    // console.log("curObject is performanced");               
+                var elem = angular.copy(curObject);
+                elem.selected = null;
+    //console.log(tmpArray.indexOf(curObject));  
+                var elementIndex = -1;
+                tmpArray.some(function(element,index,array){
+                    if (element.fullName === curObject.fullName){
+                        elementIndex = index;
+                        return true;
+                    }else{
+                        return false;
+                    }
+                });
+                tmpArray.splice(elementIndex, 1);
+                $scope.selectedObjects.push(elem);
+                curObject.selected = null;
+            };
+        }
+        $scope.availableObjects = tmpArray;
+        $scope.showAvailableObjects_flag=false;
     };
     
     $scope.removeObject = function(object){
@@ -373,6 +413,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         return $scope.currentObject.common || !$scope.currentObject._active;
     };
     
+    $scope.showAddObjectButton = function(){
+//console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
+//console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
+        return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
+    }
+    
     //checkers
     $scope.checkDateInterval = function(left, right){
         if ((left==null)|| (right==null)){return false;};
@@ -394,6 +440,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         &&intervalValidate_flag
         ;
     };
+    
+    
     
 //    $scope.$watch('currentObject',function(data){
 //console.log($scope.currentObject.common || !$scope.currentObject._active); 
