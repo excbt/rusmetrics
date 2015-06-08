@@ -64,6 +64,19 @@ var app = angular.module('portalNMC');
 //          var el = document.getElementById(el_id);
 //          el.className = el.className + "excbt_a_list_group_item_selected";
       };
+      
+      $scope.setDefaultMenuState = function(){
+          for (var k in $scope.menuMassive){
+//console.log(k);                    
+//console.log($cookies[k]); 
+              $cookies[k] = false;
+              $scope.menuMassive[k] = false;
+          };
+         $cookies.object_menu_item = true;         
+         $scope.menuMassive.object_menu_item=true;  
+//          var el = document.getElementById(el_id);
+//          el.className = el.className + "excbt_a_list_group_item_selected";
+      };
     
   }]);
 

@@ -31,13 +31,13 @@
     <![endif]-->
       
         <div ng-controller="IdleCtrl">
-              <div id="warnDialogModal" class="modal fade" role="dialog"
+              <div id="warnDialogModal" class="modal fade nmc-modal-window" role="dialog"
             aria-labelledby="warnLabel" tabindex="-1">
-                  <div class="modal-dialog  modal-content">
-                      <div class="modal-header">
-                       <h3 id="warnLabel">Автоматический выход из системы.</h3>
+                  <div class="modal-dialog  modal-content nmc-modal-dialog">
+                      <div class="modal-header nmc-modal-header">
+                       <h3 id="warnLabel" class="nmc-h3">Автоматический выход из системы.</h3>
                       </div>
-                      <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body">
+                      <div idle-countdown="countdown" ng-init="countdown=30" class="modal-body nmc-modal-body">
                           <div class="progress">
                               <div class="progress-bar progress-bar-info progress-bar-striped active" role="progressbar" aria-valuenow="{{progressbar(countdown)}}" aria-valuemin="0" aria-valuemax="100" ng-style="{width: (progressbar(countdown*3.33)+'%')}">
                               </div>
@@ -82,7 +82,7 @@
                             title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
                         </p></a></li>			
 
-                        <li><a href="../logout"
+                        <li><a href="../logout" ng-click="setDefaultMenuState();"
                             title='logout'><p> <b>Выход </b>
 						</p></a></li>
                     </ul>    
