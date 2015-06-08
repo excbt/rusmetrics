@@ -52,7 +52,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		ZipOutputStream zipOutputStream = new ZipOutputStream(fos);
 
 		try {
-			reportService.makeReport(EVENT_TEST_PARAMSET_ID,
+			reportService.makeReportById(EVENT_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), zipOutputStream, true);
 			zipOutputStream.close();
@@ -68,7 +68,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		ZipOutputStream zipOutputStream = new ZipOutputStream(fos);
 
 		try {
-			reportService.makeReport(COMMERCE_TEST_PARAMSET_ID,
+			reportService.makeReportById(COMMERCE_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), zipOutputStream, true);
 			zipOutputStream.close();
@@ -83,7 +83,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeConsT1Report.pdf");
 
 		try {
-			reportService.makeReport(CONS_T1_TEST_PARAMSET_ID,
+			reportService.makeReportById(CONS_T1_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), fos, false);
 		} finally {
@@ -97,7 +97,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeConsT2Report.pdf");
 		
 		try {
-			reportService.makeReport(CONS_T2_TEST_PARAMSET_ID,
+			reportService.makeReportById(CONS_T2_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), fos, false);
 		} finally {
