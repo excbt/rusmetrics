@@ -6,13 +6,21 @@
 	});
 </script>
 
+<style>
+/* Стиль дива с чекбоксами в окне редактирования контакта или группы*/
+.nmc-table-with-chkbx-in-contacts {
+	height: 150px;
+	overflow: auto;
+}
+</style>
+
 <div>
     <!-- Вкладки -->
-	<div role="tabpanel">
+	<div role="tabpanel" class="nmc-main-tab-panel">
   	<!-- Навигационная полоса -->
 		<ul id="ul_contacts_tabs" class="nav nav-tabs" role="tablist">
-     		<li class="active"><a href="" aria-controls="div_contacts" data-target="#div_contacts" data-toggle="tab">Контакты</a></li>
-    		<li><a href="" aria-controls="div_contact_lists" data-target="#div_contact_lists" data-toggle="tab">Списки контактов</a></li>
+     		<li class="nmc-main-tab-button"><a href="" aria-controls="div_contacts" data-target="#div_contacts" data-toggle="tab">Контакты</a></li>
+    		<li class="nmc-main-tab-button"><a href="" aria-controls="div_contact_lists" data-target="#div_contact_lists" data-toggle="tab">Списки контактов</a></li>
 		</ul>
 	</div>
   <!-- содержимое вкладок -->
@@ -22,11 +30,11 @@
     <br>
 		<!-- Кнопка добавления контактов -->
 		<div class="btn-group">
-			<button class="btn btn-primary" data-target="#edit_contact" data-toggle="modal" ng-click="editItem('new', 'contact')">Добавить контакт</button>
+			<button class="btn nmc-main-add-button" data-target="#edit_contact" data-toggle="modal" ng-click="editItem('new', 'contact')">Добавить контакт</button>
 		</div><br><br>	
 		<!-- Таблица контактов -->
-   		<table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover">
-    		<tr id="tr_cnt_header" class="info">
+   		<table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+    		<tr id="tr_cnt_header" class="nmc-main-table-header">
     			<th class="col-md-1"></th>
     			<th class="col-md-4">Имя</th>
     			<th class="col-md-3">Телефон</th>
@@ -35,13 +43,13 @@
     		</tr>
     		<tr ng-repeat = "contact in contacts">
     			<td class="col-md-1">
-    				<i title='Редактировать' class='btn btn-default btn-xs glyphicon glyphicon-edit' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
+    				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
     			</td>
     			<td class="col-md-4">{{contact.userName}}</td>
      			<td class="col-md-3">{{contact.userPhone}}</td>
     			<td class="col-md-3">{{contact.userEmail}}</td>
     			<td class="col-md-1">
-    				<i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' ng-click='delContact(contact)'></i>
+    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' ng-click='delContact(contact)'></i>
     			</td>
     		</tr>
     	</table>
@@ -51,21 +59,21 @@
     <br>
 		<!-- Кнопка добавления списков -->
 		<div class="btn-group">
-			<button class="btn btn-primary" ng-click="editItem('new', 'list')" data-target="#edit_list" data-toggle="modal" >Добавить список</button>
+			<button class="btn nmc-main-add-button" ng-click="editItem('new', 'list')" data-target="#edit_list" data-toggle="modal" >Добавить список</button>
 		</div><br><br>    
-		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover">
-			<tr id="tr_cnt_header" class="info">
+		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+			<tr id="tr_cnt_header" class="nmc-main-table-header">
 				<th class="col-md-1"></th>
     			<th class="col-md-10">Имя списка</th>
     			<th class="col-md-1"></th>
     		</tr>
     		<tr ng-repeat = "list in lists">
     			<td class="col-md-1">
-    				<i title='Редактировать' class='btn btn-default btn-xs glyphicon glyphicon-edit' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
+    				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
     			</td>
     			<td class="col-md-10">{{list.groupName}}</td>
     			<td class="col-md-1">
-    			    <i title='Удалить' class='btn btn-default btn-xs glyphicon glyphicon-trash' ng-click='delList(list)'></i>
+    			    <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' ng-click='delList(list)'></i>
     			</td>
     		</tr>
 		</table>	
@@ -73,35 +81,36 @@
   </div>  
     <!-- Вспомогательные элементы -->
     <!-- Модальное окно редактирования контакта -->
-    <div id="edit_contact" class="modal fade" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
-		<div class="modal-dialog  modal-content">
-			<div class="modal-header">
-				<h3 id="cnt_edit_w_header">Изменение контакта</h3>
+    <div id="edit_contact" class="modal fade nmc-modal-window" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
+		<div class="modal-dialog modal-content nmc-modal-dialog">
+			<div class="modal-header nmc-modal-header">
+				<h3 id="cnt_edit_w_header" class="nmc-h3">Изменение контакта</h3>
 			</div>
-    		<div class="modal_body">
+    		<div class="modal_body nmc-modal-body">
     		<br>
  	        	<div class="container-fluid">
  	            	<div class="row-fluid">
-   	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+   	               		<div class="col-md-12 well noPaddingBottom marginBottom10">
     						<div class="col-md-6">
     							<form>
 	    							<label for="inp_cnt_name">Имя:</label>
-    								<input id="inp_cnt_name" type="text" class="form-control" ng-model="currentItem.userName"/>
+    								<input id="inp_cnt_name" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userName"/>
     								<br>
     								<label for="inp_cnt_tel">Телефон:</label>
-    								<input id="inp_cnt_tel" type="text" class="form-control" ng-model="currentItem.userPhone"/>
+    								<input id="inp_cnt_tel" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userPhone"/>
     								<br>
     								<label for="inp_cnt_email">Электронная почта:</label>
-    								<input id="inp_cnt_email" type="email" class="form-control" ng-model="currentItem.userEmail"/>
+    								<input id="inp_cnt_email" type="email" class="form-control nmc-text-input-form" ng-model="currentItem.userEmail"/>
     							</form>
     						</div>
     						<div class="col-md-6">
     							<label for="list_in_window">Включить в группы:</label>
-    							<div id="list_in_window" class="panel panel-default e_list_in_window">
-    								<table id="table_lists_in_window" class = "table table-striped table-condensed table-hover">
+    							<div id="list_in_window" class="panel panel-default nmc-modal-panel-with-table nmc-table-with-chkbx-in-contacts paddingLeft5 paddingRight5">
+    								<table id="table_lists_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
     								    <tr ng-repeat = "small_list in small_lists">
-   											<td><input id={{small_list.id}} type='checkbox' ng-model = "small_list.checked" /></td>
-   											<td>{{small_list.groupName}}</td>
+   											<td>
+   												<input id={{small_list.id}} class="nmc-checkbox-form" type='checkbox' ng-model = "small_list.checked" />
+   												{{small_list.groupName}}</td>
    										</tr>
     								</table>
     							</div>
@@ -111,16 +120,18 @@
     				</div>
     			</div>
     		</div>
-	    	<div class="modal-footer">
+	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                        	<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+							<input type="submit"
+								class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="addContact()"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button"
+								data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
 							</button>
@@ -132,27 +143,29 @@
     </div>
     
     <!-- Модальное окно редактирования списка контактов -->
-    <div id="edit_list" class="modal fade" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
-		<div class="modal-dialog modal-content">
-			<div class="modal-header">
-				<h3 id="lst_edit_w_header">Изменение списка контактов</h3>
+    <div id="edit_list" class="modal fade nmc-modal-window" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
+		<div class="modal-dialog modal-content nmc-modal-dialog nmc-modal-narrow-dialog">
+			<div class="modal-header nmc-modal-header">
+				<h3 id="lst_edit_w_header" class="nmc-h3">Изменение списка контактов</h3>
 			</div>
-    		<div class="modal_body">
+    		<div class="modal_body nmc-modal-body">
     		<br>
- 	        	<div class="container-fluid">
+ 	        	<div class="container-fluid nmc-modal-panel">
  	            	<div class="row-fluid">
    	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
    							<form>
     							<label for = "inp_lst_name">Имя:</label>
-   								<input id = "inp_lst_name" type="text" class="form-control" ng-model="currentItem.groupName" />
+   								<input id = "inp_lst_name" type="text" class="form-control nmc-text-input" ng-model="currentItem.groupName" />
    							</form>
    							<br>
    							<label for = "contacts_in_window">Включить контакты в список:</label>
-   							<div id = "contacts_in_window" class = "panel panel-default e_list_in_window">
-   								<table id="table_contacts_in_window" class = "table table-striped table-condensed table-hover"> 
+   							<div id = "contacts_in_window" class = "panel panel-default nmc-modal-panel-with-table nmc-table-with-chkbx-in-contacts paddingLeft5 paddingRight5">
+   								<table id="table_contacts_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx"> 
     								<tr ng-repeat="small_contact in small_contacts">
-   										<td><input id={{small_contact.id}} type='checkbox' ng-model='small_contact.checked' /></td>
-   										<td>{{small_contact.userName}}</td>
+   										<td>
+   											<input id={{small_contact.id}} class="nmc-checkbox-form" type='checkbox' ng-model='small_contact.checked' />
+   											{{small_contact.userName}}
+   										</td>
    									</tr>  
    								</table>
    							</div>
@@ -161,16 +174,16 @@
     				</div>
     			</div>
     		</div>
-	    	<div class="modal-footer">
+	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                        	<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
 								ng-click="addList()"
 								value="Сохранить" />
 						</div>
 						<div class="pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
 							</button>
