@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -104,6 +107,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	
 	@Version
 	private int version;
+	
+	@OneToMany (mappedBy = "reportParamset")
+	private Collection<ReportParamsetParamSpecial> paramSpecialList = new ArrayList<ReportParamsetParamSpecial>();
 	
 	public ReportTemplate getReportTemplate() {
 		return reportTemplate;
@@ -260,6 +266,15 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setAllRequiredParamsPassed(Boolean allRequiredParamsPassed) {
 		this.allRequiredParamsPassed = allRequiredParamsPassed;
+	}
+
+	public Collection<ReportParamsetParamSpecial> getParamSpecialList() {
+		return paramSpecialList;
+	}
+
+	public void setParamSpecialList(
+			Collection<ReportParamsetParamSpecial> paramSpecialList) {
+		this.paramSpecialList = paramSpecialList;
 	}
 	
 }
