@@ -154,12 +154,12 @@ angular.module('portalNMC')
 //    $scope.summary.firstData = {};
 //    $scope.summary.lastData = {};    
         
-    $rootScope.reportStart = moment().format('YYYY-MM-DD');
-    $rootScope.reportEnd = moment().format('YYYY-MM-DD');
+//    $rootScope.reportStart = moment().format('YYYY-MM-DD');
+//    $rootScope.reportEnd = moment().format('YYYY-MM-DD');
         
     $scope.totalIndicators = 0;
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page    
-    $scope.timeDetailType = "1h";    
+    $scope.timeDetailType = "24h";    
     $scope.data = [];    
     $scope.pagination = {
         current: 1
@@ -173,12 +173,14 @@ angular.module('portalNMC')
          $scope.contZPointName = $cookies.contZPointName;
          var contObject = $cookies.contObject;
          $scope.contObjectName = $cookies.contObjectName;
-
+        
+//console.log($scope.timeDetailType);
+//console.log($cookies.timeDetailType);        
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
          $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
         var table =  $scope.zpointTable;
-        
+//console.log(table);        
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
                 var iCol = 0;

@@ -33,7 +33,7 @@
         <div ng-controller="IdleCtrl">
               <div id="warnDialogModal" class="modal fade nmc-modal-window" role="dialog"
             aria-labelledby="warnLabel" tabindex="-1">
-                  <div class="modal-dialog  modal-content nmc-modal-dialog">
+                  <div class="modal-dialog  modal-content nmc-modal-dialog-low">
                       <div class="modal-header nmc-modal-header">
                        <h3 id="warnLabel" class="nmc-h3">Автоматический выход из системы.</h3>
                       </div>
@@ -54,7 +54,7 @@
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
 			<div id="navbar-container" class="container-fluid">
-				<div class="navbar-header">
+				<div class="navbar-header col-md-3">
 <!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
@@ -62,33 +62,39 @@
 							class="icon-bar"></span>
 					</button>
 -->
-					<a class="navbar-brand nmc-main-header-brand" href="#/">Портал НМК</a>
+					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>
 					
 				</div>
 			
 <!--              <ul class="nav navbar-nav">-->
 				
-<!--				<li><p align="center" style="font-size: 16px;"><span class="glyphicon"></span> (c) "НМК" 2015 </p></li>						-->
+<!--				<li>-->
+                <div class="col-md-7 nmc-main-header-title"> Система учета и обработки метрологической информации </div>
+<!--                </li>						-->
 <!--			</ul>-->
                 
-            <ul class="nav navbar-nav pull-right nmc-main-header-menu">	
-				
-                <li class="dropdown">
-                    <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
-							class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
-						</span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#/private/"
-                            title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
-                        </p></a></li>			
+                <ul class="nav navbar-nav col-md-2 nmc-main-header-menu">	
 
-                        <li><a href="../logout" ng-click="setDefaultMenuState();"
-                            title='logout'><p> <b>Выход </b>
-						</p></a></li>
-                    </ul>    
-                    
-                </li>
-			</ul>					
+<!--
+                    <li>Система учета и обработки метрологической информации
+                    </li>
+-->
+                    <li class="dropdown pull-right">
+                        <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
+                                class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
+                            </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
+                        <ul class="dropdown-menu">
+                            <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
+                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
+                            </p></a></li>			
+
+                            <li><a href="../logout" ng-click="setDefaultMenuState();"
+                                title='logout'><p> <b>Выход </b>
+                            </p></a></li>
+                        </ul>    
+
+                    </li>
+                </ul>					
 			</div>
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
@@ -257,14 +263,16 @@
     <script src="bower_components/angular-touch/angular-touch.js"></script>
     <script src="bower_components/jquery-ui/jquery-ui.js"></script>
     <script src="bower_components/toastr/toastr.js"></script>
+      <script src="bower_components/moment/moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
 
     <script src="vendor_components/angular-ui-tree-master/dist/angular-ui-tree.js"></script>
-    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>
+<!--    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>-->
     <script src="vendor_components/bootstrap-daterangepicker-master/daterangepicker.js"></script>
-    <script src="vendor_components/angular-daterangepicker.js"></script>
+<!--    <script src="vendor_components/angular-daterangepicker.js"></script>-->
+      <script src="vendor_components/angular-daterangepicker-master/js/angular-daterangepicker.js"></script>
       <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
       <script src="bower_components/ng-idle/angular-idle.min.js"></script>
       <script src="vendor_components/flot/jquery.flot.js"></script>
@@ -291,6 +299,7 @@
       <script src="scripts/controllers/contacts.js"></script>
       <script src="scripts/controllers/idle.js"></script>
       <script src="scripts/controllers/object_groups.js"></script>
+<!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->
     <script src="scripts/directives/crud-grid-data-factory.js"></script>

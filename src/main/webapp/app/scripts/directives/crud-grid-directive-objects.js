@@ -211,7 +211,9 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = object.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
-                    $cookies.timeDetailType="1h";
+                    $cookies.timeDetailType="24h";
+                    $rootScope.reportStart = moment().subtract(7, 'days').startOf('day').format('YYYY-MM-DD');
+                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
                     window.location.assign("#/objects/indicators/");
                 };
@@ -259,6 +261,7 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 
                 // Активация формы редактирования эталонного интервала
                 $scope.editRefRangeOn = function () {
+                    $scope.toggleFlag = true; //переключаем видимость кнопок Изменить/сохранить
 					document.getElementById('i_ref_range_save').style.display = 'block';
 					document.getElementById('i_ref_range_add').style.display = 'none';
 					document.getElementById('inp_ref_range_start').disabled = false;
@@ -267,6 +270,7 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 
                 // Деактивация формы редактирования эталонного интервала
                 $scope.editRefRangeOff = function () {
+                    $scope.toggleFlag = false; //переключаем видимость кнопок Изменить/сохранить
 					document.getElementById('i_ref_range_save').style.display = 'none';
 					document.getElementById('i_ref_range_add').style.display = 'block';
 					document.getElementById('inp_ref_range_start').disabled = true;
@@ -336,7 +340,7 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 };
                 
                 
-                //
+                // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){
                     $scope.userInfo = $rootScope.userInfo;
                     return $scope.userInfo._system;

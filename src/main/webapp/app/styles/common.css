@@ -15,6 +15,18 @@
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
 .nmc-main-header-brand{
     color: #FFFFFF !important;
+    margin-top: 3px;
+    width: 230px;
+    height: 40px;
+    background: url(../images/rm-2.jpg);
+}
+
+/*  Текст по центру шапки портала*/
+.nmc-main-header-title {
+    font: bold 190% arial;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 13px;
 }
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{
@@ -305,6 +317,28 @@
             box-shadow:0 1px 1px rgba(0,0,0,0.3), -1px 1px 1px rgba(0,0,0,0.2);
 }
 
+
+    /* на вкладку наведен курсор*/
+.nmc-tab-panel > ul > li > a:hover{
+    /*background-color: red;
+    color: white;*/
+/*
+    border-radius: 0 10px 0 0 !important;
+    border-color: #337ab7 !important;
+    border-bottom-color: transparent !important;
+    padding: 5px 5px !important;
+*/
+    border: none !important;
+    border-radius: 0 !important;
+    position:relative;
+/*    width:480px;*/
+    padding:.5em 2em .5em 1em!important;
+/*    margin:2em auto;*/
+    color:#fff;
+    background:#7BA9D0;
+    overflow:hidden;
+}
+
     /* активная вкладка */
 .nmc-tab-panel > ul > li.active > a{
  /*   background-color: orange;*/
@@ -347,6 +381,10 @@ table {
 
 td {
     vertical-align: middle !important;
+}
+
+.nmc-td-for-buttons{
+    width: 70px !important;
 }
 
     /* Таблица в основной рабочей области */
@@ -399,6 +437,7 @@ tr.nmc-main-table-header > th {
 /*    background-color: azure !mportant;*/
 }
 
+    /* Шапка вложенной таблицы*/
 .nmc-child-table-header{
      background-color: #646263; /*background color*/
      color: #FFFFFF;
@@ -458,7 +497,7 @@ tr.nmc-main-table-header > th {
 .nmc-select-form {
     font-size: 12px;
     height: 24px;
-    padding: 5px;
+    padding: 3px;
 }
  
 /* дата */
@@ -585,7 +624,14 @@ tr.nmc-main-table-header > th {
     color: #fff;
 }
 
+    /* на кнопку наведен курсор*/
 .nmc-main-add-button:hover {
+    padding: 5px 10px 5px 10px;
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
+    color: #fff;
+}
+    /* кнопка нажата*/
+.nmc-main-add-button:focus {
     padding: 5px 10px 5px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
@@ -605,20 +651,20 @@ tr.nmc-main-table-header > th {
 
 .nmc-add-button-in-modal:hover {
 /*    padding: 5px 10px 5px 10px;*/
-    background: linear-gradient(to top, #FF6802,#FF811B);
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
     color: #fff;
 }
 
     /* Кнопка в модальном окне*/
 .nmc-button-in-modal{
-    padding: 5px 10px 5px 10px;
+/*    padding: 5px 10px 5px 10px;*/
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
 }
 
 .nmc-button-in-modal:hover{
-    padding: 5px 10px 5px 10px;
-    background: linear-gradient(to top, #FF6802,#FF811B);
+/*    padding: 5px 10px 5px 10px;*/
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
     color: #fff;
 }
 
@@ -707,12 +753,17 @@ tr.nmc-main-table-header > th {
 
     /* Контейнер для шапки, тела и футера*/
 .nmc-modal-dialog{
-    margin-top: 130px;
+    margin-top: 10%;
+}
+
+    /* Контейнер для шапки, тела и футера - для диалогов удаления, перемещения и т.д. - чтобы они распологались визиульно по центру экрана*/
+.nmc-modal-dialog-low{
+    margin-top: 20%;
 }
 
     /* Классы задающие ширину модального окна*/
 .nmc-modal-wide-dialog{
-    width: 1200px; 
+    width: 1100px; 
 }
 
 .nmc-modal-some-wide-dialog{
@@ -763,6 +814,11 @@ tr.nmc-main-table-header > th {
 .nmc-column-list  {
     height: 346px;
 }
+    /* Правая граница для окна Конструктора отчета*/
+.nmc-column-list-border{
+    border: 1px solid #e3e3e3;
+/*    border-bottom: 1px solid #e3e3e3;*/
+}
     /* Высота листа с объектами*/
 .nmc-object-list  {
     height: 520px;
@@ -800,6 +856,19 @@ tr.nmc-main-table-header > th {
     overflow-y: scroll;
 }  
 
+.nmc-hr-in-modal{
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: black; /*line color*/
+    /*      #EEEEEE;*/
+    /*    -moz-use-text-color #FFFFFF;*/
+    border-style: solid none;
+/*    border-width: .5px 0;*/
+    margin: 2px 0;
+}
  
 /*****************************
  * Предупреждения и подсказки
@@ -936,6 +1005,13 @@ tr.nmc-main-table-header > th {
     padding-right : 0;
 }
 
+.padding5{
+    padding: 5px 5px 5px 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
 
 .paddingBottom10 {
     padding-bottom: 10px;
