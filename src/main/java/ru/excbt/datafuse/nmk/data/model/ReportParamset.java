@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -9,6 +12,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,9 +31,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_paramset")
-@SQLDelete(sql="UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause="deleted <> 1")
-@JsonIgnoreProperties (ignoreUnknown = true)
+@SQLDelete(sql = "UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause = "deleted <> 1")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportParamset extends AbstractAuditableModel {
 
 	/**
@@ -40,54 +44,54 @@ public class ReportParamset extends AbstractAuditableModel {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "report_template_id")
 	private ReportTemplate reportTemplate;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subscriber_id")
 	@JsonIgnore
-	private Subscriber subscriber;	
-	
-	@Column (name = "report_paramset_name")
+	private Subscriber subscriber;
+
+	@Column(name = "report_paramset_name")
 	private String name;
 
-	@Column (name = "report_paramset_description")
+	@Column(name = "report_paramset_description")
 	private String description;
 
-	@Column (name = "report_paramset_comment")
+	@Column(name = "report_paramset_comment")
 	private String comment;
 
-	@Enumerated(EnumType.STRING)	
-	@Column (name = "output_file_type")
+	@Enumerated(EnumType.STRING)
+	@Column(name = "output_file_type")
 	private ReportOutputFileType outputFileType;
 
-	@Column (name = "output_file_name_template")
+	@Column(name = "output_file_name_template")
 	private String outputFileNameTemplate;
-	
-	@ManyToOne(fetch = FetchType.EAGER)	
-	@JoinColumn(name="report_period", insertable = false, updatable = false)
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "report_period", insertable = false, updatable = false)
 	private ReportPeriod reportPeriod;
 
-	@Enumerated(EnumType.STRING)	
-	@Column(name="report_period")
+	@Enumerated(EnumType.STRING)
+	@Column(name = "report_period")
 	private ReportPeriodKey reportPeriodKey;
-	
+
 	@Column(name = "report_paramset_one_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date paramsetOneDate;
-	
+
 	@Column(name = "report_paramset_start_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date paramsetStartDate;
-	
+
 	@Column(name = "report_paramset_end_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date paramsetEndDate;
-	
+
 	@Column(name = "is_default")
 	private boolean _default;
 
 	@Column(name = "is_active")
 	private boolean _active;
-	
+
 	@Column(name = "active_start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date activeStartDate;
@@ -98,13 +102,16 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	@Column(name = "src_report_paramset_id")
 	private Long srcReportParamsetId;
-	
+
 	@Column(name = "all_required_params_passed")
 	private Boolean allRequiredParamsPassed;
-	
+
 	@Version
 	private int version;
-	
+
+	@OneToMany(mappedBy = "reportParamset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Collection<ReportParamsetParamSpecial> paramSpecialList = new ArrayList<ReportParamsetParamSpecial>();
+
 	public ReportTemplate getReportTemplate() {
 		return reportTemplate;
 	}
@@ -221,7 +228,6 @@ public class ReportParamset extends AbstractAuditableModel {
 		return reportPeriod;
 	}
 
-
 	public ReportPeriodKey getReportPeriodKey() {
 		return reportPeriodKey;
 	}
@@ -261,5 +267,14 @@ public class ReportParamset extends AbstractAuditableModel {
 	public void setAllRequiredParamsPassed(Boolean allRequiredParamsPassed) {
 		this.allRequiredParamsPassed = allRequiredParamsPassed;
 	}
-	
+
+	public Collection<ReportParamsetParamSpecial> getParamSpecialList() {
+		return paramSpecialList;
+	}
+
+	public void setParamSpecialList(
+			Collection<ReportParamsetParamSpecial> paramSpecialList) {
+		this.paramSpecialList = paramSpecialList;
+	}
+
 }
