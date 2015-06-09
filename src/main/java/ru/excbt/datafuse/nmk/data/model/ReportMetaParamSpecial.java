@@ -35,7 +35,7 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@JsonIgnore
 	private ReportType reportType;	
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "special_param_type")	
 	private ReportMetaParamSpecialType specialParamType;
 	
