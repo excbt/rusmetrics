@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -37,11 +39,11 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	@JsonIgnore
 	private ReportParamset reportParamset;
 
-	@ManyToOne
-	@JoinColumn(name = "param_special_id")
-	private ReportMetaParamSpecial reportMetaParamSpecial;
+//	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+//	@JoinColumn(name = "param_special_id", insertable = false, updatable = false)
+//	private ReportMetaParamSpecial reportMetaParamSpecial;
 
-	@Column(name = "param_special_id", insertable = false, updatable = false)
+	@Column(name = "param_special_id")
 	private Long reportMetaParamSpecialId;
 
 	@Column(name = "text_value")
@@ -62,8 +64,44 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDateValue;
 
+	@Column(name = "directory_value")
+	private String directoryValue;
+
 	@Version
 	private int version;
+
+	public static ReportParamsetParamSpecial newInstance(
+			ReportMetaParamSpecial reportMetaParamSpecial) {
+		checkNotNull(reportMetaParamSpecial);
+		ReportParamsetParamSpecial result = new ReportParamsetParamSpecial();
+		result.setReportMetaParamSpecialId(reportMetaParamSpecial.getId());
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public boolean isOneValueAssigned() {
+		int i = 0;
+		if (numericValue != null) {
+			i++;
+		}
+
+		if (textValue != null) {
+			i++;
+		}
+
+		if (startDateValue != null || endDateValue != null) {
+			i++;
+		}
+
+		if (directoryValue != null) {
+			i++;
+		}
+		return i == 1;
+	}
 
 	public ReportParamset getReportParamset() {
 		return reportParamset;
@@ -73,14 +111,14 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 		this.reportParamset = reportParamset;
 	}
 
-	public ReportMetaParamSpecial getReportMetaParamSpecial() {
-		return reportMetaParamSpecial;
-	}
-
-	public void setReportMetaParamSpecial(
-			ReportMetaParamSpecial reportMetaParamSpecial) {
-		this.reportMetaParamSpecial = reportMetaParamSpecial;
-	}
+//	public ReportMetaParamSpecial getReportMetaParamSpecial() {
+//		return reportMetaParamSpecial;
+//	}
+//
+//	public void setReportMetaParamSpecial(
+//			ReportMetaParamSpecial reportMetaParamSpecial) {
+//		this.reportMetaParamSpecial = reportMetaParamSpecial;
+//	}
 
 	public Long getReportMetaParamSpecialId() {
 		return reportMetaParamSpecialId;
@@ -136,5 +174,13 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getDirectoryValue() {
+		return directoryValue;
+	}
+
+	public void setDirectoryValue(String directoryValue) {
+		this.directoryValue = directoryValue;
 	}
 }

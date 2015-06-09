@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 
 @Service
@@ -16,6 +18,9 @@ public class ReportTypeService {
 
 	@Autowired
 	private ReportTypeRepository reportTypeRepository;
+
+	@Autowired
+	private ReportMetaParamSpecialRepository reportMetaParamSpecialRepository;
 
 	/**
 	 * 
@@ -37,5 +42,16 @@ public class ReportTypeService {
 		List<ReportType> resultList = reportTypeRepository
 				.findByKeynameIgnoreCase(key.name());
 		return resultList.size() == 1 ? resultList.get(0) : null;
+	}
+
+	/**
+	 * 
+	 * @param reportTypeKey
+	 * @return
+	 */
+	public List<ReportMetaParamSpecial> findReportMetaParamSpecialList(
+			ReportTypeKey reportTypeKey) {
+		return reportMetaParamSpecialRepository
+				.findByReportTypeKey(reportTypeKey);
 	}
 }

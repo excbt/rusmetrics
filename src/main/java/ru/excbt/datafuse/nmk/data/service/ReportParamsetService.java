@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -54,28 +55,34 @@ public class ReportParamsetService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param entity
+	 * @param reportParamset
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset createOne(ReportParamset entity) {
-		checkNotNull(entity);
-		checkArgument(entity.isNew());
+	public ReportParamset createOne(ReportParamset reportParamset) {
+		checkNotNull(reportParamset);
+		checkArgument(reportParamset.isNew());
 
-		ReportParamset result = reportParamsetRepository.save(entity);
+		ReportParamset result = reportParamsetRepository.save(reportParamset);
 
 		return result;
 	}
 
 	/**
 	 * 
-	 * @param entity
+	 * @param reportParamset
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset createOne(ReportParamset entity, Long[] contObjectIds) {
+	public ReportParamset createOne(ReportParamset reportParamset, Long[] contObjectIds) {
 
-		ReportParamset result = createOne(entity);
+		checkNotNull(reportParamset);
+
+		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
+			param.setReportParamset(reportParamset);
+		}
+
+		ReportParamset result = createOne(reportParamset);
 
 		if (contObjectIds != null) {
 			updateUnitToParamset(result.getId(), contObjectIds);
@@ -109,6 +116,10 @@ public class ReportParamsetService implements SecuredRoles {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
 
+		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
+			param.setReportParamset(reportParamset);
+		}
+		
 		ReportParamset result = null;
 		if (checkCanUpdate(reportParamset.getId())) {
 			result = reportParamsetRepository.save(reportParamset);
@@ -129,6 +140,9 @@ public class ReportParamsetService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset,
 			Long[] contObjectIds) {
+
+		checkNotNull(reportParamset);
+		
 		ReportParamset result = updateOne(reportParamset);
 
 		if (contObjectIds != null) {
@@ -262,7 +276,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 		if (contObjectIds != null) {
 			updateUnitToParamset(result.getId(), contObjectIds);
-		}		
+		}
 
 		return result;
 	}
