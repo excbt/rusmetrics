@@ -99,6 +99,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column(name = "src_report_paramset_id")
 	private Long srcReportParamsetId;
 	
+	@Column(name = "all_required_params_passed")
+	private Boolean allRequiredParamsPassed;
+	
 	@Version
 	private int version;
 	
@@ -249,6 +252,14 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setParamsetOneDate(Date paramsetOneDate) {
 		this.paramsetOneDate = paramsetOneDate;
+	}
+
+	public Boolean getAllRequiredParamsPassed() {
+		return allRequiredParamsPassed;
+	}
+
+	public void setAllRequiredParamsPassed(Boolean allRequiredParamsPassed) {
+		this.allRequiredParamsPassed = allRequiredParamsPassed;
 	}
 	
 }
