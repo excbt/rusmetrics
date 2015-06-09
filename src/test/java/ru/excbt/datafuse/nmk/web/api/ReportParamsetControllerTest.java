@@ -20,9 +20,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
@@ -37,6 +41,12 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
+	@Autowired
+	private ReportTypeService reportTypeService;
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
+	
 	@Test
 	public void testCommerceList() throws Exception {
 		testJsonGet("/api/reportParamset/commerce");
@@ -59,6 +69,21 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
 		reportParamset.setReportPeriodKey(ReportPeriodKey.LAST_MONTH);
 
+		List<ReportMetaParamSpecial> metaParamSpecial = reportTypeService
+				.findReportMetaParamSpecialList(ReportTypeKey.COMMERCE_REPORT);
+
+		assertTrue(metaParamSpecial.size() > 0);
+
+		{
+			ReportParamsetParamSpecial param = ReportParamsetParamSpecial
+					.newInstance(metaParamSpecial.get(0));
+			param.setReportParamset(reportParamset);
+			param.setTextValue("testValue");
+			assertTrue(param.isOneValueAssigned());
+
+			reportParamset.getParamSpecialList().add(param);
+		}
+
 		RequestExtraInitializer extraInializer = new RequestExtraInitializer() {
 
 			@Override
@@ -70,7 +95,28 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		String urlStr = "/api/reportParamset/commerce";
 
+		String objString = OBJECT_MAPPER.writeValueAsString(reportParamset);
+		logger.info("objString: {}", objString);
+
 		Long createdId = testJsonCreate(urlStr, reportParamset, extraInializer);
+
+
+		ReportParamset reportParamsetNew = reportParamsetService.findOne(createdId);
+		
+		
+		reportParamsetNew.getParamSpecialList().clear();
+		{
+			ReportParamsetParamSpecial param2 = ReportParamsetParamSpecial
+					.newInstance(metaParamSpecial.get(0));
+			param2.setReportParamset(reportParamset);
+			param2.setTextValue("testValue222");
+			assertTrue(param2.isOneValueAssigned());
+
+			reportParamsetNew.getParamSpecialList().add(param2);
+		}
+
+		testJsonUpdate(urlStr + "/" + createdId, reportParamsetNew);
+
 		testJsonDelete(urlStr + "/" + createdId);
 
 	}
