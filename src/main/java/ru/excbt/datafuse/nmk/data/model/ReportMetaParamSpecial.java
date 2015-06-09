@@ -7,11 +7,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="report_meta_param_special")
@@ -25,6 +29,11 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
 	private ReportTypeKey reportTypeKey;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	@JsonIgnore
+	private ReportType reportType;	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "special_param_type")	
@@ -77,6 +86,14 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	public void setSpecialParamRequired(Boolean specialParamRequired) {
 		this.specialParamRequired = specialParamRequired;
+	}
+
+	public ReportType getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(ReportType reportType) {
+		this.reportType = reportType;
 	}
 	
 }

@@ -205,7 +205,7 @@ public class ReportService {
 		}
 
 		try {
-			makeReport(reportParamset, subscriberId, reportDate, is,
+			makeReportByParamsetInternal(reportParamset, subscriberId, reportDate, is,
 					outputStreamWrapper, isZippedStream);
 		} finally {
 			if (isZippedStream) {
@@ -227,7 +227,7 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	public void makeReport(ReportParamset reportParamset, long subscriberId,
+	private void makeReportByParamsetInternal(ReportParamset reportParamset, long subscriberId,
 			LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 

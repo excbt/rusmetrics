@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNotNull;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDateTime;
@@ -44,67 +43,49 @@ public class ReportServiceTest extends JpaSupportTest {
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
-
 	@Test
 	public void testMakeEventReport() throws IOException {
-		FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeEventReport.zip");
-		ZipOutputStream zipOutputStream = new ZipOutputStream(fos);
 
-		try {
+		try (FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeEventReport.zip");) {
 			reportService.makeReportById(EVENT_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), zipOutputStream, true);
-			zipOutputStream.close();
-		} finally {
-			fos.close();
+					LocalDateTime.now(), fos, true);
 		}
 	}
 
 	@Test
 	public void testMakeComerceReport() throws IOException {
-		FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeCommerceReport.zip");
-		ZipOutputStream zipOutputStream = new ZipOutputStream(fos);
 
-		try {
+		try (FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeCommerceReport.zip");) {
 			reportService.makeReportById(COMMERCE_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
-					LocalDateTime.now(), zipOutputStream, true);
-			zipOutputStream.close();
-		} finally {
-			fos.close();
+					LocalDateTime.now(), fos, true);
 		}
 	}
-	
+
 	@Test
 	public void testMakeConsT1Report() throws IOException {
-		FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeConsT1Report.pdf");
 
-		try {
+		try (FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeConsT1Report.pdf");) {
 			reportService.makeReportById(CONS_T1_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), fos, false);
-		} finally {
-			fos.close();
 		}
-	}	
+	}
 
 	@Test
 	public void testMakeConsT2Report() throws IOException {
-		FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeConsT2Report.pdf");
-		
-		try {
+
+		try (FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeConsT2Report.pdf");) {
 			reportService.makeReportById(CONS_T2_TEST_PARAMSET_ID,
 					currentSubscriberService.getSubscriberId(),
 					LocalDateTime.now(), fos, false);
-		} finally {
-			fos.close();
 		}
-	}	
-	
+	}
 
 	@Test
 	public void testReportEventsBody() throws IOException {

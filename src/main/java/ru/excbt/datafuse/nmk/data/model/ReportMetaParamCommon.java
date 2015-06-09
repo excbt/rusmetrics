@@ -6,14 +6,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="report_meta_param_common")
+@Table(name = "report_meta_param_common")
 public class ReportMetaParamCommon implements Serializable {
 
 	/**
@@ -22,31 +28,36 @@ public class ReportMetaParamCommon implements Serializable {
 	private static final long serialVersionUID = -569411608287416733L;
 
 	@Id
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "report_type", insertable = false, updatable = false)
+	@JsonIgnore
+	private ReportType reportType;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
 	private ReportTypeKey reportTypeKey;
-	
-	@Column(name="one_date_required")
+
+	@Column(name = "one_date_required")
 	private Boolean oneDateRequired;
-	
-	@Column(name="start_date_required")
+
+	@Column(name = "start_date_required")
 	private Boolean startDateRequired;
-	
-	@Column(name="end_date_required")
+
+	@Column(name = "end_date_required")
 	private Boolean endDateRequired;
-	
-	@Column(name="one_cont_object_required")
+
+	@Column(name = "one_cont_object_required")
 	private Boolean oneContObjectRequired;
-	
-	@Column(name="many_cont_objects_required")
+
+	@Column(name = "many_cont_objects_required")
 	private Boolean manyContObjectsRequired;
-	
-	@Column(name="many_cont_objects_zip_only")
+
+	@Column(name = "many_cont_objects_zip_only")
 	private Boolean manyContObjectsZipOnly;
 
 	@Version
 	private int version;
-	
+
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
 	}
@@ -110,5 +121,13 @@ public class ReportMetaParamCommon implements Serializable {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
+
+	public ReportType getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(ReportType reportType) {
+		this.reportType = reportType;
+	}
+
 }
