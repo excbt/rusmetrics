@@ -1,9 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
@@ -25,9 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jayway.jsonpath.JsonPath;
+import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class ReportParamsetControllerTest extends AnyControllerTest {
 
@@ -41,12 +38,12 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	private ReportTemplateService reportTemplateService;
 
 	@Test
-	public void testCommParamset() throws Exception {
+	public void testCommerceList() throws Exception {
 		testJsonGet("/api/reportParamset/commerce");
 	}
 
 	@Test
-	public void testCreateCommerce() throws Exception {
+	public void testCommerceCreateDelete() throws Exception {
 		List<ReportTemplate> commTemplates = reportTemplateService
 				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
 						true);
@@ -55,46 +52,36 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		ReportTemplate rt = commTemplates.get(0);
 
-		ReportParamset rp = new ReportParamset();
-		rp.set_active(true);
-		rp.setActiveStartDate(new Date());
-		rp.setName("Created by REST");
-		rp.setOutputFileType(ReportOutputFileType.PDF);
-		rp.setReportPeriodKey(ReportPeriodKey.LAST_MONTH);
+		ReportParamset reportParamset = new ReportParamset();
+		reportParamset.set_active(true);
+		reportParamset.setActiveStartDate(new Date());
+		reportParamset.setName("Created by REST");
+		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
+		reportParamset.setReportPeriodKey(ReportPeriodKey.LAST_MONTH);
 
-		String jsonBody = null;
-		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(rp);
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-			fail();
-		}
+		RequestExtraInitializer extraInializer = new RequestExtraInitializer() {
 
-		ResultActions resultAction = mockMvc.perform(post(
-				"/api/reportParamset/commerce")
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("reportTemplateId", rt.getId().toString())
-				.content(jsonBody).with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.param("reportTemplateId", rt.getId().toString());
 
-		resultAction.andDo(MockMvcResultHandlers.print());
+			}
+		};
 
-		resultAction.andExpect(status().isCreated());
+		String urlStr = "/api/reportParamset/commerce";
 
-		String jsonContent = resultAction.andReturn().getResponse()
-				.getContentAsString();
-		Integer createdId = JsonPath.read(jsonContent, "$.id");
-		logger.info("createdId: {}", createdId);
+		Long createdId = testJsonCreate(urlStr, reportParamset, extraInializer);
+		testJsonDelete(urlStr + "/" + createdId);
 
 	}
 
 	@Test
 	public void testUpdateUnitParamset() throws Exception {
 
-		long[] objectIds = {18811504L, 18811505L};
+		long[] objectIds = { 18811504L, 18811505L };
 
-		logger.info("Array of {}", arrayToString (objectIds));
-		
+		logger.info("Array of {}", arrayToString(objectIds));
+
 		ResultActions resultAction = mockMvc
 				.perform(put(
 						String.format("/api/reportParamset/%d/contObjects",

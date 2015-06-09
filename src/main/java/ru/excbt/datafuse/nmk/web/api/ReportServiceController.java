@@ -6,8 +6,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,10 +40,11 @@ public class ReportServiceController extends WebApiController {
 
 		String ext();
 	}
+
 	
-	
-	private abstract class ZipReportMaker implements ReportMaker {
-	
+	private abstract class AbstractReportMaker implements ReportMaker {
+		public abstract boolean isZip();
+		
 		@Override
 		public boolean makeReport(long reportParamsetId,
 				LocalDateTime dateTime, OutputStream outputStream) {
@@ -53,66 +52,52 @@ public class ReportServiceController extends WebApiController {
 			checkNotNull(outputStream);
 			checkNotNull(dateTime);
 			boolean result = true;
-			ZipOutputStream zipOutputStream = new ZipOutputStream(
-					outputStream, Charset.forName("UTF-8"));
-			try {
-				reportService.makeReport(reportParamsetId,
-						currentSubscriberService.getSubscriberId(),
-						dateTime, zipOutputStream, true);
-			} finally {
-				try {
-					zipOutputStream.flush();
-					zipOutputStream.close();
-				} catch (IOException e) {
-					result = false;
-				}
 
-			}
+			reportService.makeReportById(reportParamsetId,
+					currentSubscriberService.getSubscriberId(), dateTime,
+					outputStream, isZip());
+
 			return result;
-		}
-		
+		}		
+	}
+	
+	
+	private abstract class ZipReportMaker extends AbstractReportMaker {
+
+		@Override
+		public boolean isZip() {
+			return true;
+		};
+
 		@Override
 		public String mimeType() {
 			return MIME_ZIP;
 		}
-		
+
 		@Override
 		public String ext() {
 			return EXT_ZIP;
 		}
 	}
 
-	private abstract class PdfReportMaker implements ReportMaker {
+	private abstract class PdfReportMaker extends AbstractReportMaker {
 		@Override
-		public boolean makeReport(long reportParamsetId,
-				LocalDateTime dateTime, OutputStream outputStream) {
-			checkArgument(reportParamsetId > 0);
-			checkNotNull(outputStream);
-			checkNotNull(dateTime);
-			boolean result = true;
-			try {
-				reportService.makeReport(reportParamsetId,
-						currentSubscriberService.getSubscriberId(),
-						dateTime, outputStream, false);
-			} finally {
-			}
-			return result;
-		}
-		
+		public boolean isZip() {
+			return false;
+		};
+
 		@Override
 		public String mimeType() {
 			return MIME_PDF;
 		}
-		
+
 		@Override
 		public String ext() {
 			return EXT_PDF;
 		}
-		
-		
+
 	}
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportServiceController.class);
 
@@ -135,7 +120,6 @@ public class ReportServiceController extends WebApiController {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-
 	/**
 	 * 
 	 * @param reportParamsetId
@@ -144,7 +128,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadCommerceReportZip(
+	public void doDowndloadCommerceReportDefaultZip(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -164,13 +148,13 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadEventReportZip(
+	public void doDowndloadEventReportDefaultZip(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
-					throws IOException {
-		
+			throws IOException {
+
 		ReportMaker reportMaker = eventReportMaker();
-		
+
 		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
 				response);
 	}
@@ -199,12 +183,12 @@ public class ReportServiceController extends WebApiController {
 			return;
 		}
 
-		ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream();
-
-		reportMaker.makeReport(reportParamsetId, LocalDateTime.now(),
-				memoryOutputStream);
-
-		byte[] byteArray = memoryOutputStream.toByteArray();
+		byte[] byteArray = null;
+		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
+			reportMaker.makeReport(reportParamsetId, LocalDateTime.now(),
+					memoryOutputStream);
+			byteArray = memoryOutputStream.toByteArray();
+		}
 
 		if (byteArray == null || byteArray.length == 0) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -239,7 +223,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT1ReportPdf(
+	public void doDowndloadConsT1ReportDefaultPdf(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
@@ -259,16 +243,16 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT2ReportPdf(
+	public void doDowndloadConsT2ReportDefaultPdf(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
-					throws IOException {
-		
+			throws IOException {
+
 		ReportMaker reportMaker = consT2ReportMaker();
-		
+
 		doDowndloadInternalReport(reportParamsetId, reportMaker, request,
 				response);
-		
+
 	}
 
 	/**
@@ -296,8 +280,7 @@ public class ReportServiceController extends WebApiController {
 			public String defaultFileName() {
 				return DEFAULT_COMMERCE_FILENAME;
 			}
-			
-			
+
 		};
 	}
 
@@ -307,13 +290,12 @@ public class ReportServiceController extends WebApiController {
 	 */
 	private ReportMaker consT1ReportMaker() {
 		return new PdfReportMaker() {
-			
+
 			@Override
 			public String defaultFileName() {
 				return DEFAULT_CONS_T1_FILENAME;
 			}
-			
-			
+
 		};
 	}
 
@@ -323,13 +305,12 @@ public class ReportServiceController extends WebApiController {
 	 */
 	private ReportMaker consT2ReportMaker() {
 		return new PdfReportMaker() {
-			
+
 			@Override
 			public String defaultFileName() {
 				return DEFAULT_CONS_T2_FILENAME;
 			}
-			
-			
+
 		};
 	}
 }

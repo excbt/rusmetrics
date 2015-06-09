@@ -8,10 +8,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -48,6 +50,7 @@ public class ReportService {
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
 	public final static boolean IS_ZIP_TRUE = true;
 	public final static boolean IS_ZIP_FALSE = !IS_ZIP_TRUE;
+	public final static Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportService.class);
@@ -69,8 +72,7 @@ public class ReportService {
 
 	@PersistenceContext
 	private EntityManager em;
-	
-	
+
 	/**
 	 * 
 	 * @param contObjectId
@@ -172,8 +174,9 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	public void makeReport(long reportParamsetId, long subscriberId,
-			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
+	public ReportParamset makeReportById(long reportParamsetId,
+			long subscriberId, LocalDateTime reportDate,
+			OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
 		checkArgument(subscriberId > 0);
@@ -185,10 +188,38 @@ public class ReportService {
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
 
+		ReportParamset result = reportParamset;
+
+		final boolean isZippedStream = (reportParamset.getOutputFileType() == ReportOutputFileType.ZIP)
+				|| isZip;
+
 		InputStream is = getReportParamsetTemplateBody(reportParamset
 				.getReportTemplate().getId());
-		makeReport(reportParamset, subscriberId, reportDate, is, outputStream,
-				isZip);
+
+		OutputStream outputStreamWrapper = null;
+		if (isZippedStream) {
+			outputStreamWrapper = new ZipOutputStream(outputStream,
+					UTF8_CHARSET);
+		} else {
+			outputStreamWrapper = outputStream;
+		}
+
+		try {
+			makeReportByParamsetInternal(reportParamset, subscriberId, reportDate, is,
+					outputStreamWrapper, isZippedStream);
+		} finally {
+			if (isZippedStream) {
+				try {
+					outputStreamWrapper.flush();
+					outputStreamWrapper.close();
+				} catch (IOException e) {
+					logger.error("Error during close ZIP output stream: {}", e);
+					result = null;
+				}
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -196,7 +227,7 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	public void makeReport(ReportParamset reportParamset, long subscriberId,
+	private void makeReportByParamsetInternal(ReportParamset reportParamset, long subscriberId,
 			LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 
@@ -320,12 +351,11 @@ public class ReportService {
 		return result;
 	}
 
-	
 	/**
 	 * 
 	 * @throws SQLException
 	 */
-	@Transactional (readOnly = true)
+	@Transactional(readOnly = true)
 	public void testConnection() throws SQLException {
 
 		checkState(em.isOpen());
@@ -338,13 +368,12 @@ public class ReportService {
 			public void execute(Connection connection) throws SQLException {
 				// TODO Auto-generated method stub
 
-				logger.info("Connection: {}",connection.toString());
+				logger.info("Connection: {}", connection.toString());
 			}
 		});
 
 		checkNotNull(sess);
 
 	}
-	
-	
+
 }

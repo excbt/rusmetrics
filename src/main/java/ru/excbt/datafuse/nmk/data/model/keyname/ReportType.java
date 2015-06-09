@@ -1,14 +1,22 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
+import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 
 @Entity
-@Table(name="report_type")
+@Table(name = "report_type")
 public class ReportType extends AbstractKeynameEntity {
 
 	/**
@@ -16,26 +24,32 @@ public class ReportType extends AbstractKeynameEntity {
 	 */
 	private static final long serialVersionUID = 6608655097029684171L;
 
-	@Column(name="caption")
+	@Column(name = "caption")
 	private String caption;
-	
-	@Column(name="report_type_name")
+
+	@Column(name = "report_type_name")
 	private String name;
 
-	@Column(name="report_type_description")
+	@Column(name = "report_type_description")
 	private String description;
 
-	@Column(name="report_type_comment")
+	@Column(name = "report_type_comment")
 	private String comment;
 
-	@Column(name="report_type_suffix")
+	@Column(name = "report_type_suffix")
 	private String suffix;
 
-	@Column(name="report_type_enabled")
+	@Column(name = "report_type_enabled")
 	private boolean _enabled;
-	
+
 	@Version
 	private int version;
+
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "reportType")
+	private ReportMetaParamCommon reportMetaParamCommon;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	private Collection<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
 
 	public String getCaption() {
 		return caption;
@@ -91,6 +105,24 @@ public class ReportType extends AbstractKeynameEntity {
 
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
-	}		
-	
+	}
+
+	public ReportMetaParamCommon getReportMetaParamCommon() {
+		return reportMetaParamCommon;
+	}
+
+	public void setReportMetaParamCommon(
+			ReportMetaParamCommon reportMetaParamCommon) {
+		this.reportMetaParamCommon = reportMetaParamCommon;
+	}
+
+	public Collection<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
+		return reportMetaParamSpecialList;
+	}
+
+	public void setReportMetaParamSpecialList(
+			Collection<ReportMetaParamSpecial> reportMetaParamSpecialList) {
+		this.reportMetaParamSpecialList = reportMetaParamSpecialList;
+	}
+
 }
