@@ -1,3 +1,44 @@
+<script>
+//exampleApp = angular.module('portalNMC');
+//exampleApp.controller('TestCtrl', function($scope, $interval) {
+//    $scope.date = {
+//        startDate: moment().subtract("days", 1),
+//        endDate: moment()
+//    };
+//    $scope.date2 = {
+//        startDate: moment().subtract("days", 1),
+//        endDate: moment()
+//    };
+//
+//    $scope.opts = {
+//        locale: {
+//            applyClass: 'btn-green',
+//            applyLabel: "Použít",
+//            fromLabel: "Od",
+//            toLabel: "Do",
+//            cancelLabel: 'Zrušit',
+//            customRangeLabel: 'Vlastní rozsah',
+//            daysOfWeek: ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
+//            firstDay: 1,
+//            monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září',
+//                'Říjen', 'Listopad', 'Prosinec'
+//            ]
+//
+//        },
+//        ranges: {
+//            'Last 7 Days': [moment().subtract('days', 6), moment()],
+//            'Last 30 Days': [moment().subtract('days', 29), moment()]
+//        }
+//    };
+//
+//    //Watch for date changes
+//    $scope.$watch('date', function(newDate) {
+//        console.log('New date set: ', newDate);
+//    }, false);
+//
+//});
+//    angular.bootstrap(document, ['portalNMC']);
+</script>
 <!--<div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>-->
 <!--
 <div>
@@ -33,7 +74,7 @@
                         <div class="input-group">
                             <span class="input-group-addon nmc-date-interval-form-addon">с</span>
                             <input date-range-picker class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="navPlayerDates" options="queryDateOptsRu"/>
+                                type="text" ng-model="indicatorDates" options="queryDateOptsIndicatorRu"/>
                         </div> 
                 </div>
 
@@ -45,8 +86,8 @@
                     </div>
                     <div class="col-md-9">
                         <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="getData(1)">
-                            <option value="24h">Суточные</option>
-                            <option selected value="1h">Часовые</option>
+                            <option selected value="24h">Суточные</option>
+                            <option value="1h">Часовые</option>
                         </select>
                     </div>
             </div>

@@ -52,31 +52,37 @@ var app = angular.module('portalNMC');
 //console.log($scope.menuMassive[k]);     
 //};
 //      set selected menu item
-      $scope.clickMenu = function(menu){
+    $scope.clickMenu = function(menu){
           for (var k in $scope.menuMassive){
-//console.log(k);                    
-//console.log($cookies[k]); 
+        //console.log(k);                    
+        //console.log($cookies[k]); 
               $cookies[k] = false;
               $scope.menuMassive[k] = false;
           };
          $cookies[menu] = true;         
          $scope.menuMassive[menu]=true;  
-//          var el = document.getElementById(el_id);
-//          el.className = el.className + "excbt_a_list_group_item_selected";
-      };
-      
-      $scope.setDefaultMenuState = function(){
-          for (var k in $scope.menuMassive){
-//console.log(k);                    
-//console.log($cookies[k]); 
+        //          var el = document.getElementById(el_id);
+        //          el.className = el.className + "excbt_a_list_group_item_selected";
+    };
+
+    $scope.setDefaultMenuState = function(){
+      for (var k in $scope.menuMassive){
+        //console.log(k);                    
+        //console.log($cookies[k]); 
               $cookies[k] = false;
               $scope.menuMassive[k] = false;
           };
          $cookies.object_menu_item = true;         
          $scope.menuMassive.object_menu_item=true;  
-//          var el = document.getElementById(el_id);
-//          el.className = el.className + "excbt_a_list_group_item_selected";
-      };
+        //          var el = document.getElementById(el_id);
+        //          el.className = el.className + "excbt_a_list_group_item_selected";
+    };
+      
+          // Проверка пользователя - системный/ не системный
+//    $scope.isSystemuser = function(){
+//        $scope.userInfo = $rootScope.userInfo;
+//        return $scope.userInfo._system;
+//    };
     
   }]);
 

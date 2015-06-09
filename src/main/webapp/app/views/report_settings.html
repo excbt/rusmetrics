@@ -223,7 +223,7 @@
 <div id="moveToArchiveModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="moveToArchiveLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -286,7 +286,7 @@
 		<div class="modal-body nmc-modal-body">
     
             <div class="container-fluid noPadding">
-                <div class="row-fluid col-md-5">
+                <div class="row-fluid col-md-5 noPaddingRight">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
@@ -386,7 +386,7 @@
 
                                     </table>
                                 </div>
-                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button nmc-column-list-border">
                                     <div class="btn-group">
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-right nmc-arrow-button-in-modal" ng-click="system1.defineColumns=addColumns(system1.defaultColumns, system1.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-left nmc-arrow-button-in-modal" ng-click="system1.defineColumns=removeColumns(system1.defineColumns)"></i>
@@ -416,7 +416,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button  nmc-column-list-border">
                                     <div class="btn-group">
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-up nmc-arrow-button-in-modal" ng-click="system1.defineColumns=moveColumnsUp(system1.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-down nmc-arrow-button-in-modal" ng-click="system1.defineColumns=moveColumnsDown(system1.defineColumns)"></i>
@@ -441,7 +441,7 @@
 
                                     </table>
                                 </div>
-                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button nmc-column-list-border" >
                                     <div class="btn-group">
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-right nmc-arrow-button-in-modal" ng-click="system2.defineColumns=addColumns(system2.defaultColumns, system2.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-left nmc-arrow-button-in-modal" ng-click="system2.defineColumns=removeColumns(system2.defineColumns)"></i>
@@ -471,7 +471,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-1 nmc-column-list nmc-column-list-button">
+                                <div class="col-md-1 nmc-column-list nmc-column-list-button  nmc-column-list-border">
                                     <div class="btn-group">
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-up nmc-arrow-button-in-modal" ng-click="system2.defineColumns=moveColumnsUp(system2.defineColumns)"></i>
                                         <i class="btn btn-xs glyphicon glyphicon-arrow-down nmc-arrow-button-in-modal" ng-click="system2.defineColumns=moveColumnsDown(system2.defineColumns)"></i>
@@ -483,22 +483,28 @@
 		</div>
         </div>
 		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid dialogMarginButtons">
+<!--
+				<div class="container-fluid">
 
 					<div class="row">
                         <div class="col-xs-offset-8 col-md-2">
-							<input type="submit" class="pull-right btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="saveTemplate()"
-								value="Сохранить" />
+-->
+<!--							<input type="submit" class="pull-right btn btn-primary btn-block btn-xs nmc-save-button"-->
+								<button class="btn btn-primary btn-xs nmc-save-button" ng-click="saveTemplate()"
+								value="Сохранить" >Сохранить</button>
+<!--
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-2 noPadding noMargin">
-							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#currentObject');setDefault()">
+-->
+<!--							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"-->
+								<button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal" ng-click="exit('#currentObject');setDefault()">
 								Отменить
 							</button>
+<!--
 						</div>
 					</div>
-				</div>		
+-->
+<!--				</div>		-->
 		</div>
 		<span class="alert alert-error dialogErrorMessage"
 			ng-show="errorOnSubmit"> Request error
@@ -522,8 +528,8 @@
 			</h3>    
 		</div>
 		<div class="modal-body nmc-modal-body">         
-            <div class="container noPadding">
-                <div class="row-fluid col-md-6">
+            <div class="container">
+                <div class="row-fluid col-md-6 noPadding">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
@@ -605,7 +611,7 @@
 <div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="deleteObjectLabel" class="nmc-h3">
