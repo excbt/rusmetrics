@@ -11,16 +11,13 @@
 
 <script type="text/javascript"></script>
 
-<!--<div>Портал / Настройки / Отчеты</div>-->
-<h2 class="noMargin nmc-h2">Отчеты</h2>
-<hr >
-<div role="tabpanel"l>
+<div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-target="#report_templates" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation" ><a href="#/settings/paramsets/" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation" class="active"><a href="" aria-controls="timetables" data-target="#timetables" role="tab" data-toggle="tab">Рассылки</a></li>
+    <li role="presentation" class="nmc-main-tab-button"><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-target="#report_templates" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation" class="nmc-main-tab-button"><a href="#/settings/paramsets/" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation" class="nmc-main-tab-button"><a href="" aria-controls="timetables" data-target="#timetables" role="tab" data-toggle="tab">Рассылки</a></li>
   </ul>
 
   <!-- реализация вкладок -->
@@ -32,25 +29,25 @@
         <!-- >>>>>>>>>>>>>>>>>> Код писать в этом div <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
         
             <!-- Содержимое вкладки с рассылками -->
-    <div id="div_contacts">
+    <div>
 		<h2>Рассылки</h2>
 		<!-- Кнопка добавления рассылок -->
 		<div class="btn-group">
-			<button class="btn btn-primary" data-target="#div_edit_delivery" data-toggle="modal" ng-click="editReportShedule('new')">Добавить рассылку</button>
+			<button class="btn nmc-main-add-button" data-target="#div_edit_delivery" data-toggle="modal" ng-click="editReportShedule('new')">Добавить рассылку</button>
 		</div><br><br>		
 		<!-- Таблица со списком рассылок -->
-   		<table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover">
-    		<tr id="tr_dlv_header" class="info">
+   		<table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+    		<tr id="tr_dlv_header" class="nmc-main-table-header">
     			<th class="col-md-1">&nbsp</th>
     			<th class="col-md-2">Название</th>
     			<th class="col-md-8">Описание</th>
     			<th class="col-md-1">&nbsp</th>
        		</tr>
        		<tr ng-repeat = "rep_shdl in rep_shdls">
-       			<td><i title='Изменить'	class='btn btn-default btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+       			<td><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
        			<td>{{rep_shdl.name}}</td>
        			<td>{{rep_shdl.description}}</td>
-       			<td><i title='Удалить'	class='btn btn-default btn-xs glyphicon glyphicon-trash' ng-click="delReportShedule(rep_shdl)"></i></td>
+       			<td><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' ng-click="delReportShedule(rep_shdl)"></i></td>
        		</tr>
     	</table>
     </div>
@@ -58,19 +55,18 @@
 
 <!-- Вспомогательные элементы -->
     <!-- Модальное окно редактирования списка контактов -->
-    <div id="div_edit_delivery" class="modal fade" role="dialog"
+    <div id="div_edit_delivery" class="modal fade nmc-modal-window" role="dialog"
 		aria-labelledby="showObjOptionLabel" tabindex="-1">
-		<div class="modal-dialog  modal-content">
-			<div class="modal-header">
-				<h3 id="div_dlvr_edit_w_header">Изменение рассылки</h3>
+		<div class="modal-dialog  modal-content nmc-modal-dialog">
+			<div class="modal-header nmc-modal-header">
+				<h3 id="div_dlvr_edit_w_header" class="nmc-h3">Изменение рассылки</h3>
 			</div>
-    		<div class="modal_body">
-    		<br>
+    		<div class="modal_body nmc-modal-body">
  	        	<div class="container-fluid">
  	            	<div class="row-fluid">
-   	               		<div class="col-md-12 well noPaddingBottom marginBottom10" style="">
+   	               		<div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
    	               			<form>
-		   	               		<table class="table table-lighter table-hover table-condensed table-striped">
+		   	               		<table class="table table-lighter table-hover table-condensed table-striped nmc-modal-main-table">
 	   	               				<tr>
 	   	               					<td>
 		   	               					<div class="form-group col-sm-12">
@@ -78,7 +74,7 @@
 		   										<input id="inp_dlvr_name"
 		   												type="text"
 		   												placeholder="Введите название рассылки..."
-		   												class="form-control"
+		   												class="form-control nmc-text-input-form"
 		   												ng-model="cur_rep_shdl.name"/>
 		   	               					</div>
 	   	               					</td>
@@ -90,7 +86,7 @@
 	   	               							<textarea id="txtarea_dlvr_descr"
 	   	               										type="textarea"
 	   	               										placeholder="Введите описание для рассылки..."
-	   	               										class="form-control"
+	   	               										class="form-control nmc-textarea-form"
 	   	               										ng-model="cur_rep_shdl.description">
 	   	               							</textarea>
 	   	               						</div>
@@ -101,7 +97,7 @@
 		   	               					<div class="form-group pull-left col-sm-6">
 		   	               						<label for="slct_rep_type">Тип отчёта:</label>
 		   	               							<select id="slct_rep_type"
-		   	               									class="form-control input-sm"
+		   	               									class="form-control  nmc-select-form"
 		   	               									ng-model="cur_rep_shdl.reportTemplate.reportTypeKey"
 		   	               									ng-options="rep_type.keyname as rep_type.caption for rep_type in rep_types"
 		   	               									ng-change="changeReportType()">
@@ -111,7 +107,7 @@
 		   	               						<label for="slct_rep_tmpl_var">Вариант шаблона:</label>
 		   	               						<select id="slct_rep_tmpl_var"
 		   	               								disabled
-		   	               								class="form-control input-sm"
+		   	               								class="form-control  nmc-select-form"
 		   	               								ng-model="cur_rep_shdl.reportParamset.id"
 		   	               								ng-options="paramset.id as paramset.name for paramset in paramsets">
 		   	               						</select>
@@ -123,7 +119,7 @@
 		   	               					<div class="form-group pull-left col-sm-6">
 		   	               						<label for="slct_period">Периодичность запуска</label>
 		   	               							<select id="slct_period"
-		   	               									class="form-control input-sm"
+		   	               									class="form-control  nmc-select-form"
 		   	               									ng-model="cur_rep_shdl.reportSheduleTypeKey"
 		   	               									ng-options="rep_act_type.keyname as rep_act_type.caption for rep_act_type in rep_act_types"
 		   	               									ng-change="activatePeriod()">
@@ -136,14 +132,14 @@
 	   	               										type="text"
 	   	               										disabled
 	   	               										placeholder="Введите число месяца..."
-	   	               										class="form-control input-sm"
+	   	               										class="form-control  nmc-text-input-form"
 	   	               										ng-model="time[2]">
 	   	               							</div>
 	   	               							<div id="div_day_of_week">
 	   	               							<label for="slct_day_of_week">День:</label>
 	   	               								<select id="slct_day_of_week"
 	   	               										disabled
-	   	               										class="form-control input-sm"
+	   	               										class="form-control  nmc-select-form"
 	   	               										ng-model="time[4]">
 	   	               									<option value = "1">Понедельник</option>
 	   	               									<option value = "2">Вторник</option>
@@ -160,7 +156,7 @@
 	   	               										type="date"
 	   	               										disabled
 	   	               										placeholder="Укажите дату..."
-	   	               										class="form-control input-sm"
+	   	               										class="form-control  nmc-date-input-form"
 	   	               										ng-model="time[3]">
 	   	               							</div>
 	   	               							<div id="div_daily" style="display:none">&nbsp</div> 
@@ -171,14 +167,14 @@
 	   	               									type="text"
 	   	               									disabled
 	   	               									placeholder="Час"
-	   	               									class="form-control input-sm"
+	   	               									class="form-control nmc-text-input-form"
 	   	               									ng-model="time[1]">
-	   	               							<span class="input-group-addon">:</span>
+	   	               							<span class="input-group-addon nmc-text-input-form">:</span>
    	               								<input id="inp_minute"
    	               										type="text"
    	               										disabled
    	               										placeholder="Минута"
-   	               										class="form-control input-sm"
+   	               										class="form-control  nmc-text-input-form"
    	               										ng-model="time[0]">
 	   	               						</div>
 	   	               					</td>
@@ -190,7 +186,7 @@
 	   	               								<div id="div_dlvr_type_slct" class="form-group pull-left col-sm-6">
 	   	               									<label for="slct_dlvr_type">Тип рассылки:</label>
 	   	               									<select id="slct_dlvr_type"
-	   	               											class="form-control input-sm"
+	   	               											class="form-control  nmc-select-form"
 	   	               											ng-model="cur_rep_shdl.sheduleAction1Key"
 		   	               										ng-options="rep_shdl_type.keyname as rep_shdl_type.caption for rep_shdl_type in rep_shdl_types"
 		   	               										ng-change="changeSheduleAction()">
@@ -200,7 +196,7 @@
 		   		    	           						<label for = "slct_rcpt">Списки получателей:</label>
 	   	        	    	   							<select id = "slct_rcpt"
 	   	        	    	   									disabled
-	   	        	    	   									class="form-control input-sm"
+	   	        	    	   									class="form-control  nmc-select-form"
 	   	        	    	   									ng-model="cur_rep_shdl.sheduleAction1Param"
 	   	        	    	   									ng-options="dlvr_list.id as dlvr_list.groupName for dlvr_list in dlvr_lists">
 	   	               									</select>
@@ -211,7 +207,7 @@
 	   	               											type="email"
 	   	               											disabled
 	   	               											placeholder="Введите e-mail..."
-	   	               											class="form-control input-sm"
+	   	               											class="form-control  nmc-text-input-form"
 	   	               											ng-model="cur_rep_shdl.sheduleAction1Param">
 		   	               							</div>
 	   	               							</div>
@@ -225,7 +221,7 @@
 	   	               							<label for="inp_dlvr_begin">Начало действия рассылки:</label>
 	   	               								<input id="inp_dlvr_begin"
 	   	               										type="date" placeholder="Укажите дату..."
-	   	               										class="form-control input-sm"
+	   	               										class="form-control  nmc-date-input-form"
 	   	               										ng-model="start_date">
 	   	               							</div>
 	   	               							<div id="div_dlvr_end_input" class="form-group pull-left col-sm-6">
@@ -233,7 +229,7 @@
 	   	               								<input id="inp_dlvr_end"
 	   	               										type="date"
 	   	               										placeholder="Укажите дату..."
-	   	               										class="form-control input-sm"
+	   	               										class="form-control  nmc-date-input-form"
 	   	               										ng-model="end_date">
 	   	               							</div>
 	   	               						</div>
@@ -245,16 +241,16 @@
     				</div>
     			</div>
     		</div>
-	    	<div class="modal-footer">
+	    	<div class="modal-footer nmc-modal-footer">
     			<div class="container-fluid dialogMarginButtons">
 					<div class="row">
                        	<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs"
+							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
 								ng-click="dlvrSave()"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+							<button class="btn btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
