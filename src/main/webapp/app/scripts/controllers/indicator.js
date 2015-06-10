@@ -226,10 +226,18 @@ angular.module('portalNMC')
                         //work with fractional part
                 //search the shortest fractional part
                 $scope.intotalColumns.forEach(function(element, index, array){
-                    var columnName = element.name;                      
+                    var columnName = element.name;
+                    if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)){
+                        return;
+                    }
                     var lengthFractPart = 0;
                     var diff = $scope.summary.diffs[columnName];
                     var total = $scope.summary.totals[columnName];
+//console.log(diff);                    
+//console.log(total);                                        
+                    if((diff==null) || (total==null)){
+                        return;
+                    }
                     var diffStr = diff.toString();
                     var tempStrArr = diffStr.split(".");
                     var diffFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
@@ -245,7 +253,7 @@ angular.module('portalNMC')
 //            console.log("total = "+$scope.summary.totals[columnName]);           
 //            console.log("precision = "+precision);        
 
-                    var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
+                    var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName])).toFixed(lengthFractPart);
 //            console.log("difference = "+difference);         
             //        var difference = Math.abs(total - diff);
                     if ((difference >precision)&&(difference <= 1))
@@ -269,7 +277,7 @@ angular.module('portalNMC')
                     element.imgclass= "";
                     element.title = "";
                 });
-console.log(data);            
+//console.log(data);            
         });
     };
 

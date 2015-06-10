@@ -88,7 +88,7 @@ angular.module('portalNMC')
        
     };
     
-    $scope.addGroup = function(){
+    $scope.addGroup = function(){    
         $scope.currentGroup = {};
         $scope.selectedObjects = [];
         $scope.showAvailableObjects_flag = false;
@@ -96,6 +96,7 @@ angular.module('portalNMC')
         var availableObjectUrl = $scope.groupUrl+"/0/contObject/available";
         $scope.getData(availableObjectUrl, "availableObjects");
         
+        $('#editGroupModal').modal();
     };
     
     $scope.checkForm = function(){       
