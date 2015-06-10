@@ -141,6 +141,7 @@ app.controller(
 				var url = $scope.url_users + '/' + contact.id;
 				$http.delete(url).
 					success(function(){
+                        $('#div_delete_contact').modal('hide');
 						$scope.getContacts();
 					}).
 					error(function(){
@@ -159,6 +160,7 @@ app.controller(
 				var url = $scope.url_groups + '/' + list.id;
 				$http.delete(url)
 					.success(function(){
+                        $('#div_delete_contact_list').modal('hide');
 						$scope.getLists();
 					})
 					.error(function(){

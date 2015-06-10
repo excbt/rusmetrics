@@ -82,7 +82,7 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/delivery.html',
         controller: 'DlvrCtrl'
       })
-      .when('/private/contacts', {
+      .when('/settings/contacts', {
         templateUrl: 'views/contacts.html',
         controller: 'ContactsCtrl'
       })

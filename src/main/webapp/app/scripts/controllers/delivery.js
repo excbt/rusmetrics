@@ -79,6 +79,7 @@ app.controller(
 				var url = $scope.url_rep_shdls + '/' + rep_shdl.id;
 				$http.delete(url)
 					.success(function(){
+                        $('#div_delete_delivery').modal('hide');
 						$scope.getReportShedules();
 					})
 					.error(function(e){

@@ -6,21 +6,34 @@
 	});
 </script>
 
-<style>
-/* Стиль дива с чекбоксами в окне редактирования контакта или группы*/
-.nmc-table-with-chkbx-in-contacts {
-	height: 150px;
-	overflow: auto;
-}
-</style>
-
 <div>
+<!--    Вкладки 2го уровня - на самом верху страницы-->
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+    <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/reports/" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Контакты</h2>
+    <hr>
+</div>    
     <!-- Вкладки -->
-	<div role="tabpanel" class="nmc-main-tab-panel">
+	<div role="tabpanel" class="nmc-tab-panel">
   	<!-- Навигационная полоса -->
 		<ul id="ul_contacts_tabs" class="nav nav-tabs" role="tablist">
-     		<li><a href="" aria-controls="div_contacts" data-target="#div_contacts" data-toggle="tab" class="nmc-main-tab-button">Контакты</a></li>
-    		<li><a href="" aria-controls="div_contact_lists" data-target="#div_contact_lists" data-toggle="tab" class="nmc-main-tab-button">Списки контактов</a></li>
+     		<li><a href="" aria-controls="div_contacts" data-target="#div_contacts" data-toggle="tab" class="nmc-tab-button">Контакты</a></li>
+    		<li><a href="" aria-controls="div_contact_lists" data-target="#div_contact_lists" data-toggle="tab" class="nmc-tab-button">Списки контактов</a></li>
 		</ul>
 	</div>
   <!-- содержимое вкладок -->
@@ -35,21 +48,21 @@
 		<!-- Таблица контактов -->
    		<table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
     		<tr id="tr_cnt_header" class="nmc-main-table-header">
-    			<th class="col-md-1"></th>
+    			<th class="col-md-1 nmc-td-for-buttons"></th>
     			<th class="col-md-4">Имя</th>
     			<th class="col-md-3">Телефон</th>
     			<th class="col-md-3">Электронная почта</th>
     			<th class="col-md-1"></th>
     		</tr>
     		<tr ng-repeat = "contact in contacts">
-    			<td class="col-md-1">
+    			<td class="col-md-1 nmc-td-for-buttons">
     				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
     			</td>
     			<td class="col-md-4">{{contact.userName}}</td>
      			<td class="col-md-3">{{contact.userPhone}}</td>
     			<td class="col-md-3">{{contact.userEmail}}</td>
-    			<td class="col-md-1">
-    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' ng-click='delContact(contact)'></i>
+    			<td class="col-md-1 nmc-td-for-buttons">
+    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal">></i>
     			</td>
     		</tr>
     	</table>
@@ -63,20 +76,20 @@
 		</div><br><br>    
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
 			<tr id="tr_cnt_header" class="nmc-main-table-header">
-				<th class="col-md-1"></th>
+				<th class="col-md-1 nmc-td-for-buttons"></th>
     			<th class="col-md-10">Имя списка</th>
     			<th class="col-md-1"></th>
     		</tr>
     		<tr ng-repeat = "list in lists">
-    			<td class="col-md-1">
+    			<td class="col-md-1 nmc-td-for-buttons">
     				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
     			</td>
     			<td class="col-md-10">{{list.groupName}}</td>
-    			<td class="col-md-1">
-    			    <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' ng-click='delList(list)'></i>
+    			<td class="col-md-1 nmc-td-for-buttons">
+    			    <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
     			</td>
     		</tr>
-		</table>	
+		</table>
     </div>
   </div>  
     <!-- Вспомогательные элементы -->
@@ -84,6 +97,7 @@
     <div id="edit_contact" class="modal fade nmc-modal-window" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
 		<div class="modal-dialog modal-content nmc-modal-dialog">
 			<div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h3 id="cnt_edit_w_header" class="nmc-h3">Изменение контакта</h3>
 			</div>
     		<div class="modal_body nmc-modal-body">
@@ -121,15 +135,15 @@
     			</div>
     		</div>
 	    	<div class="modal-footer nmc-modal-footer">
-    			<div class="container-fluid dialogMarginButtons">
+    			<div class="container-fluid  ">
 					<div class="row">
-                       	<div class="col-xs-offset-2 col-md-3">
+                       	<div class="col-xs-offset-6 col-md-3">
 							<input type="submit"
 								class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="addContact()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button"
 								data-dismiss="modal"
 								ng-click="exit()">
@@ -146,6 +160,7 @@
     <div id="edit_list" class="modal fade nmc-modal-window" role="dialog" aria-labelledby="showObjOptionLabel" tabindex="-1">
 		<div class="modal-dialog modal-content nmc-modal-dialog nmc-modal-narrow-dialog">
 			<div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h3 id="lst_edit_w_header" class="nmc-h3">Изменение списка контактов</h3>
 			</div>
     		<div class="modal_body nmc-modal-body">
@@ -175,14 +190,14 @@
     			</div>
     		</div>
 	    	<div class="modal-footer nmc-modal-footer">
-    			<div class="container-fluid dialogMarginButtons">
+    			<div class="container-fluid  ">
 					<div class="row">
-                       	<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
+                       	<div class="col-xs-offset-4 col-md-5">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="addList()"
 								value="Сохранить" />
 						</div>
-						<div class="pull-right col-xs-offset-2 col-md-3">
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
@@ -193,4 +208,104 @@
 	    	</div>
     	</div>
     </div>
+</div>
+
+<!-- window: delete contact-->
+<div id="div_delete_contact" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentItem.contactName}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="delContact(currentItem);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#div_delete_delivery');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete contact list-->
+<div id="div_delete_contact_list" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentItem.groupName}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="delList(currentItem);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#div_delete_delivery');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
 </div>

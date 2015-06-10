@@ -11,13 +11,36 @@
 
 <script type="text/javascript"></script>
 
+<!--    Вкладки 2го уровня - на самом верху страницы-->
 <div role="tabpanel" class="nmc-main-tab-panel">
+
+    <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+        <li role="presentation" ><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>  
+
+<div role="tabpanel" class="nmc-tab-panel">
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="nmc-main-tab-button"><a href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-target="#report_templates" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation" class="nmc-main-tab-button"><a href="#/settings/paramsets/" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
-    <li role="presentation" class="nmc-main-tab-button"><a href="" aria-controls="timetables" data-target="#timetables" role="tab" data-toggle="tab">Рассылки</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates"  role="tab" data-target="#report_templates" data-toggle="tab">Шаблоны</a></li>
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="timetables" data-target="#timetables" role="tab" data-toggle="tab">Рассылки</a></li>
   </ul>
 
   <!-- реализация вкладок -->
@@ -30,24 +53,24 @@
         
             <!-- Содержимое вкладки с рассылками -->
     <div>
-		<h2>Рассылки</h2>
+<!--		<h2>Рассылки</h2>-->
 		<!-- Кнопка добавления рассылок -->
 		<div class="btn-group">
-			<button class="btn nmc-main-add-button" data-target="#div_edit_delivery" data-toggle="modal" ng-click="editReportShedule('new')">Добавить рассылку</button>
+			<button class="btn marginTop15 nmc-main-add-button" data-target="#div_edit_delivery" data-toggle="modal" ng-click="editReportShedule('new')">Добавить рассылку</button>
 		</div><br><br>		
 		<!-- Таблица со списком рассылок -->
    		<table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
     		<tr id="tr_dlv_header" class="nmc-main-table-header">
-    			<th class="col-md-1">&nbsp</th>
+    			<th class="col-md-1 nmc-td-for-buttons">&nbsp</th>
     			<th class="col-md-2">Название</th>
     			<th class="col-md-8">Описание</th>
     			<th class="col-md-1">&nbsp</th>
        		</tr>
        		<tr ng-repeat = "rep_shdl in rep_shdls">
-       			<td><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+       			<td class="nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
        			<td>{{rep_shdl.name}}</td>
        			<td>{{rep_shdl.description}}</td>
-       			<td><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' ng-click="delReportShedule(rep_shdl)"></i></td>
+       			<td class="nmc-td-for-buttons"><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
        		</tr>
     	</table>
     </div>
@@ -59,6 +82,7 @@
 		aria-labelledby="showObjOptionLabel" tabindex="-1">
 		<div class="modal-dialog  modal-content nmc-modal-dialog">
 			<div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 				<h3 id="div_dlvr_edit_w_header" class="nmc-h3">Изменение рассылки</h3>
 			</div>
     		<div class="modal_body nmc-modal-body">
@@ -242,15 +266,15 @@
     			</div>
     		</div>
 	    	<div class="modal-footer nmc-modal-footer">
-    			<div class="container-fluid dialogMarginButtons">
+    			<div class="container-fluid">
 					<div class="row">
-                       	<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
+                       	<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="dlvrSave()"
 								value="Сохранить" />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3">
-							<button class="btn btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
@@ -260,3 +284,53 @@
 	    	</div>
     	</div>
     </div>
+
+<!-- window: delete delivery-->
+<div id="div_delete_delivery" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{cur_rep_shdl.name}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="delReportShedule(cur_rep_shdl);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#div_delete_delivery');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
