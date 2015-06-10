@@ -686,6 +686,11 @@ tr.nmc-main-table-header > th {
     background: linear-gradient(to top, #CD5F03,#EB5F03);
     color: #fff;
 }
+.nmc-button-in-modal:focus{
+/*    padding: 5px 10px 5px 10px;*/
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
+    color: #fff;
+}
 
     /* Кнопка-стрелка управления объектом в модальном окне*/
 .nmc-arrow-button-in-modal{
