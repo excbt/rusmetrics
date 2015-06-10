@@ -308,6 +308,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         $scope.setCurrentReportType(object);
         $scope.getWizard();
         $scope.setDefault();
+        $('#createTemplateModal').modal();
     };
     
     $scope.isSystemuser = function(){
