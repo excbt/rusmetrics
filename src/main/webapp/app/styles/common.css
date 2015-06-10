@@ -53,21 +53,24 @@
 	background-color: orange;
     color: white !important;
 */
+    background-color:#7BA9D0;
 }
 .nmc-main-header-menu > li.open > a{
 /*	background-color: orange !important;*/
+    background-color: #7BA9D0 !important;
 }
     /* Пункт меню, на который наведен фокус*/
 .nmc-main-header-menu > li.open > a:focus{
-/*	background-color: red !important;*/
+	background-color: #7BA9D0 !important;
 }
 .nmc-main-header-menu > li.open > a:hover{
-/*	background-color: green !important;*/
+	background-color: #7BA9D0 !important;
 }
 
     /* Раскрывающееся меню*/
 .nmc-main-header-menu > li > ul{
 /*	background-color: white ;*/
+    
 }
     /* Пункт раскрывающегося меню*/
 .nmc-main-header-menu > li > ul > li{
@@ -77,6 +80,7 @@
     /* Пункт раскрывающегося меню, на который наведен указатель*/
 .nmc-main-header-menu > li > ul > li > a:hover{
 /*	background-color: blueviolet !important;*/
+    background-color: #7BA9D0 !important;
 }
 
     /* Пункт раскрывающегося меню, который в фокусе*/
