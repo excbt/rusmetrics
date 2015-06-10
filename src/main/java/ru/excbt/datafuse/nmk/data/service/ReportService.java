@@ -12,6 +12,7 @@ import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
@@ -399,11 +400,7 @@ public class ReportService {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
 
-		List<Long> contObjectIds = reportParamsetService
-				.selectParamsetContObjectIds(reportParamsetId);
-
-		return getReportMakerParam(reportParamset,
-				contObjectIds.toArray(new Long[0]));
+		return getReportMakerParam(reportParamset, null);
 
 	}
 
@@ -433,10 +430,21 @@ public class ReportService {
 			return new ReportMakerParam(reportParamset, contObjectIds);
 		}
 
-		List<Long> contObjectIdList = subscriberService
-				.selectSubscriberContObjectIds(reportParamset.getSubscriberId());
+		List<Long> resultContObjectIdList = Collections.emptyList();
 
-		return new ReportMakerParam(reportParamset, contObjectIdList);
+		if (contObjectIds == null) {
+			resultContObjectIdList = reportParamsetService
+					.selectParamsetContObjectIds(reportParamset.getId());
+		}
+
+		if (resultContObjectIdList.isEmpty()) {
+			resultContObjectIdList = subscriberService
+					.selectSubscriberContObjectIds(reportParamset
+							.getSubscriberId());
+		}
+
+		return new ReportMakerParam(reportParamset, resultContObjectIdList);
+
 	}
 
 }
