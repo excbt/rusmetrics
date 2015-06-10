@@ -39,6 +39,7 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.nmk.reports.NmkReport;
 import ru.excbt.nmk.reports.NmkReport.FileType;
 import ru.excbt.nmk.reports.NmkReport.ReportType;
@@ -174,7 +175,7 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	public ReportParamset makeReportById(long reportParamsetId,
+	public ReportParamset makeReportByParamsetId(long reportParamsetId,
 			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
@@ -186,7 +187,9 @@ public class ReportService {
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
 
-		return makeReportByParamset(reportParamset, reportDate, outputStream,
+		ReportMakerParam reportMakerParam = getReportMakerParam(reportParamsetId);
+
+		return makeReportByParamset(reportMakerParam, reportDate, outputStream,
 				isZip);
 
 	}
@@ -200,13 +203,14 @@ public class ReportService {
 	 * @param isZip
 	 * @return
 	 */
-	public ReportParamset makeReportByParamset(ReportParamset reportParamset,
-			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
+	public ReportParamset makeReportByParamset(
+			ReportMakerParam reportMakerParam, LocalDateTime reportDate,
+			OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
-		checkNotNull(reportParamset.getSubscriberId());
+		checkState(reportMakerParam.isSubscriberValid());
 
-		ReportParamset result = reportParamset;
+		ReportParamset reportParamset = reportMakerParam.getReportParamset();
 
 		final boolean isZippedStream = (reportParamset.getOutputFileType() == ReportOutputFileType.ZIP)
 				|| isZip;
@@ -223,7 +227,7 @@ public class ReportService {
 		}
 
 		try {
-			makeJasperReport(reportParamset, reportDate, is,
+			makeJasperReport(reportMakerParam, reportDate, is,
 					outputStreamWrapper, isZippedStream);
 		} finally {
 			if (isZippedStream) {
@@ -232,12 +236,12 @@ public class ReportService {
 					outputStreamWrapper.close();
 				} catch (IOException e) {
 					logger.error("Error during close ZIP output stream: {}", e);
-					result = null;
+					reportParamset = null;
 				}
 			}
 		}
 
-		return result;
+		return reportParamset;
 	}
 
 	/**
@@ -245,27 +249,17 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	private void makeJasperReport(ReportParamset reportParamset,
+	private void makeJasperReport(ReportMakerParam reportMakerParam,
 			LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(inputStream);
 		checkNotNull(outputStream);
-		checkNotNull(reportParamset);
-		checkNotNull(reportParamset.getSubscriber());
-		checkArgument(!reportParamset.isNew());
-		checkNotNull(reportParamset.getReportPeriodKey());
-		checkNotNull(reportParamset.getReportTemplate().getReportTypeKey());
+		checkNotNull(reportMakerParam);
+		checkState(reportMakerParam.isParamsetValid());
 
-		List<Long> reportParamsetObjectIds = reportParamsetService
-				.selectReportParamsetObjectIds(reportParamset.getId());
-
-		// If NO selected Objects - Fill report with All Objects of subscriber
-		if (reportParamsetObjectIds.isEmpty()) {
-			reportParamsetObjectIds = subscriberService
-					.selectSubscriberContObjectIds(reportParamset
-							.getSubscriber().getId());
-		}
+		final ReportParamset reportParamset = reportMakerParam
+				.getReportParamset();
 
 		LocalDateTime dtStart = null;
 		LocalDateTime dtEnd = null;
@@ -290,7 +284,9 @@ public class ReportService {
 					reportParamset.getReportPeriodKey());
 		}
 
-		long[] objectIds = ArrayUtils.toPrimitive(reportParamsetObjectIds
+		List<Long> makeObjectIds = reportMakerParam.getContObjectList();
+
+		long[] objectIds = ArrayUtils.toPrimitive(makeObjectIds
 				.toArray(new Long[0]));
 
 		checkNotNull(objectIds, "ContObject for report is not set");
@@ -392,6 +388,55 @@ public class ReportService {
 
 		checkNotNull(sess);
 
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(long reportParamsetId) {
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+
+		List<Long> contObjectIds = reportParamsetService
+				.selectParamsetContObjectIds(reportParamsetId);
+
+		return getReportMakerParam(reportParamset,
+				contObjectIds.toArray(new Long[0]));
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+			Long[] contObjectIds) {
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+		return getReportMakerParam(reportParamset, contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIds
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
+			Long[] contObjectIds) {
+		checkNotNull(reportParamset);
+
+		if (contObjectIds != null && contObjectIds.length > 0) {
+			return new ReportMakerParam(reportParamset, contObjectIds);
+		}
+
+		List<Long> contObjectIdList = subscriberService
+				.selectSubscriberContObjectIds(reportParamset.getSubscriberId());
+
+		return new ReportMakerParam(reportParamset, contObjectIdList);
 	}
 
 }

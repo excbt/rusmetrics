@@ -291,9 +291,19 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	public List<ContObject> selectParamsetContObjectUnits(long reportParamsetId) {
+	public List<ContObject> selectParamsetContObjects(long reportParamsetId) {
 		return reportParamsetUnitRepository
-				.selectContObjectUnits(reportParamsetId);
+				.selectContObjects(reportParamsetId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public List<Long> selectParamsetContObjectIds(long reportParamsetId) {
+		return reportParamsetUnitRepository
+				.selectObjectIds(reportParamsetId);
 	}
 
 	/**
@@ -303,7 +313,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	public List<ContObject> selectParamsetAvailableContObjectUnits(
 			long reportParamsetId, long subscriberId) {
-		return reportParamsetUnitRepository.selectAvailableContObjectUnits(
+		return reportParamsetUnitRepository.selectAvailableContObjects(
 				reportParamsetId, subscriberId);
 	}
 

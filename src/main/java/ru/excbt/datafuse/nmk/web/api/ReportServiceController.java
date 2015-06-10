@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -33,7 +35,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 public class ReportServiceController extends WebApiController {
 
 	private interface ReportMaker {
-		boolean makeReport(ReportParamset reportParamset,
+		boolean makeReport(ReportMakerParam reportMakerParam,
 				LocalDateTime dateTime, OutputStream outputStream);
 
 		String mimeType();
@@ -47,15 +49,15 @@ public class ReportServiceController extends WebApiController {
 		public abstract boolean isZip();
 
 		@Override
-		public boolean makeReport(ReportParamset reportParamset,
+		public boolean makeReport(ReportMakerParam reportMakerParam,
 				LocalDateTime dateTime, OutputStream outputStream) {
-			checkNotNull(reportParamset);
-			checkNotNull(reportParamset.getSubscriber());
+			checkNotNull(reportMakerParam);
+			checkState(reportMakerParam.isSubscriberValid());
 			checkNotNull(outputStream);
 			checkNotNull(dateTime);
 			boolean result = true;
 
-			reportService.makeReportByParamset(reportParamset, dateTime,
+			reportService.makeReportByParamset(reportMakerParam, dateTime,
 					outputStream, isZip());
 
 			return result;
@@ -135,7 +137,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
-		proceccDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
 				response);
 
 	}
@@ -155,7 +157,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = eventReportMaker();
 
-		proceccDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
 				response);
 	}
 
@@ -166,23 +168,25 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void proceccDowndloadRequestReport(ReportParamset reportParamset,
-			ReportMaker reportMaker, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	private void processDowndloadRequestReport(
+			ReportMakerParam reportMakerParam, ReportMaker reportMaker,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
 
 		checkNotNull(reportMaker);
 		checkNotNull(reportMaker.mimeType());
 		checkNotNull(reportMaker.defaultFileName());
 		checkNotNull(reportMaker.ext());
 
-		if (reportParamset == null || reportParamset.getSubscriber() == null) {
+		if (!reportMakerParam.isParamsetValid()
+				|| !reportMakerParam.isSubscriberValid()) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			return;
 		}
 
 		byte[] byteArray = null;
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
-			reportMaker.makeReport(reportParamset, LocalDateTime.now(),
+			reportMaker.makeReport(reportMakerParam, LocalDateTime.now(),
 					memoryOutputStream);
 			byteArray = memoryOutputStream.toByteArray();
 		}
@@ -196,7 +200,8 @@ public class ReportServiceController extends WebApiController {
 		response.setContentType(reportMaker.mimeType());
 		response.setContentLength(byteArray.length);
 
-		String outputFilename = reportParamset.getOutputFileNameTemplate();
+		String outputFilename = reportMakerParam.getReportParamset()
+				.getOutputFileNameTemplate();
 		if (outputFilename == null) {
 			outputFilename = reportMaker.defaultFileName();
 		}
@@ -220,14 +225,14 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	private void proceccDowndloadRequestReport(long reportParamsetId,
+	private void processDowndloadRequestReport(long reportParamsetId,
 			ReportMaker reportMaker, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
+		ReportMakerParam reportMakerParam = reportService
+				.getReportMakerParam(reportParamsetId);
 
-		proceccDowndloadRequestReport(reportParamset, reportMaker, request,
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 
 	}
@@ -247,7 +252,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		proceccDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
 				response);
 
 	}
@@ -267,7 +272,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		proceccDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
 				response);
 
 	}
@@ -359,7 +364,10 @@ public class ReportServiceController extends WebApiController {
 				.getSubscriberId());
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 
-		proceccDowndloadRequestReport(reportParamset, reportMaker, request,
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamset, contObjectIds);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 
 	}
