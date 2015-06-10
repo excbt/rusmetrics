@@ -306,11 +306,14 @@ console.log(data[0]);
                 	var url = $scope.urlRefRange + '/' + objectId + '/zpoints/' + zpointId + '/referencePeriod'; 
                 	$http.get(url)
 					.success(function(data){
+						// Проверяем, задан ли интервал
 						if(data[0] != null){
 							$scope.refRange = data[0];
 							$scope.refRange.cont_zpoint_id = zpointId;
 							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
 							$scope.endDate =  new Date($scope.refRange.periodEndDate);
+							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
+							// Проверяем, был ли интервал расчитан автоматически
 							if($scope.refRange._auto == false) {
 								document.getElementById('spn_if_manual').style.display = 'block';
 								document.getElementById('spn_if_auto').style.display = 'none';
@@ -321,7 +324,12 @@ console.log(data[0]);
 							}
 						}
 						else {
+							$scope.refRange = {};
 							$scope.refRange.cont_zpoint_id = zpointId;
+							$scope.beginDate = '';
+							$scope.endDate = '';
+							document.getElementById('spn_if_manual').style.display = 'none';
+							document.getElementById('spn_if_auto').style.display = 'none';
 						}
 					})
 					.error(function(e){
