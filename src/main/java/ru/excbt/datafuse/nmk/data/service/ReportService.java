@@ -204,8 +204,7 @@ public class ReportService {
 			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
-		checkNotNull(reportParamset.getSubscriber());
-		checkArgument(!reportParamset.getSubscriber().isNew());
+		checkNotNull(reportParamset.getSubscriberId());
 
 		ReportParamset result = reportParamset;
 
@@ -213,7 +212,7 @@ public class ReportService {
 				|| isZip;
 
 		InputStream is = getReportParamsetTemplateBody(reportParamset
-				.getReportTemplate().getId());
+				.getReportTemplateId());
 
 		OutputStream outputStreamWrapper = null;
 		if (isZippedStream) {
@@ -313,7 +312,7 @@ public class ReportService {
 					destReportType, dtStart, dtEnd, Arrays.toString(objectIds));
 
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
-					reportParamset.getSubscriber().getId(), dtStart.toDate(),
+					reportParamset.getSubscriberId(), dtStart.toDate(),
 					dtEnd.toDate(), objectIds, FileType.PDF, isZip);
 
 		} catch (JRException | IOException e) {

@@ -45,10 +45,16 @@ public class ReportParamset extends AbstractAuditableModel {
 	@JoinColumn(name = "report_template_id")
 	private ReportTemplate reportTemplate;
 
+	@Column(name = "report_template_id", insertable = false, updatable = false)
+	private Long reportTemplateId;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subscriber_id")
 	@JsonIgnore
 	private Subscriber subscriber;
+
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
 
 	@Column(name = "report_paramset_name")
 	private String name;
@@ -275,6 +281,22 @@ public class ReportParamset extends AbstractAuditableModel {
 	public void setParamSpecialList(
 			Collection<ReportParamsetParamSpecial> paramSpecialList) {
 		this.paramSpecialList = paramSpecialList;
+	}
+
+	public Long getReportTemplateId() {
+		return reportTemplateId;
+	}
+
+	public void setReportTemplateId(Long reportTemplateId) {
+		this.reportTemplateId = reportTemplateId;
+	}
+
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
 	}
 
 }

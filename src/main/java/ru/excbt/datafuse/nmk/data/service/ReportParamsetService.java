@@ -211,8 +211,8 @@ public class ReportParamsetService implements SecuredRoles {
 		ReportParamset result = reportParamsetRepository
 				.findOne(reportParamsetId);
 
-		result.getReportTemplate().getId();
-		result.getSubscriber().getId();
+		//result.getReportTemplate().getId();
+		//result.getSubscriber().getId();
 
 		return result;
 

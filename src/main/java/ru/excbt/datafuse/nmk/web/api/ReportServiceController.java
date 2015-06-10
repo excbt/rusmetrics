@@ -355,7 +355,11 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
-		proceccDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		reportParamset.setSubscriberId(currentSubscriberService
+				.getSubscriberId());
+		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+
+		proceccDowndloadRequestReport(reportParamset, reportMaker, request,
 				response);
 
 	}
