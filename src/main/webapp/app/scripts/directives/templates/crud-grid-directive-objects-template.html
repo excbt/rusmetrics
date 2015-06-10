@@ -46,7 +46,7 @@
              <table class="crud-grid table table-lighter  table-condensed table-hover noMarginBottom nmc-table-container nmc-hide">
                  <tr class="default">
                 <!--       Шапка таблицы-->
-                        <th>
+                        <th class="nmc-td-for-buttons">
                         </th>
                         <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                             <div>
@@ -69,7 +69,7 @@
 
                 <tr><!--    <tr> Уровень 3     -->
 <!-- этот столбец отображается, когда включена группировка или отображается иерархия объектов-->
-            <td ng-show="bGroupByObject || bObject" class="col-md-1 noMargin" style="padding:0;">
+            <td ng-show="bGroupByObject || bObject" class="col-md-1 noMargin nmc-td-for-buttons" style="padding:0;">
                 <div class="btn-toolbar marginLeft5">
                     <div class="btn-group">
                         <table>
@@ -133,7 +133,7 @@
                      
             </td>
 <!-- Колонка для редактирования объектов                   -->
-            <td ng-show="bObject" ng-hide="bReports || bList" class="col-md-1"> 
+            <td ng-show="bObject" ng-hide="bReports || bList" class="col-md-1 nmc-td-for-buttons"> 
 
                 
             </td>
@@ -148,7 +148,7 @@
                     <tr class="nmc-child-table-header">
                         <!--       Шапка таблицы-->
 <!--                        Колонка для кнопок-->
-                        <th ng-show="bObject || bList" class="col-md-1 ">
+                        <th ng-show="bObject || bList" class="col-md-1 nmc-td-for-buttons">
                         </th>
                         <th ng-repeat="oldColumn in oldColumns" ng-class="oldColumn.class" ng-click="setOrderBy(oldColumn.name)" class="nmc-text-align-left">
                                 {{oldColumn.header || oldColumn.name}}
@@ -158,7 +158,7 @@
                     </thead>    
                     <tr ng-repeat="oldObject in object.zpoints | orderBy:orderBy.field:!orderBy.asc | filter: currentObject.name" ng-dblclick="getIndicators(oldObject)">
                   <!-- Колонка для редактирования элементов                   -->
-                        <td ng-show="bObject && !bList" class="col-md-1"> 
+                        <td ng-show="bObject && !bList" class="col-md-1 nmc-td-for-buttons"> 
 	                        <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table"
 	                        	ng-click="selectedItem(oldObject);getZpointSettings(oldObject)"
 	                        	data-target="#showZpointOptionModal"
@@ -475,11 +475,11 @@
                                             <input type="checkbox" title="M1" class="" ng-model="zpointSettings.summer.wm_M1_chk"/>М1
                                         </div>
                                         <div class="col-xs-4 noPadding noMargin">
-                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M1_min">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_min">
                                             </span>
                                         </div>
                                         <div class="col-xs-6 noPadding">
-                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M2_chk" ng-model="zpointSettings.summer.wm_M1_max"></span> т/час
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M1_chk" ng-model="zpointSettings.summer.wm_M1_max"></span> т/час
                                         </div>
                                     </div> 
                                     <div class="row-fluid">
@@ -885,11 +885,11 @@
 				Свойства объекта учета
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body">
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                        <table class="table table-lighter table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3"><label for="inputCode">Код объекта</label>
                                 </td>
@@ -938,7 +938,7 @@
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> <label class="control-label">&deg; C </label>
+                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
                                     </div>
                                 </td>                               
                             </tr>                           

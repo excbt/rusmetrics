@@ -35,6 +35,7 @@ var app = angular.module('portalNMC');
 //          $cookies.menuMassive = {};
 //      }
       $scope.menuMassive.object_menu_item = ($cookies.object_menu_item==="true" ? true:false);
+      $scope.menuMassive.report_menu_item= ($cookies.report_menu_item==="true" ? true:false);
       $scope.menuMassive.notice_menu_item = ($cookies.notice_menu_item==="true" ? true:false);
       $scope.menuMassive.setting_menu_item = ($cookies.setting_menu_item==="true" ? true:false);
       $scope.menuMassive.admin_menu_item = ($cookies.admin_menu_item==="true" ? true:false);

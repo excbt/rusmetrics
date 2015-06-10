@@ -383,9 +383,18 @@ td {
     vertical-align: middle !important;
 }
 
+    /*Стиль колонки с кнопками*/
 .nmc-td-for-buttons{
-    width: 70px !important;
+    width: 4%;
 }
+/*
+th.nmc-td-for-buttons{
+    width: 1% !important;
+}
+td.nmc-td-for-buttons{
+    width: 1% !important;
+}
+*/
 
     /* Таблица в основной рабочей области */
 .nmc-main-table {
@@ -1092,9 +1101,11 @@ tr.nmc-main-table-header > th {
     display:none !important;
 }
 
+/*
 .btn-toolbar {
     width: 85px;
 }
+*/
     /* Выделить элемент по умолчанию*/
 .nmc-distinguish {
     font-weight: bold;
