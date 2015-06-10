@@ -358,6 +358,10 @@ public class ReportServiceController extends WebApiController {
 		checkNotNull(reportParamset.getId());
 		checkArgument(reportParamset.getId().equals(reportParamsetId));
 
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
 		ReportMaker reportMaker = commerceReportMaker();
 
 		reportParamset.setSubscriberId(currentSubscriberService

@@ -6,15 +6,26 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.ResultActionsTester;
+
+import com.google.common.primitives.Longs;
 
 public class ReportServiceControllerTest extends AnyControllerTest {
 
@@ -22,6 +33,9 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportServiceControllerTest.class);
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
 
 	private void redirectOption(ReportOutputFileType reportType)
 			throws Exception {
@@ -60,6 +74,45 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		resultAction.andExpect(status().isOk()).andExpect(
 				content().contentType("application/zip"));
+
+	}
+
+	@Test
+	public void testCommerceDownloadPut() throws Exception {
+		int reportParamsetId = 28618264;
+
+		String urlStr = String.format(
+				"/api/reportService/commerce/%d/download", reportParamsetId);
+
+		ReportParamset reportParamsetNew = reportParamsetService
+				.findOne(reportParamsetId);
+
+		List<Long> contObjectIds = Arrays.asList(18811504L);
+		// reportParamsetService
+		// .selectParamsetContObjectIds(reportParamsetId);
+
+		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.param("contObjectIds",
+						arrayToString(Longs.toArray(contObjectIds)));
+			}
+		};
+
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+
+				resultActions.andExpect(content()
+						.contentType("application/zip"));
+
+			}
+		};
+
+		testJsonUpdate(urlStr, reportParamsetNew, extraInitializer, tester);
 
 	}
 

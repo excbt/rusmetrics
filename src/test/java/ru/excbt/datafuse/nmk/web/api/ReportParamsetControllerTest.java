@@ -53,7 +53,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	}
 
 	@Test
-	public void testCommerceCreateDelete() throws Exception {
+	public void testCommerceCreateUpdateDelete() throws Exception {
 		List<ReportTemplate> commTemplates = reportTemplateService
 				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
 						true);

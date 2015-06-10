@@ -161,7 +161,20 @@ public class AnyControllerTest {
 	protected Long testJsonCreate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
-		return testJsonCreate(urlStr, sendObject, requestExtraInitializer, null);
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+
+				resultActions.andDo(MockMvcResultHandlers.print());
+				resultActions.andExpect(status().isCreated());
+
+			}
+		};
+
+		return testJsonCreate(urlStr, sendObject, requestExtraInitializer,
+				tester);
 
 	}
 
@@ -170,13 +183,13 @@ public class AnyControllerTest {
 	 * @param urlStr
 	 * @param sendObject
 	 * @param requestExtraInitializer
-	 * @param resultActionsExtraExpector
+	 * @param resultActionsTester
 	 * @return
 	 * @throws Exception
 	 */
 	protected Long testJsonCreate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
-			ResultActionsExtraExpector resultActionsExtraExpector) throws Exception {
+			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing CREATE on URL: {}", urlStr);
 
@@ -198,17 +211,13 @@ public class AnyControllerTest {
 			requestExtraInitializer.doInit(request);
 		}
 
-		ResultActions resultAction = mockMvc.perform(request);
+		ResultActions resultActions = mockMvc.perform(request);
 
-		resultAction.andDo(MockMvcResultHandlers.print());
-
-		resultAction.andExpect(status().isCreated());
-
-		if (resultActionsExtraExpector != null) {
-			resultActionsExtraExpector.expect(resultAction);
+		if (resultActionsTester != null) {
+			resultActionsTester.testResultActions(resultActions);
 		}
 
-		String jsonContent = resultAction.andReturn().getResponse()
+		String jsonContent = resultActions.andReturn().getResponse()
 				.getContentAsString();
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		assertTrue(createdId > 0);
@@ -238,7 +247,19 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
-		testJsonUpdate(urlStr, sendObject, requestExtraInitializer, null);
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+
+				resultActions.andDo(MockMvcResultHandlers.print());
+				resultActions.andExpect(status().isOk());
+
+			}
+		};
+
+		testJsonUpdate(urlStr, sendObject, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -246,12 +267,12 @@ public class AnyControllerTest {
 	 * @param urlStr
 	 * @param sendObject
 	 * @param requestExtraInitializer
-	 * @param resultActionsExtraExpector
+	 * @param resultActionsTester
 	 * @throws Exception
 	 */
 	protected void testJsonUpdate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
-			ResultActionsExtraExpector resultActionsExtraExpector) throws Exception {
+			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", urlStr);
 
@@ -274,14 +295,10 @@ public class AnyControllerTest {
 			requestExtraInitializer.doInit(request);
 		}
 
-		ResultActions resultAction = mockMvc.perform(request);
+		ResultActions resultActions = mockMvc.perform(request);
 
-		resultAction.andDo(MockMvcResultHandlers.print());
-
-		resultAction.andExpect(status().isOk());
-
-		if (resultActionsExtraExpector != null) {
-			resultActionsExtraExpector.expect(resultAction);
+		if (resultActionsTester != null) {
+			resultActionsTester.testResultActions(resultActions);
 		}
 
 	}
