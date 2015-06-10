@@ -130,6 +130,28 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 $scope.toggleShowGroupDetails = function(curObject){//switch option: current goup details
                     curObject.showGroupDetails = !curObject.showGroupDetails;
                 };
+                //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
+                function getRefRangeByObjectAndZpoint(object, zpoint){
+                    var url = $scope.urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod'; 
+console.log(url);                    
+                    $http.get(url)
+                    .success(function(data){
+                        if(data[0] != null){
+                            var beginDate = new Date(data[0].periodBeginDate);
+                            var endDate =  new Date(data[0].periodEndDate);
+console.log(data[0]);                                    
+                            zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
+                            zpoint.zpointRefRangeAuto = data[0]._auto?"auto":"manual";
+                        }
+                        else {
+                            zpoint.zpointRefRange = "Не задан";
+                            zpoint.zpointRefRangeAuto = "notSet";
+                        }
+                    })
+                    .error(function(e){
+                        console.log(e);
+                    });
+                }
                 
                 $scope.zPointsByObject = [];
                 $scope.getZpointsDataByObject = function(obj, mode){ 
@@ -174,6 +196,8 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                                 zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
                             };
                             zpoint.zpointLastDataDate  = $scope.zPointsByObject[i].lastDataDate;   
+                            // Получаем эталонный интервал для точки учета
+                            getRefRangeByObjectAndZpoint(obj, zpoint);
                             zpoints[i] = zpoint;                  
                         }
                         obj.zpoints = zpoints;
