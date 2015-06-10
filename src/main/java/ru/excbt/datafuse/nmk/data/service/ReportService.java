@@ -175,11 +175,9 @@ public class ReportService {
 	 * @param reportParamsetId
 	 */
 	public ReportParamset makeReportById(long reportParamsetId,
-			long subscriberId, LocalDateTime reportDate,
-			OutputStream outputStream, boolean isZip) {
+			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
 
 		checkNotNull(outputStream);
-		checkArgument(subscriberId > 0);
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
 
@@ -187,6 +185,27 @@ public class ReportService {
 			throw new PersistenceException(String.format(
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
+
+		return makeReportByParamset(reportParamset, reportDate, outputStream,
+				isZip);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param subscriberId
+	 * @param reportDate
+	 * @param outputStream
+	 * @param isZip
+	 * @return
+	 */
+	public ReportParamset makeReportByParamset(ReportParamset reportParamset,
+			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
+
+		checkNotNull(outputStream);
+		checkNotNull(reportParamset.getSubscriber());
+		checkArgument(!reportParamset.getSubscriber().isNew());
 
 		ReportParamset result = reportParamset;
 
@@ -205,7 +224,7 @@ public class ReportService {
 		}
 
 		try {
-			makeReportByParamsetInternal(reportParamset, subscriberId, reportDate, is,
+			makeJasperReport(reportParamset, reportDate, is,
 					outputStreamWrapper, isZippedStream);
 		} finally {
 			if (isZippedStream) {
@@ -227,14 +246,14 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	private void makeReportByParamsetInternal(ReportParamset reportParamset, long subscriberId,
+	private void makeJasperReport(ReportParamset reportParamset,
 			LocalDateTime reportDate, InputStream inputStream,
 			OutputStream outputStream, boolean isZip) {
 
-		checkArgument(subscriberId > 0);
 		checkNotNull(inputStream);
 		checkNotNull(outputStream);
 		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getSubscriber());
 		checkArgument(!reportParamset.isNew());
 		checkNotNull(reportParamset.getReportPeriodKey());
 		checkNotNull(reportParamset.getReportTemplate().getReportTypeKey());
@@ -245,7 +264,8 @@ public class ReportService {
 		// If NO selected Objects - Fill report with All Objects of subscriber
 		if (reportParamsetObjectIds.isEmpty()) {
 			reportParamsetObjectIds = subscriberService
-					.selectSubscriberContObjectIds(subscriberId);
+					.selectSubscriberContObjectIds(reportParamset
+							.getSubscriber().getId());
 		}
 
 		LocalDateTime dtStart = null;
@@ -290,12 +310,11 @@ public class ReportService {
 
 			logger.info(
 					"Call nmkGetReport with params (reportType:{}; startDate:{};endDate:{};idParam:{};objectIds:{};)",
-					destReportType, dtStart, dtEnd, subscriberId,
-					Arrays.toString(objectIds));
+					destReportType, dtStart, dtEnd, Arrays.toString(objectIds));
 
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
-					subscriberId, dtStart.toDate(), dtEnd.toDate(), objectIds,
-					FileType.PDF, isZip);
+					reportParamset.getSubscriber().getId(), dtStart.toDate(),
+					dtEnd.toDate(), objectIds, FileType.PDF, isZip);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
