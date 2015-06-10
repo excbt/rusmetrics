@@ -161,6 +161,23 @@ public class AnyControllerTest {
 	protected Long testJsonCreate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
+		return testJsonCreate(urlStr, sendObject, requestExtraInitializer, null);
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param sendObject
+	 * @param requestExtraInitializer
+	 * @param resultActionsExtraExpector
+	 * @return
+	 * @throws Exception
+	 */
+	protected Long testJsonCreate(String urlStr, Object sendObject,
+			RequestExtraInitializer requestExtraInitializer,
+			ResultActionsExtraExpector resultActionsExtraExpector) throws Exception {
+
 		logger.info("Testing CREATE on URL: {}", urlStr);
 
 		String jsonBody = null;
@@ -186,6 +203,10 @@ public class AnyControllerTest {
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isCreated());
+
+		if (resultActionsExtraExpector != null) {
+			resultActionsExtraExpector.expect(resultAction);
+		}
 
 		String jsonContent = resultAction.andReturn().getResponse()
 				.getContentAsString();
@@ -217,6 +238,21 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String urlStr, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
+		testJsonUpdate(urlStr, sendObject, requestExtraInitializer, null);
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param sendObject
+	 * @param requestExtraInitializer
+	 * @param resultActionsExtraExpector
+	 * @throws Exception
+	 */
+	protected void testJsonUpdate(String urlStr, Object sendObject,
+			RequestExtraInitializer requestExtraInitializer,
+			ResultActionsExtraExpector resultActionsExtraExpector) throws Exception {
+
 		logger.info("Testing UPDATE on URL: {}", urlStr);
 
 		String jsonBody = null;
@@ -243,6 +279,11 @@ public class AnyControllerTest {
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isOk());
+
+		if (resultActionsExtraExpector != null) {
+			resultActionsExtraExpector.expect(resultAction);
+		}
+
 	}
 
 	/**
