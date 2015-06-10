@@ -238,6 +238,16 @@ app.controller(
 			/***************************
 			 * Вспомогательные функции *
 			 ***************************/
+            // Добавление нового элемента
+            $scope.addItem = function(item, type){
+                $scope.editItem(item, type);
+                if(type == 'contact'){
+                    $('#edit_contact').modal();
+                }else if(type == 'list'){
+                    $('#edit_list').modal();
+                };
+			}
+            
 			// Готовим элемент для окна редактирования контакта/группы
 			// type - тип редактируемого элемента (contact или list)
 			$scope.editItem = function(item, type){

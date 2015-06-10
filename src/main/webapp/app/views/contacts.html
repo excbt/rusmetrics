@@ -43,7 +43,7 @@
     <br>
 		<!-- Кнопка добавления контактов -->
 		<div class="btn-group">
-			<button class="btn nmc-main-add-button" data-target="#edit_contact" data-toggle="modal" ng-click="editItem('new', 'contact')">Добавить контакт</button>
+			<button class="btn nmc-main-add-button" ng-click="addItem('new', 'contact')">Добавить контакт</button>
 		</div><br><br>	
 		<!-- Таблица контактов -->
    		<table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
@@ -62,7 +62,7 @@
      			<td class="col-md-3">{{contact.userPhone}}</td>
     			<td class="col-md-3">{{contact.userEmail}}</td>
     			<td class="col-md-1 nmc-td-for-buttons">
-    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal">></i>
+    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
     			</td>
     		</tr>
     	</table>
@@ -72,7 +72,7 @@
     <br>
 		<!-- Кнопка добавления списков -->
 		<div class="btn-group">
-			<button class="btn nmc-main-add-button" ng-click="editItem('new', 'list')" data-target="#edit_list" data-toggle="modal" >Добавить список</button>
+			<button class="btn nmc-main-add-button" ng-click="addItem('new', 'list')" >Добавить список</button>
 		</div><br><br>    
 		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
 			<tr id="tr_cnt_header" class="nmc-main-table-header">
@@ -227,7 +227,7 @@
 				<p>
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary nmc-form-label">{{currentItem.contactName}}</label>
+					<label class="text-primary nmc-form-label">{{currentItem.userName}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>

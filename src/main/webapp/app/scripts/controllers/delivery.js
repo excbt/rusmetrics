@@ -149,6 +149,11 @@ app.controller(
 			/************************************
 			 * Функции для работы с интерфейсом *
 			 ************************************/
+            $scope.addNewReportShedule = function(rep_shdl){
+                $scope.editReportShedule(rep_shdl);
+                $('#div_edit_delivery').modal();
+            };
+            
 			// Подготовка данных для окна редактирования рассылки
 			$scope.editReportShedule = function(rep_shdl){
 				if(rep_shdl == 'new'){
