@@ -49,7 +49,6 @@ app.controller(
 						var tmpl_id = $scope.paramsets[zx].reportTemplate.id;
 					}
 				}
-				
 				// Проверяем, создаётся новая рассылка или модифицируется имеющаяся
 				if($scope.cur_rep_shdl.id == 'new'){
 					var url = $scope.url_rep_shdls + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
@@ -138,6 +137,9 @@ app.controller(
 				$http.get($scope.url_dlvr_lists)
 					.success(function(data){
 						$scope.dlvr_lists = data;
+						for(var zx = 0; zx < $scope.dlvr_lists.length; zx++){
+							$scope.dlvr_lists[zx].id = $scope.dlvr_lists[zx].id.toString();
+						}
 					})
 					.error(function(e){
 						notificationFactory.errorInfo(e.statusText,e.description);
@@ -197,10 +199,10 @@ app.controller(
 				// Выясняем, какой способ доставки выбран
 				switch ($scope.cur_rep_shdl.sheduleAction1Key) {
 				case "EMAIL_LIST_DELIVERY":
+					$scope.getDeliveryLists();
 					document.getElementById("div_rcpt_slct").style.display = "block";
 					document.getElementById("div_rcpt_email").style.display = "none";
 					document.getElementById("slct_rcpt").disabled = false;
-					$scope.getDeliveryLists();
 					break;
 				case "EMAIL_RAW_DELIVERY":
 					document.getElementById("div_rcpt_slct").style.display = "none";
@@ -211,6 +213,7 @@ app.controller(
 					notificationFactory.errorInfo("Ошибка выбора способа доставки", "Пожалуйста, выберите способ доставки");
 				break;
 				}
+
 			}
 			
 			// Подготовка данных для ввода даты начала и конца действия рассылки
@@ -224,6 +227,16 @@ app.controller(
 				// Активируем поля ввода времени
 				document.getElementById("inp_hour").disabled = false;
 				document.getElementById("inp_minute").disabled = false;
+				// Разбиваем поле, содержащее расписание рассылки в формате cron на массив
+				// И приводим элементы к валидному для форм виду
+				$scope.time = $scope.cur_rep_shdl.sheduleTimeTemplate.split(' ');
+				if($scope.time[3] == '*'){
+					$scope.time[3] = new Date();
+				}
+				else {
+					var year = new Date();
+					$scope.time[3] = new Date(year.getFullYear(), $scope.time[3], $scope.time[2]);
+				}
 				// Определяем, какая периодичность выбрана
 				switch ($scope.cur_rep_shdl.reportSheduleTypeKey) {
 				case "SINGLE":
@@ -231,7 +244,7 @@ app.controller(
 					document.getElementById("div_day_of_week").style.display = "none";
 					document.getElementById("div_day_date").style.display = "block";
 					document.getElementById("div_daily").style.display = "none";
-					document.getElementById("inp_day_date").disabled=false;
+					document.getElementById("inp_day_date").disabled = false;
 					break;
 				case "DAILY":
 					document.getElementById("div_day_of_month").style.display = "none";
@@ -257,11 +270,11 @@ app.controller(
 					notificationFactory.errorInfo("Ошибка выбора периодичности рассылки", "Пожалуйста, выберите периодичность рассылки");
 					break;
 				}
-			$scope.time = $scope.cur_rep_shdl.sheduleTimeTemplate.split(' ');
 			}
 			
 			// Функция, подготавливающая введённые данные к передаче на сервер
 			 $scope.dlvrSave = function(){
+				 var is_errors = false;
 				 // Проверяем, заполнены ли необходимые поля
 				 // Формируем дату старта и дату окончания действия рассылки
 				 $scope.cur_rep_shdl.sheduleStartDate = $scope.start_date.getTime();
@@ -269,12 +282,41 @@ app.controller(
 					 var local_end_date = $scope.end_date.getTime();
 					 if(local_end_date < $scope.cur_rep_shdl.sheduleStartDate){
 						 notificationFactory.errorInfo("Введено неправильное время", "Указанное время окончания действия рассылки меньше, чем время начала");
+						 is_errors = true;
 					 }
 					 else {
 						 $scope.cur_rep_shdl.sheduleEndDate = local_end_date;
 					 }
 				 }
 				 else $scope.cur_rep_shdl.sheduleEndDate = null;
+				// Проверяем, заполнено ли название рассылки
+				 if ($scope.cur_rep_shdl.name == null) {
+					 notificationFactory.errorInfo("Не указано название рассылки", "Укажите, пожалуйста, название рассылки");
+					 is_errors = true;
+				 }
+				 console.log($scope.cur_rep_shdl.reportTemplate);
+				 if (typeof $scope.cur_rep_shdl.reportTemplate == 'undefined'){
+					 notificationFactory.errorInfo("Не указан тип отчёта", "Укажите, пожалуйста, тип отчёта");
+					 is_errors = true;
+				 }
+				 else {
+					 if(typeof $scope.cur_rep_shdl.reportParamset == 'undefined'){
+						 notificationFactory.errorInfo("Не указан вариант шаблона", "Укажите, пожалуйста, вариант шаблона");
+						 is_errors = true;
+					 }
+				 }
+				 // Проверяем, указаны ли получатели
+				 //console.log($scope.cur_rep_shdl.sheduleAction1Key);
+				 if($scope.cur_rep_shdl.sheduleAction1Key == null){
+					 notificationFactory.errorInfo("Не указан способ доставки", "Укажите, пожалуйста, способ доставки");
+					 is_errors = true;
+				 }
+				 else {
+					 if($scope.cur_rep_shdl.sheduleAction1Param == null){
+						 notificationFactory.errorInfo("Не указаны получатели", "Укажите, пожалуйста, получателей");
+						 is_errors = true;
+					 }
+				 }
 				 // Формируем периодичность
 				 // Проверяем корректность введённых минут и часов
 				 if($scope.time[0] >= 0 && $scope.time[0] < 60){
@@ -282,12 +324,14 @@ app.controller(
 				 	}
 				 else {
 					 notificationFactory.errorInfo("Время указано неверно", "Укажите, пожалуйста, минуты от 0 до 60");
+					 is_errors = true;
 					}
 					if($scope.time[1] >= 0 && $scope.time[1] < 24){
 						$scope.cur_rep_shdl.sheduleTimeTemplate = $scope.cur_rep_shdl.sheduleTimeTemplate + $scope.time[1] + " ";
 					}
 					else {
 						notificationFactory.errorInfo("Время указано неверно", "Укажите, пожалуйста, часы от 0 до 24");
+						is_errors = true;
 					}
 					switch ($scope.cur_rep_shdl.reportSheduleTypeKey) {
 					case "SINGLE":
@@ -299,6 +343,7 @@ app.controller(
 					case "WEEKLY":
 						if($scope.time[4]<1 || $scope.time[4]>7){
 							notificationFactory.errorInfo("Не выбран день недели", "Выберите, пожалуйста, день недели");
+							is_errors = true;
 						}
 						else{
 							$scope.cur_rep_shdl.sheduleTimeTemplate = $scope.cur_rep_shdl.sheduleTimeTemplate + "* * " + $scope.time[4];
@@ -311,12 +356,17 @@ app.controller(
 						break;
 					default:
 						notificationFactory.errorInfo("Не указана периодичность рассылки", "Выберите, пожалуйста, периодичность рассылки");
+						is_errors = true;
 						break;
 					}
-				 // Отправляем данные на сервер
-				 $scope.addReportShedule();
-				 // Закрываем окно
+				 // Если всё без ошибок, то
+				if (!is_errors){
+					// Отправляем данные на сервер
+					$scope.addReportShedule();
+					// Закрываем окно
 					$('#div_edit_delivery').modal('hide');
+				}
+
 			}
 			/*********************
 			 * Запускаем функции *
