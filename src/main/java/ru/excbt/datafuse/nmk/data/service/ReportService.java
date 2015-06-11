@@ -177,7 +177,7 @@ public class ReportService {
 	 * @param reportParamsetId
 	 */
 	public ReportParamset makeReportByParamsetId(long reportParamsetId,
-			LocalDateTime reportDate, OutputStream outputStream, boolean isZip) {
+			LocalDateTime reportDate, OutputStream outputStream) {
 
 		checkNotNull(outputStream);
 		ReportParamset reportParamset = reportParamsetService
@@ -190,8 +190,7 @@ public class ReportService {
 
 		ReportMakerParam reportMakerParam = getReportMakerParam(reportParamsetId);
 
-		return makeReportByParamset(reportMakerParam, reportDate, outputStream,
-				isZip);
+		return makeReportByParamset(reportMakerParam, reportDate, outputStream);
 
 	}
 
@@ -206,15 +205,14 @@ public class ReportService {
 	 */
 	public ReportParamset makeReportByParamset(
 			ReportMakerParam reportMakerParam, LocalDateTime reportDate,
-			OutputStream outputStream, boolean isZip) {
+			OutputStream outputStream) {
 
 		checkNotNull(outputStream);
 		checkState(reportMakerParam.isSubscriberValid());
 
 		ReportParamset reportParamset = reportMakerParam.getReportParamset();
 
-		final boolean isZippedStream = (reportParamset.getOutputFileType() == ReportOutputFileType.ZIP)
-				|| isZip;
+		final boolean isZippedStream = reportMakerParam.isOutputFileZipped();
 
 		InputStream is = getReportParamsetTemplateBody(reportParamset
 				.getReportTemplateId());
@@ -299,6 +297,7 @@ public class ReportService {
 					jasperConfig.getDatasourceUsername(),
 					jasperConfig.getDatasourcePassword());
 
+			
 			ReportTypeKey rptKey = reportParamset.getReportTemplate()
 					.getReportTypeKey();
 
