@@ -349,7 +349,7 @@
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Основные свойства</a></li>
-                <li role="presentation" id="extra_properties_tab"><a class="nmc-tab-button" href="" aria-controls="extra_properties" data-target="#extra_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Дополнительные свойства</a></li>  
+                <li role="presentation" id="extra_properties_tab" class="nmc-hide" ng-class="{'nmc-hide':!currentReportType.reportMetaParamSpecialList_flag, 'nmc-show':currentReportType.reportMetaParamSpecialList_flag}"><a class="nmc-tab-button" href="" aria-controls="extra_properties" data-target="#extra_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Дополнительные свойства</a></li>  
                 <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
               </ul>
 
@@ -406,11 +406,11 @@
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div ng-disabled="isDisabled()">
                                                 <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
-                                                <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">c</label></div>
+                                                <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                 <div class="col-sm-5">
                                                     <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
                                                 </div>    
-                                                <div class="col-sm-1 paddingTop10"><label class="nmc-form-label">по</label></div>
+                                                <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
                                                     <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
                                                 </div>
@@ -457,11 +457,11 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox  class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
+                                        <td colspan="2" class="col-sm-3"><input ng-model="currentObject.showParamsBeforeRunReport" ng-disabled="!checkRequiredFields()" type=checkbox class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox  class="nmc-checkbox-form">Упаковывать файлы отчета в ZIP архив.
+                                        <td colspan="2" class="col-sm-3"><input type=checkbox  class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
                                         </td>
                                     </tr> 
 
@@ -474,17 +474,28 @@
                   </div> 
 <!--                  Вкладка с дополнительными свойствами -->
                   <div role="tabpanel" class="tab-pane fade " id="extra_properties">
-                    <div class="container-fluid noPadding">
-                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
-                            <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                    <tr>
-                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Тип отчета</label>
-                                        </td>
-                                        <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
-                                        </td>
-                                    </tr>
-                            </table>    
+                       <div class="container-fluid noPadding">
+                            <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                                <div class="col-md-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+    <!--
+                        <div class="container-fluid noPadding">
+                            <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
+    -->
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-repeat="specialParam in currentParamSpecialList">
+                                            <td class="col-sm-3"><label for="inputType" class="nmc-form-label">{{specialParam.specialParamCaption}}</label>
+                                            </td>
+    <!--
+                                            <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
+                                            </td>
+    -->
+                                            <td class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.textValue" ng-disabled="isDisabled()">
+                                            </td>
+                                        </tr>
+                                </table>    
 
+                            </div>
                         </div>
                     </div>
                 </div>   
@@ -536,7 +547,7 @@
                              <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>
                         </div>
                         <div class="col-xs-offset-3 col-md-3">
-							<input ng-disabled="isDisabled()||!checkRequiredFields();" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveParamset(currentObject)"
 								value="Сохранить" 
                                 data-target="#main_properties" data-toggle="tab" />
