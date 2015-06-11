@@ -86,7 +86,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 				reportParamset, co.getId());
 
 		List<ContObject> listCO = reportParamsetService
-				.selectParamsetContObjectUnits(reportParamset.getId());
+				.selectParamsetContObjects(reportParamset.getId());
 		assertTrue(listCO.size() > 0);
 
 		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(),

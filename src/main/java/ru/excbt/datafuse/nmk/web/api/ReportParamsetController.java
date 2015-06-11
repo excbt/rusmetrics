@@ -499,7 +499,7 @@ public class ReportParamsetController extends WebApiController {
 
 		checkNotNull(reportParamsetId);
 		List<ContObject> resultList = reportParamsetService
-				.selectParamsetContObjectUnits(reportParamsetId);
+				.selectParamsetContObjects(reportParamsetId);
 
 		return ResponseEntity.ok(resultList);
 	}
