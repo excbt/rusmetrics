@@ -50,7 +50,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeEventReport.zip");) {
 
 			reportService.makeReportByParamsetId(EVENT_TEST_PARAMSET_ID,
-					LocalDateTime.now(), fos, true);
+					LocalDateTime.now(), fos);
 		}
 	}
 
@@ -60,7 +60,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeCommerceReport.zip");) {
 			reportService.makeReportByParamsetId(COMMERCE_TEST_PARAMSET_ID,
-					LocalDateTime.now(), fos, true);
+					LocalDateTime.now(), fos);
 		}
 	}
 
@@ -70,7 +70,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeConsT1Report.pdf");) {
 			reportService.makeReportByParamsetId(CONS_T1_TEST_PARAMSET_ID,
-					LocalDateTime.now(), fos, false);
+					LocalDateTime.now(), fos);
 		}
 	}
 
@@ -80,7 +80,7 @@ public class ReportServiceTest extends JpaSupportTest {
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeConsT2Report.pdf");) {
 			reportService.makeReportByParamsetId(CONS_T2_TEST_PARAMSET_ID,
-					LocalDateTime.now(), fos, false);
+					LocalDateTime.now(), fos);
 		}
 	}
 

@@ -38,66 +38,27 @@ public class ReportServiceController extends WebApiController {
 		boolean makeReport(ReportMakerParam reportMakerParam,
 				LocalDateTime dateTime, OutputStream outputStream);
 
-		String mimeType();
-
 		String defaultFileName();
 
-		String ext();
 	}
 
 	private abstract class AbstractReportMaker implements ReportMaker {
-		public abstract boolean isZip();
 
 		@Override
 		public boolean makeReport(ReportMakerParam reportMakerParam,
 				LocalDateTime dateTime, OutputStream outputStream) {
 			checkNotNull(reportMakerParam);
 			checkState(reportMakerParam.isSubscriberValid());
+			checkState(reportMakerParam.isParamsetValid());
 			checkNotNull(outputStream);
 			checkNotNull(dateTime);
 			boolean result = true;
 
 			reportService.makeReportByParamset(reportMakerParam, dateTime,
-					outputStream, isZip());
+					outputStream);
 
 			return result;
 		}
-	}
-
-	private abstract class ZipReportMaker extends AbstractReportMaker {
-
-		@Override
-		public boolean isZip() {
-			return true;
-		};
-
-		@Override
-		public String mimeType() {
-			return MIME_ZIP;
-		}
-
-		@Override
-		public String ext() {
-			return EXT_ZIP;
-		}
-	}
-
-	private abstract class PdfReportMaker extends AbstractReportMaker {
-		@Override
-		public boolean isZip() {
-			return false;
-		};
-
-		@Override
-		public String mimeType() {
-			return MIME_PDF;
-		}
-
-		@Override
-		public String ext() {
-			return EXT_PDF;
-		}
-
 	}
 
 	private static final Logger logger = LoggerFactory
@@ -174,9 +135,7 @@ public class ReportServiceController extends WebApiController {
 			throws IOException {
 
 		checkNotNull(reportMaker);
-		checkNotNull(reportMaker.mimeType());
 		checkNotNull(reportMaker.defaultFileName());
-		checkNotNull(reportMaker.ext());
 
 		if (!reportMakerParam.isParamsetValid()
 				|| !reportMakerParam.isSubscriberValid()) {
@@ -197,7 +156,7 @@ public class ReportServiceController extends WebApiController {
 		}
 
 		// set content attributes for the response
-		response.setContentType(reportMaker.mimeType());
+		response.setContentType(reportMakerParam.getMimeType());
 		response.setContentLength(byteArray.length);
 
 		String outputFilename = reportMakerParam.getReportParamset()
@@ -209,7 +168,7 @@ public class ReportServiceController extends WebApiController {
 		// set headers for the response
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename + reportMaker.ext());
+				outputFilename + reportMakerParam.getExt());
 		response.setHeader(headerKey, headerValue);
 		//
 		OutputStream outStream = response.getOutputStream();
@@ -282,7 +241,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker eventReportMaker() {
-		return new ZipReportMaker() {
+		return new AbstractReportMaker() {
 
 			@Override
 			public String defaultFileName() {
@@ -296,7 +255,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker commerceReportMaker() {
-		return new ZipReportMaker() {
+		return new AbstractReportMaker() {
 
 			@Override
 			public String defaultFileName() {
@@ -311,7 +270,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker consT1ReportMaker() {
-		return new PdfReportMaker() {
+		return new AbstractReportMaker() {
 
 			@Override
 			public String defaultFileName() {
@@ -326,7 +285,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker consT2ReportMaker() {
-		return new PdfReportMaker() {
+		return new AbstractReportMaker() {
 
 			@Override
 			public String defaultFileName() {
@@ -364,9 +323,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
-		reportParamset.setSubscriberId(currentSubscriberService
-				.getSubscriberId());
-		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
 				reportParamset, contObjectIds);
@@ -376,4 +333,127 @@ public class ReportServiceController extends WebApiController {
 
 	}
 
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public void doDowndloadEventReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = eventReportMaker();
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
+				response);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public void doDowndloadConsT1ReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = consT1ReportMaker();
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
+				response);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public void doDowndloadConsT2ReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = consT2ReportMaker();
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
+				response);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 */
+	private void setupReportParamset(ReportParamset reportParamset) {
+		checkNotNull(reportParamset);
+		reportParamset.setSubscriberId(currentSubscriberService
+				.getSubscriberId());
+		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+	}
 }

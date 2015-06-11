@@ -112,6 +112,9 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column(name = "all_required_params_passed")
 	private Boolean allRequiredParamsPassed;
 
+	@Column(name = "output_file_zipped")
+	private Boolean outputFileZipped;
+
 	@Version
 	private int version;
 
@@ -297,6 +300,14 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public Boolean getOutputFileZipped() {
+		return outputFileZipped;
+	}
+
+	public void setOutputFileZipped(Boolean outputFileZipped) {
+		this.outputFileZipped = outputFileZipped;
 	}
 
 }
