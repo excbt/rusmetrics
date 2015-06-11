@@ -16,14 +16,14 @@ public interface ReportParamsetUnitRepository extends
 	@Query("SELECT co FROM ContObject co WHERE co.id IN "
 			+ "( SELECT u.objectId FROM ReportParamsetUnit u LEFT JOIN u.reportParamset rp "
 			+ "WHERE rp.id = :reportParamsetId ) " + "ORDER BY co.name, co.id")
-	public List<ContObject> selectContObjectUnits(
+	public List<ContObject> selectContObjects(
 			@Param("reportParamsetId") long reportParamsetId);
 
 	@Query("SELECT co FROM Subscriber s LEFT JOIN s.contObjects co "
 			+ "WHERE s.id = :subscriberId AND co.id NOT IN "
 			+ "( SELECT u.objectId FROM ReportParamsetUnit u LEFT JOIN u.reportParamset rp "
 			+ "WHERE rp.id = :reportParamsetId ) " + "ORDER BY co.name, co.id")
-	public List<ContObject> selectAvailableContObjectUnits(
+	public List<ContObject> selectAvailableContObjects(
 			@Param("reportParamsetId") long reportParamsetId,
 			@Param("subscriberId") long subscriberId);
 
