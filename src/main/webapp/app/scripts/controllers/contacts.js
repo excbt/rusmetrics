@@ -55,8 +55,9 @@ app.controller(
 				var table_list = document.getElementById("table_lists_in_window");
 				$scope.cnt_lst = [];
 				for(var zxa = 0; zxa < table_list.rows.length; zxa++){
-					if(table_list.rows[zxa].cells[0].childNodes[0].checked){
-						$scope.cnt_lst.push(table_list.rows[zxa].cells[0].childNodes[0].id);
+					//console.log(table_list.rows[zxa].cells[0].childNodes[1]);
+					if(table_list.rows[zxa].cells[0].childNodes[1].checked){
+						$scope.cnt_lst.push(table_list.rows[zxa].cells[0].childNodes[1].id);
 					}
 				}
 				// Если объект уже существует - делаем put
@@ -97,8 +98,8 @@ app.controller(
 				var table_contacts = document.getElementById("table_contacts_in_window");
 				$scope.cnt_lst = [];
 				for(var zxa = 0; zxa < table_contacts.rows.length; zxa++){
-					if(table_contacts.rows[zxa].cells[0].childNodes[0].checked){
-						$scope.cnt_lst.push(table_contacts.rows[zxa].cells[0].childNodes[0].id);
+					if(table_contacts.rows[zxa].cells[0].childNodes[1].checked){
+						$scope.cnt_lst.push(table_contacts.rows[zxa].cells[0].childNodes[1].id);
 					}
 				}
 				// Если объект уже существует - делаем put

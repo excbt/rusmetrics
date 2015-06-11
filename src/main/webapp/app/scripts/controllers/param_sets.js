@@ -30,6 +30,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
             $scope.reportTypes = data;
+//console.log(data);
             var newObjects = [];
             var newObject = {};
             for (var i = 0; i<data.length; i++){
@@ -40,6 +41,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
                 newObject.suffix = data[i].suffix;
+                newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
+                newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length>0?true:false);
                 
                 newObjects.push(newObject);
             };        
@@ -182,6 +186,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.archiveParamset = {};
         $scope.archiveParamset.id = object.id;
         $scope.archiveParamset.name = object.name;
+        $scope.currentParamSpecialList = $scope.archiveParamset.paramSpecialList;
         $scope.currentObject = angular.copy(object);
         $scope.currentObject.id = null;
         $scope.currentObject._active = true;
@@ -216,26 +221,46 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     
     $scope.currentReportType = {};
     $scope.setCurrentReportType = function(object){
-        $scope.currentReportType.reportType = object.reportType;
-        $scope.currentReportType.reportTypeName=object.reportTypeName;
-        $scope.currentReportType.suffix=object.suffix;
+        $scope.currentReportType = object;
+//        $scope.currentReportType.reportType = object.reportType;
+//        $scope.currentReportType.reportTypeName=object.reportTypeName;
+//        $scope.currentReportType.suffix=object.suffix;
     };
     
     var activateMainPropertiesTab = function(){
         $('#main_properties_tab').addClass("active");
         $('#set_of_objects_tab').removeClass("active");
+        $('#extra_properties_tab').removeClass("active");
         $('#createParamsetModal').modal();
     };
     
     $scope.addParamSet = function(object){
+        $scope.setCurrentReportType(object);
+        //подготавливаем массив специальных параметров, который будет заполнять пользователь
+//console.log($scope.currentReportType.reportMetaParamSpecialList);        
+        $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
+            var result = {};
+            result.specialParamCaption = element.specialParamCaption;
+            result.reportMetaParamSpecialId = element.id;
+            result.specialParamRequired = element.specialParamRequired;
+            result.textValue=null;
+            result.numericValue=null;
+            result.oneDateValue=null;
+            result.startDateValue=null;
+            result.endDateValue=null;
+            result.directoryValue=null;
+            return result;
+        });
         $scope.paramsetStartDateFormat = (new Date());
         $scope.paramsetEndDateFormat= (new Date());
         $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
         $scope.set_of_objects_flag=false;
         $scope.showAvailableObjects_flag = false;
-        $scope.setCurrentReportType(object);
+        
         $scope.currentObject = {};
+        $scope.currentObject.showParamsBeforeRunReport = true;       
         $scope.currentObject._active = true;
+        $scope.currentObject.paramSpecialList = []; //массив для специальных параметров
         $scope.createByTemplate_flag = false;
         $scope.createParamset_flag = true;
         $scope.currentSign = 9999;
@@ -250,9 +275,41 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         activateMainPropertiesTab();
     };
     $scope.editParamSet =function(parentObject,object){
-//        $scope.setCurrentReportType(parentObject);
-        
+//        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
+        $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
+            var result = {};
+            result.specialParamCaption = element.specialParamCaption;
+            result.reportMetaParamSpecialId = element.id;
+            result.specialParamRequired = elemet.specialParamRequired;
+            //Ищем значение этого параметра в массиве параметров варианта отчета
+            if (object.paramSpecialList.length==0){
+                result.textValue = null;
+                result.numericValue = null;
+                result.oneDateValue = null;
+                result.startDateValue = null;
+                result.endDateValue = null;
+                result.directoryValue = null;
+                return result;
+            }
+            var elementIndex = -1;
+            object.paramSpecialList.some(function(el,index,array){
+                if (el.reportMetaParamSpecialId === element.id){
+                    elementIndex = index;
+                    return true;
+                }else{
+                    return false;
+                }
+            });
+            result.textValue = object.paramSpecialList[elementIndex].textValue || null;
+            result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
+            result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
+            result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
+            result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
+            result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
+            return result;
+            
+        });
         $scope.editParamset_flag = true;
         $scope.createByTemplate_flag = false;
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета
@@ -425,8 +482,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         return right>=left;
     };
     
-    $scope.checkRequiredFields = function(){              
+    $scope.checkRequiredFields = function(){
+        var result;
         if (!($scope.currentObject.hasOwnProperty('reportPeriodKey'))||!($scope.currentObject.hasOwnProperty('reportTemplate'))){
+            $scope.currentObject.showParamsBeforeRunReport = true;
             return false;
         };  
         
@@ -435,10 +494,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             intervalValidate_flag = $scope.checkDateInterval($scope.paramsetStartDateFormat, $scope.paramsetEndDateFormat);
         };
         
-        return !((($scope.currentObject.reportPeriodKey==null) ||   
+        result = !((($scope.currentObject.reportPeriodKey==null) ||   
         ($scope.currentObject.reportTemplate.id==null)))
-        &&intervalValidate_flag
-        ;
+        &&intervalValidate_flag;
+        $scope.currentObject.allRequiredParamsPassed = !result;      
+        return result;
+        
     };
     
     
