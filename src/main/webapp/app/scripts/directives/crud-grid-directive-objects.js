@@ -133,13 +133,13 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
                 function getRefRangeByObjectAndZpoint(object, zpoint){
                     var url = $scope.urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod'; 
-console.log(url);                    
+//console.log(url);                    
                     $http.get(url)
                     .success(function(data){
                         if(data[0] != null){
                             var beginDate = new Date(data[0].periodBeginDate);
                             var endDate =  new Date(data[0].periodEndDate);
-console.log(data[0]);                                    
+//console.log(data[0]);                                    
                             zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
                             zpoint.zpointRefRangeAuto = data[0]._auto?"auto":"manual";
                         }
@@ -312,7 +312,7 @@ console.log(data[0]);
 							$scope.refRange.cont_zpoint_id = zpointId;
 							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
 							$scope.endDate =  new Date($scope.refRange.periodEndDate);
-							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
+//							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
 							// Проверяем, был ли интервал расчитан автоматически
 							if($scope.refRange._auto == false) {
 								document.getElementById('spn_if_manual').style.display = 'block';
