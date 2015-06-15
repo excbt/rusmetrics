@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipOutputStream;
 
 import javax.persistence.EntityManager;
@@ -53,6 +55,18 @@ public class ReportService {
 	public final static boolean IS_ZIP_TRUE = true;
 	public final static boolean IS_ZIP_FALSE = !IS_ZIP_TRUE;
 	public final static Charset UTF8_CHARSET = Charset.forName("UTF-8");
+
+	private final static Map<ReportOutputFileType, FileType> NMK_REPORTS_TYPE_CONVERTER;
+
+	static {
+		Map<ReportOutputFileType, FileType> typeMap = new HashMap<>();
+		typeMap.put(ReportOutputFileType.HTML, FileType.HTML);
+		typeMap.put(ReportOutputFileType.PDF, FileType.PDF);
+		typeMap.put(ReportOutputFileType.XLSX, FileType.XLSX);
+		typeMap.put(ReportOutputFileType.XLS, FileType.XLSX);
+
+		NMK_REPORTS_TYPE_CONVERTER = Collections.unmodifiableMap(typeMap);
+	}
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportService.class);
@@ -297,7 +311,6 @@ public class ReportService {
 					jasperConfig.getDatasourceUsername(),
 					jasperConfig.getDatasourcePassword());
 
-			
 			ReportTypeKey rptKey = reportParamset.getReportTemplate()
 					.getReportTypeKey();
 
@@ -307,9 +320,19 @@ public class ReportService {
 					"Call nmkGetReport with params (reportType:{}; startDate:{};endDate:{};idParam:{};objectIds:{};)",
 					destReportType, dtStart, dtEnd, Arrays.toString(objectIds));
 
+			FileType convertedFileType = NMK_REPORTS_TYPE_CONVERTER
+					.get(reportMakerParam.reportOutputFileType());
+
+			if (convertedFileType == null) {
+				logger.warn(
+						"NMK_REPORTS_TYPE_CONVERTER for ReportMakerParam's reportOutputFileType {}  is null. Using default file type {}",
+						reportMakerParam.reportOutputFileType(), FileType.PDF);
+				convertedFileType = FileType.PDF;
+			}
+
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
 					reportParamset.getSubscriberId(), dtStart.toDate(),
-					dtEnd.toDate(), objectIds, FileType.PDF, isZip);
+					dtEnd.toDate(), objectIds, convertedFileType, isZip);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
@@ -399,7 +422,7 @@ public class ReportService {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
 
-		return getReportMakerParam(reportParamset, null);
+		return getReportMakerParam(reportParamset, null, false);
 
 	}
 
@@ -409,10 +432,36 @@ public class ReportService {
 	 * @return
 	 */
 	public ReportMakerParam getReportMakerParam(long reportParamsetId,
-			Long[] contObjectIds) {
+			boolean previewMode) {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
-		return getReportMakerParam(reportParamset, contObjectIds);
+
+		return getReportMakerParam(reportParamset, null, previewMode);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+			Long[] contObjectIdList) {
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+		return getReportMakerParam(reportParamset, contObjectIdList, false);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+			Long[] contObjectIds, boolean previewMode) {
+		ReportParamset reportParamset = reportParamsetService
+				.findOne(reportParamsetId);
+		return getReportMakerParam(reportParamset, contObjectIds, previewMode);
 	}
 
 	/**
@@ -423,6 +472,17 @@ public class ReportService {
 	 */
 	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
 			Long[] contObjectIds) {
+		return getReportMakerParam(reportParamset, contObjectIds, false);
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIds
+	 * @return
+	 */
+	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
+			Long[] contObjectIds, boolean previewMode) {
 		checkNotNull(reportParamset);
 
 		if (contObjectIds != null && contObjectIds.length > 0) {
@@ -442,7 +502,8 @@ public class ReportService {
 							.getSubscriberId());
 		}
 
-		return new ReportMakerParam(reportParamset, resultContObjectIdList);
+		return new ReportMakerParam(reportParamset, resultContObjectIdList,
+				previewMode);
 
 	}
 

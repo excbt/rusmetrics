@@ -41,7 +41,7 @@ public class Subscriber extends AbstractAuditableModel {
 
 	
 	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_cont",
+    @JoinTable(name="subscr_cont_object",
     joinColumns=@JoinColumn(name="subscriber_id"),
     inverseJoinColumns=@JoinColumn(name="cont_object_id"))
 	@JsonIgnore

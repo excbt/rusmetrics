@@ -73,7 +73,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testCommerceDownloadGet() throws Exception {
-		int reportParamsetId = 28618264;
+		long reportParamsetId = 28618264;
 		String urlStr = String.format(
 				"/api/reportService/commerce/%d/download", reportParamsetId);
 
@@ -88,6 +88,54 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	@Test
+	public void testEventDownloadGetPreview() throws Exception {
+		long reportParamsetId = TEST_PARAMSET_EVENT;
+		String urlStr = String.format("/api/reportService/event/%d/preview",
+				reportParamsetId);
+
+		testHtmlGet(urlStr);
+
+	}
+
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	@Test
+	public void testConsT1DownloadGetPreview() throws Exception {
+		long reportParamsetId = TEST_PARAMSET_CONS_T1;
+		String urlStr = String.format("/api/reportService/cons_t1/%d/preview",
+				reportParamsetId);
+
+		testHtmlGet(urlStr);
+
+	}
+
+	/**
+	 * @throws Exception
+	 * 
+	 */
+	@Test
+	public void testConsT2DownloadGetPreview() throws Exception {
+		long reportParamsetId = TEST_PARAMSET_CONS_T2;
+		String urlStr = String.format("/api/reportService/cons_t2/%d/preview",
+				reportParamsetId);
+
+		
+
+		testHtmlGet (urlStr);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCommerceDownloadPut() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_COMMERCE;
