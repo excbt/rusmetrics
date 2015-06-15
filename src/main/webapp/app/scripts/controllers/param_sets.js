@@ -135,8 +135,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         
         $scope.getTemplates();       
     };
-      
-    $scope.saveParamset = function(object){    
+    
+    $scope.checkAndSaveParamset = function(object){
+        var flag = $scope.checkRequiredFieldsOnSave();
+        if (flag===false){
+            $('#messageForUserModal').modal();
+        };
+    };
+    
+    //Save paramset
+    $scope.saveParamset = function(object){  
+        $('#messageForUserModal').modal('hide');
+        //set the list of the special params
+        object.paramSpecialList = $scope.currentParamSpecialList;
         var table="";       
         var tmp = $scope.selectedObjects.map(function(elem){
             return elem.id;
@@ -281,7 +292,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             var result = {};
             result.specialParamCaption = element.specialParamCaption;
             result.reportMetaParamSpecialId = element.id;
-            result.specialParamRequired = elemet.specialParamRequired;
+            result.specialParamRequired = element.specialParamRequired;
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (object.paramSpecialList.length==0){
                 result.textValue = null;
@@ -301,12 +312,24 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                     return false;
                 }
             });
-            result.textValue = object.paramSpecialList[elementIndex].textValue || null;
-            result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
-            result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
-            result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
-            result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
-            result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
+            if (elementIndex!=-1){
+                result.id = object.paramSpecialList[elementIndex].id || null;
+                result.textValue = object.paramSpecialList[elementIndex].textValue || null;
+                result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
+                result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
+                result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
+                result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
+                result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
+                result.version = object.paramSpecialList[elementIndex].version || null;
+            }else{
+                result.id = null;
+                result.textValue = null;
+                result.numericValue = null;
+                result.oneDateValue = null;
+                result.startDateValue = null;
+                result.endDateValue = null;
+                result.directoryValue = null;
+            }
             return result;
             
         });
@@ -477,15 +500,16 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     }
     
     //checkers
+        //check date interval
     $scope.checkDateInterval = function(left, right){
         if ((left==null)|| (right==null)){return false;};
         return right>=left;
     };
-    
+        //check fields
     $scope.checkRequiredFields = function(){
         var result;
         if (!($scope.currentObject.hasOwnProperty('reportPeriodKey'))||!($scope.currentObject.hasOwnProperty('reportTemplate'))){
-            $scope.currentObject.showParamsBeforeRunReport = true;
+//            $scope.currentObject.showParamsBeforeRunReport = true;
             return false;
         };  
         
@@ -500,6 +524,84 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         $scope.currentObject.allRequiredParamsPassed = !result;      
         return result;
         
+    };
+    
+        //check field "outputFileZipped"
+    $scope.checkOutputFileZipped = function(){
+        if (!$scope.currentReportType.hasOwnProperty('reportMetaParamCommon')){
+            return false;
+        };
+        var result = false;
+//console.log($scope.currentReportType);        
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+        {
+            $scope.currentObject.outputFileZipped =  true;
+            result= true;
+        };
+        return result;
+    };
+        //check fields before save
+    $scope.checkRequiredFieldsOnSave = function(){
+        if (!$scope.currentReportType.hasOwnProperty('reportMetaParamCommon')){
+            return true;
+        };
+        var result= true;
+        $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
+        //Check common params before save
+            //one date - for future
+//        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
+        
+            //start date
+        if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+        {
+            $scope.messageForUser += "- Не задано начало интервала"+"\n";
+        };
+                    //end date
+        if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+        {
+            $scope.messageForUser += "- Не задан конец интервала"+"\n";
+        };
+
+                    //Count of objects
+        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0))
+        {
+            $scope.messageForUser += "- Должен быть выбран хотя бы один объект"+"\n";
+        };
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length<=0))
+        {
+            $scope.messageForUser += "- Необходимо выбрать несколько объектов"+"\n";
+        };
+        
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+        {
+            $scope.currentObject.outputFileZipped =  true;
+        };
+        
+        $scope.currentParamSpecialList.forEach(function(element, index, array){
+            if (element.specialParamRequired && !(element.textValue 
+                                                 || element.numericValue 
+                                                 || element.oneDateValue 
+                                                 || element.startDateValue
+                                                 || element.endDateValue
+                                                 || element.directoryValue)
+               )
+            {
+                $scope.messageForUser += "- Не задан параметр \""+element.specialParamCaption+"\" \n";
+            }
+        });
+        if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){
+//            $scope.messageForUser = "Внимание!!! \n"+$scope.messageForUser;
+            $scope.messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
+//            $scope.messageForUser+=" Этот вариант отчета нельзя запустить без уточнения, а также его нельзя использовать в рассылке. Продолжить?";
+//            alert($scope.messageForUser);
+//            $('#messageForUserModal').modal();
+            result= false;
+        };
+        result =result && $scope.checkRequiredFields();  
+        if (!result){
+            $scope.currentObject.showParamsBeforeRunReport = true;
+        }
+        return result;
     };
     
     
