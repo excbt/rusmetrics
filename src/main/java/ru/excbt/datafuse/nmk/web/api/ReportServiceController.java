@@ -71,8 +71,6 @@ public class ReportServiceController extends WebApiController {
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
 	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
-	private final static String EXT_ZIP = ".zip";
-	private final static String EXT_PDF = ".pdf";
 
 	@Autowired
 	private ReportService reportService;
@@ -91,14 +89,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadCommerceReportDefaultZip(
+	public void doDowndloadCommerceReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
-		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		ReportMakerParam reportMakerParam = reportService
+				.getReportMakerParam(reportParamsetId);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 
 	}
@@ -111,14 +112,39 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadEventReportDefaultZip(
+	public void doDowndloadEventReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
 		ReportMaker reportMaker = eventReportMaker();
 
-		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		ReportMakerParam reportMakerParam = reportService
+				.getReportMakerParam(reportParamsetId);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
+				response);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/event/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public void doDowndloadEventReportGetPreview(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		ReportMaker reportMaker = eventReportMaker();
+
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamsetId, true);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 	}
 
@@ -165,11 +191,14 @@ public class ReportServiceController extends WebApiController {
 			outputFilename = reportMaker.defaultFileName();
 		}
 
-		// set headers for the response
-		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename + reportMakerParam.getExt());
-		response.setHeader(headerKey, headerValue);
+		if (!reportMakerParam.isPreviewMode()) {
+			// set headers for the response
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"",
+					outputFilename + reportMakerParam.getExt());
+			response.setHeader(headerKey, headerValue);
+		}
+
 		//
 		OutputStream outStream = response.getOutputStream();
 		outStream.write(byteArray);
@@ -179,14 +208,17 @@ public class ReportServiceController extends WebApiController {
 	/**
 	 * 
 	 * @param reportParamsetId
-	 * @param reportMaker
 	 * @param request
 	 * @param response
 	 * @throws IOException
 	 */
-	private void processDowndloadRequestReport(long reportParamsetId,
-			ReportMaker reportMaker, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.GET)
+	public void doDowndloadConsT1ReportGet(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		ReportMaker reportMaker = consT1ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportService
 				.getReportMakerParam(reportParamsetId);
@@ -203,15 +235,18 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT1ReportDefaultPdf(
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public void doDowndloadConsT1ReportGetPreview(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamsetId, true);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 
 	}
@@ -224,14 +259,40 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT2ReportDefaultPdf(
+	public void doDowndloadConsT2ReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		processDowndloadRequestReport(reportParamsetId, reportMaker, request,
+		ReportMakerParam reportMakerParam = reportService
+				.getReportMakerParam(reportParamsetId);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
+				response);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public void doDowndloadConsT2ReportGetPreview(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		ReportMaker reportMaker = consT2ReportMaker();
+
+		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
+				reportParamsetId, true);
+
+		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
 
 	}
