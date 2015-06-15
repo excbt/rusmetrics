@@ -18,20 +18,7 @@ public class ReportMakerParam {
 
 	private final Long[] contObjectIds;
 	private final ReportParamset reportParamset;
-
-	/**
-	 * 
-	 * @param reportParamset
-	 * @param contObjectIds
-	 */
-	public ReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds) {
-		checkNotNull(reportParamset);
-		checkNotNull(reportParamset.getReportTemplate());
-		checkNotNull(contObjectIds);
-		checkArgument(contObjectIds.length > 0);
-		this.reportParamset = reportParamset;
-		this.contObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
-	}
+	private final boolean previewMode;
 
 	/**
 	 * 
@@ -39,13 +26,49 @@ public class ReportMakerParam {
 	 * @param contObjectIds
 	 */
 	public ReportMakerParam(ReportParamset reportParamset,
-			List<Long> contObjectIds) {
+			Long[] contObjectIds, boolean previewMode) {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIds);
-		checkArgument(!contObjectIds.isEmpty());
+		checkArgument(contObjectIds.length > 0);
 		this.reportParamset = reportParamset;
-		this.contObjectIds = contObjectIds.toArray(new Long[0]);
+		this.contObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
+		this.previewMode = previewMode;
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIds
+	 */
+	public ReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds) {
+		this(reportParamset, contObjectIds, false);
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIdList
+	 */
+	public ReportMakerParam(ReportParamset reportParamset,
+			List<Long> contObjectIdList, boolean previewMode) {
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getReportTemplate());
+		checkNotNull(contObjectIdList);
+		checkArgument(!contObjectIdList.isEmpty());
+		this.reportParamset = reportParamset;
+		this.contObjectIds = contObjectIdList.toArray(new Long[0]);
+		this.previewMode = previewMode;
+	}
+
+	/**
+	 * 
+	 * @param reportParamset
+	 * @param contObjectIdList
+	 */
+	public ReportMakerParam(ReportParamset reportParamset,
+			List<Long> contObjectIdList) {
+		this(reportParamset, contObjectIdList, false);
 	}
 
 	/**
@@ -110,6 +133,10 @@ public class ReportMakerParam {
 	 */
 	public boolean isOutputFileZipped() {
 
+		if (previewMode) {
+			return false;
+		}
+
 		return Boolean.TRUE.equals(reportParamset.getOutputFileZipped())
 				|| (getContObjectList().size() > 1 && Boolean.TRUE
 						.equals(reportParamset.getReportTemplate()
@@ -129,6 +156,7 @@ public class ReportMakerParam {
 	}
 
 	public String getExt() {
+
 		if (isOutputFileZipped()) {
 			return EXT_ZIP;
 		}
@@ -141,7 +169,16 @@ public class ReportMakerParam {
 	 * @return
 	 */
 	public ReportOutputFileType reportOutputFileType() {
+
+		if (previewMode) {
+			return ReportOutputFileType.HTML;
+		}
+
 		return reportParamset.getOutputFileType() == null ? DEFAULT_OUTPUT_FILE_TYPE
 				: reportParamset.getOutputFileType();
+	}
+
+	public boolean isPreviewMode() {
+		return previewMode;
 	}
 }

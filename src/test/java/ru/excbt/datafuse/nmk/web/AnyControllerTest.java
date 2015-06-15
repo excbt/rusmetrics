@@ -99,17 +99,89 @@ public class AnyControllerTest {
 
 	/**
 	 * 
-	 * @param urlTemplate
+	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGet(String urlTemplate) throws Exception {
-		ResultActions resultActionsAll = mockMvc.perform(get(urlTemplate).with(
-				testSecurityContext()).accept(MediaType.APPLICATION_JSON));
+	protected void testJsonGet(String url) throws Exception {
 
-		resultActionsAll.andDo(MockMvcResultHandlers.print());
+		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
 
-		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.accept(MediaType.APPLICATION_JSON);
+
+			}
+		};
+
+		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+				resultActions.andDo(MockMvcResultHandlers.print());
+
+				resultActions.andExpect(status().isOk()).andExpect(
+						content().contentType(
+								WebApiController.APPLICATION_JSON_UTF8));
+
+			}
+		};
+
+		testGet(url, requestExtraInitializer, resultActionsTester);
+
+	}
+
+	
+	protected void testHtmlGet (String url) throws Exception {
+
+		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
+
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.accept(MediaType.TEXT_HTML);
+
+			}
+		};
+
+		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+				resultActions.andExpect(status().isOk()).andExpect(
+						content().contentType(
+								MediaType.TEXT_HTML));
+
+			}
+		};
+
+		testGet(url, requestExtraInitializer, resultActionsTester);		
+		
+	}
+	
+	/**
+	 * 
+	 * @param url
+	 * @param resultActionsTester
+	 * @throws Exception
+	 */
+	protected void testGet(String url,
+			RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
+		MockHttpServletRequestBuilder request = get(url).with(
+				testSecurityContext());
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions resultActions = mockMvc.perform(request);
+
+		if (resultActionsTester != null) {
+			resultActionsTester.testResultActions(resultActions);
+		}
+
 	}
 
 	/**
