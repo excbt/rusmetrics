@@ -429,10 +429,12 @@
                                     <tr>
                                         <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Тип файла</label>
                                         </td>
-                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
-                                                <option>PDF</option>
-                                                <option>HTML</option>
-                                                <option>XLSX</option>
+                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()" ng-options="fileType for fileType in fileTypes"> 
+<!--
+                                                <option value="PDF" selected>PDF</option>
+                                                <option value="HTML">HTML</option>
+                                                <option value="XLSX">XLSX</option>
+-->
 <!--                                                <option>ZIP</option>-->
                                             </select>
                                         </td>
@@ -491,7 +493,12 @@
                                             </td>
     -->
                                             <td class="col-sm-9 nmc-text-align-left">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.textValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_STRING'" ng-model="specialParam.textValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_NUMERIC'" ng-model="specialParam.numericValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_DATE'" ng-model="specialParam.oneDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.startDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.endDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-show="specialParam.directoryValue==='SPECIAL_CONT_OBJECT_GROUP'" ng-model="specialParam.directoryValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">                                                
                                             </td>
                                         </tr>
                                 </table>    
@@ -551,7 +558,7 @@
 							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="checkAndSaveParamset(currentObject)"
 								value="Сохранить" 
-                                data-target="#main_properties" data-toggle="tab" />
+                                />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
@@ -646,7 +653,9 @@
 						<div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
 								ng-click="saveParamset(currentObject);"
-								value="Ок" />
+								value="Ок" 
+                                data-target="#main_properties" data-toggle="tab"    
+                                   />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
