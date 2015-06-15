@@ -350,7 +350,8 @@
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Основные свойства</a></li>
                 <li role="presentation" id="extra_properties_tab" class="nmc-hide" ng-class="{'nmc-hide':!currentReportType.reportMetaParamSpecialList_flag, 'nmc-show':currentReportType.reportMetaParamSpecialList_flag}"><a class="nmc-tab-button" href="" aria-controls="extra_properties" data-target="#extra_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Дополнительные свойства</a></li>  
-                <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)">Выбор объектов</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;" >Выбор объектов</a></li>
+<!--                  ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)"-->
               </ul>
 
               <!-- реализация вкладок -->
@@ -431,7 +432,7 @@
                                         <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()"> 
                                                 <option>PDF</option>
                                                 <option>HTML</option>
-                                                <option>XLS</option>
+                                                <option>XLSX</option>
 <!--                                                <option>ZIP</option>-->
                                             </select>
                                         </td>
@@ -457,11 +458,11 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input ng-model="currentObject.showParamsBeforeRunReport" ng-disabled="!checkRequiredFields()" type=checkbox class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
+                                        <td colspan="2" class="col-sm-3"><input ng-model="currentObject.showParamsBeforeRunReport" ng-disabled="!checkRequiredFieldsOnSave()" type=checkbox class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2" class="col-sm-3"><input type=checkbox  class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
+                                        <td colspan="2" class="col-sm-3"><input ng-disabled="checkOutputFileZipped()" type=checkbox ng-model="currentObject.outputFileZipped" class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
                                         </td>
                                     </tr> 
 
@@ -490,7 +491,7 @@
                                             </td>
     -->
                                             <td class="col-sm-9 nmc-text-align-left">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.textValue" ng-disabled="isDisabled()">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.textValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
                                             </td>
                                         </tr>
                                 </table>    
@@ -548,7 +549,7 @@
                         </div>
                         <div class="col-xs-offset-3 col-md-3">
 							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="saveParamset(currentObject)"
+								ng-click="checkAndSaveParamset(currentObject)"
 								value="Сохранить" 
                                 data-target="#main_properties" data-toggle="tab" />
 						</div>
@@ -601,6 +602,51 @@
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#moveToArchive');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="messageForUserLabel" tabindex="-1">
+
+	<div class="modal-dialog modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="messageForUserLabel" class="nmc-h3">
+				Внимание! 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+			<form name="moveForm" novalidate>
+                <pre>
+                    {{messageForUser}}  
+                </pre>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="saveParamset(currentObject);"
+								value="Ок" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
