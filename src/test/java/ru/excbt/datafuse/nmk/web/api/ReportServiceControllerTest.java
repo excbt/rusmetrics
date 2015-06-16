@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -41,6 +42,9 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+	
+	@Autowired
+	private ReportMakerParamService reportMakerParamService;
 
 	@Autowired
 	private ReportService reportService;
@@ -77,7 +81,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format(
 				"/api/reportService/commerce/%d/download", reportParamsetId);
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(
@@ -143,7 +147,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format(
 				"/api/reportService/commerce/%d/download", reportParamsetId);
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		List<Long> contObjectIds = reportMakerParam.getContObjectList()
@@ -187,7 +191,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/cons_t1/%d/download",
 				reportParamsetId);
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
@@ -227,7 +231,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/cons_t2/%d/download",
 				reportParamsetId);
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
@@ -263,7 +267,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/event/%d/download",
 				reportParamsetId);
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {

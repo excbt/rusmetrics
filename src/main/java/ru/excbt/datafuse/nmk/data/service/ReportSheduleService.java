@@ -31,8 +31,13 @@ public class ReportSheduleService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId,
 			LocalDateTime dateTime) {
-		return reportSheduleRepository.selectReportShedule(subscriberId,
-				dateTime.toDate());
+		
+		List<ReportShedule> result = reportSheduleRepository.selectReportShedule(subscriberId,
+				dateTime.toDate()); 
+		
+		result.forEach((s) -> s.getReportParamset().getParamSpecialList().size());
+		
+		return result;
 	}
 
 	/**
@@ -42,7 +47,11 @@ public class ReportSheduleService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId) {
-		return reportSheduleRepository.findBySubscriberId(subscriberId);
+		List<ReportShedule> result = reportSheduleRepository.findBySubscriberId(subscriberId); 
+		
+		result.forEach((s) -> s.getReportParamset().getParamSpecialList().size());
+		
+		return result;
 	}
 
 	/**
@@ -173,6 +182,7 @@ public class ReportSheduleService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public ReportShedule findOne(long reportSheduleId) {
 		ReportShedule result = reportSheduleRepository.findOne(reportSheduleId);
+		result.getReportParamset().getParamSpecialList().size();
 		return result;
 	}
 
