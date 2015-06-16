@@ -287,7 +287,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
     }, false);
     
     
-        $scope.isSystemuser = function(){
+    $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
