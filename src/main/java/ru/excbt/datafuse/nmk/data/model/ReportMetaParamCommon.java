@@ -17,9 +17,12 @@ import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "report_meta_param_common")
+@JsonInclude(Include.NON_NULL)
 public class ReportMetaParamCommon implements Serializable {
 
 	/**
