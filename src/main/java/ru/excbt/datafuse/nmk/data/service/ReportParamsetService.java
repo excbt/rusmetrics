@@ -211,9 +211,9 @@ public class ReportParamsetService implements SecuredRoles {
 		List<ReportParamset> result = new ArrayList<>();
 		result.addAll(commonReportParams);
 		result.addAll(subscriberReportParams);
-		
+
 		result.forEach((s) -> s.getParamSpecialList().size());
-		
+
 		return result;
 	}
 
@@ -565,6 +565,61 @@ public class ReportParamsetService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
+	}
+
+	public void setupRequiredPassed() {
+		setupRequiredPassed(null);
+	}
+
+	/**
+	 * 
+	 */
+	public void setupRequiredPassed(Long reportParamsetId) {
+
+		Iterable<ReportParamset> allParamsets = reportParamsetId == null ? reportParamsetRepository
+				.findAll() : Arrays.asList(reportParamsetRepository
+				.findOne(reportParamsetId));
+
+		int totalCounter = 0;
+		int passedCounter = 0;
+
+		logger.info("Setting up allRequiredParamsPassed property");
+		for (ReportParamset rp : allParamsets) {
+
+			if (rp == null) {
+				continue;
+			}
+
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.getReportMakerParam(rp);
+
+			boolean commonPassed = reportMakerParamService
+					.isAllCommonRequiredParamsExists(reportMakerParam);
+			
+			boolean specialPassed = reportMakerParamService
+					.isAllSpecialRequiredParamsExists(reportMakerParam);
+			
+			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
+			
+			boolean requiredPassed = commonPassed
+					&& specialPassed;
+
+			if (requiredPassed) {
+				passedCounter++;
+			}
+
+			logger.info("ReportParamset id:{} reportType:{} ... requiredPass: {}",
+					rp.getId(), rp.getReportTemplate().getReportTypeKey(), requiredPassed);
+
+			rp.setAllRequiredParamsPassed(requiredPassed);
+			reportParamsetRepository.save(rp);
+
+			totalCounter++;
+		}
+
+		logger.info("Total Paramset processed {}. Passed {}", totalCounter,
+				passedCounter);
+
 	}
 
 }
