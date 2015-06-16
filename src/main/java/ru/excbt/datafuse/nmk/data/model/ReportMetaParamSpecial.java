@@ -36,16 +36,16 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	private ReportType reportType;	
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "special_param_type")	
+	@JoinColumn(name = "param_special_type")	
 	private ReportMetaParamSpecialType paramSpecialType;
 	
-	@Column(name = "special_param_keyname")
+	@Column(name = "param_special_keyname")
 	private String paramSpecialKeyname;
 	
-	@Column(name = "special_param_caption")
+	@Column(name = "param_special_caption")
 	private String paramSpecialCaption;
 	
-	@Column(name = "special_param_required")
+	@Column(name = "param_special_required")
 	private Boolean paramSpecialRequired;
 
 	public ReportTypeKey getReportTypeKey() {
