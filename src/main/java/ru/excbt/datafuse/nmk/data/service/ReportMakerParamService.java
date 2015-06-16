@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
@@ -148,7 +148,7 @@ public class ReportMakerParamService {
 			ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
-		checkState(reportMakerParam.isParamsetValid());
+		//checkState(reportMakerParam.isParamsetValid());
 
 		boolean result = true;
 
@@ -160,16 +160,25 @@ public class ReportMakerParamService {
 		ReportMetaParamCommon paramCommon = reportType
 				.getReportMetaParamCommon();
 
-		result = result
-				&& checkRequiredParamNotNull(paramCommon.getOneDateRequired(),
-						reportParamset.getParamsetOneDate());
-		result = result
-				&& checkRequiredParamNotNull(
-						paramCommon.getStartDateRequired(),
-						reportParamset.getParamsetStartDate());
-		result = result
-				&& checkRequiredParamNotNull(paramCommon.getEndDateRequired(),
-						reportParamset.getParamsetEndDate());
+		
+		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
+			
+			result = result
+					&& checkRequiredParamNotNull(
+							paramCommon.getStartDateRequired(),
+							reportParamset.getParamsetStartDate());
+			
+			result = result
+					&& checkRequiredParamNotNull(paramCommon.getEndDateRequired(),
+							reportParamset.getParamsetEndDate());			
+		}
+		
+		
+		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.DAY) {
+			result = result
+					&& checkRequiredParamNotNull(paramCommon.getOneDateRequired(),
+							reportParamset.getParamsetOneDate());
+		}
 
 		// Only one object required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
@@ -205,7 +214,7 @@ public class ReportMakerParamService {
 			ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
-		checkState(reportMakerParam.isParamsetValid());
+		//checkState(reportMakerParam.isParamsetValid());
 
 		boolean result = true;
 

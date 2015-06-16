@@ -111,6 +111,7 @@ public class ReportMakerParam {
 	 * @return
 	 */
 	public boolean isParamsetValid() {
+		
 		return reportParamset.getSubscriber() != null
 				//&& !reportParamset.isNew()
 				&& reportParamset.getReportPeriodKey() != null

@@ -37,7 +37,7 @@ public class ReportConstants {
 	}
 
 	public enum ReportPeriodKey {
-		CURRENT_MONTH, INTERVAL, LAST_MONTH, TODAY, YESTERDAY
+		CURRENT_MONTH, INTERVAL, LAST_MONTH, TODAY, YESTERDAY, DAY
 	}
 
 	public enum ReportActionKey {
