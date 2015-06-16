@@ -32,8 +32,8 @@
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation"><a class="nmc-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>      
     <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="report_templates" data-target="#report_templates" role="tab" data-toggle="tab">Шаблоны</a></li>
-    <li role="presentation"><a class="nmc-tab-button" href="#/settings/paramsets" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Варианты отчетов</a></li>
     <li role="presentation"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>
     
   </ul>
@@ -83,15 +83,42 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th>
+                                            </th>
+                                            <th>
+                                                Наименование
+                                            </th>
+                                            <th>
+                                                Действует с 
+                                            </th>    
+                                        </tr>
+                                    </thead>
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
+                                         <td>
+                                            <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                            <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                         </td>
+                                         <td class="col-md-3">
+                                            <div ng-class="{'nmc-distinguish': oldObject._default}">     
+                                                {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                            </div>
+                                         </td>
+                                         <td class="col-md-8">
+                                             <div ng-class="{'nmc-distinguish': oldObject._default}">
+                                                {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
+                                             </div>
+                                         </td>
 
-                                         <td class="col-md-12">
+<!--                                         <td class="col-md-12">-->
 <!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
 -->
+<!--
                                               <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
                                                     <div class="btn-group">
                                                       <table>
@@ -112,6 +139,7 @@
                                                         действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
                                                 </div>
                                          </td>
+-->
 
                                      </tr>
                                     </table>         
@@ -158,14 +186,38 @@
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th>
+                                            </th>
+                                            <th>
+                                                Наименование
+                                            </th>
+                                            <th>
+                                                В архиве с 
+                                            </th> 
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
+                                         <td>
+                                             <i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                         </td>
+                                         <td class="col-md-4">
+                                             {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                         </td>
+                                         <td class="col-md-7">
+                                             {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
+                                         </td>
 
-                                         <td class="col-md-12">
+<!--                                         <td class="col-md-12">-->
 <!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
 -->
+<!--
                                               <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right" style="">
                                                     <div class="btn-group">
                                                       <table>
@@ -184,6 +236,7 @@
                                                     в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                             </div>
                                          </td>
+-->
                                          <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 

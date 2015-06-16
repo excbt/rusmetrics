@@ -156,6 +156,25 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 $scope.zPointsByObject = [];
                 $scope.getZpointsDataByObject = function(obj, mode){ 
                     obj.zpoints = [];
+//                    var zpoint = {};
+//                    for(var i=0; i<2;i++){
+//                            zpoint = {};
+//                            zpoint.id = 123;
+//                            zpoint.zpointType = "Type";
+//                            zpoint.zpointName = "Zpoint name";
+//                            zpoint.zpointRSO = "RSO"
+//                            zpoint.checkoutTime = "checkoutTime";
+//                            zpoint.checkoutDay = "checkoutTime";
+//                            zpoint.piped = true;
+//                            zpoint.doublePipe = true;
+//                            zpoint.zpointModel = "Model";
+//                            zpoint.zpointNumber ="D503";
+//                            zpoint.zpointLastDataDate  = new Date(); 
+//                            obj.zpoints.push(zpoint);
+//                    };
+//                    
+//                    return;
+                    
                     var table = $scope.crudTableName+"/"+obj.id+"/contZPoints"+mode;//Ex";
                     crudGridDataFactory(table).query(function (data) {
                         var tmp = [];
@@ -191,8 +210,12 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                                 zpoint.doublePipe = $scope.zPointsByObject[i].doublePipe;
                                 zpoint.singlePipe = !zpoint.doublePipe;
                             };
-                            if (typeof $scope.zPointsByObject[i].deviceObjects != 'undefined'){
-                                zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                            if ((typeof $scope.zPointsByObject[i].deviceObjects != 'undefined') && ($scope.zPointsByObject[i].deviceObjects.length>0)){                                
+                                if ($scope.zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
+                                    zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                                }else{
+                                    zpoint.zpointModel = "Не задано";
+                                };
                                 zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
                             };
                             zpoint.zpointLastDataDate  = $scope.zPointsByObject[i].lastDataDate;   

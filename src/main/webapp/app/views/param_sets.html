@@ -34,8 +34,8 @@
 
   <!-- Навигационная полоса -->
   <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" ><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
     <li role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="param_sets" data-target="#param_sets" role="tab" data-toggle="tab">Варианты отчетов</a></li>
+    <li role="presentation" ><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>
     <li role="presentation"><a class="nmc-tab-button" href="#/settings/delivery/" aria-controls="mailing_lists" data-target="#mailing_lists" role="tab" data-toggle="tab">Рассылки</a></li>   
   </ul>
 
@@ -84,15 +84,48 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+    <!--                                            td for buttons-->
+                                            <th></th>
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                                {{paramsetColumn.header}}
+                                            </th>
+                                            <th>
+                                                Действует с
+                                            </th>
+                                        </tr>
+                                    </thead>
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
 
-                                         <td class="col-md-12">
+                                         <td>
+                                             <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                                           
+                                            <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span></span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
+                                         </td>
+<!--                                         <td class="col-md-12">-->
 <!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
 -->
+<!--
                                               <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
                                                     <div class="btn-group">
                                                       <table>
@@ -113,6 +146,7 @@
                                                     действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
                                             </div>
                                          </td>
+-->
 
                                      </tr>
                                     </table>         
@@ -162,17 +196,50 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+    <!--                                            td for buttons-->
+                                            <th></th>
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                                {{paramsetColumn.header}}
+                                            </th>
+                                            <th>
+                                                В архиве с
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>    
+                                    <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
 
-                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
-
-                                         <td class="col-md-12">
+                                        <td>
+                                            <i title="Просмотреть" class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                            <i title="Создать новый действующий вариант на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
+                                        </td>
+                                        <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span></span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeEndDate | date:'dd.MM.yyyy'}}</span>
+                                         </td>
+<!--                                        <td class="col-md-12">-->
 <!--
                                              <div class="col-md-1" style="width:45px;">
                                              </div>
 -->
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
+<!--                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">-->
 <!--                                                  width:55px;-->
+<!--
                                                     <div class="btn-group">
                                                       <table>
                                                           <tr>
@@ -185,13 +252,16 @@
                                                       </table>
                                                     </div>    
                                                 </div>
+-->
+<!--
                                              <div class="col-md-7 " >     
                                                     {{oldObject.name}} <span class="marginLeft15">тип файла: {{oldObject.outputFileType}}</span> <span class="marginLeft15">интервал: {{oldObject.reportPeriod.caption}}</span><span class="marginLeft15"> </span>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
                                             </div>
                                             <div class="col-md-2">     
                                                     в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
                                             </div>
-                                         </td>
+-->
+<!--                                         </td>-->
                                          <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
@@ -487,61 +557,61 @@
                             <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
     -->
                                 <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                        <tr ng-repeat="specialParam in currentParamSpecialList">
-                                            <td class="col-sm-3"><label for="inputType" class="nmc-form-label">{{specialParam.specialParamCaption}}</label>
+                                        <tr ng-repeat="paramSpecial in currentParamSpecialList">
+                                            <td class="col-sm-3"><label for="inputType" class="nmc-form-label">{{paramSpecial.paramSpecialCaption}}</label>
                                             </td>
     <!--
                                             <td class="col-sm-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
                                             </td>
     -->
                                             <td class="col-sm-9 nmc-text-align-left">
-                                                <div ng-switch on="specialParam.specialParamTypeKeyname">
+                                                <div ng-switch on="paramSpecial.paramSpecialTypeKeyname">
                                                     <span ng-switch-when="SPECIAL_STRING">
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.textValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-model="paramSpecial.textValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_NUMERIC">
-                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-model="specialParam.numericValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-model="paramSpecial.numericValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATE">
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.oneDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.oneDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME">
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.oneDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.oneDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
 <!--
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.startDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                         
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.endDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
 -->
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group" >
                                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                             <div class="col-sm-5">
-                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.startDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.startDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                             </div>    
                                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                             <div class="col-sm-5">
-                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.endDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.endDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                             </div>
                                                             </span>    
                                                         </div> 
                                                     </span>
                                                     <span ng-switch-when="SPECIAL_DATE_PERIOD">
 <!--
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.startDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                         
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.endDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
 -->
                                                         <div ng-disabled="isDisabled()">
                                                             <span class="form-group" >
                                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                             <div class="col-sm-5">
-                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.startDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.startDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                             </div>    
                                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                             <div class="col-sm-5">
-                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="specialParam.endDateValueFormatted" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
+                                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-model="paramSpecial.endDateValueFormatted" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
                                                             </div>
                                                             </span>    
                                                         </div> 
@@ -551,16 +621,16 @@
                                                     </span>
 -->
                                                     <span ng-switch-when="SPECIAL_CONT_OBJECT_GROUP">
-                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-model="specialParam.directoryValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired"> 
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-model="paramSpecial.directoryValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired"> 
                                                     </span>
                                                 </div>
 <!--
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_STRING'" ng-model="specialParam.textValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_NUMERIC'" ng-model="specialParam.numericValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_DATE'" ng-model="specialParam.oneDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.startDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="specialParam.specialParamTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="specialParam.endDateValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-show="specialParam.directoryValue==='SPECIAL_CONT_OBJECT_GROUP'" ng-model="specialParam.directoryValue" ng-disabled="isDisabled()" ng-required="specialParam.specialParamRequired">                                                
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_STRING'" ng-model="paramSpecial.textValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_NUMERIC'" ng-model="paramSpecial.numericValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_DATE'" ng-model="paramSpecial.oneDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-show="paramSpecial.directoryValue==='SPECIAL_CONT_OBJECT_GROUP'" ng-model="paramSpecial.directoryValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">                                                
 -->
                                             </td>
                                         </tr>
