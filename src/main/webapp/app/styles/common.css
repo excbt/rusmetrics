@@ -704,12 +704,17 @@ tr.nmc-main-table-header > th {
 /* кнопка в таблице */
 .nmc-button-in-table {
 }
-/* панель для кнопок в столбце таблице*/
+/* панель для кнопок в столбце таблице - для 1-2 кнопок*/
 .nmc-btn-toolbar-in-table{
     padding-left:5px !important;
     width:50px !important;
 }
 
+/* панель для кнопок в столбце таблице - 3 кнопки*/
+.nmc-btn-toolbar-in-table-3{
+    padding-left:5px !important;
+    width:70px !important;
+}
  
 /* Переключатель */
     /*Панель с переключателями*/

@@ -51,7 +51,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 
                 newObjects.push(newObject);
             };        
-            $scope.objects = newObjects;        
+            $scope.objects = newObjects; 
+//console.log($scope.objects);            
             $scope.getActive();
         });
     };
@@ -153,9 +154,17 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     $scope.saveParamset = function(object){  
         //close modal window with the message for user
         $('#messageForUserModal').modal('hide');
+        
+        //perform Special paramset props
+        $scope.currentParamSpecialList.forEach(function(element){
+            element.oneDateValue = (element.oneDateValueFormatted==null)?null:element.oneDateValueFormatted.getTime();
+            element.startDateValue = (element.startDateValueFormatted==null)?null:element.startDateValueFormatted.getTime();
+            element.endDateValue = (element.endDateValueFormatted==null)?null:element.endDateValueFormatted.getTime();
+        });
+        
         //set the list of the special params
         object.paramSpecialList = $scope.currentParamSpecialList;
-        
+console.log(object);        
         var table="";       
         //get the id's array of the selected objects - server expect array of object ids
         var tmp = $scope.selectedObjects.map(function(elem){
@@ -163,7 +172,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
         });
         //
         object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
-        
+                
         //set the param, which define - available auto/manual start report.
         object.allRequiredParamsPassed = !object.showParamsBeforeRunReport;
 //console.log(object.allRequiredParamsPassed);        
@@ -272,8 +281,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
             result.textValue=null;
             result.numericValue=null;
             result.oneDateValue=null;
+            
             result.startDateValue=null;
             result.endDateValue=null;
+            result.oneDateValueFormatted=null;
+            result.startDateValueFormatted=null;
+            result.endDateValueFormatted=null;
             result.directoryValue=null;
             return result;
         });
@@ -325,6 +338,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 result.oneDateValue = null;
                 result.startDateValue = null;
                 result.endDateValue = null;
+                result.oneDateValueFormatted=null;
+                result.startDateValueFormatted=null;
+                result.endDateValueFormatted=null;
                 result.directoryValue = null;
                 return result;
             }
@@ -344,6 +360,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
                 result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
                 result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
+                result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
+                result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
+                result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
                 result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
                 result.version = object.paramSpecialList[elementIndex].version || null;
             }else{
@@ -353,6 +372,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 result.oneDateValue = null;
                 result.startDateValue = null;
                 result.endDateValue = null;
+                result.oneDateValueFormatted=null;
+                result.startDateValueFormatted=null;
+                result.endDateValueFormatted=null;
                 result.directoryValue = null;
             }
             return result;
