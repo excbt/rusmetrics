@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDataFactory','notificationFactory',function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory',function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory){
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -273,6 +273,23 @@ console.log(object);
         $('#createParamsetModal').modal();
     };
     
+    //get custom directory data
+    $scope.getDirectory = function(url, obj){
+        $http.get(url)
+            .success(function(data){
+                obj.specialTypeDirectoryValues = data;  
+//console.log(obj);    
+//                obj.specialTypeDirectoryValues.forEach(function(element){
+//                    console.log(element[obj.specialTypeDirectoryValue]);
+//                    console.log(element[obj.specialTypeDirectoryCaption]);
+//                });
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+    
+    
     $scope.addParamSet = function(object){
         $scope.setCurrentReportType(object);
         //подготавливаем массив специальных параметров, который будет заполнять пользователь
@@ -283,6 +300,14 @@ console.log(object);
             result.reportMetaParamSpecialId = element.id;
             result.paramSpecialRequired = element.paramSpecialRequired;
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+            if (isParamSpecialTypeDirectory(element))
+            {
+                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
+                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
+                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+            };
             result.textValue=null;
             result.numericValue=null;
             result.oneDateValue=null;
@@ -327,6 +352,19 @@ console.log(object);
         $scope.currentObject.paramSpecialList = []; //массив для специальных параметров
     };
     
+    //Проверка параметра - ссылочный параметр или нет
+    function isParamSpecialTypeDirectory(element){
+        var result=  (element.paramSpecialType.specialTypeDirectoryUrl!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryUrl!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryKey!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryKey!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryCaption!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryCaption!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryValue!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
+        return result;
+    }
+    
     $scope.editParamSet =function(parentObject,object){
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
@@ -336,6 +374,14 @@ console.log(object);
             result.reportMetaParamSpecialId = element.id;
             result.paramSpecialRequired = element.paramSpecialRequired;
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+            if (isParamSpecialTypeDirectory(element))
+            {
+                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
+                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
+                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+            };
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (object.paramSpecialList.length==0){
                 result.textValue = null;
