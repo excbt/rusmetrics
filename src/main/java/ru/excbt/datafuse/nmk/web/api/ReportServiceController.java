@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
+import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -76,6 +77,9 @@ public class ReportServiceController extends WebApiController {
 	private ReportService reportService;
 
 	@Autowired
+	private ReportMakerParamService reportMakerParamService;
+
+	@Autowired
 	private ReportParamsetService reportParamsetService;
 
 	@Autowired
@@ -96,7 +100,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
@@ -119,7 +123,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = eventReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
@@ -141,8 +145,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = eventReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamsetId, true);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamsetId, true);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
@@ -220,7 +224,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
@@ -243,8 +247,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamsetId, true);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamsetId, true);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
@@ -266,7 +270,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService
+		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
@@ -289,8 +293,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamsetId, true);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamsetId, true);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
@@ -386,8 +390,8 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
 
 		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
 				response);
@@ -422,8 +426,8 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = eventReportMaker();
 
@@ -459,8 +463,8 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
@@ -497,8 +501,8 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportService.getReportMakerParam(
-				reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = consT2ReportMaker();
 

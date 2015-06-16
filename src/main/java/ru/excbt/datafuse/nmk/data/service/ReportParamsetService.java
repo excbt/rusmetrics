@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -52,6 +53,9 @@ public class ReportParamsetService implements SecuredRoles {
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
+
+	@Autowired
+	private ReportMakerParamService reportMakerParamService;
 
 	/**
 	 * 
@@ -122,6 +126,16 @@ public class ReportParamsetService implements SecuredRoles {
 				.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
 		}
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset);
+
+		boolean requiredPassed = reportMakerParamService
+				.isAllCommonRequiredParamsExists(reportMakerParam)
+				&& reportMakerParamService
+						.isAllSpecialRequiredParamsExists(reportMakerParam);
+
+		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
 		ReportParamset result = null;
 		if (checkCanUpdate(reportParamset.getId())) {
@@ -197,6 +211,9 @@ public class ReportParamsetService implements SecuredRoles {
 		List<ReportParamset> result = new ArrayList<>();
 		result.addAll(commonReportParams);
 		result.addAll(subscriberReportParams);
+		
+		result.forEach((s) -> s.getParamSpecialList().size());
+		
 		return result;
 	}
 
@@ -211,8 +228,10 @@ public class ReportParamsetService implements SecuredRoles {
 		ReportParamset result = reportParamsetRepository
 				.findOne(reportParamsetId);
 
-		//result.getReportTemplate().getId();
-		//result.getSubscriber().getId();
+		// result.getReportTemplate().getId();
+		// result.getSubscriber().getId();
+
+		result.getParamSpecialList().size();
 
 		return result;
 
@@ -292,8 +311,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public List<ContObject> selectParamsetContObjects(long reportParamsetId) {
-		return reportParamsetUnitRepository
-				.selectContObjects(reportParamsetId);
+		return reportParamsetUnitRepository.selectContObjects(reportParamsetId);
 	}
 
 	/**
@@ -302,8 +320,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	public List<Long> selectParamsetContObjectIds(long reportParamsetId) {
-		return reportParamsetUnitRepository
-				.selectObjectIds(reportParamsetId);
+		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
 
 	/**

@@ -78,6 +78,17 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getCommerceReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+		
+		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getConsT1ReportParamsetList() {
 
@@ -676,7 +687,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneCommerceArchive(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		return deleteInternal(reportParamsetId);
 	}
 
@@ -692,6 +703,7 @@ public class ReportParamsetController extends WebApiController {
 
 		return deleteInternal(reportParamsetId);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -701,7 +713,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT1Archive(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		return deleteInternal(reportParamsetId);
 	}
 
@@ -717,6 +729,7 @@ public class ReportParamsetController extends WebApiController {
 
 		return deleteInternal(reportParamsetId);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -726,7 +739,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsT2Archive(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		return deleteInternal(reportParamsetId);
 	}
 
@@ -742,6 +755,7 @@ public class ReportParamsetController extends WebApiController {
 
 		return deleteInternal(reportParamsetId);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -751,7 +765,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneConsArchive(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		return deleteInternal(reportParamsetId);
 	}
 
@@ -767,6 +781,7 @@ public class ReportParamsetController extends WebApiController {
 
 		return deleteInternal(reportParamsetId);
 	}
+
 	/**
 	 * 
 	 * @param reportTemplareId
@@ -776,7 +791,7 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/archive/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneEventArchive(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
+
 		return deleteInternal(reportParamsetId);
 	}
 

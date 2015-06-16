@@ -118,7 +118,7 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	@OneToMany(mappedBy = "reportParamset", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "reportParamset", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Collection<ReportParamsetParamSpecial> paramSpecialList = new ArrayList<ReportParamsetParamSpecial>();
 
 	public ReportTemplate getReportTemplate() {

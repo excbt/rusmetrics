@@ -35,6 +35,12 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 	@Column(name="special_type_directory")
 	private String specialTypeDirectory;	
 	
+	@Column(name="special_type_field1")
+	private String specialTypeField1;
+
+	@Column(name="special_type_field2")
+	private String specialTypeField2;
+	
 	@Version
 	private int version;
 
@@ -84,6 +90,22 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getSpecialTypeField1() {
+		return specialTypeField1;
+	}
+
+	public void setSpecialTypeField1(String specialTypeField1) {
+		this.specialTypeField1 = specialTypeField1;
+	}
+
+	public String getSpecialTypeField2() {
+		return specialTypeField2;
+	}
+
+	public void setSpecialTypeField2(String specialTypeField2) {
+		this.specialTypeField2 = specialTypeField2;
 	}
 
 
