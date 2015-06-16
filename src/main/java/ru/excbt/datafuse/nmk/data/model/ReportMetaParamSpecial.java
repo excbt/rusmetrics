@@ -37,16 +37,16 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "special_param_type")	
-	private ReportMetaParamSpecialType specialParamType;
+	private ReportMetaParamSpecialType paramSpecialType;
 	
 	@Column(name = "special_param_keyname")
-	private String specialParamKeyname;
+	private String paramSpecialKeyname;
 	
 	@Column(name = "special_param_caption")
-	private String specialParamCaption;
+	private String paramSpecialCaption;
 	
 	@Column(name = "special_param_required")
-	private Boolean specialParamRequired;
+	private Boolean paramSpecialRequired;
 
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
@@ -56,44 +56,44 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 		this.reportTypeKey = reportTypeKey;
 	}
 
-	public ReportMetaParamSpecialType getSpecialParamType() {
-		return specialParamType;
-	}
-
-	public void setSpecialParamType(ReportMetaParamSpecialType specialParamType) {
-		this.specialParamType = specialParamType;
-	}
-
-	public String getSpecialParamKeyname() {
-		return specialParamKeyname;
-	}
-
-	public void setSpecialParamKeyname(String specialParamKeyname) {
-		this.specialParamKeyname = specialParamKeyname;
-	}
-
-	public String getSpecialParamCaption() {
-		return specialParamCaption;
-	}
-
-	public void setSpecialParamCaption(String specialParamCaption) {
-		this.specialParamCaption = specialParamCaption;
-	}
-
-	public Boolean getSpecialParamRequired() {
-		return specialParamRequired;
-	}
-
-	public void setSpecialParamRequired(Boolean specialParamRequired) {
-		this.specialParamRequired = specialParamRequired;
-	}
-
 	public ReportType getReportType() {
 		return reportType;
 	}
 
 	public void setReportType(ReportType reportType) {
 		this.reportType = reportType;
+	}
+
+	public ReportMetaParamSpecialType getParamSpecialType() {
+		return paramSpecialType;
+	}
+
+	public void setParamSpecialType(ReportMetaParamSpecialType paramSpecialType) {
+		this.paramSpecialType = paramSpecialType;
+	}
+
+	public String getParamSpecialKeyname() {
+		return paramSpecialKeyname;
+	}
+
+	public void setParamSpecialKeyname(String paramSpecialKeyname) {
+		this.paramSpecialKeyname = paramSpecialKeyname;
+	}
+
+	public String getParamSpecialCaption() {
+		return paramSpecialCaption;
+	}
+
+	public void setParamSpecialCaption(String paramSpecialCaption) {
+		this.paramSpecialCaption = paramSpecialCaption;
+	}
+
+	public Boolean getParamSpecialRequired() {
+		return paramSpecialRequired;
+	}
+
+	public void setParamSpecialRequired(Boolean paramSpecialRequired) {
+		this.paramSpecialRequired = paramSpecialRequired;
 	}
 	
 }

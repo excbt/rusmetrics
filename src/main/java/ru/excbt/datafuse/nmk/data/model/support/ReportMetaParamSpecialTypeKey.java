@@ -1,0 +1,6 @@
+package ru.excbt.datafuse.nmk.data.model.support;
+
+
+public enum ReportMetaParamSpecialTypeKey {
+	SPECIAL_CONT_OBJECT_GROUP, SPECIAL_DATE, SPECIAL_DATETIME, SPECIAL_NUMERIC, SPECIAL_PERIOD_DATE, SPECIAL_PERIOD_DATETIME, SPECIAL_STRING;
+}

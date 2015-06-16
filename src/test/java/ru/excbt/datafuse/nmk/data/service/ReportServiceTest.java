@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ReportServiceTest extends JpaSupportTest {
@@ -35,6 +36,9 @@ public class ReportServiceTest extends JpaSupportTest {
 	private ReportService reportService;
 
 	@Autowired
+	private ReportMakerParamService reportMakerParamService;
+
+	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
@@ -49,7 +53,10 @@ public class ReportServiceTest extends JpaSupportTest {
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeEventReport.zip");) {
 
-			reportService.makeReportByParamsetId(EVENT_TEST_PARAMSET_ID,
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.getReportMakerParam(EVENT_TEST_PARAMSET_ID);
+
+			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
 		}
 	}
@@ -59,7 +66,11 @@ public class ReportServiceTest extends JpaSupportTest {
 
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeCommerceReport.zip");) {
-			reportService.makeReportByParamsetId(COMMERCE_TEST_PARAMSET_ID,
+
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.getReportMakerParam(COMMERCE_TEST_PARAMSET_ID);
+
+			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
 		}
 	}
@@ -69,7 +80,11 @@ public class ReportServiceTest extends JpaSupportTest {
 
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeConsT1Report.pdf");) {
-			reportService.makeReportByParamsetId(CONS_T1_TEST_PARAMSET_ID,
+
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.getReportMakerParam(CONS_T1_TEST_PARAMSET_ID);
+
+			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
 		}
 	}
@@ -79,7 +94,11 @@ public class ReportServiceTest extends JpaSupportTest {
 
 		try (FileOutputStream fos = new FileOutputStream(
 				"./out/testMakeConsT2Report.pdf");) {
-			reportService.makeReportByParamsetId(CONS_T2_TEST_PARAMSET_ID,
+
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.getReportMakerParam(CONS_T2_TEST_PARAMSET_ID);
+
+			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
 		}
 	}

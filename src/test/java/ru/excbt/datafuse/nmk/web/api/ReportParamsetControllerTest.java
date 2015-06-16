@@ -37,6 +37,8 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 	private static final long TEST_REPORT_TEMPLATE_ID = 28181422;
 	private static final long TEMPLATE_PARAMSET_ID = 28344056;
+	
+	private final static long TEST_PARAMSET_COMMERCE = 28618264;
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
@@ -52,6 +54,11 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		testJsonGet("/api/reportParamset/commerce");
 	}
 
+	@Test
+	public void testCommerceGet() throws Exception {
+		testJsonGet("/api/reportParamset/commerce/" + TEST_PARAMSET_COMMERCE);
+	}	
+	
 	@Test
 	public void testCommerceCreateUpdateDelete() throws Exception {
 		List<ReportTemplate> commTemplates = reportTemplateService

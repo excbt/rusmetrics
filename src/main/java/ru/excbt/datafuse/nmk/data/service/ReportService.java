@@ -88,6 +88,8 @@ public class ReportService {
 
 	@PersistenceContext
 	private EntityManager em;
+	
+
 
 	/**
 	 * 
@@ -190,7 +192,7 @@ public class ReportService {
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
-	public ReportParamset makeReportByParamsetId(long reportParamsetId,
+	private ReportParamset makeReportByParamsetId(long reportParamsetId,
 			LocalDateTime reportDate, OutputStream outputStream) {
 
 		checkNotNull(outputStream);
@@ -202,10 +204,11 @@ public class ReportService {
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
 
-		ReportMakerParam reportMakerParam = getReportMakerParam(reportParamsetId);
+		//ReportMakerParam reportMakerParam = getReportMakerParam(reportParamsetId);
 
-		return makeReportByParamset(reportMakerParam, reportDate, outputStream);
+		//return makeReportByParamset(reportMakerParam, reportDate, outputStream);
 
+		return null;
 	}
 
 	/**
@@ -413,98 +416,6 @@ public class ReportService {
 
 	}
 
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
 
-		return getReportMakerParam(reportParamset, null, false);
-
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
-			boolean previewMode) {
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
-
-		return getReportMakerParam(reportParamset, null, previewMode);
-
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
-			Long[] contObjectIdList) {
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
-		return getReportMakerParam(reportParamset, contObjectIdList, false);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
-			Long[] contObjectIds, boolean previewMode) {
-		ReportParamset reportParamset = reportParamsetService
-				.findOne(reportParamsetId);
-		return getReportMakerParam(reportParamset, contObjectIds, previewMode);
-	}
-
-	/**
-	 * 
-	 * @param reportParamset
-	 * @param contObjectIds
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
-			Long[] contObjectIds) {
-		return getReportMakerParam(reportParamset, contObjectIds, false);
-	}
-
-	/**
-	 * 
-	 * @param reportParamset
-	 * @param contObjectIds
-	 * @return
-	 */
-	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
-			Long[] contObjectIds, boolean previewMode) {
-		checkNotNull(reportParamset);
-
-		if (contObjectIds != null && contObjectIds.length > 0) {
-			return new ReportMakerParam(reportParamset, contObjectIds);
-		}
-
-		List<Long> resultContObjectIdList = Collections.emptyList();
-
-		if (contObjectIds == null) {
-			resultContObjectIdList = reportParamsetService
-					.selectParamsetContObjectIds(reportParamset.getId());
-		}
-
-		if (resultContObjectIdList.isEmpty()) {
-			resultContObjectIdList = subscriberService
-					.selectSubscriberContObjectIds(reportParamset
-							.getSubscriberId());
-		}
-
-		return new ReportMakerParam(reportParamset, resultContObjectIdList,
-				previewMode);
-
-	}
 
 }

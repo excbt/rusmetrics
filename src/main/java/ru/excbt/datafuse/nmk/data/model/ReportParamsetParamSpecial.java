@@ -7,15 +7,13 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -24,8 +22,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "report_paramset_param_special")
-@SQLDelete(sql = "UPDATE report_paramset_param_special SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
@@ -34,14 +30,10 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = -8266275292467053060L;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_paramset_id")
 	@JsonIgnore
 	private ReportParamset reportParamset;
-
-//	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
-//	@JoinColumn(name = "param_special_id", insertable = false, updatable = false)
-//	private ReportMetaParamSpecial reportMetaParamSpecial;
 
 	@Column(name = "param_special_id")
 	private Long reportMetaParamSpecialId;
@@ -110,15 +102,6 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	public void setReportParamset(ReportParamset reportParamset) {
 		this.reportParamset = reportParamset;
 	}
-
-//	public ReportMetaParamSpecial getReportMetaParamSpecial() {
-//		return reportMetaParamSpecial;
-//	}
-//
-//	public void setReportMetaParamSpecial(
-//			ReportMetaParamSpecial reportMetaParamSpecial) {
-//		this.reportMetaParamSpecial = reportMetaParamSpecial;
-//	}
 
 	public Long getReportMetaParamSpecialId() {
 		return reportMetaParamSpecialId;
