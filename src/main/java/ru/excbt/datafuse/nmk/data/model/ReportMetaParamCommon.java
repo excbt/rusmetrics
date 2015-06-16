@@ -130,4 +130,90 @@ public class ReportMetaParamCommon implements Serializable {
 		this.reportType = reportType;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((endDateRequired == null) ? 0 : endDateRequired.hashCode());
+		result = prime
+				* result
+				+ ((manyContObjectsRequired == null) ? 0
+						: manyContObjectsRequired.hashCode());
+		result = prime
+				* result
+				+ ((manyContObjectsZipOnly == null) ? 0
+						: manyContObjectsZipOnly.hashCode());
+		result = prime
+				* result
+				+ ((oneContObjectRequired == null) ? 0 : oneContObjectRequired
+						.hashCode());
+		result = prime * result
+				+ ((oneDateRequired == null) ? 0 : oneDateRequired.hashCode());
+		result = prime * result
+				+ ((reportType == null) ? 0 : reportType.hashCode());
+		result = prime * result
+				+ ((reportTypeKey == null) ? 0 : reportTypeKey.hashCode());
+		result = prime
+				* result
+				+ ((startDateRequired == null) ? 0 : startDateRequired
+						.hashCode());
+		result = prime * result + version;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReportMetaParamCommon other = (ReportMetaParamCommon) obj;
+		if (endDateRequired == null) {
+			if (other.endDateRequired != null)
+				return false;
+		} else if (!endDateRequired.equals(other.endDateRequired))
+			return false;
+		if (manyContObjectsRequired == null) {
+			if (other.manyContObjectsRequired != null)
+				return false;
+		} else if (!manyContObjectsRequired
+				.equals(other.manyContObjectsRequired))
+			return false;
+		if (manyContObjectsZipOnly == null) {
+			if (other.manyContObjectsZipOnly != null)
+				return false;
+		} else if (!manyContObjectsZipOnly.equals(other.manyContObjectsZipOnly))
+			return false;
+		if (oneContObjectRequired == null) {
+			if (other.oneContObjectRequired != null)
+				return false;
+		} else if (!oneContObjectRequired.equals(other.oneContObjectRequired))
+			return false;
+		if (oneDateRequired == null) {
+			if (other.oneDateRequired != null)
+				return false;
+		} else if (!oneDateRequired.equals(other.oneDateRequired))
+			return false;
+		if (reportType == null) {
+			if (other.reportType != null)
+				return false;
+		} else if (!reportType.equals(other.reportType))
+			return false;
+		if (reportTypeKey != other.reportTypeKey)
+			return false;
+		if (startDateRequired == null) {
+			if (other.startDateRequired != null)
+				return false;
+		} else if (!startDateRequired.equals(other.startDateRequired))
+			return false;
+		if (version != other.version)
+			return false;
+		return true;
+	}
+
+
+
 }

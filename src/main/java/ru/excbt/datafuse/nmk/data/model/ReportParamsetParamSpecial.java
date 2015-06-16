@@ -59,6 +59,9 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	@Column(name = "directory_value")
 	private String directoryValue;
 
+	@Column(name = "bool_value")
+	private Boolean boolValue;
+
 	@Version
 	private int version;
 
@@ -90,6 +93,10 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 		}
 
 		if (directoryValue != null) {
+			i++;
+		}
+
+		if (boolValue != null) {
 			i++;
 		}
 		return i == 1;
@@ -165,5 +172,13 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	public void setDirectoryValue(String directoryValue) {
 		this.directoryValue = directoryValue;
+	}
+
+	public Boolean getBoolValue() {
+		return boolValue;
+	}
+
+	public void setBoolValue(Boolean boolValue) {
+		this.boolValue = boolValue;
 	}
 }

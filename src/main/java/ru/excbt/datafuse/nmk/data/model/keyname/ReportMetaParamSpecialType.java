@@ -34,6 +34,18 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
 	@Column(name="special_type_directory")
 	private String specialTypeDirectory;	
+
+	@Column(name="special_type_directory_url")
+	private String specialTypeDirectoryUrl;	
+	
+	@Column(name="special_type_directory_key")
+	private String specialTypeDirectoryKey;	
+	
+	@Column(name="special_type_directory_caption")
+	private String specialTypeDirectoryCaption;	
+
+	@Column(name="special_type_directory_value")
+	private String specialTypeDirectoryValue;	
 	
 	@Column(name="special_type_field1")
 	private String specialTypeField1;
@@ -106,6 +118,38 @@ public class ReportMetaParamSpecialType extends AbstractKeynameEntity {
 
 	public void setSpecialTypeField2(String specialTypeField2) {
 		this.specialTypeField2 = specialTypeField2;
+	}
+
+	public String getSpecialTypeDirectoryUrl() {
+		return specialTypeDirectoryUrl;
+	}
+
+	public void setSpecialTypeDirectoryUrl(String specialTypeDirectoryUrl) {
+		this.specialTypeDirectoryUrl = specialTypeDirectoryUrl;
+	}
+
+	public String getSpecialTypeDirectoryKey() {
+		return specialTypeDirectoryKey;
+	}
+
+	public void setSpecialTypeDirectoryKey(String specialTypeDirectoryKey) {
+		this.specialTypeDirectoryKey = specialTypeDirectoryKey;
+	}
+
+	public String getSpecialTypeDirectoryCaption() {
+		return specialTypeDirectoryCaption;
+	}
+
+	public void setSpecialTypeDirectoryCaption(String specialTypeDirectoryCaption) {
+		this.specialTypeDirectoryCaption = specialTypeDirectoryCaption;
+	}
+
+	public String getSpecialTypeDirectoryValue() {
+		return specialTypeDirectoryValue;
+	}
+
+	public void setSpecialTypeDirectoryValue(String specialTypeDirectoryValue) {
+		this.specialTypeDirectoryValue = specialTypeDirectoryValue;
 	}
 
 
