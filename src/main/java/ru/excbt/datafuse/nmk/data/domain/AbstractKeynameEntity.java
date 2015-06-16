@@ -29,5 +29,32 @@ public abstract class AbstractKeynameEntity implements Serializable {
 		this.keyname = keyname;
 	}
 
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((keyname == null) ? 0 : keyname.hashCode());
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractKeynameEntity other = (AbstractKeynameEntity) obj;
+		if (keyname == null) {
+			if (other.keyname != null)
+				return false;
+		} else if (!keyname.equals(other.keyname))
+			return false;
+		return true;
+	}
+
 	
 }
