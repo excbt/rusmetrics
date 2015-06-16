@@ -137,10 +137,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
         $scope.selectedItem(parentObject, object);
         $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
-            result.specialParamCaption = element.specialParamCaption;
+            result.paramSpecialCaption = element.paramSpecialCaption;
             result.reportMetaParamSpecialId = element.id;
-            result.specialParamRequired = element.specialParamRequired;
-            result.specialParamTypeKeyname = element.specialParamType.keyname;
+            result.paramSpecialRequired = element.paramSpecialRequired;
+            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (object.paramSpecialList.length==0){
                 result.textValue = null;
@@ -287,7 +287,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
     }, false);
     
     
-        $scope.isSystemuser = function(){
+    $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
@@ -388,7 +388,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
         };
         
         $scope.currentParamSpecialList.forEach(function(element, index, array){
-            if (element.specialParamRequired && !(element.textValue 
+            if (element.paramSpecialRequired && !(element.textValue 
                                                  || element.numericValue 
                                                  || element.oneDateValue 
                                                  || element.startDateValue
@@ -396,7 +396,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
                                                  || element.directoryValue)
                )
             {
-                $scope.messageForUser += "- Не задан параметр \""+element.specialParamCaption+"\" \n";
+                $scope.messageForUser += "- Не задан параметр \""+element.paramSpecialCaption+"\" \n";
             }
         });
         if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){

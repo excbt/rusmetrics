@@ -9,7 +9,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
     $scope.columns = [
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
     ];
-    
+    $scope.paramsetColumns = [
+        {"name":"name","header":"Наименование", "class":"col-md-1"}
+        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-1"}
+        ,{"name":"period","header":"Период", "class":"col-md-1"}
+        ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
+    ];
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
     
     $scope.createParamset_flag = false;
@@ -52,7 +57,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource','crudGridDat
                 newObjects.push(newObject);
             };        
             $scope.objects = newObjects; 
-//console.log($scope.objects);            
+//console.log(data);            
             $scope.getActive();
         });
     };
@@ -274,10 +279,10 @@ console.log(object);
 //console.log($scope.currentReportType.reportMetaParamSpecialList);        
         $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
-            result.specialParamCaption = element.specialParamCaption;
+            result.paramSpecialCaption = element.paramSpecialCaption;
             result.reportMetaParamSpecialId = element.id;
-            result.specialParamRequired = element.specialParamRequired;
-            result.specialParamTypeKeyname = element.specialParamType.keyname;
+            result.paramSpecialRequired = element.paramSpecialRequired;
+            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
             result.textValue=null;
             result.numericValue=null;
             result.oneDateValue=null;
@@ -327,10 +332,10 @@ console.log(object);
         $scope.selectedItem(parentObject, object);
         $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
-            result.specialParamCaption = element.specialParamCaption;
+            result.paramSpecialCaption = element.paramSpecialCaption;
             result.reportMetaParamSpecialId = element.id;
-            result.specialParamRequired = element.specialParamRequired;
-            result.specialParamTypeKeyname = element.specialParamType.keyname;
+            result.paramSpecialRequired = element.paramSpecialRequired;
+            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (object.paramSpecialList.length==0){
                 result.textValue = null;
@@ -638,7 +643,7 @@ console.log(object);
         };
         
         $scope.currentParamSpecialList.forEach(function(element, index, array){
-            if (element.specialParamRequired && !(element.textValue 
+            if (element.paramSpecialRequired && !(element.textValue 
                                                  || element.numericValue 
                                                  || element.oneDateValue 
                                                  || element.startDateValue
@@ -646,7 +651,7 @@ console.log(object);
                                                  || element.directoryValue)
                )
             {
-                $scope.messageForUser += "- Не задан параметр \""+element.specialParamCaption+"\" \n";
+                $scope.messageForUser += "- Не задан параметр \""+element.paramSpecialCaption+"\" \n";
             }
         });
         if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){
