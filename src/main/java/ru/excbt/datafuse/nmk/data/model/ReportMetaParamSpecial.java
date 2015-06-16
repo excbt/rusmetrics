@@ -16,9 +16,12 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name="report_meta_param_special")
+@JsonInclude(Include.NON_NULL)
 public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	/**
@@ -48,6 +51,9 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@Column(name = "param_special_required")
 	private Boolean paramSpecialRequired;
 
+	@Column(name = "param_special_name")
+	private String paramSpecialName;
+	
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
 	}
@@ -94,6 +100,14 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	public void setParamSpecialRequired(Boolean paramSpecialRequired) {
 		this.paramSpecialRequired = paramSpecialRequired;
+	}
+
+	public String getParamSpecialName() {
+		return paramSpecialName;
+	}
+
+	public void setParamSpecialName(String paramSpecialName) {
+		this.paramSpecialName = paramSpecialName;
 	}
 	
 }

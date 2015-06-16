@@ -19,10 +19,13 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "report_paramset_param_special")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	/**
@@ -59,6 +62,9 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	@Column(name = "directory_value")
 	private String directoryValue;
 
+	@Column(name = "bool_value")
+	private Boolean boolValue;
+
 	@Version
 	private int version;
 
@@ -90,6 +96,10 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 		}
 
 		if (directoryValue != null) {
+			i++;
+		}
+
+		if (boolValue != null) {
 			i++;
 		}
 		return i == 1;
@@ -165,5 +175,13 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	public void setDirectoryValue(String directoryValue) {
 		this.directoryValue = directoryValue;
+	}
+
+	public Boolean getBoolValue() {
+		return boolValue;
+	}
+
+	public void setBoolValue(Boolean boolValue) {
+		this.boolValue = boolValue;
 	}
 }

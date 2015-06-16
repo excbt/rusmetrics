@@ -220,8 +220,9 @@ public class ReportMakerParamService {
 				.getReportMetaParamSpecialList();
 
 		logger.debug("specialParamDefs. size: {}", specialParamDefs.size());
-		logger.debug("paramSpecialList.size: {}", reportParamset.getParamSpecialList().size());
-		
+		logger.debug("paramSpecialList.size: {}", reportParamset
+				.getParamSpecialList().size());
+
 		List<ReportParamsetParamSpecial> paramValues = new ArrayList<>();
 		paramValues.addAll(reportParamset.getParamSpecialList());
 
@@ -230,8 +231,10 @@ public class ReportMakerParamService {
 					paramDef.getParamSpecialKeyname());
 			if (result
 					&& Boolean.TRUE.equals(paramDef.getParamSpecialRequired())) {
-				logger.debug("paramDef. id:{} keyname:{} ({}) .... required: {}",
-						paramDef.getId(), paramDef.getParamSpecialKeyname(), paramDef.getParamSpecialCaption(),  
+				logger.debug(
+						"paramDef. id:{} keyname:{} ({}) .... required: {}",
+						paramDef.getId(), paramDef.getParamSpecialKeyname(),
+						paramDef.getParamSpecialCaption(),
 						paramDef.getParamSpecialRequired());
 
 				boolean checkRequired = false;
@@ -263,9 +266,10 @@ public class ReportMakerParamService {
 						checkRequired = checkParamSpecialFieldValue(typeKey,
 								checkValue);
 
-						//logger.debug("Remove: {}", paramValues.remove(paramValue));
+						// logger.debug("Remove: {}",
+						// paramValues.remove(paramValue));
 						paramValues.remove(checkValue);
-						//break;						
+						// break;
 
 					}
 				}
@@ -311,6 +315,23 @@ public class ReportMakerParamService {
 			break;
 		case SPECIAL_DATETIME:
 			result = param.getOneDateValue() != null;
+			break;
+		case SPECIAL_BOOL:
+			result = param.getBoolValue() != null;
+			break;
+		case SPECIAL_NUMERIC:
+			result = param.getNumericValue() != null;
+			break;
+		case SPECIAL_PERIOD_DATE:
+			result = param.getStartDateValue() != null
+					&& param.getEndDateValue() != null;
+			break;
+		case SPECIAL_PERIOD_DATETIME:
+			result = param.getStartDateValue() != null
+					&& param.getEndDateValue() != null;
+			break;
+		case SPECIAL_CONT_OBJECT_GROUP:
+			result = param.getDirectoryValue() != null;
 			break;
 		default:
 			break;
