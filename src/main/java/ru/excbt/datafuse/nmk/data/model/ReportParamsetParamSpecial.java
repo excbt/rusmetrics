@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -183,5 +185,29 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	public void setBoolValue(Boolean boolValue) {
 		this.boolValue = boolValue;
+	}
+
+	@JsonIgnore
+	public String getValuesAsString() {
+
+		Map<String, Object> valuesMap = new HashMap<>();
+		valuesMap.put("textValue", textValue);
+		valuesMap.put("numericValue", numericValue);
+		valuesMap.put("oneDateValue", oneDateValue);
+		valuesMap.put("startDateValue", startDateValue);
+		valuesMap.put("endDateValue", endDateValue);
+		valuesMap.put("directoryValue", directoryValue);
+		valuesMap.put("boolValue", boolValue);
+
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
+			if (v.getValue() != null) {
+				sb.append(v.getKey());
+				sb.append('=');
+				sb.append(v.getValue().toString());
+				sb.append("   ");
+			}
+		}
+		return sb.toString();
 	}
 }

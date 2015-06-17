@@ -51,8 +51,11 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@Column(name = "param_special_required")
 	private Boolean paramSpecialRequired;
 
-	@Column(name = "param_special_name")
-	private String paramSpecialName;
+	@Column(name = "param_special_name1")
+	private String paramSpecialName1;
+
+	@Column(name = "param_special_name2")
+	private String paramSpecialName2;
 	
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
@@ -102,12 +105,21 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 		this.paramSpecialRequired = paramSpecialRequired;
 	}
 
-	public String getParamSpecialName() {
-		return paramSpecialName;
+	public String getParamSpecialName1() {
+		return paramSpecialName1;
 	}
 
-	public void setParamSpecialName(String paramSpecialName) {
-		this.paramSpecialName = paramSpecialName;
+	public void setParamSpecialName1(String paramSpecialName1) {
+		this.paramSpecialName1 = paramSpecialName1;
 	}
-	
+
+	public String getParamSpecialName2() {
+		return paramSpecialName2;
+	}
+
+	public void setParamSpecialName2(String paramSpecialName2) {
+		this.paramSpecialName2 = paramSpecialName2;
+	}
+
+
 }
