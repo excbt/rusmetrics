@@ -285,7 +285,7 @@ public class ReportService {
 				throw new IllegalArgumentException(
 						String.format(
 								"ReportParamset (id=%d) is invalid. "
-										+ "ParamsetStartDate and ParamsetEndDat is not set correctly. "
+										+ "ParamsetStartDate and ParamsetEndDate is not set correctly. "
 										+ "ReportPeriodKey=%s",
 								reportParamset.getId(),
 								ReportPeriodKey.INTERVAL));

@@ -33,6 +33,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	public final static String API_REPORT_URL = "/api/reportService";
 
 	private final static long TEST_PARAMSET_COMMERCE = 28618264;
+	private final static long TEST_PARAMSET_COMMERCE2 = 38623152;
 	private final static long TEST_PARAMSET_CONS_T1 = 29457574;
 	private final static long TEST_PARAMSET_CONS_T2 = 28841247;
 	private final static long TEST_PARAMSET_EVENT = 28820616;
@@ -42,7 +43,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
-	
+
 	@Autowired
 	private ReportMakerParamService reportMakerParamService;
 
@@ -130,9 +131,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/cons_t2/%d/preview",
 				reportParamsetId);
 
-		
-
-		testHtmlGet (urlStr);
+		testHtmlGet(urlStr);
 
 	}
 
@@ -176,6 +175,59 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		};
 
 		testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
+				extraInitializer, tester);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCommerceDownloadPut2() throws Exception {
+		long srcParamsetId = TEST_PARAMSET_COMMERCE;
+		long modReportParamsetId = TEST_PARAMSET_COMMERCE2;
+
+		String urlStr = String.format(
+				"/api/reportService/commerce/%d/download", modReportParamsetId);
+
+		ReportMakerParam modReportMakerParam = reportMakerParamService
+				.getReportMakerParam(modReportParamsetId);
+
+		ReportMakerParam srcParam = reportMakerParamService
+				.getReportMakerParam(srcParamsetId);
+
+		modReportMakerParam.getReportParamset().setReportPeriod(
+				srcParam.getReportParamset().getReportPeriod());
+		modReportMakerParam.getReportParamset().setParamsetStartDate(
+				srcParam.getReportParamset().getParamsetStartDate());
+		modReportMakerParam.getReportParamset().setParamsetEndDate(
+				srcParam.getReportParamset().getParamsetEndDate());
+
+		List<Long> contObjectIds = srcParam.getContObjectList().subList(0, 1);
+
+		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
+
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.param("contObjectIds",
+						arrayToString(Longs.toArray(contObjectIds)));
+			}
+		};
+
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+
+				resultActions.andExpect(content().contentType(
+						modReportMakerParam.getMimeType()));
+
+			}
+		};
+
+		testJsonUpdate(urlStr, modReportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
