@@ -209,7 +209,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
                 result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
-                result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
+                result.directoryValue = Number(object.paramSpecialList[elementIndex].directoryValue) || null;
                 result.version = object.paramSpecialList[elementIndex].version || null;
             }else{
                 result.id = null;
@@ -481,11 +481,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var result = element.id;
             return result;
         });
+console.log("************************ Paramset ************************************");        
+console.log(paramset);        
+console.log("************************ objectIds ************************************"); 
+console.log(objectIds);         
+console.log("***********************************************************************");      
+        var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
         $http.put(url, paramset, { contObjectIds: objectIds })
-        .success(function(data) {
-            var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
-            var file = new Blob([data], { type: "application/"+fileExt });
+        .success(function(data, status, headers) {
+            var file = new Blob([data], { type: headers()['content-type'] });
             saveAs(file, paramset.outputFileNameTemplate+"."+fileExt);
         })
         .error(function(e){

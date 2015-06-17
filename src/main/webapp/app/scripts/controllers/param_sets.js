@@ -169,7 +169,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         
         //set the list of the special params
         object.paramSpecialList = $scope.currentParamSpecialList;
-console.log(object);        
+//console.log(object);        
         var table="";       
         //get the id's array of the selected objects - server expect array of object ids
         var tmp = $scope.selectedObjects.map(function(elem){
@@ -277,7 +277,8 @@ console.log(object);
     $scope.getDirectory = function(url, obj){
         $http.get(url)
             .success(function(data){
-                obj.specialTypeDirectoryValues = data;  
+                obj.specialTypeDirectoryValues = data;
+//console.log(obj.specialTypeDirectoryValues[0].id);
 //console.log(obj);    
 //                obj.specialTypeDirectoryValues.forEach(function(element){
 //                    console.log(element[obj.specialTypeDirectoryValue]);
@@ -306,7 +307,7 @@ console.log(object);
                 result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
                 result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
                 result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);
             };
             result.textValue=null;
             result.numericValue=null;
@@ -414,7 +415,7 @@ console.log(object);
                 result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
                 result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
-                result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
+                result.directoryValue = Number(object.paramSpecialList[elementIndex].directoryValue) || null;                
                 result.version = object.paramSpecialList[elementIndex].version || null;
             }else{
                 result.id = null;
