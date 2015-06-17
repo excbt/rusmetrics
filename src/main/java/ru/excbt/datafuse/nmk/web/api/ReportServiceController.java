@@ -193,6 +193,15 @@ public class ReportServiceController extends WebApiController {
 			return;
 		}
 
+		boolean checkParamsCommon = reportMakerParamService
+				.isAllCommonRequiredParamsExists(reportMakerParam);
+		boolean checParamsSpecial = reportMakerParamService
+				.isAllSpecialRequiredParamsExists(reportMakerParam);
+
+		if (!checkParamsCommon || !checParamsSpecial) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
+
 		byte[] byteArray = null;
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
 			reportMaker.makeReport(reportMakerParam, LocalDateTime.now(),
@@ -227,6 +236,7 @@ public class ReportServiceController extends WebApiController {
 		OutputStream outStream = response.getOutputStream();
 		outStream.write(byteArray);
 		outStream.close();
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	/**
