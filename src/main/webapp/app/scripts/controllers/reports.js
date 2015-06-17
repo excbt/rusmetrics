@@ -326,6 +326,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         for (var i = 0; i<$scope.reportPeriods.length;i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
+                if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
+                    $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
+                    $scope.paramsetEndDateFormat= ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
+                }
             };
         };
               
