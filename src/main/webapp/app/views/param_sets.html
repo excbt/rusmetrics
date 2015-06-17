@@ -107,10 +107,10 @@
                                                            
                                             <i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                          </td>
-                                         <td>
+                                         <td class="nmc-text-align-center">
                                              <span ng-show="oldObject.allRequiredParamsPassed"><i title="Корректно заполненн" class="glyphicon glyphicon-thumbs-up"></i></span>
                                          </td>
-                                         <td class="nmc-text-align-center">
+                                         <td >
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span></span>
                                          </td>
                                          <td>

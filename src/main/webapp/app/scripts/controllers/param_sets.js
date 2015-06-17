@@ -184,6 +184,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
             object.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
             object.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+        }else{
+            object.paramsetStartDate = null;
+            object.paramsetEndDate = null;
         }
 
         if ($scope.createByTemplate_flag){
@@ -196,6 +199,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             return;
         };
         table=$scope.crudTableName+$scope.currentReportType.suffix;
+//console.log($scope.createParamset_flag);        
         if ($scope.createParamset_flag){            
             object._active = true;
             
@@ -433,7 +437,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             
         });
         $scope.currentObject.showParamsBeforeRunReport = !$scope.currentObject.allRequiredParamsPassed;
-//console.log($scope.currentObject.allRequiredParamsPassed);         
+//console.log($scope.currentObject.allRequiredParamsPassed);   
+        $scope.createParamset_flag = false;
         $scope.editParamset_flag = true;
         $scope.createByTemplate_flag = false;
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета
@@ -584,6 +589,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         for (var i = 0; i<$scope.reportPeriods.length;i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
+                if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
+                    $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
+                    $scope.paramsetEndDateFormat= ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
+                }
             };
         };
               

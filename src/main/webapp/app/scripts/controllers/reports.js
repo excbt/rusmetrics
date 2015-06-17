@@ -326,6 +326,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         for (var i = 0; i<$scope.reportPeriods.length;i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
+                if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
+                    $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
+                    $scope.paramsetEndDateFormat= ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
+                }
             };
         };
               
@@ -480,19 +484,32 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var result = element.id;
             return result;
         });
-console.log("************************ Paramset ************************************");        
-console.log(paramset);        
-console.log("************************ objectIds ************************************"); 
-console.log(objectIds);         
-console.log("***********************************************************************");      
+//console.log("************************ Paramset ************************************");        
+//console.log(paramset);        
+//console.log("************************ objectIds ************************************"); 
+//console.log(objectIds);         
+//console.log("***********************************************************************");      
         var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
-        $http.put(url, paramset, { contObjectIds: objectIds })
-        .success(function(data, status, headers) {
-            var file = new Blob([data], { type: headers()['content-type'] });
-            saveAs(file, paramset.outputFileNameTemplate+"."+fileExt);
+        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: 'arraybuffer'})
+        .then(function(response) {
+//console.log("************************ headers ************************************"); 
+//console.log(response.headers());         
+//console.log("***********************************************************************");
+//console.log("Data.length = "+response.data.length);            
+//for(var k in data)
+//{
+//    console.log("data["+k+"]"+data[k]);
+//};
+//console.log("==========================================================================");
+            var fileName = response.headers()['content-disposition'];           
+            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
+            var file = new Blob([response.data], { type: response.headers()['content-type'] });
+            saveAs(file,fileName);
+            
+//            openSaveAsDialog(paramset.outputFileNameTemplate+"."+fileExt, response.data, response.headers()['content-type']);
         })
-        .error(function(e){
+        .catch(function(e){
             notificationFactory.errorInfo(e.statusText,e.data.description);
         });
     };
