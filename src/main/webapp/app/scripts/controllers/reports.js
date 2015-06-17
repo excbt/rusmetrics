@@ -22,7 +22,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-1"}
         ,{"name":"period","header":"Период", "class":"col-md-1"}
         ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
-        ,{"name":"activeStartDate","header":"Действует с", "class":"col-md-1"}
     ];
     $scope.crudTableName = "../api/reportParamset"; 
     
