@@ -363,7 +363,7 @@ console.log(object);
         && (element.paramSpecialType.specialTypeDirectoryValue!=null)
                 && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
         return result;
-    }
+    };
     
     $scope.editParamSet =function(parentObject,object){
 //        $scope.setCurrentReportType(parentObject);     

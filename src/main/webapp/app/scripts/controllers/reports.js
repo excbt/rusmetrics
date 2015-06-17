@@ -1,6 +1,6 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, crudGridDataFactory, notificationFactory){
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory){
                      
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -113,7 +113,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
         if (flag===false){
             $('#messageForUserModal').modal();
         }else{
-            $scope.createReport(type, object);
+            $scope.createReportWithParams(type, object);
         };
     };
     
@@ -132,6 +132,34 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
         $('#editParamsetModal').modal();
     };
     
+        //get custom directory data
+    $scope.getDirectory = function(url, obj){
+        $http.get(url)
+            .success(function(data){
+                obj.specialTypeDirectoryValues = data;  
+//console.log(obj);    
+//                obj.specialTypeDirectoryValues.forEach(function(element){
+//                    console.log(element[obj.specialTypeDirectoryValue]);
+//                    console.log(element[obj.specialTypeDirectoryCaption]);
+//                });
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+        //Проверка параметра - ссылочный параметр или нет
+    function isParamSpecialTypeDirectory(element){
+        var result=  (element.paramSpecialType.specialTypeDirectoryUrl!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryUrl!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryKey!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryKey!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryCaption!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryCaption!='undefined')
+        && (element.paramSpecialType.specialTypeDirectoryValue!=null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
+        return result;
+    };
+    
     $scope.editParamSet =function(parentObject,object){
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
@@ -141,6 +169,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
             result.reportMetaParamSpecialId = element.id;
             result.paramSpecialRequired = element.paramSpecialRequired;
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
+            if (isParamSpecialTypeDirectory(element))
+            {
+                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
+                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
+                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+            };
             //Ищем значение этого параметра в массиве параметров варианта отчета
             if (object.paramSpecialList.length==0){
                 result.textValue = null;
@@ -148,6 +184,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
                 result.oneDateValue = null;
                 result.startDateValue = null;
                 result.endDateValue = null;
+                result.oneDateValueFormatted=null;
+                result.startDateValueFormatted=null;
+                result.endDateValueFormatted=null;
                 result.directoryValue = null;
                 return result;
             }
@@ -167,6 +206,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
                 result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
                 result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
                 result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
+                result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
+                result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
+                result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
                 result.directoryValue = object.paramSpecialList[elementIndex].directoryValue || null;
                 result.version = object.paramSpecialList[elementIndex].version || null;
             }else{
@@ -177,6 +219,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
                 result.startDateValue = null;
                 result.endDateValue = null;
                 result.directoryValue = null;
+                
+                result.oneDateValueFormatted=null;
+                result.startDateValueFormatted=null;
+                result.endDateValueFormatted=null;
             }
             return result;
             
@@ -423,5 +469,27 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', 'crudGridDataFactory', 'no
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
         window.open(url);
         
+    };
+    
+    $scope.previewReport = function(type,paramset){
+        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
+        window.open(url);    
+    };
+    
+    $scope.createReportWithParams = function(type, paramset){
+        var objectIds = $scope.selectedObjects.map(function(element){
+            var result = element.id;
+            return result;
+        });
+        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
+        $http.put(url, paramset, { contObjectIds: objectIds })
+        .success(function(data) {
+            var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
+            var file = new Blob([data], { type: "application/"+fileExt });
+            saveAs(file, paramset.outputFileNameTemplate+"."+fileExt);
+        })
+        .error(function(e){
+            notificationFactory.errorInfo(e.statusText,e.data.description);
+        });
     };
 }]);
