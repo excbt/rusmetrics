@@ -50,6 +50,8 @@
                                             <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
+                                            <th></th>
+                                            <th>Действует с</th>
                                         </tr>
                                     </thead>    
 
@@ -62,7 +64,7 @@
                                                       <tr>
                                                         <td>
 -->
-                                                            <i title="Сформировать" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table" ng-click="createReport(object,oldObject)" ng-disabled="!oldObject.allRequiredParamsPassed"></i>
+                                                            <i title="Сформировать" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="createReport(object,oldObject)" ng-disabled="!oldObject.allRequiredParamsPassed" ng-class="{'nmc-button-in-table-run-disabled':!oldObject.allRequiredParamsPassed}"></i>
 <!--
                                                         </td>
                                                         <td>
@@ -92,6 +94,9 @@
                                          </td>
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
+                                         </td>
+                                         <td class="nmc-text-align-center">
+                                             <span ng-show="oldObject.outputFileType=='ZIP'||oldObject.outputFileZipped"><i title="Архивировать" class="fa fa-cube"></i></span>
                                          </td>
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
