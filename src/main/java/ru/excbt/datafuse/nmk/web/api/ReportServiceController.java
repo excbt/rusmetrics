@@ -31,10 +31,30 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController extends WebApiController {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportServiceController.class);
+
+	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
+			.forPattern(ReportService.DATE_TEMPLATE);
+
+	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
+	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
+	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
+	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
+
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	private interface ReportMaker {
 		boolean makeReport(ReportMakerParam reportMakerParam,
 				LocalDateTime dateTime, OutputStream outputStream);
@@ -43,6 +63,11 @@ public class ReportServiceController extends WebApiController {
 
 	}
 
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	private abstract class AbstractReportMaker implements ReportMaker {
 
 		@Override
@@ -61,17 +86,6 @@ public class ReportServiceController extends WebApiController {
 			return result;
 		}
 	}
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportServiceController.class);
-
-	private final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
-			.forPattern(ReportService.DATE_TEMPLATE);
-
-	private final static String DEFAULT_COMMERCE_FILENAME = "commerceReport";
-	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
-	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
-	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
 
 	@Autowired
 	private ReportService reportService;
@@ -164,8 +178,14 @@ public class ReportServiceController extends WebApiController {
 			HttpServletRequest request, HttpServletResponse response)
 			throws IOException {
 
+		checkNotNull(reportMakerParam);
 		checkNotNull(reportMaker);
 		checkNotNull(reportMaker.defaultFileName());
+
+		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+				.writeValueAsString(reportMakerParam);
+
+		logger.debug("ReportMakerParam JSON: {}", paramJson);
 
 		if (!reportMakerParam.isParamsetValid()
 				|| !reportMakerParam.isSubscriberValid()) {
