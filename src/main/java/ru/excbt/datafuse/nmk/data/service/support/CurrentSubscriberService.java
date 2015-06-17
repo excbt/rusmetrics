@@ -36,6 +36,7 @@ public class CurrentSubscriberService {
 				.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
+			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");			
 			return mockSubscriberService.getMockSubscriberId();
 		}
 
@@ -58,6 +59,7 @@ public class CurrentSubscriberService {
 				.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
+			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");			
 			return mockSubscriberService.getMockSubscriber();
 		}
 
