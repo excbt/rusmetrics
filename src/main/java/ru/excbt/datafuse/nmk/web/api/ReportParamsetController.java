@@ -81,8 +81,9 @@ public class ReportParamsetController extends WebApiController {
 	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getCommerceReportParamsetGet(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
 	}
 
 	/**
@@ -103,6 +104,18 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsT1ReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getConsT2ReportParamsetList() {
 
@@ -113,6 +126,19 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsT2ReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}	
+	
 	/**
 	 * 
 	 * @return
@@ -131,6 +157,19 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getConsReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}	
+		
+	
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getEventReportParamsetList() {
 
@@ -141,6 +180,19 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getEventReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}	
+	
+	
 	/**
 	 * 
 	 * @return
@@ -159,6 +211,18 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchCommerceReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}		
+	
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getArchConsT1ReportParamsetList() {
 
@@ -169,6 +233,18 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsT1ReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}		
+	
 	/**
 	 * 
 	 * @return
@@ -187,6 +263,18 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsT2ReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}		
+	
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getArchConsReportParamsetList() {
 
@@ -201,6 +289,18 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
+	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchConsReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}			
+	
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/archive/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getArchEventReportParamsetList() {
 
@@ -211,6 +311,18 @@ public class ReportParamsetController extends WebApiController {
 		return ResponseEntity.ok(reportParamsetList);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/event/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getArchEventReportParamsetGet(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}	
+	
 	/**
 	 * 
 	 * @return
