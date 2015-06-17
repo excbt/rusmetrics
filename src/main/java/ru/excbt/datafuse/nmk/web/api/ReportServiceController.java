@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
+import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -49,6 +50,21 @@ public class ReportServiceController extends WebApiController {
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
 	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
+
+	@Autowired
+	private ReportService reportService;
+
+	@Autowired
+	private ReportMakerParamService reportMakerParamService;
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private ReportPeriodService reportPeriodService;
 
 	/**
 	 * 
@@ -86,18 +102,6 @@ public class ReportServiceController extends WebApiController {
 			return result;
 		}
 	}
-
-	@Autowired
-	private ReportService reportService;
-
-	@Autowired
-	private ReportMakerParamService reportMakerParamService;
-
-	@Autowired
-	private ReportParamsetService reportParamsetService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
@@ -217,6 +221,7 @@ public class ReportServiceController extends WebApiController {
 		// set content attributes for the response
 		response.setContentType(reportMakerParam.getMimeType());
 		response.setContentLength(byteArray.length);
+		response.setStatus(HttpServletResponse.SC_OK);
 
 		String outputFilename = reportMakerParam.getReportParamset()
 				.getOutputFileNameTemplate();
@@ -232,11 +237,13 @@ public class ReportServiceController extends WebApiController {
 			response.setHeader(headerKey, headerValue);
 		}
 
+		logger.debug("Report Result file size: {} bytes", byteArray.length);
+
 		//
 		OutputStream outStream = response.getOutputStream();
 		outStream.write(byteArray);
 		outStream.close();
-		response.setStatus(HttpServletResponse.SC_OK);
+
 	}
 
 	/**
@@ -550,5 +557,7 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setSubscriberId(currentSubscriberService
 				.getSubscriberId());
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+		reportParamset.setReportPeriod(reportPeriodService
+				.findByKeyname(reportParamset.getReportPeriodKey()));
 	}
 }
