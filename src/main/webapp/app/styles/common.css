@@ -9,13 +9,13 @@
 .nmc-main-header {
     background-color: #225685;
     color: #FFFFFF;
-    height: 5%;
+    height: 60px;
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
 .nmc-main-header-brand{
     color: #FFFFFF !important;
-    margin-top: 3px;
+    margin-top: 7px;
     width: 230px;
     height: 40px;
     background: url(../images/rm-2.jpg);
@@ -89,6 +89,11 @@
 }
 
 /* Основная рабочая область */
+
+    /* Надпись о загрузке*/
+.nmc-loading{
+    
+}
 
     /* Обертка для страницы, которая придавливает футер к низу экрана.
                 Wrapper for page content to push down footer */
