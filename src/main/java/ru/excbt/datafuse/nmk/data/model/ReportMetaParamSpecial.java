@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
-@Table(name="report_meta_param_special")
+@Table(name = "report_meta_param_special")
 @JsonInclude(Include.NON_NULL)
 public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
@@ -32,22 +32,22 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
 	private ReportTypeKey reportTypeKey;
-	
+
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_type", insertable = false, updatable = false)
 	@JsonIgnore
-	private ReportType reportType;	
-	
+	private ReportType reportType;
+
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "param_special_type")	
+	@JoinColumn(name = "param_special_type")
 	private ReportMetaParamSpecialType paramSpecialType;
-	
+
 	@Column(name = "param_special_keyname")
 	private String paramSpecialKeyname;
-	
+
 	@Column(name = "param_special_caption")
 	private String paramSpecialCaption;
-	
+
 	@Column(name = "param_special_required")
 	private Boolean paramSpecialRequired;
 
@@ -56,7 +56,13 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	@Column(name = "param_special_name2")
 	private String paramSpecialName2;
-	
+
+	@Column(name = "param_special_default_value1")
+	private String paramSpecialDefaultValue1;
+
+	@Column(name = "param_special_default_value2")
+	private String paramSpecialDefaultValue2;
+
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
 	}
@@ -121,5 +127,21 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 		this.paramSpecialName2 = paramSpecialName2;
 	}
 
+	public String getParamSpecialDefaultValue1() {
+		return paramSpecialDefaultValue1;
+	}
 
+	public void setParamSpecialDefaultValue1(String paramSpecialDefaultValue1) {
+		this.paramSpecialDefaultValue1 = paramSpecialDefaultValue1;
+	}
+
+	public String getParamSpecialDefaultValue2() {
+		return paramSpecialDefaultValue2;
+	}
+
+	public void setParamSpecialDefaultValue2(String paramSpecialDefaultValue2) {
+		this.paramSpecialDefaultValue2 = paramSpecialDefaultValue2;
+	}
+
+	
 }

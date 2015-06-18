@@ -1,11 +1,14 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
@@ -34,6 +38,9 @@ public class ReportMakerParamService {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private ReportTypeService reportTypeService;
 
 	/**
 	 * 
@@ -148,7 +155,7 @@ public class ReportMakerParamService {
 			ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
-		//checkState(reportMakerParam.isParamsetValid());
+		// checkState(reportMakerParam.isParamsetValid());
 
 		boolean result = true;
 
@@ -160,23 +167,23 @@ public class ReportMakerParamService {
 		ReportMetaParamCommon paramCommon = reportType
 				.getReportMetaParamCommon();
 
-		
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.INTERVAL) {
-			
+
 			result = result
 					&& checkRequiredParamNotNull(
 							paramCommon.getStartDateRequired(),
 							reportParamset.getParamsetStartDate());
-			
+
 			result = result
-					&& checkRequiredParamNotNull(paramCommon.getEndDateRequired(),
-							reportParamset.getParamsetEndDate());			
+					&& checkRequiredParamNotNull(
+							paramCommon.getEndDateRequired(),
+							reportParamset.getParamsetEndDate());
 		}
-		
-		
+
 		if (reportParamset.getReportPeriodKey() == ReportPeriodKey.DAY) {
 			result = result
-					&& checkRequiredParamNotNull(paramCommon.getOneDateRequired(),
+					&& checkRequiredParamNotNull(
+							paramCommon.getOneDateRequired(),
 							reportParamset.getParamsetOneDate());
 		}
 
@@ -214,7 +221,7 @@ public class ReportMakerParamService {
 			ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);
-		//checkState(reportMakerParam.isParamsetValid());
+		// checkState(reportMakerParam.isParamsetValid());
 
 		boolean result = true;
 
@@ -344,6 +351,104 @@ public class ReportMakerParamService {
 			break;
 		default:
 			break;
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<String, Object> getParamSpecialValues(
+			ReportMakerParam reportMakerParam) {
+
+		checkNotNull(reportMakerParam);
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		ReportTypeKey reportTypeKey = reportMakerParam.getReportParamset()
+				.getReportTemplate().getReportTypeKey();
+
+		checkNotNull(reportTypeKey);
+
+		logger.debug("Checking params of reportType:{} ", reportTypeKey);
+
+		ReportType reportType = reportMakerParam.getReportParamset()
+				.getReportTemplate().getReportType();
+
+		if (reportType == null) {
+			reportType = reportTypeService.findByKeyname(reportTypeKey);
+		}
+
+		Map<Long, ReportMetaParamSpecial> metaParamMap = new HashMap<>();
+
+		for (ReportMetaParamSpecial metaParam : reportType
+				.getReportMetaParamSpecialList()) {
+			metaParamMap.put(metaParam.getId(), metaParam);
+		}
+
+		Iterable<ReportParamsetParamSpecial> paramSpecials = reportMakerParam
+				.getReportParamset().getParamSpecialList();
+
+		for (ReportParamsetParamSpecial paramV : paramSpecials) {
+
+			ReportMetaParamSpecial metaParamSpecial = metaParamMap.get(paramV
+					.getReportMetaParamSpecialId());
+
+			checkNotNull(
+					metaParamSpecial,
+					"MetaParamSpecial with id:"
+							+ paramV.getReportMetaParamSpecialId()
+							+ " is not found");
+
+			if (!paramV.isAnyValueAssigned()) {
+				if (Boolean.TRUE.equals(metaParamSpecial
+						.getParamSpecialRequired())) {
+					throw new IllegalStateException(
+							"Value of required metaParamSpecial id:"
+									+ metaParamSpecial.getId() + ", keyname:"
+									+ metaParamSpecial.getParamSpecialKeyname()
+									+ " is null");
+				}
+				continue;
+			}
+
+			logger.debug(
+					"paramSpecial id:{}, metaParamSpecialId:{}, metaKeyname:{}, paramValue:{}",
+					paramV.getId(), metaParamSpecial.getId(),
+					metaParamSpecial.getParamSpecialKeyname(),
+					paramV.getValuesAsString());
+
+			Map<String, Object> valueMap = paramV.getValuesAsMap();
+
+			if (metaParamSpecial.getParamSpecialType().getSpecialTypeField1() != null
+					&& metaParamSpecial.getParamSpecialName1() != null) {
+				String srcKey = metaParamSpecial.getParamSpecialType()
+						.getSpecialTypeField1();
+				String dstKey = metaParamSpecial.getParamSpecialName1();
+				Object value = valueMap.get(srcKey);
+
+				checkNotNull(value, "value with key:" + srcKey + " is null");
+
+				Object checkValue = result.put(dstKey, value);
+				checkState(checkValue == null, "Param with key:" + dstKey
+						+ " is already added");
+			}
+
+			if (metaParamSpecial.getParamSpecialType().getSpecialTypeField2() != null
+					&& metaParamSpecial.getParamSpecialName2() != null) {
+				String srcKey = metaParamSpecial.getParamSpecialType()
+						.getSpecialTypeField2();
+				String dstKey = metaParamSpecial.getParamSpecialName2();
+				Object value = valueMap.get(srcKey);
+				checkNotNull(value, "value with key:" + srcKey + " is null");
+				Object checkValue = result.put(dstKey, value);
+
+				checkState(checkValue == null, "Param with key:" + dstKey
+						+ " is already added");
+			}
+
 		}
 
 		return result;

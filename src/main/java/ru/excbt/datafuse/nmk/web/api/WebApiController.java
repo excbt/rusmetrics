@@ -23,6 +23,7 @@ public class WebApiController {
 	public final static String MIME_XLS = "application/vnd.ms-excel";
 
 	public final static String MIME_CSV = "text/csv";
+	public final static String MIME_TEXT = "text/html";
 
 	public final static String FILE_CSV_EXT = ".csv";
 
