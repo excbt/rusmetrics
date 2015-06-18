@@ -495,7 +495,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             return result;
         });   
         var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
-        var url ="../api/reportService/"+paramset.id+"/download/"+fileExt;  
+        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";  
         var responseType = "arraybuffer";
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
         $http({

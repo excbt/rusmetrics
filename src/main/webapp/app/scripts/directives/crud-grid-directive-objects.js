@@ -101,11 +101,11 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                         var tmp = data;    
                         var curObjId = $cookies.contObject;
 //console.log(curObjId);                        
-//                        for (var i=0; i<tmp.length; i++){                                                    
-//                            $scope.getZpointsDataByObject(tmp[i], "Ex");  
-////console.log(tmp[i].id);                               
-//                            if (tmp[i].id == curObjId){tmp[i].showGroupDetails=true};
-//                        }
+                        for (var i=0; i<tmp.length; i++){                                                    
+                            $scope.getZpointsDataByObject(tmp[i], "Ex");  
+//console.log(tmp[i].id);                               
+                            if (tmp[i].id == curObjId){tmp[i].showGroupDetails=true};
+                        }
                         $scope.objects = tmp;
                         $cookies.contObject = null;
                         if (cb) cb();
