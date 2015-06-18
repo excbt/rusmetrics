@@ -333,9 +333,12 @@ public class ReportService {
 				convertedFileType = FileType.PDF;
 			}
 
+			
+			// TO DO 
+			
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
 					reportParamset.getSubscriberId(), dtStart.toDate(),
-					dtEnd.toDate(), objectIds, convertedFileType, isZip);
+					dtEnd.toDate(), objectIds, convertedFileType, isZip, null);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
