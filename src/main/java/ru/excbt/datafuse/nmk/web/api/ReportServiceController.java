@@ -17,6 +17,10 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
@@ -111,18 +117,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadCommerceReportGet(
+	public ResponseEntity<byte[]> doDowndloadCommerceReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = commerceReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -134,18 +139,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadEventReportGet(
+	public ResponseEntity<byte[]> doDowndloadEventReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = eventReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 	}
 
 	/**
@@ -156,18 +160,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/event/{reportParamsetId}/preview", method = RequestMethod.GET)
-	public void doDowndloadEventReportGetPreview(
+	public ResponseEntity<byte[]> doDowndloadEventReportGetPreview(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = eventReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId, true);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 	}
 
 	/**
@@ -253,19 +256,93 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
+	private ResponseEntity<byte[]> processDowndloadRequestReportFix(
+			ReportMakerParam reportMakerParam, ReportMaker reportMaker,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportMakerParam);
+		checkNotNull(reportMaker);
+		checkNotNull(reportMaker.defaultFileName());
+
+		byte[] result = new byte[0];
+
+		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+				.writeValueAsString(reportMakerParam);
+
+		logger.debug("ReportMakerParam JSON: {}", paramJson);
+
+		if (!reportMakerParam.isParamsetValid()
+				|| !reportMakerParam.isSubscriberValid()) {
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		boolean checkParamsCommon = reportMakerParamService
+				.isAllCommonRequiredParamsExists(reportMakerParam);
+		boolean checParamsSpecial = reportMakerParamService
+				.isAllSpecialRequiredParamsExists(reportMakerParam);
+
+		if (!checkParamsCommon || !checParamsSpecial) {
+			return ResponseEntity.badRequest().body(result);
+		}
+
+		byte[] byteArray = null;
+		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
+			reportMaker.makeReport(reportMakerParam, LocalDateTime.now(),
+					memoryOutputStream);
+			byteArray = memoryOutputStream.toByteArray();
+		}
+
+		if (byteArray == null || byteArray.length == 0) {
+			return ResponseEntity.status(
+					HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(result);
+		}
+
+		// set content attributes for the response
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.valueOf(reportMakerParam.getMimeType()));
+		headers.setContentLength(byteArray.length);
+
+		String outputFilename = reportMakerParam.getReportParamset()
+				.getOutputFileNameTemplate();
+		if (outputFilename == null) {
+			outputFilename = reportMaker.defaultFileName();
+		}
+
+		if (!reportMakerParam.isPreviewMode()) {
+			// set headers for the response
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"",
+					outputFilename + reportMakerParam.getExt());
+			headers.set(headerKey, headerValue);
+		}
+
+		logger.debug("Report Result file size: {} bytes", byteArray.length);
+
+		result = byteArray;
+
+		return new ResponseEntity<byte[]>(result, headers, HttpStatus.OK);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT1ReportGet(
+	public ResponseEntity<byte[]> doDowndloadConsT1ReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -277,18 +354,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t1/{reportParamsetId}/preview", method = RequestMethod.GET)
-	public void doDowndloadConsT1ReportGetPreview(
+	public ResponseEntity<byte[]> doDowndloadConsT1ReportGetPreview(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId, true);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -300,18 +376,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.GET)
-	public void doDowndloadConsT2ReportGet(
+	public ResponseEntity<byte[]> doDowndloadConsT2ReportGet(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -323,18 +398,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}/preview", method = RequestMethod.GET)
-	public void doDowndloadConsT2ReportGetPreview(
+	public ResponseEntity<byte[]> doDowndloadConsT2ReportGetPreview(
 			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId, true);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -407,12 +481,11 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/commerce/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public void doDowndloadCommerceReportPut(
+	public ResponseEntity<byte[]> doDowndloadCommerceReportPut(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -430,8 +503,8 @@ public class ReportServiceController extends WebApiController {
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamset, contObjectIds);
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -445,12 +518,11 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/event/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public void doDowndloadEventReportPut(
+	public ResponseEntity<byte[]> doDowndloadEventReportPut(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request, HttpServletResponse response)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -468,8 +540,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = eventReportMaker();
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 	}
 
 	/**
@@ -482,11 +554,11 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t1/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public void doDowndloadConsT1ReportPut(
+	public ResponseEntity<byte[]> doDowndloadConsT1ReportPut(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest request)
 			throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -505,8 +577,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker, request);
 
 	}
 
@@ -520,11 +591,11 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/cons_t2/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public void doDowndloadConsT2ReportPut(
+	public ResponseEntity<byte[]> doDowndloadConsT2ReportPut(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest request)
 			throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -543,8 +614,7 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		processDowndloadRequestReport(reportMakerParam, reportMaker, request,
-				response);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker, request);
 
 	}
 
@@ -560,4 +630,148 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setReportPeriod(reportPeriodService
 				.findByKeyname(reportParamset.getReportPeriodKey()));
 	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT, produces = "application/zip")
+	public ResponseEntity<byte[]> doDowndloadReportPutZip(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+
+		reportParamset.setOutputFileZipped(true);
+
+		return procedDownloadAllReports(reportParamsetId, contObjectIds,
+				reportParamset, request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
+	public ResponseEntity<byte[]> doDowndloadReportPutPdf(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+
+		reportParamset.setOutputFileZipped(false);
+		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
+
+		return procedDownloadAllReports(reportParamsetId, contObjectIds,
+				reportParamset, request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
+	public ResponseEntity<byte[]> doDowndloadReportPutXlsx(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request, HttpServletResponse response)
+			throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+
+		reportParamset.setOutputFileZipped(false);
+		reportParamset.setOutputFileType(ReportOutputFileType.XLSX);
+
+		return procedDownloadAllReports(reportParamsetId, contObjectIds,
+				reportParamset, request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws IOException
+	 */
+	private ResponseEntity<byte[]> procedDownloadAllReports(
+			Long reportParamsetId, Long[] contObjectIds,
+			ReportParamset reportParamset, HttpServletRequest request)
+			throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+		checkNotNull(reportParamset.getReportTemplate());
+		checkNotNull(reportParamset.getReportTemplate().getReportTypeKey());
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
+
+		ReportTypeKey reportTypeKey = reportParamset.getReportTemplate()
+				.getReportTypeKey();
+
+		ReportMaker reportMaker = null;
+
+		switch (reportTypeKey) {
+		case COMMERCE_REPORT:
+			reportMaker = commerceReportMaker();
+			break;
+		case EVENT_REPORT:
+			reportMaker = eventReportMaker();
+			break;
+		case CONS_T1_REPORT:
+			reportMaker = consT1ReportMaker();
+			break;
+		case CONS_T2_REPORT:
+			reportMaker = consT2ReportMaker();
+			break;
+
+		default:
+			break;
+		}
+
+		checkState(reportMaker != null, "reportTypeKey:" + reportTypeKey
+				+ " is not supported");
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
 }

@@ -8,7 +8,9 @@ public class ReportConstants {
 
 	public enum ReportOutputFileType {
 		HTML("text/html", ".html"), PDF("application/pdf", ".pdf"), XLS(
-				"application/excel", ".xlsx"), XLSX("application/excel", ".xlsx");
+				"application/vnd.ms-excel", ".xlsx"), XLSX(
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+				".xlsx");
 
 		private final String mimeType;
 		private final String ext;

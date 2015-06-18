@@ -184,12 +184,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testCommerceDownloadPut2() throws Exception {
+	public void testCommerceDownload__Zip() throws Exception {
 		long srcParamsetId = TEST_PARAMSET_COMMERCE;
 		long modReportParamsetId = TEST_PARAMSET_COMMERCE2;
 
 		String urlStr = String.format(
-				"/api/reportService/commerce/%d/download", modReportParamsetId);
+				"/api/reportService/%d/download/zip", modReportParamsetId);
 
 		ReportMakerParam modReportMakerParam = reportMakerParamService
 				.getReportMakerParam(modReportParamsetId);
