@@ -81,6 +81,9 @@ public class ReportService {
 	private ReportParamsetService reportParamsetService;
 
 	@Autowired
+	private ReportMakerParamService reportMakerParamService;
+
+	@Autowired
 	private JasperDatabaseConnectionSettings jasperConfig;
 
 	@Autowired
@@ -88,8 +91,6 @@ public class ReportService {
 
 	@PersistenceContext
 	private EntityManager em;
-	
-
 
 	/**
 	 * 
@@ -204,9 +205,11 @@ public class ReportService {
 					"ReportParamset (id=%d) not found", reportParamsetId));
 		}
 
-		//ReportMakerParam reportMakerParam = getReportMakerParam(reportParamsetId);
+		// ReportMakerParam reportMakerParam =
+		// getReportMakerParam(reportParamsetId);
 
-		//return makeReportByParamset(reportMakerParam, reportDate, outputStream);
+		// return makeReportByParamset(reportMakerParam, reportDate,
+		// outputStream);
 
 		return null;
 	}
@@ -333,12 +336,15 @@ public class ReportService {
 				convertedFileType = FileType.PDF;
 			}
 
-			
-			// TO DO 
-			
+			// TO DO
+
+			Map<String, Object> paramSpecialMap = reportMakerParamService
+					.getParamSpecialValues(reportMakerParam);
+
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
 					reportParamset.getSubscriberId(), dtStart.toDate(),
-					dtEnd.toDate(), objectIds, convertedFileType, isZip, null);
+					dtEnd.toDate(), objectIds, convertedFileType, isZip,
+					paramSpecialMap);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
@@ -418,7 +424,5 @@ public class ReportService {
 		checkNotNull(sess);
 
 	}
-
-
 
 }
