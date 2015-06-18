@@ -471,23 +471,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.createReport = function(type,paramset){
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
         $http.get(url, {responseType: 'arraybuffer'})
-            .then(function(response) {
-    console.log("************************ headers ************************************"); 
-    console.log(response.headers());         
-    console.log("***********************************************************************");
-    console.log("Data.length = "+response.data.length);            
-    //for(var k in data)
-    //{
-        console.log(response);
-    //};
-    console.log("==========================================================================");
-            
+            .then(function(response) {        
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });
                 saveAs(file,fileName);
-
-    //            openSaveAsDialog(paramset.outputFileNameTemplate+"."+fileExt, response.data, response.headers()['content-type']);
             })
             .catch(function(e){
                 notificationFactory.errorInfo(e.statusText,e.data.description);
@@ -505,34 +493,23 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var objectIds = $scope.selectedObjects.map(function(element){
             var result = element.id;
             return result;
-        });
-//console.log("************************ Paramset ************************************");        
-//console.log(paramset);        
-//console.log("************************ objectIds ************************************"); 
-//console.log(objectIds);         
-//console.log("***********************************************************************");      
+        });   
         var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
-        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
-        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: 'arraybuffer'})
+        var url ="../api/reportService/"+paramset.id+"/download/"+fileExt;  
+        var responseType = "arraybuffer";
+//        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
+        $http({
+            url: url, 
+            method: "PUT",
+            params: { contObjectIds: objectIds },
+            data: paramset,
+            responseType: responseType
+        })
         .then(function(response) {
-console.log("************************ headers ************************************"); 
-console.log(response.headers());         
-console.log("***********************************************************************");
-console.log("Data.length = "+response.data.length);            
-//for(var k in data)
-//{
-console.log(response);
-//};
-console.log("==========================================================================");
             var fileName = response.headers()['content-disposition']; 
-            
-console.log(typeof response.data);
-            var buf = new ArrayBuffer(response.data);
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
-            var file = new Blob([buf], { type: response.headers()['content-type'] });
+            var file = new Blob([response.data], { type: response.headers()['content-type'] });
             saveAs(file,fileName);
-            
-//            openSaveAsDialog(paramset.outputFileNameTemplate+"."+fileExt, response.data, response.headers()['content-type']);
         })
         .catch(function(e){
             notificationFactory.errorInfo(e.statusText,e);
