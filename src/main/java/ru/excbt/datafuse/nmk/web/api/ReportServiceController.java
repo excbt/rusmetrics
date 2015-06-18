@@ -719,6 +719,34 @@ public class ReportServiceController extends WebApiController {
 	 * @param reportParamset
 	 * @param request
 	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
+	public ResponseEntity<byte[]> doDowndloadReportPutHtml(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request, HttpServletResponse response)
+					throws IOException {
+		
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		
+		reportParamset.setOutputFileZipped(false);
+		reportParamset.setOutputFileType(ReportOutputFileType.HTML);
+		
+		return procedDownloadAllReports(reportParamsetId, contObjectIds,
+				reportParamset, request);
+		
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @param response
 	 * @return
 	 * @throws IOException
 	 */

@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.junit.Test;
@@ -149,8 +152,11 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		ReportMakerParam reportMakerParam = reportMakerParamService
 				.getReportMakerParam(reportParamsetId);
 
-		List<Long> contObjectIds = reportMakerParam.getContObjectList()
-				.subList(0, 1);
+		reportMakerParam.getReportParamset().setOutputFileType(
+				ReportOutputFileType.PDF);
+
+		List<Long> contObjectIds = reportMakerParam.getContObjectList().subList(0, 1);
+		reportMakerParam.getReportParamset().setOutputFileZipped(true);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 
@@ -168,8 +174,17 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 					throws Exception {
 
 				resultActions.andExpect(content().contentType(
-						reportMakerParam.getReportParamset()
-								.getOutputFileType().getMimeType()));
+						reportMakerParam.getMimeType()));
+
+				byte[] resultBytes = resultActions.andReturn().getResponse()
+						.getContentAsByteArray();
+
+				logger.info("ResultBytes size:{}", resultBytes.length);
+
+				String filename = "./out/testCommerceDownloadPut"
+						+ reportMakerParam.getExt();
+
+				writeResultBytesToFile(filename, resultBytes);
 
 			}
 		};
@@ -184,18 +199,21 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testCommerceDownload__Zip() throws Exception {
+	public void testCommerceDownload__Html() throws Exception {
 		long srcParamsetId = TEST_PARAMSET_COMMERCE;
 		long modReportParamsetId = TEST_PARAMSET_COMMERCE2;
 
-		String urlStr = String.format(
-				"/api/reportService/%d/download/zip", modReportParamsetId);
+		String urlStr = String.format("/api/reportService/%d/download/html",
+				modReportParamsetId);
 
 		ReportMakerParam modReportMakerParam = reportMakerParamService
 				.getReportMakerParam(modReportParamsetId);
 
 		ReportMakerParam srcParam = reportMakerParamService
 				.getReportMakerParam(srcParamsetId);
+
+		List<Long> contObjectIds = srcParam.getContObjectList().subList(0, 1);
+
 
 		modReportMakerParam.getReportParamset().setReportPeriod(
 				srcParam.getReportParamset().getReportPeriod());
@@ -204,7 +222,9 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		modReportMakerParam.getReportParamset().setParamsetEndDate(
 				srcParam.getReportParamset().getParamsetEndDate());
 
-		List<Long> contObjectIds = srcParam.getContObjectList().subList(0, 1);
+		modReportMakerParam.getReportParamset().setOutputFileType(
+				ReportOutputFileType.HTML);
+		// modReportMakerParam.getReportParamset().
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 
@@ -221,8 +241,17 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			public void testResultActions(ResultActions resultActions)
 					throws Exception {
 
-				resultActions.andExpect(content().contentType(
-						modReportMakerParam.getMimeType()));
+				resultActions.andExpect(content().contentType(ReportOutputFileType.HTML.getMimeType()));
+
+				byte[] resultBytes = resultActions.andReturn().getResponse()
+						.getContentAsByteArray();
+
+				logger.info("ResultBytes size:{}", resultBytes.length);
+
+				String filename = "./out/testCommerceDownload__Html"
+						+ ReportOutputFileType.HTML.getExt();
+
+				writeResultBytesToFile(filename, resultBytes);
 
 			}
 		};
@@ -348,4 +377,22 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
+	/**
+	 * 
+	 * @param filename
+	 * @param fileBytes
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private void writeResultBytesToFile(String filename, byte[] fileBytes)
+			throws FileNotFoundException, IOException {
+		logger.info("Writing file: {}", filename);
+		logger.info("fileBytes size: {}", fileBytes.length);
+
+		try (FileOutputStream out = new FileOutputStream(filename)) {
+			out.write(fileBytes);
+			out.close();
+		}
+
+	}
 }
