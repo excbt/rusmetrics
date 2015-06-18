@@ -446,7 +446,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		// set headers for the response
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename + MIME_CSV_EXT);
+				outputFilename + FILE_CSV_EXT);
 		response.setHeader(headerKey, headerValue);
 		//
 		OutputStream outStream = response.getOutputStream();
