@@ -70,6 +70,10 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	@Version
 	private int version;
 
+	// ************************************************************************
+	//
+	// ************************************************************************
+
 	public static ReportParamsetParamSpecial newInstance(
 			ReportMetaParamSpecial reportMetaParamSpecial) {
 		checkNotNull(reportMetaParamSpecial);
@@ -139,6 +143,59 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 		}
 		return i > 0;
 	}
+
+	@JsonIgnore
+	public String getValuesAsString() {
+
+		Map<String, Object> valuesMap = new HashMap<>();
+		valuesMap.put("textValue", textValue);
+		valuesMap.put("numericValue", numericValue);
+		valuesMap.put("oneDateValue", oneDateValue);
+		valuesMap.put("startDateValue", startDateValue);
+		valuesMap.put("endDateValue", endDateValue);
+		valuesMap.put("directoryValue", directoryValue);
+		valuesMap.put("boolValue", boolValue);
+
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
+			if (v.getValue() != null) {
+				sb.append(v.getKey());
+				sb.append('=');
+				sb.append(v.getValue().toString());
+				sb.append("   ");
+			}
+		}
+		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonIgnore
+	public Map<String, Object> getValuesAsMap() {
+
+		Map<String, Object> result = new HashMap<>();
+		Map<String, Object> valuesMap = new HashMap<>();
+		valuesMap.put("textValue", textValue);
+		valuesMap.put("numericValue", numericValue);
+		valuesMap.put("oneDateValue", oneDateValue);
+		valuesMap.put("startDateValue", startDateValue);
+		valuesMap.put("endDateValue", endDateValue);
+		valuesMap.put("directoryValue", directoryValue);
+		valuesMap.put("boolValue", boolValue);
+
+		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
+			if (v.getValue() != null) {
+				result.put(v.getKey(), v.getValue());
+			}
+		}
+		return result;
+	}
+
+	// ************************************************************************
+	//
+	// ************************************************************************
 
 	public ReportParamset getReportParamset() {
 		return reportParamset;
@@ -218,54 +275,6 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 
 	public void setBoolValue(Boolean boolValue) {
 		this.boolValue = boolValue;
-	}
-
-	@JsonIgnore
-	public String getValuesAsString() {
-
-		Map<String, Object> valuesMap = new HashMap<>();
-		valuesMap.put("textValue", textValue);
-		valuesMap.put("numericValue", numericValue);
-		valuesMap.put("oneDateValue", oneDateValue);
-		valuesMap.put("startDateValue", startDateValue);
-		valuesMap.put("endDateValue", endDateValue);
-		valuesMap.put("directoryValue", directoryValue);
-		valuesMap.put("boolValue", boolValue);
-
-		StringBuilder sb = new StringBuilder();
-		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
-			if (v.getValue() != null) {
-				sb.append(v.getKey());
-				sb.append('=');
-				sb.append(v.getValue().toString());
-				sb.append("   ");
-			}
-		}
-		return sb.toString();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public Map<String, Object> getValuesAsMap() {
-
-		Map<String, Object> result = new HashMap<>();
-		Map<String, Object> valuesMap = new HashMap<>();
-		valuesMap.put("textValue", textValue);
-		valuesMap.put("numericValue", numericValue);
-		valuesMap.put("oneDateValue", oneDateValue);
-		valuesMap.put("startDateValue", startDateValue);
-		valuesMap.put("endDateValue", endDateValue);
-		valuesMap.put("directoryValue", directoryValue);
-		valuesMap.put("boolValue", boolValue);
-
-		for (Map.Entry<String, Object> v : valuesMap.entrySet()) {
-			if (v.getValue() != null) {
-				result.put(v.getKey(), v.getValue());
-			}
-		}
-		return result;
 	}
 
 }
