@@ -34,7 +34,7 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	 * @param isBodyCompiled
 	 * @throws IOException
 	 */
-	public void testLoadReportMasterTemplate(ReportTypeKey reportTypeKey,
+	private void testLoadReportMasterTemplate(ReportTypeKey reportTypeKey,
 			String fileResourceString, boolean isBodyCompiled)
 			throws IOException {
 		ReportMasterTemplateBody templateBody = reportMasterTemplateBodyService

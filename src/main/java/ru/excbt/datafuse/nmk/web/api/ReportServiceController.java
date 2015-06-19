@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
@@ -192,7 +193,7 @@ public class ReportServiceController extends WebApiController {
 		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
 				.writeValueAsString(reportMakerParam);
 
-		logger.debug("ReportMakerParam JSON: {}", paramJson);
+		logger.trace("ReportMakerParam JSON: {}", paramJson);
 
 		if (!reportMakerParam.isParamsetValid()
 				|| !reportMakerParam.isSubscriberValid()) {
@@ -558,8 +559,7 @@ public class ReportServiceController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -577,7 +577,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
-		return processDowndloadRequestReportFix(reportMakerParam, reportMaker, request);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -595,8 +596,7 @@ public class ReportServiceController extends WebApiController {
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request)
-			throws IOException {
+			HttpServletRequest request) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -614,7 +614,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
-		return processDowndloadRequestReportFix(reportMakerParam, reportMaker, request);
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 
 	}
 
@@ -624,9 +625,14 @@ public class ReportServiceController extends WebApiController {
 	 */
 	private void setupReportParamset(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
-		reportParamset.setSubscriberId(currentSubscriberService
-				.getSubscriberId());
-		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+
+		Subscriber subscriber = currentSubscriberService.getSubscriber();
+		checkNotNull(subscriber);
+		checkNotNull(subscriber.getId());
+
+		reportParamset.setSubscriberId(subscriber.getId());
+		reportParamset.setSubscriber(subscriber);
+
 		reportParamset.setReportPeriod(reportPeriodService
 				.findByKeyname(reportParamset.getReportPeriodKey()));
 	}
@@ -727,17 +733,17 @@ public class ReportServiceController extends WebApiController {
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset,
 			HttpServletRequest request, HttpServletResponse response)
-					throws IOException {
-		
+			throws IOException {
+
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
-		
+
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.HTML);
-		
+
 		return procedDownloadAllReports(reportParamsetId, contObjectIds,
 				reportParamset, request);
-		
+
 	}
 
 	/**
