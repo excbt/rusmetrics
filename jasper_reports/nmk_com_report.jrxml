@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-05-06T14:43:57 -->
+<!-- 2015-06-17T16:33:46 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_com_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="ireport.jasperserver.url" value="http://192.168.84.251:8080/jasperserver/"/>
@@ -14,8 +14,7 @@
 		<parameter name="int_begin_date" class="java.util.Date"/>
 		<parameter name="int_end_date" class="java.util.Date"/>
 		<queryString language="SQL">
-			<![CDATA[select * from get_data_integrators($P{int_cont_id}, $P{int_begin_date}, $P{int_end_date}, 3);
-]]>
+			<![CDATA[select * from get_data_integrators($P{int_cont_id}, $P{int_begin_date}, $P{int_end_date}, 3);]]>
 		</queryString>
 		<field name="hw_data_date" class="java.sql.Timestamp"/>
 		<field name="hw_m_in" class="java.math.BigDecimal"/>
@@ -43,6 +42,9 @@
 	</parameter>
 	<parameter name="cont_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[container id]]></parameterDescription>
+	</parameter>
+	<parameter name="par_signature1" class="java.lang.String">
+		<parameterDescription><![CDATA[ФИО ответственного лица]]></parameterDescription>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select 
@@ -1348,7 +1350,7 @@ on (heat.data_date = hw.data_date);]]>
 		</band>
 	</detail>
 	<summary>
-		<band height="240" splitType="Immediate">
+		<band height="250" splitType="Immediate">
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<textField pattern="#0.000" isBlankWhenNull="true">
@@ -2726,6 +2728,16 @@ on (heat.data_date = hw.data_date);]]>
 					</jr:listContents>
 				</jr:list>
 			</componentElement>
+			<textField>
+				<reportElement style="Style1" x="480" y="210" width="220" height="20" uuid="8989d6c8-4ebf-4da0-b233-847b06402295">
+					<property name="local_mesure_unity" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement verticalAlignment="Top"/>
+				<textFieldExpression><![CDATA[$P{par_signature1}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>
