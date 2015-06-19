@@ -120,7 +120,7 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 $scope.getData(
                     function () {
                         $scope.loading = false;
-                    });
+                });
               
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);

@@ -493,7 +493,19 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var objectIds = $scope.selectedObjects.map(function(element){
             var result = element.id;
             return result;
-        });   
+        }); 
+         //set the list of the special params
+        paramset.paramSpecialList = $scope.currentParamSpecialList;
+        //
+        if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
+            paramset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+            paramset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+        }else{
+            paramset.paramsetStartDate = null;
+            paramset.paramsetEndDate = null;
+        }
+
+//console.log(paramset);        
         var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";  
         var responseType = "arraybuffer";
