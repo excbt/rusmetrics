@@ -41,7 +41,7 @@ public interface ContServiceDataHWaterRepository extends
 			Pageable pageable);
 
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId "
+			+ " WHERE d.contZPointId = :contZPointId "
 			+ " ORDER BY d.dataDate desc")
 	public List<ContServiceDataHWater> selectLastDataByZPoint(
 			@Param("contZPointId") long contZPointId, Pageable pageable);
