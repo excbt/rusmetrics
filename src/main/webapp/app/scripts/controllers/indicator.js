@@ -286,6 +286,7 @@ angular.module('portalNMC')
     };  
         
     $scope.$watch('reportStart', function (newDates) {  
+//console.log("change reportStart");        
         if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
             return;
         }

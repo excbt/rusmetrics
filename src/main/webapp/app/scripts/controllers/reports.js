@@ -81,7 +81,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
             type.paramsets = data;
-            type.paramsetsCount = data.length;
+            type.paramsetsCount = data.length;            
         });
     };
       
@@ -94,7 +94,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         };
     };
 
-    $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
+    $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
     };
     

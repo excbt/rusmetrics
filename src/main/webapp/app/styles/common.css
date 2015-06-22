@@ -7,9 +7,12 @@
  ********************/
 /* Шапка */
 .nmc-main-header {
-    background-color: #225685;
+/*    background-color: #225685;*/
+/*    background: linear-gradient(to bottom, #689CD5 0%,#4074A3 50%,#225685 51%,#0E4271 100%);*/
+    background: linear-gradient(to bottom, #86BAF3 0%, #5E92CB 10%, #043867 90%, #003463 100%);
     color: #FFFFFF;
     height: 60px;
+    border: none;
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
@@ -18,7 +21,7 @@
     margin-top: 7px;
     width: 230px;
     height: 40px;
-    background: url(../images/rm-2.jpg);
+    background: url(../images/rm-2.2.t.png);
 }
 
 /*  Текст по центру шапки портала*/
@@ -26,13 +29,13 @@
     font: bold 190% arial;
     text-align: center;
     vertical-align: middle;
-    padding-top: 13px;
+    padding-top: 16px;
 }
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{
-/*
-	padding: 5px;
-	background-color: yellow;
+
+	padding-top: 5px;
+	/*background-color: yellow;
 */
 }
 
@@ -394,6 +397,7 @@ td {
 
     /*Стиль колонки с кнопками*/
 .nmc-td-for-buttons{
+    min-width: 65px;
     width: 4%;
 }
 /*
@@ -442,6 +446,9 @@ tr.nmc-main-table-header > th {
     border: none;
 }
 
+.nmc-parent-object-table > tbody > tr>td {
+    padding: 0 !important;
+}
 .nmc-parent-table > tbody > tr:nth-of-type(odd) {
     background-color: #FFFFFF;/* цвет фона для нечетной строки родительской таблицы*/
 /*    background-color: #f5f5f5;*/
@@ -454,6 +461,19 @@ tr.nmc-main-table-header > th {
     border-radius: 4px;
 /*    background-color: azure !mportant;*/
 }
+
+    /* Вложенная таблица с объектами*/
+.nmc-child-object-table {
+/*    margin-left: 2%;*/
+/*    width: 97%;*/
+    border-radius: 4px;
+/*    background-color: azure !mportant;*/
+}
+/*
+.nmc-child-object-table > tbody > tr>td{
+    padding: 0;
+}
+*/
 
     /* Шапка вложенной таблицы*/
 .nmc-child-table-header{
@@ -727,7 +747,7 @@ tr.nmc-main-table-header > th {
 /* панель для кнопок в столбце таблице - 3 кнопки*/
 .nmc-btn-toolbar-in-table-3{
     padding-left:5px !important;
-    width:70px !important;
+    width:90px !important;
 }
  
 /* Переключатель */

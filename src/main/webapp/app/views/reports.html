@@ -16,7 +16,8 @@
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
-                        <td style="padding:0;">
+<!--                        <td style="padding:0;">-->
+                            <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
                                 <tr>
@@ -46,7 +47,7 @@
                                     <thead>
                                         <tr class="nmc-child-table-header">
     <!--                                            td for buttons-->
-                                            <th class="col-md-1"></th>
+                                            <th class="nmc-btn-toolbar-in-table-3"></th>
                                             <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
@@ -56,7 +57,7 @@
                                     </thead>    
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
-                                         <td class="col-md-1">
+                                         <td class="nmc-btn-toolbar-in-table-3">
 <!--
                                             <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table-3 nmc-text-align-right">
                                                 <div class="btn-group">
