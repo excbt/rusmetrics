@@ -14,9 +14,12 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
+@JsonInclude(Include.NON_NULL)
 public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	/**
