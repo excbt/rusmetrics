@@ -12,5 +12,87 @@
       </div>
     </div>
 </div>
-
-Monitor
+<div class="tab-content">
+<!--      Варианты отчетов-->
+    <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
+        <!--       Активные / Архивные -->
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle col-md-2" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" >Все объекты</a></li>
+            <li role="presentation" class="nmc-toggle-archive"><a class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" >Объекты с ЧП</a></li>
+<!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
+        </ul>
+        <div class="col-md-3 noPadding marginTop15" ng-controller="DataRangeSettings">   
+        <div class="input-group marginRight15">
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">интервал дат: с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"/>
+        </div>    
+        </div>
+        <div class="col-md-3 marginTop15">
+            <label class="nmc-form-label">Период обновления:</label>
+    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+            <select class="form-control nmc-input-digital-data nmc-select-form" >
+                        <option>30 сек</option>
+                        <option>1 мин</option>
+                        <option>5 мин</option>
+                        <option>30 мин</option>
+                        <option>1 час</option>
+    <!--            <option>100</option>-->
+            </select>
+            <i title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh"></i>
+        </div>
+        <div class="tab-content">
+<!--            Активные варианты-->
+            <div role="tabpanel" class="tab-pane fade in active" id="active_paramsets">
+            </div>
+        </div>
+    </div>
+</div>
+<table class="crud-grid table table-lighter table-condensed noMarginBottom">
+    <tr>
+        <td title="Раскрыть / скрыть" class="nmc-td-for-buttons">
+            <i class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"></i>
+        </td>
+        <td class="col-md-1"><img src="images/divergenceIndicatorAlert.png" width=16 height=16/>
+            <img src="images/divergenceIndicatorCrit.png" width=16 height=16/>
+            <img src="images/objectAlert.png" width=16 height=16/>
+        </td>
+        <td class="col-md-1">
+            <i class="btn btn-xs glyphicon glyphicon-picture"></i>
+            <i class="btn btn-xs glyphicon glyphicon-adjust"></i>
+            <i class="btn btn-xs glyphicon glyphicon-stats"></i>
+            <i class="btn btn-xs glyphicon glyphicon-equalizer"></i>
+        </td>
+        <td class="col-md-2">
+            Ижевск, 40 лет Октября, д. 1
+        </td>
+        <td class="col-md-1">
+            150/5 (30)
+        </td>
+        <td class="col-md-6">
+        </td>
+    </tr>
+    <tr>
+        <td class="nmc-td-for-buttons">
+            <i title="Раскрыть / скрыть" class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"></i>
+        </td>
+        <td class="col-md-1"><img src="images/divergenceIndicatorAlert.png" width=16 height=16/>
+            <img src="images/divergenceIndicatorCrit.png" width=16 height=16/>
+            <img src="images/objectAlert.png" width=16 height=16/>
+        </td>
+        <td class="col-md-1">
+            <i class="btn btn-xs glyphicon glyphicon-picture"></i>
+            <i class="btn btn-xs glyphicon glyphicon-adjust"></i>
+            <i class="btn btn-xs glyphicon glyphicon-stats"></i>
+            <i class="btn btn-xs glyphicon glyphicon-equalizer"></i>
+        </td>
+        <td class="col-md-2">
+            Ижевск, 40 лет Октября, д.2
+        </td>
+        <td class="col-md-1">
+            10/1 (10)
+        </td>
+        <td class="col-md-6">
+        </td>
+    </tr>
+</table>

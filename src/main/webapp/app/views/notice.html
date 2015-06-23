@@ -12,7 +12,7 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a class="nmc-main-tab-button nmc-hide" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
 
     </ul>
@@ -45,7 +45,6 @@
 <!--        <label class="nmc-form-label">Фильтры:</label>-->
 <!--    </div>     -->
     <div class="col-md-3 noPadding" ng-controller="DataRangeSettings">   
-<!--        <label class="nmc-form-label">интервал дат:</label>-->
         <div class="input-group marginRight15">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">интервал дат: с</span>
             <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
@@ -60,20 +59,24 @@
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"></i></span>    
         </div>
     </div>
-    <div class="col-md-1 noPadding">
-        <div class="input-group nmc-hide">
+    <div class="col-md-2 noPadding">
+        <div class="input-group marginRight15">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-data" aria-describedby="rightAddon"> 
 <!--            ng-click="selectObjectsClick()" ng-model="selectedObjects_list" -->
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove"></i></span>    
         </div>
     </div>
-    <div class="col-md-1 paddingTop3">
-        <span class="nmc-hide"><input type="checkbox" class="nmc-checkbox-form"/>Критические </span>
-    </div>
+<!--    <div class="col-md-1 paddingTop3">-->
+<!--        <span class="nmc-hide">-->
+<!--            <input type="checkbox" class="nmc-checkbox-form"/>Критические-->
+<!--        </span>-->
+<!--    </div>-->
     <div class="col-md-1 noPadding paddingTop3">
-       <span class="nmc-hide">     <input type="checkbox" class="nmc-checkbox-form"/>Новые 
-           <i title="Сбросить все фильтры" class="btn btn-default btn-xs glyphicon glyphicon-remove marginLeft15 marginTopMinus10"></i></span>
+<!--       <span class="nmc-hide">     -->
+           <input type="checkbox" class="nmc-checkbox-form"/>Новые 
+           <i title="Сбросить все фильтры" class="btn btn-default btn-xs glyphicon glyphicon-remove marginLeft15 marginTopMinus10"></i>
+<!--        </span>-->
     </div>
 
     <div class="col-md-4">    
