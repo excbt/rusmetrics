@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -70,6 +69,12 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 				.selectReportShedule(
 						currentSubscriberService.getSubscriberId(),
 						LocalDateTime.now());
+		
+		if (reportSheduleList.size() == 0) {
+			logger.error("reportSheduleList is empty. Can't test testGetSheduleOne");
+			return;
+		}		
+		
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
@@ -82,6 +87,12 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 				.selectReportShedule(
 						currentSubscriberService.getSubscriberId(),
 						LocalDateTime.now());
+
+		if (reportSheduleList.size() == 0) {
+			logger.error("reportSheduleList is empty. Can't test testUndateShedule");
+			return;
+		}
+
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
@@ -171,6 +182,5 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		String urlStrDelete = "/api/reportShedule/" + String.valueOf(createdId);
 		testJsonDelete(urlStrDelete);
 	}
-
 
 }
