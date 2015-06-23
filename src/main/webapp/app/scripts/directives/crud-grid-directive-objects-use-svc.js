@@ -100,9 +100,17 @@ angular.module('portalNMC')
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
                     $('#showObjOptionModal').modal('hide');
+                    var elIndex = -1;
+                    $scope.objects.some(function(element, index){
+                        if (element.id == $scope.currentObject.id){
+                            elIndex = index;
+                            return true;
+                        };
+                    });
+                    if(elIndex!=-1){
+                        $scope.objects[elIndex]=$scope.currentObject;
+                    };
                     $scope.currentObject={};
-                    $scope.getData(cb);
-                    
                 };
 
                 var successPostCallback = function (e) {
@@ -596,6 +604,15 @@ angular.module('portalNMC')
 					.success(function(data){
 						$scope.editRefRangeOff();
 						$scope.refRange = data;
+                        //прорисовываем эталонный интервал в таблице
+                        var refRangeEl = document.getElementById("zpointRefRange"+$scope.currentZpoint.id);
+                        $scope.beginDate = new Date($scope.refRange.periodBeginDate);
+				        $scope.endDate =  new Date($scope.refRange.periodEndDate);                                 
+                        
+                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate.toLocaleDateString()+" по "+$scope.endDate.toLocaleDateString();
+                        $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange._auto?"auto":"manual";
+                        
+                        viewRefRangeInTable($scope.currentZpoint);
 					})
 					.error(function(e){
 						notificationFactory.errorInfo(e.statusText,e.description);

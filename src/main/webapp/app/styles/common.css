@@ -554,7 +554,7 @@ tr.nmc-main-table-header > th {
 /* интервал дат */
 .nmc-date-interval-form {
     font-size: 12px;
-    height: 24px;
+    height: 25px;
     padding: 5px;
     border-left-width: 0px;
 }
@@ -564,13 +564,29 @@ tr.nmc-main-table-header > th {
     background-color: white;
     padding: 0px 0px 0px 6px;
     border-right-width: 0px;
+    height: 25px;
 }
  
 /* ввод строки */
 .nmc-text-input-form {
     font-size: 12px;
-    height: 24px;
+    height: 25px;
     padding: 5px;
+}
+
+/*  кнопка позади контрола input*/
+.nmc-input-form-suffix {
+    font-size: 12px;
+    height: 25px;
+    padding: 0;
+}
+
+/*  текст перед контролом input*/
+.nmc-input-form-addon {
+    background-color: white;
+    font-size: 12px;
+    height: 25px;
+    padding: 0;
 }
  
 /* ввод многострочного текстового поля */
@@ -1034,6 +1050,10 @@ tr.nmc-main-table-header > th {
 
 .marginTop15 {
     margin-top: 15px;
+}
+
+.marginTopMinus10{
+    margin-top: -10px;
 }
 
 .margin10 {

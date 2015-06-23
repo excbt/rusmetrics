@@ -85,7 +85,7 @@
                             </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                         <ul class="dropdown-menu">
                             <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;showSettings=false"><p> <b>Личный кабинет</b> 
+                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
                             </p></a></li>			
 
                             <li><a href="../logout" ng-click="setDefaultMenuState();"
@@ -113,22 +113,22 @@
                                 <!-- Объекты, редактирование -->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
 
-                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showSettings=false;showAdminSettings=false;"><i class="glyphicon glyphicon-list nmc-main-menu-item-icon"></i>Объекты</a>
+                                    href="#/objects_edit/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showAdminSettings=false;"><i class="glyphicon glyphicon-list nmc-main-menu-item-icon"></i>Объекты</a>
                                 
                                 <!-- Отчеты -->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
 
-                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item');showSettings=false"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon"></i>Отчеты</a>
+                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon"></i>Отчеты</a>
                                 
                                  <!-- Notices -->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
 
-                                    href="#/notice/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item');showSettings=false"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon"></i>Уведомления</a>                            
+                                    href="#/notices/list/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item')"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon"></i>Уведомления</a>                            
                                 
 <!--                                Настройки-->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
-                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item');showSettings=true"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
+                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon"></i>Настройки <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 
                                                                 <!-- Меню настроек -->
 <!--
@@ -282,7 +282,7 @@
       <script src="vendor_components/flot/jquery.flot.pie.min.js"></script>
       <script src="vendor_components/flot/jquery.flot.time.min.js"></script>
       <script src="vendor_components/Blob.js-master/Blob.js"></script>
-      <script src="vendor_components/angular-rg-cache-view-master/src/rgCacheView.js"></script>
+<!--      <script src="vendor_components/angular-rg-cache-view-master/src/rgCacheView.js"></script>-->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
      
@@ -304,6 +304,7 @@
       <script src="scripts/controllers/contacts.js"></script>
       <script src="scripts/controllers/idle.js"></script>
       <script src="scripts/controllers/object_groups.js"></script>
+      <script src="scripts/controllers/monitor.js"></script>
 <!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->

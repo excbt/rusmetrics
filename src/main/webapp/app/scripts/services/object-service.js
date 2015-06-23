@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-    .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies',
-             function(crudGridDataFactory, $http, $cookies)
+    .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval',
+             function(crudGridDataFactory, $http, $cookies, $interval)
 //             function()
              {
         var svcObjects = [{fullName:"yaa"
@@ -37,19 +37,24 @@ angular.module('portalNMC')
             return $http.get(table);
         };         
         
-        var getData = function (cb) {
-           return $http.get(crudTableName).success(function (data) {
-                var tmp = data;    
-                var curObjId = $cookies.contObject;                   
-                svcObjects = tmp;
-                if (cb) cb();
-            });
+        var getData = function () {
+           return $http.get(crudTableName);
+//               .success(function (data) {
+//                var tmp = data;    
+//                var curObjId = $cookies.contObject;                   
+//                svcObjects = tmp;
+//                if (cb) cb();
+//            });
         };
 
-       var promise = getData(
-            function () {
-                loading = false;
-        });
+       var promise = getData();
+//       $interval(function(){
+//           var time = (new Date()).toLocaleString();
+//           document.getElementById('timeOutput').innerHTML="Время: "+time;
+//console.log(time);           
+//       },10000);
+                 
+        
                     
         return {
 //            getObjects,
