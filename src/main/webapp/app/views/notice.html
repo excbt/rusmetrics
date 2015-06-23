@@ -61,7 +61,7 @@
         </div>
     </div>
     <div class="col-md-1 noPadding">
-        <div class="input-group">
+        <div class="input-group nmc-hide">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-data" aria-describedby="rightAddon"> 
 <!--            ng-click="selectObjectsClick()" ng-model="selectedObjects_list" -->
@@ -69,11 +69,11 @@
         </div>
     </div>
     <div class="col-md-1 paddingTop3">
-        <input type="checkbox" class="nmc-checkbox-form"/>Критические 
+        <span class="nmc-hide"><input type="checkbox" class="nmc-checkbox-form"/>Критические </span>
     </div>
     <div class="col-md-1 noPadding paddingTop3">
-            <input type="checkbox" class="nmc-checkbox-form"/>Новые 
-        <i title="Сбросить все фильтры" class="btn btn-default btn-xs glyphicon glyphicon-remove marginLeft15 marginTopMinus10"></i>
+       <span class="nmc-hide">     <input type="checkbox" class="nmc-checkbox-form"/>Новые 
+           <i title="Сбросить все фильтры" class="btn btn-default btn-xs glyphicon glyphicon-remove marginLeft15 marginTopMinus10"></i></span>
     </div>
 
     <div class="col-md-4">    
