@@ -199,6 +199,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                   $scope.selectedObjects.push(el.id);
               }
           });
+          $scope.selectedObjects_list = $scope.selectedObjects.length;
           $scope.getResultsPage(1);
          
       };

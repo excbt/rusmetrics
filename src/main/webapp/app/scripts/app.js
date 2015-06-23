@@ -30,9 +30,13 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/notice', {
+      .when('/notices/list', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl'
+      })
+      .when('/notices/monitor', {
+        templateUrl: 'views/monitor.html',
+        controller: 'MonitorCtrl'
       })
       .when('/private', {
         templateUrl: 'views/private_office.html',
