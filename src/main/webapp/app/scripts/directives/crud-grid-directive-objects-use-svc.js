@@ -368,13 +368,13 @@ angular.module('portalNMC')
                     //Записываем эталонный интервал в таблицу
                     switch (zpoint.zpointRefRangeAuto){
                         case "auto":element.innerHTML = '<div class="progress progress-striped noMargin">'+
-                                            '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'+zpoint.zpointRefRange+
-                                            '</div>'+
+                                            '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
+                                            '</strong></div>'+
                                         '</div>';
                                     break;
                         case "manual":element.innerHTML = '<div class="progress progress-striped noMargin">'+
-                                            '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">'+zpoint.zpointRefRange+
-                                            '</div>'+
+                                            '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
+                                            '</strong></div>'+
                                         '</div>';
                                     break;
                         default : element.innerHTML = ''+zpoint.zpointRefRange+'';

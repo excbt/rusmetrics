@@ -53,29 +53,42 @@
     </div>
     <div class="col-md-2 noPadding">
 <!--        <label class="nmc-form-label">объекты:</label>-->
-        <div class="input-group marginRight15">
+        <div class="input-group nmc-input-data">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">объекты:</span>
-            <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
+            <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-digital-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"></i></span>    
         </div>
     </div>
-    <div class="col-md-2 noPadding">
-        <div class="input-group marginRight15">
+    <div class="col-md-1 noPadding">
+        <div class="input-group marginRight5 marginLeft5">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-data" aria-describedby="rightAddon"> 
 <!--            ng-click="selectObjectsClick()" ng-model="selectedObjects_list" -->
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove"></i></span>    
         </div>
     </div>
-<!--    <div class="col-md-1 paddingTop3">-->
+    <div class="col-md-1">
 <!--        <span class="nmc-hide">-->
 <!--            <input type="checkbox" class="nmc-checkbox-form"/>Критические-->
+            <p class="btn btn-xs nmc-primary-button-in-header">Критические</p>
 <!--        </span>-->
-<!--    </div>-->
-    <div class="col-md-1 noPadding paddingTop3">
+    </div>
+    <div class="col-md-1 noPadding">
 <!--       <span class="nmc-hide">     -->
-           <input type="checkbox" class="nmc-checkbox-form"/>Новые 
-           <i title="Сбросить все фильтры" class="btn btn-default btn-xs glyphicon glyphicon-remove marginLeft15 marginTopMinus10"></i>
+<!--           <span class="marginRight5"></span><input title="Только новые уведомления" type="checkbox" class="nmc-checkbox-form-in-header"/> -->
+        
+            <div class="btn-group">
+              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Действия <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Паказывать все уведомления</a></li>
+                <li><a href="#">Показывать только новые</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Сбросить все фильтры</a></li>
+              </ul>
+            </div>
+           <i title="Сбросить все фильтры" class="btn btn-default btn-xs marginLeft15 nmc-remove-button-in-header"></i>
 <!--        </span>-->
     </div>
 
@@ -100,36 +113,7 @@
     </div>
 <!--</div> -->
 </div>
- <div class="row" ng-hide="true">
-    <div class="col-md-8 noPadding marginBottom10">
-        <div>объекты:</div>
-        <div class="input-group">
-            <input type="text" class="form-control nmc-text-input-form nmc-input-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list">
-            <span class="input-group-addon nmc-input-form-suffix"><i class="btn btn-xs glyphicon glyphicon-remove"></i></span>
-<!--            <textarea  class="form-control nmc-textarea-form" type="text" ng-click="selectObjectsClick()" ng-model="selectedObjects_list"></textarea>-->
-
-        </div>
-    </div>
-     <div class="col-md-4 paddingTop15">    
- 
-         <div class="col-md-7">
-            <label class="nmc-form-label">Записей на странице:</label>
-    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="noticesPerPage"    >
-                        <option>15</option>
-                        <option>25</option>
-                        <option>50</option>
-                        <option>75</option>
-                        <option>100</option>
-    <!--            <option>100</option>-->
-            </select>
-        </div>
-        <div class="col-md-5">
-            <label class="nmc-form-label">Всего:</label>
-             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalNotices">
-        </div>
-    </div>
-</div>    
+   
 </div>
 
 <div >

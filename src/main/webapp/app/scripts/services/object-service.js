@@ -49,9 +49,9 @@ angular.module('portalNMC')
 
        var promise = getData();
        $interval(function(){
-           var time = (new Date()).toLocaleString();
+//           var time = (new Date()).toLocaleString();
 //           document.getElementById('timeOutput').innerHTML="Время: "+time;
-console.log(time);           
+//console.log(time);           
        },10000);
                  
         

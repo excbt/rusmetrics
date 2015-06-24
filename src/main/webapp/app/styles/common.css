@@ -267,6 +267,7 @@
 .nmc-main-tab-button{
 /*    background-color: #DCDCDC;*/
     background: linear-gradient(to top, #C8C8C8, #EBEBEB);
+    padding: 5px 15px !important;
 /*    margin-right: 15px;*/
 }
 
@@ -278,6 +279,7 @@
     background: #FFFFFF;
     color: black;
     font-weight: bold;
+    padding: 5px 15px;    
 /*    margin-right: 15px;*/
 }
 
@@ -605,6 +607,11 @@ tr.nmc-main-table-header > th {
 .nmc-checkbox-form {
 }
 
+/* чекбокс в заголовке рабочей области - например, в строке настроек фильтров уведомлений*/
+.nmc-checkbox-form-in-header {
+    height: 15px;
+}
+
 /* див, содержаций в себе чексбокс*/
 .nmc-div-with-checkbox {
     width:15px;
@@ -677,6 +684,24 @@ tr.nmc-main-table-header > th {
 .nmc-button-in-header{
  }
 
+    /* Главная кнопка в заголовке рабочей области - */
+.nmc-primary-button-in-header{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+    height: 25px;
+    padding-top: 3px;
+ }
+
+.nmc-primary-button-in-header:hover{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+ }
+
+.nmc-primary-button-in-header:focus{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+ }
+
 /* Добавить в заголовке рабочей области */
 .nmc-main-add-button {
     padding: 5px 10px 5px 10px;
@@ -695,6 +720,15 @@ tr.nmc-main-table-header > th {
     padding: 5px 10px 5px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
+}
+
+    /* Кнопка удалить/ очистить фильтр в рабочей области окна*/
+.nmc-remove-button-in-header{
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    background-image: url(../images/cross-25-for-header.png);
+    background-repeat: no-repeat;
 }
  
 /* Добавить в таблице */
@@ -1062,6 +1096,9 @@ tr.nmc-main-table-header > th {
 
 .marginRight15 {
     margin-right:15px;
+}
+.marginRight5 {
+    margin-right:5px;
 }
 
 .marginRight28 {

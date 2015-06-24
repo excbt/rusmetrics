@@ -95,11 +95,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                 }else{
                      oneNotice.noticeTypeCaption= el.contEventType.name;
             };
-
-            if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
-                    oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
-                }else{
-                     oneNotice.noticeCaption= el.message;
+            if (el.message == null){
+                oneNotice.noticeCaption = "";
+            }else{
+                if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
+                        oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+                    }else{
+                         oneNotice.noticeCaption= el.message;
+                };
             };
 
             for (var i=0; i<$scope.objects.length; i++){                       
@@ -115,7 +118,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                         case "heat" : oneNotice.noticeZpoint = "ТС"; break;
                         case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
                         case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
-                        default: oneNotice.noticeZpoint  = data;
+                        case null : oneNotice.noticeZpoint = ""; break;
+                        default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
              }
             return oneNotice;
         });
