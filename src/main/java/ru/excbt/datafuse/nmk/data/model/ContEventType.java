@@ -34,6 +34,9 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 	@Column(name = "cont_event_type_comment")
 	private String comment;
 
+	@Column(name = "cont_event_type_description")
+	private String description;
+
 	@Version
 	private int version;
 
@@ -152,6 +155,14 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 
 	public void setIsScalarEvent(Boolean isScalarEvent) {
 		this.isScalarEvent = isScalarEvent;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }
