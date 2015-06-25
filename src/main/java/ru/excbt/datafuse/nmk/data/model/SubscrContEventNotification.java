@@ -35,7 +35,10 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@JsonIgnore
 	private Subscriber subscriber;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
+
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_event_id")
 	private ContEvent contEvent;
 
@@ -49,10 +52,13 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonIgnore
 	private Date contEventTime;
-	
+
+	@Column(name = "cont_object_id")
+	private Long contObjectId;
+
 	@Column(name = "is_new")
 	private Boolean isNew;
-	
+
 	@Column(name = "notification_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notificationTime;
@@ -124,5 +130,21 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	public void setContEventTime(Date contEventTime) {
 		this.contEventTime = contEventTime;
 	}
-	
+
+	public Long getContObjectId() {
+		return contObjectId;
+	}
+
+	public void setContObjectId(Long contObjectId) {
+		this.contObjectId = contObjectId;
+	}
+
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
 }
