@@ -148,39 +148,6 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                         var oneNotice = {};
                         $scope.totalNotices = data.totalElements;
                         var tmp = dataParse(data.objects);
-//                        var tmp = data.objects.map(function(el){
-//                            oneNotice = {};
-//                            oneNotice.noticeType = el.contEventType.name;
-//                            oneNotice.noticeMessage = el.message;                        
-//                            if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
-//                                    oneNotice.noticeTypeCaption= el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-//                                }else{
-//                                     oneNotice.noticeTypeCaption= el.contEventType.name;
-//                            };
-//                            
-//                            if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
-//                                    oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
-//                                }else{
-//                                     oneNotice.noticeCaption= el.message;
-//                            };
-//                            
-//                            for (var i=0; i<$scope.objects.length; i++){                       
-//                                if ($scope.objects[i].id == el.contObjectId ){
-//                                    oneNotice.noticeObjectName = $scope.objects[i].fullName;  
-//                                };   
-//                            };
-//                            
-//                            oneNotice.noticeDate = $scope.dateFormat(el.eventTime);
-//                            
-//                            switch (el.contServiceType)
-//                            {
-//                                        case "heat" : oneNotice.noticeZpoint = "ТС"; break;
-//                                        case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
-//                                        case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
-//                                        default: oneNotice.noticeZpoint  = data;
-//                             }
-//                            return oneNotice;
-//                        });
                         $scope.notices = tmp;
                     });
     };
@@ -189,24 +156,43 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         return (new Date(date)).toLocaleString();
     };
 
-      $scope.selectObjectsClick = function(){
-          $('#selectObjectsModal').modal('show');
-      };
+    $scope.selectObjectsClick = function(){
+        $('#selectObjectsModal').modal('show');
+    };
+    
+    $scope.selectNoticeTypesClick = function(){
+        $('#selectNoticeTypesModal').modal('show');
+    };
       
-      $scope.selectObjects = function(){
-          $scope.selectedObjects_list = "";
-          $scope.selectedObjects = [];
-          $('#selectObjectsModal').modal('hide');
-          $scope.objects.map(function(el){
-              if(el.selected){
-                  $scope.selectedObjects_list+=el.fullName+"; ";
-                  $scope.selectedObjects.push(el.id);
-              }
-          });
-          $scope.selectedObjects_list = $scope.selectedObjects.length;
-          $scope.getResultsPage(1);
-         
-      };
+    $scope.selectObjects = function(){
+        $scope.selectedObjects_list = "";
+        $scope.selectedObjects = [];
+        $('#selectObjectsModal').modal('hide');
+        $scope.objects.map(function(el){
+          if(el.selected){
+              $scope.selectedObjects_list+=el.fullName+"; ";
+              $scope.selectedObjects.push(el.id);
+          }
+        });
+        $scope.selectedObjects_list = $scope.selectedObjects.length;
+        $scope.getResultsPage(1);
+
+    };
+    
+    $scope.selectNoticeTypes = function(){
+        $scope.selectedNoticeTypes_list = "";
+        $scope.selectedNoticeTypes = [];
+        $('#selectNoticeTypesModal').modal('hide');
+        $scope.noticeTypes.map(function(el){
+          if(el.selected){
+              $scope.selectedNoticeTypes_list+=el.fullName+"; ";
+              $scope.selectedNoticeTypes.push(el.id);
+          }
+        });
+        $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
+//        $scope.getResultsPage(1);
+
+    };
       
       $scope.selectedItem = function (item) {
           var curObject = angular.copy(item);

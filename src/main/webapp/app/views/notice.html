@@ -29,7 +29,7 @@
             <h2 class="noMargin nmc-h2">Уведомления</h2>
         </div>
         <div class="col-md-1">
-            <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats nmc-button-in-header" ng-click="runChart()"></i>
+<!--            <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats nmc-button-in-header" ng-click="runChart()"></i>-->
         </div>  
     </div>    
     <div class="row">
@@ -55,49 +55,49 @@
 <!--        <label class="nmc-form-label">объекты:</label>-->
         <div class="input-group nmc-input-data">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">объекты:</span>
-            <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-digital-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
-            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"></i></span>    
+            <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-digital-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
+            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
     <div class="col-md-1 noPadding">
         <div class="input-group marginRight5 marginLeft5">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
-            <input id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-text-input-form nmc-input-data" aria-describedby="rightAddon"> 
-<!--            ng-click="selectObjectsClick()" ng-model="selectedObjects_list" -->
-            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs glyphicon glyphicon-remove"></i></span>    
+            <input ng-init="selectedNoticeTypes_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-data" ng-click="selectNoticeTypesClick()" ng-model="selectedNoticeTypes_list"  aria-describedby="rightAddon"> 
+            
+            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs "><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
-    <div class="col-md-1">
+<!--    <div class="col-md-1">-->
 <!--        <span class="nmc-hide">-->
 <!--            <input type="checkbox" class="nmc-checkbox-form"/>Критические-->
-            <p class="btn btn-xs nmc-primary-button-in-header">Критические</p>
+            
 <!--        </span>-->
-    </div>
-    <div class="col-md-1 noPadding">
+<!--    </div>-->
+    <div class="col-md-2 noPadding">
 <!--       <span class="nmc-hide">     -->
 <!--           <span class="marginRight5"></span><input title="Только новые уведомления" type="checkbox" class="nmc-checkbox-form-in-header"/> -->
         
-            <div class="btn-group">
-              <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Действия <span class="caret"></span>
+            <div class="btn-group" ng-init="visibleText='Все уведомления'">
+              <button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle nmc-button-notice-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{visibleText}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="#">Паказывать все уведомления</a></li>
-                <li><a href="#">Показывать только новые</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Сбросить все фильтры</a></li>
+                <li><a href="" ng-click="visibleText='Все уведомления'">Все уведомления</a></li>
+                <li><a href="" ng-click="visibleText='Только новые'">Только новые</a></li>
               </ul>
             </div>
-           <i title="Сбросить все фильтры" class="btn btn-default btn-xs marginLeft15 nmc-remove-button-in-header"></i>
+    </div>
+    <div class="col-md-1 noPadding">
+           <i title="Сбросить все фильтры" class="btn btn-xs"><img height="25" width="25" src="images/clear-filter.jpg"/></i>
 <!--        </span>-->
     </div>
 
-    <div class="col-md-4">    
+    <div class="col-md-3">    
  
-         <div class="col-md-7">
+         <div class="col-md-7 noPadding">
             <label class="nmc-form-label">Записей на странице:</label>
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="noticesPerPage"    >
+            <select class="form-control nmc-select-form nmc-input-digital-data-sm" ng-model="noticesPerPage"    >
                         <option>15</option>
                         <option>25</option>
                         <option>50</option>
@@ -106,7 +106,7 @@
     <!--            <option>100</option>-->
             </select>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 noPadding">
             <label class="nmc-form-label">Всего:</label>
              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalNotices">
         </div>
@@ -192,6 +192,60 @@
 	</div>
         </div>
 </div>
+
+<!--Окно выбора типов уведомлений-->
+<div id="selectNoticeTypesModal" class="modal nmc-modal-window nmc-select-objects-window selectNoticeTypesModal" role="dialog"
+	aria-labelledby="selectNoticeTypesLabel" tabindex="-1">
+
+	<div class="modal-dialog nmc-modal-dialog">
+    <div class="modal-content nmc-modal-narrow-dialog">
+
+		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop noPadding">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="row marginTopBottom5">
+                <div class="col-xs-3"></div>
+                <div class="col-xs-6 noPadding">
+                    <p class="btn btn-xs nmc-button-in-modal">Выбрать все критические</p>
+                </div>
+                <div class="col-xs-3"></div>
+            </div>    
+            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
+                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
+            </div>
+            <div class="nmc-object-list nmc-modal-panel-with-table">
+                <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                    <tr ng-repeat="noticeType in noticeTypes | filter: noticetypefilter">
+                        <td><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.typeName}}
+                        </td>    
+                    </tr>    
+                </table>
+            </div>    
+		</div>
+		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop noPadding paddingTop5">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-4 col-md-4">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="selectNoticeTypes();"
+								value="Выбрать" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#selectNoticeTypesModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+
+	</div>
+        </div>
+</div>
+
 
 <!-- Карточка уведомления-->
 <div id="showNoticeModal" class="modal fade nmc-modal-window" role="dialog"
