@@ -11,6 +11,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.Filter;
@@ -199,6 +201,27 @@ public class AnyControllerTest {
 		StringBuilder b = new StringBuilder();
 		for (int i = 0;; i++) {
 			b.append(a[i]);
+			if (i == iMax)
+				return b.toString();
+			b.append(", ");
+		}
+	}
+
+	/**
+	 * 
+	 * @param a
+	 * @return
+	 */
+	protected static String ListToString(List<Long> a) {
+		if (a == null)
+			return "null";
+		int iMax = a.size() - 1;
+		if (iMax == -1)
+			return "";
+		
+		StringBuilder b = new StringBuilder();
+		for (int i = 0;; i++) {
+			b.append(a.get(i));
 			if (i == iMax)
 				return b.toString();
 			b.append(", ");
