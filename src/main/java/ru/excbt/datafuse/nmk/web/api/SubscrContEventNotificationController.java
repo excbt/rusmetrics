@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.ArrayList;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Arrays;
 import java.util.List;
 
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -24,6 +28,10 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 @RequestMapping("/api/subscr/contEvent")
 public class SubscrContEventNotificationController extends WebApiController {
 
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(SubscrContEventNotificationController.class);
+	
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
 
@@ -38,15 +46,14 @@ public class SubscrContEventNotificationController extends WebApiController {
 	public ResponseEntity<?> contEventNotificationsAll() {
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
-				.selectAllNotifications(
-						currentSubscriberService.getSubscriberId(), null, null);
+				.selectAll(currentSubscriberService.getSubscriberId(), null,
+						null);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
 				resultPage));
 
 	}
 
-	
 	/**
 	 * 
 	 * @param fromDateStr
@@ -60,47 +67,63 @@ public class SubscrContEventNotificationController extends WebApiController {
 	public ResponseEntity<?> contEventNotificationPaged(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
-			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
+			@RequestParam(value = "isNew", required = false) Boolean isNew,
+			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		List<Long> contObjectList = contObjectIds != null ? Arrays
-				.asList(contObjectIds) : new ArrayList<Long>();
+		List<Long> contObjectList = contObjectIds == null ? null : Arrays
+				.asList(contObjectIds);
+		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
+				.asList(contEventTypeIds);
 
-		if (fromDateStr != null && toDateStr != null) {
-			DateTime fromD = null;
-			DateTime toD = null;
-			try {
-				fromD = DATE_FORMATTER.parseDateTime(fromDateStr);
-				toD = DATE_FORMATTER.parseDateTime(toDateStr);
-			} catch (Exception e) {
-				return ResponseEntity
-						.badRequest()
-						.body(String
-								.format("Invalid parameters fromDateStr:{}, toDateStr:{}",
-										fromDateStr, toDateStr));
-			}
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
 
-			if (fromD.compareTo(toD) > 0) {
-				return ResponseEntity.badRequest().body(
-						String.format(
-								"fromDateStr:%s is bigger than toDateStr:%s",
-								fromDateStr, toDateStr));
-			}
+		checkNotNull(datePeriodParser);
 
-			DateTime endOfDay = toD.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999);
+		if (datePeriodParser.isOk() && !datePeriodParser.isValidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
 
-			// Page<ContEvent> resultPage = contEventService
-			// .selectBySubscriberAndDateAndContObjectIds(
-			// currentSubscriberService.getSubscriberId(), fromD,
-			// endOfDay, contObjectList);
+		Pageable pageRequest = SubscrContEventNotifiicationService
+				.setupPageRequestSort(pageable, sortDesc);
 
-			return ResponseEntity.ok().build();
+		Page<SubscrContEventNotification> resultPage = null;
+
+		logger.debug("date isOK condition");
+		
+		if (datePeriodParser.isOk()) {
+			DateTime endOfDay = null;
+
+			endOfDay = datePeriodParser.getToDate().withHourOfDay(23)
+					.withMinuteOfHour(59).withSecondOfMinute(59)
+					.withMillisOfSecond(999);
+
+			resultPage = subscrContEventNotifiicationService
+					.selectByConditions(
+							currentSubscriberService.getSubscriberId(),
+							datePeriodParser.getFromDate().toDate(),
+							endOfDay.toDate(), contObjectList,
+							contEventTypeList, isNew, pageRequest);
+
+		} else {
+			logger.debug("date isOK condition");
+			resultPage = subscrContEventNotifiicationService
+					.selectByConditions(
+							currentSubscriberService.getSubscriberId(), null,
+							null, contObjectList, contEventTypeList, isNew,
+							pageRequest);
 
 		}
 
-		return ResponseEntity.badRequest().build();
-	}
+		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
+				resultPage));
 
+	}
 }

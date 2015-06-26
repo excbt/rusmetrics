@@ -197,7 +197,7 @@ public class ContEventService {
 	 * 
 	 * @return
 	 */
-	public List<ContEventType> findAllEventTypes() {
+	public List<ContEventType> findAllContEventTypes() {
 		List<ContEventType> result = Lists.newArrayList(contEventTypeRepository
 				.findAll());
 

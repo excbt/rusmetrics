@@ -24,7 +24,7 @@ public class ContEventController extends WebApiController {
 	 */
 	@RequestMapping(value = "/types", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContEventTypes() {
-		List<ContEventType> vList = contEventService.findAllEventTypes();
+		List<ContEventType> vList = contEventService.findAllContEventTypes();
 		return ResponseEntity.ok(vList);
 	}
 	
