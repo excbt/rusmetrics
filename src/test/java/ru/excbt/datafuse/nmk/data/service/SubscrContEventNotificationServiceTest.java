@@ -20,13 +20,13 @@ import org.springframework.data.domain.Sort.Direction;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContEventNotificationServiceTest.class);
-	
+
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
 
@@ -38,6 +38,9 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ContEventService contEventService;
+
+	@Autowired
+	private CurrentUserService currentUserService;
 
 	@Test
 	public void testFindAll() {
@@ -88,12 +91,17 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		List<Long> updateIds = lst.stream().map(v -> v.getId())
 				.collect(Collectors.toList());
 
-		subscrContEventNotifiicationService.updateIsNew(updateIds);
-
-		SubscrContEventNotification result = subscrContEventNotifiicationService.findOne(updateIds.get(0));
-
-		logger.info("Update Result. id:{} isNew:{}", result.getId(), result.getIsNew());
+		logger.info("Current User Id:{}", currentUserService.getCurrentUserId());
 		
+		subscrContEventNotifiicationService.updateIsNew(updateIds,
+				currentUserService.getCurrentUserId());
+
+		SubscrContEventNotification result = subscrContEventNotifiicationService
+				.findOne(updateIds.get(0));
+
+		logger.info("Update Result. id:{} isNew:{}", result.getId(),
+				result.getIsNew());
+
 	}
 
 }

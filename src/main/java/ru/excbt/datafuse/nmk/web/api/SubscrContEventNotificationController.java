@@ -165,12 +165,13 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param notificationIds
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdate(
 			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
 
+		// TO DO
 		subscrContEventNotifiicationService.updateIsNew(Arrays
-				.asList(notificationIds));
+				.asList(notificationIds), null);
 
 		return ResponseEntity.ok().body(ApiResult.ok());
 	}

@@ -357,7 +357,8 @@ public class SubscrContEventNotifiicationService {
 	 * @param id
 	 * @return
 	 */
-	public SubscrContEventNotification updateOneIsNew(Long id) {
+	public SubscrContEventNotification updateOneIsNew(Long id,
+			Long revisionSubscrUserId) {
 
 		SubscrContEventNotification updateCandidate = subscrContEventNotificationRepository
 				.findOne(id);
@@ -367,6 +368,8 @@ public class SubscrContEventNotifiicationService {
 		}
 
 		updateCandidate.setIsNew(Boolean.FALSE);
+		updateCandidate.setRevisionTime(new Date());
+		updateCandidate.setRevisionSubscrUserId(revisionSubscrUserId);
 		return subscrContEventNotificationRepository.save(updateCandidate);
 
 	}
@@ -375,10 +378,11 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @param notificationIds
 	 */
-	public void updateIsNew(List<Long> notificationIds) {
+	public void updateIsNew(List<Long> notificationIds,
+			Long revisionSubscrUserId) {
 		checkNotNull(notificationIds);
 		for (Long id : notificationIds) {
-			updateOneIsNew(id);
+			updateOneIsNew(id, revisionSubscrUserId);
 		}
 	}
 }
