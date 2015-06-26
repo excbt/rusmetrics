@@ -12,5 +12,168 @@
       </div>
     </div>
 </div>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
+        <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle col-md-2" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" >Все объекты</a></li>
+            <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" >Объекты с НС</a></li>
+        </ul>
+        <div class="col-md-3 noPadding marginTop15" ng-controller="DataRangeSettings">   
+        <div class="input-group marginRight15">
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">интервал дат: с</span>
+            <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"/>
+        </div>    
+        </div>
+        <div class="pull-right col-md-offset-3 col-md-3 marginTop15">
+<!--            <label class="nmc-form-label">Период обновления:</label>-->
+    <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+            <div class="input-group nmc-input-group-refresh-period">
+                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">Период обновления: </span>
+                <select class="form-control nmc-date-interval-form nmc-input-digital-data nmc-select-form" >
+                            <option>30 сек</option>
+                            <option>1 мин</option>
+                            <option>5 мин</option>
+                            <option>30 мин</option>
+                            <option>1 час</option>
+        <!--            <option>100</option>-->
+                </select>
+                <span class="input-group-addon nmc-input-form-suffix">
+                    <i title="Обновить" class="btn btn-xs glyphicon glyphicon-refresh"></i>
+                </span>
+            </div>    
+        </div>
+<!--
+        <div class="col-md-2">
+        </div>
+-->
+        <div class="tab-content">
+<!--            Активные варианты-->
+            <div role="tabpanel" class="tab-pane fade in active" id="active_paramsets">
+            </div>
+        </div>
+    </div>
+</div>
 
-Monitor
+<table id="objectTable" class="table table-lighter table-condensed table-striped noMarginBottom nmc-parent-table nmc-parent-object-table">
+</table>
+
+<table class="crud-grid table table-lighter table-condensed noMarginBottom nmc-hide">
+    <tr>
+        <td title="Раскрыть / скрыть" class="nmc-td-for-buttons">
+            <i class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="innerTableFlag=!innerTableFlag"></i>
+        </td>
+        <td class="col-md-1"><img src="images/divergenceIndicatorAlert.png" width=16 height=16/>
+            <img src="images/divergenceIndicatorCrit.png" width=16 height=16/>
+            <img src="images/object-state-orange.png" width=16 height=16/>
+        </td>
+        <td class="col-md-1">
+<!--
+            <i class="btn btn-xs glyphicon glyphicon-picture"></i>
+            <i class="btn btn-xs glyphicon glyphicon-adjust"></i>
+            <i class="btn btn-xs glyphicon glyphicon-stats"></i>
+            <i class="btn btn-xs glyphicon glyphicon-equalizer"></i>
+-->
+            <img src="images/roundDiagram_1.png" width=16 height=16/>
+            <img src="images/roundDiagram_2.png" width=16 height=16/>
+            <img src="images/roundDiagram_3.png" width=16 height=16/>
+        </td>
+        <td class="col-md-2">
+            Ижевск, 40 лет Октября, д. 1
+        </td>
+        <td class="col-md-1">
+            150/5 (30)
+        </td>
+        <td class="col-md-6">
+        </td>
+    </tr>
+    <tr class="nmc-hide" ng-class="{'nmc-hide':!innerTableFlag, 'nmc-show':innerTableFlag}">
+        <td colspan="6">
+            <table>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        Выход показаний за пределы метрологического диапазона (135)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        Температура ГВС ниже порога расценки ХВС  (10)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                    <td>
+                        Температура ГВС ниже порога расценки ХВС  (55)
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="nmc-td-for-buttons">
+            <i title="Раскрыть / скрыть" class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"></i>
+        </td>
+        <td class="col-md-1"><img src="images/divergenceIndicatorAlert.png" width=16 height=16/>
+            <img src="images/divergenceIndicatorCrit.png" width=16 height=16/>
+            <img src="images/object-state-orange.png" width=16 height=16/>
+        </td>
+        <td class="col-md-1">
+<!--
+            <i class="btn btn-xs glyphicon glyphicon-picture"></i>
+            <i class="btn btn-xs glyphicon glyphicon-adjust"></i>
+            <i class="btn btn-xs glyphicon glyphicon-stats"></i>
+            <i class="btn btn-xs glyphicon glyphicon-equalizer"></i>
+-->
+            <img src="images/roundDiagram_1.png" width=16 height=16/>
+            <img src="images/roundDiagram_2.png" width=16 height=16/>
+            <img src="images/roundDiagram_3.png" width=16 height=16/>
+        </td>
+        <td class="col-md-2">
+            Ижевск, 40 лет Октября, д.2
+        </td>
+        <td class="col-md-1">
+            10/1 (10)
+        </td>
+        <td class="col-md-6">
+        </td>
+    </tr>
+</table>
+
+<!-- Окно с графиком-->
+<div id="chartModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="chartLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-some-wide-dialog nmc-modal-dialog">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showNoticeLabel" class="nmc-h3">
+				Диаграмма уведомлений 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+            <div id="noticeChart" class="paddingBottom40">
+                <div id="noticeChart-area"></div>
+		  </div>
+        </div>     
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-xs-offset-2 col-md-3 pull-right">
+							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
+								ng-click="exit();">
+								Ок
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+
+	</div>
+</div>

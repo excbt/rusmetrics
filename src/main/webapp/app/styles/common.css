@@ -267,6 +267,7 @@
 .nmc-main-tab-button{
 /*    background-color: #DCDCDC;*/
     background: linear-gradient(to top, #C8C8C8, #EBEBEB);
+    padding: 7px 15px !important;
 /*    margin-right: 15px;*/
 }
 
@@ -278,6 +279,7 @@
     background: #FFFFFF;
     color: black;
     font-weight: bold;
+    padding: 7px 15px;    
 /*    margin-right: 15px;*/
 }
 
@@ -540,7 +542,7 @@ tr.nmc-main-table-header > th {
 /* выпадающий список */
 .nmc-select-form {
     font-size: 12px;
-    height: 24px;
+    height: 26px;
     padding: 3px;
 }
  
@@ -554,9 +556,10 @@ tr.nmc-main-table-header > th {
 /* интервал дат */
 .nmc-date-interval-form {
     font-size: 12px;
-    height: 25px;
+    height: 26px;
     padding: 5px;
     border-left-width: 0px;
+    float: none !important;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -565,6 +568,33 @@ tr.nmc-main-table-header > th {
     padding: 0px 0px 0px 6px;
     border-right-width: 0px;
     height: 25px;
+}
+/* Страница Уведомления - строка с фильтрами*/
+    /* Стиль для дива, содержащего фильтр по интервалу дат*/
+.nmc-div-filter-date-interval{
+    width: 20%;
+    padding: 0 10px 0 0;
+}
+
+    /* Стиль для дива, содержащего фильтр по объектам*/
+.nmc-div-filter-object{
+    width: 11%;
+    padding: 0 10px 0 0;
+}
+
+    /* Стиль для дива, содержащего фильтр по типам*/
+.nmc-div-filter-type{
+    width: 10%;
+    padding: 0 10px 0 5px;
+}
+
+    /* Стиль для дива, содержащего фильтр новые/ все уведомления*/
+.nmc-div-filter-kind{
+    width: 10%;
+}
+    /* Стиль для дива, содержащего кнопку сброса всех фильтров*/
+.nmc-div-filter-remove{
+    width: 10%;
 }
  
 /* ввод строки */
@@ -579,6 +609,7 @@ tr.nmc-main-table-header > th {
     font-size: 12px;
     height: 25px;
     padding: 0;
+    background-color: #fff;
 }
 
 /*  текст перед контролом input*/
@@ -605,6 +636,11 @@ tr.nmc-main-table-header > th {
 .nmc-checkbox-form {
 }
 
+/* чекбокс в заголовке рабочей области - например, в строке настроек фильтров уведомлений*/
+.nmc-checkbox-form-in-header {
+    height: 15px;
+}
+
 /* див, содержаций в себе чексбокс*/
 .nmc-div-with-checkbox {
     width:15px;
@@ -615,6 +651,11 @@ tr.nmc-main-table-header > th {
     font-size: 12px;
     height: 24px;
     padding: 5px;
+}
+
+/* группа для настройки обновления монитора*/
+.nmc-input-group-refresh-period{
+    max-width: 260px;/* задаем макс длину этого контрола, чтобы сильно не разъежался*/
 }
 
 /* Классы для задания размеров полей*/
@@ -634,7 +675,7 @@ tr.nmc-main-table-header > th {
 }
     /* Поле, в котором отображается общее количество чего либо - страниц, записей и т.д.*/
 .nmc-view-allcount{
-    width: 100px;
+    width: 80px;
     display: inline;
 }
  
@@ -672,9 +713,33 @@ tr.nmc-main-table-header > th {
     background-image: url(../images/cross-12.png);
     background-repeat: no-repeat;
 }
- 
+
+/* Кнопка переключатель режимов отображения уведомлений*/
+.nmc-button-notice-toggle{
+    height: 26px;
+    width: 125px;
+}
+
     /* Кнопка в правом верхнем углу заголовка рабочей области*/
 .nmc-button-in-header{
+ }
+
+    /* Главная кнопка в заголовке рабочей области - */
+.nmc-primary-button-in-header{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+    height: 25px;
+    padding-top: 3px;
+ }
+
+.nmc-primary-button-in-header:hover{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+ }
+
+.nmc-primary-button-in-header:focus{
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
  }
 
 /* Добавить в заголовке рабочей области */
@@ -695,6 +760,15 @@ tr.nmc-main-table-header > th {
     padding: 5px 10px 5px 10px;
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
+}
+
+    /* Кнопка удалить/ очистить фильтр в рабочей области окна*/
+.nmc-remove-button-in-header{
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    background-image: url(../images/cross-25-for-header.png);
+    background-repeat: no-repeat;
 }
  
 /* Добавить в таблице */
@@ -948,6 +1022,11 @@ tr.nmc-main-table-header > th {
 /*    border-width: .5px 0;*/
     margin: 2px 0;
 }
+
+/*  Модальное окно выбора типов уведомлений на странице Уведомления*/
+.selectNoticeTypesModal >.modal-dialog >.modal-content{
+    margin: 0 0 0 200px; /* двигаем содержимое под фильтр выбора Типов - так правильнее*/
+}
  
 /*****************************
  * Предупреждения и подсказки
@@ -1048,6 +1127,10 @@ tr.nmc-main-table-header > th {
     margin-top: 10px;
 }
 
+.marginTopBottom5 {
+    margin: 5px 0;
+}
+
 .marginTop15 {
     margin-top: 15px;
 }
@@ -1062,6 +1145,9 @@ tr.nmc-main-table-header > th {
 
 .marginRight15 {
     margin-right:15px;
+}
+.marginRight5 {
+    margin-right:5px;
 }
 
 .marginRight28 {
