@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
@@ -86,7 +87,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk() && !datePeriodParser.isValidEq()) {
+		if (datePeriodParser.isOk()
+				&& !datePeriodParser.getDatePeriod().isValidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -104,24 +106,26 @@ public class SubscrContEventNotificationController extends WebApiController {
 		if (datePeriodParser.isOk()) {
 			DateTime endOfDay = null;
 
-			endOfDay = datePeriodParser.getToDate().withHourOfDay(23)
-					.withMinuteOfHour(59).withSecondOfMinute(59)
-					.withMillisOfSecond(999);
+			endOfDay = DatePeriodParser.endOfDay(datePeriodParser
+					.getDatePeriod().getDateTimeTo());
+
+			DatePeriod dp = DatePeriod
+					.builder(datePeriodParser.getDatePeriod()).dateTo(endOfDay)
+					.build();
 
 			resultPage = subscrContEventNotifiicationService
 					.selectByConditions(
-							currentSubscriberService.getSubscriberId(),
-							datePeriodParser.getFromDate().toDate(),
-							endOfDay.toDate(), contObjectList,
-							contEventTypeList, isNew, pageRequest);
+							currentSubscriberService.getSubscriberId(), dp,
+							contObjectList, contEventTypeList, isNew,
+							pageRequest);
 
 		} else {
 			logger.debug("date isOK condition");
 			resultPage = subscrContEventNotifiicationService
 					.selectByConditions(
-							currentSubscriberService.getSubscriberId(), null,
-							null, contObjectList, contEventTypeList, isNew,
-							pageRequest);
+							currentSubscriberService.getSubscriberId(),
+							DatePeriod.emptyPeriod(), contObjectList,
+							contEventTypeList, isNew, pageRequest);
 
 		}
 
@@ -164,7 +168,11 @@ public class SubscrContEventNotificationController extends WebApiController {
 	@RequestMapping(value = "/notifications", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdate(
 			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
-		return ResponseEntity.badRequest().build();
+
+		subscrContEventNotifiicationService.updateIsNew(Arrays
+				.asList(notificationIds));
+
+		return ResponseEntity.ok().body(ApiResult.ok());
 	}
 
 }

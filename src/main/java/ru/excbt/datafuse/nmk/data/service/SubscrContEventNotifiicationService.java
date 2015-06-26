@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 
 @Service
@@ -96,6 +97,37 @@ public class SubscrContEventNotifiicationService {
 
 		return subscrContEventNotificationRepository
 				.findAll(specs, pageRequest);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param datePeriod
+	 * @param contObjectList
+	 * @param contEventTypeList
+	 * @param isNew
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<SubscrContEventNotification> selectByConditions(
+			long subscriberId, final DatePeriod datePeriod,
+			final List<Long> contObjectList,
+			final List<Long> contEventTypeList, final Boolean isNew,
+			final Pageable pageable) {
+
+		Pageable pageRequest = setupPageRequest(pageable);
+
+		Specifications<SubscrContEventNotification> specs = Specifications
+				.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(datePeriod.getDateFrom(),
+						datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContObjectId(contObjectList))
+				.and(specContEventTypeId(contEventTypeList));
+
+		return subscrContEventNotificationRepository
+				.findAll(specs, pageRequest);
+
 	}
 
 	/**
@@ -334,7 +366,7 @@ public class SubscrContEventNotifiicationService {
 					"SubscrContEventNotification with id=%d is not found", id));
 		}
 
-		updateCandidate.setIsNew(Boolean.TRUE);
+		updateCandidate.setIsNew(Boolean.FALSE);
 		return subscrContEventNotificationRepository.save(updateCandidate);
 
 	}
