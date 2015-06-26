@@ -58,7 +58,7 @@ public class SubscrContEventNotificationControllerTest extends
 						.param("toDate", "2015-06-30")
 						.param("contObjectIds", ListToString(contObjectList))
 						.param("contEventTypeIds", ListToString(contEventTypeIdList))
-						.param("page", "0").param("size", "100")
+						.param("page", "0").param("size", "100").param("sortDesc", "false")
 						.with(testSecurityContext())
 						.accept(MediaType.APPLICATION_JSON));
 

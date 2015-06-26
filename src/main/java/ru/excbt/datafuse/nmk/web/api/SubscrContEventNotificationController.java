@@ -12,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,15 +25,16 @@ import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 @Controller
 @RequestMapping("/api/subscr/contEvent")
 public class SubscrContEventNotificationController extends WebApiController {
 
-	
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContEventNotificationController.class);
-	
+
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
 
@@ -97,7 +100,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		Page<SubscrContEventNotification> resultPage = null;
 
 		logger.debug("date isOK condition");
-		
+
 		if (datePeriodParser.isOk()) {
 			DateTime endOfDay = null;
 
@@ -126,4 +129,42 @@ public class SubscrContEventNotificationController extends WebApiController {
 				resultPage));
 
 	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> contEventNotificationOne(
+			@PathVariable("id") Long id) {
+
+		checkNotNull(id);
+
+		SubscrContEventNotification result = subscrContEventNotifiicationService
+				.findOne(id);
+
+		if (result == null) {
+
+			return ResponseEntity
+					.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.body(ApiResult
+							.build(ApiResultCode.ERR_UNPROCESSABLE_TRANSACTION));
+		}
+
+		return ResponseEntity.ok(result);
+
+	}
+
+	/**
+	 * 
+	 * @param notificationIds
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> contEventNotificationUpdate(
+			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+		return ResponseEntity.badRequest().build();
+	}
+
 }
