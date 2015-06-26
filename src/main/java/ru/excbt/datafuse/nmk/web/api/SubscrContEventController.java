@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
@@ -42,6 +43,9 @@ public class SubscrContEventController extends WebApiController {
 
 	@Autowired
 	private ContEventRepository contEventRepository;
+
+	@Autowired
+	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -195,9 +199,8 @@ public class SubscrContEventController extends WebApiController {
 
 		}
 
-		Page<ContEvent> resultPage = contEventService
-				.selectEventsBySubscriber(currentSubscriberService
-						.getSubscriberId(), pageable);
+		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(
+				currentSubscriberService.getSubscriberId(), pageable);
 
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
@@ -228,5 +231,7 @@ public class SubscrContEventController extends WebApiController {
 	// return null; // new ResponseEntity<>(assembler.toResources(result),
 	// HttpStatus.OK);
 	// }
+
+
 
 }
