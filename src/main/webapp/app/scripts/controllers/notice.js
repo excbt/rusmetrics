@@ -16,7 +16,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.TEXT_CAPTION_LENGTH = 20*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-3; //length of type visible part 
     $scope.crudTableName= "../api/subscr/contObjects";
-    $scope.noticeTypesUrl= "resource/noticeTypes.json";
+    $scope.noticeTypesUrl= "../api/contEvent/types";
+    
+    $scope.criticalTypes_flag = false;
+    $scope.noCriticalTypes_flag = false;
+    $scope.undefinedCriticalTypes_flag = false;
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
@@ -223,7 +227,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.getNoticeTypes = function(url){
        $http.get(url)
             .success(function(data){
-                $scope.noticeTypes = data;           
+                $scope.noticeTypes = data;
+//console.log($scope.noticeTypes);           
             })
             .error(function(e){
                 console.log(e);
@@ -231,6 +236,74 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     };
     
     $scope.getNoticeTypes($scope.noticeTypesUrl);
+    
+    //notice filter
+    $scope.noticeFilterCritical = function(notice){
+        if (notice.isCriticalEvent===true){
+            return notice
+        };
+    };
+    
+    $scope.noticeFilterNoCritical = function(notice){
+        if (notice.isCriticalEvent===false){
+            return notice
+        };
+    };
+    
+    $scope.noticeFilterUndefinedCritical = function(notice){
+        if (!(notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+            return notice
+        };
+    };
+    
+    //selection notice types
+    $scope.selectAllCritical = function(){       
+        if ($scope.criticalTypes_flag){               
+            $scope.noticeTypes.forEach(function(notice){        
+                if (notice.isCriticalEvent===true){
+                    notice.selected = true;
+                };
+            });
+        }else{                               
+            $scope.noticeTypes.forEach(function(notice){        
+                if (notice.isCriticalEvent===true){
+                    notice.selected = false;
+                };
+            });
+        };      
+    };
+    
+    $scope.selectAllNoCritical = function(){       
+        if ($scope.noCriticalTypes_flag){               
+            $scope.noticeTypes.forEach(function(notice){        
+                if (notice.isCriticalEvent===false){
+                    notice.selected = true;
+                };
+            });
+        }else{                               
+            $scope.noticeTypes.forEach(function(notice){        
+                if (notice.isCriticalEvent===false){
+                    notice.selected = false;
+                };
+            });
+        };      
+    };
+    
+    $scope.selectAllUndefinedCritical = function(){       
+        if ($scope.undefinedCriticalTypes_flag){               
+            $scope.noticeTypes.forEach(function(notice){        
+                if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                    notice.selected = true;
+                };
+            });
+        }else{                               
+            $scope.noticeTypes.forEach(function(notice){        
+                if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                    notice.selected = false;
+                };
+            });
+        };      
+    };
     
     //chart
     $scope.runChart = function(){

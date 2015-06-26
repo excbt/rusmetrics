@@ -995,6 +995,10 @@ tr.nmc-main-table-header > th {
     margin-top: 200px;
 }
 
+.nmc-select-objects-window > .modal-dialog > .modal-content{
+    margin: 0 0 0 -100px;
+}
+
     /* Панель с выбранными объектами в модальном окне создания/редактирования группы объектов*/
 /*.editGroupWindowSelectedObjectsArea{*/
 .nmc-modal-panel-with-objects{  
@@ -1024,7 +1028,7 @@ tr.nmc-main-table-header > th {
 }
 
 /*  Модальное окно выбора типов уведомлений на странице Уведомления*/
-.selectNoticeTypesModal >.modal-dialog >.modal-content{
+.nmc-select-notice-types-window >.modal-dialog >.modal-content{
     margin: 0 0 0 200px; /* двигаем содержимое под фильтр выбора Типов - так правильнее*/
 }
  
