@@ -16,6 +16,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.TEXT_CAPTION_LENGTH = 20*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-3; //length of type visible part 
     $scope.crudTableName= "../api/subscr/contObjects";
+    $scope.noticeTypesUrl= "resource/noticeTypes.json";
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
@@ -219,6 +220,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         $scope.getObjects();                              
     }, false);
     
+    $scope.getNoticeTypes = function(url){
+       $http.get(url)
+            .success(function(data){
+                $scope.noticeTypes = data;           
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+    
+    $scope.getNoticeTypes($scope.noticeTypesUrl);
     
     //chart
     $scope.runChart = function(){

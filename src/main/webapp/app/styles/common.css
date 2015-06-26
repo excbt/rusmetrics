@@ -569,6 +569,33 @@ tr.nmc-main-table-header > th {
     border-right-width: 0px;
     height: 25px;
 }
+/* Страница Уведомления - строка с фильтрами*/
+    /* Стиль для дива, содержащего фильтр по интервалу дат*/
+.nmc-div-filter-date-interval{
+    width: 20%;
+    padding: 0 10px 0 0;
+}
+
+    /* Стиль для дива, содержащего фильтр по объектам*/
+.nmc-div-filter-object{
+    width: 11%;
+    padding: 0 10px 0 0;
+}
+
+    /* Стиль для дива, содержащего фильтр по типам*/
+.nmc-div-filter-type{
+    width: 10%;
+    padding: 0 10px 0 5px;
+}
+
+    /* Стиль для дива, содержащего фильтр новые/ все уведомления*/
+.nmc-div-filter-kind{
+    width: 10%;
+}
+    /* Стиль для дива, содержащего кнопку сброса всех фильтров*/
+.nmc-div-filter-remove{
+    width: 10%;
+}
  
 /* ввод строки */
 .nmc-text-input-form {

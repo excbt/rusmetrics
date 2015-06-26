@@ -44,14 +44,14 @@
 <!--    <div class="col-md-12 noPadding">-->
 <!--        <label class="nmc-form-label">Фильтры:</label>-->
 <!--    </div>     -->
-    <div class="col-md-3 noPadding" ng-controller="DataRangeSettings">   
-        <div class="input-group marginRight15">
+    <div class="col-md-1 nmc-div-filter-date-interval" ng-controller="DataRangeSettings" >   
+        <div class="input-group">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">интервал дат: с</span>
             <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
                 type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"/>
         </div>    
     </div>
-    <div class="col-md-2 noPadding">
+    <div class="col-md-1 nmc-div-filter-object" >
 <!--        <label class="nmc-form-label">объекты:</label>-->
         <div class="input-group nmc-input-data">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">объекты:</span>
@@ -59,8 +59,8 @@
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
-    <div class="col-md-1 noPadding">
-        <div class="input-group marginRight5 marginLeft5">
+    <div class="col-md-1 nmc-div-filter-type">
+        <div class="input-group">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input ng-init="selectedNoticeTypes_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-data" ng-click="selectNoticeTypesClick()" ng-model="selectedNoticeTypes_list"  aria-describedby="rightAddon"> 
             
@@ -73,12 +73,12 @@
             
 <!--        </span>-->
 <!--    </div>-->
-    <div class="col-md-2 noPadding">
+    <div class="col-md-1 noPadding nmc-div-filter-kind">
 <!--       <span class="nmc-hide">     -->
 <!--           <span class="marginRight5"></span><input title="Только новые уведомления" type="checkbox" class="nmc-checkbox-form-in-header"/> -->
         
             <div class="btn-group" ng-init="visibleText='Все уведомления'">
-              <button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle nmc-button-notice-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <button type="button" class="btn btn-default btn-xs dropdown-toggle nmc-button-notice-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{visibleText}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
@@ -87,12 +87,16 @@
               </ul>
             </div>
     </div>
-    <div class="col-md-1 noPadding">
-           <i title="Сбросить все фильтры" class="btn btn-xs"><img height="25" width="25" src="images/clear-filter.jpg"/></i>
+    <div class="col-md-1 noPadding nmc-div-filter-remove">
+           <button title="Сбросить все фильтры" class="btn btn-xs btn-primary nmc-button-notice-toggle">Сброс фильтров</button>
 <!--        </span>-->
     </div>
+<!--
+    <div class="col-md-1">
+    </div>
+-->
 
-    <div class="col-md-3">    
+    <div class="col-md-offset-1 col-md-3 noPadding">    
  
          <div class="col-md-7 noPadding">
             <label class="nmc-form-label">Записей на странице:</label>

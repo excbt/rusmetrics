@@ -73,7 +73,7 @@ angular.module('portalNMC')
         var objTable = document.getElementById('objectTable');
         var tableHTML = "";
         $scope.objects.forEach(function(element, index){
-            var trClass= index%2>0?"":"active"; //Подкрашиваем разным цветом четные / нечетные строки
+            var trClass= index%2>0?"":"success"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
             if(element.objectState=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
                 imgSize = 1;
