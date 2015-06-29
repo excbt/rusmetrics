@@ -8,11 +8,11 @@ public abstract class AbstractApiAction implements ApiAction {
 	protected static final Logger logger = LoggerFactory
 			.getLogger(AbstractApiAction.class);
 
-	protected static final Object EMPTY_RESULT = new Object();
+	public static final Object EMPTY_RESULT = new Object();
 
 	@Override
 	public Object getResult() {
-		return EMPTY_RESULT;
+		return null;
 	}
 
 }

@@ -354,20 +354,22 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
-	 * @param id
+	 * @param subscrContEventNotificationId
 	 * @return
 	 */
-	public SubscrContEventNotification updateOneIsNew(Long id,
+	public SubscrContEventNotification updateOneIsNew(Boolean isNew, Long subscrContEventNotificationId,
 			Long revisionSubscrUserId) {
 
+		checkNotNull(isNew);
+
 		SubscrContEventNotification updateCandidate = subscrContEventNotificationRepository
-				.findOne(id);
+				.findOne(subscrContEventNotificationId);
 		if (updateCandidate == null) {
 			throw new PersistenceException(String.format(
-					"SubscrContEventNotification with id=%d is not found", id));
+					"SubscrContEventNotification with id=%d is not found", subscrContEventNotificationId));
 		}
 
-		updateCandidate.setIsNew(Boolean.FALSE);
+		updateCandidate.setIsNew(isNew);
 		updateCandidate.setRevisionTime(new Date());
 		updateCandidate.setRevisionSubscrUserId(revisionSubscrUserId);
 		return subscrContEventNotificationRepository.save(updateCandidate);
@@ -378,11 +380,13 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @param notificationIds
 	 */
-	public void updateIsNew(List<Long> notificationIds,
+	public void updateIsNew(Boolean isNew, List<Long> notificationIds,
 			Long revisionSubscrUserId) {
+		checkNotNull(isNew);
 		checkNotNull(notificationIds);
+		checkNotNull(revisionSubscrUserId);
 		for (Long id : notificationIds) {
-			updateOneIsNew(id, revisionSubscrUserId);
+			updateOneIsNew(isNew, id, revisionSubscrUserId);
 		}
 	}
 }

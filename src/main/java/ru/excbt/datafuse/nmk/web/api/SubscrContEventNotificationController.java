@@ -26,6 +26,9 @@ import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
@@ -41,6 +44,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private CurrentUserService currentUserService;
 
 	/**
 	 * 
@@ -166,14 +172,42 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contEventNotificationUpdate(
+	public ResponseEntity<?> contEventNotificationUpdateIsNewFalse(
 			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
 
-		// TO DO
-		subscrContEventNotifiicationService.updateIsNew(Arrays
-				.asList(notificationIds), null);
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				subscrContEventNotifiicationService.updateIsNew(Boolean.FALSE,
+						Arrays.asList(notificationIds),
+						currentUserService.getCurrentUserId());
+			}
+		};
 
-		return ResponseEntity.ok().body(ApiResult.ok());
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
+	}
+
+	/**
+	 * 
+	 * @param notificationIds
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> contEventNotificationUpdateIsNewTrue(
+			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				subscrContEventNotifiicationService.updateIsNew(Boolean.TRUE,
+						Arrays.asList(notificationIds),
+						currentUserService.getCurrentUserId());
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
 	}
 
 }
