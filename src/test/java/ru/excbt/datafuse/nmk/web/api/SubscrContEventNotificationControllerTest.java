@@ -88,6 +88,10 @@ public class SubscrContEventNotificationControllerTest extends
 				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testNotificationUpdateIsNew() throws Exception {
 
@@ -115,9 +119,29 @@ public class SubscrContEventNotificationControllerTest extends
 		testJsonUpdate("/api/subscr/contEvent/notifications/revision", null,
 				extraInitializer);
 
-		testJsonUpdate("/api/subscr/contEvent/notifications/revision/isNew", null,
-				extraInitializer);
+		testJsonUpdate("/api/subscr/contEvent/notifications/revision/isNew",
+				null, extraInitializer);
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testNotifiicationsContObject() throws Exception {
+
+
+		ResultActions resultActionsAll = mockMvc
+				.perform(get("/api/subscr/contEvent/notifications/contObjects")
+						.param("fromDate", "2015-06-01")
+						.param("toDate", "2015-06-30")
+						.with(testSecurityContext())
+						.accept(MediaType.APPLICATION_JSON));
+
+		resultActionsAll.andDo(MockMvcResultHandlers.print());
+
+		resultActionsAll.andExpect(status().isOk()).andExpect(
+				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+	}
 }

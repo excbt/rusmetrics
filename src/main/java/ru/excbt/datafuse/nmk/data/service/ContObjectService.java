@@ -3,55 +3,41 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 @Transactional
-public class ContObjectService {
+public class ContObjectService implements SecuredRoles {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(ContObjectService.class);
 
 	@Autowired
 	private ContObjectRepository contObjectRepository;
-	
+
 	@Autowired
-	private SubscriberRepository subscrOrgRepository;
-	
+	private SubscriberService subscriberService;
+
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
-	
-	
-	@Transactional (readOnly = true)
-	private List<ContObject> getSubscrContObjects2(long userId) {
-		
-		List<ContObject> result = null;
-		
-		SubscrUser su = subscrUserRepository.findOne(userId);
-		
-		if (su == null) {
-			result = Collections.emptyList();
-			return result;
-		}
-		
-		//su.
-		
-		return result;
-		
-		//return contObjectRepository.selectByUserName(725L);
-	}
-	
-	
+
+	@Autowired
+	private SubscrContEventNotifiicationService contEventNotifiicationService;
+
 	/**
 	 * 
 	 * @param id
@@ -61,7 +47,7 @@ public class ContObjectService {
 	public ContObject findOne(long id) {
 		return contObjectRepository.findOne(id);
 	}
-	
+
 	/**
 	 * 
 	 * @param str
@@ -71,16 +57,21 @@ public class ContObjectService {
 	public List<ContObject> findByFullName(String str) {
 		return contObjectRepository.findByFullNameLikeIgnoreCase(str);
 	}
-	
-	
-	
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContObject updateOne(ContObject entity) {
 		checkNotNull(entity);
 		checkArgument(!entity.isNew());
-		
+
 		ContObject currentEntity = contObjectRepository.findOne(entity.getId());
 		if (currentEntity == null) {
-			throw new PersistenceException(String.format("ContObject (ID=%d) not found", entity.getId()));
+			throw new PersistenceException(String.format(
+					"ContObject (ID=%d) not found", entity.getId()));
 		}
 		currentEntity.setVersion(entity.getVersion());
 		currentEntity.setName(entity.getName());
@@ -94,11 +85,12 @@ public class ContObjectService {
 		currentEntity.setOwnerContacts(entity.getOwnerContacts());
 		currentEntity.setCwTemp(entity.getCwTemp());
 		currentEntity.setHeatArea(entity.getHeatArea());
-		
+
 		ContObject resultEntity = contObjectRepository.save(currentEntity);
-		
+
 		return resultEntity;
 	}
-	
-	
+
+
+
 }
