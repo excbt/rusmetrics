@@ -12,6 +12,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Table(name = "subscr_cont_event_notification")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@DynamicUpdate
 public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	/**
@@ -67,6 +70,9 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date revisionTime;
 
+	@Column(name = "revision_subscr_user_id")
+	private Long revisionSubscrUserId;
+	
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
@@ -145,6 +151,14 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public Long getRevisionSubscrUserId() {
+		return revisionSubscrUserId;
+	}
+
+	public void setRevisionSubscrUserId(Long revisionSubscrUserId) {
+		this.revisionSubscrUserId = revisionSubscrUserId;
 	}
 
 }

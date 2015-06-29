@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -29,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 
 @Service
@@ -78,6 +80,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
 			long subscriberId, final Date fromDate, final Date toDate,
 			final List<Long> contObjectList,
@@ -94,6 +97,37 @@ public class SubscrContEventNotifiicationService {
 
 		return subscrContEventNotificationRepository
 				.findAll(specs, pageRequest);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param datePeriod
+	 * @param contObjectList
+	 * @param contEventTypeList
+	 * @param isNew
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<SubscrContEventNotification> selectByConditions(
+			long subscriberId, final DatePeriod datePeriod,
+			final List<Long> contObjectList,
+			final List<Long> contEventTypeList, final Boolean isNew,
+			final Pageable pageable) {
+
+		Pageable pageRequest = setupPageRequest(pageable);
+
+		Specifications<SubscrContEventNotification> specs = Specifications
+				.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(datePeriod.getDateFrom(),
+						datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContObjectId(contObjectList))
+				.and(specContEventTypeId(contEventTypeList));
+
+		return subscrContEventNotificationRepository
+				.findAll(specs, pageRequest);
+
 	}
 
 	/**
@@ -166,7 +200,7 @@ public class SubscrContEventNotifiicationService {
 					pageable.getPageSize(), makeSort(Direction.DESC));
 		} else {
 			result = new PageRequest(pageable.getPageNumber(),
-					pageable.getPageSize(), makeSort(Direction.DESC));
+					pageable.getPageSize(), makeSort(Direction.ASC));
 		}
 		return result;
 	}
@@ -306,5 +340,53 @@ public class SubscrContEventNotifiicationService {
 
 		};
 
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public SubscrContEventNotification findOne(Long id) {
+		return subscrContEventNotificationRepository.findOne(id);
+	}
+
+	/**
+	 * 
+	 * @param subscrContEventNotificationId
+	 * @return
+	 */
+	public SubscrContEventNotification updateOneIsNew(Boolean isNew, Long subscrContEventNotificationId,
+			Long revisionSubscrUserId) {
+
+		checkNotNull(isNew);
+
+		SubscrContEventNotification updateCandidate = subscrContEventNotificationRepository
+				.findOne(subscrContEventNotificationId);
+		if (updateCandidate == null) {
+			throw new PersistenceException(String.format(
+					"SubscrContEventNotification with id=%d is not found", subscrContEventNotificationId));
+		}
+
+		updateCandidate.setIsNew(isNew);
+		updateCandidate.setRevisionTime(new Date());
+		updateCandidate.setRevisionSubscrUserId(revisionSubscrUserId);
+		return subscrContEventNotificationRepository.save(updateCandidate);
+
+	}
+
+	/**
+	 * 
+	 * @param notificationIds
+	 */
+	public void updateIsNew(Boolean isNew, List<Long> notificationIds,
+			Long revisionSubscrUserId) {
+		checkNotNull(isNew);
+		checkNotNull(notificationIds);
+		checkNotNull(revisionSubscrUserId);
+		for (Long id : notificationIds) {
+			updateOneIsNew(isNew, id, revisionSubscrUserId);
+		}
 	}
 }
