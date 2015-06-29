@@ -17,6 +17,8 @@ public class DatePeriodParser {
 	private final DateTime toDate;
 	private final boolean isEmpty;
 
+	private final DatePeriod datePeriod;
+
 	/**
 	 * 
 	 */
@@ -24,12 +26,15 @@ public class DatePeriodParser {
 		fromDate = null;
 		toDate = null;
 		isEmpty = true;
+		datePeriod = DatePeriod.emptyPeriod();
 	}
 
 	private DatePeriodParser(DateTime fromDate, DateTime toDate, boolean isEmpty) {
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		this.isEmpty = isEmpty;
+		this.datePeriod = DatePeriod.builder().dateFrom(fromDate).dateTo(toDate)
+				.build();
 	}
 
 	/**
@@ -64,19 +69,11 @@ public class DatePeriodParser {
 	 * @param dateTime
 	 * @return
 	 */
-	public DateTime endOfDay(DateTime dateTime) {
+	public static DateTime endOfDay(DateTime dateTime) {
 		checkNotNull(dateTime);
 		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59)
 				.withSecondOfMinute(59).withMillisOfSecond(999);
 		return endOfDay;
-	}
-
-	public DateTime getFromDate() {
-		return fromDate;
-	}
-
-	public DateTime getToDate() {
-		return toDate;
 	}
 
 	public boolean isEmpty() {
@@ -87,18 +84,9 @@ public class DatePeriodParser {
 		return !isEmpty;
 	}
 
-	public boolean isValidEq() {
-		if (isEmpty) {
-			return false;
-		}
-		return fromDate.isBefore(toDate) || fromDate.isEqual(toDate);
-	}
 
-	public boolean isValid() {
-		if (isEmpty) {
-			return false;
-		}
-		return fromDate.isBefore(toDate);
+	public DatePeriod getDatePeriod() {
+		return datePeriod;
 	}
 
 }
