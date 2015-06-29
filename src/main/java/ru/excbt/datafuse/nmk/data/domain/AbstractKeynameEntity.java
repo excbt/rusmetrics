@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-public abstract class AbstractKeynameEntity implements Serializable {
+public abstract class AbstractKeynameEntity implements Serializable, KeynameObject {
 
 	/**
 	 * 
@@ -20,6 +20,7 @@ public abstract class AbstractKeynameEntity implements Serializable {
 	private String keyname;
 
 
+	@Override
 	public String getKeyname() {
 		return keyname;
 	}
