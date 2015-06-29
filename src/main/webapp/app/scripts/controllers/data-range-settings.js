@@ -3,7 +3,7 @@ app
     .controller('DataRangeSettings', function($scope, $interval, $rootScope){
   // Общие настройки элемента управления интервалом дат
     $scope.navPlayerDates = {
-        startDate :  moment().startOf('day'),
+        startDate :  moment().subtract(6, 'days').startOf('day'),
         endDate :  moment().endOf('day')
     };
     

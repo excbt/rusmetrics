@@ -64,7 +64,7 @@
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input ng-init="selectedNoticeTypes_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-data" ng-click="selectNoticeTypesClick()" ng-model="selectedNoticeTypes_list"  aria-describedby="rightAddon"> 
             
-            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs "><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
+            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="selectedNoticeTypes_list='Нет';selectedNoticeTypes=[];getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
 <!--    <div class="col-md-1">-->
@@ -82,13 +82,13 @@
                 {{visibleText}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
-                <li><a href="" ng-click="visibleText='Все уведомления'">Все уведомления</a></li>
-                <li><a href="" ng-click="visibleText='Только новые'">Только новые</a></li>
+                <li><a href="" ng-click="visibleText='Все уведомления';getAllNotices()">Все уведомления</a></li>
+                <li><a href="" ng-click="visibleText='Только новые';getOnlyNewNotices()">Только новые</a></li>
               </ul>
             </div>
     </div>
     <div class="col-md-1 noPadding nmc-div-filter-remove">
-           <button title="Сбросить все фильтры" class="btn btn-xs btn-primary nmc-button-notice-toggle">Сброс фильтров</button>
+           <button title="Сбросить все фильтры" class="btn btn-xs btn-primary nmc-button-notice-toggle" ng-click="clearAllFilters()">Сброс фильтров</button>
 <!--        </span>-->
     </div>
 <!--
@@ -123,13 +123,15 @@
 <div >
     <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
+            <th class="nmc-td-for-buttons"><input type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/></th>
             <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}
             </th>       
         </tr>
         <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
+            <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span></td>
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                {{notice[column.fieldName]}}
+                <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew}">{{notice[column.fieldName]}}</span>
             </td>
         </tr>
     </table>

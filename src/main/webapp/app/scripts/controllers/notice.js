@@ -13,14 +13,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 //console.log(Math.round($('#div-main-area').width()*8.333/100*3));     
 //    Math.round($('#div-main-area').width()*8.333/100)= 130 = 20*x; => x= 130/20
     //Math.round($('#div-main-area').width()*8.333/100/6.5) //dynamic coef
-    $scope.TEXT_CAPTION_LENGTH = 20*4-3; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
-    $scope.TYPE_CAPTION_LENGTH = 20*3-3; //length of type visible part 
-    $scope.crudTableName= "../api/subscr/contObjects";
+    $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
+    $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part 
+    $scope.objectsUrl= "../api/subscr/contObjects";
+    $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     
     $scope.criticalTypes_flag = false;
     $scope.noCriticalTypes_flag = false;
     $scope.undefinedCriticalTypes_flag = false;
+    
+    $scope.allSelected = false;
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
@@ -76,16 +79,23 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
     
-    var getNotices = function(table, startDate, endDate, objectArray){
-        return $resource(table, {},
-                         {'get':{method:'GET', params:{startDate: startDate, endDate: endDate, contObjectIds: objectArray}}
-        });
+    var getNotices = function(table, startDate, endDate, objectArray, eventTypeArray, isNew){
+        if (isNew==null){
+            return $resource(table, {},
+                         {'get':{method:'GET', params:{fromDate: startDate, toDate: endDate, contEventTypeIds: eventTypeArray, contObjectIds: objectArray}}
+            });
+        }else{
+            return $resource(table, {},
+                         {'get':{method:'GET', params:{fromDate: startDate, toDate: endDate, contEventTypeIds: eventTypeArray, contObjectIds: objectArray, isNew: isNew}}
+            });
+        };
     }; 
     $scope.pagination = {
         current: 1
     };
 
     $scope.pageChanged = function(newPage) {       
+//console.log("pageChanged");        
         $scope.getResultsPage(newPage);
     };
     
@@ -93,20 +103,20 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         var oneNotice = {};
         var tmp = arr.map(function(el){
             oneNotice = {};
-            oneNotice.noticeType = el.contEventType.name;
-            oneNotice.noticeMessage = el.message;                        
-            if (el.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
-                    oneNotice.noticeTypeCaption= el.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+            oneNotice.noticeType = el.contEvent.contEventType.name;
+            oneNotice.noticeMessage = el.contEvent.message;                        
+            if (el.contEvent.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
+                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
                 }else{
-                     oneNotice.noticeTypeCaption= el.contEventType.name;
+                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.name;
             };
-            if (el.message == null){
+            if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";
             }else{
-                if (el.message.length > $scope.TEXT_CAPTION_LENGTH){
-                        oneNotice.noticeCaption= el.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
+                if (el.contEvent.message.length > $scope.TEXT_CAPTION_LENGTH){
+                        oneNotice.noticeCaption= el.contEvent.message.substr(0, $scope.TEXT_CAPTION_LENGTH)+"...";
                     }else{
-                         oneNotice.noticeCaption= el.message;
+                         oneNotice.noticeCaption= el.contEvent.message;
                 };
             };
 
@@ -116,9 +126,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                 };   
             };
 
-            oneNotice.noticeDate = $scope.dateFormat(el.eventTime);
-
-            switch (el.contServiceType)
+            oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
+            oneNotice.contEventLevelColor = el.contEventLevelColor;
+            oneNotice.isNew = el.isNew;
+            switch (el.contEvent.contServiceType)
             {
                         case "heat" : oneNotice.noticeZpoint = "ТС"; break;
                         case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
@@ -144,16 +155,21 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     
     $scope.getResultsPage = function(pageNumber) {
         $scope.pagination.current = pageNumber;        
-        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
+//old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
+        var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
+//console.log($rootScope.reportStart);        
         $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
-        $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');   
-        getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects).get(function(data){                  
+        $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
+//console.log($scope.startDate);                
+        getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
+//console.log($scope.data);             
                         var oneNotice = {};
                         $scope.totalNotices = data.totalElements;
                         var tmp = dataParse(data.objects);
                         $scope.notices = tmp;
+//console.log($scope.notices);            
                     });
     };
     
@@ -195,7 +211,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
           }
         });
         $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
-//        $scope.getResultsPage(1);
+        $scope.getResultsPage(1);
 
     };
       
@@ -214,13 +230,22 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     
              //get Objects
     $scope.getObjects = function(){
-        crudGridDataFactory($scope.crudTableName).query(function(data){
+        crudGridDataFactory($scope.objectsUrl).query(function(data){
             $scope.objects = data;
+//console.log("getObjects");            
               $scope.getResultsPage(1);
         });
     };
     
+    //click the main checkbox - select/ deselect notices
+    $scope.performAllNoticesOnPage = function(){
+        $scope.notices.forEach(function(element){
+            element.selected = $scope.allSelected;
+        });
+    };
+    
     $scope.$watch('reportStart', function (newDates) {
+console.log("watch");        
         $scope.getObjects();                              
     }, false);
     
@@ -237,7 +262,19 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     
     $scope.getNoticeTypes($scope.noticeTypesUrl);
     
-    //notice filter
+    //new/all filter
+    $scope.getAllNotices = function(){
+        $scope.isNew = null;
+        $scope.getResultsPage(1);
+    };
+    
+    $scope.getOnlyNewNotices = function(){
+        $scope.isNew = true;
+        $scope.getResultsPage(1);
+    };
+    
+    
+    //notice type filters
     $scope.noticeFilterCritical = function(notice){
         if (notice.isCriticalEvent===true){
             return notice
@@ -303,6 +340,16 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
                 };
             });
         };      
+    };
+    
+    //Clear all filters
+    $scope.clearAllFilters = function(){
+        $scope.selectedNoticeTypes_list='Нет';
+        $scope.selectedNoticeTypes=[];
+        $scope.selectedObjects_list='Нет';
+        $scope.selectedObjects=[];
+        $scope.isNew = null;
+        $scope.getResultsPage(1);
     };
     
     //chart
