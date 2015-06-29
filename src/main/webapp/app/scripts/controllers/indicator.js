@@ -164,6 +164,24 @@ angular.module('portalNMC')
     $scope.pagination = {
         current: 1
     };         
+        
+    
+	
+
+function timeConverter(timestamp){
+  var a = new Date(timestamp);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
+
+    
 
       //Получаем показания
     $scope.columns = [];
@@ -196,18 +214,23 @@ angular.module('portalNMC')
                     iCol=iCol+1;                          
                 };
                 $scope.tableDef.columns = $scope.columns;
-
                 var tmp = data.objects.map(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-//                          var datad = new Date(el.dataDate);
-                          el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
-  
+                          var datad = new Date(el.dataDate);
+//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
+//console.log(el.dataDate);                   
+//console.log("el.Date1 = "+datad.toLocaleDateString());                            
+//console.log("el.Time1 = "+datad.toLocaleTimeString());                                                     
+                            el.dataDate = datad.toLocaleDateString()+" "+datad.toLocaleTimeString();
+//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
+//                            el.dateDate = timeConverter(el.dataDate);
+//  console.log("el.dateDate = "+el.dateDate);
                             continue;
                         }
                         if (el[$scope.columns[i].fieldName]!=null){
-                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(2);
+                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
                         
                     };                    

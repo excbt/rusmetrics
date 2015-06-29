@@ -465,7 +465,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;                     
+            $scope.availableObjects = data;
+            sortObjectsByFullName($scope.availableObjects); 
         });        
     };
 //    $scope.getAvailableObjects();
@@ -473,7 +474,20 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            sortObjectsByFullName($scope.selectedObjects);
         });
+    };
+    // sort the object array by the fullname
+    function sortObjectsByFullName(array){
+        array.sort(function(a, b){
+            if (a.fullName>b.fullName){
+                return 1;
+            };
+            if (a.fullName<b.fullName){
+                return -1;
+            };
+            return 0;
+        }); 
     };
     
     var objectPerform = function(addObject_flag, currentObjectId){
@@ -527,6 +541,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+        sortObjectsByFullName($scope.availableObjects);
+        sortObjectsByFullName($scope.selectedObjects);
     }
     
     $scope.addSelectedObjects = function(){
@@ -557,6 +573,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         }
         $scope.availableObjects = tmpArray;
         $scope.showAvailableObjects_flag=false;
+        sortObjectsByFullName($scope.availableObjects);
+        sortObjectsByFullName($scope.selectedObjects);
     };
     
     $scope.removeObject = function(object){
