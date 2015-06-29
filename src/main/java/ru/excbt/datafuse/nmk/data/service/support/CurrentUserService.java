@@ -92,4 +92,8 @@ public class CurrentUserService {
 		return result == null ? null : new FullUserInfo(result);
 	}
 
+	public Long getCurrentUserId() {
+		return getCurrentAuditUser().getId();
+	}
+	
 }

@@ -384,6 +384,7 @@
 			</plugin>
 
 			<!-- Metamodel Generator -->
+
 			<plugin>
 				<groupId>org.bsc.maven</groupId>
 				<artifactId>maven-processor-plugin</artifactId>
@@ -406,7 +407,7 @@
 					<dependency>
 						<groupId>org.hibernate</groupId>
 						<artifactId>hibernate-jpamodelgen</artifactId>
-						<version>WORKING</version>
+						<version>${hibernate.version}</version>
 					</dependency>
 				</dependencies>
 			</plugin>

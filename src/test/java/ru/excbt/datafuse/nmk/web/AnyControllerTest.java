@@ -133,8 +133,7 @@ public class AnyControllerTest {
 
 	}
 
-	
-	protected void testHtmlGet (String url) throws Exception {
+	protected void testHtmlGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
 
@@ -151,16 +150,15 @@ public class AnyControllerTest {
 			public void testResultActions(ResultActions resultActions)
 					throws Exception {
 				resultActions.andExpect(status().isOk()).andExpect(
-						content().contentType(
-								MediaType.TEXT_HTML));
+						content().contentType(MediaType.TEXT_HTML));
 
 			}
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);		
-		
+		testGet(url, requestExtraInitializer, resultActionsTester);
+
 	}
-	
+
 	/**
 	 * 
 	 * @param url
@@ -218,7 +216,7 @@ public class AnyControllerTest {
 		int iMax = a.size() - 1;
 		if (iMax == -1)
 			return "";
-		
+
 		StringBuilder b = new StringBuilder();
 		for (int i = 0;; i++) {
 			b.append(a.get(i));
@@ -371,20 +369,24 @@ public class AnyControllerTest {
 
 		logger.info("Testing UPDATE on URL: {}", urlStr);
 
-		String jsonBody = null;
-		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
-		} catch (JsonProcessingException e) {
-			logger.error("Can't create json: {}", e);
-			e.printStackTrace();
-			fail();
+		MockHttpServletRequestBuilder request = put(urlStr).with(
+				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		if (sendObject != null) {
+			String jsonBody = null;
+			try {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+			} catch (JsonProcessingException e) {
+				logger.error("Can't create json: {}", e);
+				e.printStackTrace();
+				fail();
+			}
+
+			logger.info("Request JSON: {}", jsonBody);
+
+			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
+
 		}
-
-		logger.info("Request JSON: {}", jsonBody);
-
-		MockHttpServletRequestBuilder request = put(urlStr)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);

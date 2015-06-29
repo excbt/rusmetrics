@@ -61,6 +61,14 @@ public class ApiResult {
 
 	/**
 	 * 
+	 * @return
+	 */
+	public static ApiResult ok() {
+		return build(ApiResultCode.OK, null);
+	}
+
+	/**
+	 * 
 	 * @param description
 	 * @return
 	 */
