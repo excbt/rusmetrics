@@ -30,6 +30,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
@@ -58,6 +59,9 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private ContEventMonitorService contEventMonitorService;
 
 	/**
 	 * 
@@ -490,8 +494,6 @@ public class SubscrContEventNotifiicationService {
 
 		List<SubscrContEventNotificationsStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
-			SubscrContEventNotificationsStatus item = SubscrContEventNotificationsStatus
-					.newInstance(co);
 
 			logger.trace(
 					"Select EventsStatusData for contObjectId:{}, subscriberId:{}",
@@ -506,9 +508,22 @@ public class SubscrContEventNotifiicationService {
 			long typesCnt = selectContEventTypes(subscriberId, co.getId(),
 					datePeriod);
 
+			ContEventLevelColorKey monitorColorKey = contEventMonitorService
+					.findContEventMonitorColor(co.getId());
+
+			ContEventLevelColorKey resultColorKey = monitorColorKey;
+			if (resultColorKey == null) {
+				resultColorKey = allCnt > 0 ? ContEventLevelColorKey.YELLOW
+						: ContEventLevelColorKey.GREEN;
+			}
+
+			SubscrContEventNotificationsStatus item = SubscrContEventNotificationsStatus
+					.newInstance(co);
+
 			item.setTotalCount(allCnt);
 			item.setTotalNewCount(newCnt);
 			item.setTotalTypesCount(typesCnt);
+			item.setContEventLevelColorKey(resultColorKey);
 
 			result.add(item);
 		}

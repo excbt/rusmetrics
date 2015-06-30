@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 
 public class SubscrContEventNotificationsStatus implements Serializable {
@@ -14,6 +15,8 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 	private static final long serialVersionUID = -5870004714222214147L;
 
 	private final ContObject contObject;
+
+	private ContEventLevelColorKey contEventLevelColorKey;
 
 	private long totalCount;
 
@@ -29,9 +32,11 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 		return contObject;
 	}
 
-	public static SubscrContEventNotificationsStatus newInstance(ContObject contObject) {
+	public static SubscrContEventNotificationsStatus newInstance(
+			ContObject contObject) {
 		checkNotNull(contObject);
-		SubscrContEventNotificationsStatus result = new SubscrContEventNotificationsStatus(contObject);
+		SubscrContEventNotificationsStatus result = new SubscrContEventNotificationsStatus(
+				contObject);
 		return result;
 	}
 
@@ -57,6 +62,20 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 
 	public void setTotalNewCount(long totalNewCount) {
 		this.totalNewCount = totalNewCount;
+	}
+
+	public ContEventLevelColorKey getContEventLevelColorKey() {
+		return contEventLevelColorKey;
+	}
+
+	public void setContEventLevelColorKey(
+			ContEventLevelColorKey contEventLevelColorKey) {
+		this.contEventLevelColorKey = contEventLevelColorKey;
+	}
+
+	public String getStatusColor() {
+		return contEventLevelColorKey == null ? null : contEventLevelColorKey
+				.getKeyname();
 	}
 
 }

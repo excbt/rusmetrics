@@ -218,7 +218,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contObjectEventNotificationPaged(
+	public ResponseEntity<?> contObjectEventNotificationStatus(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr) {
 
