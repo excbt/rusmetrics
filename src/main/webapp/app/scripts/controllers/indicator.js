@@ -223,7 +223,10 @@ function timeConverter(timestamp){
 //console.log(el.dataDate);                   
 //console.log("el.Date1 = "+datad.toLocaleDateString());                            
 //console.log("el.Time1 = "+datad.toLocaleTimeString());                                                     
-                            el.dataDate = datad.toLocaleDateString()+" "+datad.toLocaleTimeString();
+                            el.dataDate = datad.toLocaleDateString();
+                            if ($scope.timeDetailType=="1h"){
+                                el.dataDate +=" "+datad.toLocaleTimeString();
+                            };
 //                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
 //                            el.dateDate = timeConverter(el.dataDate);
 //  console.log("el.dateDate = "+el.dateDate);
@@ -353,22 +356,22 @@ function timeConverter(timestamp){
         $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
         
         var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
-console.log("diff = "+$scope.summary.diffs[columnName]);           
-console.log("total = "+$scope.summary.totals[columnName]);           
-console.log("precision = "+precision);        
+//console.log("diff = "+$scope.summary.diffs[columnName]);           
+//console.log("total = "+$scope.summary.totals[columnName]);           
+//console.log("precision = "+precision);        
         
         var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
-console.log("difference = "+difference);         
+//console.log("difference = "+difference);         
 //        var difference = Math.abs(total - diff);
         if ((difference >precision)&&(difference <= 1))
         {
-console.log(ALERT_IMG_PATH);         
+//console.log(ALERT_IMG_PATH);         
             return ALERT_IMG_PATH;
 
         };
         if ((difference >1))
         {  
-console.log(CRIT_IMG_PATH);            
+//console.log(CRIT_IMG_PATH);            
             return CRIT_IMG_PATH;
         };
 

@@ -1,0 +1,69 @@
+[
+	{
+		"id":1,
+		"fullName": "Мой Ижевск, 50 лет Ноября, д. 1",
+		"objectState": "red",
+		"eventCount": 135,
+		"eventCountNew": 10,
+		"eventTypeCount": 3,
+		"eventTypes":[
+			{
+				"id":1,
+				"typeName":"Сообщения",
+				"typeCategory": "green",
+				"typeEventCount": 100
+			},
+			{
+				"id":2,
+				"typeName":"Выход показаний за пределы метрологического диапазона",
+				"typeCategory": "orange",
+				"typeEventCount": 30
+			},
+			{
+				"id":3,
+				"typeName":"Отсутствие показаний с прибора учета в течение долгого времени",
+				"typeCategory": "red",
+				"typeEventCount": 5
+			}
+
+		] 
+	},
+	{
+		"id":2,
+		"fullName": "Мой Ижевск, 50 лет Ноября, д. 2",
+		"objectState": "green",
+		"eventCount": 99,
+		"eventCountNew": 22,
+		"eventTypeCount": 1,
+		"eventTypes":[
+			{
+				"id":1,
+				"typeName":"Сообщения",
+				"typeCategory": "green",
+				"typeEventCount": 99
+			}
+		] 
+	},
+	{
+		"id":3,
+		"fullName": "Мой Ижевск, 50 лет Ноября, д. 3",
+		"objectState": "yellow",
+		"eventCount": 105,
+		"eventCountNew": 0,
+		"eventTypeCount": 3,
+		"eventTypes":[
+			{
+				"id":1,
+				"typeName":"Сообщения",
+				"typeCategory": "green",
+				"typeEventCount": 100
+			},
+			{
+				"id":3,
+				"typeName":"Отсутствие показаний с прибора учета в течение долгого времени",
+				"typeCategory": "red",
+				"typeEventCount": 5
+			}
+		] 
+	}
+]

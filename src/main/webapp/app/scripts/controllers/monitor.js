@@ -88,7 +88,7 @@ angular.module('portalNMC')
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"\">"+element.eventCount+" / "+element.eventTypeCount+"</a> (<a title=\"Новые уведомления\" href=\"\">"+element.eventCountNew+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram_1.png'/></i></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
             tableHTML += "<td class=\"col-md-3\">"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
