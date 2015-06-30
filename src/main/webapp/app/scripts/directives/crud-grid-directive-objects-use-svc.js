@@ -41,8 +41,9 @@ angular.module('portalNMC')
                 function makeObjectTable(){
                     var objTable = document.getElementById('objectTable');
                     var tableHTML = "";
-                    $scope.objects.forEach(function(element){
-                        tableHTML += "<tr id=\"obj"+element.id+"\"><td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
+                    $scope.objects.forEach(function(element, index){
+                        var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
+                        tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\"><td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
                         tableHTML += "<i ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject("+element.id+")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
                         tableHTML+= "</td>";
                         tableHTML += "<td>"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td></tr>";
@@ -224,7 +225,7 @@ angular.module('portalNMC')
                                     var result = {};
                                     result = el.object;
                                     result.lastDataDate = el.lastDataDate;
-console.log(el.lastDataDate);                                    
+//console.log(el.lastDataDate);                                    
                                     return result;
                                 });
                             }else{
@@ -291,7 +292,7 @@ console.log(el.lastDataDate);
                 //Формируем таблицу с точками учета
                 function makeZpointTable(object){
                     var trObjZp = document.getElementById("trObjZp"+object.id);
-                    var trHTML = "<td></td><td><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">"+
+                    var trHTML = "<td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">"+
                         "<thead>"+
                         "<tr class=\"nmc-child-table-header\">"+
                             "<!--       Шапка таблицы-->"+

@@ -396,6 +396,14 @@ table {
 td {
     vertical-align: middle !important;
 }
+/* Нечетная строка таблицы*/
+.nmc-tr-odd{
+/*    background-color: #DCDCDC;*/
+}
+tr.nmc-tr-odd>td{
+    background-color: #eee;
+}
+
 
     /*Стиль колонки с кнопками*/
 .nmc-td-for-buttons{
@@ -1211,6 +1219,9 @@ tr.nmc-main-table-header > th {
 
 .paddingTop3 {
     padding-top: 3px;
+}
+.paddingTop2 {
+    padding-top: 2px !important;
 }
 
 .paddingTop5 {

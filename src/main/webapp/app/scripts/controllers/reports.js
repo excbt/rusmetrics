@@ -96,6 +96,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
     $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
+console.log(curObject.paramsets);        
     };
     
     $scope.selectedItem = function(parentItem, item){
@@ -347,7 +348,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
-        return $scope.currentObject.common || !$scope.currentObject._active;
+//        return $scope.currentObject.common || !$scope.currentObject._active;
+        return false;
     };
     
     $scope.showAddObjectButton = function(){

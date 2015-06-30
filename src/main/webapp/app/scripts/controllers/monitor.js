@@ -1,21 +1,25 @@
 angular.module('portalNMC')
   .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile){
     //object url
-    var objectUrl = "resource/objects.json";    
+    var objectUrl = "../api/subscr/contEvent/notifications/contObjects";//"resource/objects.json";    
     //objects array
     $scope.objects = [];
+    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
+    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     //get objects function
-    $scope.getObjects = function(url){        
-        $http.get(url)
+    $scope.getObjects = function(url){ 
+        var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        $http.get(targetUrl)
             .success(function(data){
-                $scope.objects = data;           
+                $scope.objects = data;
+//console.log(data);            
                 //sort objects by name
                 $scope.objects.sort(function(a, b){
-                    if (a.fullName>b.fullName){
-                        return 1;
-                    };
-                    if (a.fullName<b.fullName){
+                    if (a.statusColor>b.statusColor){
                         return -1;
+                    };
+                    if (a.statusColor<b.statusColor){
+                        return 1;
                     };
                     return 0;
                 });         
@@ -73,28 +77,28 @@ angular.module('portalNMC')
         var objTable = document.getElementById('objectTable');
         var tableHTML = "";
         $scope.objects.forEach(function(element, index){
-            var trClass= index%2>0?"":"success"; //Подкрашиваем разным цветом четные / нечетные строки
+            var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
-            if(element.objectState=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
+            if(element.statusColor.toLowerCase()=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
                 imgSize = 1;
             };
-            tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\">";
+            tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.contObject.id+"\">";
             tableHTML += "<td>";
             tableHTML += "<table>";
             tableHTML += "<tr>";
-            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
-            tableHTML += "<img height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.objectState+".png"+"\"/>";
+            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
+            tableHTML += "<img height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
             tableHTML+= "</td>";
-            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"\">"+element.eventCount+" / "+element.eventTypeCount+"</a> (<a title=\"Новые уведомления\" href=\"\">"+element.eventCountNew+"</a>)";
+            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\"\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
             tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
-            tableHTML += "<td class=\"col-md-3\">"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td>";
+            tableHTML += "<td class=\"col-md-3\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
             tableHTML += "</table>";
             tableHTML += "</td>";
-            tableHTML +="<tr id=\"trObjEvents"+element.id+"\">";
+            tableHTML +="<tr id=\"trObjEvents"+element.contObject.id+"\">";
             tableHTML += "</tr>";                       
         });
 //console.log(tableHTML); 
