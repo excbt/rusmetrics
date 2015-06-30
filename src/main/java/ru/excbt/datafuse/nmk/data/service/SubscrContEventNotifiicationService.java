@@ -31,12 +31,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.SubscrContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 
 @Service
@@ -62,6 +64,9 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
+
+	@Autowired
+	private ContEventTypeService contEventTypeService;
 
 	/**
 	 * 
@@ -463,7 +468,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public long selectContEventTypes(final Long subscriberId,
+	public long selectContEventTypeCount(final Long subscriberId,
 			final Long contObjectId, final DatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
@@ -480,10 +485,47 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<SubscrContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
+	public List<ContEventTypeMonitorStatus> selectContEventTypeMonitorStatus(
+			final Long subscriberId, final Long contObjectId,
+			final DatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		List<ContEventTypeMonitorStatus> result = new ArrayList<>();
+		for (Object[] o : typesList) {
+			checkState(o.length == 2);
+			Long eventTypeId = null;
+			if (o[0] instanceof Long) {
+				eventTypeId = (Long) o[0];
+			}
+			ContEventType contEventType = contEventTypeService
+					.findOne(eventTypeId);
+			checkNotNull(contEventType);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
 			final Long subscriberId, final DatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -492,7 +534,7 @@ public class SubscrContEventNotifiicationService {
 		List<ContObject> contObjects = subscriberService
 				.selectSubscriberContObjects(subscriberId);
 
-		List<SubscrContEventNotificationsStatus> result = new ArrayList<>();
+		List<ContEventNotificationsStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
 			logger.trace(
@@ -505,7 +547,7 @@ public class SubscrContEventNotifiicationService {
 			long newCnt = selectNotificationsCount(subscriberId, co.getId(),
 					datePeriod, Boolean.TRUE);
 
-			long typesCnt = selectContEventTypes(subscriberId, co.getId(),
+			long typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
 					datePeriod);
 
 			ContEventLevelColorKey monitorColorKey = contEventMonitorService
@@ -517,7 +559,7 @@ public class SubscrContEventNotifiicationService {
 						: ContEventLevelColorKey.GREEN;
 			}
 
-			SubscrContEventNotificationsStatus item = SubscrContEventNotificationsStatus
+			ContEventNotificationsStatus item = ContEventNotificationsStatus
 					.newInstance(co);
 
 			item.setTotalCount(allCnt);

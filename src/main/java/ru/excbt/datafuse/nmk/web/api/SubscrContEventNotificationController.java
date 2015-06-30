@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
-import ru.excbt.datafuse.nmk.data.model.support.SubscrContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -236,7 +236,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<SubscrContEventNotificationsStatus> resultList = subscrContEventNotifiicationService
+		List<ContEventNotificationsStatus> resultList = subscrContEventNotifiicationService
 				.selectSubscrEventNotificationsStatus(
 						currentSubscriberService.getSubscriberId(),
 						datePeriodParser.getDatePeriod());

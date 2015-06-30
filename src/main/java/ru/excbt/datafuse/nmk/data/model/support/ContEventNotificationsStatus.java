@@ -5,9 +5,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 
-public class SubscrContEventNotificationsStatus implements Serializable {
+public class ContEventNotificationsStatus implements Serializable, StatusColorObject {
 
 	/**
 	 * 
@@ -24,7 +25,7 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 
 	private long totalNewCount;
 
-	public SubscrContEventNotificationsStatus(ContObject contObject) {
+	public ContEventNotificationsStatus(ContObject contObject) {
 		this.contObject = contObject;
 	}
 
@@ -32,10 +33,10 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 		return contObject;
 	}
 
-	public static SubscrContEventNotificationsStatus newInstance(
+	public static ContEventNotificationsStatus newInstance(
 			ContObject contObject) {
 		checkNotNull(contObject);
-		SubscrContEventNotificationsStatus result = new SubscrContEventNotificationsStatus(
+		ContEventNotificationsStatus result = new ContEventNotificationsStatus(
 				contObject);
 		return result;
 	}
