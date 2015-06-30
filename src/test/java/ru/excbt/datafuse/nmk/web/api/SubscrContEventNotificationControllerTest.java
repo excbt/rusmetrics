@@ -112,7 +112,7 @@ public class SubscrContEventNotificationControllerTest extends
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("contObjectIds", ListToString(updateIds));
+				builder.param("notificationIds", ListToString(updateIds));
 			}
 		};
 

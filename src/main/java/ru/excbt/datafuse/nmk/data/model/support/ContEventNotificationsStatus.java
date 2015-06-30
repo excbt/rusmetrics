@@ -4,9 +4,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 
-public class SubscrContEventNotificationsStatus implements Serializable {
+public class ContEventNotificationsStatus implements Serializable, StatusColorObject {
 
 	/**
 	 * 
@@ -15,13 +17,15 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 
 	private final ContObject contObject;
 
+	private ContEventLevelColorKey contEventLevelColorKey;
+
 	private long totalCount;
 
 	private long totalTypesCount;
 
 	private long totalNewCount;
 
-	public SubscrContEventNotificationsStatus(ContObject contObject) {
+	public ContEventNotificationsStatus(ContObject contObject) {
 		this.contObject = contObject;
 	}
 
@@ -29,9 +33,11 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 		return contObject;
 	}
 
-	public static SubscrContEventNotificationsStatus newInstance(ContObject contObject) {
+	public static ContEventNotificationsStatus newInstance(
+			ContObject contObject) {
 		checkNotNull(contObject);
-		SubscrContEventNotificationsStatus result = new SubscrContEventNotificationsStatus(contObject);
+		ContEventNotificationsStatus result = new ContEventNotificationsStatus(
+				contObject);
 		return result;
 	}
 
@@ -57,6 +63,20 @@ public class SubscrContEventNotificationsStatus implements Serializable {
 
 	public void setTotalNewCount(long totalNewCount) {
 		this.totalNewCount = totalNewCount;
+	}
+
+	public ContEventLevelColorKey getContEventLevelColorKey() {
+		return contEventLevelColorKey;
+	}
+
+	public void setContEventLevelColorKey(
+			ContEventLevelColorKey contEventLevelColorKey) {
+		this.contEventLevelColorKey = contEventLevelColorKey;
+	}
+
+	public String getStatusColor() {
+		return contEventLevelColorKey == null ? null : contEventLevelColorKey
+				.getKeyname();
 	}
 
 }

@@ -30,12 +30,15 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.SubscrContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 
 @Service
@@ -58,6 +61,12 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private ContEventMonitorService contEventMonitorService;
+
+	@Autowired
+	private ContEventTypeService contEventTypeService;
 
 	/**
 	 * 
@@ -459,7 +468,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public long selectContEventTypes(final Long subscriberId,
+	public long selectContEventTypeCount(final Long subscriberId,
 			final Long contObjectId, final DatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
@@ -476,10 +485,47 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<SubscrContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
+	public List<ContEventTypeMonitorStatus> selectContEventTypeMonitorStatus(
+			final Long subscriberId, final Long contObjectId,
+			final DatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		List<ContEventTypeMonitorStatus> result = new ArrayList<>();
+		for (Object[] o : typesList) {
+			checkState(o.length == 2);
+			Long eventTypeId = null;
+			if (o[0] instanceof Long) {
+				eventTypeId = (Long) o[0];
+			}
+			ContEventType contEventType = contEventTypeService
+					.findOne(eventTypeId);
+			checkNotNull(contEventType);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
 			final Long subscriberId, final DatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -488,10 +534,8 @@ public class SubscrContEventNotifiicationService {
 		List<ContObject> contObjects = subscriberService
 				.selectSubscriberContObjects(subscriberId);
 
-		List<SubscrContEventNotificationsStatus> result = new ArrayList<>();
+		List<ContEventNotificationsStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
-			SubscrContEventNotificationsStatus item = SubscrContEventNotificationsStatus
-					.newInstance(co);
 
 			logger.trace(
 					"Select EventsStatusData for contObjectId:{}, subscriberId:{}",
@@ -503,12 +547,25 @@ public class SubscrContEventNotifiicationService {
 			long newCnt = selectNotificationsCount(subscriberId, co.getId(),
 					datePeriod, Boolean.TRUE);
 
-			long typesCnt = selectContEventTypes(subscriberId, co.getId(),
+			long typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
 					datePeriod);
+
+			ContEventLevelColorKey monitorColorKey = contEventMonitorService
+					.findContEventMonitorColor(co.getId());
+
+			ContEventLevelColorKey resultColorKey = monitorColorKey;
+			if (resultColorKey == null) {
+				resultColorKey = allCnt > 0 ? ContEventLevelColorKey.YELLOW
+						: ContEventLevelColorKey.GREEN;
+			}
+
+			ContEventNotificationsStatus item = ContEventNotificationsStatus
+					.newInstance(co);
 
 			item.setTotalCount(allCnt);
 			item.setTotalNewCount(newCnt);
 			item.setTotalTypesCount(typesCnt);
+			item.setContEventLevelColorKey(resultColorKey);
 
 			result.add(item);
 		}

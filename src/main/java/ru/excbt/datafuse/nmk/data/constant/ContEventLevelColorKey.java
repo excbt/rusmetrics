@@ -8,12 +8,28 @@ public enum ContEventLevelColorKey implements KeynameObject {
 	private final String keyname;
 
 	private ContEventLevelColorKey() {
-		this.keyname = this.name().toLowerCase();
+		this.keyname = this.name().toUpperCase();
 	}
 
 	@Override
 	public String getKeyname() {
 		return keyname;
+	}
+
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
+	public static ContEventLevelColorKey findByKey(String keyname) {
+		ContEventLevelColorKey result = null;
+		for (ContEventLevelColorKey v : ContEventLevelColorKey.values()) {
+			if (v.keyname.equals(keyname)) {
+				result = v;
+				break;
+			}
+		}
+		return result;
 	}
 
 }
