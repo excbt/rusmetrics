@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -75,7 +76,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contEventNotificationPaged(
+	public ResponseEntity<?> notificationsPaged(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
@@ -147,13 +148,12 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contEventNotificationOne(
-			@PathVariable("id") Long id) {
+	public ResponseEntity<?> notificationOne(@PathVariable("id") Long id) {
 
 		checkNotNull(id);
 
 		SubscrContEventNotification result = subscrContEventNotifiicationService
-				.findOne(id);
+				.findOneNotification(id);
 
 		if (result == null) {
 
@@ -173,14 +173,17 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contEventNotificationUpdateIsNewFalse(
-			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
+	public ResponseEntity<?> notificationsUpdateIsNewFalse(
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
+			@RequestParam(value = "isNew", required = false, defaultValue = "false") Boolean isNew) {
+
+		checkNotNull(isNew);
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateIsNew(Boolean.FALSE,
-						Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationIsNew(
+						isNew, Arrays.asList(notificationIds),
 						currentUserService.getCurrentUserId());
 			}
 		};
@@ -195,14 +198,17 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contEventNotificationUpdateIsNewTrue(
-			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
+	public ResponseEntity<?> notificationsUpdateIsNewTrue(
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
+			@RequestParam(value = "isNew", required = false, defaultValue = "true") Boolean isNew) {
+
+		checkNotNull(isNew);
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateIsNew(Boolean.TRUE,
-						Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationIsNew(
+						isNew, Arrays.asList(notificationIds),
 						currentUserService.getCurrentUserId());
 			}
 		};
@@ -218,9 +224,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> contObjectEventNotificationStatus(
-			@RequestParam(value = "fromDate", required = false) String fromDateStr,
-			@RequestParam(value = "toDate", required = false) String toDateStr) {
+	public ResponseEntity<?> notificationContObjects(
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
 				toDateStr);
@@ -236,12 +242,46 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<ContEventNotificationsStatus> resultList = subscrContEventNotifiicationService
-				.selectSubscrEventNotificationsStatus(
+		List<ContEventNotificationStatus> resultList = subscrContEventNotifiicationService
+				.selectContEventNotificationStatus(
 						currentSubscriberService.getSubscriberId(),
 						datePeriodParser.getDatePeriod());
 
 		return ResponseEntity.ok(resultList);
 	}
 
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationEventTypes(
+			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr) {
+
+		checkNotNull(contObjectId);
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& !datePeriodParser.getDatePeriod().isValidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<ContEventTypeMonitorStatus> resultList = subscrContEventNotifiicationService
+				.selectContEventTypeMonitorStatus(
+						currentSubscriberService.getSubscriberId(),
+						contObjectId, datePeriodParser.getDatePeriod());
+
+		return ResponseEntity.ok(resultList);
+	}
 }
