@@ -26,7 +26,7 @@ public class ContEventTypeMonitorStatus implements Serializable,
 		this.contEventType = contEventType;
 	}
 
-	public ContEventTypeMonitorStatus newInstance(ContEventType contEventType) {
+	public static ContEventTypeMonitorStatus newInstance(ContEventType contEventType) {
 		checkNotNull(contEventType);
 		ContEventTypeMonitorStatus result = new ContEventTypeMonitorStatus(
 				contEventType);

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -19,7 +20,9 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
@@ -94,24 +97,24 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 		logger.info("Current User Id:{}", currentUserService.getCurrentUserId());
 
-		subscrContEventNotifiicationService.updateIsNew(Boolean.FALSE,
+		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.FALSE,
 				updateIds, currentUserService.getCurrentUserId());
 
 		SubscrContEventNotification result = subscrContEventNotifiicationService
-				.findOne(updateIds.get(0));
+				.findOneNotification(updateIds.get(0));
 
 		logger.info("Update Result. id:{} isNew:{}", result.getId(),
 				result.getIsNew());
 
 		assertTrue(Boolean.FALSE.equals(result.getIsNew()));
 
-		subscrContEventNotifiicationService.updateIsNew(Boolean.TRUE,
+		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.TRUE,
 				updateIds, currentUserService.getCurrentUserId());
 
 		logger.info("Update Result. id:{} isNew:{}", result.getId(),
 				result.getIsNew());
 
-		result = subscrContEventNotifiicationService.findOne(updateIds.get(0));
+		result = subscrContEventNotifiicationService.findOneNotification(updateIds.get(0));
 
 		assertTrue(Boolean.TRUE.equals(result.getIsNew()));
 	}
@@ -124,11 +127,30 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<?> list = subscrContEventNotifiicationService
-				.selectSubscrEventNotificationsStatus(
+				.selectContEventNotificationStatus(
 						currentSubscriberService.getSubscriberId(), dp);
 
 		assertNotNull(list);
 		assertTrue(list.size() > 0);
 	}
 
+	@Test
+	public void selectContEventTypeMonitorStatusTest() throws Exception {
+
+		long contObjectId = 20118695;
+		DatePeriodParser dpp = DatePeriodParser.parse("2015-06-01",
+				"2015-06-30");
+
+		List<ContEventTypeMonitorStatus> checkList = subscrContEventNotifiicationService
+				.selectContEventTypeMonitorStatus(
+						currentSubscriberService.getSubscriberId(),
+						contObjectId, dpp.getDatePeriod());
+
+		assertNotNull(checkList);
+		assertFalse(checkList.isEmpty());
+
+		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i
+				.getContEventType().getKeyname(), i.getTotalCount()));
+
+	}
 }
