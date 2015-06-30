@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -174,7 +174,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 */
 	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdateIsNewFalse(
-			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
@@ -196,7 +196,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 */
 	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdateIsNewTrue(
-			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
