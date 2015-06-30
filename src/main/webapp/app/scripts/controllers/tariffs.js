@@ -1,6 +1,6 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory){
+app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, objectSvc){
     //set default values
     $scope.crudTableName = "../api/subscr/tariff";    
     $scope.columns = [
@@ -185,13 +185,15 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.getAvailableObjects = function(tariffId){  
         var table=$scope.crudTableName+"/"+tariffId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;                
+            $scope.availableObjects = data;
+            objectSvc.sortObjectsByFullName($scope.availableObjects);
         });        
     };
     $scope.getSelectedObjects = function(){
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            objectSvc.sortObjectsByFullName($scope.selectedObjects);
         });
     };
     
@@ -253,6 +255,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+        objectSvc.sortObjectsByFullName($scope.availableObjects);
     }
     
     $scope.addSelectedObjects = function(){
@@ -282,6 +285,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
             };
         }
         $scope.availableObjects = tmpArray;
+        objectSvc.sortObjectsByFullName($scope.selectedObjects);
         $scope.showAvailableObjects_flag=false;
     };    
     

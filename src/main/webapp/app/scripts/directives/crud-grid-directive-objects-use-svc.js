@@ -224,6 +224,7 @@ angular.module('portalNMC')
                                     var result = {};
                                     result = el.object;
                                     result.lastDataDate = el.lastDataDate;
+console.log(el.lastDataDate);                                    
                                     return result;
                                 });
                             }else{

@@ -56,7 +56,7 @@
         <div class="input-group nmc-input-data">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">объекты:</span>
             <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-digital-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
-            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="selectedObjects_list='Нет';selectedObjects=[];getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
+            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="clearObjectFilter();getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
     <div class="col-md-1 nmc-div-filter-type">
@@ -64,7 +64,7 @@
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
             <input ng-init="selectedNoticeTypes_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-data" ng-click="selectNoticeTypesClick()" ng-model="selectedNoticeTypes_list"  aria-describedby="rightAddon"> 
             
-            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="selectedNoticeTypes_list='Нет';selectedNoticeTypes=[];getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
+            <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="clearTypeFilter();getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
 <!--    <div class="col-md-1">-->
@@ -123,7 +123,24 @@
 <div >
     <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
-            <th class="nmc-td-for-buttons"><input type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/></th>
+            <th class="nmc-td-for-buttons">
+                    <span class="paddingTop3">
+                        <input type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/>
+                    </span>    
+                    <div class="btn-group">
+
+                      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="" ng-click="">Пометить выделенные как прочитанные</a></li>
+                        <li><a href="" ng-click="">Пометить выделенные как непрочитанные</a></li>
+                        <li role="separator" class="divider"></li> 
+                        <li><a href="" ng-click="confirmationText='пометить все как прочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как прочитанные</a></li>  
+                        <li><a href="" ng-click="confirmationText='пометить все как непрочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как непрочитанные</a></li>    
+                      </ul>
+                    </div>  
+            </th>
             <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}
             </th>       
@@ -153,6 +170,28 @@
 	<div class="modal-dialog nmc-modal-dialog">
 <!--                modal-content">-->
     <div class="modal-content nmc-modal-narrow-dialog">
+        <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
+          <div class="row">
+            <div class="col-md-9 noPadding paddingLeft10">
+                <div class="input-group marginBottom10 nmc-search-form">
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                    ng-click="selectObjects();"
+                    value="Ок" />
+            </div>
+          </div>
+<!--
+            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
+                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
+            </div>
+-->
+	
+		</div>
 
 <!--
 		<div class="modal-header well nmc-modal-header noMarginBottom noPadding">
@@ -161,14 +200,34 @@
 		</div>
 -->
 		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
-                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
-                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
-            </div>
+<!--            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+
+<!--
+            <div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-4 col-md-4 marginBottom10">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="selectObjects();"
+								value="Применить" />
+						</div>
+-->
+
+<!--
+						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#selectObjectsModal');">
+								Отменить
+							</button>
+						</div>
+-->
+<!--
+					</div>
+			</div>	
+-->
             <div class="nmc-object-list nmc-modal-panel-with-table">
                 <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
-                    <tr ng-repeat="object in objects | filter: objectfilter">
+                    <tr ng-repeat="object in objectsInWindow | filter: objectfilter">
                         <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form">{{object.fullName}}
                         </td>    
                     </tr>    
@@ -176,23 +235,32 @@
             </div>    
 		</div>
 		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
+            <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                ng-click="selectObjects();"
+                value="Ок" />
+<!--
 				<div class="container-fluid">
 
 					<div class="row">
 						<div class="col-xs-offset-4 col-md-4">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="selectObjects();"
-								value="Выбрать" />
+								value="Применить" />
 						</div>
+-->
 
+<!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#selectObjectsModal');">
 								Отменить
 							</button>
 						</div>
+-->
+<!--
 					</div>
 				</div>		
+-->
 		</div>
 
 	</div>
@@ -205,9 +273,41 @@
 
 	<div class="modal-dialog nmc-modal-dialog">
     <div class="modal-content">
+        <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
+          <div class="row">
+            <div class="col-md-10 noPadding paddingLeft10">
+                <div class="input-group marginBottom10 nmc-search-form">
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                    ng-click="selectNoticeTypes();"
+                    value="Ок" />
+            </div>
+          </div>      
+		</div>
 
 		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+<!--            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+            
+<!--
+            <div class="row">
+                <div class="col-xs-offset-4 col-md-4">
+                    <input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+                        ng-click="selectNoticeTypes();"
+                        value="Применить" />
+                </div>
+
+                <div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
+                    <button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+                        ng-click="exit('#selectNoticeTypesModal');">
+                        Отменить
+                    </button>
+                </div>
+            </div>
+-->
 <!--
             <div class="row marginTopBottom5">
                 <div class="col-xs-3"></div>
@@ -217,35 +317,55 @@
                 <div class="col-xs-3"></div>
             </div>    
 -->
-            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
-                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
-                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
-            </div>
+
+<!--
+            <div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-4 col-md-4 marginBottom10">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="selectNoticeTypes();"
+								value="Применить" />
+						</div>
+-->
+
+<!--
+						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#selectNoticeTypesModal');">
+								Отменить
+							</button>
+						</div>
+-->
+<!--					</div>-->
+<!--				</div>		-->
             <div class="nmc-object-list nmc-modal-panel-with-table">
                 <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                     <tr>
-                        <td><input type="checkbox" ng-model="criticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllCritical()">Критические
+                        <td><input type="checkbox" ng-model="states.tempCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllCritical()">Критические
                         </td>
                     </tr>
-                    <tr ng-repeat="noticeType in noticeTypes |filter: noticetypefilter | filter: noticeFilterCritical">
+                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterCritical">
                         <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
                         </td>    
                     </tr>
                     
                     <tr>
-                        <td><input type="checkbox" ng-model="noCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllNoCritical()">Некритические
+                        <td><input type="checkbox" ng-model="states.tempNoCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllNoCritical()">Некритические
                         </td>
                     </tr>
-                    <tr ng-repeat="noticeType in noticeTypes |filter: noticetypefilter | filter: noticeFilterNoCritical">
+                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterNoCritical">
                         <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
                         </td>    
                     </tr>
                     
+<!--
                     <tr>
-                        <td><input type="checkbox" ng-model="undefinedCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllUndefinedCritical()">Остальные
+                        <td><input type="checkbox" ng-model="states.tempUndefinedCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllUndefinedCritical()">Остальные
                         </td>
                     </tr>
-                    <tr ng-repeat="noticeType in noticeTypes |filter: noticetypefilter | filter: noticeFilterUndefinedCritical">
+-->
+                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterUndefinedCritical">
                         <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
                         </td>    
                     </tr>
@@ -254,23 +374,33 @@
             </div>    
 		</div>
 		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
-				<div class="container-fluid">
+            <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                ng-click="selectNoticeTypes();"
+                value="Ок" />
+<!--				<div class="container">-->
 
-					<div class="row">
+<!--					<div class="row">-->
+<!--                        <div class="col-xs-offset-4 col-md-4">-->
+
+<!--						</div>-->
+<!--
 						<div class="col-xs-offset-4 col-md-4">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="selectNoticeTypes();"
-								value="Выбрать" />
+								value="Применить" />
 						</div>
+-->
 
+<!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#selectNoticeTypesModal');">
 								Отменить
 							</button>
 						</div>
-					</div>
-				</div>		
+-->
+<!--					</div>-->
+<!--				</div>		-->
 		</div>
 
 	</div>
@@ -382,5 +512,55 @@
 				</div>		
 		</div>
 
+	</div>
+</div>
+
+<!-- window: confirm action-->
+<div id="confirmActionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="confirmActionLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="confirmActionLabel" class="nmc-h3">
+				Подтверждение 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
+					</label> 
+					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="confirmAction(currentObject);"
+								value="Ок" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
 	</div>
 </div>

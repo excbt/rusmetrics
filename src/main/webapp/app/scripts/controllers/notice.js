@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory, objectSvc){
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -19,9 +19,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     
-    $scope.criticalTypes_flag = false;
-    $scope.noCriticalTypes_flag = false;
-    $scope.undefinedCriticalTypes_flag = false;
+    
+    $scope.states = {};//object, which keep the states of the notice objects
+    $scope.states.applyObjects_flag = false; //flag, which keep state of object filter: true - the objects had been selected and to need them at the filter.
+    $scope.states.applyTypes_flag = false; //flag, which keep state of types filter: true - the types had been selected and to need them at the filter.
+    $scope.states.criticalTypes_flag = false;
+    $scope.states.noCriticalTypes_flag = false;
+    $scope.states.undefinedCriticalTypes_flag = false;
+    //This flags keep the states in the selection types window
+    $scope.states.tempCriticalTypes_flag = false;
+    $scope.states.tempNoCriticalTypes_flag = false;
+    $scope.states.tempUndefinedCriticalTypes_flag = false;
     
     $scope.allSelected = false;
     
@@ -177,15 +185,43 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         return (new Date(date)).toLocaleString();
     };
 
+    // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
+        $scope.objectsInWindow = angular.copy($scope.objects);
+        //Если флаг состояния объектов = "ложь" (это означает, что либо объекты еще не выбирались либо выбор объектов не был подтвержден - не была нажата кнопка "Применить"), то сбросить флаги у выбранных объектов
+
+//        if (!$scope.states.applyObjects_flag){
+//            $scope.objects.forEach(function(el){
+//                el.selected = false;
+//            });
+//        }else{
+            //иначе
+//            $scope.states.applyObjects_flag = false;// сбрасываем флаг, чтобы отследить нажатие кнопки "Применить" 
+//        };
         $('#selectObjectsModal').modal('show');
     };
     
     $scope.selectNoticeTypesClick = function(){
+        //create the copy of category states
+        $scope.states.tempCriticalTypes_flag = angular.copy($scope.states.criticalTypes_flag);
+        $scope.states.tempNoCriticalTypes_flag = angular.copy($scope.states.noCriticalTypes_flag);
+        $scope.states.tempUndefinedCriticalTypes_flag = angular.copy($scope.states.undefinedCriticalTypes_flag);
+        //Create the copy of types
+        $scope.typesInWindow = angular.copy($scope.noticeTypes);
+        //аналогично функции $scope.selectObjectsClick
+//        if (!$scope.states.applyTypes_flag){
+//            $scope.noticeTypes.forEach(function(el){
+//                el.selected = false;
+//            });
+//        }else{
+            //иначе
+//            $scope.states.applyTypes_flag = false;// сбрасываем флаг, чтобы отследить нажатие кнопки "Применить" 
+//        };
         $('#selectNoticeTypesModal').modal('show');
     };
       
     $scope.selectObjects = function(){
+        $scope.objects = $scope.objectsInWindow;
         $scope.selectedObjects_list = "";
         $scope.selectedObjects = [];
         $('#selectObjectsModal').modal('hide');
@@ -195,12 +231,25 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
               $scope.selectedObjects.push(el.id);
           }
         });
-        $scope.selectedObjects_list = $scope.selectedObjects.length;
+        if ($scope.selectedObjects.length == 0){
+            $scope.selectedObjects_list = "Нет";
+        }else{
+            $scope.selectedObjects_list = $scope.selectedObjects.length;
+        };
+//        $scope.states.applyObjects_flag = true;
+        //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
         $scope.getResultsPage(1);
 
     };
     
     $scope.selectNoticeTypes = function(){
+        
+        $scope.noticeTypes = $scope.typesInWindow;
+
+        $scope.states.criticalTypes_flag = $scope.states.tempCriticalTypes_flag;
+        $scope.states.noCriticalTypes_flag = $scope.states.tempNoCriticalTypes_flag;
+        $scope.states.undefinedCriticalTypes_flag = $scope.states.tempUndefinedCriticalTypes_flag;
+        
         $scope.selectedNoticeTypes_list = "";
         $scope.selectedNoticeTypes = [];
         $('#selectNoticeTypesModal').modal('hide');
@@ -211,6 +260,12 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
           }
         });
         $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
+        if ($scope.selectedNoticeTypes.length == 0){
+            $scope.selectedNoticeTypes_list = "Нет";
+        }else{
+            $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
+        };
+        $scope.states.applyTypes_flag = true;//Типы были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
         $scope.getResultsPage(1);
 
     };
@@ -226,12 +281,24 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         $('#showNoticeModal').modal();
     };
     
-        
+        // sort the object array by the fullname
+//    function sortObjectsByFullName(array){
+//        array.sort(function(a, b){
+//            if (a.fullName>b.fullName){
+//                return 1;
+//            };
+//            if (a.fullName<b.fullName){
+//                return -1;
+//            };
+//            return 0;
+//        }); 
+//    };    
     
              //get Objects
     $scope.getObjects = function(){
         crudGridDataFactory($scope.objectsUrl).query(function(data){
             $scope.objects = data;
+            objectSvc.sortObjectsByFullName($scope.objects);
 //console.log("getObjects");            
               $scope.getResultsPage(1);
         });
@@ -295,14 +362,14 @@ console.log("watch");
     
     //selection notice types
     $scope.selectAllCritical = function(){       
-        if ($scope.criticalTypes_flag){               
-            $scope.noticeTypes.forEach(function(notice){        
+        if ($scope.states.tempCriticalTypes_flag){               
+            $scope.typesInWindow.forEach(function(notice){        
                 if (notice.isCriticalEvent===true){
                     notice.selected = true;
                 };
             });
         }else{                               
-            $scope.noticeTypes.forEach(function(notice){        
+            $scope.typesInWindow.forEach(function(notice){        
                 if (notice.isCriticalEvent===true){
                     notice.selected = false;
                 };
@@ -311,15 +378,15 @@ console.log("watch");
     };
     
     $scope.selectAllNoCritical = function(){       
-        if ($scope.noCriticalTypes_flag){               
-            $scope.noticeTypes.forEach(function(notice){        
-                if (notice.isCriticalEvent===false){
+        if ($scope.states.tempNoCriticalTypes_flag){               
+            $scope.typesInWindow.forEach(function(notice){        
+                if ((notice.isCriticalEvent===false)||(!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
                     notice.selected = true;
                 };
             });
         }else{                               
-            $scope.noticeTypes.forEach(function(notice){        
-                if (notice.isCriticalEvent===false){
+            $scope.typesInWindow.forEach(function(notice){        
+                if ((notice.isCriticalEvent===false)||(!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
                     notice.selected = false;
                 };
             });
@@ -327,14 +394,14 @@ console.log("watch");
     };
     
     $scope.selectAllUndefinedCritical = function(){       
-        if ($scope.undefinedCriticalTypes_flag){               
-            $scope.noticeTypes.forEach(function(notice){        
+        if ($scope.states.tempUndefinedCriticalTypes_flag){               
+            $scope.typesInWindow.forEach(function(notice){        
                 if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
                     notice.selected = true;
                 };
             });
         }else{                               
-            $scope.noticeTypes.forEach(function(notice){        
+            $scope.typesInWindow.forEach(function(notice){        
                 if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
                     notice.selected = false;
                 };
@@ -344,13 +411,34 @@ console.log("watch");
     
     //Clear all filters
     $scope.clearAllFilters = function(){
-        $scope.selectedNoticeTypes_list='Нет';
-        $scope.selectedNoticeTypes=[];
-        $scope.selectedObjects_list='Нет';
-        $scope.selectedObjects=[];
+        $scope.clearObjectFilter();
+        $scope.clearTypeFilter();
         $scope.isNew = null;
         $scope.getResultsPage(1);
     };
+    
+    $scope.clearObjectFilter = function(){
+        $scope.objects.forEach(function(el){
+            el.selected = false;
+        });
+        $scope.selectedObjects_list='Нет';
+        $scope.selectedObjects=[];
+//        $scope.getResultsPage(1);
+    };
+    
+    $scope.clearTypeFilter = function(){
+        $scope.states.criticalTypes_flag = false;
+        $scope.states.noCriticalTypes_flag = false;
+        $scope.states.undefinedCriticalTypes_flag = false;
+        $scope.noticeTypes.forEach(function(el){
+            el.selected = false;
+        });
+        $scope.selectedNoticeTypes_list='Нет';
+        $scope.selectedNoticeTypes=[];
+
+//        $scope.getResultsPage(1);
+    };
+    
     
     //chart
     $scope.runChart = function(){

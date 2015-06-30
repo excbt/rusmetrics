@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory',function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory','objectSvc',function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc){
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -465,7 +465,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;                     
+            $scope.availableObjects = data;
+            objectSvc.sortObjectsByFullName($scope.availableObjects); 
         });        
     };
 //    $scope.getAvailableObjects();
@@ -473,8 +474,21 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            objectSvc.sortObjectsByFullName($scope.selectedObjects);
         });
     };
+    // sort the object array by the fullname
+//    function sortObjectsByFullName(array){
+//        array.sort(function(a, b){
+//            if (a.fullName>b.fullName){
+//                return 1;
+//            };
+//            if (a.fullName<b.fullName){
+//                return -1;
+//            };
+//            return 0;
+//        }); 
+//    };
     
     var objectPerform = function(addObject_flag, currentObjectId){
         var el = {};
@@ -527,6 +541,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+        objectSvc.sortObjectsByFullName($scope.availableObjects);
     }
     
     $scope.addSelectedObjects = function(){
@@ -557,6 +572,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         }
         $scope.availableObjects = tmpArray;
         $scope.showAvailableObjects_flag=false;
+        objectSvc.sortObjectsByFullName($scope.selectedObjects);
     };
     
     $scope.removeObject = function(object){

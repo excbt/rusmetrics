@@ -164,6 +164,24 @@ angular.module('portalNMC')
     $scope.pagination = {
         current: 1
     };         
+        
+    
+	
+
+function timeConverter(timestamp){
+  var a = new Date(timestamp);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
+
+    
 
       //Получаем показания
     $scope.columns = [];
@@ -196,18 +214,26 @@ angular.module('portalNMC')
                     iCol=iCol+1;                          
                 };
                 $scope.tableDef.columns = $scope.columns;
-
                 var tmp = data.objects.map(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-//                          var datad = new Date(el.dataDate);
-                          el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
-  
+                          var datad = new Date(el.dataDate);
+//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
+//console.log(el.dataDate);                   
+//console.log("el.Date1 = "+datad.toLocaleDateString());                            
+//console.log("el.Time1 = "+datad.toLocaleTimeString());                                                     
+                            el.dataDate = datad.toLocaleDateString();
+                            if ($scope.timeDetailType=="1h"){
+                                el.dataDate +=" "+datad.toLocaleTimeString();
+                            };
+//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
+//                            el.dateDate = timeConverter(el.dataDate);
+//  console.log("el.dateDate = "+el.dateDate);
                             continue;
                         }
                         if (el[$scope.columns[i].fieldName]!=null){
-                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(2);
+                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
                         
                     };                    
@@ -330,22 +356,22 @@ angular.module('portalNMC')
         $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
         
         var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
-console.log("diff = "+$scope.summary.diffs[columnName]);           
-console.log("total = "+$scope.summary.totals[columnName]);           
-console.log("precision = "+precision);        
+//console.log("diff = "+$scope.summary.diffs[columnName]);           
+//console.log("total = "+$scope.summary.totals[columnName]);           
+//console.log("precision = "+precision);        
         
         var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
-console.log("difference = "+difference);         
+//console.log("difference = "+difference);         
 //        var difference = Math.abs(total - diff);
         if ((difference >precision)&&(difference <= 1))
         {
-console.log(ALERT_IMG_PATH);         
+//console.log(ALERT_IMG_PATH);         
             return ALERT_IMG_PATH;
 
         };
         if ((difference >1))
         {  
-console.log(CRIT_IMG_PATH);            
+//console.log(CRIT_IMG_PATH);            
             return CRIT_IMG_PATH;
         };
 
