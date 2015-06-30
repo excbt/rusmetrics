@@ -2,8 +2,11 @@ package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
@@ -14,6 +17,10 @@ public class ContEventLevelColor extends AbstractKeynameEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = -406404451942425879L;
+
+	@Column(name = "keyname", insertable = false, updatable = false)
+	@Enumerated(EnumType.STRING)
+	private ContEventLevelColorKey colorKey;
 
 	@Column(name = "caption")
 	private String caption;
@@ -101,6 +108,14 @@ public class ContEventLevelColor extends AbstractKeynameEntity {
 
 	public void setLevelTo(Integer levelTo) {
 		this.levelTo = levelTo;
+	}
+
+	public ContEventLevelColorKey getColorKey() {
+		return colorKey;
+	}
+
+	public void setColorKey(ContEventLevelColorKey colorKey) {
+		this.colorKey = colorKey;
 	}
 
 }

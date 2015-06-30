@@ -36,10 +36,12 @@ import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
 @Service
 @Transactional
@@ -67,6 +69,9 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private ContEventTypeService contEventTypeService;
+
+	@Autowired
+	private ContEventLevelColorRepository contEventLevelColorRepository;
 
 	/**
 	 * 
@@ -372,7 +377,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public SubscrContEventNotification findOne(Long id) {
+	public SubscrContEventNotification findOneNotification(Long id) {
 		return subscrContEventNotificationRepository.findOne(id);
 	}
 
@@ -381,7 +386,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
-	public SubscrContEventNotification updateOneIsNew(Boolean isNew,
+	public SubscrContEventNotification updateNotificationOneIsNew(Boolean isNew,
 			Long subscrContEventNotificationId, Long revisionSubscrUserId) {
 
 		checkNotNull(isNew);
@@ -405,13 +410,13 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @param notificationIds
 	 */
-	public void updateIsNew(Boolean isNew, List<Long> notificationIds,
+	public void updateNotificationIsNew(Boolean isNew, List<Long> notificationIds,
 			Long revisionSubscrUserId) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
 		checkNotNull(revisionSubscrUserId);
 		for (Long id : notificationIds) {
-			updateOneIsNew(isNew, id, revisionSubscrUserId);
+			updateNotificationOneIsNew(isNew, id, revisionSubscrUserId);
 		}
 	}
 
@@ -504,7 +509,7 @@ public class SubscrContEventNotifiicationService {
 				.selectNotificationEventTypeCount(subscriberId, contObjectId,
 						datePeriod.getDateFrom(), datePeriod.getDateTo());
 
-		List<ContEventTypeMonitorStatus> result = new ArrayList<>();
+		List<ContEventTypeMonitorStatus> resultList = new ArrayList<>();
 		for (Object[] o : typesList) {
 			checkState(o.length == 2);
 			Long eventTypeId = null;
@@ -514,10 +519,28 @@ public class SubscrContEventNotifiicationService {
 			ContEventType contEventType = contEventTypeService
 					.findOne(eventTypeId);
 			checkNotNull(contEventType);
+			Long eventTypeCnt = null;
+			if (o[1] instanceof Long) {
+				eventTypeCnt = (Long) o[1];
+			}
+			checkNotNull(eventTypeCnt);
+
+			ContEventTypeMonitorStatus item = ContEventTypeMonitorStatus
+					.newInstance(contEventType);
+			item.setTotalCount(eventTypeCnt.longValue());
+			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
+					.selectByContEventLevel(contEventType.getContEventLevel());
+
+			checkState(levelColors.size() == 1,
+					"Can't calculate eventLevelColor for contEventType with keyname:"
+							+ contEventType.getKeyname());
+
+			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
+			resultList.add(item);
 
 		}
 
-		return result;
+		return resultList;
 	}
 
 	/**
@@ -525,7 +548,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
+	public List<ContEventNotificationStatus> selectContEventNotificationStatus(
 			final Long subscriberId, final DatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -534,7 +557,7 @@ public class SubscrContEventNotifiicationService {
 		List<ContObject> contObjects = subscriberService
 				.selectSubscriberContObjects(subscriberId);
 
-		List<ContEventNotificationsStatus> result = new ArrayList<>();
+		List<ContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
 			logger.trace(
@@ -559,12 +582,12 @@ public class SubscrContEventNotifiicationService {
 						: ContEventLevelColorKey.GREEN;
 			}
 
-			ContEventNotificationsStatus item = ContEventNotificationsStatus
+			ContEventNotificationStatus item = ContEventNotificationStatus
 					.newInstance(co);
 
-			item.setTotalCount(allCnt);
-			item.setTotalNewCount(newCnt);
-			item.setTotalTypesCount(typesCnt);
+			item.setEventsCount(allCnt);
+			item.setNewEventsCount(newCnt);
+			item.setEventsTypesCount(typesCnt);
 			item.setContEventLevelColorKey(resultColorKey);
 
 			result.add(item);
