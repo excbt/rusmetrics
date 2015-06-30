@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory, objectSvc){
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -282,23 +282,23 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     };
     
         // sort the object array by the fullname
-    function sortObjectsByFullName(array){
-        array.sort(function(a, b){
-            if (a.fullName>b.fullName){
-                return 1;
-            };
-            if (a.fullName<b.fullName){
-                return -1;
-            };
-            return 0;
-        }); 
-    };    
+//    function sortObjectsByFullName(array){
+//        array.sort(function(a, b){
+//            if (a.fullName>b.fullName){
+//                return 1;
+//            };
+//            if (a.fullName<b.fullName){
+//                return -1;
+//            };
+//            return 0;
+//        }); 
+//    };    
     
              //get Objects
     $scope.getObjects = function(){
         crudGridDataFactory($scope.objectsUrl).query(function(data){
             $scope.objects = data;
-            sortObjectsByFullName($scope.objects);
+            objectSvc.sortObjectsByFullName($scope.objects);
 //console.log("getObjects");            
               $scope.getResultsPage(1);
         });

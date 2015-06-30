@@ -46,6 +46,19 @@ angular.module('portalNMC')
 //                if (cb) cb();
 //            });
         };
+                 
+            // sort the object array by the fullname
+        function sortObjectsByFullName(array){
+            array.sort(function(a, b){
+                if (a.fullName>b.fullName){
+                    return 1;
+                };
+                if (a.fullName<b.fullName){
+                    return -1;
+                };
+                return 0;
+            }); 
+        };
 
        var promise = getData();
        $interval(function(){
@@ -61,7 +74,8 @@ angular.module('portalNMC')
             loading,
             promise,
             getZpointsDataByObject,
-            getRefRangeByObjectAndZpoint
+            getRefRangeByObjectAndZpoint,
+            sortObjectsByFullName
         }
     
 }]);

@@ -1,6 +1,6 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory){
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc){
                      
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -254,7 +254,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;                     
+            $scope.availableObjects = data; 
+            objectSvc.sortObjectsByFullName($scope.availableObjects);
         });        
     };
 //    $scope.getAvailableObjects();
@@ -262,12 +263,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            objectSvc.sortObjectsByFullName($scope.selectedObjects);
         });
     };
     
         $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+        objectSvc.sortObjectsByFullName($scope.availableObjects);
     }
     
     $scope.addSelectedObjects = function(){
@@ -297,6 +300,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             };
         }
         $scope.availableObjects = tmpArray;
+        objectSvc.sortObjectsByFullName($scope.selectedObjects);
         $scope.showAvailableObjects_flag=false;
     };
     

@@ -134,10 +134,10 @@
                       </button>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="">Пометить выделенные как прочитанные</a></li>
-                        <li><a href="" ng-click="">Пометить выделенные как не прочитанные</a></li>
+                        <li><a href="" ng-click="">Пометить выделенные как непрочитанные</a></li>
                         <li role="separator" class="divider"></li> 
                         <li><a href="" ng-click="confirmationText='пометить все как прочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как прочитанные</a></li>  
-                        <li><a href="" ng-click="confirmationText='пометить все как не прочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как не прочитанные</a></li>    
+                        <li><a href="" ng-click="confirmationText='пометить все как непрочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как непрочитанные</a></li>    
                       </ul>
                     </div>  
             </th>
@@ -171,10 +171,25 @@
 <!--                modal-content">-->
     <div class="modal-content nmc-modal-narrow-dialog">
         <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
+          <div class="row">
+            <div class="col-md-9 noPadding paddingLeft10">
+                <div class="input-group marginBottom10 nmc-search-form">
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                    ng-click="selectObjects();"
+                    value="Ок" />
+            </div>
+          </div>
+<!--
             <div class="input-group col-md-12 marginBottom10 nmc-search-form">
                 <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
                  <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
             </div>
+-->
 	
 		</div>
 
@@ -187,6 +202,7 @@
 		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
 <!--            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
 
+<!--
             <div class="container-fluid">
 
 					<div class="row">
@@ -195,6 +211,7 @@
 								ng-click="selectObjects();"
 								value="Применить" />
 						</div>
+-->
 
 <!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
@@ -204,8 +221,10 @@
 							</button>
 						</div>
 -->
+<!--
 					</div>
 			</div>	
+-->
             <div class="nmc-object-list nmc-modal-panel-with-table">
                 <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                     <tr ng-repeat="object in objectsInWindow | filter: objectfilter">
@@ -216,6 +235,10 @@
             </div>    
 		</div>
 		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
+            <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                ng-click="selectObjects();"
+                value="Ок" />
+<!--
 				<div class="container-fluid">
 
 					<div class="row">
@@ -224,6 +247,7 @@
 								ng-click="selectObjects();"
 								value="Применить" />
 						</div>
+-->
 
 <!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
@@ -233,8 +257,10 @@
 							</button>
 						</div>
 -->
+<!--
 					</div>
 				</div>		
+-->
 		</div>
 
 	</div>
@@ -248,10 +274,19 @@
 	<div class="modal-dialog nmc-modal-dialog">
     <div class="modal-content">
         <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
-            <div class="input-group col-md-12 marginBottom10 nmc-search-form">
-                <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
-                 <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
+          <div class="row">
+            <div class="col-md-10 noPadding paddingLeft10">
+                <div class="input-group marginBottom10 nmc-search-form">
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
+                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
+                </div>
             </div>
+            <div class="col-md-2">
+                <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                    ng-click="selectNoticeTypes();"
+                    value="Ок" />
+            </div>
+          </div>      
 		</div>
 
 		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
@@ -283,6 +318,7 @@
             </div>    
 -->
 
+<!--
             <div class="container-fluid">
 
 					<div class="row">
@@ -291,6 +327,7 @@
 								ng-click="selectNoticeTypes();"
 								value="Применить" />
 						</div>
+-->
 
 <!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
@@ -300,8 +337,8 @@
 							</button>
 						</div>
 -->
-					</div>
-				</div>		
+<!--					</div>-->
+<!--				</div>		-->
             <div class="nmc-object-list nmc-modal-panel-with-table">
                 <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                     <tr>
@@ -337,14 +374,22 @@
             </div>    
 		</div>
 		<div class="modal-footer well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
-				<div class="container-fluid">
+            <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                ng-click="selectNoticeTypes();"
+                value="Ок" />
+<!--				<div class="container">-->
 
-					<div class="row">
+<!--					<div class="row">-->
+<!--                        <div class="col-xs-offset-4 col-md-4">-->
+
+<!--						</div>-->
+<!--
 						<div class="col-xs-offset-4 col-md-4">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="selectNoticeTypes();"
 								value="Применить" />
 						</div>
+-->
 
 <!--
 						<div class="pull-right col-xs-offset-2 col-md-4 noPadding noMargin">
@@ -354,8 +399,8 @@
 							</button>
 						</div>
 -->
-					</div>
-				</div>		
+<!--					</div>-->
+<!--				</div>		-->
 		</div>
 
 	</div>
