@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
 
 import org.joda.time.DateTime;
@@ -53,6 +55,26 @@ public class DatePeriod {
 		return new DatePeriod();
 	}
 
+	private static DateTime endOfDay(DateTime dateTime) {
+		checkNotNull(dateTime);
+		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59)
+				.withSecondOfMinute(59).withMillisOfSecond(999);
+		return endOfDay;
+	}
+
+	private static DateTime startOfDay(DateTime dateTime) {
+		checkNotNull(dateTime);
+		DateTime endOfDay = dateTime.withMillisOfDay(0);
+		return endOfDay;
+	}
+
+	public static DatePeriod lastWeek() {
+		DatePeriod result = builder()
+				.dateFrom(startOfDay(DateTime.now().minusWeeks(1)))
+				.dateTo(endOfDay(DateTime.now())).build();
+		return result;
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -81,7 +103,8 @@ public class DatePeriod {
 		if (dateTimeFrom == null || dateTimeTo == null) {
 			return false;
 		}
-		return dateTimeFrom.isBefore(dateTimeTo) || dateTimeFrom.isEqual(dateTimeTo);
+		return dateTimeFrom.isBefore(dateTimeTo)
+				|| dateTimeFrom.isEqual(dateTimeTo);
 	}
 
 	public boolean isValid() {
@@ -90,6 +113,5 @@ public class DatePeriod {
 		}
 		return dateTimeFrom.isBefore(dateTimeTo);
 	}
-	
-	
+
 }

@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.model.support.SubscrContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -208,6 +209,39 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
 
+	}
+
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> contObjectEventNotificationPaged(
+			@RequestParam(value = "fromDate", required = false) String fromDateStr,
+			@RequestParam(value = "toDate", required = false) String toDateStr) {
+
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& !datePeriodParser.getDatePeriod().isValidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<SubscrContEventNotificationsStatus> resultList = subscrContEventNotifiicationService
+				.selectSubscrEventNotificationsStatus(
+						currentSubscriberService.getSubscriberId(),
+						datePeriodParser.getDatePeriod());
+
+		return ResponseEntity.ok(resultList);
 	}
 
 }

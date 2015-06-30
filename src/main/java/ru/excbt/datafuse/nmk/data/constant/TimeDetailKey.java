@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.constant;
 
-public enum TimeDetailKey {
+import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
+
+public enum TimeDetailKey implements KeynameObject {
 
 	TYPE_24H("24h"), TYPE_1H("1h"), TYPE_ABS("abs");
 

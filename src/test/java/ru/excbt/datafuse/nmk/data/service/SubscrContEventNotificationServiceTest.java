@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
@@ -113,6 +114,21 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		result = subscrContEventNotifiicationService.findOne(updateIds.get(0));
 
 		assertTrue(Boolean.TRUE.equals(result.getIsNew()));
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testSubscrContEventNotifications() {
+		DatePeriod dp = DatePeriod.lastWeek();
+
+		List<?> list = subscrContEventNotifiicationService
+				.selectSubscrEventNotificationsStatus(
+						currentSubscriberService.getSubscriberId(), dp);
+
+		assertNotNull(list);
+		assertTrue(list.size() > 0);
 	}
 
 }
