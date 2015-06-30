@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -173,7 +174,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 */
 	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdateIsNewFalse(
-			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
@@ -195,7 +196,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 */
 	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationUpdateIsNewTrue(
-			@RequestParam(value = "contObjectIds", required = true) Long[] notificationIds) {
+			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds) {
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
@@ -208,6 +209,39 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
 
+	}
+
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> contObjectEventNotificationStatus(
+			@RequestParam(value = "fromDate", required = false) String fromDateStr,
+			@RequestParam(value = "toDate", required = false) String toDateStr) {
+
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& !datePeriodParser.getDatePeriod().isValidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<ContEventNotificationsStatus> resultList = subscrContEventNotifiicationService
+				.selectSubscrEventNotificationsStatus(
+						currentSubscriberService.getSubscriberId(),
+						datePeriodParser.getDatePeriod());
+
+		return ResponseEntity.ok(resultList);
 	}
 
 }

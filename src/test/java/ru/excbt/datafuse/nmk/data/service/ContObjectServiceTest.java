@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ContObjectServiceTest extends JpaSupportTest {
 
@@ -20,12 +21,17 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
 	@Test
 	public void testIzhevskCont() {
 		List<ContObject> res = contObjectService.findByFullName("%Ижевск%");
-		//assertTrue(res.size() > 0);
+		// assertTrue(res.size() > 0);
 		assertNotNull(res);
 		logger.info("Found {} ContObjects from Izhevsk", res.size());
 	}
+
+
 
 }

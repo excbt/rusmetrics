@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -15,6 +16,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,15 +30,23 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationsStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 
 @Service
 @Transactional
 public class SubscrContEventNotifiicationService {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(SubscrContEventNotifiicationService.class);
 
 	private final static int DEFAULT_PAGE_SIZE = 100;
 	private final static Pageable DEFAULT_NOTIFICATION_PAGE_REQUEST = new PageRequest(
@@ -47,6 +58,15 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
+
+	@Autowired
+	private SubscriberService subscriberService;
+
+	@Autowired
+	private ContEventMonitorService contEventMonitorService;
+
+	@Autowired
+	private ContEventTypeService contEventTypeService;
 
 	/**
 	 * 
@@ -82,10 +102,12 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
-			long subscriberId, final Date fromDate, final Date toDate,
+			Long subscriberId, final Date fromDate, final Date toDate,
 			final List<Long> contObjectList,
 			final List<Long> contEventTypeList, final Boolean isNew,
 			final Pageable pageable) {
+
+		checkNotNull(subscriberId);
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
@@ -111,10 +133,12 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
-			long subscriberId, final DatePeriod datePeriod,
+			Long subscriberId, final DatePeriod datePeriod,
 			final List<Long> contObjectList,
 			final List<Long> contEventTypeList, final Boolean isNew,
 			final Pageable pageable) {
+
+		checkNotNull(subscriberId);
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
@@ -357,8 +381,8 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
-	public SubscrContEventNotification updateOneIsNew(Boolean isNew, Long subscrContEventNotificationId,
-			Long revisionSubscrUserId) {
+	public SubscrContEventNotification updateOneIsNew(Boolean isNew,
+			Long subscrContEventNotificationId, Long revisionSubscrUserId) {
 
 		checkNotNull(isNew);
 
@@ -366,7 +390,8 @@ public class SubscrContEventNotifiicationService {
 				.findOne(subscrContEventNotificationId);
 		if (updateCandidate == null) {
 			throw new PersistenceException(String.format(
-					"SubscrContEventNotification with id=%d is not found", subscrContEventNotificationId));
+					"SubscrContEventNotification with id=%d is not found",
+					subscrContEventNotificationId));
 		}
 
 		updateCandidate.setIsNew(isNew);
@@ -389,4 +414,163 @@ public class SubscrContEventNotifiicationService {
 			updateOneIsNew(isNew, id, revisionSubscrUserId);
 		}
 	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public long selectNotificationsCount(final Long subscriberId,
+			final Long contObjectId, final DatePeriod datePeriod) {
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		Long result = subscrContEventNotificationRepository
+				.selectNotificatoinsCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		return result == null ? 0 : result.longValue();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public long selectNotificationsCount(final Long subscriberId,
+			final Long contObjectId, final DatePeriod datePeriod, Boolean isNew) {
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkNotNull(isNew);
+		checkState(datePeriod.isValidEq());
+
+		Long result = subscrContEventNotificationRepository
+				.selectNotificatoinsCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
+
+		return result == null ? 0 : result.longValue();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public long selectContEventTypeCount(final Long subscriberId,
+			final Long contObjectId, final DatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		return typesList.size();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContEventTypeMonitorStatus> selectContEventTypeMonitorStatus(
+			final Long subscriberId, final Long contObjectId,
+			final DatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCount(subscriberId, contObjectId,
+						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		List<ContEventTypeMonitorStatus> result = new ArrayList<>();
+		for (Object[] o : typesList) {
+			checkState(o.length == 2);
+			Long eventTypeId = null;
+			if (o[0] instanceof Long) {
+				eventTypeId = (Long) o[0];
+			}
+			ContEventType contEventType = contEventTypeService
+					.findOne(eventTypeId);
+			checkNotNull(contEventType);
+
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContEventNotificationsStatus> selectSubscrEventNotificationsStatus(
+			final Long subscriberId, final DatePeriod datePeriod) {
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<ContObject> contObjects = subscriberService
+				.selectSubscriberContObjects(subscriberId);
+
+		List<ContEventNotificationsStatus> result = new ArrayList<>();
+		for (ContObject co : contObjects) {
+
+			logger.trace(
+					"Select EventsStatusData for contObjectId:{}, subscriberId:{}",
+					co.getId(), subscriberId);
+
+			long allCnt = selectNotificationsCount(subscriberId, co.getId(),
+					datePeriod);
+
+			long newCnt = selectNotificationsCount(subscriberId, co.getId(),
+					datePeriod, Boolean.TRUE);
+
+			long typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
+					datePeriod);
+
+			ContEventLevelColorKey monitorColorKey = contEventMonitorService
+					.findContEventMonitorColor(co.getId());
+
+			ContEventLevelColorKey resultColorKey = monitorColorKey;
+			if (resultColorKey == null) {
+				resultColorKey = allCnt > 0 ? ContEventLevelColorKey.YELLOW
+						: ContEventLevelColorKey.GREEN;
+			}
+
+			ContEventNotificationsStatus item = ContEventNotificationsStatus
+					.newInstance(co);
+
+			item.setTotalCount(allCnt);
+			item.setTotalNewCount(newCnt);
+			item.setTotalTypesCount(typesCnt);
+			item.setContEventLevelColorKey(resultColorKey);
+
+			result.add(item);
+		}
+
+		return result;
+	}
+
 }

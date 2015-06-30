@@ -59,6 +59,9 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Column(name = "cont_object_id")
 	private Long contObjectId;
 
+	@Column(name = "cont_event_type_id")
+	private Long contEventTypeId;
+
 	@Column(name = "is_new")
 	private Boolean isNew;
 
@@ -72,7 +75,7 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	@Column(name = "revision_subscr_user_id")
 	private Long revisionSubscrUserId;
-	
+
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
@@ -159,6 +162,14 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setRevisionSubscrUserId(Long revisionSubscrUserId) {
 		this.revisionSubscrUserId = revisionSubscrUserId;
+	}
+
+	public Long getContEventTypeId() {
+		return contEventTypeId;
+	}
+
+	public void setContEventTypeId(Long contEventTypeId) {
+		this.contEventTypeId = contEventTypeId;
 	}
 
 }
