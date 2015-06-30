@@ -20,12 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -43,6 +45,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
+
+	@Autowired
+	private ContEventMonitorService contEventMonitorService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -256,9 +261,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationEventTypes(
-			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectEventTypes(
+			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
@@ -281,6 +286,23 @@ public class SubscrContEventNotificationController extends WebApiController {
 				.selectContEventTypeMonitorStatus(
 						currentSubscriberService.getSubscriberId(),
 						contObjectId, datePeriodParser.getDatePeriod());
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectMonitorEvents(
+			@PathVariable(value = "contObjectId") Long contObjectId) {
+
+		checkNotNull(contObjectId);
+
+		List<ContEventMonitor> resultList = contEventMonitorService
+				.findContEventMonitor(contObjectId);
 
 		return ResponseEntity.ok(resultList);
 	}

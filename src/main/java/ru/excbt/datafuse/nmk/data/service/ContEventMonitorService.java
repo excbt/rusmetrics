@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,9 @@ public class ContEventMonitorService {
 			.getContEventLevelColor() == null ? -1 : e2
 			.getContEventLevelColor().getColorRank());
 
+	public final static Comparator<ContEventMonitor> CMP_BY_EVENT_TIME = (e1,
+			e2) -> e1.getContEventTime().compareTo(e2.getContEventTime());
+
 	@Autowired
 	private ContEventMonitorRepository contEventMonitorRepository;
 
@@ -35,9 +39,14 @@ public class ContEventMonitorService {
 	@Transactional(readOnly = true)
 	public List<ContEventMonitor> findContEventMonitor(Long contObjectId) {
 		checkNotNull(contObjectId);
+		
 		List<ContEventMonitor> contEventMonitor = contEventMonitorRepository
 				.findByContObjectId(contObjectId);
-		return contEventMonitor;
+
+		List<ContEventMonitor> result = contEventMonitor.stream()
+				.sorted(CMP_BY_EVENT_TIME).collect(Collectors.toList());
+
+		return result;
 	}
 
 	/**

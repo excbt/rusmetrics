@@ -37,6 +37,10 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 	@Column(name = "cont_event_type_id")
 	private Long contEventTypeId;
 
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "cont_event_type_id", insertable = false, updatable = false)
+	private ContEventType contEventType;
+
 	@Column(name = "cont_event_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date contEventTime;
@@ -131,6 +135,14 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 	public void setContEventLevelColorKey(
 			ContEventLevelColorKey contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
+	}
+
+	public ContEventType getContEventType() {
+		return contEventType;
+	}
+
+	public void setContEventType(ContEventType contEventType) {
+		this.contEventType = contEventType;
 	}
 
 }
