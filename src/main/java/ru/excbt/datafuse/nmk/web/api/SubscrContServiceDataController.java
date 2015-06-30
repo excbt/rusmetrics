@@ -319,10 +319,10 @@ public class SubscrContServiceDataController extends WebApiController {
 						endOfDay);
 
 		ContServiceDataHWater firstAbs = contServiceDataHWaterService
-				.selectLastAbsData(contZPointId, timeDetail, beginD);
+				.selectLastAbsData(contZPointId, beginD);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService
-				.selectLastAbsData(contZPointId, timeDetail, endOfPeriod);
+				.selectLastAbsData(contZPointId, endOfPeriod);
 
 		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
 		result.setTotals(totals);

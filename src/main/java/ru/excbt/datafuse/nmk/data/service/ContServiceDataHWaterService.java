@@ -198,20 +198,22 @@ public class ContServiceDataHWaterService {
 	 * @param localDateTime
 	 * @return
 	 */
-//	@Transactional(readOnly = true)
-//	private ContServiceDataHWater selectLastAbsData(long contZPointId,
-//			LocalDateTime localDateTime) {
-//
-//		checkNotNull(localDateTime);
-//
-//		String[] timeDetails = { TimeDetailKey.TYPE_ABS.getKeyname() };
-//
-//		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-//				.selectLastDataByZPoint(contZPointId, timeDetails,
-//						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
-//
-//		return dataList.size() > 0 ? dataList.get(0) : null;
-//	}
+	 @Transactional(readOnly = true)
+	 public ContServiceDataHWater selectLastAbsData(long contZPointId,
+	 LocalDateTime localDateTime) {
+	
+	 checkNotNull(localDateTime);
+	
+	 String[] timeDetails = {// timeDetail.getAbsPair()
+				TimeDetailKey.TYPE_1H.getAbsPair(),
+				TimeDetailKey.TYPE_24H.getAbsPair()};
+	
+	 List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
+	 .selectLastDataByZPoint(contZPointId, timeDetails,
+	 localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+	
+	 return dataList.size() > 0 ? dataList.get(0) : null;
+	 }
 
 	/**
 	 * 
@@ -220,14 +222,16 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+	private ContServiceDataHWater selectLastAbsData(long contZPointId,
 			TimeDetailKey timeDetail, LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
 		checkNotNull(timeDetail);
 
-		String[] timeDetails = { //TimeDetailKey.TYPE_ABS.getKeyname(),
-				timeDetail.getAbsPair() };
+		String[] timeDetails = { // TimeDetailKey.TYPE_ABS.getKeyname(),
+				// timeDetail.getAbsPair()
+				TimeDetailKey.TYPE_1H.getAbsPair(),
+				TimeDetailKey.TYPE_24H.getAbsPair() };
 
 		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
 				.selectLastDataByZPoint(contZPointId, timeDetails,
