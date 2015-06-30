@@ -330,22 +330,27 @@ public class SubscrContServiceDataController extends WebApiController {
 		result.setLastData(lastAbs);
 
 		ContServiceDataHWaterTotals diffs = new ContServiceDataHWaterTotals();
-		diffs.setM_in(lastAbs.getM_in() == null || firstAbs.getM_in() == null ? null
-				: lastAbs.getM_in().subtract(firstAbs.getM_in()));
-		diffs.setM_out(lastAbs.getM_out() == null
-				|| firstAbs.getM_out() == null ? null : lastAbs.getM_out()
-				.subtract(firstAbs.getM_out()));
 
-		diffs.setV_in(lastAbs.getV_in() == null || firstAbs.getV_in() == null ? null
-				: lastAbs.getV_in().subtract(firstAbs.getV_in()));
-		diffs.setV_out(lastAbs.getV_out() == null
-				|| firstAbs.getV_out() == null ? null : lastAbs.getV_out()
-				.subtract(firstAbs.getV_out()));
+		if (firstAbs != null && lastAbs != null) {
 
-		diffs.setH_delta(lastAbs.getH_delta() == null
-				|| firstAbs.getH_delta() == null ? null : lastAbs.getH_delta()
-				.subtract(firstAbs.getH_delta()));
+			diffs.setM_in(lastAbs.getM_in() == null
+					|| firstAbs.getM_in() == null ? null : lastAbs.getM_in()
+					.subtract(firstAbs.getM_in()));
+			diffs.setM_out(lastAbs.getM_out() == null
+					|| firstAbs.getM_out() == null ? null : lastAbs.getM_out()
+					.subtract(firstAbs.getM_out()));
 
+			diffs.setV_in(lastAbs.getV_in() == null
+					|| firstAbs.getV_in() == null ? null : lastAbs.getV_in()
+					.subtract(firstAbs.getV_in()));
+			diffs.setV_out(lastAbs.getV_out() == null
+					|| firstAbs.getV_out() == null ? null : lastAbs.getV_out()
+					.subtract(firstAbs.getV_out()));
+
+			diffs.setH_delta(lastAbs.getH_delta() == null
+					|| firstAbs.getH_delta() == null ? null : lastAbs
+					.getH_delta().subtract(firstAbs.getH_delta()));
+		}
 		result.setDiffs(diffs);
 
 		return ResponseEntity.ok(result);
