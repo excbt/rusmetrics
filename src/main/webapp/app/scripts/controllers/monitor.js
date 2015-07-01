@@ -1,11 +1,17 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile){
+  .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile, $interval){
     //object url
     var objectUrl = "../api/subscr/contEvent/notifications/contObjects";//"resource/objects.json";    
     //objects array
     $scope.objects = [];
+    //default date interval settings
     $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
     $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+    
+    //monitor settings
+    $scope.monitor = {};
+    $scope.monitor.refreshPeriod = "60";
+    
     //get objects function
     $scope.getObjects = function(url){ 
         var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
@@ -15,10 +21,10 @@ angular.module('portalNMC')
 //console.log(data);            
                 //sort objects by name
                 $scope.objects.sort(function(a, b){
-                    if (a.statusColor>b.statusColor){
+                    if (a.contObject.fullName>b.contObject.fullName){
                         return -1;
                     };
-                    if (a.statusColor<b.statusColor){
+                    if (a.contObject.fullName<b.contObject.fullName){
                         return 1;
                     };
                     return 0;
@@ -164,6 +170,45 @@ angular.module('portalNMC')
     };
     //call get objects function
     $scope.getObjects(objectUrl);
+    
+    $scope.refreshData = function(){
+        $scope.getObjects(objectUrl);
+    };
+    
+    //Watching for the change period 
+    $scope.$watch('reportStart', function (newDates) {
+console.log("reportStart watch");        
+        $scope.getObjects(objectUrl);                              
+    }, false);
+    
+    var interval;
+    //watch for the change of the refresh period
+    $scope.$watch('monitor.refreshPeriod', function (newPeriod) {
+//console.log("monitor.refreshPeriod watch");
+//console.log("new period = "+newPeriod);        
+        //cancel previous interval
+        if (angular.isDefined(interval)){
+            $interval.cancel(interval);
+            interval = undefined;
+        };
+        //set new interval
+//        interval = $interval(function(){
+//            var time = (new Date()).toLocaleString();
+//console.log("new interval");            
+//console.log(time);
+//console.log(Number($scope.monitor.refreshPeriod));        
+//            $scope.getObjects(objectUrl);
+//        },Number($scope.monitor.refreshPeriod)*1000);
+        
+    }, false);
+    
+    //Вызвываем с заданным периодом обновление монитора
+//    interval = $interval(function(){
+//        var time = (new Date()).toLocaleString();
+//console.log(time);
+//console.log(Number($scope.monitor.refreshPeriod));        
+//        $scope.getObjects(objectUrl);
+//    },Number($scope.monitor.refreshPeriod)*1000);
     
         //chart
     $scope.runChart = function(objId){

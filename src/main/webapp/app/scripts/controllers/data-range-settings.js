@@ -136,7 +136,7 @@ app
     
     
     
-    //monitor
+    //monitor settings
     $scope.queryDateOptsMonitorRu = {
         locale : {
             applyClass : 'btn-green',
@@ -163,6 +163,7 @@ app
         },
         startDate : moment().startOf('day'),
         endDate : moment().endOf('day'),
+        maxDate: moment().endOf('day'),
 
         format : 'DD.MM.YYYY'
         ,separator: " по "
