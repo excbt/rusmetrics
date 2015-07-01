@@ -161,6 +161,21 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
+	 * @param subscriberId
+	 * @param datePeriod
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<SubscrContEventNotification> selectByConditions(
+			Long subscriberId, final DatePeriod datePeriod,
+			final Pageable pageable) {
+		return selectByConditions(subscriberId, datePeriod, null, null, null,
+				pageable);
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public static Sort makeDefaultSort() {
@@ -386,8 +401,9 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
-	public SubscrContEventNotification updateNotificationOneIsNew(Boolean isNew,
-			Long subscrContEventNotificationId, Long revisionSubscrUserId) {
+	public SubscrContEventNotification updateNotificationOneIsNew(
+			Boolean isNew, Long subscrContEventNotificationId,
+			Long revisionSubscrUserId) {
 
 		checkNotNull(isNew);
 
@@ -410,8 +426,8 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @param notificationIds
 	 */
-	public void updateNotificationIsNew(Boolean isNew, List<Long> notificationIds,
-			Long revisionSubscrUserId) {
+	public void updateNotificationIsNew(Boolean isNew,
+			List<Long> notificationIds, Long revisionSubscrUserId) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
 		checkNotNull(revisionSubscrUserId);
@@ -564,22 +580,31 @@ public class SubscrContEventNotifiicationService {
 					"Select EventsStatusData for contObjectId:{}, subscriberId:{}",
 					co.getId(), subscriberId);
 
+			ContEventLevelColorKey monitorColorKey = contEventMonitorService
+					.getColorKeyByContObject(co.getId());
+
 			long allCnt = selectNotificationsCount(subscriberId, co.getId(),
 					datePeriod);
-
-			long newCnt = selectNotificationsCount(subscriberId, co.getId(),
-					datePeriod, Boolean.TRUE);
-
-			long typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
-					datePeriod);
-
-			ContEventLevelColorKey monitorColorKey = contEventMonitorService
-					.findContEventMonitorColor(co.getId());
+			long newCnt = 0;
+			long typesCnt = 0;
 
 			ContEventLevelColorKey resultColorKey = monitorColorKey;
+
+			if (allCnt > 0) {
+
+				newCnt = selectNotificationsCount(subscriberId, co.getId(),
+						datePeriod, Boolean.TRUE);
+
+				typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
+						datePeriod);
+
+				if (resultColorKey == null) {
+					resultColorKey = ContEventLevelColorKey.YELLOW;
+				}
+			}
+
 			if (resultColorKey == null) {
-				resultColorKey = allCnt > 0 ? ContEventLevelColorKey.YELLOW
-						: ContEventLevelColorKey.GREEN;
+				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
 			ContEventNotificationStatus item = ContEventNotificationStatus

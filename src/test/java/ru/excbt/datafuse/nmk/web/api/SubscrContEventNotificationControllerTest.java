@@ -170,11 +170,18 @@ public class SubscrContEventNotificationControllerTest extends
 	}
 
 	@Test
-	public void testContObjectMonitor() throws Exception {
+	public void testNotificationsContObjectMonitor() throws Exception {
 		long contObjectId = 20118695;
 		String url = String
 				.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEvents",
 						contObjectId);
+
+		testJsonGet(url);
+	}
+
+	@Test
+	public void testNotificationsMonitorColor() throws Exception {
+		String url = "/api/subscr/contEvent/notifications/monitorColor";
 
 		testJsonGet(url);
 	}

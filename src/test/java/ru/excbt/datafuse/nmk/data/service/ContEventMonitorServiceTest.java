@@ -38,7 +38,7 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 
 		for (ContObject co : vList) {
 			List<ContEventMonitor> monitorList = contEventMonitorService
-					.findContEventMonitor(co.getId());
+					.findByContObject(co.getId());
 
 			if (monitorList.size() > 0) {
 				logger.info("(ContObjectId:{}) Found {} monitorEvents",
@@ -53,7 +53,7 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 			}
 
 			ContEventLevelColorKey colorKey = contEventMonitorService
-					.findContEventMonitorColor(co.getId());
+					.getColorKeyByContObject(co.getId());
 			assertNotNull(colorKey);
 			logger.info(
 					"(ContObjectId:{}) findContEventMonitorColor colorKey:{}",

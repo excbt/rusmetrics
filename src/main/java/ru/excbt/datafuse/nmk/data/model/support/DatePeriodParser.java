@@ -13,6 +13,8 @@ public class DatePeriodParser {
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
 			.forPattern(ReportService.DATE_TEMPLATE);
 
+	public final static DatePeriodParser EMPTY_PARSER = new DatePeriodParser();
+
 	private final DateTime fromDate;
 	private final DateTime toDate;
 	private final boolean isEmpty;
@@ -33,8 +35,8 @@ public class DatePeriodParser {
 		this.fromDate = fromDate;
 		this.toDate = toDate;
 		this.isEmpty = isEmpty;
-		this.datePeriod = DatePeriod.builder().dateFrom(fromDate).dateTo(toDate)
-				.build();
+		this.datePeriod = DatePeriod.builder().dateFrom(fromDate)
+				.dateTo(toDate).build();
 	}
 
 	/**
@@ -59,7 +61,7 @@ public class DatePeriodParser {
 				result = new DatePeriodParser(fromDate, toDate, emptyResult);
 			}
 		} else {
-			result = new DatePeriodParser();
+			result = EMPTY_PARSER;
 		}
 		return result;
 	}
@@ -83,7 +85,6 @@ public class DatePeriodParser {
 	public boolean isOk() {
 		return !isEmpty;
 	}
-
 
 	public DatePeriod getDatePeriod() {
 		return datePeriod;
