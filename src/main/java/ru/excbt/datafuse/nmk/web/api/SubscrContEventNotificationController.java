@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -64,6 +65,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 	@Autowired
 	private ContEventLevelColorService contEventLevelColorService;
+
+	@Autowired
+	private ContEventTypeService contEventTypeService;
 
 	/**
 	 * 
@@ -105,6 +109,10 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
 				.asList(contEventTypeIds);
 
+		final List<Long> contEventTypeIdPairList = contEventTypeList == null ? null
+				: contEventTypeService
+						.selectContEventTypesPaired(contEventTypeList);
+
 		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
@@ -138,8 +146,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
 				.selectByConditions(currentSubscriberService.getSubscriberId(),
-						requestDatePeriod, contObjectList, contEventTypeList,
-						isNew, pageRequest);
+						requestDatePeriod, contObjectList,
+						contEventTypeIdPairList, isNew, pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
 				resultPage));
@@ -240,6 +248,10 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
 				.asList(contEventTypeIds);
 
+		final List<Long> contEventTypeIdPairList = contEventTypeList == null ? null
+				: contEventTypeService
+						.selectContEventTypesPaired(contEventTypeList);		
+		
 		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
@@ -275,7 +287,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			public void process() {
 				subscrContEventNotifiicationService.updateRevisionByConditions(
 						currentSubscriberService.getSubscriberId(), actionDP,
-						contObjectList, contEventTypeList, isNew,
+						contObjectList, contEventTypeIdPairList, isNew,
 						revisionIsNew, currentUserService.getCurrentUserId());
 			}
 		};

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
@@ -191,14 +190,5 @@ public class ContEventService {
 
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public List<ContEventType> selectBaseContEventTypes() {
-		List<ContEventType> result = contEventTypeRepository
-				.selectBaseEventTypes(Boolean.TRUE);
-		return result;
-	}
 
 }
