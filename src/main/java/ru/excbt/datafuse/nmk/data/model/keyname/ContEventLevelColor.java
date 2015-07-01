@@ -8,10 +8,18 @@ import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "cont_event_level_color")
-public class ContEventLevelColor extends AbstractKeynameEntity {
+@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ContEventLevelColor extends AbstractKeynameEntity implements
+		StatusColorObject {
 
 	/**
 	 * 
@@ -116,6 +124,11 @@ public class ContEventLevelColor extends AbstractKeynameEntity {
 
 	public void setColorKey(ContEventLevelColorKey colorKey) {
 		this.colorKey = colorKey;
+	}
+
+	@Override
+	public String getStatusColor() {
+		return this.getKeyname();
 	}
 
 }
