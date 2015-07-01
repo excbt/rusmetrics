@@ -18,8 +18,6 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
-import com.google.common.collect.Lists;
-
 @Service
 @Transactional
 public class ContEventService {
@@ -197,10 +195,9 @@ public class ContEventService {
 	 * 
 	 * @return
 	 */
-	public List<ContEventType> findAllContEventTypes() {
-		List<ContEventType> result = Lists.newArrayList(contEventTypeRepository
-				.findAll());
-
+	public List<ContEventType> selectBaseContEventTypes() {
+		List<ContEventType> result = contEventTypeRepository
+				.selectBaseEventTypes(Boolean.TRUE);
 		return result;
 	}
 

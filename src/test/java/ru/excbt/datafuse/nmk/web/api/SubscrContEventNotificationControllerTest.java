@@ -70,7 +70,7 @@ public class SubscrContEventNotificationControllerTest extends
 						.getSubscriberId());
 
 		List<Long> contEventTypeIdList = contEventService
-				.findAllContEventTypes().stream().map(cet -> cet.getId())
+				.selectBaseContEventTypes().stream().map(cet -> cet.getId())
 				.collect(Collectors.toList());
 
 		ResultActions resultActionsAll = mockMvc.perform(get(

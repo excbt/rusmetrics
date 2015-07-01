@@ -67,7 +67,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 						.getSubscriberId());
 
 		List<Long> contEventTypeIdList = contEventService
-				.findAllContEventTypes().stream().map(cet -> cet.getId())
+				.selectBaseContEventTypes().stream().map(cet -> cet.getId())
 				.collect(Collectors.toList());
 
 		Page<?> result = subscrContEventNotifiicationService
