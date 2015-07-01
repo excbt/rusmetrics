@@ -4,12 +4,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -20,12 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationStatus;
+import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -41,14 +48,22 @@ public class SubscrContEventNotificationController extends WebApiController {
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContEventNotificationController.class);
 
+	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
+
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
+
+	@Autowired
+	private ContEventMonitorService contEventMonitorService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
 	private CurrentUserService currentUserService;
+
+	@Autowired
+	private ContEventLevelColorService contEventLevelColorService;
 
 	/**
 	 * 
@@ -226,7 +241,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 	@RequestMapping(value = "/notifications/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationContObjects(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
-			@RequestParam(value = "toDate", required = true) String toDateStr) {
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
 		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
 				toDateStr);
@@ -242,10 +258,21 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<ContEventNotificationStatus> resultList = subscrContEventNotifiicationService
+		List<ContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
 				.selectContEventNotificationStatus(
 						currentSubscriberService.getSubscriberId(),
 						datePeriodParser.getDatePeriod());
+
+		List<ContEventNotificationStatus> resultList = null;
+
+		if (Boolean.TRUE.equals(noGreenColor)) {
+			resultList = preResultList
+					.stream()
+					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
+					.collect(Collectors.toList());
+		} else {
+			resultList = preResultList;
+		}
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -256,9 +283,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationEventTypes(
-			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectEventTypes(
+			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
@@ -283,5 +310,60 @@ public class SubscrContEventNotificationController extends WebApiController {
 						contObjectId, datePeriodParser.getDatePeriod());
 
 		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectMonitorEvents(
+			@PathVariable(value = "contObjectId") Long contObjectId) {
+
+		checkNotNull(contObjectId);
+
+		List<ContEventMonitor> resultList = contEventMonitorService
+				.findByContObject(contObjectId);
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/monitorColor", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationMonitorColor(
+			@RequestParam(value = "fromDate", required = false) String fromDateStr,
+			@RequestParam(value = "toDate", required = false) String toDateStr) {
+
+		ContEventLevelColor monitorColor = contEventMonitorService
+				.getColorBySubscriberId(currentSubscriberService
+						.getSubscriberId());
+
+		if (monitorColor == null) {
+
+			monitorColor = contEventLevelColorService
+					.getEventColorCached(ContEventLevelColorKey.GREEN);
+
+			DatePeriodParser datePeriodParser = DatePeriodParser.parse(
+					fromDateStr, toDateStr);
+
+			if (datePeriodParser.isOk()) {
+				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
+						.selectByConditions(
+								currentSubscriberService.getSubscriberId(),
+								datePeriodParser.getDatePeriod(), PAGE_LIMIT_1);
+
+				if (pageResult.getTotalElements() > 0) {
+					monitorColor = contEventLevelColorService
+							.getEventColorCached(ContEventLevelColorKey.YELLOW);
+				}
+			}
+
+		}
+
+		return ResponseEntity.ok(monitorColor);
 	}
 }

@@ -149,15 +149,15 @@ public class SubscrContEventNotificationControllerTest extends
 	 * @throws Exception
 	 */
 	@Test
-	public void testNotificationsEventTypes() throws Exception {
+	public void testNotificationsContObjectEventTypes() throws Exception {
 
-		
 		long contObjectId = 20118695;
-		
+
 		ResultActions resultActionsAll = mockMvc
-				.perform(get("/api/subscr/contEvent/notifications/eventTypes")
-						.param("contObjectId", Long.toString(contObjectId))
-						.param("fromDate", "2015-06-01")
+				.perform(get(
+						String.format(
+								"/api/subscr/contEvent/notifications/contObject/%d/eventTypes",
+								contObjectId)).param("fromDate", "2015-06-01")
 						.param("toDate", "2015-06-30")
 						.with(testSecurityContext())
 						.accept(MediaType.APPLICATION_JSON));
@@ -167,6 +167,23 @@ public class SubscrContEventNotificationControllerTest extends
 		resultActionsAll.andExpect(status().isOk()).andExpect(
 				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 
+	}
+
+	@Test
+	public void testNotificationsContObjectMonitor() throws Exception {
+		long contObjectId = 20118695;
+		String url = String
+				.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEvents",
+						contObjectId);
+
+		testJsonGet(url);
+	}
+
+	@Test
+	public void testNotificationsMonitorColor() throws Exception {
+		String url = "/api/subscr/contEvent/notifications/monitorColor";
+
+		testJsonGet(url);
 	}
 
 }
