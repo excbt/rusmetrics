@@ -69,9 +69,17 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date notificationTime;
 
+	@Column(name = "notification_time_tz")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date notificationTimeTZ;
+
 	@Column(name = "revision_time")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date revisionTime;
+
+	@Column(name = "revision_time_tz")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date revisionTimeTZ;
 
 	@Column(name = "revision_subscr_user_id")
 	private Long revisionSubscrUserId;
@@ -170,6 +178,22 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setContEventTypeId(Long contEventTypeId) {
 		this.contEventTypeId = contEventTypeId;
+	}
+
+	public Date getNotificationTimeTZ() {
+		return notificationTimeTZ;
+	}
+
+	public void setNotificationTimeTZ(Date notificationTimeTZ) {
+		this.notificationTimeTZ = notificationTimeTZ;
+	}
+
+	public Date getRevisionTimeTZ() {
+		return revisionTimeTZ;
+	}
+
+	public void setRevisionTimeTZ(Date revisionTimeTZ) {
+		this.revisionTimeTZ = revisionTimeTZ;
 	}
 
 }

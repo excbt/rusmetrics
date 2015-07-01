@@ -176,6 +176,36 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
+	 * @param subscriberId
+	 * @param datePeriod
+	 * @param contObjectList
+	 * @param contEventTypeList
+	 * @param isNew
+	 * @param pageable
+	 */
+	public void updateRevisionByConditions(Long subscriberId,
+			final DatePeriod datePeriod, final List<Long> contObjectList,
+			final List<Long> contEventTypeList, final Boolean isNew,
+			final Boolean revisionIsNew, Long revisionSubscrUserId) {
+
+		checkNotNull(subscriberId);
+
+		Specifications<SubscrContEventNotification> specs = Specifications
+				.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(datePeriod.getDateFrom(),
+						datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContObjectId(contObjectList))
+				.and(specContEventTypeId(contEventTypeList));
+
+		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository
+				.findAll(specs);
+		for (SubscrContEventNotification n : updateCandidates) {
+			updateNotificationOneIsNew(n, revisionIsNew, revisionSubscrUserId);
+		}
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	public static Sort makeDefaultSort() {
@@ -415,11 +445,31 @@ public class SubscrContEventNotifiicationService {
 					subscrContEventNotificationId));
 		}
 
-		updateCandidate.setIsNew(isNew);
-		updateCandidate.setRevisionTime(new Date());
-		updateCandidate.setRevisionSubscrUserId(revisionSubscrUserId);
-		return subscrContEventNotificationRepository.save(updateCandidate);
+		return updateNotificationOneIsNew(updateCandidate, isNew,
+				revisionSubscrUserId);
 
+	}
+
+	/**
+	 * 
+	 * @param subscrContEventNotification
+	 * @param isNew
+	 * @param revisionSubscrUserId
+	 * @return
+	 */
+	private SubscrContEventNotification updateNotificationOneIsNew(
+			SubscrContEventNotification subscrContEventNotification,
+			Boolean isNew, Long revisionSubscrUserId) {
+
+		checkNotNull(subscrContEventNotification);
+		subscrContEventNotification.setIsNew(isNew);
+		Date revisionDate = new Date();
+		subscrContEventNotification.setRevisionTime(revisionDate);
+		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
+		subscrContEventNotification
+				.setRevisionSubscrUserId(revisionSubscrUserId);
+		return subscrContEventNotificationRepository
+				.save(subscrContEventNotification);
 	}
 
 	/**
