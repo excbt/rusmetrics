@@ -122,9 +122,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		Pageable pageRequest = SubscrContEventNotifiicationService
 				.setupPageRequestSort(pageable, sortDesc);
 
-		Page<SubscrContEventNotification> resultPage = null;
-
-		logger.debug("date isOK condition");
+		DatePeriod requestDatePeriod = DatePeriod.emptyPeriod();
 
 		if (datePeriodParser.isOk()) {
 			DateTime endOfDay = null;
@@ -132,25 +130,16 @@ public class SubscrContEventNotificationController extends WebApiController {
 			endOfDay = DatePeriodParser.endOfDay(datePeriodParser
 					.getDatePeriod().getDateTimeTo());
 
-			DatePeriod dp = DatePeriod
+			requestDatePeriod = DatePeriod
 					.builder(datePeriodParser.getDatePeriod()).dateTo(endOfDay)
 					.build();
 
-			resultPage = subscrContEventNotifiicationService
-					.selectByConditions(
-							currentSubscriberService.getSubscriberId(), dp,
-							contObjectList, contEventTypeList, isNew,
-							pageRequest);
-
-		} else {
-			logger.debug("date isOK condition");
-			resultPage = subscrContEventNotifiicationService
-					.selectByConditions(
-							currentSubscriberService.getSubscriberId(),
-							DatePeriod.emptyPeriod(), contObjectList,
-							contEventTypeList, isNew, pageRequest);
-
 		}
+
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
+				.selectByConditions(currentSubscriberService.getSubscriberId(),
+						requestDatePeriod, contObjectList, contEventTypeList,
+						isNew, pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
 				resultPage));
@@ -188,7 +177,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsUpdateIsNewFalse(
+	public ResponseEntity<?> notificationsUpdateRevisionFalse(
 			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
 			@RequestParam(value = "isNew", required = false, defaultValue = "false") Boolean isNew) {
 
@@ -213,7 +202,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsUpdateIsNewTrue(
+	public ResponseEntity<?> notificationsUpdateRevisionTrue(
 			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
 			@RequestParam(value = "isNew", required = false, defaultValue = "true") Boolean isNew) {
 
@@ -230,6 +219,68 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
 
+	}
+
+	/**
+	 * 
+	 * @param notificationIds
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/revision/all", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationsUpdateRevisionAll(
+			@RequestParam(value = "fromDate", required = false) String fromDateStr,
+			@RequestParam(value = "toDate", required = false) String toDateStr,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
+			@RequestParam(value = "isNew", required = false) Boolean isNew,
+			@RequestParam(value = "revisionIsNew", required = true) Boolean revisionIsNew) {
+
+		List<Long> contObjectList = contObjectIds == null ? null : Arrays
+				.asList(contObjectIds);
+		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
+				.asList(contEventTypeIds);
+
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& !datePeriodParser.getDatePeriod().isValidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		DatePeriod requestDatePeriod = DatePeriod.emptyPeriod();
+
+		if (datePeriodParser.isOk()) {
+			DateTime endOfDay = null;
+
+			endOfDay = DatePeriodParser.endOfDay(datePeriodParser
+					.getDatePeriod().getDateTimeTo());
+
+			requestDatePeriod = DatePeriod
+					.builder(datePeriodParser.getDatePeriod()).dateTo(endOfDay)
+					.build();
+
+		}
+
+		final DatePeriod actionDP = requestDatePeriod;
+
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				subscrContEventNotifiicationService.updateRevisionByConditions(
+						currentSubscriberService.getSubscriberId(), actionDP,
+						contObjectList, contEventTypeList, isNew,
+						revisionIsNew, currentUserService.getCurrentUserId());
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
