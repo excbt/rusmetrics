@@ -268,9 +268,9 @@ console.log(data);
                     {
 //            console.log(ALERT_IMG_PATH);         
                        element.imgpath=  ALERT_IMG_PATH;
-                        element.imgclass= "nmc-img-divergence-indicator";
-                        element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
-                        return;
+                       element.imgclass= "nmc-img-divergence-indicator";
+                       element.title = "Итого и показания интеграторов расходятся НЕ более чем на 1";
+                       return;
 
                     };
                     if ((difference >1))

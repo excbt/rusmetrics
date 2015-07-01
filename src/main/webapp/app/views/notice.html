@@ -133,11 +133,12 @@
                         <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu">
-                        <li><a href="" ng-click="">Пометить выделенные как прочитанные</a></li>
-                        <li><a href="" ng-click="">Пометить выделенные как непрочитанные</a></li>
+                        <li><a href="" ng-click="revisionNotices(false)">{{messages.markSelectedAsRevision}}</a></li>
+                        <li><a href="" ng-click="revisionNotices(true)">{{messages.markSelectedAsNew}}</a></li>
                         <li role="separator" class="divider"></li> 
-                        <li><a href="" ng-click="confirmationText='пометить все как прочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как прочитанные</a></li>  
-                        <li><a href="" ng-click="confirmationText='пометить все как непрочитанные'" data-target="#confirmActionModal" data-toggle="modal">Пометить все как непрочитанные</a></li>    
+                        <li><a href="" ng-click="confirmationText=messages.markOnPageAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.markOnPageAsRevision}}</a></li> 
+                        <li><a href="" ng-click="confirmationText=messages.markAllAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.markAllAsRevision}}</a></li>  
+<!--                        <li><a href="" ng-click="confirmationText=messages.markAllAsNew" data-target="#confirmActionModal" data-toggle="modal">{{messages.markAllAsNew}}</a></li>    -->
                       </ul>
                     </div>  
             </th>
@@ -146,7 +147,7 @@
             </th>       
         </tr>
         <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
-            <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span></td>
+            <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}"></td>
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
                 <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew}">{{notice[column.fieldName]}}</span>
             </td>
@@ -548,13 +549,13 @@
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="confirmAction(currentObject);"
+								ng-click="confirmAction();"
 								value="Ок" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
-								ng-click="exit('#deleteObject');">
+								ng-click="exit('#confirmActionModal');">
 								Отменить
 							</button>
 						</div>

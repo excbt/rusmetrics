@@ -1,11 +1,19 @@
 var app = angular.module('portalNMC');
 app
-    .controller('DataRangeSettings', function($scope, $interval, $rootScope){
+    .controller('DataRangeSettings', function($scope, $interval, $rootScope, $location){
   // Общие настройки элемента управления интервалом дат
-    $scope.navPlayerDates = {
-        startDate :  moment().subtract(6, 'days').startOf('day'),
-        endDate :  moment().endOf('day')
-    };
+    if (angular.isDefined($rootScope.monitor)){
+        $rootScope.monitor.toDate
+        $scope.navPlayerDates = {
+            startDate :  $rootScope.monitor.fromDate,
+            endDate : $rootScope.monitor.toDate
+        };
+    }else{
+        $scope.navPlayerDates = {
+            startDate :  moment().subtract(6, 'days').startOf('day'),
+            endDate :  moment().endOf('day')
+        };
+    }; 
     
     $scope.queryDateOptsRu = {
         locale : {
@@ -82,7 +90,10 @@ app
     
     $scope.$watch('navPlayerDates', function (newDates) {
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
+console.log("data-range-settings");         
+console.log($rootScope.reportStart); 
+console.log($rootScope.reportEnd);         
     }, false);
     
                         
@@ -128,8 +139,11 @@ app
     };
 
     $scope.$watch('indicatorDates', function (newDates) {
-//console.log("New dates");        
-//console.log(newDates);        
+console.log("indicatorDates");        
+        if ($location.path()!=="/objects/indicators"){
+            return;
+        };
+console.log("indicatorDates1");                
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
     }, false);

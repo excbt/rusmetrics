@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory, objectSvc){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory, objectSvc, notificationFactory){
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -18,7 +18,16 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
+    //the path template of notice icon
+    $scope.imgPathTmpl = "images/notice-state-";
     
+    //messages for user
+    $scope.messages = {};
+    $scope.messages.markSelectedAsRevision = "Пометить выделенные как прочитанные";
+    $scope.messages.markSelectedAsNew = "Пометить выделенные как непрочитанные";
+    $scope.messages.markOnPageAsRevision = "Пометить все на странице как прочитанные";
+    $scope.messages.markAllAsRevision = "Пометить все как прочитанные";
+    $scope.messages.markAllAsNew = "Пометить все как непрочитанные";
     
     $scope.states = {};//object, which keep the states of the notice objects
     $scope.states.applyObjects_flag = false; //flag, which keep state of object filter: true - the objects had been selected and to need them at the filter.
@@ -87,6 +96,53 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
     
+    //Controller initialization
+    //use to redirect from the Monitor page
+    $scope.initCtrl = function(){
+console.log("initCtrl");        
+        if ((angular.isDefined($rootScope.monitor))&&($rootScope.monitor.hasOwnProperty('monitorFlag'))&&($rootScope.monitor.monitorFlag)){
+            $rootScope.monitor.monitorFlag = false;
+//            $rootScope.reportStart=$rootScope.monitor.fromDate;
+//            $rootScope.reportEnd=$rootScope.monitor.toDate;
+            $scope.objectsInWindow = angular.copy($scope.objects);           
+            var curIndex = -1; 
+            $scope.objectsInWindow.some(function(element, index){
+                if (element.id === $rootScope.monitor.objectId){
+                    curIndex = index;
+                    return true;
+                }
+            });           
+            if (curIndex>-1){//object is need - else is absurd
+                //object
+                $scope.objectsInWindow[curIndex].selected=true;
+                performObjectsFilter();               
+                //new / revision
+                $scope.isNew = $rootScope.monitor.isNew;
+                if ($scope.isNew===true){
+                    $scope.visibleText='Только новые';
+                };
+                //types
+                if ((angular.isDefined($rootScope.monitor.typeIds))&&($rootScope.monitor.typeIds.hasOwnProperty('length'))&&($rootScope.monitor.typeIds.length>0)){
+                    $scope.typesInWindow = angular.copy($scope.noticeTypes);
+                    $rootScope.monitor.typeIds.forEach(function(element){
+                        var curTypeIndex = -1;
+                        $scope.typesInWindow.some(function(elem, index){
+                            if (elem.id = element){
+                                curTypeIndex = index;
+                                return true;
+                            };  
+                        });
+                        if (curTypeIndex>-1){
+                            $scope.typesInWindow[curTypeIndex].selected = true;
+                        };
+                    });
+                    performNoticeTypesFilter();
+                };
+//                $scope.getResultsPage(1);
+            };
+        };
+    };
+    
     var getNotices = function(table, startDate, endDate, objectArray, eventTypeArray, isNew){
         if (isNew==null){
             return $resource(table, {},
@@ -111,6 +167,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         var oneNotice = {};
         var tmp = arr.map(function(el){
             oneNotice = {};
+            oneNotice.id = el.id;
             oneNotice.noticeType = el.contEvent.contEventType.name;
             oneNotice.noticeMessage = el.contEvent.message;                        
             if (el.contEvent.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
@@ -136,6 +193,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 
             oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
             oneNotice.contEventLevelColor = el.contEventLevelColor;
+            oneNotice.imgpath = $scope.imgPathTmpl+el.contEventLevelColor.toLowerCase()+".png";
+            oneNotice.imgclass = el.contEventLevelColor==="GREEN"?"":"nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
             switch (el.contEvent.contServiceType)
             {
@@ -165,9 +224,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
-//console.log($rootScope.reportStart);        
-        $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
-        $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
+//console.log($rootScope.reportStart); 
+        if ((angular.isDefined($rootScope.monitor))){
+            $scope.startDate = $rootScope.monitor.fromDate;
+            $scope.endDate = $rootScope.monitor.toDate;  
+        }else{
+            $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
+            $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
+        };
 //console.log($scope.startDate);                
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
@@ -187,6 +251,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
+console.log($scope.objects);        
         $scope.objectsInWindow = angular.copy($scope.objects);
         //Если флаг состояния объектов = "ложь" (это означает, что либо объекты еще не выбирались либо выбор объектов не был подтвержден - не была нажата кнопка "Применить"), то сбросить флаги у выбранных объектов
 
@@ -219,8 +284,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
 //        };
         $('#selectNoticeTypesModal').modal('show');
     };
-      
-    $scope.selectObjects = function(){
+    
+    function performObjectsFilter(){
         $scope.objects = $scope.objectsInWindow;
         $scope.selectedObjects_list = "";
         $scope.selectedObjects = [];
@@ -236,14 +301,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         }else{
             $scope.selectedObjects_list = $scope.selectedObjects.length;
         };
+    };
+      
+    $scope.selectObjects = function(){
+         performObjectsFilter();
 //        $scope.states.applyObjects_flag = true;
         //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
         $scope.getResultsPage(1);
 
     };
     
-    $scope.selectNoticeTypes = function(){
-        
+    function performNoticeTypesFilter(){
         $scope.noticeTypes = $scope.typesInWindow;
 
         $scope.states.criticalTypes_flag = $scope.states.tempCriticalTypes_flag;
@@ -265,7 +333,12 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         }else{
             $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
         };
-        $scope.states.applyTypes_flag = true;//Типы были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
+    };
+    
+    $scope.selectNoticeTypes = function(){
+        performNoticeTypesFilter();
+//        $scope.states.applyTypes_flag = true;
+        //Типы были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
         $scope.getResultsPage(1);
 
     };
@@ -299,8 +372,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
         crudGridDataFactory($scope.objectsUrl).query(function(data){
             $scope.objects = data;
             objectSvc.sortObjectsByFullName($scope.objects);
-//console.log("getObjects");            
-              $scope.getResultsPage(1);
+            $scope.initCtrl();    
+console.log("getObjects");
+console.log(this);            
+            $scope.getResultsPage(1);
         });
     };
     
@@ -312,8 +387,16 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     };
     
     $scope.$watch('reportStart', function (newDates) {
-console.log("watch");        
-        $scope.getObjects();                              
+console.log("watch");
+console.log("notice");         
+console.log($rootScope.reportStart); 
+console.log($rootScope.reportEnd);         
+        if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
+console.log("if = true");            
+            $scope.getObjects();                              
+        }else{
+            $scope.getResultsPage(1);
+        };
     }, false);
     
     $scope.getNoticeTypes = function(url){
@@ -409,6 +492,56 @@ console.log("watch");
         };      
     };
     
+    //Revision / new notices (Просмотренные/новые увеодомления)
+    function getNoticesIds(notices, noticesIds){       
+        if ((!notices.hasOwnProperty('length'))||(notices.length==0)||(typeof noticesIds == 'undefined')){
+            return;
+        };
+        notices.forEach(function(el){
+            if (el.selected){             
+                noticesIds.push(el.id);
+            };
+        });       
+    };
+    
+    $scope.revisionNotices = function(flagIsNew){
+        var noticesIds = [];
+        var url = $scope.crudTableName+"/revision";
+        getNoticesIds($scope.notices, noticesIds);   
+        if ((typeof noticesIds == 'undefined')||(!noticesIds.hasOwnProperty('length'))|| (noticesIds.length==0)){
+            return;
+        };
+
+        $http({
+            url: url, 
+            method: "PUT",
+            params: { notificationIds:noticesIds, isNew: flagIsNew },
+            data: null
+        })
+        .then(function(response) {
+            $scope.getResultsPage(1);
+            notificationFactory.success();
+        })
+        .catch(function(e){
+            notificationFactory.errorInfo(e.statusText,e);
+        });
+    };
+    
+    //mark the notices on the current page as revision
+    $scope.revisionNoticesOnPage = function(){
+        $scope.notice.forEach(function(el){
+            el.selected;
+        });
+        $scope.revisionNotices(false);
+    };
+    
+    //Confirm the selected action
+    $scope.confirmAction = function(){
+        if (confirmationText===messages.markOnPageAsRevision){
+            $scope.revisionNoticesOnPage();
+        };
+    };
+
     //Clear all filters
     $scope.clearAllFilters = function(){
         $scope.clearObjectFilter();
