@@ -1111,6 +1111,13 @@ tr.nmc-main-table-header > th {
     width: 16px;
     height: 16px;
 }
+
+.nmc-img-critical-indicator {
+    width: 16px;
+    height: 16px;
+}
+
+
 .nmc-img2 {
 }
 

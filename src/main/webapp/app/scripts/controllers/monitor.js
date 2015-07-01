@@ -15,6 +15,7 @@ angular.module('portalNMC')
     //get objects function
     $scope.getObjects = function(url){ 
         var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+console.log(targetUrl);        
         $http.get(targetUrl)
             .success(function(data){
                 $scope.objects = data;
@@ -22,10 +23,10 @@ angular.module('portalNMC')
                 //sort objects by name
                 $scope.objects.sort(function(a, b){
                     if (a.contObject.fullName>b.contObject.fullName){
-                        return -1;
+                        return 1;
                     };
                     if (a.contObject.fullName<b.contObject.fullName){
-                        return 1;
+                        return -1;
                     };
                     return 0;
                 });         
@@ -95,7 +96,7 @@ angular.module('portalNMC')
             tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
             tableHTML+= "</td>";
-            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\"\">"+element.newEventsCount+"</a>)";
+            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
             tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
@@ -162,14 +163,34 @@ angular.module('portalNMC')
         trHTML += "</table></td>";
         trObjEvents.innerHTML = trHTML;
         $compile(trObjEvents)($scope);
-    }; 
+    };
+    
+    //Set filters for notice window
+    $scope.setNoticeFilterByObject = function(objId){
+        $rootScope.monitor = {};
+        $rootScope.monitor.monitorFlag = true;
+        $rootScope.monitor.objectId = objId;
+        $rootScope.monitor.isNew = null;
+        $rootScope.monitor.fromDate = $rootScope.reportStart;
+        $rootScope.monitor.toDate = $rootScope.reportEnd;
+    };
+    
+    $scope.setNoticeFilterByObjectAndRevision = function(objId){
+        $rootScope.monitor = {};
+        $rootScope.monitor.monitorFlag = true;
+        $rootScope.monitor.objectId = objId;
+        $rootScope.monitor.isNew = true;
+        $rootScope.monitor.fromDate = $rootScope.reportStart;
+        $rootScope.monitor.toDate = $rootScope.reportEnd;
+    };
+    
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
     //call get objects function
-    $scope.getObjects(objectUrl);
+//    $scope.getObjects(objectUrl);
     
     $scope.refreshData = function(){
         $scope.getObjects(objectUrl);
