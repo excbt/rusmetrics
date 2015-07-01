@@ -690,12 +690,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         if ($scope.currentSign==null){
             if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
             {
-                $scope.messageForUser += "- Не задано начало интервала"+"\n";
+                $scope.messageForUser += "- Не задано начало периода"+"\n";
             };
                         //end date
             if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
             {
-                $scope.messageForUser += "- Не задан конец интервала"+"\n";
+                $scope.messageForUser += "- Не задан конец периода"+"\n";
             };
         }
 

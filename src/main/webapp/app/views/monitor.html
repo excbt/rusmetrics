@@ -19,9 +19,9 @@
             <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" >Все объекты</a></li>
             <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" >Объекты с НС</a></li>
         </ul>
-        <div class="col-md-3 noPadding marginTop15" ng-controller="DataRangeSettings">   
+        <div class="col-md-2 noPadding marginTop15" ng-controller="DataRangeSettings">   
         <div class="input-group marginRight15">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">интервал дат: с</span>
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
             <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
                 type="text" ng-model="navPlayerDates" options="queryDateOptsMonitorRu" aria-describedby="leftAddon"/>
         </div>    
@@ -30,17 +30,17 @@
 <!--            <label class="nmc-form-label">Период обновления:</label>-->
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
             <div class="input-group nmc-input-group-refresh-period">
-                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">Период обновления: </span>
-                <select class="form-control nmc-date-interval-form nmc-input-digital-data nmc-select-form" >
-                            <option>30 сек</option>
-                            <option>1 мин</option>
-                            <option>5 мин</option>
-                            <option>30 мин</option>
-                            <option>1 час</option>
+                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период обновления: </span>
+                <select class="form-control nmc-date-interval-form nmc-input-digital-data nmc-select-form" ng-model="monitor.refreshPeriod">
+<!--                            <option value=30>30 сек</option>-->
+                            <option value="60">1 мин</option>
+                            <option value="300">5 мин</option>
+                            <option value="1800">30 мин</option>
+                            <option value="3600">1 час</option>
         <!--            <option>100</option>-->
                 </select>
                 <span class="input-group-addon nmc-input-form-suffix">
-                    <i title="Обновить" class="btn btn-xs glyphicon glyphicon-refresh"></i>
+                    <i title="Обновить" class="btn btn-xs glyphicon glyphicon-refresh" ng-click="refreshData()"></i>
                 </span>
             </div>    
         </div>
