@@ -2,7 +2,7 @@ angular.module('portalNMC')
   .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile, $interval){
     //object url
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
-    var objectUrl = notificationsUrl+"/contObjects";//"resource/objects.json";  
+    var objectUrl = notificationsUrl+"/contObject";//"resource/objects.json";  
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = [];
@@ -67,41 +67,75 @@ console.log(targetUrl);
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
             ];
     
-    $scope.getEventsByObject = function(){
+    $scope.getEventTypesByObject = function(obj){
+        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        $http.get(url)
+            .success(function(data){
+            //if data is not array - exit
+                if (!data.hasOwnProperty('length')||(data.length == 0)){
+                    return;
+                };
+                //temp array
+                var tmpTypes = [];
+                //make the new array of the types wich formatted to display
+                data.forEach(function(element){
+                    var tmpType = {};
+                    tmpType.id = element.contEventType.id;
+                    tmpType.typeCategory = element.statusColor.toLowerCase();
+                    tmpType.typeEventCount = element.totalCount;
+                    tmpType.typeName = element.contEventType.name;
+                    tmpTypes.push(tmpType);
+                });
+                tmpTypes.sort(function(a, b){
+                    if (a.typeEventCount > b.typeEventCount){
+                        return -1;
+                    };
+                    if (a.typeEventCount < b.typeEventCount){
+                        return 1;
+                    };
+                    return 0;
+                });
+                obj.eventTypes = tmpTypes;
+                makeEventTypesByObjectTable(obj);
+            })
+            .error(function(e){
+                console.log(e);
+            });        
     };
     
-    $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
+    $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details   
         var curObject = null;
         $scope.objects.some(function(element){
-            if (element.id === objId){
+            if (element.contObject.id === objId){
                 curObject = element;
                 return true;
             }
-        });                  
+        });        
         //if cur object = null => exit function
         if (curObject == null){
             return;
         };
         //else
-        $scope.getEventsByObject(curObject);
-        var eventTable = document.getElementById("eventTable"+curObject.id);
+        
+        var eventTable = document.getElementById("eventTable"+curObject.contObject.id);
         if ((curObject.showGroupDetails==true) && (eventTable==null)){
             curObject.showGroupDetails =true;
         }else{
             curObject.showGroupDetails =!curObject.showGroupDetails;
         };                     
         //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
+//console.log(curObject.showGroupDetails);        
         if (curObject.showGroupDetails === true){
-
-            makeEventTypesByObjectTable(curObject);
-            var btnDetail = document.getElementById("btnDetail"+curObject.id);
+            $scope.getEventTypesByObject(curObject);
+            
+            var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-right");
             btnDetail.classList.add("glyphicon-chevron-down");
         }//else if curObject.showGroupDetails = false => hide child zpoint table
         else{
-            var trObjEvents = document.getElementById("trObjEvents"+curObject.id);
+            var trObjEvents = document.getElementById("trObjEvents"+curObject.contObject.id);
             trObjEvents.innerHTML = "";
-            var btnDetail = document.getElementById("btnDetail"+curObject.id);
+            var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-down");
             btnDetail.classList.add("glyphicon-chevron-right");
         };
@@ -127,7 +161,7 @@ console.log(targetUrl);
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.contObject.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
             tableHTML += "<td class=\"col-md-3\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
@@ -142,9 +176,9 @@ console.log(targetUrl);
     };
     
     //Формируем таблицу с событиями объекта
-    function makeEventTypesByObjectTable(object){
-        var trObjEvents = document.getElementById("trObjEvents"+object.id);
-        var trHTML = "<td><table id=\"eventTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">"+
+    function makeEventTypesByObjectTable(obj){        
+        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);      
+        var trHTML = "<td><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">"+
             "<thead>"+
             "<tr class=\"nmc-child-table-header\">"+
                 "<!--       Шапка таблицы-->"+
@@ -157,11 +191,14 @@ console.log(targetUrl);
                 "</th>"+
             "</tr>"+
             "</thead>    ";
-        object.eventTypes.forEach(function(event){
+        if (angular.isUndefined(obj)||!obj.hasOwnProperty('eventTypes')||(obj.eventTypes.length==0)){            
+            return;
+        };      
+        obj.eventTypes.forEach(function(event){
             trHTML +="<tr id=\"trEvent"+event.id+"\" >";
             trHTML +="<td class=\"nmc-td-for-buttons\">"+
                     "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-                        "ng-click=\"getZpointSettings("+object.id+","+event.id+")\""+
+                        "ng-click=\"getZpointSettings("+obj.contObject.id+","+event.id+")\""+
                         "data-target=\"#showZpointOptionModal\""+
                         "data-toggle=\"modal\""+
                         "data-placement=\"bottom\""+
@@ -179,7 +216,7 @@ console.log(targetUrl);
                         };
                         switch (event[column.name]){
                             case "red": title = "Критическая ситуация"; break;
-                            case "orange": title = "Не критическая ситуация"; break;
+                            case "orange": title = "Некритическая ситуация"; break;
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
