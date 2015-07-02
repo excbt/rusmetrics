@@ -1,7 +1,9 @@
 angular.module('portalNMC')
   .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile, $interval){
     //object url
-    var objectUrl = "../api/subscr/contEvent/notifications/contObjects";//"resource/objects.json";    
+    var notificationsUrl = "../api/subscr/contEvent/notifications"; 
+    var objectUrl = notificationsUrl+"/contObjects";//"resource/objects.json";  
+    var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = [];
     //default date interval settings
@@ -9,13 +11,34 @@ angular.module('portalNMC')
     $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
-    $scope.monitor = {};
-    $scope.monitor.refreshPeriod = "60";
+    $scope.monitorSettings = {};
+    $scope.monitorSettings.refreshPeriod = "60";
+    
+    
+    //monitor state
+    $scope.monitorState = {};
+    $scope.getMonitorState = function(){
+        $http.get(monitorUrl)
+            .success(function(data){
+                $scope.monitorState = data;
+                var monitorTab = document.getElementById('monitorTab');
+                monitorTab.style.backgroundColor = $scope.monitorState.statusColor.toLowerCase();
+                monitorTab.title = $scope.monitorState.colorDescription;
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+    $scope.getMonitorState();
+    
+    //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
+    $scope.noGreenObjects_flag = false;
     
     //get objects function
     $scope.getObjects = function(url){ 
-        var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
-console.log(targetUrl);        
+        var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd+"&noGreenColor="+$scope.noGreenObjects_flag;
+console.log(targetUrl);  
+        
         $http.get(targetUrl)
             .success(function(data){
                 $scope.objects = data;
@@ -35,13 +58,17 @@ console.log(targetUrl);
             .error(function(e){
                 console.log(e);
             });
+        $scope.noGreenObjects_flag = false; //reset flag
     };
     
     $scope.eventColumns = [
              {"name":"typeCategory", "header" : " ", "class":""},
             {"name":"typeEventCount", "header" : " ", "class":""},
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
-            ]
+            ];
+    
+    $scope.getEventsByObject = function(){
+    };
     
     $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
         var curObject = null;
@@ -56,6 +83,7 @@ console.log(targetUrl);
             return;
         };
         //else
+        $scope.getEventsByObject(curObject);
         var eventTable = document.getElementById("eventTable"+curObject.id);
         if ((curObject.showGroupDetails==true) && (eventTable==null)){
             curObject.showGroupDetails =true;
@@ -196,6 +224,11 @@ console.log(targetUrl);
         $scope.getObjects(objectUrl);
     };
     
+    $scope.getNoGreenObjects= function(){
+        $scope.noGreenObjects_flag = true;
+        $scope.getObjects(objectUrl);
+    };
+    
     //Watching for the change period 
     $scope.$watch('reportStart', function (newDates) {
 console.log("reportStart watch");        
@@ -217,9 +250,9 @@ console.log("reportStart watch");
 //            var time = (new Date()).toLocaleString();
 //console.log("new interval");            
 //console.log(time);
-//console.log(Number($scope.monitor.refreshPeriod));        
+//console.log(Number($scope.monitorSettings.refreshPeriod));        
 //            $scope.getObjects(objectUrl);
-//        },Number($scope.monitor.refreshPeriod)*1000);
+//        },Number($scope.monitorSettings.refreshPeriod)*1000);
         
     }, false);
     
@@ -227,9 +260,9 @@ console.log("reportStart watch");
 //    interval = $interval(function(){
 //        var time = (new Date()).toLocaleString();
 //console.log(time);
-//console.log(Number($scope.monitor.refreshPeriod));        
+//console.log(Number($scope.monitorSettings.refreshPeriod));        
 //        $scope.getObjects(objectUrl);
-//    },Number($scope.monitor.refreshPeriod)*1000);
+//    },Number($scope.monitorSettings.refreshPeriod)*1000);
     
         //chart
     $scope.runChart = function(objId){
