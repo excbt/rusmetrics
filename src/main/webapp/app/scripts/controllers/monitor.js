@@ -54,7 +54,10 @@ console.log(targetUrl);
                         return -1;
                     };
                     return 0;
-                });         
+                });  
+                $scope.objects.forEach(function(element){
+                    $scope.getMonitorEventsByObject(element);
+                });
                 makeObjectTable();
             })
             .error(function(e){
@@ -79,26 +82,31 @@ console.log(targetUrl);
                     return;
                 };
                 //temp array
-                var tmpTypes = [];
+                var tmpMessage = "";
                 //make the new array of the types wich formatted to display
                 data.forEach(function(element){
-                    var tmpType = {};
-                    tmpType.id = element.contEventType.id;
-                    tmpType.typeCategory = element.statusColor.toLowerCase();
-                    tmpType.typeEventCount = element.totalCount;
-                    tmpType.typeName = element.contEventType.name;
-                    tmpTypes.push(tmpType);
+                    var tmpEvent = "";
+//                    tmpType.id = element.contEventType.id;
+//                    tmpType.typeCategory = element.statusColor.toLowerCase();
+//                    tmpType.typeEventCount = element.totalCount;
+//                    tmpType.typeName = element.contEventType.name;
+                    var contEventTime = new Date(element.contEventTime);
+                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"\n";
+                    tmpMessage+=tmpEvent;
                 });
-                tmpTypes.sort(function(a, b){
-                    if (a.typeEventCount > b.typeEventCount){
-                        return -1;
-                    };
-                    if (a.typeEventCount < b.typeEventCount){
-                        return 1;
-                    };
-                    return 0;
-                });
-                obj.monitorEvents = tmpTypes;
+//                tmpTypes.sort(function(a, b){
+//                    if (a.typeEventCount > b.typeEventCount){
+//                        return -1;
+//                    };
+//                    if (a.typeEventCount < b.typeEventCount){
+//                        return 1;
+//                    };
+//                    return 0;
+//                });
+                obj.monitorEvents = tmpMessage;
+                //Display message
+                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
+                imgObj.title = obj.monitorEvents;
 //                makeEventTypesByObjectTable(obj);
             })
             .error(function(e){
@@ -197,7 +205,7 @@ console.log(targetUrl);
             tableHTML += "<table>";
             tableHTML += "<tr>";
             tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
-            tableHTML += "<img height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
+            tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
             tableHTML+= "</td>";
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
