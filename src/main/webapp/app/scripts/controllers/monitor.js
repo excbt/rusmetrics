@@ -14,7 +14,7 @@ angular.module('portalNMC')
     //monitor settings
     $scope.monitorSettings = {};
     $scope.monitorSettings.refreshPeriod = "60";
-    
+    $scope.monitorSettings.createRoundDiagram = false;
     
     //monitor state
     $scope.monitorState = {};
@@ -115,7 +115,18 @@ console.log(targetUrl);
     };
     
     //get event types by object
-    $scope.getEventTypesByObject = function(obj){
+    $scope.getEventTypesByObject = function(objId){
+        var obj = null;
+        $scope.objects.some(function(element){
+            if (element.contObject.id === objId){
+                obj = element;
+                return true;
+            }
+        });        
+        //if cur object = null => exit function
+        if (obj == null){
+            return;
+        };
         var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
         $http.get(url)
             .success(function(data){
@@ -144,7 +155,12 @@ console.log(targetUrl);
                     return 0;
                 });
                 obj.eventTypes = tmpTypes;
-                makeEventTypesByObjectTable(obj);
+                //If need diagram - don't create child table
+                if ($scope.monitorSettings.createRoundDiagram){
+                    $scope.runChart(obj.contObject.id);
+                }else{
+                    makeEventTypesByObjectTable(obj);
+                };
             })
             .error(function(e){
                 console.log(e);
@@ -174,7 +190,7 @@ console.log(targetUrl);
         //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
 //console.log(curObject.showGroupDetails);        
         if (curObject.showGroupDetails === true){
-            $scope.getEventTypesByObject(curObject);
+            $scope.getEventTypesByObject(curObject.contObject.id);
             
             var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-right");
@@ -210,7 +226,7 @@ console.log(targetUrl);
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.contObject.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
             tableHTML += "<td class=\"col-md-3\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
@@ -356,9 +372,11 @@ console.log("reportStart watch");
     
         //chart
     $scope.runChart = function(objId){
+        $scope.monitorSettings.createRoundDiagram = true;
+        
         var curObjIndex = -1;
         $scope.objects.some(function(element, index){
-            if(element.id == objId){
+            if(element.contObject.id == objId){
                 curObjIndex = index;
                 return true;
             };
@@ -366,13 +384,16 @@ console.log("reportStart watch");
         if (curObjIndex==-1){
             return;
         };
+        $scope.getEventTypesByObject($scope.objects[curObjIndex]);
         var data = [];//, series = Math.floor(Math.random() * 6) + 3;
+//console.log($scope.objects);        
         for (var i = 0; i < $scope.objects[curObjIndex].eventTypes.length; i++) {
 			data[i] = {
 				label: $scope.objects[curObjIndex].eventTypes[i].typeName,
 				data: $scope.objects[curObjIndex].eventTypes[i].typeEventCount
 			}
 		};
+        $scope.monitorSettings.createRoundDiagram = false;
         
         // выводим график
         $("#noticeChart-area").width(300);
