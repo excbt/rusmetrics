@@ -136,7 +136,7 @@ public class SubscrContEventNotificationControllerTest extends
 	public void testNotifiicationsContObject() throws Exception {
 
 		ResultActions resultActionsAll = mockMvc
-				.perform(get("/api/subscr/contEvent/notifications/contObjects")
+				.perform(get("/api/subscr/contEvent/notifications/contObject")
 						.param("fromDate", "2015-06-01")
 						.param("toDate", "2015-06-30")
 						.with(testSecurityContext())
