@@ -539,6 +539,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
+	@Deprecated
 	public long selectContEventTypeCount(final Long subscriberId,
 			final Long contObjectId, final DatePeriod datePeriod) {
 
@@ -550,6 +551,30 @@ public class SubscrContEventNotifiicationService {
 		List<Object[]> typesList = subscrContEventNotificationRepository
 				.selectNotificationEventTypeCount(subscriberId, contObjectId,
 						datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		return typesList.size();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public long selectContEventTypeCountGroup(final Long subscriberId,
+			final Long contObjectId, final DatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCountGroup(subscriberId,
+						contObjectId, datePeriod.getDateFrom(),
+						datePeriod.getDateTo());
 
 		return typesList.size();
 	}
@@ -645,8 +670,8 @@ public class SubscrContEventNotifiicationService {
 				newCnt = selectNotificationsCount(subscriberId, co.getId(),
 						datePeriod, Boolean.TRUE);
 
-				typesCnt = selectContEventTypeCount(subscriberId, co.getId(),
-						datePeriod);
+				typesCnt = selectContEventTypeCountGroup(subscriberId,
+						co.getId(), datePeriod);
 
 				if (resultColorKey == null) {
 					resultColorKey = ContEventLevelColorKey.YELLOW;
