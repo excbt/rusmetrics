@@ -1059,6 +1059,11 @@ tr.nmc-main-table-header > th {
  
 /* Всплывающая подсказка */
 .nmc-tooltip {
+    max-width: 1000px;
+}
+.qtip-nmc-tooltip {
+/*    background-color: aqua;*/
+    max-width: 1000px;
 }
  
 /* Неправильно введённое значение */

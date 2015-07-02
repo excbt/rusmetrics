@@ -25,6 +25,9 @@ angular.module('portalNMC')
                 $scope.monitorState = data;
                 var monitorTab = document.getElementById('monitorTab');
                 monitorTab.style.backgroundColor = $scope.monitorState.statusColor.toLowerCase();
+                if ($scope.monitorState.statusColor.toLowerCase()==="red" || $scope.monitorState.statusColor.toLowerCase()=="orange"){
+                    monitorTab.style.color = "#eee";
+                };
                 monitorTab.title = $scope.monitorState.colorDescription;
             })
             .error(function(e){
@@ -83,15 +86,17 @@ console.log(targetUrl);
                 };
                 //temp array
                 var tmpMessage = "";
+//                var tmpMessageEx = "";
                 //make the new array of the types wich formatted to display
                 data.forEach(function(element){
                     var tmpEvent = "";
+//                    var tmpEventEx = "";
 //                    tmpType.id = element.contEventType.id;
 //                    tmpType.typeCategory = element.statusColor.toLowerCase();
 //                    tmpType.typeEventCount = element.totalCount;
 //                    tmpType.typeName = element.contEventType.name;
                     var contEventTime = new Date(element.contEventTime);
-                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"\n";
+                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/>";
                     tmpMessage+=tmpEvent;
                 });
 //                tmpTypes.sort(function(a, b){
@@ -105,8 +110,18 @@ console.log(targetUrl);
 //                });
                 obj.monitorEvents = tmpMessage;
                 //Display message
-                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
-                imgObj.title = obj.monitorEvents;
+//                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
+//                imgObj.title = obj.monitorEvents;
+                var imgObj = "#imgObj"+obj.contObject.id;
+                $(imgObj).qtip({
+                    content:{
+                        text: obj.monitorEvents
+                    },
+                    style:{
+                        classes: 'qtip-bootstrap nmc-tooltip',
+                        width: 1000
+                    }
+                });
 //                makeEventTypesByObjectTable(obj);
             })
             .error(function(e){
@@ -115,7 +130,7 @@ console.log(targetUrl);
     };
     
     //get event types by object
-    $scope.getEventTypesByObject = function(objId){
+    $scope.getEventTypesByObject = function(objId, isChart){
         var obj = null;
         $scope.objects.some(function(element){
             if (element.contObject.id === objId){
@@ -156,7 +171,7 @@ console.log(targetUrl);
                 });
                 obj.eventTypes = tmpTypes;
                 //If need diagram - don't create child table
-                if ($scope.monitorSettings.createRoundDiagram){
+                if (isChart){
                     $scope.runChart(obj.contObject.id);
                 }else{
                     makeEventTypesByObjectTable(obj);
@@ -190,7 +205,7 @@ console.log(targetUrl);
         //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
 //console.log(curObject.showGroupDetails);        
         if (curObject.showGroupDetails === true){
-            $scope.getEventTypesByObject(curObject.contObject.id);
+            $scope.getEventTypesByObject(curObject.contObject.id, false);
             
             var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-right");
@@ -222,11 +237,14 @@ console.log(targetUrl);
             tableHTML += "<tr>";
             tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
+//            if (element.statusColor.toLowerCase()!="green"){
+//                tableHTML +="<i title=\"Узнать причину оценки\" class=\"btn btn-xs glyphicon glyphicon-bookmark\" ng-click=\"getNoticesByObject("+element.contObject.id+")\" data-target=\"#showNoticesModal\" data-toggle=\"modal\"></i>";
+//            };
             tableHTML+= "</td>";
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
             tableHTML += "<td class=\"col-md-3\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
@@ -372,7 +390,7 @@ console.log("reportStart watch");
     
         //chart
     $scope.runChart = function(objId){
-        $scope.monitorSettings.createRoundDiagram = true;
+//        $scope.monitorSettings.createRoundDiagram = true;
         
         var curObjIndex = -1;
         $scope.objects.some(function(element, index){
@@ -384,7 +402,7 @@ console.log("reportStart watch");
         if (curObjIndex==-1){
             return;
         };
-        $scope.getEventTypesByObject($scope.objects[curObjIndex]);
+//        $scope.getEventTypesByObject($scope.objects[curObjIndex]);
         var data = [];//, series = Math.floor(Math.random() * 6) + 3;
 //console.log($scope.objects);        
         for (var i = 0; i < $scope.objects[curObjIndex].eventTypes.length; i++) {
