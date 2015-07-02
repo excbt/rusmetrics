@@ -44,6 +44,9 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	private ContEventService contEventService;
 
 	@Autowired
+	private ContEventTypeService contEventTypeService;
+
+	@Autowired
 	private CurrentUserService currentUserService;
 
 	@Test
@@ -66,8 +69,8 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 				.selectSubscriberContObjectIds(currentSubscriberService
 						.getSubscriberId());
 
-		List<Long> contEventTypeIdList = contEventService
-				.findAllContEventTypes().stream().map(cet -> cet.getId())
+		List<Long> contEventTypeIdList = contEventTypeService
+				.selectBaseContEventTypes().stream().map(cet -> cet.getId())
 				.collect(Collectors.toList());
 
 		Page<?> result = subscrContEventNotifiicationService

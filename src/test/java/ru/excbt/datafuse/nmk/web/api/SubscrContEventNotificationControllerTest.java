@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
+import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -46,6 +47,9 @@ public class SubscrContEventNotificationControllerTest extends
 	@Autowired
 	private ContEventService contEventService;
 
+	@Autowired
+	private ContEventTypeService contEventTypeService;
+	
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
 
@@ -69,8 +73,8 @@ public class SubscrContEventNotificationControllerTest extends
 				.selectSubscriberContObjectIds(currentSubscriberService
 						.getSubscriberId());
 
-		List<Long> contEventTypeIdList = contEventService
-				.findAllContEventTypes().stream().map(cet -> cet.getId())
+		List<Long> contEventTypeIdList = contEventTypeService
+				.selectBaseContEventTypes().stream().map(cet -> cet.getId())
 				.collect(Collectors.toList());
 
 		ResultActions resultActionsAll = mockMvc.perform(get(

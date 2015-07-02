@@ -14,11 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
-
-import com.google.common.collect.Lists;
 
 @Service
 @Transactional
@@ -193,15 +190,5 @@ public class ContEventService {
 
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public List<ContEventType> findAllContEventTypes() {
-		List<ContEventType> result = Lists.newArrayList(contEventTypeRepository
-				.findAll());
-
-		return result;
-	}
 
 }
