@@ -1,6 +1,7 @@
 angular.module('portalNMC')
   .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile, $interval){
     //object url
+    var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
     var objectUrl = notificationsUrl+"/contObject";//"resource/objects.json";  
     var monitorUrl = notificationsUrl+"/monitorColor";
@@ -18,7 +19,8 @@ angular.module('portalNMC')
     //monitor state
     $scope.monitorState = {};
     $scope.getMonitorState = function(){
-        $http.get(monitorUrl)
+        var url = monitorUrl+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        $http.get(url)
             .success(function(data){
                 $scope.monitorState = data;
                 var monitorTab = document.getElementById('monitorTab');
@@ -67,6 +69,44 @@ console.log(targetUrl);
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
             ];
     
+    //get monitor events
+    $scope.getMonitorEventsByObject = function(obj){
+        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        $http.get(url)
+            .success(function(data){
+            //if data is not array - exit
+                if (!data.hasOwnProperty('length')||(data.length == 0)){
+                    return;
+                };
+                //temp array
+                var tmpTypes = [];
+                //make the new array of the types wich formatted to display
+                data.forEach(function(element){
+                    var tmpType = {};
+                    tmpType.id = element.contEventType.id;
+                    tmpType.typeCategory = element.statusColor.toLowerCase();
+                    tmpType.typeEventCount = element.totalCount;
+                    tmpType.typeName = element.contEventType.name;
+                    tmpTypes.push(tmpType);
+                });
+                tmpTypes.sort(function(a, b){
+                    if (a.typeEventCount > b.typeEventCount){
+                        return -1;
+                    };
+                    if (a.typeEventCount < b.typeEventCount){
+                        return 1;
+                    };
+                    return 0;
+                });
+                obj.monitorEvents = tmpTypes;
+//                makeEventTypesByObjectTable(obj);
+            })
+            .error(function(e){
+                console.log(e);
+            });        
+    };
+    
+    //get event types by object
     $scope.getEventTypesByObject = function(obj){
         var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
         $http.get(url)
@@ -140,6 +180,7 @@ console.log(targetUrl);
             btnDetail.classList.add("glyphicon-chevron-right");
         };
     };
+    
 
     //Рисуем таблицу с объектами
     function makeObjectTable(){
@@ -158,7 +199,7 @@ console.log(targetUrl);
             tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
             tableHTML+= "</td>";
-            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\"#/notices/list\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
+            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
             tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"runChart("+element.contObject.id+")\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
@@ -198,10 +239,7 @@ console.log(targetUrl);
             trHTML +="<tr id=\"trEvent"+event.id+"\" >";
             trHTML +="<td class=\"nmc-td-for-buttons\">"+
                     "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-                        "ng-click=\"getZpointSettings("+obj.contObject.id+","+event.id+")\""+
-                        "data-target=\"#showZpointOptionModal\""+
-                        "data-toggle=\"modal\""+
-                        "data-placement=\"bottom\""+
+                        "ng-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\""+
                         "title=\"Посмотреть уведомления\">"+
                     "</i>"+
                 "</td>";
@@ -241,12 +279,19 @@ console.log(targetUrl);
     };
     
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
-        $rootScope.monitor = {};
-        $rootScope.monitor.monitorFlag = true;
-        $rootScope.monitor.objectId = objId;
+        $scope.setNoticeFilterByObject(objId);
         $rootScope.monitor.isNew = true;
-        $rootScope.monitor.fromDate = $rootScope.reportStart;
-        $rootScope.monitor.toDate = $rootScope.reportEnd;
+
+    };
+    
+    $scope.setNoticeFilterByObjectAndType = function(objId, typeId){
+        $scope.setNoticeFilterByObject(objId);
+        $rootScope.monitor.typeIds = [typeId];
+    };
+    
+    $scope.getNoticesByObjectAndType = function(objId, typeId){
+        $scope.setNoticeFilterByObjectAndType(objId, typeId);
+        window.location.assign(noticesUrl);
     };
     
     

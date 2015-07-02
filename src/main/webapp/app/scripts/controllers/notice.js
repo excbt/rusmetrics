@@ -232,7 +232,14 @@ console.log("initCtrl");
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-//console.log($scope.startDate);                
+console.log("****************** Запрос *****************");
+console.log(url);        
+console.log($scope.startDate);
+console.log($scope.endDate);        
+console.log($scope.selectedObjects); 
+console.log($scope.selectedNoticeTypes);  
+console.log($scope.isNew);    
+console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
