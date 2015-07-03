@@ -70,6 +70,7 @@ public class ReportTemplateService implements SecuredRoles {
 	public ReportTemplate createOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
+		checkNotNull(reportTemplate.getSubscriber());
 
 		ReportTemplate result = reportTemplateRepository.save(reportTemplate);
 
@@ -85,6 +86,7 @@ public class ReportTemplateService implements SecuredRoles {
 	public ReportTemplate updateOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
+		checkNotNull(reportTemplate.getSubscriber());
 
 		ReportTemplate result = null;
 
@@ -105,18 +107,11 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN })
-	public ReportTemplate updateOneCommon(ReportTemplate reportTemplate) {
+	protected ReportTemplate updateOneAny(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
 
-		ReportTemplate result = null;
-		if (checkIsCommon(reportTemplate.getId())) {
-			result = reportTemplateRepository.save(reportTemplate);
-		} else {
-			throw new PersistenceException(String.format(
-					"Can't update common template (id=%d)",
-					reportTemplate.getId()));
-		}
+		ReportTemplate result = reportTemplateRepository.save(reportTemplate);
 
 		return result;
 	}
@@ -240,9 +235,8 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	public boolean checkCanUpdate(long id) {
-		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
-		return ids.indexOf(id) == -1;
+	public boolean checkCanUpdate(Long id) {
+		return !checkIsCommon(id);
 	}
 
 	/**
@@ -250,8 +244,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	public boolean checkIsCommon(long id) {
-		return !checkCanUpdate(id);
+	public boolean checkIsCommon(Long id) {
+		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
+		return ids.contains(id);
 	}
 
 	/**
