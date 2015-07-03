@@ -604,6 +604,10 @@ tr.nmc-main-table-header > th {
 .nmc-div-filter-remove{
     width: 10%;
 }
+    /*Стиль дива с кнопкой Обновить    */
+.nmc-div-refresh{
+    width: 40px;
+}
  
 /* ввод строки */
 .nmc-text-input-form {
@@ -727,6 +731,11 @@ tr.nmc-main-table-header > th {
 .nmc-button-notice-toggle{
     height: 26px;
     width: 125px;
+}
+
+/* Кнопка "Обновить" на странице уведомлений*/
+.nmc-button-refresh{
+    height: 26px;
 }
 
     /* Кнопка в правом верхнем углу заголовка рабочей области*/
@@ -1118,8 +1127,8 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-img-critical-indicator {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
 }
 
 

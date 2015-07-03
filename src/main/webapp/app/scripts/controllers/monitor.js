@@ -364,20 +364,29 @@ console.log("reportStart watch");
     }, false);
     
     
+//The control of the period monitor refresh(Управление перодическим обновлением монитора)
+//**************************************************************************  
+    var interval;
+    
+    function stopRefreshing(){
+        if (angular.isDefined(interval)){
+            $interval.cancel(interval);
+            interval = undefined;
+        };
+    };
+    
     $scope.$on('$destroy', function() {
-        alert("In destroy of:" + $scope.todo.text);
+//        alert("Ушли со страницы?");
+        stopRefreshing();
     });
     
-    var interval;
+    
     //watch for the change of the refresh period
     $scope.$watch('monitor.refreshPeriod', function (newPeriod) {
 //console.log("monitor.refreshPeriod watch");
 //console.log("new period = "+newPeriod);        
         //cancel previous interval
-        if (angular.isDefined(interval)){
-            $interval.cancel(interval);
-            interval = undefined;
-        };
+        stopRefreshing();
         //set new interval
         interval = $interval(function(){
             var time = (new Date()).toLocaleString();

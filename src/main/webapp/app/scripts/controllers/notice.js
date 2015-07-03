@@ -162,7 +162,7 @@ console.log("initCtrl");
 //console.log("pageChanged");        
         $scope.getResultsPage(newPage);
     };
-    
+    //Преобразуем полученные уведомления в формат, который будет отображаться пользователю
     var dataParse = function(arr){
         var oneNotice = {};
         var tmp = arr.map(function(el){
