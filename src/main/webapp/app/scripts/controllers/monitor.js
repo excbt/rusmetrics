@@ -62,6 +62,10 @@ console.log(targetUrl);
                     $scope.getMonitorEventsByObject(element);
                 });
                 makeObjectTable();
+            if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
+                $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
+                $rootScope.monitor.objectId = null;
+            };
             })
             .error(function(e){
                 console.log(e);
@@ -261,7 +265,7 @@ console.log(targetUrl);
     //Формируем таблицу с событиями объекта
     function makeEventTypesByObjectTable(obj){        
         var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);      
-        var trHTML = "<td><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">"+
+        var trHTML = "<td style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">"+
             "<thead>"+
             "<tr class=\"nmc-child-table-header\">"+
                 "<!--       Шапка таблицы-->"+
@@ -359,6 +363,11 @@ console.log("reportStart watch");
         $scope.getObjects(objectUrl);                              
     }, false);
     
+    
+    $scope.$on('$destroy', function() {
+        alert("In destroy of:" + $scope.todo.text);
+    });
+    
     var interval;
     //watch for the change of the refresh period
     $scope.$watch('monitor.refreshPeriod', function (newPeriod) {
@@ -370,13 +379,13 @@ console.log("reportStart watch");
             interval = undefined;
         };
         //set new interval
-//        interval = $interval(function(){
-//            var time = (new Date()).toLocaleString();
-//console.log("new interval");            
-//console.log(time);
-//console.log(Number($scope.monitorSettings.refreshPeriod));        
-//            $scope.getObjects(objectUrl);
-//        },Number($scope.monitorSettings.refreshPeriod)*1000);
+        interval = $interval(function(){
+            var time = (new Date()).toLocaleString();
+console.log("new interval");            
+console.log(time);
+console.log(Number($scope.monitorSettings.refreshPeriod));        
+            $scope.getObjects(objectUrl);
+        },Number($scope.monitorSettings.refreshPeriod)*1000);
         
     }, false);
     

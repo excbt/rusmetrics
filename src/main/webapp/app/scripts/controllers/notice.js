@@ -232,14 +232,14 @@ console.log("initCtrl");
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-console.log("****************** Запрос *****************");
-console.log(url);        
-console.log($scope.startDate);
-console.log($scope.endDate);        
-console.log($scope.selectedObjects); 
-console.log($scope.selectedNoticeTypes);  
-console.log($scope.isNew);    
-console.log("88888888888888888888 the end ***********************");        
+//console.log("****************** Запрос *****************");
+//console.log(url);        
+//console.log($scope.startDate);
+//console.log($scope.endDate);        
+//console.log($scope.selectedObjects); 
+//console.log($scope.selectedNoticeTypes);  
+//console.log($scope.isNew);    
+//console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
@@ -499,7 +499,9 @@ console.log("if = true");
         };      
     };
     
-    //Revision / new notices (Просмотренные/новые увеодомления)
+//control revision / new notices (Просмотренные/новые увеодомления)
+//*****************************************************************************************    
+    //get notice id array
     function getNoticesIds(notices, noticesIds){       
         if ((!notices.hasOwnProperty('length'))||(notices.length==0)||(typeof noticesIds == 'undefined')){
             return;
@@ -510,7 +512,7 @@ console.log("if = true");
             };
         });       
     };
-    
+    //set revision of selected notices
     $scope.revisionNotices = function(flagIsNew){
         var noticesIds = [];
         var url = $scope.crudTableName+"/revision";
@@ -526,6 +528,36 @@ console.log("if = true");
             data: null
         })
         .then(function(response) {
+            $('#confirmActionModal').modal('hide');
+            $scope.getResultsPage(1);
+            notificationFactory.success();
+        })
+        .catch(function(e){
+            notificationFactory.errorInfo(e.statusText,e);
+        });
+    };
+    //set revision of all notices 
+    $scope.revisionAllNotices = function(flagIsNew){
+//        var noticesIds = [];
+        var url = $scope.crudTableName+"/revision/all";
+//        getNoticesIds($scope.notices, noticesIds);   
+//        if ((typeof noticesIds == 'undefined')||(!noticesIds.hasOwnProperty('length'))|| (noticesIds.length==0)){
+//            return;
+//        };
+console.log($scope.isNew);
+        $http({
+            url: url, 
+            method: "PUT",
+            params: { fromDate: $scope.startDate,
+                     toDate: $scope.endDate,
+                     contObjectIds: $scope.selectedObjects,
+                     contEventTypeIds: $scope.selectedNoticeTypes,
+                     isNew: $scope.isNew,
+                     revisionIsNew: flagIsNew },
+            data: null
+        })
+        .then(function(response) {
+            $('#confirmActionModal').modal('hide');
             $scope.getResultsPage(1);
             notificationFactory.success();
         })
@@ -544,8 +576,11 @@ console.log("if = true");
     
     //Confirm the selected action
     $scope.confirmAction = function(){
-        if (confirmationText===messages.markOnPageAsRevision){
+        if ($scope.confirmationText===$scope.messages.markOnPageAsRevision){
             $scope.revisionNoticesOnPage();
+        };
+        if ($scope.confirmationText===$scope.messages.markAllAsRevision){
+            $scope.revisionAllNotices(false);
         };
     };
 
