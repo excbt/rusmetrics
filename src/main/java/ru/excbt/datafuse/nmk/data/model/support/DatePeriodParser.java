@@ -13,8 +13,6 @@ public class DatePeriodParser {
 
 	public final static DatePeriodParser EMPTY_PARSER = new DatePeriodParser();
 
-	private final DateTime fromDate;
-	private final DateTime toDate;
 	private final boolean isEmpty;
 
 	private final DatePeriod datePeriod;
@@ -23,15 +21,11 @@ public class DatePeriodParser {
 	 * 
 	 */
 	public DatePeriodParser() {
-		fromDate = null;
-		toDate = null;
 		isEmpty = true;
 		datePeriod = DatePeriod.emptyPeriod();
 	}
 
 	private DatePeriodParser(DateTime fromDate, DateTime toDate, boolean isEmpty) {
-		this.fromDate = fromDate;
-		this.toDate = toDate;
 		this.isEmpty = isEmpty;
 		this.datePeriod = DatePeriod.builder().dateFrom(fromDate)
 				.dateTo(toDate).build();
