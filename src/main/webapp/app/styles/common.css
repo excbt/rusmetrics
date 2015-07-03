@@ -410,6 +410,11 @@ tr.nmc-tr-odd>td{
     min-width: 65px;
     width: 4%;
 }
+    /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
+.nmc-td-for-buttons-3{
+    min-width: 90px;
+    width: 4%;
+}
 /*
 th.nmc-td-for-buttons{
     width: 1% !important;
