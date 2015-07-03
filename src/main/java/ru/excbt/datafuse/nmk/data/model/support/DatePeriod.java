@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
+
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 public class DatePeriod {
 
@@ -112,6 +115,27 @@ public class DatePeriod {
 			return false;
 		}
 		return dateTimeFrom.isBefore(dateTimeTo);
+	}
+
+	public boolean isInvalid() {
+		return !isValid();
+	}
+
+	public boolean isInvalidEq() {
+		return !isValidEq();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public DatePeriod buildEndOfDay() {
+
+		checkState(isValidEq(), "Can't build DatePeriod from invalid source");
+		DateTime endOfDay = JodaTimeUtils.endOfDay(dateTimeTo);
+
+		return DatePeriod.builder(this).dateTo(endOfDay).build();
+
 	}
 
 }

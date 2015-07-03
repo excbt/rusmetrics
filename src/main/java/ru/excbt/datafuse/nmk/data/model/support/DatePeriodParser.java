@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -66,24 +64,12 @@ public class DatePeriodParser {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param dateTime
-	 * @return
-	 */
-	public static DateTime endOfDay(DateTime dateTime) {
-		checkNotNull(dateTime);
-		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
-		return endOfDay;
-	}
-
 	public boolean isEmpty() {
 		return isEmpty;
 	}
 
 	public boolean isOk() {
-		return !isEmpty;
+		return !isEmpty && datePeriod != null;
 	}
 
 	public DatePeriod getDatePeriod() {
