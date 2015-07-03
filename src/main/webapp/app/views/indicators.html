@@ -54,7 +54,7 @@
 <div class="col-md-2">
     <div class="btn-group">
         <i ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
-        <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats" ng-click="runChart()"></i>
+<!--        <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats" ng-click="runChart()"></i>-->
     </div>    
 </div>  
 <div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
@@ -114,7 +114,10 @@
         </div>    
     </div>
     
-    <div class="row">
+    <div class="row" class="nmc-hide" ng-show="data.length ==0">
+        <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
+    </div>
+    <div class="row" ng-show="data.length >0">
         <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
             <tr ng-class="tableDef.headerClassTR">
                 <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
@@ -143,9 +146,9 @@
     </div>    
 <!--    In total-->
     <div class="row" ng-show="data.length >0">
-        <table class="crud-grid table table-lighter table-condensed table-hover nmc-table-nowrap-data">
+        <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-nowrap-data">
             <tr class="nmc-main-table-header">
-                <th class="col-md-1">
+                <th class="col-md-3">
                 </th>
                 <th ng-repeat="column in intotalColumns" ng-class="column.class">
                     {{column.header}}
@@ -159,21 +162,25 @@
             </tr>
             <tr>
                 <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns">
+                <td ng-repeat="column in intotalColumns" class="nmc-text-align-right">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
-                <td class="col-md-1"><span title="Разность между интеграторами на конец и начало периода. Двойной клик по строке откроет детали.">Итого по интеграторам:</span></td>
-                <td ng-repeat="column in intotalColumns" ng-dblclick="toggleDetail(summary.lastData)">
+                <td class="col-md-3"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
+<!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
+                </td>
+                <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right">
 <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                     {{summary.diffs[column.name]}}
+<!--
                     <div ng-show="summary.lastData.detail">
                         <div>Начальное значение = {{summary.firstData[column.name]}}</div>
                         <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>
                         <div>Конечное значение = {{summary.lastData[column.name]}} </div>
                         <div>(Дата = {{summary.lastData['dataDate'] | date: 'dd.MM.yyyy HH:mm'}});</div>
                     </div>
+-->
                 </td>
             </tr>   
         </table>    

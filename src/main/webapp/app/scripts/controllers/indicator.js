@@ -102,50 +102,304 @@ angular.module('portalNMC')
             }
         }
         ;
-      
-    $scope.intotalColumns = [
-        {"name": "m_in",
-         "header":"Масса подачи",
-         "class":"col-md-1",
-         "imgpath" : "",
-         "imgclass": ""
-         ,"title":""
-        },
-        {"name": "m_out",
-         "header":"Масса обратки",
-         "class":"col-md-1"
-         ,"imgpath" : ""
-         ,"imgclass": ""
-         ,"title":""
-        },
-        {"name": "v_in",
-         "header":"Объем подачи",
-         "class":"col-md-1"
-         ,"imgpath" : ""
-         ,"imgclass": ""
-         ,"title":""
-        },
-        {"name": "v_out",
-         "header":"Объем обратки",
-         "class":"col-md-1"
-         ,"imgpath" : ""
-         ,"imgclass": ""
-         ,"title":""
-        },
-        {"name": "h_delta",
-         "header":"ГКал отопления",
-         "class":"col-md-1"
-         ,"imgpath" : ""
-         ,"imgclass": ""
-         ,"title":""
-        }
-    ];    
+        
+      $scope.intotalColumns = [
+            {
+                header : "ГКал отопления, ГКал",
+//                header : "",
+                class : "col-md-1",
+                name: "h_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            }, 
+            {
+                header : "Масса подачи, т",
+//                header : "",
+                class : "col-md-1",
+                name: "m_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            }, 
+            {
+                header : "Масса обратки, т",
+//                header : "",
+                class : "col-md-1",
+                name: "m_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            }, 
+            {
+                header : "Температура подачи, град C",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "t_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            }, 
+            {
+                header : "Температура обратки, град C",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "t_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            } , 
+            {
+                header : "Температура холодной воды, град C",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "t_cold",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            } ,
+            {
+                header : "Температура окружающей среды, град C",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "t_outdoor",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Разница масс воды, т",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "m_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Объем подачи, м3",
+//                header : "",
+                class : "col-md-1",
+                name: "v_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Объем обратки, м3",
+//                header : "",
+                class : "col-md-1",
+                name: "v_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Разница объемов (потребление), м3",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "v_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Входящие ГКал, ГКал",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "h_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "ГКал на выходе, ГКал",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "h_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Давление на подаче, Мпа",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "p_in",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Давление на обратке, Мпа",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "p_out",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
+                header : "Разность давлений, Мпа",
+//                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "p_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            }];
+
+          
+//    $scope.intotalColumns = [
+//        {"name": "m_in",
+//         "header":"Масса подачи",
+//         "class":"col-md-1",
+//         "imgpath" : "",
+//         "imgclass": ""
+//         ,"title":""
+//        },
+//        {"name": "m_out",
+//         "header":"Масса обратки",
+//         "class":"col-md-1"
+//         ,"imgpath" : ""
+//         ,"imgclass": ""
+//         ,"title":""
+//        },
+//        {"name": "v_in",
+//         "header":"Объем подачи",
+//         "class":"col-md-1"
+//         ,"imgpath" : ""
+//         ,"imgclass": ""
+//         ,"title":""
+//        },
+//        {"name": "v_out",
+//         "header":"Объем обратки",
+//         "class":"col-md-1"
+//         ,"imgpath" : ""
+//         ,"imgclass": ""
+//         ,"title":""
+//        },
+//        {"name": "h_delta",
+//         "header":"ГКал отопления",
+//         "class":"col-md-1"
+//         ,"imgpath" : ""
+//         ,"imgclass": ""
+//         ,"title":""
+//        }
+//    ];    
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
         hideHeader : false,
         headerClassTR : "nmc-main-table-header",
-        columns : []
+        columns : [{
+                header : "Дата",
+                headerClass : "col-md-2",
+                dataClass : "col-md-2",
+                fieldName: "dataDate"
+            }, 
+            {
+                header : "Время наработки, час",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "workTime"
+            }, 
+            {
+                header : "ГКал отопления, ГКал",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "h_delta"
+            }, 
+            {
+                header : "Масса подачи, т",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "m_in"
+            }, 
+            {
+                header : "Масса обратки, т",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "m_out"
+            }, 
+            {
+                header : "Температура подачи, град C",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "t_in"
+            }, 
+            {
+                header : "Температура обратки, град C",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "t_out"
+            } , 
+            {
+                header : "Температура холодной воды, град C",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "t_cold"
+            } ,
+            {
+                header : "Температура окружающей среды, град C",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "t_outdoor"
+            },
+            {
+                header : "Разница масс воды, т",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "m_delta"
+            },
+            {
+                header : "Объем подачи, м3",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "v_in"
+            },
+            {
+                header : "Объем обратки, м3",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "v_out"
+            },
+            {
+                header : "Разница объемов (потребление), м3",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "v_delta"
+            },
+            {
+                header : "Входящие ГКал, ГКал",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "h_in"
+            },
+            {
+                header : "ГКал на выходе, ГКал",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "h_out"
+            },
+            {
+                header : "Давление на подаче, Мпа",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "p_in"
+            },
+            {
+                header : "Давление на обратке, Мпа",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "p_out"
+            },
+            {
+                header : "Разность давлений, Мпа",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "p_delta"
+            }]
     };
     
     $scope.summary = {};
@@ -183,19 +437,22 @@ angular.module('portalNMC')
 //console.log(table);        
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
-                var iCol = 0;
-                var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
-                for (var k in data.objects[0]){ 
-                    if (notUserColumns.has(k)){continue;};      
-                    var column = {};
-                    column.header = listColumns[k].header || k; 
-                    column.headerClass = listColumns[k].headerClass || "col-md-1";
-                    column.dataClass = listColumns[k].dataClass || "col-md-1";
-                    column.fieldName = k; 
-                    $scope.columns[iCol] = column;
-                    iCol=iCol+1;                          
-                };
-                $scope.tableDef.columns = $scope.columns;
+//                var iCol = 0;
+//                var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
+//                for (var k in data.objects[0]){ 
+//                    if (notUserColumns.has(k)){continue;};      
+//                    var column = {};
+//                    column.header = listColumns[k].header || k; 
+//                    column.headerClass = listColumns[k].headerClass || "col-md-1";
+//                    column.dataClass = listColumns[k].dataClass || "col-md-1";
+//                    column.fieldName = k; 
+//console.log(column.header +" = "+k);                    
+//                    $scope.columns[iCol] = column;
+//                    iCol=iCol+1;                          
+//                };
+//                $scope.tableDef.columns =$scope.columns;
+//console.log($scope.tableDef.columns);   
+                $scope.columns = $scope.tableDef.columns;
                 var tmp = data.objects.map(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
@@ -227,14 +484,38 @@ angular.module('portalNMC')
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){
                 $scope.summary = data;
-console.log(data);
+//console.log(data);
                 if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')){
                     return;
                 }
                         //work with fractional part
                 //search the shortest fractional part
-                $scope.intotalColumns.forEach(function(element, index, array){
+                $scope.intotalColumns.forEach(function(element, index, array){                
                     var columnName = element.name;
+                    var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+"<br>";
+                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br>";
+                    textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+"<br>";
+                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+                    var elDOM = "#total"+columnName;
+                    $(elDOM).qtip({
+                        content:{
+                            text: textDetails,
+                            button : true
+                        },
+                        style:{
+                            classes: 'qtip-bootstrap nmc-tooltip',
+                            width: 1000
+                        },
+                        hide: {
+                            event: false
+                        }
+                    });
+                    if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
+                        $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
+                    };
+                    if ($scope.summary.totals.hasOwnProperty(columnName) && ($scope.summary.totals[columnName]!=null)){
+                        $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
+                    };
                     if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)){
                         return;
                     }
@@ -252,9 +533,10 @@ console.log(data);
                     var totalStr = total.toString();
                     tempStrArr = totalStr.split(".");
                     var totalFractPart = tempStrArr.length>1? tempStrArr[1].length : 0;
-                    lengthFractPart = totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
-                    $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
-                    $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
+                    //29.06.2015 - поступило требование - выводить 3 знака после запятой
+                    lengthFractPart = 3;//totalFractPart>diffFractPart ? diffFractPart : totalFractPart;
+//                    $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
+//                    $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);                  
 
                     var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
 //            console.log("diff = "+$scope.summary.diffs[columnName]);           
@@ -284,7 +566,10 @@ console.log(data);
                     element.imgpath = EMPTY_IMG_PATH;
                     element.imgclass= "";
                     element.title = "";
+                    
                 });
+            
+                
 //console.log(data);            
         });
     };
@@ -435,6 +720,14 @@ console.log(data);
         var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         window.open(url);
     }; 
+    
+    //check indicators for data (проверка: есть данные для отображения или нет)
+    $scope.isHaveData = function(){
+        if (angular.isUndefined($scope.data)||($scope.data.length == 0)){
+            return false;
+        };
+        return true;
+    };
         
      //chart
     $scope.runChart = function(){

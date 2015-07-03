@@ -433,6 +433,11 @@ tr.nmc-main-table-header > th {
      background-color: #646263; /*background color*/
      color: #FFFFFF;
 }
+    /*Скрываем текст у колнки    */
+        /*значение color тут должен быть равно background-color из tr.nmc-main-table-header > th*/
+.nmc-th-invisible {
+     color: #646263 !important;
+}
 
     /*Таблица - контейнер для таблицы первого уровня*/
 .nmc-table-container {
@@ -1226,6 +1231,9 @@ tr.nmc-main-table-header > th {
     padding-left: 5px;
 }
 
+.paddingBottom5 {
+    padding-bottom: 5px;
+}
 .paddingBottom10 {
     padding-bottom: 10px;
 }
