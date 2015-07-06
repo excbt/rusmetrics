@@ -25,10 +25,10 @@ import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
@@ -378,7 +378,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(contObjectId);
 
 		List<ContEventMonitor> resultList = contEventMonitorService
-				.findByContObject(contObjectId);
+				.selectByContObject(contObjectId);
 
 		return ResponseEntity.ok(resultList);
 	}

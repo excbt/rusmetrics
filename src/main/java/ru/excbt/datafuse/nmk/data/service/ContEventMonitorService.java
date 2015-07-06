@@ -46,7 +46,7 @@ public class ContEventMonitorService {
 	 * @param contObjectId
 	 * @return
 	 */
-	public List<ContEventMonitor> findByContObject(Long contObjectId) {
+	protected List<ContEventMonitor> findByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
 
 		List<ContEventMonitor> contEventMonitor = contEventMonitorRepository
@@ -55,6 +55,20 @@ public class ContEventMonitorService {
 		List<ContEventMonitor> result = contEventMonitor.stream()
 				.sorted(CMP_BY_EVENT_TIME).collect(Collectors.toList());
 
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	public List<ContEventMonitor> selectByContObject(Long contObjectId) {
+		checkNotNull(contObjectId);
+		
+		List<ContEventMonitor> result = contEventMonitorRepository
+				.selectByContObjectId(contObjectId);
+		
 		return result;
 	}
 

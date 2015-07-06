@@ -18,6 +18,14 @@ public interface ContEventMonitorRepository extends
 	 */
 	public List<ContEventMonitor> findByContObjectId(Long contObjectId);
 
+	
+	@Query("SELECT m FROM ContEventMonitor m "
+			+ "WHERE m.contObjectId = :contObjectId "
+			+ " ORDER BY m.contEventTime ")
+	public List<ContEventMonitor> selectByContObjectId(
+			@Param("contObjectId") Long contObjectId);
+
+	
 	/**
 	 * 
 	 * @param contObjectId
