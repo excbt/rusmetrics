@@ -99,7 +99,7 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	public String getCommercialReportPathHtml(long contObjectId,
+	protected String getCommercialReportPathHtml(long contObjectId,
 			DateTime beginDate, DateTime endDate) {
 		return getCommercialReportPath(ReportOutputFileType.HTML, contObjectId,
 				beginDate, endDate);
@@ -112,7 +112,7 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	public String getCommercialReportPathPdf(long contObjectId,
+	protected String getCommercialReportPathPdf(long contObjectId,
 			DateTime beginDate, DateTime endDate) {
 		return getCommercialReportPath(ReportOutputFileType.PDF, contObjectId,
 				beginDate, endDate);
@@ -125,7 +125,7 @@ public class ReportService {
 	 * @param endDate
 	 * @return
 	 */
-	public String getCommercialReportPath(ReportOutputFileType reportType,
+	protected String getCommercialReportPath(ReportOutputFileType reportType,
 			long contObjectId, DateTime beginDate, DateTime endDate) {
 		checkNotNull(reportType);
 		checkArgument(contObjectId > 0);
@@ -390,6 +390,10 @@ public class ReportService {
 		}
 		case EVENT_REPORT: {
 			result = ReportType.RPT_ALERTS;
+			break;
+		}
+		case METROLOGICAL_REPORT: {
+			result = ReportType.RPT_METROLOGICAL;
 			break;
 		}
 		default: {

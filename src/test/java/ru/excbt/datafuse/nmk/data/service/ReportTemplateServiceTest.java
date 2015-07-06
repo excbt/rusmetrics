@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -275,7 +276,21 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			reportTemplateService
 					.createCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
 		}
+	}
 
+	@Test
+	public void updateCommonMetrologicalReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.METROLOGICAL_REPORT, ReportConstants.IS_ACTIVE,
+				ReportConstants.IS_COMPILED);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.METROLOGICAL_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
+		}
 	}
 
 	@Test

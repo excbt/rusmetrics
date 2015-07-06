@@ -57,6 +57,7 @@ public class ReportServiceController extends WebApiController {
 	private final static String DEFAULT_CONS_T1_FILENAME = "cont_T2_Report";
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
 	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
+	private final static String DEFAULT_METROLOGICAL_FILENAME = "metrologicalReport";
 
 	@Autowired
 	private ReportService reportService;
@@ -415,6 +416,50 @@ public class ReportServiceController extends WebApiController {
 
 	/**
 	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/metrological/{reportParamsetId}/download", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadMetrologicalReportGet(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = metrologicalReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamsetId);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/metrological/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadMetrologicalReportGetPreview(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = metrologicalReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamsetId, true);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	private ReportMaker eventReportMaker() {
@@ -467,6 +512,21 @@ public class ReportServiceController extends WebApiController {
 			@Override
 			public String defaultFileName() {
 				return DEFAULT_CONS_T2_FILENAME;
+			}
+
+		};
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker metrologicalReportMaker() {
+		return new AbstractReportMaker() {
+
+			@Override
+			public String defaultFileName() {
+				return DEFAULT_METROLOGICAL_FILENAME;
 			}
 
 		};
@@ -617,6 +677,33 @@ public class ReportServiceController extends WebApiController {
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
 
+	}
+
+	@RequestMapping(value = "/metrological/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public ResponseEntity<byte[]> doDowndloadMetrologicalReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = metrologicalReportMaker();
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
 	}
 
 	/**
