@@ -422,6 +422,7 @@ angular.module('portalNMC')
       //Получаем показания
     $scope.columns = [];
     $scope.getData = function (pageNumber) {
+//console.log("getData");        
         $scope.pagination.current = pageNumber;   
          var contZPoint = $cookies.contZPoint;
          $scope.contZPointName = $cookies.contZPointName;
@@ -491,7 +492,10 @@ angular.module('portalNMC')
                         //work with fractional part
                 //search the shortest fractional part
                 $scope.intotalColumns.forEach(function(element, index, array){                
-                    var columnName = element.name;
+                    var columnName = element.name;                  
+                    if (angular.isUndefined($scope.summary.firstData) || angular.isUndefined($scope.summary.lastData) || ($scope.summary.firstData===null) || ($scope.summary.lastData===null) || !$scope.summary.firstData.hasOwnProperty(columnName) || !$scope.summary.lastData.hasOwnProperty(columnName)){
+                        return;
+                    };
                     var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+"<br>";
                     textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br>";
                     textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+"<br>";
