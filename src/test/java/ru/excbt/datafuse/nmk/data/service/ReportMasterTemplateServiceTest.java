@@ -9,20 +9,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
 import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 
 public class ReportMasterTemplateServiceTest extends JpaSupportTest {
-
-	private static final String COMM_FILE_COMPILED = "jasper_reports/nmk_com_report.jasper";
-	private static final String COMM_FILE_JRXML = "jasper_reports/nmk_com_report.jrxml";
-
-	private static final String EVENT_FILE_COMPILED = "jasper_reports/nmk_event_report.jasper";
-	private static final String CONS_T1_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_1.jasper";
-	private static final String CONS_T2_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_2.jasper";
-
-	private static final boolean IS_COMPILED = true;
-	private static final boolean IS_NOT_COMPILED = false;
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
@@ -57,10 +48,12 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testLoadCommerceMasterReportTemplateCompiled() throws IOException {
-		
+	public void testLoadCommerce_MasterReportTemplateCompiled()
+			throws IOException {
+
 		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				COMM_FILE_COMPILED, IS_COMPILED);
+				ReportConstants.Paths.COMM_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
 	}
 
 	/**
@@ -68,29 +61,39 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testLoadCommerceMasterReportTemplateJrxml() throws IOException {
-		
+	public void testLoadCommerce_MasterReportTemplateJrxml() throws IOException {
+
 		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				COMM_FILE_JRXML, IS_NOT_COMPILED);
+				ReportConstants.Paths.COMM_FILE_JRXML,
+				ReportConstants.IS_NOT_COMPILED);
 	}
 
-	
 	@Test
-	public void testLoadEventReport() throws Exception {
+	public void testLoadEvent_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.EVENT_REPORT,
-				EVENT_FILE_COMPILED, IS_COMPILED);
+				ReportConstants.Paths.EVENT_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
-	public void testLoadConsT1Report() throws Exception {
+	public void testLoadConsT1_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
-				CONS_T1_FILE_COMPILED, IS_COMPILED);
+				ReportConstants.Paths.CONS_T1_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
-	public void testLoadConsT2Report() throws Exception {
+	public void testLoadConsT2_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				CONS_T2_FILE_COMPILED, IS_COMPILED);
+				ReportConstants.Paths.CONS_T2_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
+	}
+
+	@Test
+	public void testLoadMetrological_MasterReportTemplate() throws Exception {
+		testLoadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
+				ReportConstants.Paths.METROLOGICAL_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
 	}
 
 }
