@@ -2,11 +2,16 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +25,9 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorRepository;
 @Service
 @Transactional(readOnly = true)
 public class ContEventMonitorService {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(ContEventMonitorService.class);
 
 	public final static Comparator<ContEventMonitor> CMP_BY_COLOR_RANK = (e1,
 			e2) -> Integer.compare(e1.getContEventLevelColor() == null ? -1
@@ -110,7 +118,7 @@ public class ContEventMonitorService {
 	 * @param contEventMonitor
 	 * @return
 	 */
-	private ContEventLevelColor sortWorseColor(
+	public ContEventLevelColor sortWorseColor(
 			List<ContEventMonitor> contEventMonitor) {
 
 		checkNotNull(contEventMonitor);
@@ -134,7 +142,7 @@ public class ContEventMonitorService {
 	 * @param keynameObject
 	 * @return
 	 */
-	private ContEventLevelColorKey getColorKey(KeynameObject keynameObject) {
+	public ContEventLevelColorKey getColorKey(KeynameObject keynameObject) {
 		if (keynameObject == null) {
 			return null;
 		}
@@ -142,6 +150,31 @@ public class ContEventMonitorService {
 				.findByKeyname(keynameObject);
 		return result;
 
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	public Map<Long, List<ContEventMonitor>> getContObjectsContEventMonitorMap(
+			List<Long> contObjectIds) {
+		List<ContEventMonitor> monitorList = contEventMonitorRepository
+				.selectByContObjectIds(contObjectIds);
+
+		Map<Long, List<ContEventMonitor>> resultMap = new HashMap<Long, List<ContEventMonitor>>();
+		for (ContEventMonitor m : monitorList) {
+			if (!resultMap.containsKey(m.getContObjectId())) {
+				resultMap.put(m.getContObjectId(), new ArrayList<>());
+			}
+			resultMap.get(m.getContObjectId()).add(m);
+		}
+
+		// Map<Long, ContEventLevelColorKey> resultMap = monitorList.stream()
+		// .collect(
+		// Collectors.toMap(ContEventMonitor::getContObjectId,
+		// m -> m.getContEventLevelColorKey()));
+		return resultMap;
 	}
 
 }

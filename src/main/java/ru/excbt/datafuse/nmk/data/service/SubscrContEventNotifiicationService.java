@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -113,6 +114,12 @@ public class SubscrContEventNotifiicationService {
 					Collectors.toMap(
 							ContEventNotificationInfo::getContObjectId,
 							(info) -> info));
+		}
+
+		private long getNotificationCount(Long contObjectId) {
+			ContEventNotificationInfo info = notificationMap.get(contObjectId);
+			return (info == null) || (info.count == null) ? 0 : info.count
+					.longValue();
 		}
 	}
 
@@ -691,21 +698,43 @@ public class SubscrContEventNotifiicationService {
 		List<ContObject> contObjects = subscriberService
 				.selectSubscriberContObjects(subscriberId);
 
-		List<ContEventNotificationInfo> contEventNotificationInfoList = selectContEventNotificationInfoList(
-				subscriberId, datePeriod);
+		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId())
+				.collect(Collectors.toList());
+
+		ContEventNotificationMap allMap = new ContEventNotificationMap(
+				selectContEventNotificationInfoList(subscriberId,
+						contObjectIds, datePeriod));
+
+		ContEventNotificationMap allNewMap = new ContEventNotificationMap(
+				selectContEventNotificationInfoList(subscriberId,
+						contObjectIds, datePeriod, Boolean.TRUE));
+
+		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
+				.getContObjectsContEventMonitorMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
-			logger.trace(
-					"Select EventsStatusData for contObjectId:{}, subscriberId:{}",
-					co.getId(), subscriberId);
+			List<ContEventMonitor> availableMonitors = monitorContObjectsMap
+					.get(co.getId());
 
-			ContEventLevelColorKey monitorColorKey = contEventMonitorService
-					.getColorKeyByContObject(co.getId());
+			ContEventLevelColorKey monitorColorKey = null;
 
-			long allCnt = selectNotificationsCount(subscriberId, co.getId(),
-					datePeriod);
+			if (availableMonitors != null) {
+				ContEventLevelColor monitorColor = contEventMonitorService
+						.sortWorseColor(availableMonitors);
+				monitorColorKey = contEventMonitorService
+						.getColorKey(monitorColor);
+			}
+
+			// ContEventLevelColorKey checkMonitorColorKey =
+			// contEventMonitorService
+			// .getColorKeyByContObject(co.getId());
+			//
+			// checkState(checkMonitorColorKey == monitorColorKey);
+
+			long allCnt = allMap.getNotificationCount(co.getId());
+
 			long newCnt = 0;
 			long typesCnt = 0;
 
@@ -713,8 +742,7 @@ public class SubscrContEventNotifiicationService {
 
 			if (allCnt > 0) {
 
-				newCnt = selectNotificationsCount(subscriberId, co.getId(),
-						datePeriod, Boolean.TRUE);
+				newCnt = allNewMap.getNotificationCount(co.getId());
 
 				typesCnt = selectContEventTypeCountGroup(subscriberId,
 						co.getId(), datePeriod);
@@ -742,8 +770,56 @@ public class SubscrContEventNotifiicationService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param datePeriod
+	 * @return
+	 */
 	private List<ContEventNotificationInfo> selectContEventNotificationInfoList(
-			final Long subscriberId, final DatePeriod datePeriod) {
-		return null;
+			final Long subscriberId, final List<Long> contObjectIds,
+			final DatePeriod datePeriod) {
+		return selectContEventNotificationInfoList(subscriberId, contObjectIds,
+				datePeriod, null);
 	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param datePeriod
+	 * @param isNew
+	 * @return
+	 */
+	private List<ContEventNotificationInfo> selectContEventNotificationInfoList(
+			final Long subscriberId, final List<Long> contObjectIds,
+			final DatePeriod datePeriod, Boolean isNew) {
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkArgument(datePeriod.isValidEq());
+
+		List<Object[]> selectResult = null;
+		if (isNew == null) {
+			selectResult = subscrContEventNotificationRepository
+					.selectNotificatoinsCountList(subscriberId, contObjectIds,
+							datePeriod.getDateFrom(), datePeriod.getDateTo());
+		} else {
+			selectResult = subscrContEventNotificationRepository
+					.selectNotificatoinsCountList(subscriberId, contObjectIds,
+							datePeriod.getDateFrom(), datePeriod.getDateTo(),
+							isNew);
+		}
+
+		checkNotNull(selectResult);
+
+		List<ContEventNotificationInfo> resultList = selectResult
+				.stream()
+				.map((objects) -> new ContEventNotificationInfo(objects[0],
+						objects[1])).collect(Collectors.toList());
+
+		return resultList;
+	}
+
+	// private
 }

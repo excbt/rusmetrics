@@ -39,7 +39,7 @@ public interface SubscrContEventNotificationRepository extends
 	 * @param dateTo
 	 * @return
 	 */
-	@Query(value = " SELECT count(1), cen.contObjectId FROM SubscrContEventNotification cen "
+	@Query(value = " SELECT cen.contObjectId, count(1) FROM SubscrContEventNotification cen "
 			+ " WHERE cen.subscriberId = :subscriberId AND "
 			+ " cen.contEventTime >= :dateFrom AND "
 			+ " cen.contEventTime <= :dateTo AND "
@@ -79,7 +79,7 @@ public interface SubscrContEventNotificationRepository extends
 	 * @param isNew
 	 * @return
 	 */
-	@Query(value = " SELECT count(1), cen.contObjectId FROM SubscrContEventNotification cen "
+	@Query(value = " SELECT cen.contObjectId, count(1) FROM SubscrContEventNotification cen "
 			+ " WHERE cen.subscriberId = :subscriberId AND "
 			+ " cen.isNew = :isNew AND"
 			+ " cen.contEventTime >= :dateFrom AND "
