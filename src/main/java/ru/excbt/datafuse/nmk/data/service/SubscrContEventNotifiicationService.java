@@ -77,22 +77,35 @@ public class SubscrContEventNotifiicationService {
 	@Autowired
 	private ContEventLevelColorRepository contEventLevelColorRepository;
 
-	private class ContEventNotificationInfo {
+	private static class ContObjectCounterInfo {
 		private final Long contObjectId;
 		private final Long count;
 
-		private ContEventNotificationInfo(Long contObjectId, Long count) {
+		private ContObjectCounterInfo(Long contObjectId, Long count) {
 			this.contObjectId = contObjectId;
 			this.count = count;
 		}
 
-		private ContEventNotificationInfo(Object contObjectId, Object count) {
+		private static ContObjectCounterInfo newInstance(Object contObjectId,
+				Object count) {
 
-			checkArgument(contObjectId instanceof Long);
-			checkArgument(count instanceof Long);
+			if (contObjectId instanceof Long && count instanceof Long) {
+				return new ContObjectCounterInfo((Long) contObjectId,
+						(Long) count);
 
-			this.contObjectId = (Long) contObjectId;
-			this.count = (Long) count;
+			} else if (contObjectId instanceof Number
+					&& count instanceof Number) {
+
+				long contObjectIdValue = ((Number) contObjectId)
+						.longValue();
+				long countValue = ((Number) count).longValue();
+				return new ContObjectCounterInfo(contObjectIdValue, countValue);
+			
+			} 
+
+			throw new IllegalArgumentException(
+					"Can't determine type for ContObjectCounterInfo arguments ");
+
 		}
 
 		public Long getContObjectId() {
@@ -105,19 +118,18 @@ public class SubscrContEventNotifiicationService {
 
 	}
 
-	private class ContEventNotificationMap {
-		private final Map<Long, ContEventNotificationInfo> notificationMap;
+	private class ContObjectCounterMap {
+		private final Map<Long, ContObjectCounterInfo> notificationMap;
 
-		private ContEventNotificationMap(List<ContEventNotificationInfo> srcList) {
+		private ContObjectCounterMap(List<ContObjectCounterInfo> srcList) {
 			checkNotNull(srcList);
 			this.notificationMap = srcList.stream().collect(
-					Collectors.toMap(
-							ContEventNotificationInfo::getContObjectId,
-							(info) -> info));
+					Collectors.toMap(ContObjectCounterInfo::getContObjectId, (
+							info) -> info));
 		}
 
-		private long getNotificationCount(Long contObjectId) {
-			ContEventNotificationInfo info = notificationMap.get(contObjectId);
+		private long getCountValue(Long contObjectId) {
+			ContObjectCounterInfo info = notificationMap.get(contObjectId);
 			return (info == null) || (info.count == null) ? 0 : info.count
 					.longValue();
 		}
@@ -701,13 +713,17 @@ public class SubscrContEventNotifiicationService {
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId())
 				.collect(Collectors.toList());
 
-		ContEventNotificationMap allMap = new ContEventNotificationMap(
+		ContObjectCounterMap allMap = new ContObjectCounterMap(
 				selectContEventNotificationInfoList(subscriberId,
 						contObjectIds, datePeriod));
 
-		ContEventNotificationMap allNewMap = new ContEventNotificationMap(
+		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
 				selectContEventNotificationInfoList(subscriberId,
 						contObjectIds, datePeriod, Boolean.TRUE));
+
+		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
+				selectContObjectEventTypeCountGroupInfoList(subscriberId,
+						contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
@@ -733,7 +749,7 @@ public class SubscrContEventNotifiicationService {
 			//
 			// checkState(checkMonitorColorKey == monitorColorKey);
 
-			long allCnt = allMap.getNotificationCount(co.getId());
+			long allCnt = allMap.getCountValue(co.getId());
 
 			long newCnt = 0;
 			long typesCnt = 0;
@@ -742,10 +758,11 @@ public class SubscrContEventNotifiicationService {
 
 			if (allCnt > 0) {
 
-				newCnt = allNewMap.getNotificationCount(co.getId());
+				newCnt = allNewMap.getCountValue(co.getId());
 
-				typesCnt = selectContEventTypeCountGroup(subscriberId,
-						co.getId(), datePeriod);
+				// typesCnt = selectContEventTypeCountGroup(subscriberId,
+				// co.getId(), datePeriod);
+				typesCnt = contallEventTypesMap.getCountValue(co.getId());
 
 				if (resultColorKey == null) {
 					resultColorKey = ContEventLevelColorKey.YELLOW;
@@ -777,7 +794,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	private List<ContEventNotificationInfo> selectContEventNotificationInfoList(
+	private List<ContObjectCounterInfo> selectContEventNotificationInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
 			final DatePeriod datePeriod) {
 		return selectContEventNotificationInfoList(subscriberId, contObjectIds,
@@ -792,7 +809,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param isNew
 	 * @return
 	 */
-	private List<ContEventNotificationInfo> selectContEventNotificationInfoList(
+	private List<ContObjectCounterInfo> selectContEventNotificationInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
 			final DatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
@@ -813,13 +830,38 @@ public class SubscrContEventNotifiicationService {
 
 		checkNotNull(selectResult);
 
-		List<ContEventNotificationInfo> resultList = selectResult
+		List<ContObjectCounterInfo> resultList = selectResult
 				.stream()
-				.map((objects) -> new ContEventNotificationInfo(objects[0],
+				.map((objects) -> ContObjectCounterInfo.newInstance(objects[0],
 						objects[1])).collect(Collectors.toList());
 
 		return resultList;
 	}
 
-	// private
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param datePeriod
+	 * @return
+	 */
+	private List<ContObjectCounterInfo> selectContObjectEventTypeCountGroupInfoList(
+			final Long subscriberId, final List<Long> contObjectIds,
+			final DatePeriod datePeriod) {
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkArgument(datePeriod.isValidEq());
+
+		List<Object[]> selectResult = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCountGroup(subscriberId,
+						contObjectIds, datePeriod.getDateFrom(),
+						datePeriod.getDateTo());
+
+		List<ContObjectCounterInfo> resultList = selectResult
+				.stream()
+				.map((objects) -> ContObjectCounterInfo.newInstance(objects[0],
+						objects[1])).collect(Collectors.toList());
+
+		return resultList;
+	}
 }

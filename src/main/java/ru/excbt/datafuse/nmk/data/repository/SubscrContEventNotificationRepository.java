@@ -128,4 +128,17 @@ public interface SubscrContEventNotificationRepository extends
 			@Param("contObjectId") Long contObjectId,
 			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
+	@Query(value = " SELECT x.cont_object_id, COUNT(cont_event_type_id) cnt FROM ( SELECT cen.cont_object_id, cen.cont_event_type_id "
+			+ " FROM subscr_cont_event_notification cen "
+			+ " WHERE cen.subscriber_id = :subscriberId AND "
+			+ " cen.cont_object_id IN (:contObjectIds) AND "
+			+ " cen.cont_event_time >= :dateFrom AND "
+			+ " cen.cont_event_time <= :dateTo "
+			+ " GROUP BY cen.cont_object_id, cen.cont_event_type_id) x "
+			+ " GROUP BY x.cont_object_id ", nativeQuery = true)
+	public List<Object[]> selectNotificationEventTypeCountGroup(
+			@Param("subscriberId") Long subscriberId,
+			@Param("contObjectIds") List<Long> contObjectIds,
+			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
+
 }
