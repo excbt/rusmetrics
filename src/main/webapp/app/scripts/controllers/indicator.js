@@ -21,7 +21,7 @@ angular.module('portalNMC')
                 dataClass : "col-md-1"
             }, 
             "h_delta":{
-                header : "ГКал отопления, ГКал",
+                header : "ГКал отопления",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             }, 
@@ -76,12 +76,12 @@ angular.module('portalNMC')
                 dataClass : "col-md-1"
             },
             "h_in":{
-                header : "Входящие ГКал, ГКал",
+                header : "Входящие ГКал",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             },
             "h_out":{
-                header : "ГКал на выходе, ГКал",
+                header : "ГКал на выходе",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1"
             },
@@ -105,7 +105,7 @@ angular.module('portalNMC')
         
       $scope.intotalColumns = [
             {
-                header : "ГКал отопления, ГКал",
+                header : "Потребление тепла, ГКал",
 //                header : "",
                 class : "col-md-1",
                 name: "h_delta",
@@ -132,8 +132,8 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
-                header : "Температура подачи, град C",
-//                header : "",
+//                header : "Температура подачи, град C",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_in",
                 "imgpath" : "",
@@ -141,8 +141,8 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
-                header : "Температура обратки, град C",
-//                header : "",
+//                header : "Температура обратки, град C",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_out",
                 "imgpath" : "",
@@ -150,8 +150,8 @@ angular.module('portalNMC')
                 "title":""
             } , 
             {
-                header : "Температура холодной воды, град C",
-//                header : "",
+//                header : "Температура холодной воды, град C",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_cold",
                 "imgpath" : "",
@@ -159,8 +159,8 @@ angular.module('portalNMC')
                 "title":""
             } ,
             {
-                header : "Температура окружающей среды, град C",
-//                header : "",
+//                header : "Температура окружающей среды, град C",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
                 "imgpath" : "",
@@ -168,8 +168,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Разница масс воды, т",
-//                header : "",
+//                header : "Разница масс воды, т",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "m_delta",
                 "imgpath" : "",
@@ -186,7 +186,7 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Объем обратки, м3",
+                header : "Объем обратки",
 //                header : "",
                 class : "col-md-1",
                 name: "v_out",
@@ -195,8 +195,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Разница объемов (потребление), м3",
-//                header : "",
+//                header : "Разница объемов, м3",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "v_delta",
                 "imgpath" : "",
@@ -204,8 +204,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Входящие ГКал, ГКал",
-//                header : "",
+//                header : "Входящие ГКал",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "h_in",
                 "imgpath" : "",
@@ -213,8 +213,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "ГКал на выходе, ГКал",
-//                header : "",
+//                header : "ГКал на выходе",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "h_out",
                 "imgpath" : "",
@@ -222,8 +222,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Давление на подаче, Мпа",
-//                header : "",
+//                header : "Давление на подаче",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "p_in",
                 "imgpath" : "",
@@ -231,8 +231,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Давление на обратке, Мпа",
-//                header : "",
+//                header : "Давление на обратке",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "p_out",
                 "imgpath" : "",
@@ -240,8 +240,8 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Разность давлений, Мпа",
-//                header : "",
+//                header : "Разность давлений, Мпа",
+                header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "p_delta",
                 "imgpath" : "",
@@ -305,7 +305,7 @@ angular.module('portalNMC')
                 fieldName: "workTime"
             }, 
             {
-                header : "ГКал отопления, ГКал",
+                header : "Потребление тепла, ГКал",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "h_delta"
@@ -323,31 +323,35 @@ angular.module('portalNMC')
                 fieldName: "m_out"
             }, 
             {
-                header : "Температура подачи, град C",
+                header : "Темп. подачи",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_in"
+                ,dataType: "temperature"                
             }, 
             {
-                header : "Температура обратки, град C",
+                header : "Темп. обратки",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_out"
+                ,dataType: "temperature"                
             } , 
             {
-                header : "Температура холодной воды, град C",
+                header : "Темп. ХВС",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_cold"
+                ,dataType: "temperature"                
             } ,
             {
-                header : "Температура окружающей среды, град C",
+                header : "Темп. окр. среды",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_outdoor"
+                ,dataType: "temperature"                
             },
             {
-                header : "Разница масс воды, т",
+                header : "Разность масс, т",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "m_delta"
@@ -365,19 +369,19 @@ angular.module('portalNMC')
                 fieldName: "v_out"
             },
             {
-                header : "Разница объемов (потребление), м3",
+                header : "Разность объемов, м3",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "v_delta"
             },
             {
-                header : "Входящие ГКал, ГКал",
+                header : "ГКал на входе",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "h_in"
             },
             {
-                header : "ГКал на выходе, ГКал",
+                header : "ГКал на выходе",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "h_out"
@@ -484,11 +488,46 @@ angular.module('portalNMC')
         // get summary
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){
-                $scope.summary = data;
-//console.log(data);
+//var indicatorTh = document.getElementById("indicators_th_h_delta");           
+//for (var k in indicatorTh){
+//   console.log("indicatorTh["+k+"]= "+indicatorTh[k]); 
+//};           
+                    //set styles for score/integrators
+                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+                var totalThHead = document.getElementById("totals_th_head"); 
+                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+//                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
+                $scope.intotalColumns.forEach(function(element){
+                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
+                    element.ngstyle =indicatorTh.clientWidth+2;
+                    
+                });
+            
+                $scope.summary = data;            
+                if ($scope.summary.hasOwnProperty('diffs')){
+                    $scope.intotalColumns.forEach(function(element){
+                        var columnName = element.name;
+                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
+                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
+                        }else{
+                            $scope.summary.diffs[columnName] = "-";
+                        };
+                    });
+                };
+                if ($scope.summary.hasOwnProperty('totals')){                 
+                    $scope.intotalColumns.forEach(function(element){                       
+                        var columnName = element.name;
+                        if ($scope.summary.totals.hasOwnProperty(columnName) &&($scope.summary.totals[columnName]!=null)){                
+                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
+                        }else{
+                            $scope.summary.totals[columnName] = "-";
+                        };
+                    });
+                };
                 if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')){
                     return;
-                }
+                };
                         //work with fractional part
                 //search the shortest fractional part
                 $scope.intotalColumns.forEach(function(element, index, array){                
@@ -500,25 +539,39 @@ angular.module('portalNMC')
                     textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br>";
                     textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+"<br>";
                     textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
-                    var elDOM = "#total"+columnName;
+                    var titleDetails = "Детальная информация";
+                    var elDOM = "#diffBtn"+columnName;
+                    var targetDOM = "#total"+columnName;
                     $(elDOM).qtip({
+                        suppress: false,
                         content:{
                             text: textDetails,
+                            title: titleDetails,
                             button : true
                         },
+                        show:{
+                            event: 'click'
+                        },
                         style:{
-                            classes: 'qtip-bootstrap nmc-tooltip',
+                            classes: 'nmc-tooltip',
                             width: 1000
                         },
                         hide: {
                             event: false
+                        },
+                        position:{
+                            my: 'top right',
+                            at: 'bottom right',
+                            target: $(targetDOM)
                         }
                     });
+              
                     if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
-                        $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
+console.log(Number($scope.summary.diffs[columnName]));                          
+                        $scope.summary.diffs[columnName] = Number($scope.summary.diffs[columnName]).toFixed(3);
                     };
                     if ($scope.summary.totals.hasOwnProperty(columnName) && ($scope.summary.totals[columnName]!=null)){
-                        $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
+                        $scope.summary.totals[columnName] = Number($scope.summary.totals[columnName]).toFixed(3);
                     };
                     if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)){
                         return;

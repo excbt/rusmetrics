@@ -123,8 +123,8 @@
     <div class="row" ng-show="data.length >0">
         <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
             <tr ng-class="tableDef.headerClassTR">
-                <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
-                    {{column.header}}
+                <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
+                    {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg; C</span>
                 </th>
 
             </tr>
@@ -151,9 +151,9 @@
     <div class="row" ng-show="data.length >0">
         <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-nowrap-data">
             <tr class="nmc-main-table-header">
-                <th class="col-md-3">
+                <th id="totals_th_head" class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">
                 </th>
-                <th ng-repeat="column in intotalColumns" ng-class="column.class">
+                <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{width: column.ngstyle+'px'}">
                     {{column.header}}
 <!--                        <img class="divergenceIndicatorImg" src="images/plug.png">-->
 <!--
@@ -164,16 +164,16 @@
                 </th>
             </tr>
             <tr>
-                <td class="col-md-1">итого:</td>
-                <td ng-repeat="column in intotalColumns" class="nmc-text-align-right">
+                <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
+                <td ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 
             <tr>
-                <td class="col-md-3"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
+                <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
 <!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
                 </td>
-                <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right">
+                <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.diffs[column.name]!='-','nmc-text-align-center':summary.diffs[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
 <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                     {{summary.diffs[column.name]}}
 <!--
@@ -185,7 +185,18 @@
                     </div>
 -->
                 </td>
-            </tr>   
+            </tr>
+            <tr>
+                <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
+<!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
+                </td>
+                <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'diffBtn'+column.name}}" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
+                    <span ng-if="summary.diffs[column.name]!='-'">
+                        <i class="btn btn-xs glyphicon glyphicon-eject"></i>
+                    </span>    
+
+                </td>
+            </tr> 
         </table>    
     </div>    
 </div>

@@ -410,6 +410,11 @@ console.log(curObject.paramsets);
         var result= true;
         $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
         //Check common params before save
+            //file ext
+        if (angular.isUndefined($scope.currentObject.outputFileType)||($scope.currentObject.outputFileType===null)||($scope.currentObject.outputFileType==="")){
+            $scope.messageForUser += "- Не задан тип файла"+"\n";
+        };
+        
             //one date - for future
 //        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
         
