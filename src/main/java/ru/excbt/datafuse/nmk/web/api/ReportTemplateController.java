@@ -67,7 +67,8 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT, true);
+						ReportTypeKey.COMMERCE_REPORT,
+						ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -80,7 +81,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T1_REPORT, true);
+						ReportTypeKey.CONS_T1_REPORT, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -93,7 +94,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, true);
+						ReportTypeKey.CONS_T2_REPORT, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -106,7 +107,7 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, true);
+						ReportTypeKey.CONS_T2_REPORT, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -119,7 +120,21 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.EVENT_REPORT, true);
+						ReportTypeKey.EVENT_REPORT, ReportConstants.IS_ACTIVE);
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesMetrological() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.METROLOGICAL_REPORT,
+						ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -132,7 +147,8 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT, false);
+						ReportTypeKey.COMMERCE_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -145,7 +161,8 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T1_REPORT, false);
+						ReportTypeKey.CONS_T1_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -158,7 +175,8 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, false);
+						ReportTypeKey.CONS_T2_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -171,7 +189,8 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, false);
+						ReportTypeKey.CONS_T2_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -184,7 +203,22 @@ public class ReportTemplateController extends WebApiController {
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.EVENT_REPORT, false);
+						ReportTypeKey.EVENT_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportTemplatesArchiveMetrological() {
+		List<ReportTemplate> result = reportTemplateService
+				.getAllReportTemplates(
+						currentSubscriberService.getSubscriberId(),
+						ReportTypeKey.METROLOGICAL_REPORT,
+						ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -327,6 +361,22 @@ public class ReportTemplateController extends WebApiController {
 	 */
 	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOneEvent(
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+
+		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
+		if (result == null) {
+			ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok(result);
+	}
+
+	/** */
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/metrological/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOneMetrological(
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
