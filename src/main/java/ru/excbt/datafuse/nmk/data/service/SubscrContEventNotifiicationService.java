@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -9,6 +10,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -37,9 +40,9 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventNotificationStatus;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
@@ -72,6 +75,46 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private ContEventLevelColorRepository contEventLevelColorRepository;
+
+	private class ContEventNotificationInfo {
+		private final Long contObjectId;
+		private final Long count;
+
+		private ContEventNotificationInfo(Long contObjectId, Long count) {
+			this.contObjectId = contObjectId;
+			this.count = count;
+		}
+
+		private ContEventNotificationInfo(Object contObjectId, Object count) {
+
+			checkArgument(contObjectId instanceof Long);
+			checkArgument(count instanceof Long);
+
+			this.contObjectId = (Long) contObjectId;
+			this.count = (Long) count;
+		}
+
+		public Long getContObjectId() {
+			return contObjectId;
+		}
+
+		public Long getCount() {
+			return count;
+		}
+
+	}
+
+	private class ContEventNotificationMap {
+		private final Map<Long, ContEventNotificationInfo> notificationMap;
+
+		private ContEventNotificationMap(List<ContEventNotificationInfo> srcList) {
+			checkNotNull(srcList);
+			this.notificationMap = srcList.stream().collect(
+					Collectors.toMap(
+							ContEventNotificationInfo::getContObjectId,
+							(info) -> info));
+		}
+	}
 
 	/**
 	 * 
@@ -587,7 +630,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContEventTypeMonitorStatus> selectContEventTypeMonitorStatus(
+	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(
 			final Long subscriberId, final Long contObjectId,
 			final DatePeriod datePeriod) {
 
@@ -600,7 +643,7 @@ public class SubscrContEventNotifiicationService {
 				.selectNotificationEventTypeCount(subscriberId, contObjectId,
 						datePeriod.getDateFrom(), datePeriod.getDateTo());
 
-		List<ContEventTypeMonitorStatus> resultList = new ArrayList<>();
+		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
 		for (Object[] o : typesList) {
 			checkState(o.length == 2);
 			Long eventTypeId = null;
@@ -616,7 +659,7 @@ public class SubscrContEventNotifiicationService {
 			}
 			checkNotNull(eventTypeCnt);
 
-			ContEventTypeMonitorStatus item = ContEventTypeMonitorStatus
+			MonitorContEventTypeStatus item = MonitorContEventTypeStatus
 					.newInstance(contEventType);
 			item.setTotalCount(eventTypeCnt.longValue());
 			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
@@ -639,7 +682,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContEventNotificationStatus> selectContEventNotificationStatus(
+	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(
 			final Long subscriberId, final DatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -648,7 +691,10 @@ public class SubscrContEventNotifiicationService {
 		List<ContObject> contObjects = subscriberService
 				.selectSubscriberContObjects(subscriberId);
 
-		List<ContEventNotificationStatus> result = new ArrayList<>();
+		List<ContEventNotificationInfo> contEventNotificationInfoList = selectContEventNotificationInfoList(
+				subscriberId, datePeriod);
+
+		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
 			logger.trace(
@@ -682,7 +728,7 @@ public class SubscrContEventNotifiicationService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			ContEventNotificationStatus item = ContEventNotificationStatus
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus
 					.newInstance(co);
 
 			item.setEventsCount(allCnt);
@@ -696,4 +742,8 @@ public class SubscrContEventNotifiicationService {
 		return result;
 	}
 
+	private List<ContEventNotificationInfo> selectContEventNotificationInfoList(
+			final Long subscriberId, final DatePeriod datePeriod) {
+		return null;
+	}
 }

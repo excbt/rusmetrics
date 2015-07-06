@@ -37,6 +37,25 @@ public interface SubscrContEventNotificationRepository extends
 	 * @param contObjectId
 	 * @param dateFrom
 	 * @param dateTo
+	 * @return
+	 */
+	@Query(value = " SELECT count(1), cen.contObjectId FROM SubscrContEventNotification cen "
+			+ " WHERE cen.subscriberId = :subscriberId AND "
+			+ " cen.contEventTime >= :dateFrom AND "
+			+ " cen.contEventTime <= :dateTo AND "
+			+ " cen.contObjectId IN (:contObjectIds) "
+			+ " GROUP BY cen.contObjectId ")
+	public List<Object[]> selectNotificatoinsCountList(
+			@Param("subscriberId") Long subscriberId,
+			@Param("contObjectIds") List<Long> contObjectIds,
+			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectId
+	 * @param dateFrom
+	 * @param dateTo
 	 * @param isNew
 	 * @return
 	 */
@@ -51,18 +70,45 @@ public interface SubscrContEventNotificationRepository extends
 			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo,
 			@Param("isNew") Boolean isNew);
 
-	
-	
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectId
+	 * @param dateFrom
+	 * @param dateTo
+	 * @param isNew
+	 * @return
+	 */
+	@Query(value = " SELECT count(1), cen.contObjectId FROM SubscrContEventNotification cen "
+			+ " WHERE cen.subscriberId = :subscriberId AND "
+			+ " cen.isNew = :isNew AND"
+			+ " cen.contEventTime >= :dateFrom AND "
+			+ " cen.contEventTime <= :dateTo AND "
+			+ " cen.contObjectId IN (:contObjectIds) "
+			+ " GROUP BY cen.contObjectId ")
+	public List<Object[]> selectNotificatoinsCountList(
+			@Param("subscriberId") Long subscriberId,
+			@Param("contObjectIds") List<Long> contObjectIds,
+			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo,
+			@Param("isNew") Boolean isNew);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectId
+	 * @param dateFrom
+	 * @param dateTo
+	 * @return
+	 */
 	@Query(value = "SELECT cen.contEventTypeId, count(1) FROM SubscrContEventNotification cen "
 			+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
 			+ " cen.contEventTime >= :dateFrom AND "
 			+ " cen.contEventTime <= :dateTo "
-			+ " GROUP BY cen.contEventTypeId", 
-			countQuery = "SELECT COUNT(1) FROM (SELECT cen.contEventTypeId FROM SubscrContEventNotification cen "
-					+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
-					+ " cen.contEventTime >= :dateFrom AND "
-					+ " cen.contEventTime <= :dateTo "
-					+ " GROUP BY cen.contEventTypeId) ")
+			+ " GROUP BY cen.contEventTypeId", countQuery = "SELECT COUNT(1) FROM (SELECT cen.contEventTypeId FROM SubscrContEventNotification cen "
+			+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
+			+ " cen.contEventTime >= :dateFrom AND "
+			+ " cen.contEventTime <= :dateTo "
+			+ " GROUP BY cen.contEventTypeId) ")
 	public List<Object[]> selectNotificationEventTypeCount(
 			@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") Long contObjectId,
@@ -72,12 +118,11 @@ public interface SubscrContEventNotificationRepository extends
 			+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
 			+ " cen.contEventTime >= :dateFrom AND "
 			+ " cen.contEventTime <= :dateTo "
-			+ " GROUP BY cen.contEventTypeId", 
-			countQuery = "SELECT COUNT(1) FROM (SELECT cen.contEventTypeId FROM SubscrContEventNotification cen "
-					+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
-					+ " cen.contEventTime >= :dateFrom AND "
-					+ " cen.contEventTime <= :dateTo "
-					+ " GROUP BY cen.contEventTypeId) ")
+			+ " GROUP BY cen.contEventTypeId", countQuery = "SELECT COUNT(1) FROM (SELECT cen.contEventTypeId FROM SubscrContEventNotification cen "
+			+ "WHERE cen.subscriberId = :subscriberId AND cen.contObjectId = :contObjectId AND "
+			+ " cen.contEventTime >= :dateFrom AND "
+			+ " cen.contEventTime <= :dateTo "
+			+ " GROUP BY cen.contEventTypeId) ")
 	public List<Object[]> selectNotificationEventTypeCountGroup(
 			@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") Long contObjectId,
