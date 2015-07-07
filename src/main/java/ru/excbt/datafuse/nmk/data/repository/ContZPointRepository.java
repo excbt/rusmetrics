@@ -16,7 +16,7 @@ public interface ContZPointRepository extends CrudRepository<ContZPoint, Long> {
 			long contObjectId);
 
 	@Query("SELECT zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId ")
-	public List<Long> selectCommonParamsetIds(
+	public List<Long> selectContZPointIds(
 			@Param("contObjectId") long contObjectId);
 
 }

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class AnyControllerSubscriberTest extends AnyControllerTest {
 		List<ContObject> contObjects = selectSubscriberContObjects();
 		assertTrue(contObjects.size() > 0);
 		return contObjects.get(0);
+	}
+
+	protected Long getFirstContObjectId() {
+		return checkNotNull(getFirstContObject()).getId();
 	}
 
 }
