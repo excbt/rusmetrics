@@ -8,7 +8,7 @@
  * Controller of the portalNMC
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory', function ($scope, $rootScope, $cookies, crudGridDataFactory) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', function ($scope, $rootScope, $cookies) {
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
