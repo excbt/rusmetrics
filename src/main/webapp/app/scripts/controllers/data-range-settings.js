@@ -151,6 +151,19 @@ console.log("indicatorDates1");
     
     
     //monitor settings
+    if (angular.isDefined($rootScope.monitor)){
+        $rootScope.monitor.toDate
+        $scope.monitorDates = {
+            startDate :  $rootScope.monitor.fromDate,
+            endDate : $rootScope.monitor.toDate
+        };
+    }else{
+//        startDate :  moment().subtract(6, 'days').startOf('day'),
+        $scope.monitorDates = {
+            startDate :  moment().startOf('day'),
+            endDate :  moment().endOf('day')
+        };
+    }; 
     $scope.queryDateOptsMonitorRu = {
         locale : {
             applyClass : 'btn-green',
@@ -182,4 +195,13 @@ console.log("indicatorDates1");
         format : 'DD.MM.YYYY'
         ,separator: " по "
     };
+    $scope.$watch('monitorDates', function (newDates) {
+console.log("monitorDates");        
+        if ($location.path()!=="/notices/monitor"){
+            return;
+        };
+console.log("monitorDates1");                
+        $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
+        $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+    }, false);
 });

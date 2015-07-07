@@ -8,8 +8,8 @@ angular.module('portalNMC')
     //objects array
     $scope.objects = [];
     //default date interval settings
-//    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
-//    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
+    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
