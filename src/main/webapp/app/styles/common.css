@@ -533,8 +533,9 @@ tr.nmc-main-table-header > th {
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
- }   
-  
+ }  
+
+
 /*********
  * Формы
  *********/
@@ -1332,6 +1333,12 @@ tr.nmc-main-table-header > th {
 .nmc-undistinguish {
     font-weight: lighter;
 }
+
+/* Стиль для подсветки позитивных уведомлений*/
+.nmc-positive-notice{
+    color: green;
+}
+  
 
 /*------------------------------------------*/
 .span2, .span1 {

@@ -34,7 +34,7 @@ angular.module('portalNMC')
                 console.log(e);
             });
     };
-    $scope.getMonitorState();
+//    $scope.getMonitorState();
     
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.noGreenObjects_flag = false;
@@ -162,9 +162,10 @@ console.log(targetUrl);
                 data.forEach(function(element){
                     var tmpType = {};
                     tmpType.id = element.contEventType.id;
+                    tmpType.isBaseEvent = element.contEventType.isBaseEvent;
                     tmpType.typeCategory = element.statusColor.toLowerCase();
                     tmpType.typeEventCount = element.totalCount;
-                    tmpType.typeName = element.contEventType.name;
+                    tmpType.typeName = element.contEventType.caption;
                     tmpTypes.push(tmpType);
                 });
                 tmpTypes.sort(function(a, b){
@@ -294,7 +295,7 @@ console.log(targetUrl);
                 "</td>";
             $scope.eventColumns.forEach(function(column){
                 switch (column.name){
-                    case "typeName": trHTML += "<td class=\"col-md-11\">"+event[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+event.id+")</span></td>"; break;
+                    case "typeName": trHTML += "<td class=\"col-md-11\" ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\">"+event[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+event.id+")</span></td>"; break;
                     case "typeCategory" : 
                         var size = 16;
                         var title = "";
@@ -307,7 +308,7 @@ console.log(targetUrl);
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
-                    default : trHTML += "<td>"+event[column.name]+"</td>"; break;
+                    default : trHTML += "<td ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\"> "+event[column.name]+"</td>"; break;
                 };
             });
             trHTML +="</tr>";
