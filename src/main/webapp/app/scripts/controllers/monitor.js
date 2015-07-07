@@ -8,12 +8,12 @@ angular.module('portalNMC')
     //objects array
     $scope.objects = [];
     //default date interval settings
-    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
-    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+//    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
+//    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
-    $scope.monitorSettings.refreshPeriod = "60";
+    $scope.monitorSettings.refreshPeriod = "180";
     $scope.monitorSettings.createRoundDiagram = false;
     
     //monitor state
@@ -25,7 +25,7 @@ angular.module('portalNMC')
                 $scope.monitorState = data;
                 var monitorTab = document.getElementById('monitorTab');
                 monitorTab.style.backgroundColor = $scope.monitorState.statusColor.toLowerCase();
-                if ($scope.monitorState.statusColor.toLowerCase()==="red" || $scope.monitorState.statusColor.toLowerCase()=="orange"){
+                if ($scope.monitorState.statusColor==="RED" || $scope.monitorState.statusColor=="ORANGE"){
                     monitorTab.style.color = "#eee";
                 };
                 monitorTab.title = $scope.monitorState.colorDescription;
@@ -58,8 +58,11 @@ console.log(targetUrl);
                     };
                     return 0;
                 });  
+                //get the list of the events, which set the object color
                 $scope.objects.forEach(function(element){
-                    $scope.getMonitorEventsByObject(element);
+                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+                        $scope.getMonitorEventsByObject(element);
+                    }
                 });
                 makeObjectTable();
             if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
@@ -81,7 +84,7 @@ console.log(targetUrl);
     
     //get monitor events
     $scope.getMonitorEventsByObject = function(obj){
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
