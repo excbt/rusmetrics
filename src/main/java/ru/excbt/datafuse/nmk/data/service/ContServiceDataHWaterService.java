@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
 @Transactional
@@ -121,11 +122,65 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
+	public Date selectLastDataDate(long contZPointId, Date fromDateTime) {
+		checkArgument(contZPointId > 0);
+
+		Date actialFromDate = fromDateTime;
+		if (actialFromDate == null) {
+			actialFromDate = JodaTimeUtils.startOfDay(
+					DateTime.now().minusDays(3)).toDate();
+		} else {
+			logger.debug("MinCheck: {}", actialFromDate);
+		}
+
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
+				.selectLastDataByZPoint(contZPointId, actialFromDate,
+						LIMIT1_PAGE_REQUEST);
+
+		if (resultList.size() == 0) {
+			resultList = contServiceDataHWaterRepository
+					.selectLastDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+		}
+
+		checkNotNull(resultList);
+		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param fromDateTime
+	 * @return
+	 */
+	@Transactional(readOnly = true)
 	public Date selectLastDataDate(long contZPointId) {
+		return selectLastDataDate(contZPointId, null);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Date selectAnyDataDate(long contZPointId) {
 		checkArgument(contZPointId > 0);
 		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
-				.selectLastDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+				.selectAnyDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
 		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Boolean selectExistsAnyData(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<Long> resultList = contServiceDataHWaterRepository
+				.selectExistsAnyDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+		return resultList.size() > 0;
 	}
 
 	/**
@@ -198,22 +253,21 @@ public class ContServiceDataHWaterService {
 	 * @param localDateTime
 	 * @return
 	 */
-	 @Transactional(readOnly = true)
-	 public ContServiceDataHWater selectLastAbsData(long contZPointId,
-	 LocalDateTime localDateTime) {
-	
-	 checkNotNull(localDateTime);
-	
-	 String[] timeDetails = {// timeDetail.getAbsPair()
-				TimeDetailKey.TYPE_1H.getAbsPair(),
-				TimeDetailKey.TYPE_24H.getAbsPair()};
-	
-	 List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-	 .selectLastDataByZPoint(contZPointId, timeDetails,
-	 localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
-	
-	 return dataList.size() > 0 ? dataList.get(0) : null;
-	 }
+	@Transactional(readOnly = true)
+	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+			LocalDateTime localDateTime) {
+
+		checkNotNull(localDateTime);
+
+		String[] timeDetails = {// timeDetail.getAbsPair()
+		TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
+
+		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
+				.selectLastDetailDataByZPoint(contZPointId, timeDetails,
+						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+
+		return dataList.size() > 0 ? dataList.get(0) : null;
+	}
 
 	/**
 	 * 
@@ -234,7 +288,7 @@ public class ContServiceDataHWaterService {
 				TimeDetailKey.TYPE_24H.getAbsPair() };
 
 		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-				.selectLastDataByZPoint(contZPointId, timeDetails,
+				.selectLastDetailDataByZPoint(contZPointId, timeDetails,
 						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
 
 		return dataList.size() > 0 ? dataList.get(0) : null;

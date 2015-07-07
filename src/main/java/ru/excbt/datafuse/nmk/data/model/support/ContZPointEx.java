@@ -15,12 +15,24 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 
 	private DateTime lastDataDate;
 
+	private Boolean dataExists;
+
 	/**
 	 * 
 	 * @param srcObject
 	 */
 	public ContZPointEx(ContZPoint srcObject) {
 		super(srcObject);
+		this.dataExists = false;
+	}
+
+	/**
+	 * 
+	 * @param srcObject
+	 */
+	public ContZPointEx(ContZPoint srcObject, Boolean dataExists) {
+		super(srcObject);
+		this.dataExists = dataExists;
 	}
 
 	/**
@@ -31,12 +43,14 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 	public ContZPointEx(ContZPoint srcObject, DateTime lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate;
+		this.dataExists = lastDataDate != null;
 	}
 
 	public ContZPointEx(ContZPoint srcObject, Date lastDataDate) {
 		super(srcObject);
 		this.lastDataDate = lastDataDate != null ? new DateTime(lastDataDate)
 				: null;
+		this.dataExists = lastDataDate != null;
 	}
 
 	public Date getLastDataDate() {
@@ -45,11 +59,19 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 
 	public void setLastDataDate(Date lastDataDate) {
 		if (lastDataDate != null) {
-			this.lastDataDate = new DateTime(lastDataDate);	
+			this.lastDataDate = new DateTime(lastDataDate);
 		} else {
 			this.lastDataDate = null;
 		}
-		
+
+	}
+
+	public Boolean getDataExists() {
+		return dataExists;
+	}
+
+	public void setDataExists(Boolean dataExists) {
+		this.dataExists = dataExists;
 	}
 
 }
