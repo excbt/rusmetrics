@@ -19,6 +19,8 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 @Transactional
 public class ContZPointService {
 
+	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
+
 	@Autowired
 	private ContZPointRepository contZPointRepository;
 
@@ -59,23 +61,29 @@ public class ContZPointService {
 				.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
 
-		// MinCheck<Date> minCheck = new MinCheck<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
 
 		for (ContZPoint zp : zPoints) {
 
-			// Date zPointLastDate = contServiceDataHWaterService
-			// .selectLastDataDate(zp.getId(), minCheck.getObject());
-			//
-			// Date startDay = zPointLastDate == null ? null : JodaTimeUtils
-			// .startOfDay(zPointLastDate).toDate();
-			//
-			// minCheck.check(startDay);
-			// result.add(new ContZPointEx(zp, zPointLastDate));
+			if (CONT_ZPOINT_EX_OPTIMIZE) {
 
-			Boolean existsData = null;
-			existsData = contServiceDataHWaterService.selectExistsAnyData(zp
-					.getId());
-			result.add(new ContZPointEx(zp, existsData));
+				Boolean existsData = null;
+				existsData = contServiceDataHWaterService
+						.selectExistsAnyData(zp.getId());
+				result.add(new ContZPointEx(zp, existsData));
+
+			} else {
+				
+				Date zPointLastDate = contServiceDataHWaterService
+						.selectLastDataDate(zp.getId(), minCheck.getObject());
+
+				Date startDay = zPointLastDate == null ? null : JodaTimeUtils
+						.startOfDay(zPointLastDate).toDate();
+
+				minCheck.check(startDay);
+				result.add(new ContZPointEx(zp, zPointLastDate));
+			}
+
 		}
 
 		return result;
