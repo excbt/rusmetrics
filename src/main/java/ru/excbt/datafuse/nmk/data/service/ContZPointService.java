@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 
 @Service
@@ -56,9 +57,10 @@ public class ContZPointService {
 				.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
 		for (ContZPoint zp : zPoints) {
-			Date d = contServiceDataHWaterService
-					.selectLastDataDate(zp.getId());
-			result.add(new ContZPointEx(zp, d));
+			Boolean existsData = null;
+			existsData = contServiceDataHWaterService.selectExistsAnyData(zp
+					.getId());
+			result.add(new ContZPointEx(zp, existsData));
 		}
 
 		return result;
@@ -84,6 +86,26 @@ public class ContZPointService {
 	 */
 	@Transactional(readOnly = true)
 	public List<Long> selectContZPointIds(long contObjectId) {
-		return contZPointRepository.selectCommonParamsetIds(contObjectId);
+		return contZPointRepository.selectContZPointIds(contObjectId);
 	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContZPointStatInfo> selectContZPointStatInfo(Long contObjectId) {
+		List<ContZPointStatInfo> resultList = new ArrayList<>();
+		List<Long> contZPointIds = contZPointRepository
+				.selectContZPointIds(contObjectId);
+		for (Long id : contZPointIds) {
+			Date lastDataDate = contServiceDataHWaterService
+					.selectLastDataDate(id);
+			ContZPointStatInfo item = new ContZPointStatInfo(id, lastDataDate);
+			resultList.add(item);
+		}
+		return resultList;
+	}
+
 }

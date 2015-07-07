@@ -46,6 +46,15 @@ public interface ContServiceDataHWaterRepository extends
 	public List<ContServiceDataHWater> selectLastDataByZPoint(
 			@Param("contZPointId") long contZPointId, Pageable pageable);
 
+	@Query("SELECT d FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPointId = :contZPointId ")
+	public List<ContServiceDataHWater> selectAnyDataByZPoint(
+			@Param("contZPointId") long contZPointId, Pageable pageable);
+
+	@Query("SELECT 1 FROM ContServiceDataHWater d "
+			+ " WHERE d.contZPointId = :contZPointId ")
+	public List<Long> selectExistsAnyDataByZPoint(
+			@Param("contZPointId") long contZPointId, Pageable pageable);
 	
 	@Query("SELECT d FROM ContServiceDataHWater d "
 			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "

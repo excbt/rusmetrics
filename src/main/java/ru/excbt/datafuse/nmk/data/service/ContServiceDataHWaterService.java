@@ -131,6 +131,32 @@ public class ContServiceDataHWaterService {
 	/**
 	 * 
 	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Date selectAnyDataDate(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
+				.selectAnyDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Boolean selectExistsAnyData(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<Long> resultList = contServiceDataHWaterRepository
+				.selectExistsAnyDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+		return resultList.size() > 0;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
 	 * @param timeDetail
 	 * @param beginDate
 	 * @param endDate
@@ -198,22 +224,21 @@ public class ContServiceDataHWaterService {
 	 * @param localDateTime
 	 * @return
 	 */
-	 @Transactional(readOnly = true)
-	 public ContServiceDataHWater selectLastAbsData(long contZPointId,
-	 LocalDateTime localDateTime) {
-	
-	 checkNotNull(localDateTime);
-	
-	 String[] timeDetails = {// timeDetail.getAbsPair()
-				TimeDetailKey.TYPE_1H.getAbsPair(),
-				TimeDetailKey.TYPE_24H.getAbsPair()};
-	
-	 List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-	 .selectLastDataByZPoint(contZPointId, timeDetails,
-	 localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
-	
-	 return dataList.size() > 0 ? dataList.get(0) : null;
-	 }
+	@Transactional(readOnly = true)
+	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+			LocalDateTime localDateTime) {
+
+		checkNotNull(localDateTime);
+
+		String[] timeDetails = {// timeDetail.getAbsPair()
+		TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
+
+		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
+				.selectLastDataByZPoint(contZPointId, timeDetails,
+						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+
+		return dataList.size() > 0 ? dataList.get(0) : null;
+	}
 
 	/**
 	 * 
