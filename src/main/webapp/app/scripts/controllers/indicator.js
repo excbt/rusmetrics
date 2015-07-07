@@ -535,9 +535,9 @@ angular.module('portalNMC')
                     if (angular.isUndefined($scope.summary.firstData) || angular.isUndefined($scope.summary.lastData) || ($scope.summary.firstData===null) || ($scope.summary.lastData===null) || !$scope.summary.firstData.hasOwnProperty(columnName) || !$scope.summary.lastData.hasOwnProperty(columnName)){
                         return;
                     };
-                    var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+"<br>";
-                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br>";
-                    textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+"<br>";
+                    var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+" ";
+                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+                    textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+" ";
                     textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
@@ -553,7 +553,7 @@ angular.module('portalNMC')
                             event: 'click'
                         },
                         style:{
-                            classes: 'nmc-tooltip',
+                            classes: 'qtip-nmc-indicator-tooltip',
                             width: 1000
                         },
                         hide: {

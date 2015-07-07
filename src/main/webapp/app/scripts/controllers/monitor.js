@@ -64,6 +64,17 @@ console.log(targetUrl);
                         $scope.getMonitorEventsByObject(element);
                     }
                 });
+//                $scope.objects.forEach(function(element){
+//                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        $scope.getMonitorEventsByObjectAW(element);
+//                    }
+//                });
+//                 for(var i=0; i<$scope.objects.length;i++){
+//                     var element = $scope.objects[i];
+//                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        $scope.getMonitorEventsByObject(element);
+//                    }
+//                };
                 makeObjectTable();
             if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
                 $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
@@ -82,11 +93,45 @@ console.log(targetUrl);
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
             ];
     
+    //get monitor events -alter way
+    $scope.getMonitorEventsByObjectAW = function(obj){
+console.log("getMonitorEventsByObjectAW");        
+        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";
+        var imgObj = "#imgObj"+obj.contObject.id;          
+        $(imgObj).qtip({
+            content:{
+                text: function(event, api){
+                    $.ajax({url: url})
+                        .done(function(data){
+console.log(data);                        
+                            api.set('content.text', data)
+                        })
+                        .fail(function(xhr, status, error){
+console.log(error);                        
+                            api.set('content.text', status+'; '+error)
+                        })
+                    return 'Загрузка ... ';
+                }
+            },
+            position:{
+                viewport: $(window)
+            },
+            style:{
+                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+            }
+        });
+    };
     //get monitor events
-    $scope.getMonitorEventsByObject = function(obj){
+    $scope.getMonitorEventsByObject = function(obj){       
+//        var obj = findObjectById(objId);    
+        //if cur object = null => exit function
+//        if (obj == null){
+//            return;
+//        };
         var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $http.get(url)
             .success(function(data){
+//console.log("success");
             //if data is not array - exit
                 if (!data.hasOwnProperty('length')||(data.length == 0)){
                     return;
@@ -103,7 +148,7 @@ console.log(targetUrl);
 //                    tmpType.typeEventCount = element.totalCount;
 //                    tmpType.typeName = element.contEventType.name;
                     var contEventTime = new Date(element.contEventTime);
-                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/>";
+                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/><br/>";
                     tmpMessage+=tmpEvent;
                 });
 //                tmpTypes.sort(function(a, b){
@@ -119,16 +164,16 @@ console.log(targetUrl);
                 //Display message
 //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
 //                imgObj.title = obj.monitorEvents;
-                var imgObj = "#imgObj"+obj.contObject.id;
+            
+                var imgObj = "#imgObj"+obj.contObject.id;          
                 $(imgObj).qtip({
                     content:{
                         text: obj.monitorEvents
                     },
                     style:{
-                        classes: 'qtip-bootstrap nmc-tooltip',
-                        width: 1000
+                        classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
                     }
-                });
+                });         
 //                makeEventTypesByObjectTable(obj);
             })
             .error(function(e){
@@ -136,8 +181,7 @@ console.log(targetUrl);
             });        
     };
     
-    //get event types by object
-    $scope.getEventTypesByObject = function(objId, isChart){
+    function findObjectById(objId){
         var obj = null;
         $scope.objects.some(function(element){
             if (element.contObject.id === objId){
@@ -145,6 +189,12 @@ console.log(targetUrl);
                 return true;
             }
         });        
+        return obj;
+    };
+    
+    //get event types by object
+    $scope.getEventTypesByObject = function(objId, isChart){
+        var obj = findObjectById(objId);    
         //if cur object = null => exit function
         if (obj == null){
             return;
@@ -232,19 +282,32 @@ console.log(targetUrl);
     //Рисуем таблицу с объектами
     function makeObjectTable(){
         var objTable = document.getElementById('objectTable');
+//        var temptableHTML = "";
         var tableHTML = "";
+//        var tmpArray = $scope.objects;
         $scope.objects.forEach(function(element, index){
             var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
             if(element.statusColor.toLowerCase()=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
                 imgSize = 1;
             };
+//            temptableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.contObject.id+"\">";
+//            temptableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
+//            temptableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\" />";
+//            temptableHTML+= "</td>";
+//            temptableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
+//            
+//            temptableHTML += "</td>";
+//            temptableHTML +="<td>hi</td><td>amigo</td></tr>";
+//            temptableHTML+="<tr><td><table></table></td></tr>";
+            
             tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.contObject.id+"\">";
             tableHTML += "<td>";
             tableHTML += "<table>";
             tableHTML += "<tr>";
             tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
-            tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\"/>";
+            tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\" />";
+//            ng-mouseover=\"getMonitorEventsByObject("+element.contObject.id+")\"
 //            if (element.statusColor.toLowerCase()!="green"){
 //                tableHTML +="<i title=\"Узнать причину оценки\" class=\"btn btn-xs glyphicon glyphicon-bookmark\" ng-click=\"getNoticesByObject("+element.contObject.id+")\" data-target=\"#showNoticesModal\" data-toggle=\"modal\"></i>";
 //            };
@@ -261,8 +324,9 @@ console.log(targetUrl);
             tableHTML +="<tr id=\"trObjEvents"+element.contObject.id+"\">";
             tableHTML += "</tr>";                       
         });
-//console.log(tableHTML); 
+//console.log(temptableHTML); 
         objTable.innerHTML = tableHTML;
+//        objTable.innerHTML = tableHTML;
         $compile(objTable)($scope);
     };
     
@@ -388,8 +452,8 @@ console.log("monitorStart watch");
     
     
     //watch for the change of the refresh period
-    $scope.$watch('monitor.refreshPeriod', function (newPeriod) {
-//console.log("monitor.refreshPeriod watch");
+    $scope.$watch('monitorSettings.refreshPeriod', function (newPeriod) {
+console.log("monitorSettings.refreshPeriod watch");
 //console.log("new period = "+newPeriod);        
         //cancel previous interval
         stopRefreshing();
@@ -405,12 +469,12 @@ console.log(time);
     }, false);
     
     //Вызвываем с заданным периодом обновление монитора
-//    interval = $interval(function(){
-//        var time = (new Date()).toLocaleString();
-//console.log(time);
+    interval = $interval(function(){
+        var time = (new Date()).toLocaleString();
+console.log(time);
 //console.log(Number($scope.monitorSettings.refreshPeriod));        
-//        $scope.getObjects(objectUrl);
-//    },Number($scope.monitorSettings.refreshPeriod)*1000);
+        $scope.getObjects(objectUrl);
+    },Number($scope.monitorSettings.refreshPeriod)*1000);
     
         //chart
     $scope.runChart = function(objId){
