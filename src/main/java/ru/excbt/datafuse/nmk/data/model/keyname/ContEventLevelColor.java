@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -34,6 +35,7 @@ public class ContEventLevelColor extends AbstractKeynameEntity implements
 	private String caption;
 
 	@Column(name = "color_description")
+	@JsonIgnore
 	private String colorDescription;
 
 	@Column(name = "color_rank")
@@ -49,9 +51,11 @@ public class ContEventLevelColor extends AbstractKeynameEntity implements
 	private Boolean isCriticalColor;
 
 	@Column(name = "cont_event_level_from")
+	@JsonIgnore	
 	private Integer levelFrom;
 
 	@Column(name = "cont_event_level_to")
+	@JsonIgnore	
 	private Integer levelTo;
 
 	public String getCaption() {

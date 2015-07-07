@@ -20,7 +20,7 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeMonitorStatus;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -130,7 +130,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<?> list = subscrContEventNotifiicationService
-				.selectContEventNotificationStatus(
+				.selectMonitorContEventNotificationStatus(
 						currentSubscriberService.getSubscriberId(), dp);
 
 		assertNotNull(list);
@@ -144,8 +144,8 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		DatePeriodParser dpp = DatePeriodParser.parse("2015-06-01",
 				"2015-06-30");
 
-		List<ContEventTypeMonitorStatus> checkList = subscrContEventNotifiicationService
-				.selectContEventTypeMonitorStatus(
+		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
+				.selectMonitorContEventTypeStatus(
 						currentSubscriberService.getSubscriberId(),
 						contObjectId, dpp.getDatePeriod());
 

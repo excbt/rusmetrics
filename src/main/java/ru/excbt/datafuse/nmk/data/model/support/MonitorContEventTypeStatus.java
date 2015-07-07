@@ -8,7 +8,7 @@ import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 
-public class ContEventTypeMonitorStatus implements Serializable,
+public class MonitorContEventTypeStatus implements Serializable,
 		StatusColorObject {
 
 	/**
@@ -22,13 +22,13 @@ public class ContEventTypeMonitorStatus implements Serializable,
 
 	private ContEventLevelColorKey contEventLevelColorKey;
 
-	public ContEventTypeMonitorStatus(ContEventType contEventType) {
+	public MonitorContEventTypeStatus(ContEventType contEventType) {
 		this.contEventType = contEventType;
 	}
 
-	public static ContEventTypeMonitorStatus newInstance(ContEventType contEventType) {
+	public static MonitorContEventTypeStatus newInstance(ContEventType contEventType) {
 		checkNotNull(contEventType);
-		ContEventTypeMonitorStatus result = new ContEventTypeMonitorStatus(
+		MonitorContEventTypeStatus result = new MonitorContEventTypeStatus(
 				contEventType);
 		return result;
 	}
