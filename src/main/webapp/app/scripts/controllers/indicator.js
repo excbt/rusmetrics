@@ -557,7 +557,7 @@ angular.module('portalNMC')
                             width: 1000
                         },
                         hide: {
-                            event: false
+                            event: 'unfocus'
                         },
                         position:{
                             my: 'top right',

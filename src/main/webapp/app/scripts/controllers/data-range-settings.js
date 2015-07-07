@@ -2,7 +2,7 @@ var app = angular.module('portalNMC');
 app
     .controller('DataRangeSettings', function($scope, $interval, $rootScope, $location){
   // Общие настройки элемента управления интервалом дат
-    if (angular.isDefined($rootScope.monitor)){
+    if (angular.isDefined($rootScope.monitor) && ($location.path()==="/notices/list")){
         $rootScope.monitor.toDate
         $scope.navPlayerDates = {
             startDate :  $rootScope.monitor.fromDate,
@@ -13,7 +13,7 @@ app
             startDate :  moment().subtract(6, 'days').startOf('day'),
             endDate :  moment().endOf('day')
         };
-    }; 
+    };
     
     $scope.queryDateOptsRu = {
         locale : {

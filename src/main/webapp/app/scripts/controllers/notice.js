@@ -380,8 +380,7 @@ console.log($scope.objects);
             $scope.objects = data;
             objectSvc.sortObjectsByFullName($scope.objects);
             $scope.initCtrl();    
-console.log("getObjects");
-console.log(this);            
+console.log("getObjects");            
             $scope.getResultsPage(1);
         });
     };
@@ -394,8 +393,7 @@ console.log(this);
     };
     
     $scope.$watch('reportStart', function (newDates) {
-console.log("watch");
-console.log("notice");         
+console.log("watch notice");        
 console.log($rootScope.reportStart); 
 console.log($rootScope.reportEnd);         
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
