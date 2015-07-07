@@ -63,7 +63,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset createOne(ReportParamset reportParamset) {
+	protected ReportParamset createOne(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
 
@@ -88,6 +88,17 @@ public class ReportParamsetService implements SecuredRoles {
 			param.setReportParamset(reportParamset);
 		}
 
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.getReportMakerParam(reportParamset, contObjectIds);
+
+		boolean requiredPassed = reportMakerParamService
+				.isAllCommonRequiredParamsExists(reportMakerParam)
+				&& reportMakerParamService
+						.isAllSpecialRequiredParamsExists(reportMakerParam);
+
+		reportParamset.setAllRequiredParamsPassed(requiredPassed);
+		
+		
 		ReportParamset result = createOne(reportParamset);
 
 		if (contObjectIds != null) {
@@ -118,7 +129,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset updateOne(ReportParamset reportParamset) {
+	protected ReportParamset updateOne(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
 
@@ -595,21 +606,23 @@ public class ReportParamsetService implements SecuredRoles {
 
 			boolean commonPassed = reportMakerParamService
 					.isAllCommonRequiredParamsExists(reportMakerParam);
-			
+
 			boolean specialPassed = reportMakerParamService
 					.isAllSpecialRequiredParamsExists(reportMakerParam);
-			
-			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
-			
-			boolean requiredPassed = commonPassed
-					&& specialPassed;
+
+			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed,
+					specialPassed);
+
+			boolean requiredPassed = commonPassed && specialPassed;
 
 			if (requiredPassed) {
 				passedCounter++;
 			}
 
-			logger.info("ReportParamset id:{} reportType:{} ... requiredPass: {}",
-					rp.getId(), rp.getReportTemplate().getReportTypeKey(), requiredPassed);
+			logger.info(
+					"ReportParamset id:{} reportType:{} ... requiredPass: {}",
+					rp.getId(), rp.getReportTemplate().getReportTypeKey(),
+					requiredPassed);
 
 			rp.setAllRequiredParamsPassed(requiredPassed);
 			reportParamsetRepository.save(rp);
