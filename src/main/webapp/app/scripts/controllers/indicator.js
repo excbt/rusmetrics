@@ -567,7 +567,7 @@ angular.module('portalNMC')
                     });
               
                     if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
-console.log(Number($scope.summary.diffs[columnName]));                          
+//console.log(Number($scope.summary.diffs[columnName]));                          
                         $scope.summary.diffs[columnName] = Number($scope.summary.diffs[columnName]).toFixed(3);
                     };
                     if ($scope.summary.totals.hasOwnProperty(columnName) && ($scope.summary.totals[columnName]!=null)){
@@ -803,10 +803,10 @@ console.log(Number($scope.summary.diffs[columnName]));
 //console.log(Date.parse(data[i][0]));            
 //            data[i][0] = Date.parse(data[i][0]);
 //            moment(el.dataDate).format("DD.MM.YY HH:mm");
-console.log("====================");              
-console.log(moment(data[i][0], "DD.MM.YY HH:mm"));   
-console.log(moment.utc(data[i][0]));              
-console.log("====================");              
+//console.log("====================");              
+//console.log(moment(data[i][0], "DD.MM.YY HH:mm"));   
+//console.log(moment.utc(data[i][0]));              
+//console.log("====================");              
             data[i][0] = moment(data[i][0], "DD.MM.YY HH:mm");
         };
 //console.log("data after====================");        

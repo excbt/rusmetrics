@@ -54,7 +54,6 @@
 <div class="col-md-2">
     <div class="btn-group">
         <i ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
-<!--        <i ng-disabled="notices.length==0" class="btn glyphicon glyphicon-stats" ng-click="runChart()"></i>-->
     </div>    
 </div>  
 <div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
@@ -124,7 +123,7 @@
         <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
             <tr ng-class="tableDef.headerClassTR">
                 <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
-                    {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg; C</span>
+                    {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                 </th>
 
             </tr>
@@ -190,9 +189,9 @@
                 <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
 <!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
                 </td>
-                <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'diffBtn'+column.name}}" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
+                <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
                     <span ng-if="summary.diffs[column.name]!='-'">
-                        <i class="btn btn-xs glyphicon glyphicon-eject"></i>
+                         <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
                     </span>    
 
                 </td>
