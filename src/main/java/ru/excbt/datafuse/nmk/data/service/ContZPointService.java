@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
 @Transactional
@@ -56,7 +58,20 @@ public class ContZPointService {
 		List<ContZPoint> zPoints = contZPointRepository
 				.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
+
+		// MinCheck<Date> minCheck = new MinCheck<>();
+
 		for (ContZPoint zp : zPoints) {
+
+			// Date zPointLastDate = contServiceDataHWaterService
+			// .selectLastDataDate(zp.getId(), minCheck.getObject());
+			//
+			// Date startDay = zPointLastDate == null ? null : JodaTimeUtils
+			// .startOfDay(zPointLastDate).toDate();
+			//
+			// minCheck.check(startDay);
+			// result.add(new ContZPointEx(zp, zPointLastDate));
+
 			Boolean existsData = null;
 			existsData = contServiceDataHWaterService.selectExistsAnyData(zp
 					.getId());
@@ -99,10 +114,29 @@ public class ContZPointService {
 		List<ContZPointStatInfo> resultList = new ArrayList<>();
 		List<Long> contZPointIds = contZPointRepository
 				.selectContZPointIds(contObjectId);
+
+		// Date fromDateTime = null;
+
+		MinCheck<Date> minCheck = new MinCheck<>();
+
 		for (Long id : contZPointIds) {
-			Date lastDataDate = contServiceDataHWaterService
-					.selectLastDataDate(id);
-			ContZPointStatInfo item = new ContZPointStatInfo(id, lastDataDate);
+			Date zPointLastDate = contServiceDataHWaterService
+					.selectLastDataDate(id, minCheck.getObject());
+
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils
+					.startOfDay(zPointLastDate).toDate();
+
+			minCheck.check(startDay);
+
+			// if (zPointLastDate != null) {
+			// if (fromDateTime == null) {
+			// fromDateTime = zPointLastDate;
+			// } else if (fromDateTime.compareTo(zPointLastDate) < 0) {
+			// fromDateTime = zPointLastDate;
+			// }
+			// }
+
+			ContZPointStatInfo item = new ContZPointStatInfo(id, zPointLastDate);
 			resultList.add(item);
 		}
 		return resultList;

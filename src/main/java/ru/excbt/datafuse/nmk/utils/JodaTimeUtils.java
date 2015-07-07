@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.utils;
 
+import java.util.Date;
+
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
@@ -31,7 +33,7 @@ public class JodaTimeUtils {
 		}
 		DateTime result = dateTime.withHourOfDay(23).withMinuteOfHour(59)
 				.withSecondOfMinute(59).withMillisOfSecond(999);
-		
+
 		return result;
 	}
 
@@ -45,9 +47,24 @@ public class JodaTimeUtils {
 			return null;
 		}
 		DateTime result = dateTime.withMillisOfDay(0);
-		
+
 		return result;
 	}
+
+	/**
+	 * 
+	 * @param dateTime
+	 * @return
+	 */
+	public static DateTime startOfDay(Date dateTime) {
+		if (dateTime == null) {
+			return null;
+		}
+		DateTime result = new DateTime(dateTime).withMillisOfDay(0);
+
+		return result;
+	}
+
 	/**
 	 * 
 	 * @param dateTime
@@ -58,7 +75,7 @@ public class JodaTimeUtils {
 			return null;
 		}
 		LocalDateTime result = dateTime.withMillisOfDay(0);
-		
+
 		return result;
 	}
 
