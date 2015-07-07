@@ -1,12 +1,12 @@
 var app = angular.module('portalNMC');
 app
-    .controller('DataRangeSettings', function($scope, $interval, $rootScope, $location){
+    .controller('DataRangeSettings', function($scope, $interval, $rootScope, $location, $cookies){
   // Общие настройки элемента управления интервалом дат
-    if (angular.isDefined($rootScope.monitor) && ($location.path()==="/notices/list")){
-        $rootScope.monitor.toDate
+    if (angular.isDefined($cookies.fromDate) && ($location.path()==="/notices/list")){
+//        $rootScope.monitor.toDate
         $scope.navPlayerDates = {
-            startDate :  $rootScope.monitor.fromDate,
-            endDate : $rootScope.monitor.toDate
+            startDate :  $cookies.fromDate,
+            endDate : $cookies.toDate
         };
     }else{
         $scope.navPlayerDates = {
@@ -152,7 +152,7 @@ console.log("indicatorDates1");
     
     //monitor settings
     if (angular.isDefined($rootScope.monitor)){
-        $rootScope.monitor.toDate
+//        $rootScope.monitor.toDate
         $scope.monitorDates = {
             startDate :  $rootScope.monitor.fromDate,
             endDate : $rootScope.monitor.toDate

@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crudGridDataFactory, objectSvc, notificationFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, crudGridDataFactory, objectSvc, notificationFactory){
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -99,39 +99,46 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, crud
     //Controller initialization
     //use to redirect from the Monitor page
     $scope.initCtrl = function(){
-console.log("initCtrl");        
-        if ((angular.isDefined($rootScope.monitor))&&($rootScope.monitor.hasOwnProperty('monitorFlag'))&&($rootScope.monitor.monitorFlag)){
-            $rootScope.monitor.monitorFlag = false;
+console.log("initCtrl"); 
+//for(var k in $cookies){        
+//    console.log("$cookies["+k+"]="+$cookies[k]); 
+//};
+        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
+            $cookies.monitorFlag = false;
 //            $rootScope.reportStart=$rootScope.monitor.fromDate;
 //            $rootScope.reportEnd=$rootScope.monitor.toDate;
             $scope.objectsInWindow = angular.copy($scope.objects);           
             var curIndex = -1; 
             $scope.objectsInWindow.some(function(element, index){
-                if (element.id === $rootScope.monitor.objectId){
+                if (element.id === Number($cookies.objectId)){
                     curIndex = index;
                     return true;
                 }
-            });           
+            });  
+//console.log("curIndex = "+curIndex);            
             if (curIndex>-1){//object is need - else is absurd
                 //object
                 $scope.objectsInWindow[curIndex].selected=true;
                 performObjectsFilter();               
                 //new / revision
-                $scope.isNew = $rootScope.monitor.isNew;
+                $scope.isNew = Boolean($cookies.isNew);
                 if ($scope.isNew===true){
                     $scope.visibleText='Только новые';
                 };
                 //types
-                if ((angular.isDefined($rootScope.monitor.typeIds))&&($rootScope.monitor.typeIds.hasOwnProperty('length'))&&($rootScope.monitor.typeIds.length>0)){
+                var tmpTypesArr = [Number($cookies.typeIds)];
+//console.log(tmpTypesArr);                
+                if ((angular.isDefined(tmpTypesArr))&&(tmpTypesArr.hasOwnProperty('length'))&&(tmpTypesArr.length>0)){
                     $scope.typesInWindow = angular.copy($scope.noticeTypes);
-                    $rootScope.monitor.typeIds.forEach(function(element){
+                    tmpTypesArr.forEach(function(element){
                         var curTypeIndex = -1;
                         $scope.typesInWindow.some(function(elem, index){
-                            if (elem.id = element){
+                            if (elem.id === element){
                                 curTypeIndex = index;
                                 return true;
                             };  
                         });
+//console.log("curTypeIndex = "+curTypeIndex);                         
                         if (curTypeIndex>-1){
                             $scope.typesInWindow[curTypeIndex].selected = true;
                         };
@@ -227,9 +234,9 @@ console.log("initCtrl");
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-        if ((angular.isDefined($rootScope.monitor))){
-            $scope.startDate = $rootScope.monitor.fromDate;
-            $scope.endDate = $rootScope.monitor.toDate;  
+        if ((angular.isDefined($cookies))){
+            $scope.startDate = $cookies.fromDate;
+            $scope.endDate = $cookies.toDate;  
         }else{
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  

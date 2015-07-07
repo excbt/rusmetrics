@@ -12,7 +12,10 @@
       </div>
     </div>
 </div>
-<div class="tab-content">
+<div class="nmc-show" ng-class="{'nmc-hide':!monitorSettings.loadingFlag, 'nmc-show':monitorSettings.loadingFlag}">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка .... 
+</div>
+<div class="tab-content nmc-hide" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
         <!--       Все / Объекты, на которых наблюдались нештатные ситуации -->
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle nmc-toggle-monitor col-md-2" role="tablist">
