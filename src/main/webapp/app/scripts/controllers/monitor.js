@@ -8,8 +8,8 @@ angular.module('portalNMC')
     //objects array
     $scope.objects = [];
     //default date interval settings
-    $rootScope.reportStart = moment().startOf('day').format('YYYY-MM-DD');
-    $rootScope.reportEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+    $rootScope.monitorStart = moment().startOf('day').format('YYYY-MM-DD');
+    $rootScope.monitorEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
@@ -19,7 +19,7 @@ angular.module('portalNMC')
     //monitor state
     $scope.monitorState = {};
     $scope.getMonitorState = function(){
-        var url = monitorUrl+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        var url = monitorUrl+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $http.get(url)
             .success(function(data){
                 $scope.monitorState = data;
@@ -34,14 +34,14 @@ angular.module('portalNMC')
                 console.log(e);
             });
     };
-    $scope.getMonitorState();
+//    $scope.getMonitorState();
     
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.noGreenObjects_flag = false;
     
     //get objects function
     $scope.getObjects = function(url){ 
-        var targetUrl = url+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd+"&noGreenColor="+$scope.noGreenObjects_flag;
+        var targetUrl = url+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&noGreenColor="+$scope.noGreenObjects_flag;
 console.log(targetUrl);  
         
         $http.get(targetUrl)
@@ -84,7 +84,7 @@ console.log(targetUrl);
     
     //get monitor events
     $scope.getMonitorEventsByObject = function(obj){
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
@@ -149,7 +149,7 @@ console.log(targetUrl);
         if (obj == null){
             return;
         };
-        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.reportStart+"&toDate="+$rootScope.reportEnd;
+        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
@@ -162,9 +162,10 @@ console.log(targetUrl);
                 data.forEach(function(element){
                     var tmpType = {};
                     tmpType.id = element.contEventType.id;
+                    tmpType.isBaseEvent = element.contEventType.isBaseEvent;
                     tmpType.typeCategory = element.statusColor.toLowerCase();
                     tmpType.typeEventCount = element.totalCount;
-                    tmpType.typeName = element.contEventType.name;
+                    tmpType.typeName = element.contEventType.caption;
                     tmpTypes.push(tmpType);
                 });
                 tmpTypes.sort(function(a, b){
@@ -294,7 +295,7 @@ console.log(targetUrl);
                 "</td>";
             $scope.eventColumns.forEach(function(column){
                 switch (column.name){
-                    case "typeName": trHTML += "<td class=\"col-md-11\">"+event[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+event.id+")</span></td>"; break;
+                    case "typeName": trHTML += "<td class=\"col-md-11\" ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\">"+event[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+event.id+")</span></td>"; break;
                     case "typeCategory" : 
                         var size = 16;
                         var title = "";
@@ -307,7 +308,7 @@ console.log(targetUrl);
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
-                    default : trHTML += "<td>"+event[column.name]+"</td>"; break;
+                    default : trHTML += "<td ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\"> "+event[column.name]+"</td>"; break;
                 };
             });
             trHTML +="</tr>";
@@ -323,8 +324,10 @@ console.log(targetUrl);
         $rootScope.monitor.monitorFlag = true;
         $rootScope.monitor.objectId = objId;
         $rootScope.monitor.isNew = null;
-        $rootScope.monitor.fromDate = $rootScope.reportStart;
-        $rootScope.monitor.toDate = $rootScope.reportEnd;
+        $rootScope.monitor.fromDate = $rootScope.monitorStart;
+        $rootScope.monitor.toDate = $rootScope.monitorEnd;
+        $rootScope.reportStart = $rootScope.monitorStart;
+        $rootScope.reportEnd = $rootScope.monitorEnd;
     };
     
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
@@ -361,8 +364,8 @@ console.log(targetUrl);
     };
     
     //Watching for the change period 
-    $scope.$watch('reportStart', function (newDates) {
-console.log("reportStart watch");        
+    $scope.$watch('monitorStart', function (newDates) {
+console.log("monitorStart watch");        
         $scope.getObjects(objectUrl);                              
     }, false);
     
@@ -393,9 +396,9 @@ console.log("reportStart watch");
         //set new interval
         interval = $interval(function(){
             var time = (new Date()).toLocaleString();
-console.log("new interval");            
+//console.log("new interval");            
 console.log(time);
-console.log(Number($scope.monitorSettings.refreshPeriod));        
+//console.log(Number($scope.monitorSettings.refreshPeriod));        
             $scope.getObjects(objectUrl);
         },Number($scope.monitorSettings.refreshPeriod)*1000);
         

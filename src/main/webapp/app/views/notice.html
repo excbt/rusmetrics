@@ -146,11 +146,12 @@
             </th>       
         </tr>
         <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
+<!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
             <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
                 <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>
             </td>
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew}">{{notice[column.fieldName]}}</span>
+                <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
             </td>
         </tr>
     </table>

@@ -168,12 +168,13 @@ console.log("initCtrl");
         var tmp = arr.map(function(el){
             oneNotice = {};
             oneNotice.id = el.id;
-            oneNotice.noticeType = el.contEvent.contEventType.name;
+            oneNotice.noticeType = el.contEvent.contEventType.caption;
+            oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
             oneNotice.noticeMessage = el.contEvent.message;                        
-            if (el.contEvent.contEventType.name.length > $scope.TYPE_CAPTION_LENGTH){
-                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.name.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+            if (el.contEvent.contEventType.caption.length > $scope.TYPE_CAPTION_LENGTH){
+                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
                 }else{
-                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.name;
+                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption;
             };
             if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";
@@ -204,6 +205,7 @@ console.log("initCtrl");
                         case null : oneNotice.noticeZpoint = ""; break;
                         default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
              }
+//console.log(oneNotice);            
             return oneNotice;
         });
         return tmp;
@@ -380,8 +382,7 @@ console.log($scope.objects);
             $scope.objects = data;
             objectSvc.sortObjectsByFullName($scope.objects);
             $scope.initCtrl();    
-console.log("getObjects");
-console.log(this);            
+console.log("getObjects");            
             $scope.getResultsPage(1);
         });
     };
@@ -394,8 +395,7 @@ console.log(this);
     };
     
     $scope.$watch('reportStart', function (newDates) {
-console.log("watch");
-console.log("notice");         
+console.log("watch notice");        
 console.log($rootScope.reportStart); 
 console.log($rootScope.reportEnd);         
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
