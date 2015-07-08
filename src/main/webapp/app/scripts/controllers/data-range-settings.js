@@ -91,9 +91,9 @@ app
     $scope.$watch('navPlayerDates', function (newDates) {
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
-console.log("data-range-settings");         
-console.log($rootScope.reportStart); 
-console.log($rootScope.reportEnd);         
+//console.log("data-range-settings");         
+//console.log($rootScope.reportStart); 
+//console.log($rootScope.reportEnd);         
     }, false);
     
                         
@@ -139,11 +139,11 @@ console.log($rootScope.reportEnd);
     };
 
     $scope.$watch('indicatorDates', function (newDates) {
-console.log("indicatorDates");        
+//console.log("Date-range-settings indicatorDates");        
         if ($location.path()!=="/objects/indicators"){
             return;
         };
-console.log("indicatorDates1");                
+//console.log("Date-range-settings indicatorDates1");                
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
     }, false);
@@ -151,19 +151,22 @@ console.log("indicatorDates1");
     
     
     //monitor settings
-    if (angular.isDefined($rootScope.monitor)){
+    if (angular.isDefined($rootScope.monitorStart)){
 //        $rootScope.monitor.toDate
+//console.log("Data-range-settings. Set monitor dates.");  
+//console.log($rootScope.monitorStart); 
         $scope.monitorDates = {
-            startDate :  $rootScope.monitor.fromDate,
-            endDate : $rootScope.monitor.toDate
+            startDate :  $rootScope.monitorStart,
+            endDate : $rootScope.monitorEnd
         };
     }else{
 //        startDate :  moment().subtract(6, 'days').startOf('day'),
         $scope.monitorDates = {
-            startDate :  moment().startOf('day'),
+            startDate :  moment().subtract(6, 'days').startOf('day'),
             endDate :  moment().endOf('day')
         };
     }; 
+//console.log($scope.monitorDates);    
     $scope.queryDateOptsMonitorRu = {
         locale : {
             applyClass : 'btn-green',
@@ -188,7 +191,7 @@ console.log("indicatorDates1");
                     moment().subtract(29, 'days').startOf('day'),
                     moment().endOf('day') ]
         },
-        startDate : moment().startOf('day'),
+        startDate : moment().subtract(6, 'days').startOf('day'),
         endDate : moment().endOf('day'),
         maxDate: moment().endOf('day'),
 
@@ -196,12 +199,14 @@ console.log("indicatorDates1");
         ,separator: " по "
     };
     $scope.$watch('monitorDates', function (newDates) {
-console.log("monitorDates");        
+//console.log("Date-range-settings monitorDates");        
         if ($location.path()!=="/notices/monitor"){
             return;
-        };
-console.log("monitorDates1");                
+        };             
         $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+//console.log($rootScope.monitorStart);  
+//console.log($rootScope.monitorEnd);         
+//console.log("Date-range-settings monitorDates1");         
     }, false);
 });
