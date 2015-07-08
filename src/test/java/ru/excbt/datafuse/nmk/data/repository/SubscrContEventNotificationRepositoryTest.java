@@ -94,4 +94,24 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 		}
 
 	}
+
+	@Test
+	public void testSelectContObjectsContTypesCollapse() throws Exception {
+		List<Long> vList = subscriberService
+				.selectSubscriberContObjectIds(subscriberId());
+		DatePeriod dp = DatePeriod.lastWeek();
+		
+		List<Object[]> resultList = subscrContEventNotificationRepository
+				.selectNotificationEventTypeCountGroupCollapse(subscriberId(), vList,
+						dp.getDateFrom(), dp.getDateTo());
+		
+		assertNotNull(resultList);
+		assertTrue(!resultList.isEmpty());
+		
+		for (Object[] oo : resultList) {
+			logger.info("oo[0]:{} (__{}__), oo[1]:{} (__{}__)", oo[0], oo[0].getClass().getSimpleName(), oo[1], oo[1].getClass().getSimpleName());
+			
+		}
+		
+	}
 }
