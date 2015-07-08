@@ -30,7 +30,7 @@ angular.module('portalNMC')
         var getObjects = function(url, monitorSvcSettings){ 
 console.log("MonitorSvc. Get objects");    
             monitorSvcSettings.loadingFlag = true;
-            var targetUrl = url+"?fromDate="+monitorSvcSettings.fromDate+"&toDate="+monitorSvcSettings.toDate+"&noGreenColor="+monitorSvcSettings.noGreenObjectsFlag;
+            var targetUrl = url+"/statusCollapse?fromDate="+monitorSvcSettings.fromDate+"&toDate="+monitorSvcSettings.toDate+"&noGreenColor="+monitorSvcSettings.noGreenObjectsFlag;
     console.log(targetUrl);  
 
             $http.get(targetUrl)

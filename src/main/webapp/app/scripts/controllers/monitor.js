@@ -213,7 +213,7 @@ console.log(error);
         if (obj == null){
             return;
         };
-        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
+        var url = objectUrl+"/"+obj.contObject.id+"/eventTypes/statusCollapse"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
