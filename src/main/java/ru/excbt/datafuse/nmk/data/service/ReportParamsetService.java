@@ -97,8 +97,7 @@ public class ReportParamsetService implements SecuredRoles {
 						.isAllSpecialRequiredParamsExists(reportMakerParam);
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
-		
-		
+
 		ReportParamset result = createOne(reportParamset);
 
 		if (contObjectIds != null) {

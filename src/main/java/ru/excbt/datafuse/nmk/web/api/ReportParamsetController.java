@@ -41,12 +41,17 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @Controller
 @RequestMapping(value = "/api/reportParamset")
 public class ReportParamsetController extends WebApiController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ReportParamsetController.class);
+
+	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
@@ -456,6 +461,14 @@ public class ReportParamsetController extends WebApiController {
 		reportParamset.setReportTemplate(reportTemplate);
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 		reportParamset.set_active(true);
+
+		try {
+			String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+					.writeValueAsString(reportParamset);
+			logger.trace("ReportParamset JSON: {}", paramJson);
+
+		} catch (JsonProcessingException e) {
+		}
 
 		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(
 				reportParamset, request) {
