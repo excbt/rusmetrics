@@ -153,6 +153,26 @@ public class SubscrContEventNotificationControllerTest extends
 	 * @throws Exception
 	 */
 	@Test
+	public void testNotifiicationsContObjectStatusCollapse() throws Exception {
+		
+		ResultActions resultActionsAll = mockMvc
+				.perform(get("/api/subscr/contEvent/notifications/contObject/statusCollapse")
+						.param("fromDate", "2015-06-01")
+						.param("toDate", "2015-06-30")
+						.with(testSecurityContext())
+						.accept(MediaType.APPLICATION_JSON));
+		
+		resultActionsAll.andDo(MockMvcResultHandlers.print());
+		
+		resultActionsAll.andExpect(status().isOk()).andExpect(
+				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
 	public void testNotificationsContObjectEventTypes() throws Exception {
 
 		long contObjectId = 20118695;
@@ -171,6 +191,31 @@ public class SubscrContEventNotificationControllerTest extends
 		resultActionsAll.andExpect(status().isOk()).andExpect(
 				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testNotificationsContObjectEventTypesStatusCollapse() throws Exception {
+		
+		long contObjectId = 20118695;
+		
+		ResultActions resultActionsAll = mockMvc
+				.perform(get(
+						String.format(
+								"/api/subscr/contEvent/notifications/contObject/%d/eventTypes/statusCollapse",
+								contObjectId)).param("fromDate", "2015-06-01")
+								.param("toDate", "2015-06-30")
+								.with(testSecurityContext())
+								.accept(MediaType.APPLICATION_JSON));
+		
+		resultActionsAll.andDo(MockMvcResultHandlers.print());
+		
+		resultActionsAll.andExpect(status().isOk()).andExpect(
+				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		
 	}
 
 	@Test

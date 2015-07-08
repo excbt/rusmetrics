@@ -337,6 +337,51 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
+	@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectsStatusCollapse(
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
+				.selectMonitorContEventNotificationStatusCollapse(
+						currentSubscriberService.getSubscriberId(),
+						datePeriodParser.getDatePeriod().buildEndOfDay());
+
+		List<MonitorContEventNotificationStatus> resultList = null;
+
+		if (Boolean.TRUE.equals(noGreenColor)) {
+			resultList = preResultList
+					.stream()
+					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
+					.collect(Collectors.toList());
+		} else {
+			resultList = preResultList;
+		}
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationContObjectEventTypes(
 			@PathVariable(value = "contObjectId") Long contObjectId,
@@ -362,6 +407,42 @@ public class SubscrContEventNotificationController extends WebApiController {
 				.selectMonitorContEventTypeStatus(currentSubscriberService
 						.getSubscriberId(), contObjectId, datePeriodParser
 						.getDatePeriod().buildEndOfDay());
+
+		return ResponseEntity.ok(resultList);
+	}
+
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationContObjectEventTypesStatusCollapse(
+			@PathVariable(value = "contObjectId") Long contObjectId,
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr) {
+
+		checkNotNull(contObjectId);
+		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+				toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
+				.selectMonitorContEventTypeStatusCollapse(
+						currentSubscriberService.getSubscriberId(),
+						contObjectId, datePeriodParser.getDatePeriod()
+								.buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
 	}
