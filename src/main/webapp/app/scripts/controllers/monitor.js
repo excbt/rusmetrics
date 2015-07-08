@@ -23,14 +23,6 @@ angular.module('portalNMC')
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
       
-    //check object array
-    if ($scope.objects.length!=0)  {
-        //if array is not empty -> make table
-        makeObjectTable();
-    }else if($scope.monitorSettings.loadingFlag===false){//else -> send request
-//console.log("$scope.objects.length!=0");        
-        $rootScope.$broadcast('monitor:updateObjectsRequest');
-    };  
     
     //monitor state
     $scope.monitorState = {};
@@ -53,7 +45,7 @@ angular.module('portalNMC')
 //    $scope.getMonitorState();
     
     //get objects function
-    $scope.getObjects = function(url){ 
+    $scope.getObjects111 = function(url){ 
         var targetUrl = url+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&noGreenColor="+$scope.monitorSettings.noGreenObjectsFlag;
 //console.log(targetUrl);  
         
@@ -136,7 +128,7 @@ console.log(error);
         });
     };
     //get monitor events
-    $scope.getMonitorEventsByObject = function(obj){       
+    $scope.getMonitorEventsByObject111 = function(obj){       
 //        var obj = findObjectById(objId);    
         //if cur object = null => exit function
 //        if (obj == null){
@@ -473,6 +465,22 @@ console.log("request");
 //        $rootScope.$broadcast('monitor:periodChanged');
 //        $scope.getObjects(objectUrl);                              
     }, false);
+      
+      
+    $scope.$on('monitorObjects:getObjectEvents',function(event, args){
+//console.log(event);
+//console.log(args);   
+        var obj = args.obj;
+        var imgObj = "#imgObj"+obj.contObject.id;          
+        $(imgObj).qtip({
+            content:{
+                text: obj.monitorEvents
+            },
+            style:{
+                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+            }
+        }); 
+    });
     
     
 //The control of the period monitor refresh(Управление перодическим обновлением монитора)
@@ -534,6 +542,19 @@ console.log("request");
 //        $scope.monitorSettings.loadingFlag = true;
 //        $scope.getObjects(objectUrl);
 //    },Number($scope.monitorSettings.refreshPeriod)*1000);
+      
+          //check object array
+    if ($scope.objects.length!=0)  {
+        //if array is not empty -> make table
+        makeObjectTable();
+        if (angular.isDefined($cookies.objectId) && $cookies.objectId!==null){
+            $scope.getEventTypesByObject($cookies.objectId, false);
+            $cookies.objectId = null;
+        };
+    }else if($scope.monitorSettings.loadingFlag===false){//else -> send request
+//console.log("$scope.objects.length!=0");        
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };
     
         //chart
     $scope.runChart = function(objId){

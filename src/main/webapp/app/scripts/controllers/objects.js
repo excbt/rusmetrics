@@ -1,8 +1,7 @@
 'use strict';
 
 angular.module('portalNMC')
-.controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http, monitorSvc){
-    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
+.controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http){
     
 //        $cookies.contZPoint = null;
 //        $cookies.contObject=null;

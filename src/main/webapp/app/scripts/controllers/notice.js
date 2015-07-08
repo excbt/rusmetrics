@@ -130,6 +130,7 @@ console.log("initCtrl");
 //console.log(tmpTypesArr);                
                 if ((angular.isDefined(tmpTypesArr))&&(tmpTypesArr.hasOwnProperty('length'))&&(tmpTypesArr.length>0)){
                     $scope.typesInWindow = angular.copy($scope.noticeTypes);
+//console.log($scope.noticeTypes);                    
                     tmpTypesArr.forEach(function(element){
                         var curTypeIndex = -1;
                         $scope.typesInWindow.some(function(elem, index){
@@ -267,7 +268,7 @@ console.log("initCtrl");
 
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
-console.log($scope.objects);        
+//console.log($scope.objects);        
         $scope.objectsInWindow = angular.copy($scope.objects);
         //Если флаг состояния объектов = "ложь" (это означает, что либо объекты еще не выбирались либо выбор объектов не был подтвержден - не была нажата кнопка "Применить"), то сбросить флаги у выбранных объектов
 
@@ -385,10 +386,11 @@ console.log($scope.objects);
     
              //get Objects
     $scope.getObjects = function(){
-        crudGridDataFactory($scope.objectsUrl).query(function(data){
-            $scope.objects = data;
+//        crudGridDataFactory($scope.objectsUrl).query(function(data){
+        objectSvc.promise.then(function(response){
+            $scope.objects = response.data;
             objectSvc.sortObjectsByFullName($scope.objects);
-            $scope.initCtrl();    
+               
 console.log("getObjects");            
             $scope.getResultsPage(1);
         });
@@ -417,7 +419,8 @@ console.log("watch notice");
        $http.get(url)
             .success(function(data){
                 $scope.noticeTypes = data;
-//console.log($scope.noticeTypes);           
+                $scope.initCtrl(); 
+console.log("$scope.noticeTypes");           
             })
             .error(function(e){
                 console.log(e);
@@ -551,7 +554,7 @@ console.log("watch notice");
 //        if ((typeof noticesIds == 'undefined')||(!noticesIds.hasOwnProperty('length'))|| (noticesIds.length==0)){
 //            return;
 //        };
-console.log($scope.isNew);
+//console.log($scope.isNew);
         $http({
             url: url, 
             method: "PUT",

@@ -8,7 +8,8 @@
  * Controller of the portalNMC
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', function ($scope, $rootScope, $cookies) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', 'monitorSvc', function ($scope, $rootScope, $cookies, monitorSvc) {
+    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;

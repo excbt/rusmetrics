@@ -106,6 +106,7 @@ console.log("MonitorSvc. Get objects");
     //                    return 0;
     //                });
                     obj.monitorEvents = tmpMessage;
+                    $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
                     //Display message
     //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
     //                imgObj.title = obj.monitorEvents;
