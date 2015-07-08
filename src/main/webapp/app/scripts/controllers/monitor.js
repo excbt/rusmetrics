@@ -1,21 +1,36 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', function($rootScope, $http, $scope, $compile, $interval, $cookies){
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, monitorSvc){
     //object url
     var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
     var objectUrl = notificationsUrl+"/contObject";//"resource/objects.json";  
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
-    $scope.objects = [];
+    $scope.objects = monitorSvc.getAllMonitorObjects();//[];
+//console.log("================== $scope.objects================");            
+//console.log($scope.objects);      
+//console.log("====================== end $scope.objects=================");            
+
     //default date interval settings
-    $rootScope.monitorStart = moment().startOf('day').format('YYYY-MM-DD');
+    $rootScope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
     $rootScope.monitorEnd =  moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
-    $scope.monitorSettings.refreshPeriod = "180";
+    $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
-    $scope.monitorSettings.loadingFlag = true;
+    $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;
+    //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
+    $scope.monitorSettings.noGreenObjectsFlag = false;
+      
+    //check object array
+    if ($scope.objects.length!=0)  {
+        //if array is not empty -> make table
+        makeObjectTable();
+    }else if($scope.monitorSettings.loadingFlag===false){//else -> send request
+//console.log("$scope.objects.length!=0");        
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+    };  
     
     //monitor state
     $scope.monitorState = {};
@@ -37,13 +52,10 @@ angular.module('portalNMC')
     };
 //    $scope.getMonitorState();
     
-    //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
-    $scope.noGreenObjects_flag = false;
-    
     //get objects function
     $scope.getObjects = function(url){ 
-        var targetUrl = url+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&noGreenColor="+$scope.noGreenObjects_flag;
-console.log(targetUrl);  
+        var targetUrl = url+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&noGreenColor="+$scope.monitorSettings.noGreenObjectsFlag;
+//console.log(targetUrl);  
         
         $http.get(targetUrl)
             .success(function(data){
@@ -86,7 +98,7 @@ console.log(targetUrl);
             .error(function(e){
                 console.log(e);
             });
-        $scope.noGreenObjects_flag = false; //reset flag
+        $scope.monitorSettings.noGreenObjectsFlag = false; //reset flag
     };
     
     $scope.eventColumns = [
@@ -97,7 +109,7 @@ console.log(targetUrl);
     
     //get monitor events -alter way
     $scope.getMonitorEventsByObjectAW = function(obj){
-console.log("getMonitorEventsByObjectAW");        
+//console.log("getMonitorEventsByObjectAW");        
         var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";
         var imgObj = "#imgObj"+obj.contObject.id;          
         $(imgObj).qtip({
@@ -283,10 +295,14 @@ console.log(error);
 
     //Рисуем таблицу с объектами
     function makeObjectTable(){
+       
         var objTable = document.getElementById('objectTable');
 //        var temptableHTML = "";
         var tableHTML = "";
 //        var tmpArray = $scope.objects;
+//console.log("Monitor. Make objects table."); 
+//console.log(objTable);        
+//console.log($scope.objects);                
         $scope.objects.forEach(function(element, index){
             var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
@@ -324,8 +340,10 @@ console.log(error);
             tableHTML += "</table>";
             tableHTML += "</td>";
             tableHTML +="<tr id=\"trObjEvents"+element.contObject.id+"\">";
-            tableHTML += "</tr>";                       
+            tableHTML += "</tr>";
         });
+//console.log(tableHTML);
+        
 //console.log(temptableHTML); 
         objTable.innerHTML = tableHTML;
 //        objTable.innerHTML = tableHTML;
@@ -409,7 +427,7 @@ console.log(error);
     };
     
     $scope.getNoticesByObjectAndType = function(objId, typeId){
-console.log("getNoticesByObjectAndType");        
+//console.log("getNoticesByObjectAndType");        
         $scope.setNoticeFilterByObjectAndType(objId, typeId);
 //        window.location.assign(noticesUrl);
     };
@@ -417,68 +435,105 @@ console.log("getNoticesByObjectAndType");
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
+//console.log($rootScope.userInfo);        
         return $scope.userInfo._system;
     };
     //call get objects function
 //    $scope.getObjects(objectUrl);
     
     $scope.refreshData = function(){
-        $scope.getObjects(objectUrl);
+        $scope.monitorSettings.loadingFlag = true;
+//console.log("request");                
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+//        $scope.getObjects(objectUrl);
     };
     
     $scope.getNoGreenObjects= function(){
-        $scope.noGreenObjects_flag = true;
-        $scope.getObjects(objectUrl);
+        $scope.monitorSettings.loadingFlag = true;
+        $scope.monitorSettings.noGreenObjectsFlag = true;
+        monitorSvc.monitorSvcSettings.noGreenObjectsFlag = true;
+console.log("request");                
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+//        $scope.getObjects(objectUrl);
     };
     
     //Watching for the change period 
-    $scope.$watch('monitorStart', function (newDates) {
-console.log("monitorStart watch");        
-        $scope.getObjects(objectUrl);                              
+    $scope.$watch('monitorStart', function (newDates, oldDates) {
+//console.log("monitorStart watch");  
+//console.log(newDates);        
+//console.log(oldDates);   
+        if (oldDates===newDates){
+            return;
+        };
+        $scope.monitorSettings.loadingFlag = true;
+        monitorSvc.monitorSvcSettings.fromDate = $rootScope.monitorStart;
+        monitorSvc.monitorSvcSettings.toDate = $rootScope.monitorEnd;
+//console.log("request");        
+        $rootScope.$broadcast('monitor:updateObjectsRequest');
+//        $rootScope.$broadcast('monitor:periodChanged');
+//        $scope.getObjects(objectUrl);                              
     }, false);
     
     
 //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
-    var interval;
-    
-    function stopRefreshing(){
-        if (angular.isDefined(interval)){
-            $interval.cancel(interval);
-            interval = undefined;
-        };
-    };
-    
-    $scope.$on('$destroy', function() {
-//        alert("Ушли со страницы?");
-        stopRefreshing();
+    $scope.$on('monitorObjects:updated',function(){
+        $scope.objects = monitorSvc.getAllMonitorObjects();
+        makeObjectTable();
+        $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
+        $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.monitorSvcSettings.noGreenObjectsFlag;
     });
+    
+//    var interval;
+//    
+//    function stopRefreshing(){
+//        if (angular.isDefined(interval)){
+//            $interval.cancel(interval);
+//            interval = undefined;
+//        };
+//    };
+    
+//    $scope.$on('$destroy', function() {
+//        alert("Ушли со страницы?");
+//        stopRefreshing();
+//    });
     
     
     //watch for the change of the refresh period
-    $scope.$watch('monitorSettings.refreshPeriod', function (newPeriod) {
-console.log("monitorSettings.refreshPeriod watch");
+    $scope.$watch('monitorSettings.refreshPeriod', function (newPeriod, oldPeriod) {
+//console.log("Refresh period watch");        
+//console.log(newPeriod);
+//console.log(oldPeriod);  
+        if (newPeriod===oldPeriod){
+            return;
+        };
+        monitorSvc.monitorSvcSettings.refreshPeriod = $scope.monitorSettings.refreshPeriod;
+        $rootScope.$broadcast('monitor:periodChanged');
+//        $rootScope.$broadcast('monitor:updateObjectsRequest');
+//console.log("monitorSettings.refreshPeriod watch");
 //console.log("new period = "+newPeriod);        
         //cancel previous interval
-        stopRefreshing();
+//        stopRefreshing();
         //set new interval
-        interval = $interval(function(){
-            var time = (new Date()).toLocaleString();
+//        interval = $interval(function(){
+//            var time = (new Date()).toLocaleString();
 //console.log("new interval");            
-console.log(time);
-//console.log(Number($scope.monitorSettings.refreshPeriod));        
-            $scope.getObjects(objectUrl);
-        },Number($scope.monitorSettings.refreshPeriod)*1000);
+//console.log(time);
+//console.log(Number($scope.monitorSettings.refreshPeriod)); 
+//            $scope.monitorSettings.loadingFlag = true;
+//            $scope.getObjects(objectUrl);
+//        },Number($scope.monitorSettings.refreshPeriod)*1000);
         
     }, false);
     
     //Вызвываем с заданным периодом обновление монитора
-    interval = $interval(function(){
-        var time = (new Date()).toLocaleString();
-console.log(time);
-//console.log(Number($scope.monitorSettings.refreshPeriod));        
-        $scope.getObjects(objectUrl);
-    },Number($scope.monitorSettings.refreshPeriod)*1000);
+//    interval = $interval(function(){
+//        var time = (new Date()).toLocaleString();
+//console.log(time);
+//console.log(Number($scope.monitorSettings.refreshPeriod));
+//        $scope.monitorSettings.loadingFlag = true;
+//        $scope.getObjects(objectUrl);
+//    },Number($scope.monitorSettings.refreshPeriod)*1000);
     
         //chart
     $scope.runChart = function(objId){
@@ -533,4 +588,4 @@ console.log(time);
     function labelFormatter(label, series) {
 		return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label + " (" + Math.round(series.percent) + "%)</div>";
 	}
-});
+}]);
