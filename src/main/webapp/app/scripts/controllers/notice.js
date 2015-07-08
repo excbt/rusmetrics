@@ -403,10 +403,10 @@ console.log("getObjects");
     
     $scope.$watch('reportStart', function (newDates) {
 console.log("watch notice");        
-console.log($rootScope.reportStart); 
-console.log($rootScope.reportEnd);         
+//console.log($rootScope.reportStart); 
+//console.log($rootScope.reportEnd);         
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
-console.log("if = true");            
+//console.log("if = true");            
             $scope.getObjects();                              
         }else{
             $scope.getResultsPage(1);

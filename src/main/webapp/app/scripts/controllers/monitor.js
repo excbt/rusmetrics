@@ -17,7 +17,7 @@ angular.module('portalNMC')
     
     //monitor settings
     $scope.monitorSettings = {};
-    $scope.monitorSettings.refreshPeriod = "180";
+    $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
     $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
@@ -340,7 +340,7 @@ console.log(error);
             tableHTML += "</table>";
             tableHTML += "</td>";
             tableHTML +="<tr id=\"trObjEvents"+element.contObject.id+"\">";
-            tableHTML += "</tr>";                       
+            tableHTML += "</tr>";
         });
 //console.log(tableHTML);
         
