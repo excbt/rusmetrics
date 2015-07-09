@@ -19,7 +19,8 @@ angular.module('portalNMC')
     $scope.monitorSettings = {};
     $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
-    $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;
+    $scope.monitorSettings.loadingFlag = true;//monitorSvc.monitorSvcSettings.loadingFlag;
+//console.log($scope.monitorSettings.loadingFlag);      
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
       
@@ -83,6 +84,7 @@ angular.module('portalNMC')
                 makeObjectTable();
             $scope.monitorSettings.loadingFlag = false;//data has been loaded
             if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
+console.log($rootScope.monitor.objectId);                
                 $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
                 $rootScope.monitor.objectId = null;
             };
@@ -551,12 +553,13 @@ console.log(url);
         //if array is not empty -> make table
 //console.log("$scope.objects.length!=0")        
         makeObjectTable();
-console.log($cookies.objectMonitorId);          
-        if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null){
-//console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
+        $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
+//console.log($cookies.objectMonitorId);          
+        if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!=="null"){
+console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
             $scope.getEventTypesByObject(Number($cookies.objectMonitorId), false);
             $cookies.objectMonitorId = null;
-console.log($cookies.objectMonitorId);            
+//console.log($cookies.objectMonitorId);            
         };
         $scope.objects.forEach(function(obj){
             var imgObj = "#imgObj"+obj.contObject.id;          
