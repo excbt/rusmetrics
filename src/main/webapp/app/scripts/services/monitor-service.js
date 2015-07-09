@@ -171,6 +171,10 @@ console.log("MonitorSvc. monitor:updateObjectsRequest");
             getObjects(objectUrl, monitorSvcSettings);
         });
         
+        $rootScope.$on('$destroy',function(){
+            stopRefreshing();
+        });
+        
          return {
             monitorSvcSettings,
             getAllMonitorObjects

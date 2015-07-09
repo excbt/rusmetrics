@@ -205,7 +205,9 @@ console.log(error);
         if (obj == null){
             return;
         };
+      
         var url = objectUrl+"/"+obj.contObject.id+"/eventTypes/statusCollapse"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
+console.log(url);          
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
@@ -398,18 +400,19 @@ console.log(error);
     $scope.setNoticeFilterByObject = function(objId){
         $rootScope.monitor = {};
         $cookies.monitorFlag = true;
-        $cookies.objectId = objId;
+        $cookies.objectMonitorId = objId;
         $cookies.isNew = null;
         $cookies.typeIds = null;
         $cookies.fromDate = $rootScope.monitorStart;
         $cookies.toDate = $rootScope.monitorEnd;
         $rootScope.reportStart = $rootScope.monitorStart;
         $rootScope.reportEnd = $rootScope.monitorEnd;
+//console.log(" $cookies.isNew ="+ $cookies.isNew);        
     };
     
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
-        $scope.setNoticeFilterByObject(objId);
-        $cookies.isNew = true;
+        $scope.setNoticeFilterByObject(objId);        
+        $cookies.isNew = true;        
 
     };
     
@@ -444,7 +447,7 @@ console.log(error);
         $scope.monitorSettings.loadingFlag = true;
         $scope.monitorSettings.noGreenObjectsFlag = true;
         monitorSvc.monitorSvcSettings.noGreenObjectsFlag = true;
-console.log("request");                
+//console.log("request");                
         $rootScope.$broadcast('monitor:updateObjectsRequest');
 //        $scope.getObjects(objectUrl);
     };
@@ -546,15 +549,36 @@ console.log("request");
           //check object array
     if ($scope.objects.length!=0)  {
         //if array is not empty -> make table
+//console.log("$scope.objects.length!=0")        
         makeObjectTable();
-        if (angular.isDefined($cookies.objectId) && $cookies.objectId!==null){
-            $scope.getEventTypesByObject($cookies.objectId, false);
-            $cookies.objectId = null;
+console.log($cookies.objectMonitorId);          
+        if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null){
+//console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
+            $scope.getEventTypesByObject(Number($cookies.objectMonitorId), false);
+            $cookies.objectMonitorId = null;
+console.log($cookies.objectMonitorId);            
         };
+        $scope.objects.forEach(function(obj){
+            var imgObj = "#imgObj"+obj.contObject.id;          
+            $(imgObj).qtip({
+                content:{
+                    text: obj.monitorEvents
+                },
+                style:{
+                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                }
+            });
+        });
+        
     }else if($scope.monitorSettings.loadingFlag===false){//else -> send request
 //console.log("$scope.objects.length!=0");        
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
+      
+//    $scope.$on('$destroy', function() {
+//        alert("Way out");
+//        $cookies.objectMonitorId = null;
+//    }); 
     
         //chart
     $scope.runChart = function(objId){

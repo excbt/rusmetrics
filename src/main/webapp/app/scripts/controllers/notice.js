@@ -110,7 +110,7 @@ console.log("initCtrl");
             $scope.objectsInWindow = angular.copy($scope.objects);           
             var curIndex = -1; 
             $scope.objectsInWindow.some(function(element, index){
-                if (element.id === Number($cookies.objectId)){
+                if (element.id === Number($cookies.objectMonitorId)){
                     curIndex = index;
                     return true;
                 }
@@ -120,8 +120,8 @@ console.log("initCtrl");
                 //object
                 $scope.objectsInWindow[curIndex].selected=true;
                 performObjectsFilter();               
-                //new / revision
-                $scope.isNew = Boolean($cookies.isNew);
+                //new / revision               
+                $scope.isNew = $cookies.isNew==="null"?null:Boolean($cookies.isNew);               
                 if ($scope.isNew===true){
                     $scope.visibleText='Только новые';
                 };
@@ -390,11 +390,13 @@ console.log("initCtrl");
         objectSvc.promise.then(function(response){
             $scope.objects = response.data;
             objectSvc.sortObjectsByFullName($scope.objects);
-               
+            $scope.$broadcast('notices:getNoticeTypes');   
 console.log("getObjects");            
-            $scope.getResultsPage(1);
+//            $scope.getResultsPage(1);
         });
     };
+    
+    $scope.getObjects();
     
     //click the main checkbox - select/ deselect notices
     $scope.performAllNoticesOnPage = function(){
@@ -403,10 +405,13 @@ console.log("getObjects");
         });
     };
     
-    $scope.$watch('reportStart', function (newDates) {
+    $scope.$watch('reportStart', function (newDates, oldDates) {
 console.log("watch notice");        
-//console.log($rootScope.reportStart); 
-//console.log($rootScope.reportEnd);         
+//console.log(newDates); 
+//console.log(oldDates);
+        if(oldDates === newDates){
+            return;
+        };
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
 //console.log("if = true");            
             $scope.getObjects();                              
@@ -419,7 +424,8 @@ console.log("watch notice");
        $http.get(url)
             .success(function(data){
                 $scope.noticeTypes = data;
-                $scope.initCtrl(); 
+                $scope.initCtrl();
+                $scope.getResultsPage(1);
 console.log("$scope.noticeTypes");           
             })
             .error(function(e){
@@ -427,7 +433,10 @@ console.log("$scope.noticeTypes");
             });
     };
     
-    $scope.getNoticeTypes($scope.noticeTypesUrl);
+    $scope.$on('notices:getNoticeTypes',function(){
+        $scope.getNoticeTypes($scope.noticeTypesUrl);
+//        $scope.getResultsPage(1);
+    });
     
     //new/all filter
     $scope.getAllNotices = function(){

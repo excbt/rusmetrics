@@ -8,7 +8,7 @@
  * Controller of the portalNMC
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', 'monitorSvc', function ($scope, $rootScope, $cookies, monitorSvc) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, monitorSvc) {
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
 
     $scope.showPrivateOfficeMenu = false;
@@ -35,19 +35,45 @@ var app = angular.module('portalNMC');
 //console.log("no MenuMassive");          
 //          $cookies.menuMassive = {};
 //      }
-      $scope.menuMassive.object_menu_item = ($cookies.object_menu_item==="true" ? true:false);
-      $scope.menuMassive.report_menu_item= ($cookies.report_menu_item==="true" ? true:false);
-      $scope.menuMassive.notice_menu_item = ($cookies.notice_menu_item==="true" ? true:false);
-      $scope.menuMassive.setting_menu_item = ($cookies.setting_menu_item==="true" ? true:false);
-      $scope.menuMassive.admin_menu_item = ($cookies.admin_menu_item==="true" ? true:false);
-      $scope.menuMassive.object_menu_list_item = ($cookies.object_menu_list_item==="true" ? true:false);
-      $scope.menuMassive.contact_menu_item= ($cookies.contact_menu_item==="true" ? true:false);
-      $scope.menuMassive.directory_menu_item= ($cookies.directory_menu_item==="true" ? true:false);
-      $scope.menuMassive.object_control_menu_item= ($cookies.object_control_menu_item==="true" ? true:false);
-      $scope.menuMassive.metadata_control_menu_item= ($cookies.metadata_control_menu_item==="true" ? true:false);
-      $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
-      $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
-      $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
+      function initMenu(){
+          $scope.menuMassive.object_menu_item = ($cookies.object_menu_item==="true" ? true:false);
+          $scope.menuMassive.report_menu_item= ($cookies.report_menu_item==="true" ? true:false);
+          $scope.menuMassive.notice_menu_item = ($cookies.notice_menu_item==="true" ? true:false);
+          $scope.menuMassive.setting_menu_item = ($cookies.setting_menu_item==="true" ? true:false);
+          $scope.menuMassive.admin_menu_item = ($cookies.admin_menu_item==="true" ? true:false);
+          $scope.menuMassive.object_menu_list_item = ($cookies.object_menu_list_item==="true" ? true:false);
+          $scope.menuMassive.contact_menu_item= ($cookies.contact_menu_item==="true" ? true:false);
+          $scope.menuMassive.directory_menu_item= ($cookies.directory_menu_item==="true" ? true:false);
+          $scope.menuMassive.object_control_menu_item= ($cookies.object_control_menu_item==="true" ? true:false);
+          $scope.menuMassive.metadata_control_menu_item= ($cookies.metadata_control_menu_item==="true" ? true:false);
+          $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
+          $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
+          $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
+          if ($scope.menuMassive.object_menu_item){
+              window.location.assign("#/");
+          };
+          if ($scope.menuMassive.report_menu_item){
+              window.location.assign("#/reports/");
+          };
+          if ($scope.menuMassive.notice_menu_item){
+             window.location.assign("#/notices/monitor/");
+          };
+          if ($scope.menuMassive.setting_menu_item){
+              window.location.assign("#/settings/tariffs/");
+          };
+          if ($scope.menuMassive.admin_menu_item){
+              window.location.assign("/");
+          };
+//          if ($scope.menuMassive.object_menu_item){
+//              window.location.assign("/");
+//          };
+//          if ($scope.menuMassive.object_menu_item){
+//              window.location.assign("/");
+//          };
+          
+      };
+      
+      initMenu();
 //for (var k in $scope.menuMassive){
 //console.log(k);                    
 //console.log($cookies[k]); 
@@ -79,6 +105,25 @@ var app = angular.module('portalNMC');
         //          var el = document.getElementById(el_id);
         //          el.className = el.className + "excbt_a_list_group_item_selected";
     };
+      
+//    $rootScope.$on('$destroy',function(){
+//        $scope.setDefaultMenuState();
+//        alert('Destroy app');
+//    });
+//      $window.on('onbeforeunload',function(){
+//          alert("close");
+//      });
+//      for(var k in $window){
+//          console.log("window["+k+"]= "+$window[k]);
+//      };
+//        $window.onunload = function(){
+//            alert("jdskjhnk");
+//        };
+      
+      $(window).bind("beforeunload",function(){
+          console.log("jdslkj;ljl");
+          $scope.setDefaultMenuState();
+      });
       
           // Проверка пользователя - системный/ не системный
 //    $scope.isSystemuser = function(){
