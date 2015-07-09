@@ -1,6 +1,7 @@
 'use strict';
 angular.module('portalNMC')
     .service('monitorSvc', ['$rootScope', '$http', '$interval', function($rootScope, $http, $interval){
+console.log("Monitor service. Run Monitor service.");        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
         var objectUrl = notificationsUrl+"/contObject";
@@ -20,6 +21,7 @@ angular.module('portalNMC')
         monitorSvcSettings.toDate = $rootScope.monitorEnd;
         
         var getAllMonitorObjects = function(){
+console.log("Monitor service. getAllMonitorObjects.");                    
 //            if (objectsMonitorSvc.length===0){
 //                $rootScope.$broadcast('monitor:updateObjectsRequest');
 //            };

@@ -485,6 +485,21 @@ angular.module('portalNMC')
                 $scope.data = data.objects;
         });
         
+        
+        function setScoreStyles(){
+            //set styles for score/integrators
+            var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+            var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+            var totalThHead = document.getElementById("totals_th_head"); 
+            $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+//                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
+            $scope.intotalColumns.forEach(function(element){
+                var indicatorTh = document.getElementById("indicators_th_"+element.name);
+                element.ngstyle =indicatorTh.clientWidth+2;
+
+            });
+        };
+        
         // get summary
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){
@@ -493,17 +508,18 @@ angular.module('portalNMC')
 //   console.log("indicatorTh["+k+"]= "+indicatorTh[k]); 
 //};           
                     //set styles for score/integrators
-                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
-                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
-                var totalThHead = document.getElementById("totals_th_head"); 
-                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
-//                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
-                $scope.intotalColumns.forEach(function(element){
-                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                    element.ngstyle =indicatorTh.clientWidth+2;
-                    
-                });
+//                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+//                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+//                var totalThHead = document.getElementById("totals_th_head"); 
+//                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+////                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
+//                $scope.intotalColumns.forEach(function(element){
+//                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
+//                    element.ngstyle =indicatorTh.clientWidth+2;
+//                    
+//                });
             
+                setScoreStyles();
                 $scope.summary = data;            
                 if ($scope.summary.hasOwnProperty('diffs')){
                     $scope.intotalColumns.forEach(function(element){
@@ -642,6 +658,13 @@ angular.module('portalNMC')
         }
         $scope.getData(1);                              
     }, false); 
+        
+    //listen window resize
+//    var wind = angular.element($window);
+//    wind.bind('resize', function(){
+//        setScoreStyles();
+////        $scope.$apply();
+//    });
     
 //    $scope.setTitle = function(fieldName){ 
 //        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){

@@ -54,14 +54,14 @@
     <div class="col-md-1 nmc-div-filter-object" >
 <!--        <label class="nmc-form-label">объекты:</label>-->
         <div class="input-group nmc-input-data">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">объекты:</span>
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon" ng-click="selectObjectsClick()">объекты:</span>
             <input ng-init="selectedObjects_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-digital-data" ng-click="selectObjectsClick()" ng-model="selectedObjects_list" aria-describedby="rightAddon">
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="clearObjectFilter();getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    
         </div>
     </div>
     <div class="col-md-1 nmc-div-filter-type">
         <div class="input-group">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">типы:</span>
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon" ng-click="selectNoticeTypesClick()">типы:</span>
             <input ng-init="selectedNoticeTypes_list='Нет'" id="inputObjects" type="text" class="form-control nmc-date-interval-form nmc-input-data" ng-click="selectNoticeTypesClick()" ng-model="selectedNoticeTypes_list"  aria-describedby="rightAddon"> 
             
             <span class="input-group-addon nmc-input-form-suffix" id="rightAddon"><i class="btn btn-xs" ng-click="clearTypeFilter();getResultsPage(1)"><img height="19" width="19" src="images/clear-filter.jpg"/></i></span>    

@@ -12,8 +12,13 @@
       </div>
     </div>
 </div>
+<!--
 <div class="" ng-class="{'nmc-hide':!monitorSettings.loadingFlag, 'nmc-show':monitorSettings.loadingFlag}">
     <i class="fa fa-spinner fa-spin"></i> Загрузка .... 
+</div>
+-->
+<div  ng-show="monitorSettings.loadingFlag" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
 <div class="tab-content" ng-class="{'nmc-hide':monitorSettings.loadingFlag, 'nmc-show':!monitorSettings.loadingFlag}">
     <div role="tabpanel" class="tab-pane fade in active" id="param_sets">
