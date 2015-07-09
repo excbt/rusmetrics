@@ -20,9 +20,9 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
@@ -155,5 +155,25 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i
 				.getContEventType().getKeyname(), i.getTotalCount()));
 
+	}
+
+	@Test
+	public void selectContEventTypeMonitorStatusCollapseTest() throws Exception {
+		
+		long contObjectId = 20118695;
+		DatePeriodParser dpp = DatePeriodParser.parse("2015-06-01",
+				"2015-06-30");
+		
+		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
+				.selectMonitorContEventTypeStatusCollapse(
+						currentSubscriberService.getSubscriberId(),
+						contObjectId, dpp.getDatePeriod());
+		
+		assertNotNull(checkList);
+		assertFalse(checkList.isEmpty());
+		
+		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i
+				.getContEventType().getKeyname(), i.getTotalCount()));
+		
 	}
 }

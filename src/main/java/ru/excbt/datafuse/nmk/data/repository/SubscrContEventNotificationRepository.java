@@ -120,21 +120,45 @@ public interface SubscrContEventNotificationRepository extends
 	 * @return
 	 */
 	@Query(value = "SELECT cont_event_type_id, sum(count_events) as count_events FROM ( "
-			+ " SELECT pre1.cont_object_id, CASE WHEN pre1.is_base_event=false THEN pre1.reverse_cont_event_type_id ELSE pre1.cont_event_type_id END AS cont_event_type_id, count_events "
+			+ " SELECT pre1.cont_object_id, CASE WHEN et.is_base_event=false THEN et.reverse_id ELSE et.id END AS cont_event_type_id, count_events "
 			+ " FROM  ( "
-			+ " SELECT cen.cont_object_id, cen.cont_event_type_id, et.is_base_event, et.reverse_id reverse_cont_event_type_id, COUNT(1) count_events "
-			+ " FROM subscr_cont_event_notification cen, cont_event_type et "
+			+ " SELECT cen.cont_object_id, cen.cont_event_type_id, COUNT(1) count_events "
+			+ " FROM subscr_cont_event_notification cen "
 			+ " WHERE cen.subscriber_id = :subscriberId AND cen.cont_object_id = :contObjectId AND "
 			+ " cen.cont_event_time >= :dateFrom AND "
-			+ " cen.cont_event_time <= :dateTo AND "
-			+ " cen.cont_event_type_id = et.id "
-			+ " GROUP BY cen.cont_object_id, cen.cont_event_type_id, et.is_base_event, et.reverse_id "
-			+ " ) pre1) pre2 GROUP BY cont_event_type_id", nativeQuery = true)
+			+ " cen.cont_event_time <= :dateTo "
+			+ " GROUP BY cen.cont_object_id, cen.cont_event_type_id "
+			+ " ) pre1, cont_event_type et "
+			+ " WHERE pre1.cont_event_type_id = et.id "
+			+ ") pre2 GROUP BY cont_event_type_id", nativeQuery = true)
 	public List<Object[]> selectNotificationEventTypeCountCollapse(
 			@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") Long contObjectId,
 			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
+	/**
+
+select cont_event_type_id, sum(count_events) as count_events from 
+(
+select pre1.cont_object_id, 
+	CASE 
+		WHEN et.is_base_event=false THEN et.reverse_id 
+		ELSE et.id 
+	END as cont_event_type_id, count_events
+from (       
+	select n.cont_object_id, n.cont_event_type_id, count(1) count_events
+	from subscr_cont_event_notification n
+	where 	n.cont_object_id = 20118695 and 
+		n.subscriber_id = 728 and 
+		n.cont_event_time > now() -  interval '7 days' 
+	Group by n.cont_object_id, n.cont_event_type_id	
+) pre1, cont_event_type et
+WHERE pre1.cont_event_type_id = et.id
+) pre2
+group by cont_event_type_id
+		 *
+		 */	
+	
 	/**
 	 * 
 	 * @param subscriberId
@@ -184,16 +208,16 @@ public interface SubscrContEventNotificationRepository extends
 	 */
 	@Query(value = " SELECT cont_object_id, count(cont_event_type_id) FROM ( "
 			+ " SELECT DISTINCT pre1.cont_object_id, "
-			+ " CASE WHEN pre1.is_base_event=false THEN pre1.reverse_cont_event_type_id ELSE pre1.cont_event_type_id END as cont_event_type_id "
-			+ " FROM ( SELECT cen.cont_object_id, cen.cont_event_type_id, et.is_base_event, et.reverse_id reverse_cont_event_type_id "
-			+ " FROM subscr_cont_event_notification cen, cont_event_type et "
+			+ " CASE WHEN et.is_base_event=false THEN et.reverse_id ELSE et.id END as cont_event_type_id "
+			+ " FROM ( SELECT cen.cont_object_id, cen.cont_event_type_id "
+			+ " FROM subscr_cont_event_notification cen "
 			+ " WHERE cen.subscriber_id = :subscriberId AND "
 			+ " cen.cont_object_id IN (:contObjectIds) AND "
 			+ " cen.cont_event_time >= :dateFrom AND "
-			+ " cen.cont_event_time <= :dateTo AND"
-			+ " cen.cont_event_type_id = et.id "
-			+ " GROUP BY cen.cont_object_id, cen.cont_event_type_id	, et.is_base_event, et.reverse_id "
-			+ " ) pre1 "
+			+ " cen.cont_event_time <= :dateTo "
+			+ " GROUP BY cen.cont_object_id, cen.cont_event_type_id	"
+			+ " ) pre1, cont_event_type et "
+			+ " WHERE pre1.cont_event_type_id = et.id "
 			+ " ) pre2 "
 			+ " GROUP BY cont_object_id	", nativeQuery = true)
 	public List<Object[]> selectNotificationEventTypeCountGroupCollapse(
@@ -201,4 +225,29 @@ public interface SubscrContEventNotificationRepository extends
 			@Param("contObjectIds") List<Long> contObjectIds,
 			@Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
+/*
+
+SELECT cont_object_id, count(1) FROM
+(
+select distinct pre1.cont_object_id, 
+		CASE 
+			WHEN et.is_base_event=false THEN et.reverse_id 
+			ELSE et.id 
+		END as cont_event_type_id
+from (       
+	select n.cont_object_id, n.cont_event_type_id
+	from subscr_cont_event_notification n
+	where 	n.cont_object_id IN (
+			select sco.cont_object_id 
+			from subscr_cont_object sco
+			where sco.subscriber_id = 728) and 
+		n.subscriber_id = 728 and 
+		n.cont_event_time > now() -  interval '7 days' 
+	Group by n.cont_object_id, n.cont_event_type_id
+) pre1, cont_event_type et
+WHERE pre1.cont_event_type_id = et.id
+) pre2
+GROUP BY cont_object_id	
+ */
+	
 }
