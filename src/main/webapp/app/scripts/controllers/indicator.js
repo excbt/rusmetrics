@@ -1,6 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -484,9 +484,8 @@ angular.module('portalNMC')
                 });
                 $scope.data = data.objects;
         });
-        
-        
-        function setScoreStyles(){
+         
+        $scope.setScoreStyles = function(){
             //set styles for score/integrators
             var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
             var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
@@ -495,7 +494,7 @@ angular.module('portalNMC')
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
             $scope.intotalColumns.forEach(function(element){
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                element.ngstyle =indicatorTh.clientWidth+2;
+                element.ngstyle =indicatorTh.clientWidth+1;
 
             });
         };
@@ -519,7 +518,7 @@ angular.module('portalNMC')
 //                    
 //                });
             
-                setScoreStyles();
+                $scope.setScoreStyles();
                 $scope.summary = data;            
                 if ($scope.summary.hasOwnProperty('diffs')){
                     $scope.intotalColumns.forEach(function(element){
@@ -660,11 +659,11 @@ angular.module('portalNMC')
     }, false); 
         
     //listen window resize
-//    var wind = angular.element($window);
-//    wind.bind('resize', function(){
-//        setScoreStyles();
-////        $scope.$apply();
-//    });
+    var wind = angular.element($window);
+    wind.bind('resize', function(){
+        $scope.setScoreStyles();
+        $scope.$apply();
+    });
     
 //    $scope.setTitle = function(fieldName){ 
 //        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){

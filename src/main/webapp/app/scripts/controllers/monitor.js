@@ -7,6 +7,9 @@ angular.module('portalNMC')
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
+//console.log("Monitor ctrl. Objects are got."); 
+//var time = new Date();
+//console.log(time);        
 //console.log("================== $scope.objects================");            
 //console.log($scope.objects);      
 //console.log("====================== end $scope.objects=================");            
@@ -23,6 +26,9 @@ angular.module('portalNMC')
 //console.log($scope.monitorSettings.loadingFlag);      
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
+    
+    $scope.monitorSettings.objectsPerScroll = 800;//the pie of the object array, which add to the page on window scrolling
+    $scope.monitorSettings.objectsOnPage = 50;//current the count of objects, which view on the page
       
     
     //monitor state
@@ -81,7 +87,8 @@ angular.module('portalNMC')
 //                        $scope.getMonitorEventsByObject(element);
 //                    }
 //                };
-                makeObjectTable();
+                var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+                makeObjectTable(tempArr, true);
             $scope.monitorSettings.loadingFlag = false;//data has been loaded
             if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
 console.log($rootScope.monitor.objectId);                
@@ -290,16 +297,19 @@ console.log(url);
     
 
     //Рисуем таблицу с объектами
-    function makeObjectTable(){
+    function makeObjectTable(objectArray, isNewFlag){
        
         var objTable = document.getElementById('objectTable');
 //        var temptableHTML = "";
         var tableHTML = "";
+        if (!isNewFlag){
+            tableHTML = objTable.innerHTML;
+        };
 //        var tmpArray = $scope.objects;
 //console.log("Monitor. Make objects table."); 
 //console.log(objTable);        
 //console.log($scope.objects);                
-        $scope.objects.forEach(function(element, index){
+        objectArray.forEach(function(element, index){
             var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
             if(element.statusColor.toLowerCase()=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
@@ -319,7 +329,7 @@ console.log(url);
             tableHTML += "<td>";
             tableHTML += "<table>";
             tableHTML += "<tr>";
-            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
+            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\" />";
 //            ng-mouseover=\"getMonitorEventsByObject("+element.contObject.id+")\"
 //            if (element.statusColor.toLowerCase()!="green"){
@@ -330,7 +340,7 @@ console.log(url);
             
             tableHTML += "</td>";
             tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
-            tableHTML += "<td class=\"col-md-3\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
+            tableHTML += "<td class=\"col-md-3\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
             tableHTML += "</table>";
@@ -486,13 +496,27 @@ console.log(url);
             }
         }); 
     });
+      
+    $(window).bind("onscroll",function(){
+        console.log("on scroll");
+        
+    });
+      
+    window.onscroll = function(){
+        console.log("Window. On scroll");
+        
+    };
     
     
 //The control of the period monitor refresh(Управление перодическим обновлением монитора)
 //**************************************************************************  
     $scope.$on('monitorObjects:updated',function(){
         $scope.objects = monitorSvc.getAllMonitorObjects();
-        makeObjectTable();
+//console.log("Monitor ctrl. Objects are got."); 
+//var time = new Date();
+//console.log(time);  
+        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.monitorSvcSettings.noGreenObjectsFlag;
     });
@@ -551,8 +575,9 @@ console.log(url);
           //check object array
     if ($scope.objects.length!=0)  {
         //if array is not empty -> make table
-//console.log("$scope.objects.length!=0")        
-        makeObjectTable();
+//console.log("$scope.objects.length!=0")    
+        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
 //console.log($cookies.objectMonitorId);          
         if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!=="null"){

@@ -148,11 +148,11 @@
     </div>    
 <!--    In total-->
     <div class="row" ng-show="data.length >0">
-        <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-table-nowrap-data nmc-main-table">
+        <table class="nmc-table-nowrap-data nmc-main-table crud-grid table table-lighter table-bordered table-condensed table-hover">
             <tr class="nmc-main-table-header">
-                <th id="totals_th_head" class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">
+                <th id="totals_th_head" class="col-md-3" ng-style="{'min-width': totals_th_head_style+'px'}">
                 </th>
-                <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{width: column.ngstyle+'px'}">
+                <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{'min-width': column.ngstyle+'px'}">
                     {{column.header}}
 <!--                        <img class="divergenceIndicatorImg" src="images/plug.png">-->
 <!--
@@ -164,7 +164,7 @@
             </tr>
             <tr>
                 <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
-                <td ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
+                <td ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{'min-width': column.ngstyle+'px'}">
                     {{summary.totals[column.name]}}
                 </td>
             </tr> 

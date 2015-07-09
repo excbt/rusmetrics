@@ -21,7 +21,9 @@ console.log("Monitor service. Run Monitor service.");
         monitorSvcSettings.toDate = $rootScope.monitorEnd;
         
         var getAllMonitorObjects = function(){
-console.log("Monitor service. getAllMonitorObjects.");                    
+//console.log("Monitor service. getAllMonitorObjects."); 
+//var time = new Date();
+//console.log(time);            
 //            if (objectsMonitorSvc.length===0){
 //                $rootScope.$broadcast('monitor:updateObjectsRequest');
 //            };
@@ -56,7 +58,6 @@ console.log("MonitorSvc. Get objects");
                         }
                     });
 
-//                    makeObjectTable();
                 monitorSvcSettings.loadingFlag = false;//data has been loaded
                 $rootScope.$broadcast('monitorObjects:updated');
 //                if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){

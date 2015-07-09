@@ -43,7 +43,7 @@ angular.module('portalNMC')
                     var tableHTML = "";
                     objectArray.forEach(function(element, index){
                         var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
-                        tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\"><td class=\"nmc-td-for-buttons\"> <i id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
+                        tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\"><td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
                         tableHTML += "<i ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject("+element.id+")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
                         tableHTML+= "</td>";
                         tableHTML += "<td>"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td></tr>";
@@ -643,11 +643,15 @@ angular.module('portalNMC')
                     crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
                 };
                 
-                
+                // search objects
                 $scope.searchObjects = function(searchString){
+                    var tmpArray = [];
                     $scope.objects.forEach(function(element){
-                        
+                        if(element.fullName.indexOf(searchString)!=-1){
+                            tmpArray.push(element);
+                        };
                     });
+                    makeObjectTable(tmpArray);
                 };
                 
                 
