@@ -2,6 +2,7 @@
 
 angular.module('portalNMC')
 .controller('ObjectsCtrl', function($scope, $rootScope, $cookies, $http){
+console.log("Objects ctrl.");
     
 //        $cookies.contZPoint = null;
 //        $cookies.contObject=null;

@@ -19,6 +19,10 @@ angular.module('portalNMC')
         },
         controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc',
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc) {
+                
+console.log("Objects directive.");
+var timeDirStart = (new Date()).getTime();
+                
                 $scope.object = {};
                 $scope.objects = [];
 //console.log(objectSvc.promise);                 
@@ -39,6 +43,8 @@ angular.module('portalNMC')
                 });
                 
                 function makeObjectTable(objectArray){
+var timeStart = (new Date()).getTime();                   
+console.log("Start makeObjectTable"+(new Date()).toLocaleString());
                     var objTable = document.getElementById('objectTable');
                     var tableHTML = "";
                     objectArray.forEach(function(element, index){
@@ -46,13 +52,22 @@ angular.module('portalNMC')
                         tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\"><td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
                         tableHTML += "<i ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject("+element.id+")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
                         tableHTML+= "</td>";
-                        tableHTML += "<td>"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td></tr>";
+                        tableHTML += "<td ng-click=\"toggleShowGroupDetails("+element.id+")\">"+element.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.id+")</span></td></tr>";
                         tableHTML +="<tr id=\"trObjZp"+element.id+"\">";
                         tableHTML += "</tr>";                       
                     });
 //console.log(tableHTML); 
-                    objTable.innerHTML = tableHTML;
+                    if (angular.isDefined(objTable.innerHTML)){
+                        objTable.innerHTML = tableHTML;
+                    };
                     $compile(objTable)($scope);
+var timeEnd = (new Date()).getTime();                    
+console.log("End makeObjectTable"+(new Date()).toLocaleString());
+var difff = (timeEnd-timeStart);        
+//console.log(timeStart);                    
+//console.log(timeEnd);                                        
+                    
+console.log("Time length = "+difff);                    
                 };
 //                $scope.objects = objectSvc.getObjects();
                 $scope.loading = objectSvc.loading;
@@ -756,6 +771,9 @@ angular.module('portalNMC')
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
+var timeDirEnd = (new Date()).getTime();                
+var dirDifff = timeDirEnd-timeDirStart;
+console.log("Time dir = "+dirDifff);                
             }]
     };
 });

@@ -27,8 +27,11 @@ angular.module('portalNMC')
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
     
-    $scope.monitorSettings.objectsPerScroll = 800;//the pie of the object array, which add to the page on window scrolling
-    $scope.monitorSettings.objectsOnPage = 50;//current the count of objects, which view on the page
+    $scope.monitorSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
+    $scope.monitorSettings.objectsOnPage = $scope.monitorSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
+    $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
+    $scope.monitorSettings.objectTopOnPage =0;
+    $scope.monitorSettings.objectBottomOnPage =50;
       
     
     //monitor state
@@ -87,7 +90,7 @@ angular.module('portalNMC')
 //                        $scope.getMonitorEventsByObject(element);
 //                    }
 //                };
-                var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+                var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
                 makeObjectTable(tempArr, true);
             $scope.monitorSettings.loadingFlag = false;//data has been loaded
             if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
@@ -298,8 +301,7 @@ console.log(url);
 
     //Рисуем таблицу с объектами
     function makeObjectTable(objectArray, isNewFlag){
-       
-        var objTable = document.getElementById('objectTable');
+        var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];       
 //        var temptableHTML = "";
         var tableHTML = "";
         if (!isNewFlag){
@@ -310,7 +312,8 @@ console.log(url);
 //console.log(objTable);        
 //console.log($scope.objects);                
         objectArray.forEach(function(element, index){
-            var trClass= index%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
+            var globalElementIndex = $scope.monitorSettings.objectBottomOnPage-objectArray.length+index;
+            var trClass= globalElementIndex%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
             var imgSize = 16; //размер иконки состояния объекта
             if(element.statusColor.toLowerCase()=="green"){//если объет "зеленый", то размер уменьшаем до 1пх, чтобы ничего не выводилось 
                 imgSize = 1;
@@ -329,7 +332,7 @@ console.log(url);
             tableHTML += "<td>";
             tableHTML += "<table>";
             tableHTML += "<tr>";
-            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
+            tableHTML +="<td class=\"nmc-td-for-buttons\"> "+globalElementIndex+" <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\" />";
 //            ng-mouseover=\"getMonitorEventsByObject("+element.contObject.id+")\"
 //            if (element.statusColor.toLowerCase()!="green"){
@@ -359,19 +362,20 @@ console.log(url);
     //Формируем таблицу с событиями объекта
     function makeEventTypesByObjectTable(obj){        
         var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);      
-        var trHTML = "<td style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">"+
-            "<thead>"+
-            "<tr class=\"nmc-child-table-header\">"+
-                "<!--       Шапка таблицы-->"+
-"<!--                        Колонка для кнопок-->"+
-                "<th class=\"nmc-td-for-buttons\">"+
-                "</th>"+
-                "<th ng-repeat=\"eventColumn in eventColumns track by $index\" ng-class=\"eventColumn.class\" ng-click=\"setOrderBy(eventColumn.name)\" class=\"nmc-text-align-left\">"+
-                        "{{eventColumn.header || eventColumn.name}}"+
-                        "<i class=\"glyphicon\" ng-class=\"{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}\" ng-show=\"orderBy.field == '{{eventColumn.name}}'\"></i>"+
-                "</th>"+
-            "</tr>"+
-            "</thead>    ";
+        var trHTML = "";
+        trHTML = "<td style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">";
+        trHTML+="<thead>";
+        trHTML+="<tr class=\"nmc-child-table-header\">";
+        trHTML+="<th class=\"nmc-td-for-buttons\">";
+        trHTML+="</th>";
+        $scope.eventColumns.forEach(function(element){
+            trHTML+="<th>";
+            trHTML+=""+(element.header || element.name)+"";
+            trHTML+="</th>";
+        });
+        trHTML+="</tr>";
+        trHTML+="</thead>";
+        
         if (angular.isUndefined(obj)||!obj.hasOwnProperty('eventTypes')||(obj.eventTypes.length==0)){            
             return;
         };      
@@ -403,7 +407,7 @@ console.log(url);
             });
             trHTML +="</tr>";
         });    
-        trHTML += "</table></td>";
+        trHTML += "</table></td>";      
         trObjEvents.innerHTML = trHTML;
         $compile(trObjEvents)($scope);
     };
@@ -497,14 +501,69 @@ console.log(url);
         }); 
     });
       
-    $(window).bind("onscroll",function(){
-        console.log("on scroll");
-        
-    });
+//    $(window).bind("onscroll",function(){
+//        console.log("on scroll");
+//        
+//    });
       
     window.onscroll = function(){
         console.log("Window. On scroll");
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+//console.log("scrollTop = "+scrollTop);
+//        $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
+//        $scope.monitorSettings.objectTopOnPage =0;
+//        $scope.monitorSettings.objectBottomOnPage =49;
         
+        var deltaScroll = scrollTop - $scope.monitorSettings.currentScrollYPos;
+//console.log(deltaScroll);        
+        if (deltaScroll >=22){//down to 1 row
+//console.log("deltaScroll +");            
+            
+            var rowCount = Math.round(deltaScroll/22);
+            $scope.monitorSettings.objectTopOnPage+=rowCount;
+            $scope.monitorSettings.objectBottomOnPage+=rowCount;
+            //draw new table
+            var tempArr = $scope.objects.slice($scope.monitorSettings.objectBottomOnPage-rowCount, $scope.monitorSettings.objectBottomOnPage);
+            makeObjectTable(tempArr, false);
+            
+//            window.
+
+            $scope.monitorSettings.currentScrollYPos = scrollTop;
+        };
+        
+        for(var i = 0; i<=$scope.monitorSettings.objectBottomOnPage; i++){
+            var obj = $scope.objects[i];
+            var imgObj = "#imgObj"+obj.contObject.id;          
+            $(imgObj).qtip({
+                content:{
+                    text: obj.monitorEvents
+                },
+                style:{
+                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                }
+            }); 
+        };
+        //up to some row
+//        if (deltaScroll <=-22){
+//console.log("deltaScroll -"); 
+//            var rowCount = Math.round(Math.abs(deltaScroll/22));
+//            $scope.monitorSettings.objectTopOnPage-=rowCount;
+//            $scope.monitorSettings.objectBottomOnPage-=rowCount;            
+//            //draw new table
+//            var tempArr = $scope.objects.slice($scope.monitorSettings.objectTopOnPage, $scope.monitorSettings.objectBottomOnPage);
+//            makeObjectTable(tempArr, true);
+//
+//            $scope.monitorSettings.currentScrollYPos = scrollTop;
+//        };
+
+//        if ($scope.monitorSettings.objectsOnPage>=$scope.objects.length){
+//            return;
+//        };
+//        var startPos = $scope.monitorSettings.objectsOnPage;
+//        var endPos = $scope.monitorSettings.objectsOnPage + $scope.monitorSettings.objectsPerScroll;
+//        var tempArr = $scope.objects.slice(startPos, endPos);
+//        makeObjectTable(tempArr, false);
+//        $scope.monitorSettings.objectsOnPage = endPos;
     };
     
     
@@ -515,7 +574,13 @@ console.log(url);
 //console.log("Monitor ctrl. Objects are got."); 
 //var time = new Date();
 //console.log(time);  
-        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+        
+        //reset position
+        window.scrollTo(0,0);
+        $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
+        $scope.monitorSettings.objectTopOnPage =0;
+        $scope.monitorSettings.objectBottomOnPage =50;
+        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
         makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.monitorSvcSettings.noGreenObjectsFlag;
@@ -576,7 +641,7 @@ console.log(url);
     if ($scope.objects.length!=0)  {
         //if array is not empty -> make table
 //console.log("$scope.objects.length!=0")    
-        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll-1);
+        var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
         makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
 //console.log($cookies.objectMonitorId);          

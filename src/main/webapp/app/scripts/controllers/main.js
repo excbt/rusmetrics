@@ -9,6 +9,7 @@
  */
 var app = angular.module('portalNMC');
   app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc) {
+console.log("MainCtrl");      
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
 
     $scope.showPrivateOfficeMenu = false;
@@ -49,7 +50,18 @@ var app = angular.module('portalNMC');
           $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
           $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
           $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
-console.log($location.path());          
+          var menuFlag = false;
+          for (var k in $scope.menuMassive){
+              if (!$scope.menuMassive[k]){
+                  continue;
+              };
+              menuFlag = true;
+          };
+          if (!menuFlag){
+              $scope.setDefaultMenuState();
+          };
+//console.log($scope.menuMassive);          
+//console.log($location.path());          
           if ($location.path()!=""){
               return;
           };
@@ -77,7 +89,7 @@ console.log($location.path());
           
       };
       
-      initMenu();
+      
 //for (var k in $scope.menuMassive){
 //console.log(k);                    
 //console.log($cookies[k]); 
@@ -125,9 +137,16 @@ console.log($location.path());
 //        };
       
       $(window).bind("beforeunload",function(){
-          console.log("jdslkj;ljl");
+          console.log("beforeunload");
           $scope.setDefaultMenuState();
       });
+      
+      $(window).bind("reflow",function(){
+          console.log("reflow");
+          $scope.setDefaultMenuState();
+      });
+      
+      initMenu();
       
           // Проверка пользователя - системный/ не системный
 //    $scope.isSystemuser = function(){

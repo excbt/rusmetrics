@@ -30,6 +30,10 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/objects_edit.html',
         controller: 'ObjectsCtrl'
       })
+      .when('/objects', {
+        templateUrl: 'views/objects_edit.html',
+        controller: 'ObjectsCtrl'
+      })
       .when('/notices/list', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl'
