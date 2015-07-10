@@ -470,18 +470,40 @@
                 </div>	
 		</div>
 		<div class="modal-footer nmc-modal-footer">
+<!--
+            <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>
+            <button ng-disabled="isDisabled()" class="btn btn-xs nmc-save-button"
+								ng-click="checkAndRunParamset(currentReportType, currentObject, true)"
+								value="Предпросмотр" 
+                                >Предпросмотр
+            </button>
+            <button ng-disabled="isDisabled()" class="btn btn-primary btn-xs nmc-save-button"
+								ng-click="checkAndRunParamset(currentReportType, currentObject, false)"
+								value="Сформировать" 
+                                >Сформировать
+            </button>
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject');setDefault();">
+								Отменить
+			</button>
+-->
 				<div class="container-fluid">
 					<div class="row">
                         <div class=" col-md-3">
                              <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>
                         </div>
-                        <div class="col-xs-offset-3 col-md-3">
+                        <div class="col-md-3">
+							<button ng-disabled="currentReportType.reportType=='COMMERCE_REPORT'" class="btn btn-default btn-block btn-xs nmc-save-button"
+								ng-click="checkAndRunParamset(currentReportType, currentObject, true)">Предпросмотр
+                            </button>    
+						</div>
+                        <div class="col-md-3">
 							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="checkAndRunParamset(currentReportType, currentObject)"
+								ng-click="checkAndRunParamset(currentReportType, currentObject, false)"
 								value="Сформировать" 
                                 />
 						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+						<div class=" pull-right col-md-3 noPadding noMargin">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject');setDefault();">
 								Отменить

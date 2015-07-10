@@ -29,14 +29,14 @@
     <div class="col-md-3 noPadding">
         <h2 class="noMargin nmc-h2">Объекты учета</h2>
     </div>
-    <div class="col-md-4"></div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form nmc-hide">   
+    <div class="col-md-7"></div>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
-        <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
+        <input type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
 <!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
     </div>
-    <div class="col-md-3"></div>
-    <div class="col-md-2">
+<!--    <div class="col-md-3"></div>-->
+    <div class="col-md-offset-2 col-md-2">
             <label class="nmc-form-label">Всего:</label>
              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
             <span id="timeOutput"></span>

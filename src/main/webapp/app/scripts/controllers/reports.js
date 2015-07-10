@@ -108,12 +108,12 @@ console.log(curObject.paramsets);
         $scope.getTemplates();       
     };
     
-    $scope.checkAndRunParamset = function(type,object){
+    $scope.checkAndRunParamset = function(type,object, previewFlag){
         var flag = $scope.checkRequiredFieldsOnSave();
         if (flag===false){
             $('#messageForUserModal').modal();
         }else{
-            $scope.createReportWithParams(type, object);
+            $scope.createReportWithParams(type, object, previewFlag);
         };
     };
     
@@ -500,39 +500,53 @@ console.log(curObject.paramsets);
         window.open(url);    
     };
     
-    $scope.createReportWithParams = function(type, paramset){
+    $scope.createReportWithParams = function(type, paramset, previewFlag){
+        var tmpParamset = angular.copy(paramset);
         var objectIds = $scope.selectedObjects.map(function(element){
             var result = element.id;
             return result;
         }); 
          //set the list of the special params
-        paramset.paramSpecialList = $scope.currentParamSpecialList;
+        tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
         //
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
-            paramset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
-            paramset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
         }else{
-            paramset.paramsetStartDate = null;
-            paramset.paramsetEndDate = null;
+            tmpParamset.paramsetStartDate = null;
+            tmpParamset.paramsetEndDate = null;
         }
 
 //console.log(paramset);        
-        var fileExt = paramset.outputFileZipped?"zip":paramset.outputFileType.toLowerCase();
-        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";  
+        var fileExt = "";
+        if (previewFlag){
+            tmpParamset.outputFileType="HTML";
+            tmpParamset.outputFileZipped=false;
+            fileExt = "html";
+        }else{
+            fileExt=tmpParamset.outputFileZipped?"zip":tmpParamset.outputFileType.toLowerCase();
+        }
+        var url ="../api/reportService"+type.suffix+"/"+tmpParamset.id+"/download";  
         var responseType = "arraybuffer";
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
         $http({
             url: url, 
             method: "PUT",
             params: { contObjectIds: objectIds },
-            data: paramset,
+            data: tmpParamset,
             responseType: responseType
         })
         .then(function(response) {
+           
             var fileName = response.headers()['content-disposition']; 
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
-            var file = new Blob([response.data], { type: response.headers()['content-type'] });
-            saveAs(file,fileName);
+            var file = new Blob([response.data], { type: response.headers()['content-type'] });            
+            if (previewFlag){                
+                var url = window.URL.createObjectURL(file);
+                window.open(url);
+            }else{    
+                saveAs(file,fileName);
+            };
         })
         .catch(function(e){
             notificationFactory.errorInfo(e.statusText,e);

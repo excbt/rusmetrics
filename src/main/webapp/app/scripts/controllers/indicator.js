@@ -1,6 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', 'crudGridDataFactory',function($scope, $rootScope, $cookies, crudGridDataFactory){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -484,6 +484,20 @@ angular.module('portalNMC')
                 });
                 $scope.data = data.objects;
         });
+         
+        $scope.setScoreStyles = function(){
+            //set styles for score/integrators
+            var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+            var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+            var totalThHead = document.getElementById("totals_th_head"); 
+            $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+//                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
+            $scope.intotalColumns.forEach(function(element){
+                var indicatorTh = document.getElementById("indicators_th_"+element.name);
+                element.ngstyle =indicatorTh.clientWidth+1;
+
+            });
+        };
         
         // get summary
         var table_summary = table.replace("paged", "summary");
@@ -493,17 +507,18 @@ angular.module('portalNMC')
 //   console.log("indicatorTh["+k+"]= "+indicatorTh[k]); 
 //};           
                     //set styles for score/integrators
-                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
-                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
-                var totalThHead = document.getElementById("totals_th_head"); 
-                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
-//                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
-                $scope.intotalColumns.forEach(function(element){
-                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                    element.ngstyle =indicatorTh.clientWidth+2;
-                    
-                });
+//                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
+//                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
+//                var totalThHead = document.getElementById("totals_th_head"); 
+//                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+////                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
+//                $scope.intotalColumns.forEach(function(element){
+//                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
+//                    element.ngstyle =indicatorTh.clientWidth+2;
+//                    
+//                });
             
+                $scope.setScoreStyles();
                 $scope.summary = data;            
                 if ($scope.summary.hasOwnProperty('diffs')){
                     $scope.intotalColumns.forEach(function(element){
@@ -642,6 +657,13 @@ angular.module('portalNMC')
         }
         $scope.getData(1);                              
     }, false); 
+        
+    //listen window resize
+    var wind = angular.element($window);
+    wind.bind('resize', function(){
+        $scope.setScoreStyles();
+        $scope.$apply();
+    });
     
 //    $scope.setTitle = function(fieldName){ 
 //        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){

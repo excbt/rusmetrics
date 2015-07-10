@@ -8,7 +8,7 @@
  * Controller of the portalNMC
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, monitorSvc) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc) {
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
 
     $scope.showPrivateOfficeMenu = false;
@@ -49,6 +49,10 @@ var app = angular.module('portalNMC');
           $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
           $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
           $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
+console.log($location.path());          
+          if ($location.path()!=""){
+              return;
+          };
           if ($scope.menuMassive.object_menu_item){
               window.location.assign("#/");
           };
