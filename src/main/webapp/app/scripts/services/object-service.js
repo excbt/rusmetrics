@@ -4,7 +4,8 @@ angular.module('portalNMC')
              function(crudGridDataFactory, $http, $cookies, $interval)
 //             function()
              {
-        var svcObjects = [{fullName:"yaa"
+console.log("Object Service. Run.");                 
+        var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
         var crudTableName = '../api/subscr/contObjects';

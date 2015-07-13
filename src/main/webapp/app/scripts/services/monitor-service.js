@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-    .service('monitorSvc', ['$rootScope', '$http', '$interval', function($rootScope, $http, $interval){
+    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', function($rootScope, $http, $interval, $cookies){
 console.log("Monitor service. Run Monitor service.");        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -8,8 +8,8 @@ console.log("Monitor service. Run Monitor service.");
         
         var objectsMonitorSvc = [];
         //default date interval settings
-        $rootScope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-        $rootScope.monitorEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+        $rootScope.monitorStart = $cookies.fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+        $rootScope.monitorEnd = $cookies.toDate || moment().endOf('day').format('YYYY-MM-DD');    
 
         //monitor settings
         var monitorSvcSettings = {};
@@ -35,7 +35,7 @@ console.log("Monitor service. Run Monitor service.");
 console.log("MonitorSvc. Get objects");    
             monitorSvcSettings.loadingFlag = true;
             var targetUrl = url+"/statusCollapse?fromDate="+monitorSvcSettings.fromDate+"&toDate="+monitorSvcSettings.toDate+"&noGreenColor="+monitorSvcSettings.noGreenObjectsFlag;
-    console.log(targetUrl);  
+//console.log(targetUrl);  
 
             $http.get(targetUrl)
                 .success(function(data){
