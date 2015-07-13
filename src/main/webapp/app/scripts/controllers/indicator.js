@@ -4,11 +4,11 @@ angular.module('portalNMC')
 
         //Определяем оформление для таблицы показаний прибора
         
-        //Определеяю названия колонок
+        //Задаем пути к картинкам, которые будут показывать статус расхождения итого и итого по интеграторам
     var ALERT_IMG_PATH = "images/divergenceIndicatorAlert.png";
     var CRIT_IMG_PATH = "images/divergenceIndicatorCrit.png";
     var EMPTY_IMG_PATH = "images/plug.png";    
-        
+        //Определеяю названия колонок
     var listColumns = {
             "dataDate":{
                 header : "Дата",

@@ -407,15 +407,15 @@ console.log("getObjects");
     
     $scope.$watch('reportStart', function (newDates, oldDates) {
 console.log("watch notice");        
-console.log(newDates); 
-console.log(oldDates);
+//console.log(newDates); 
+//console.log(oldDates);
         if (angular.isUndefined(oldDates)){
             return;
         };
         if(oldDates === newDates){
             return;
         };
-console.log("oldDates !== newDates");        
+//console.log("oldDates !== newDates");        
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
 //console.log("if = true");            
             $scope.getObjects();                              

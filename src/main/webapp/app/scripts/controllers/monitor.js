@@ -355,7 +355,7 @@ console.log(url);
             tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectOnRightClick("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectAndRevisionOnRightClick("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i title=\"Показать диаграмму уведомлений\" class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
             tableHTML += "<td class=\"col-md-3\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\">"+element.contObject.fullName;
             if ($scope.isSystemuser()){
                 tableHTML+= " <span>(id = "+element.contObject.id+")</span>";
@@ -497,8 +497,8 @@ console.log(url);
     //Watching for the change period 
     $scope.$watch('monitorStart', function (newDates, oldDates) {
 console.log("monitorStart watch");  
-console.log(newDates);        
-console.log(oldDates);   
+//console.log(newDates);        
+//console.log(oldDates);   
         if (oldDates===newDates){
             return;
         };

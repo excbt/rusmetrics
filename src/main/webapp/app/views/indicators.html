@@ -53,7 +53,9 @@
 <div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
 <div class="col-md-2">
     <div class="btn-group">
-        <i ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
+        <i title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
+        <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-upload" ng-click="saveIndicatorsToFile()"></i>
+        <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash" ng-click="saveIndicatorsToFile()">...</i>
     </div>    
 </div>  
 <div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
@@ -91,7 +93,7 @@
                     </div>
             </div>
             <div class="col-md-1 noPadding nmc-div-refresh">
-                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
+                <button title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
             </div>
             <div class="col-md-4">    
  
@@ -191,7 +193,7 @@
                 </td>
                 <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
                     <span ng-if="summary.diffs[column.name]!='-'">
-                         <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
+                         <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i title="Показать детали по интеграторам" class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
                     </span>    
 
                 </td>
