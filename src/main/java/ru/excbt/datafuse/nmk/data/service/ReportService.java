@@ -322,10 +322,6 @@ public class ReportService {
 
 			ReportType destReportType = reportTypeConverter(rptKey);
 
-			logger.info(
-					"Call nmkGetReport with params (reportType:{}; startDate:{};endDate:{};idParam:{};objectIds:{};)",
-					destReportType, dtStart, dtEnd, Arrays.toString(objectIds));
-
 			FileType convertedFileType = NMK_REPORTS_TYPE_CONVERTER
 					.get(reportMakerParam.reportOutputFileType());
 
@@ -336,15 +332,28 @@ public class ReportService {
 				convertedFileType = FileType.PDF;
 			}
 
-			// TO DO
+			// TODO
 
 			Map<String, Object> paramSpecialMap = reportMakerParamService
 					.getParamSpecialValues(reportMakerParam);
 
+			long idParam = 0;
+			if (reportMakerParam.isSpecialIdParam()) {
+				idParam = reportMakerParam.getIdParam();
+			} else {
+				idParam = reportMakerParam.getIdParam();
+			}
+
+			logger.debug(
+					"Call nmkGetReport with params (reportType:{}; (is, os); "
+							+ "idParam:{}; startDate:{}; endDate:{}; objectIds:{}; "
+							+ "convertedFileType:{}, isZip: {}, paramSpecialMap...)",
+					destReportType, idParam, dtStart.toDate(), dtEnd.toDate(),
+					Arrays.toString(objectIds), convertedFileType, isZip);
+
 			rep.nmkGetReport(destReportType, inputStream, outputStream,
-					reportParamset.getSubscriberId(), dtStart.toDate(),
-					dtEnd.toDate(), objectIds, convertedFileType, isZip,
-					paramSpecialMap);
+					idParam, dtStart.toDate(), dtEnd.toDate(), objectIds,
+					convertedFileType, isZip, paramSpecialMap);
 
 		} catch (JRException | IOException e) {
 			logger.error("NmkReport exception: {}", e);
@@ -396,6 +405,14 @@ public class ReportService {
 			result = ReportType.RPT_METROLOGICAL;
 			break;
 		}
+		case CONSUMPTION_REPORT: {
+			result = ReportType.RPT_CONSUMPTION;
+			break;
+		}
+		case CONSUMPTION_HISTORY_REPORT: {
+			result = ReportType.RPT_CONSUMPTION_HISTORY;
+			break;
+		}
 		default: {
 			break;
 		}
@@ -419,8 +436,7 @@ public class ReportService {
 
 			@Override
 			public void execute(Connection connection) throws SQLException {
-				// TODO Auto-generated method stub
-
+				// TODO testConnection Block
 				logger.info("Connection: {}", connection.toString());
 			}
 		});

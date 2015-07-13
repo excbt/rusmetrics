@@ -72,12 +72,12 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		logger.info("Report {} was successfully loaded from fils '{}'",
 				reportTypeKey.name(), fileResourceString);
-		
+
 		System.out.println();
 		System.out.println(String.format(
 				"Report %s was successfully loaded from fils '%s'",
 				reportTypeKey.name(), fileResourceString));
-		System.out.println();		
+		System.out.println();
 	}
 
 	/**
@@ -103,6 +103,14 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		loadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
 				ReportConstants.Paths.METROLOGICAL_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
+
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT,
+				ReportConstants.Paths.CONSUMPTION_FILE_COMPILED,
+				ReportConstants.IS_COMPILED);
+
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
+				ReportConstants.Paths.CONSUMPTION_HISTORY_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
