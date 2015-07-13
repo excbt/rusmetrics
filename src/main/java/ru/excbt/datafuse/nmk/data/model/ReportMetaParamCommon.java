@@ -58,6 +58,12 @@ public class ReportMetaParamCommon implements Serializable {
 	@Column(name = "many_cont_objects_zip_only")
 	private Boolean manyContObjectsZipOnly;
 
+	@Column(name = "no_cont_objects_required")
+	private Boolean noContObjectsRequired;
+
+	@Column(name = "is_special_id_param")
+	private Boolean isSpecialIdParam;
+	
 	@Version
 	private int version;
 
@@ -215,6 +221,22 @@ public class ReportMetaParamCommon implements Serializable {
 		if (version != other.version)
 			return false;
 		return true;
+	}
+
+	public Boolean getNoContObjectsRequired() {
+		return noContObjectsRequired;
+	}
+
+	public void setNoContObjectsRequired(Boolean noContObjectsRequired) {
+		this.noContObjectsRequired = noContObjectsRequired;
+	}
+
+	public Boolean getIsSpecialIdParam() {
+		return isSpecialIdParam;
+	}
+
+	public void setIsSpecialIdParam(Boolean isSpecialIdParam) {
+		this.isSpecialIdParam = isSpecialIdParam;
 	}
 
 

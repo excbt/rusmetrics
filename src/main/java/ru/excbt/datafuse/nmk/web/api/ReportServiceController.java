@@ -58,6 +58,8 @@ public class ReportServiceController extends WebApiController {
 	private final static String DEFAULT_CONS_T2_FILENAME = "cons_T1_Report";
 	private final static String DEFAULT_EVENT_FILENAME = "eventReport";
 	private final static String DEFAULT_METROLOGICAL_FILENAME = "metrologicalReport";
+	private final static String DEFAULT_CONSUMPTION_FILENAME = "consumptionReport";
+	private final static String DEFAULT_CONSUMPTION_HISTORY_FILENAME = "consumptionHistoryReport";
 
 	@Autowired
 	private ReportService reportService;
@@ -126,7 +128,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = commerceReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -148,7 +150,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = eventReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -169,7 +171,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = eventReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId, true);
+				.newReportMakerParam(reportParamsetId, true);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -288,6 +290,7 @@ public class ReportServiceController extends WebApiController {
 		}
 
 		byte[] byteArray = null;
+		// TODO Time Zone Service
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
 			reportMaker.makeReport(reportMakerParam, LocalDateTime.now(),
 					memoryOutputStream);
@@ -341,7 +344,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = consT1ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -363,7 +366,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = consT1ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId, true);
+				.newReportMakerParam(reportParamsetId, true);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -385,7 +388,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = consT2ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -407,7 +410,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = consT2ReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId, true);
+				.newReportMakerParam(reportParamsetId, true);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -429,7 +432,7 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = metrologicalReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -451,7 +454,95 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = metrologicalReportMaker();
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId, true);
+				.newReportMakerParam(reportParamsetId, true);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption/{reportParamsetId}/download", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadConsumptionReportGet(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = consumptionReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamsetId);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadConsumptionReportGetPreview(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = consumptionReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamsetId, true);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption_history/{reportParamsetId}/download", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadConsumptionHistoryReportGet(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = consumptionHistoryReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamsetId);
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption_history/{reportParamsetId}/preview", method = RequestMethod.GET)
+	public ResponseEntity<byte[]> doDowndloadConsumptionHistoryReportGetPreview(
+			@PathVariable("reportParamsetId") long reportParamsetId,
+			HttpServletRequest request) throws IOException {
+
+		ReportMaker reportMaker = consumptionHistoryReportMaker();
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamsetId, true);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -463,13 +554,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker eventReportMaker() {
-		return new AbstractReportMaker() {
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_EVENT_FILENAME;
-			}
-		};
+		return newAbstractReportMaker(DEFAULT_EVENT_FILENAME);
 	}
 
 	/**
@@ -477,14 +562,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker commerceReportMaker() {
-		return new AbstractReportMaker() {
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_COMMERCE_FILENAME;
-			}
-
-		};
+		return newAbstractReportMaker(DEFAULT_COMMERCE_FILENAME);
 	}
 
 	/**
@@ -492,14 +570,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker consT1ReportMaker() {
-		return new AbstractReportMaker() {
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_CONS_T1_FILENAME;
-			}
-
-		};
+		return newAbstractReportMaker(DEFAULT_CONS_T1_FILENAME);
 	}
 
 	/**
@@ -507,14 +578,7 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker consT2ReportMaker() {
-		return new AbstractReportMaker() {
-
-			@Override
-			public String defaultFileName() {
-				return DEFAULT_CONS_T2_FILENAME;
-			}
-
-		};
+		return newAbstractReportMaker(DEFAULT_CONS_T2_FILENAME);
 	}
 
 	/**
@@ -522,14 +586,39 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 */
 	private ReportMaker metrologicalReportMaker() {
-		return new AbstractReportMaker() {
+		return newAbstractReportMaker(DEFAULT_METROLOGICAL_FILENAME);
+	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker consumptionReportMaker() {
+		return newAbstractReportMaker(DEFAULT_CONSUMPTION_FILENAME);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ReportMaker consumptionHistoryReportMaker() {
+		return newAbstractReportMaker(DEFAULT_CONSUMPTION_HISTORY_FILENAME);
+	}
+
+	/**
+	 * 
+	 * @param defaultFileName
+	 * @return
+	 */
+	private ReportMaker newAbstractReportMaker(final String defaultFileName) {
+		return new AbstractReportMaker() {
 			@Override
 			public String defaultFileName() {
-				return DEFAULT_METROLOGICAL_FILENAME;
+				return defaultFileName;
 			}
 
 		};
+
 	}
 
 	/**
@@ -562,7 +651,7 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -597,7 +686,7 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = eventReportMaker();
 
@@ -633,7 +722,7 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = consT1ReportMaker();
 
@@ -670,7 +759,7 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = consT2ReportMaker();
 
@@ -679,6 +768,15 @@ public class ReportServiceController extends WebApiController {
 
 	}
 
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/metrological/{reportParamsetId}/download", method = RequestMethod.PUT)
 	public ResponseEntity<byte[]> doDowndloadMetrologicalReportPut(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
@@ -698,9 +796,81 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		ReportMaker reportMaker = metrologicalReportMaker();
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public ResponseEntity<byte[]> doDowndloadConsumptionReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = consumptionReportMaker();
+
+		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
+				request);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/consumption_hisotry/{reportParamsetId}/download", method = RequestMethod.PUT)
+	public ResponseEntity<byte[]> doDowndloadConsumptionHisotryReportPut(
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) throws IOException {
+
+		checkNotNull(reportParamsetId);
+		checkNotNull(reportParamset);
+		checkNotNull(reportParamset.getId());
+		checkArgument(reportParamset.getId().equals(reportParamsetId));
+
+		if (contObjectIds == null) {
+			logger.warn("Attention: contObjectIds is null");
+		}
+
+		setupReportParamset(reportParamset);
+
+		ReportMakerParam reportMakerParam = reportMakerParamService
+				.newReportMakerParam(reportParamset, contObjectIds);
+
+		ReportMaker reportMaker = consumptionHistoryReportMaker();
 
 		return processDowndloadRequestReportFix(reportMakerParam, reportMaker,
 				request);
@@ -862,7 +1032,7 @@ public class ReportServiceController extends WebApiController {
 		setupReportParamset(reportParamset);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		ReportTypeKey reportTypeKey = reportParamset.getReportTemplate()
 				.getReportTypeKey();

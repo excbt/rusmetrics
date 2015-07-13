@@ -89,7 +89,7 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset, contObjectIds);
+				.newReportMakerParam(reportParamset, contObjectIds);
 
 		boolean requiredPassed = reportMakerParamService
 				.isAllCommonRequiredParamsExists(reportMakerParam)
@@ -138,7 +138,7 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamset);
+				.newReportMakerParam(reportParamset);
 
 		boolean requiredPassed = reportMakerParamService
 				.isAllCommonRequiredParamsExists(reportMakerParam)
@@ -601,7 +601,7 @@ public class ReportParamsetService implements SecuredRoles {
 			}
 
 			ReportMakerParam reportMakerParam = reportMakerParamService
-					.getReportMakerParam(rp);
+					.newReportMakerParam(rp);
 
 			boolean commonPassed = reportMakerParamService
 					.isAllCommonRequiredParamsExists(reportMakerParam);

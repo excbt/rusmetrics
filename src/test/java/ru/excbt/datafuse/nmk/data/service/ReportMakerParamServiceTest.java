@@ -30,7 +30,7 @@ public class ReportMakerParamServiceTest extends JpaSupportTest {
 	public void testRequredCommerce() {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(TEST_PARAMSET_COMMERCE);
+				.newReportMakerParam(TEST_PARAMSET_COMMERCE);
 
 		boolean commonCheck = reportMakerParamService
 				.isAllCommonRequiredParamsExists(reportMakerParam);
@@ -47,7 +47,7 @@ public class ReportMakerParamServiceTest extends JpaSupportTest {
 	public void testParamSpecialValuesMap() {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(TEST_PARAMSET_COMMERCE);
+				.newReportMakerParam(TEST_PARAMSET_COMMERCE);
 
 		Map<String, Object> valueMap = reportMakerParamService
 				.getParamSpecialValues(reportMakerParam);

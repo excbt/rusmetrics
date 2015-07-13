@@ -80,7 +80,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 						OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
 								.writeValueAsString(settingMode));
 			} catch (JsonProcessingException e1) {
-				// TODO Auto-generated catch block
+				// XXX Auto-generated catch block
 				e1.printStackTrace();
 			}
 
