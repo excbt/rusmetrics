@@ -2,6 +2,10 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.Instant;
+import java.util.Date;
+
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +64,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Subscriber getSubscriber() {
-		
+
 		AuditUserPrincipal userPrincipal = currentUserService
 				.getCurrentAuditUserPrincipal();
 
@@ -76,6 +80,26 @@ public class CurrentSubscriberService {
 		}
 
 		return subscriberService.findOne(subscriberId);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getSubscriberCurrentTime_Joda() {
+		Date pre = subscriberService
+				.getSubscriberCurrentTime(getSubscriberId());
+		return pre == null ? null : new LocalDateTime(pre);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Instant getSubscriberCurrentTimeInstant_JDK() {
+		Date pre = subscriberService
+				.getSubscriberCurrentTime(getSubscriberId());
+		return pre == null ? null : pre.toInstant();
 	}
 
 }

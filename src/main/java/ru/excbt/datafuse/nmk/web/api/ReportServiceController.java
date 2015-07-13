@@ -290,9 +290,9 @@ public class ReportServiceController extends WebApiController {
 		}
 
 		byte[] byteArray = null;
-		// TODO Time Zone Service
+		// XXX Time Zone Service
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
-			reportMaker.makeReport(reportMakerParam, LocalDateTime.now(),
+			reportMaker.makeReport(reportMakerParam, currentSubscriberService.getSubscriberCurrentTime_Joda(),
 					memoryOutputStream);
 			byteArray = memoryOutputStream.toByteArray();
 		}
