@@ -13,11 +13,12 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name="subscriber")
+@Table(name = "subscriber")
 public class Subscriber extends AbstractAuditableModel {
 
 	/**
@@ -25,48 +26,40 @@ public class Subscriber extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
-	@Column (name="subscriber_name")
+	@Column(name = "subscriber_name")
 	private String subscriberName;
 
-	@Column (name="subscriber_info")
+	@Column(name = "subscriber_info")
 	private String info;
 
-	@Column (name="subscriber_comment")
+	@Column(name = "subscriber_comment")
 	private String comment;
-	
-	@ManyToOne 
-	@JoinColumn(name = "organization_id")
-    private Organization organization;
 
-	
-	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_cont_object",
-    joinColumns=@JoinColumn(name="subscriber_id"),
-    inverseJoinColumns=@JoinColumn(name="cont_object_id"))
+	@ManyToOne
+	@JoinColumn(name = "organization_id")
+	private Organization organization;
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
 	@JsonIgnore
 	private Collection<ContObject> contObjects;
-	
-	
-	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_directory",
-    joinColumns=@JoinColumn(name="subscriber_id"),
-    inverseJoinColumns=@JoinColumn(name="directory_id"))
+
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "directory_id"))
 	@JsonIgnore
-	private Collection<UDirectory> directories;	
+	private Collection<UDirectory> directories;
 
-
-	@OneToMany (fetch = FetchType.LAZY)
-    @JoinTable(name="subscr_rso",
-    joinColumns=@JoinColumn(name="subscriber_id"),
-    inverseJoinColumns=@JoinColumn(name="organization_id"))
+	@OneToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "organization_id"))
 	@JsonIgnore
 	private Collection<Organization> rsoOrganizations;
-	
-	
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "timezone_def")
+	private TimezoneDef timezoneDef;
+
 	@Version
 	private int version;
-	
 
 	public String getInfo() {
 		return info;
@@ -132,7 +125,12 @@ public class Subscriber extends AbstractAuditableModel {
 		this.subscriberName = subscriberName;
 	}
 
+	public TimezoneDef getTimezoneDef() {
+		return timezoneDef;
+	}
 
-	
-	
+	public void setTimezoneDef(TimezoneDef timezoneDef) {
+		this.timezoneDef = timezoneDef;
+	}
+
 }
