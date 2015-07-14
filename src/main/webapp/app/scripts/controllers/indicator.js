@@ -469,7 +469,11 @@ angular.module('portalNMC')
 //console.log("el.Time1 = "+datad.toLocaleTimeString());                                                     
                             el.dataDate = datad.toLocaleDateString();
                             if ($scope.timeDetailType=="1h"){
-                                el.dataDate +=" "+datad.toLocaleTimeString();
+                                var time = datad.toLocaleTimeString();
+                                if (time.indexOf(':')<=1){
+                                    time="0"+time;
+                                };
+                                el.dataDate +=" "+time;
                             };
 //                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
 //                            el.dateDate = timeConverter(el.dataDate);

@@ -41,6 +41,7 @@ console.log("Objects directive.");
                 
                 $scope.object = {};
                 $scope.objects = [];
+                $scope.objectsOnPage = [];
 //console.log(objectSvc.promise);                 
                 objectSvc.promise.then(function(response){
                     $scope.objects = response.data;
@@ -54,8 +55,9 @@ console.log("Objects directive.");
                         };
                         return 0;
                     }); 
-                    var tempArr =  $scope.objects.slice(0, 50);
-                    makeObjectTable(tempArr, true);
+                    var tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                    $scope.objectsOnPage = tempArr;
+//                    makeObjectTable(tempArr, true);
                     $scope.loading = false;                  
                 });
                 
@@ -256,6 +258,7 @@ console.log("Objects directive.");
                         return;
                     };
                     //else
+                    
                     var zpTable = document.getElementById("zpointTable"+curObject.id);
                     if ((curObject.showGroupDetails==true) && (zpTable==null)){
                         curObject.showGroupDetails =true;
@@ -314,14 +317,16 @@ console.log("Objects directive.");
                                 zpoints[i] = zpoint;                  
                             }
                             curObject.zpoints = zpoints;
-                            makeZpointTable(curObject);
+//                            makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail"+curObject.id);
                             btnDetail.classList.remove("glyphicon-chevron-right");
                             btnDetail.classList.add("glyphicon-chevron-down");
+                            curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else{
                         var trObjZp = document.getElementById("trObjZp"+curObject.id);
+console.log("trObjZp"+curObject.id);                        
                         trObjZp.innerHTML = "";
                         var btnDetail = document.getElementById("btnDetail"+curObject.id);
                         btnDetail.classList.remove("glyphicon-chevron-down");
@@ -337,8 +342,8 @@ console.log("Objects directive.");
                     
                 };
                 //Формируем таблицу с точками учета
-                function makeZpointTable(object){
-                    var trObjZp = document.getElementById("trObjZp"+object.id);
+                function makeZpointTable(object){                 
+                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
                     var trHTML = "";
 //                        "<td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">"+
 //                        "<thead>"+
@@ -398,7 +403,8 @@ console.log("Objects directive.");
                     });    
                     trHTML += "</table></td>";
                     trObjZp.innerHTML = trHTML;
-                    $compile(trObjZp)($scope);
+                    
+                    $compile(trObjZp)($scope);                
                 }; 
                 
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
@@ -709,18 +715,34 @@ console.log("Objects directive.");
                             tmpArray.push(element);
                         };
                     });
-                    makeObjectTable(tmpArray, true);
+//                    makeObjectTable(tmpArray, true);
                 };
                 
                 $scope.$on('$destroy', function() {
             //        alert("Way out");
             //        $cookies.objectMonitorId = null;
 console.log("Objects page destroy");        
-                    window.onscroll = undefined;
+//                    window.onscroll = undefined;
+                    window.onkeydown = undefined;
                 }); 
                 
+                window.onkeydown = function(e){
+console.log("Window key down");                                            
+                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
+console.log("Ctrl + End");
+                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
+                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
+//                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
+//console.log(pageHeight);
+                        window.scrollTo(0, Math.round(20*$scope.objects.length));
+//                        $scope.objectsOnPage = $scope.objects;
+                    };
+                };
+                
                 //onScroll listener
-                window.onscroll = function(){
+//                window.onscroll = 
+                    var funt = function(){
             //        console.log("Window. On scroll");
                     if(angular.isUndefined($scope.objects) || ($scope.objects.length===0)){
                         return;
@@ -781,6 +803,31 @@ console.log("Objects page destroy");
             //        var tempArr = $scope.objects.slice(startPos, endPos);
             //        makeObjectTable(tempArr, false);
             //        $scope.monitorSettings.objectsOnPage = endPos;
+                };
+                
+                $scope.addMoreObjects = function(){
+console.log("addMoreObjects. Run");   
+                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll);
+//                    $scope.objectsOnPage = $scope.objectsOnPage.push(tempArr);
+                    Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                    $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                    
+//                    objectSvc.promise.then(function(response){
+//                        $scope.objects = response.data;
+//                        //sort by name
+//                        $scope.objects.sort(function(a, b){
+//                            if (a.fullName>b.fullName){
+//                                return 1;
+//                            };
+//                            if (a.fullName<b.fullName){
+//                                return -1;
+//                            };
+//                            return 0;
+//                        }); 
+//                        var tempArr =  $scope.objects.slice(0, 50);
+//    //                    makeObjectTable(tempArr, true);
+//                        $scope.loading = false;                  
+//                    });
                 };
                 
                 
