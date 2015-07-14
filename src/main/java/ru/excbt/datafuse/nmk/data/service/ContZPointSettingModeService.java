@@ -14,9 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContZPointSettingModeCheck;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContZPointSettingModeCheckRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -30,7 +29,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	private ContZPointSettingModeRepository settingModeRepository;
 
 	@Autowired
-	private ContZPointSettingModeCheckRepository settingModeCheckRepository;
+	private ContObjectService contObjectService;
 
 	@Autowired
 	private ContZPointService contZPointService;
@@ -86,7 +85,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContZPointSettingMode save(ContZPointSettingMode arg) {
 		checkNotNull(arg);
 		checkNotNull(arg.getContZPoint().getId());
@@ -106,7 +105,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param entity
 	 */
 	@Transactional
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	private void delete(ContZPointSettingMode entity) {
 		checkNotNull(entity);
 		settingModeRepository.delete(entity);
@@ -117,7 +116,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param id
 	 */
 	@Transactional
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	private void delete(long id) {
 		checkArgument(id > 0);
 		settingModeRepository.delete(id);
@@ -137,9 +136,10 @@ public class ContZPointSettingModeService implements SecuredRoles {
 					"ContZPoint(id:{}) not found", contZPointId));
 		}
 
-		Iterable<ContZPointSettingModeCheck> settingModeCheckList = settingModeCheckRepository
-				.findAll();
-		for (ContZPointSettingModeCheck check : settingModeCheckList) {
+		List<ContObjectSettingModeType> settingModeCheckList = contObjectService
+				.selectContObjectSettingModeType();
+
+		for (ContObjectSettingModeType check : settingModeCheckList) {
 			List<ContZPointSettingMode> mode = settingModeRepository
 					.findByContZPointIdAndSettingMode(contZPointId,
 							check.getKeyname());

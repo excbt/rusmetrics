@@ -4,9 +4,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
-import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 
 public class MonitorContEventTypeStatus implements Serializable,
 		StatusColorObject {

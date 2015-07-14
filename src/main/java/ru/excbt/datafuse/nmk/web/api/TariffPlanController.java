@@ -176,7 +176,7 @@ public class TariffPlanController extends WebApiController {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findOne(contObjectId);
+				ContObject co = contObjectService.findOneContObject(contObjectId);
 				if (co == null) {
 					return ResponseEntity.badRequest().body(
 							ApiResult.validationError("Invalid ContObjectId"));
@@ -241,7 +241,7 @@ public class TariffPlanController extends WebApiController {
 		if (contObjectIds != null) {
 
 			for (long contObjectId : contObjectIds) {
-				ContObject co = contObjectService.findOne(contObjectId);
+				ContObject co = contObjectService.findOneContObject(contObjectId);
 				if (co == null) {
 					return ResponseEntity.badRequest().body(
 							"Invalid ContObjectId");

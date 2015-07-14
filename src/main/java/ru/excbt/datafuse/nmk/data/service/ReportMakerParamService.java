@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.model.support.ReportMetaParamSpecialTypeKey;
+import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeKey;
 
 @Service
 @Transactional(readOnly = true)

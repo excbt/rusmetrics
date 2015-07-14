@@ -210,7 +210,7 @@ public class AnyControllerTest {
 	 * @param a
 	 * @return
 	 */
-	protected static String ListToString(List<Long> a) {
+	protected static String listToString(List<Long> a) {
 		if (a == null)
 			return "null";
 		int iMax = a.size() - 1;
@@ -409,6 +409,16 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String urlStr, Object sendObject)
 			throws Exception {
 		testJsonUpdate(urlStr, sendObject, null);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	protected String apiSubscrUrl(String url) {
+		checkNotNull(url);
+		return "/api/subscr" + url;
 	}
 
 }

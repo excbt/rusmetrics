@@ -26,7 +26,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testIzhevskCont() {
-		List<ContObject> res = contObjectService.findByFullName("%Ижевск%");
+		List<ContObject> res = contObjectService.findContObjectsByFullName("%Ижевск%");
 		// assertTrue(res.size() > 0);
 		assertNotNull(res);
 		logger.info("Found {} ContObjects from Izhevsk", res.size());
