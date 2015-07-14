@@ -95,5 +95,12 @@ public class CurrentUserService {
 	public Long getCurrentUserId() {
 		return getCurrentAuditUser().getId();
 	}
-	
+
+	public boolean isSystem() {
+		FullUserInfo info = getFullUserInfo();
+		if (info == null) {
+			return false;
+		}
+		return info.is_system();
+	}
 }
