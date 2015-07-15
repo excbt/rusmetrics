@@ -14,8 +14,7 @@ public class TimezoneDef extends AbstractKeynameEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 341837575197941958L;
-	
-	
+
 	@Column(name = "caption")
 	private String caption;
 
@@ -25,29 +24,30 @@ public class TimezoneDef extends AbstractKeynameEntity {
 	@Column(name = "timezone_description")
 	private String timezoneDescription;
 
+	@Column(name = "canonical_id")
+	private String cononicalId;
+
+	@Column(name = "timezone_is_default")
+	private Boolean isDefault;
+
 	public String getCaption() {
 		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
 	}
 
 	public String getTimezoneName() {
 		return timezoneName;
 	}
 
-	public void setTimezoneName(String timezoneName) {
-		this.timezoneName = timezoneName;
-	}
-
 	public String getTimezoneDescription() {
 		return timezoneDescription;
 	}
 
-	public void setTimezoneDescription(String timezoneDescription) {
-		this.timezoneDescription = timezoneDescription;
+	public String getCononicalId() {
+		return cononicalId;
 	}
-	
-	
+
+	public Boolean getIsDefault() {
+		return isDefault;
+	}
+
 }

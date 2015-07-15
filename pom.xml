@@ -145,8 +145,13 @@
 		<!-- </dependency> -->
 
 
-		<!-- JSON -->
 
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+
+		<!-- JSON & Jackson-->
 
 		<dependency>
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
@@ -187,6 +192,18 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-hibernate4</artifactId>
 			<version>${jackson.version}</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-csv</artifactId>
+			<version>2.5.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
 		</dependency>
 
 
@@ -252,10 +269,6 @@
 		</dependency>
 
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
 
 		<!-- UUID generator -->
 		<dependency>
@@ -336,13 +349,6 @@
 			<artifactId>jasperreports-functions</artifactId>
 			<version>6.1.0</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-csv</artifactId>
-			<version>2.4.0</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

@@ -14,12 +14,14 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	/**
@@ -39,7 +41,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	@JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private ContZPoint contZPoint;
-	
+
 	@Column(name = "cont_zpoint_id")
 	@JsonIgnore
 	private Long contZPointId;

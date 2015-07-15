@@ -79,6 +79,26 @@ public class ContServiceDataHWaterService {
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 	}
+	
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDateTime beginDate, LocalDateTime endDate) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(beginDate, "beginDate is null");
+		checkNotNull(endDate, "endDate is null");
+		checkArgument(beginDate.compareTo(endDate) <= 0);
+		
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
+	}
 
 	/**
 	 * 
