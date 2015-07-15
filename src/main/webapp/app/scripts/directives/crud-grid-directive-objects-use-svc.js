@@ -23,6 +23,15 @@ angular.module('portalNMC')
 console.log("Objects directive.");
 //var timeDirStart = (new Date()).getTime();
                 
+                    //messages for user
+                $scope.messages = {};
+                $scope.messages.setSelectedInWinterMode = "Перевести выделенные объекты на зимний режим";
+                $scope.messages.setSelectedInSummerMode = "Перевести выделенные объекты на летний режим";
+                $scope.messages.setAllInWinterMode = "Перевести все объекты на зимний режим";
+                $scope.messages.setAllInSummerMode = "Перевести все объекты на летний режим";
+                $scope.messages.markAllOn = "Выбрать все";
+                $scope.messages.markAllOff = "Отменить все";
+                
                     //monitor settings
                 $scope.objectCtrlSettings = {};
 //                $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
@@ -44,18 +53,30 @@ console.log("Objects directive.");
                 $scope.objectsOnPage = [];
 //console.log(objectSvc.promise);                 
                 objectSvc.promise.then(function(response){
+                    var tempArr = response.data;
+                    tempArr.forEach(function(element){
+                        element.imgsrc='images/object-mode-'+element.currentSettingMode+'.png';
+//                        $scope.cont_zpoint_setting_mode_check
+                        if (element.currentSettingMode===$scope.cont_zpoint_setting_mode_check[0].keyname){
+                            element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
+                            
+                        }else if(element.currentSettingMode===$scope.cont_zpoint_setting_mode_check[1].keyname){
+                            element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                        };
+                    });
                     $scope.objects = response.data;
                     //sort by name
-                    $scope.objects.sort(function(a, b){
-                        if (a.fullName>b.fullName){
-                            return 1;
-                        };
-                        if (a.fullName<b.fullName){
-                            return -1;
-                        };
-                        return 0;
-                    }); 
-                    var tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                    objectSvc.sortObjectsByFullName($scope.objects);
+//                    $scope.objects.sort(function(a, b){
+//                        if (a.fullName>b.fullName){
+//                            return 1;
+//                        };
+//                        if (a.fullName<b.fullName){
+//                            return -1;
+//                        };
+//                        return 0;
+//                    }); 
+                    tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                     $scope.objectsOnPage = tempArr;
 //                    makeObjectTable(tempArr, true);
                     $scope.loading = false;                  
@@ -260,13 +281,15 @@ console.log("Objects directive.");
                     //else
                     
                     var zpTable = document.getElementById("zpointTable"+curObject.id);
-                    if ((curObject.showGroupDetails==true) && (zpTable==null)){
+//console.log(zpTable);                    
+                    if ((curObject.showGroupDetails==true) && (zpTable==null)){                        
                         curObject.showGroupDetails =true;
-                    }else{
+                    }else{                       
                         curObject.showGroupDetails =!curObject.showGroupDetails;
-                    };                     
+                    };                                           
                     //if curObject.showGroupDetails = true => get zpoints data and make zpoint table
                     if (curObject.showGroupDetails === true){
+                      
                         var mode = "Ex";
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
@@ -317,16 +340,20 @@ console.log("Objects directive.");
                                 zpoints[i] = zpoint;                  
                             }
                             curObject.zpoints = zpoints;
-//                            makeZpointTable(curObject);
+                            makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail"+curObject.id);
                             btnDetail.classList.remove("glyphicon-chevron-right");
                             btnDetail.classList.add("glyphicon-chevron-down");
+                            
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
                     }//else if curObject.showGroupDetails = false => hide child zpoint table
                     else{
-                        var trObjZp = document.getElementById("trObjZp"+curObject.id);
-console.log("trObjZp"+curObject.id);                        
+                        var trObj = document.getElementById("obj"+curObject.id);
+                        var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");
+//console.log(trTemp);                        
+//                        var trObjZp = document.getElementById("trObjZp"+curObject.id);
+//console.log("trObjZp"+curObject.id);                        
                         trObjZp.innerHTML = "";
                         var btnDetail = document.getElementById("btnDetail"+curObject.id);
                         btnDetail.classList.remove("glyphicon-chevron-down");
@@ -342,8 +369,10 @@ console.log("trObjZp"+curObject.id);
                     
                 };
                 //Формируем таблицу с точками учета
-                function makeZpointTable(object){                 
-                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
+                function makeZpointTable(object){ 
+                    var trObj = document.getElementById("obj"+object.id);
+                    var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];//.getElementById("trObjZp");                    
+//                    var trObjZp = document.getElementById("trObjZp"+object.id);                 
                     var trHTML = "";
 //                        "<td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">"+
 //                        "<thead>"+
@@ -358,7 +387,7 @@ console.log("trObjZp"+curObject.id);
 //                            "</th>"+
 //                        "</tr>"+
 //                        "</thead>    ";
-                    trHTML+="<td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
+                    trHTML+="<td></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
@@ -424,7 +453,7 @@ console.log("trObjZp"+curObject.id);
                             zpoint.zpointRefRange = "Не задан";
                             zpoint.zpointRefRangeAuto = "notSet";
                         }
-                        viewRefRangeInTable(zpoint);
+//                        viewRefRangeInTable(zpoint);
                     })
                     .error(function(e){
                         console.log(e);
@@ -721,23 +750,27 @@ console.log("trObjZp"+curObject.id);
                 $scope.$on('$destroy', function() {
             //        alert("Way out");
             //        $cookies.objectMonitorId = null;
-console.log("Objects page destroy");        
+//console.log("Objects page destroy");        
 //                    window.onscroll = undefined;
                     window.onkeydown = undefined;
                 }); 
                 
                 window.onkeydown = function(e){
-console.log("Window key down");                                            
+//console.log("Window key down");                                            
                     if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
-console.log("Ctrl + End");
+//console.log("Ctrl + End");
                         var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
-//                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
-//console.log(pageHeight);
+                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
+console.log(pageHeight);
                         window.scrollTo(0, Math.round(20*$scope.objects.length));
 //                        $scope.objectsOnPage = $scope.objects;
                     };
+                };
+                
+                window.onload = function(e){
+console.log("Window.On load event");                    
                 };
                 
                 //onScroll listener
@@ -808,26 +841,8 @@ console.log("Ctrl + End");
                 $scope.addMoreObjects = function(){
 console.log("addMoreObjects. Run");   
                     var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll);
-//                    $scope.objectsOnPage = $scope.objectsOnPage.push(tempArr);
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
-                    
-//                    objectSvc.promise.then(function(response){
-//                        $scope.objects = response.data;
-//                        //sort by name
-//                        $scope.objects.sort(function(a, b){
-//                            if (a.fullName>b.fullName){
-//                                return 1;
-//                            };
-//                            if (a.fullName<b.fullName){
-//                                return -1;
-//                            };
-//                            return 0;
-//                        }); 
-//                        var tempArr =  $scope.objects.slice(0, 50);
-//    //                    makeObjectTable(tempArr, true);
-//                        $scope.loading = false;                  
-//                    });
                 };
                 
                 

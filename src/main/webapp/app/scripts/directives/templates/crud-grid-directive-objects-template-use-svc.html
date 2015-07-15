@@ -27,7 +27,8 @@
 -->
 <div class="row nmc-main-workspace-header">
     <div class="col-md-3 noPadding">
-        <h2 class="noMargin nmc-h2">Объекты учета</h2>
+        <h2 class="noMargin nmc-h2">Объекты учета
+        </h2>    
     </div>
     <div class="col-md-7"></div>
     <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
@@ -58,79 +59,142 @@
 
 <div infinite-scroll="addMoreObjects()" infinte-scroll-distance='50'>
     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-    <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
-    <td>
-        <table>
+        <thead>
             <tr>
-                <td class="nmc-td-for-buttons"> 
-                    <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
-                    <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
-                </td>
-                <td class="nmc-td-for-buttons">
-<!--                    <input type="checkbox" ng-model="object.selected"/>-->
-<!--                    <img height="16" width="16" ng-src="{{'images/object-mode-'+object.currentSettingMode+'.png'}}">-->
-                </td>
-                <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}
-
-                </td>
-            </tr>
-            <tr ng-attr-id={{"trObjZp"+object.id}} ng-show="object.showGroupDetailsFlag">
-                <td></td>
-                <td style="padding-top: 2px !important;">
-                    <table ng-attr-id={{"zpointTable"+object.id}} class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table">
+                <th style="padding: 0; border-bottom-width: 0px;">
+                    <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th ng-show="bObject || bList" class="nmc-td-for-buttons-3"></th>
-                                <th ng-repeat="column in oldColumns" ng-class="column.class">
-                                    {{column.header || column.name}}
+                                <th class="nmc-td-for-buttons">
+                                    <input title="Выбрать / отменить все" type="checkbox" />
+                                    <div class="btn-group">
+
+                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li><a href="" ng-click="">{{messages.setSelectedInWinterMode}}</a></li>
+                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> 
+                                      </ul>
+                                    </div>
                                 </th>
+                                <th class="nmc-td-for-button"></th>
+                                <th>Название объекта</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr ng-repeat="zpoint in object.zpoints" ng-attr-id="{{'trZpoint'+zpoint.id}}" ng-dblclick="getIndicators(object.id, zpoint.id)">
-                                <td class="nmc-td-for-buttons-3">
-                                    <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table"
-                                        ng-click="getZpointSettings(object.id,zpoint.id)"
-                                        data-target="#showZpointOptionModal"
-                                        data-toggle="modal"
-                                        data-placement="bottom"
-                                        title="Свойства точки учёта">
-                                    </i>
-                                    <i class="btn btn-xs nmc-button-in-table"
-                                        ng-click="getZpointSettings(object.id, zpoint.id)"
-                                        data-target="#showZpointExplParameters"
-                                        data-toggle="modal"
-                                        data-placement="bottom"
-                                        title="Эксплуатационные параметры точки учёта">
-                                        <img height=12 width=12 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
-                                    </i>
-                                    <i class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table"
-                                        ng-click="getIndicators(object.id, zpoint.id)"
-                                        title="Показания точки учёта">
-                                    </i>
-                                </td>
-                                <td ng-repeat="column in oldColumns">
-                                    <span ng-switch on="column.name">
-                                        <span ng-switch-when="zpointName">
-                                            {{zpoint[column.name]}} <span ng-show="isSystemuser()">(id = {{zpoint.id}})</span>
-                                        </span>
-                                        <span ng-switch-when="zpointLastDataDate">
-                                            {{zpoint[column.name] | date: 'dd.MM.yyyy HH:mm'}}
-                                        </span>
-                                        <span ng-switch-default>
-                                            {{zpoint[column.name]}}
-                                        </span>
-                                        
-                                    </span>
-                                </td>
-                                
-                            </tr>
-                        </tbody>        
-                
+                    </table>
+                </th>
             </tr>
-        </table>
-    </td>        
-    </tr>
+        </thead>
+<!--
+        <tr>
+            <td class="nmc-td-for-buttons">
+                    <span class="paddingTop3">
+                        <input title="Выделить/снять выделение со всех объектов" type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/>
+                    </span>    
+                    <div class="btn-group">
+
+                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a href="" ng-click="">{{messages.markAllOn}}</a></li>
+                        <li><a href="" ng-click="">{{messages.markAllOff}}</a></li>
+                        <li role="separator" class="divider"></li> 
+                        <li><a href="" ng-click="">{{messages.setSelectedInWinterMode}}</a></li>
+                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li>
+                        <li role="separator" class="divider"></li> 
+                        <li><a href="" ng-click="confirmationText=messages.markOnPageAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.setAllInWinterMode}}</a></li> 
+                        <li><a href="" ng-click="confirmationText=messages.markAllAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.setAllInSummerMode}}</a></li>  
+                      </ul>
+                    </div>  
+            </td>
+        </tr>
+-->
+        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
+            <td>
+                <table>
+                    <tr>
+        
+                        <td class="nmc-td-for-buttons-in-object-page">
+                            <input type="checkbox" ng-model="object.selected"/>
+                            <img height="16" width="16" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
+                            <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
+
+                        </td>
+        
+                        <td class="nmc-td-for-button"> 
+
+                            <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
+                            
+                        </td>
+
+                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}
+
+                        </td>
+                    </tr>
+                    <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
+<!--                        ng-show="object.showGroupDetailsFlag">-->
+<!--
+                        <td></td>
+                        <td style="padding-top: 2px !important;">
+                            <table ng-attr-id={{"zpointTable"+object.id}} class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table">
+                                <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th ng-show="bObject || bList" class="nmc-td-for-buttons-3"></th>
+                                            <th ng-repeat="column in oldColumns" ng-class="column.class">
+                                                {{column.header || column.name}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                <tbody>
+                                        <tr ng-repeat="zpoint in object.zpoints" ng-attr-id="{{'trZpoint'+zpoint.id}}" ng-dblclick="getIndicators(object.id, zpoint.id)">
+                                            <td class="nmc-td-for-buttons-3">
+                                                <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table"
+                                                    ng-click="getZpointSettings(object.id,zpoint.id)"
+                                                    data-target="#showZpointOptionModal"
+                                                    data-toggle="modal"
+                                                    data-placement="bottom"
+                                                    title="Свойства точки учёта">
+                                                </i>
+                                                <i class="btn btn-xs nmc-button-in-table"
+                                                    ng-click="getZpointSettings(object.id, zpoint.id)"
+                                                    data-target="#showZpointExplParameters"
+                                                    data-toggle="modal"
+                                                    data-placement="bottom"
+                                                    title="Эксплуатационные параметры точки учёта">
+                                                    <img height=12 width=12 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
+                                                </i>
+                                                <i class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table"
+                                                    ng-click="getIndicators(object.id, zpoint.id)"
+                                                    title="Показания точки учёта">
+                                                </i>
+                                            </td>
+                                            <td ng-repeat="column in oldColumns">
+                                                <span ng-switch on="column.name">
+                                                    <span ng-switch-when="zpointName">
+                                                        {{zpoint[column.name]}} <span ng-show="isSystemuser()">(id = {{zpoint.id}})</span>
+                                                    </span>
+                                                    <span ng-switch-when="zpointLastDataDate">
+                                                        {{zpoint[column.name] | date: 'dd.MM.yyyy HH:mm'}}
+                                                    </span>
+                                                    <span ng-switch-default>
+                                                        {{zpoint[column.name]}}
+                                                    </span>
+
+                                                </span>
+                                            </td>
+
+                                          
+                                        </tr>
+                                </tbody>        
+                            </table>
+                        </td>
+-->
+                    </tr>
+                </table>
+             </td>        
+         </tr>
     </table>
 </div>
 
@@ -866,6 +930,56 @@
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: confirm action-->
+<div id="confirmActionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="confirmActionLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="confirmActionLabel" class="nmc-h3">
+				Подтверждение 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
+					</label> 
+					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="confirmAction();"
+								value="Ок" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
 								Отменить
 							</button>
 						</div>
