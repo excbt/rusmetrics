@@ -31,9 +31,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
@@ -80,14 +81,36 @@ public class SubscrContServiceDataController extends WebApiController {
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
-			@RequestParam("beginDate") String beginDateS,
-			@RequestParam("endDate") String endDateS) {
+			@RequestParam("beginDate") String fromDateStr,
+			@RequestParam("endDate") String toDateStr) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetailType);
-		checkNotNull(beginDateS);
-		checkNotNull(endDateS);
+		checkNotNull(fromDateStr);
+		checkNotNull(toDateStr);
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} and toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
@@ -114,25 +137,6 @@ public class SubscrContServiceDataController extends WebApiController {
 							serviceType));
 		}
 
-		DateTime beginD = null;
-		DateTime endD = null;
-		try {
-			beginD = DATE_FORMATTER.parseDateTime(beginDateS);
-			endD = DATE_FORMATTER.parseDateTime(endDateS);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters beginDateS:{}, endDateS:{}",
-							beginDateS, endDateS));
-		}
-
-		if (beginD.compareTo(endD) > 0) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters beginDateS:{}, endDateS:{}",
-							beginDateS, endDateS));
-		}
-
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return ResponseEntity.badRequest().body(
@@ -140,11 +144,9 @@ public class SubscrContServiceDataController extends WebApiController {
 							timeDetailType));
 		}
 
-		DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
-
 		List<ContServiceDataHWater> result = contServiceDataHWaterService
-				.selectByContZPoint(contZPointId, timeDetail, beginD, endOfDay);
+				.selectByContZPoint(contZPointId, timeDetail, datePeriodParser
+						.getDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(result);
 
@@ -164,15 +166,37 @@ public class SubscrContServiceDataController extends WebApiController {
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
-			@RequestParam("beginDate") String beginDateS,
-			@RequestParam("endDate") String endDateS,
+			@RequestParam("beginDate") String fromDateStr,
+			@RequestParam("endDate") String toDateStr,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetailType);
-		checkNotNull(beginDateS);
-		checkNotNull(endDateS);
+		checkNotNull(fromDateStr);
+		checkNotNull(toDateStr);
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} and toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
@@ -199,25 +223,6 @@ public class SubscrContServiceDataController extends WebApiController {
 							serviceType));
 		}
 
-		DateTime beginD = null;
-		DateTime endD = null;
-		try {
-			beginD = DATE_FORMATTER.parseDateTime(beginDateS);
-			endD = DATE_FORMATTER.parseDateTime(endDateS);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters beginDateS:{}, endDateS:{}",
-							beginDateS, endDateS));
-		}
-
-		if (beginD.compareTo(endD) > 0) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters beginDateS:{}, endDateS:{}",
-							beginDateS, endDateS));
-		}
-
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return ResponseEntity.badRequest().body(
@@ -225,12 +230,9 @@ public class SubscrContServiceDataController extends WebApiController {
 							timeDetailType));
 		}
 
-		DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
-
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService
-				.selectByContZPoint(contZPointId, timeDetail, beginD, endOfDay,
-						pageable);
+				.selectByContZPoint(contZPointId, timeDetail, datePeriodParser
+						.getDatePeriod().buildEndOfDay(), pageable);
 
 		return ResponseEntity
 				.ok(new PageInfoList<ContServiceDataHWater>(result));
@@ -427,8 +429,7 @@ public class SubscrContServiceDataController extends WebApiController {
 				.withSecondOfMinute(59).withMillisOfSecond(999);
 
 		List<ContServiceDataHWaterAbs_Csv> cvsDataList = contServiceDataHWaterService
-				.selectDataAbs_Csv(contZPointId, timeDetail, beginD,
-						endOfDay);
+				.selectDataAbs_Csv(contZPointId, timeDetail, beginD, endOfDay);
 
 		CsvMapper mapper = new CsvMapper();
 

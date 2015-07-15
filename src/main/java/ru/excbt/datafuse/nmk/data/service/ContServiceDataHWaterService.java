@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -68,7 +69,7 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+	private List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, DateTime beginDate, DateTime endDate) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
@@ -79,7 +80,7 @@ public class ContServiceDataHWaterService {
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 	}
-	
+
 	/**
 	 * 
 	 * @param contZPointId
@@ -89,15 +90,36 @@ public class ContServiceDataHWaterService {
 	 */
 	@Transactional(readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
-			TimeDetailKey timeDetail, LocalDateTime beginDate, LocalDateTime endDate) {
+			TimeDetailKey timeDetail, LocalDateTime beginDate,
+			LocalDateTime endDate) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
-		
+
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param datePeriod
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDatePeriod datePeriod) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(datePeriod, "beginDate is null");
+		checkArgument(datePeriod.isValid());
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), datePeriod.getDateFrom(),
+				datePeriod.getDateTo());
 	}
 
 	/**
@@ -120,6 +142,29 @@ public class ContServiceDataHWaterService {
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate(),
+				pageable);
+	}
+	
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param datePeriod
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDatePeriod datePeriod,
+			Pageable pageable) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(datePeriod, "beginDate is null");
+		checkArgument(datePeriod.isValid());
+		checkNotNull(pageable);
+		
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), datePeriod.getDateFrom(), datePeriod.getDateTo(),
 				pageable);
 	}
 
