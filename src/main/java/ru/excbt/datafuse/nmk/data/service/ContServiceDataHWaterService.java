@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
@@ -303,19 +303,19 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContServiceDataHWaterCsv> selectByContZPointCsvData(
+	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(
 			long contZPointId, TimeDetailKey timeDetail, DateTime beginDate,
 			DateTime endDate) {
 
 		List<ContServiceDataHWater> srcDataList = selectByContZPoint(
 				contZPointId, timeDetail, beginDate, endDate);
 
-		List<ContServiceDataHWaterCsv> cvsDataList = new ArrayList<>();
+		List<ContServiceDataHWaterAbs_Csv> cvsDataList = new ArrayList<>();
 		try {
 
 			for (ContServiceDataHWater data : srcDataList) {
-				ContServiceDataHWaterCsv cvsData;
-				cvsData = ContServiceDataHWaterCsv.newInstance(data);
+				ContServiceDataHWaterAbs_Csv cvsData;
+				cvsData = ContServiceDataHWaterAbs_Csv.newInstance(data);
 				ContServiceDataHWater abs = selectLastAbsData(
 						data.getContZPointId(), timeDetail, new LocalDateTime(
 								data.getDataDate()));
@@ -325,7 +325,7 @@ public class ContServiceDataHWaterService {
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("Can't create intance of {}: {}",
-					ContServiceDataHWaterCsv.class, e);
+					ContServiceDataHWaterAbs_Csv.class, e);
 			cvsDataList.clear();
 		}
 

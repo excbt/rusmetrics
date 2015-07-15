@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsvFormat;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -426,16 +426,16 @@ public class SubscrContServiceDataController extends WebApiController {
 		DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
 				.withSecondOfMinute(59).withMillisOfSecond(999);
 
-		List<ContServiceDataHWaterCsv> cvsDataList = contServiceDataHWaterService
-				.selectByContZPointCsvData(contZPointId, timeDetail, beginD,
+		List<ContServiceDataHWaterAbs_Csv> cvsDataList = contServiceDataHWaterService
+				.selectDataAbs_Csv(contZPointId, timeDetail, beginD,
 						endOfDay);
 
 		CsvMapper mapper = new CsvMapper();
 
-		mapper.addMixInAnnotations(ContServiceDataHWaterCsv.class,
-				ContServiceDataHWaterCsvFormat.class);
+		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class,
+				ContServiceDataHWater_CsvFormat.class);
 
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterCsv.class)
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class)
 				.withHeader();
 
 		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(cvsDataList);

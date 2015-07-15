@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsvFormat;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 
@@ -43,17 +43,17 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 	private void readData() throws JsonProcessingException,
 			IllegalAccessException, InvocationTargetException {
 
-		List<ContServiceDataHWaterCsv> cvsDataList = contServiceDataHWaterService
-				.selectByContZPointCsvData(18811586, TimeDetailKey.TYPE_24H, DateTime.now()
+		List<ContServiceDataHWaterAbs_Csv> cvsDataList = contServiceDataHWaterService
+				.selectDataAbs_Csv(18811586, TimeDetailKey.TYPE_24H, DateTime.now()
 						.withMillisOfDay(0).minusMonths(1), DateTime.now()
 						.withMillisOfDay(0));
 
 		CsvMapper mapper = new CsvMapper();
 
-		mapper.addMixInAnnotations(ContServiceDataHWaterCsv.class,
-				ContServiceDataHWaterCsvFormat.class);
+		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class,
+				ContServiceDataHWater_CsvFormat.class);
 
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterCsv.class)
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class)
 				.withHeader();
 
 		String csv = mapper.writer(schema).writeValueAsString(cvsDataList);
