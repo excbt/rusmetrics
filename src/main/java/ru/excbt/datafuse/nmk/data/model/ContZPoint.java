@@ -1,8 +1,8 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -53,7 +53,7 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	private Collection<DeviceObject> deviceObjects = new ArrayList<>();
+	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
 	private int version;
@@ -106,11 +106,11 @@ public class ContZPoint extends AbstractAuditableModel {
 		this.endDate = endDate;
 	}
 
-	public Collection<DeviceObject> getDeviceObjects() {
+	public List<DeviceObject> getDeviceObjects() {
 		return deviceObjects;
 	}
 
-	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
+	public void setDeviceObjects(List<DeviceObject> deviceObjects) {
 		this.deviceObjects = deviceObjects;
 	}
 

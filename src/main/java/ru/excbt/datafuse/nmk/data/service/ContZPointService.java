@@ -1,10 +1,14 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +17,12 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
 @Transactional
-public class ContZPointService {
+public class ContZPointService implements SecuredRoles {
 
 	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
 
@@ -73,7 +78,7 @@ public class ContZPointService {
 				result.add(new ContZPointEx(zp, existsData));
 
 			} else {
-				
+
 				Date zPointLastDate = contServiceDataHWaterService
 						.selectLastDataDate(zp.getId(), minCheck.getObject());
 
@@ -148,6 +153,13 @@ public class ContZPointService {
 			resultList.add(item);
 		}
 		return resultList;
+	}
+
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public ContZPoint saveOne(ContZPoint contZPoint) {
+		checkNotNull(contZPoint);
+		checkArgument(!contZPoint.isNew());
+		return contZPointRepository.save(contZPoint);
 	}
 
 }

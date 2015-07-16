@@ -30,12 +30,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
@@ -52,7 +52,10 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
 
 	@Autowired
-	private ContZPointRepository contZPointRepository;
+	private ContZPointService contZPointService;
+
+	@Autowired
+	private DeviceObjectService deviceObjectService;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -412,7 +415,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @param inData
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public void manualLoadDataHWater(Long contZPointId,
 			List<ContServiceDataHWater> inData) {
 
@@ -420,7 +423,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(inData);
 		checkArgument(inData.size() > 0);
 
-		ContZPoint zpoint = contZPointRepository.findOne(contZPointId);
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
 		checkNotNull(zpoint, String.format(
 				"ContZPoint with id:%d is not found", contZPointId));
@@ -431,15 +434,35 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 						"Manual Loading for ContZPoint with id:%d is not allowed",
 						contZPointId));
 
+		// Device Object Check And Save
+		DeviceObject deviceObject = null;
+
+		if (zpoint.getDeviceObjects().isEmpty()) {
+
+			logger.debug("Device Object is not found. Create new");
+
+			deviceObject = deviceObjectService.createPortalDeviceObject();
+			logger.debug("Cont Object is saved. Id:{}", deviceObject.getId());
+
+			zpoint.getDeviceObjects().add(deviceObject);
+			contZPointService.saveOne(zpoint);
+
+			logger.debug("ContZPoint is saved. Id:{}", zpoint.getId());
+		} else {
+			deviceObject = zpoint.getDeviceObjects().get(0);
+		}
+
 		Optional<ContServiceDataHWater> checkIsNewElements = inData.stream()
-				.filter((i) -> i.isNew()).findAny();
+				.filter((i) -> !i.isNew()).findAny();
 
 		checkState(!checkIsNewElements.isPresent(),
 				"Elements in data list is not new");
 
+		final DeviceObject dObject = deviceObject;
 		inData.forEach((d) -> {
 			d.setContZPointId(contZPointId);
 			d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
+			d.setDeviceObject(dObject);
 		});
 
 		contServiceDataHWaterRepository.save(inData);

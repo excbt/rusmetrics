@@ -9,6 +9,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class ContServiceDataHWater_CsvFormat {
 
+	@JsonIgnore
+	abstract Long getId();
+	
 	@JsonProperty("date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	abstract Date getDataDate();

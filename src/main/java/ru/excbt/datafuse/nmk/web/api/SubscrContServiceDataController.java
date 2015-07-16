@@ -526,7 +526,7 @@ public class SubscrContServiceDataController extends WebApiController {
 						currentSubscriberService.getSubscriberId(),
 						currentSubscriberService.getCurrentUserId());
 
-		String digestMD5 = "mockMD5";
+		String digestMD5;
 		try {
 			digestMD5 = FileWriterUtils.writeFile(
 					multipartFile.getInputStream(), filename);
@@ -572,14 +572,14 @@ public class SubscrContServiceDataController extends WebApiController {
 					.build();
 		}
 
-		ApiAction action = new AbstractEntityApiAction<String>(digestMD5) {
+		ApiAction action = new AbstractEntityApiAction<String>() {
 
 			@Override
 			public void process() {
 				contServiceDataHWaterService.manualLoadDataHWater(contZPointId,
 						inData);
 
-				setResultEntity(entity);
+				setResultEntity(digestMD5);
 			}
 		};
 
