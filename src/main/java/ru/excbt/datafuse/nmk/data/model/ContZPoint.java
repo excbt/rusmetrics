@@ -52,9 +52,7 @@ public class ContZPoint extends AbstractAuditableModel {
 	private Date endDate;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "cont_zpoint_device", 
-			joinColumns = @JoinColumn(name = "cont_zpoint_id"), 
-			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
 	private Collection<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
@@ -72,6 +70,9 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	@Column(name = "is_double_pipe")
 	private Boolean doublePipe;
+
+	@Column(name = "is_manual_loading")
+	private Boolean isManualLoading;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -159,6 +160,14 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	public void setRso(Organization rso) {
 		this.rso = rso;
+	}
+
+	public Boolean getIsManualLoading() {
+		return isManualLoading;
+	}
+
+	public void setIsManualLoading(Boolean isManualLoading) {
+		this.isManualLoading = isManualLoading;
 	}
 
 }

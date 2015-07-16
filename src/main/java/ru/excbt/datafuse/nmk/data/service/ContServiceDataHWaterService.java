@@ -2,17 +2,20 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -21,20 +24,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
 @Transactional
-public class ContServiceDataHWaterService {
+public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContServiceDataHWaterService.class);
@@ -43,6 +50,9 @@ public class ContServiceDataHWaterService {
 
 	@Autowired
 	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
+
+	@Autowired
+	private ContZPointRepository contZPointRepository;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -144,7 +154,7 @@ public class ContServiceDataHWaterService {
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate(),
 				pageable);
 	}
-	
+
 	/**
 	 * 
 	 * @param contZPointId
@@ -162,10 +172,10 @@ public class ContServiceDataHWaterService {
 		checkNotNull(datePeriod, "beginDate is null");
 		checkArgument(datePeriod.isValid());
 		checkNotNull(pageable);
-		
+
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
-				timeDetail.getKeyname(), datePeriod.getDateFrom(), datePeriod.getDateTo(),
-				pageable);
+				timeDetail.getKeyname(), datePeriod.getDateFrom(),
+				datePeriod.getDateTo(), pageable);
 	}
 
 	/**
@@ -395,6 +405,45 @@ public class ContServiceDataHWaterService {
 		}
 
 		return cvsDataList;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param inData
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public void manualLoadDataHWater(Long contZPointId,
+			List<ContServiceDataHWater> inData) {
+
+		checkNotNull(contZPointId);
+		checkNotNull(inData);
+		checkArgument(inData.size() > 0);
+
+		ContZPoint zpoint = contZPointRepository.findOne(contZPointId);
+
+		checkNotNull(zpoint, String.format(
+				"ContZPoint with id:%d is not found", contZPointId));
+
+		checkState(
+				BooleanUtils.isTrue(zpoint.getIsManualLoading()),
+				String.format(
+						"Manual Loading for ContZPoint with id:%d is not allowed",
+						contZPointId));
+
+		Optional<ContServiceDataHWater> checkIsNewElements = inData.stream()
+				.filter((i) -> i.isNew()).findAny();
+
+		checkState(!checkIsNewElements.isPresent(),
+				"Elements in data list is not new");
+
+		inData.forEach((d) -> {
+			d.setContZPointId(contZPointId);
+			d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
+		});
+
+		contServiceDataHWaterRepository.save(inData);
+
 	}
 
 }

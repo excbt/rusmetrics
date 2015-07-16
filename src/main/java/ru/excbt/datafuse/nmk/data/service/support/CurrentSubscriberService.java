@@ -116,4 +116,11 @@ public class CurrentSubscriberService {
 		return contObjectService.selectSubscriberContObjects(getSubscriberId());
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getCurrentUserId() {
+		return currentUserService.getCurrentUserId();
+	}
 }

@@ -7,13 +7,13 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvProps;
+
 @Service
-public class WebAppPropsService {
+public class WebAppPropsService implements HWatersCsvProps {
 
 	public final static String CATALINA_BASE = "catalina.base";
-	public final static String HWATERS_CSV_OUT = "app.hwaters.csv.out";
-	
-	
+
 	@Autowired
 	private ServletContext servletContext;
 
@@ -24,8 +24,7 @@ public class WebAppPropsService {
 	public String getWebAppHomeDirectory() {
 		return servletContext.getRealPath("/");
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return
@@ -34,13 +33,22 @@ public class WebAppPropsService {
 		String catalinaBase = System.getProperty(CATALINA_BASE);
 		File f = new File(".");
 		return catalinaBase != null ? catalinaBase : f.getAbsolutePath();
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @return
 	 */
-	public String getHWatersCvsOut() {
+	@Override
+	public String getHWatersCsvOutputDir() {
 		return getServerHomeDirectory() + File.separator + HWATERS_CSV_OUT;
-	}	
+	}
+
+	/**
+	 * 
+	 */
+	@Override
+	public String getHWatersCsvInputDir() {
+		return getServerHomeDirectory() + File.separator + HWATERS_CSV_IN;
+	}
 }
