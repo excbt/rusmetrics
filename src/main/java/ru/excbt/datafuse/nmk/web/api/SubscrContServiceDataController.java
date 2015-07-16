@@ -526,7 +526,7 @@ public class SubscrContServiceDataController extends WebApiController {
 						currentSubscriberService.getSubscriberId(),
 						currentSubscriberService.getCurrentUserId());
 
-		String digestMD5;
+		String digestMD5 = "mockMD5";
 		try {
 			digestMD5 = FileWriterUtils.writeFile(
 					multipartFile.getInputStream(), filename);
@@ -550,9 +550,15 @@ public class SubscrContServiceDataController extends WebApiController {
 				schema);
 
 		MappingIterator<ContServiceDataHWater> iterator = null;
+		List<ContServiceDataHWater> inData = new ArrayList<>();
+
 		boolean parsingResult = true;
 		try (FileInputStream fio = new FileInputStream(filename)) {
 			iterator = reader.readValues(fio);
+			while (iterator.hasNext()) {
+				ContServiceDataHWater d = iterator.next();
+				inData.add(d);
+			}
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
 			parsingResult = false;
@@ -566,20 +572,14 @@ public class SubscrContServiceDataController extends WebApiController {
 					.build();
 		}
 
-		List<ContServiceDataHWater> inData = new ArrayList<>();
-		while (iterator.hasNext()) {
-			ContServiceDataHWater d = iterator.next();
-			inData.add(d);
-		}
-
-		ApiAction action = new AbstractEntityApiAction<String>() {
+		ApiAction action = new AbstractEntityApiAction<String>(digestMD5) {
 
 			@Override
 			public void process() {
 				contServiceDataHWaterService.manualLoadDataHWater(contZPointId,
 						inData);
 
-				setResultEntity(digestMD5);
+				setResultEntity(entity);
 			}
 		};
 

@@ -412,7 +412,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @param inData
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void manualLoadDataHWater(Long contZPointId,
 			List<ContServiceDataHWater> inData) {
 
