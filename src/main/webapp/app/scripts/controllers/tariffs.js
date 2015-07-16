@@ -2,7 +2,8 @@
 var app = angular.module('portalNMC');
 app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, objectSvc){
     //set default values
-    $scope.crudTableName = "../api/subscr/tariff";    
+    $scope.crudTableName = "../api/subscr/tariff"; 
+    $scope.groupUrl = "../api/contGroup";
     $scope.columns = [
         {"name":"tariffTypeName", "header" : "Вид услуги", "class":"col-md-1"}
         ,{"name":"tariffPlanName", "header" : "Наименование", "class":"col-md-2"}
@@ -23,6 +24,10 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     $scope.addMode = false;
     $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true };
     $scope.filter = '';
+    
+    //Headers of modal window
+    $scope.headers = {}
+    $scope.headers.addObjects = "Доступные объекты";//header of add objects window
 
     $scope.toggleAddMode = function () {
         $scope.addMode = !$scope.addMode;
@@ -180,6 +185,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     //tariff objects
     $scope.availableObjects = [];
+    $scope.availableObjectGroups = [];
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(tariffId){  
@@ -195,6 +201,31 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
             $scope.selectedObjects = data;
             objectSvc.sortObjectsByFullName($scope.selectedObjects);
         });
+    };
+    
+    $scope.getAvailableObjectGroups = function(){         
+        crudGridDataFactory($scope.groupUrl).query(function(data){           
+            $scope.availableObjectGroups = data;
+        });        
+    };
+    $scope.getAvailableObjectGroups();
+    
+    $scope.viewAvailableObjects = function(objectGroupFlag){
+        $scope.showAvailableObjects_flag=!$scope.showAvailableObjects_flag;
+        $scope.showAvailableObjectGroups_flag=objectGroupFlag;
+        if (objectGroupFlag){
+            $scope.headers.addObjects = "Доступные группы объектов";
+            //prepare the object goups to view in table
+            var tmpArr = $scope.availableObjectGroups.map(function(element){
+                var result = {};
+                result.fullName = element.contGroupName;//set the field, which view entity name in table
+                return result;
+            });
+            $scope.availableEntities = tmpArr;
+        }else{
+            $scope.headers.addObjects = "Доступные объекты";
+            $scope.availableEntities = $scope.availableObjects;
+        };
     };
     
     var objectPerform = function(addObject_flag, currentObjectId){
@@ -258,7 +289,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         objectSvc.sortObjectsByFullName($scope.availableObjects);
     }
     
-    $scope.addSelectedObjects = function(){
+    $scope.addSelectedEntities = function(){
     //console.log($scope.availableObjects);          
         var tmpArray = angular.copy($scope.availableObjects);
         for(var i =0; i<$scope.availableObjects.length; i++){

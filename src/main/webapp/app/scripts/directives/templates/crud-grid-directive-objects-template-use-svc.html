@@ -65,11 +65,11 @@
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th class="nmc-td-for-buttons">
+                                <th class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
                                     <input title="Выбрать / отменить все" type="checkbox" />
-                                    <div class="btn-group">
+                                    <div class="btn-group" style="vertical-align: initial;">
 
-                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu">
@@ -114,12 +114,21 @@
         <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
-                    <tr>
+                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
         
                         <td class="nmc-td-for-buttons-in-object-page">
-                            <input type="checkbox" ng-model="object.selected"/>
-                            <img height="16" width="16" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
+                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
+                            <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
                             <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
+                            <div class="btn-group">
+                              <i title="Редактирование мета данных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<!--                                <span class="caret"></span>-->
+                              </i>
+                              <ul class="dropdown-menu">
+                                <li><a href="" ng-click="" data-target="#metaDataEditorModal" data-toggle="modal">Прибор №1 Модель 1</a></li>
+                                <li><a href="" ng-click="" data-target="#metaDataEditorModal" data-toggle="modal">Прибор №2 Модель 2</a></li> 
+                              </ul>
+                            </div>
 
                         </td>
         
@@ -219,7 +228,7 @@
                                     <label for="inputName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input disabled="true" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
+                                	<input ng-disabled="isSystemuser()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
                                 </td>
                             </tr>
                             <tr>
@@ -980,6 +989,174 @@
 						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#confirmActionModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+    
+<!--Meta data editor-->
+<div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="metaDataEditorLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="metaDataEditorLabel" class="nmc-h3">
+				Редактор метаданных прибора &lt; Модель &gt; - &lt; Номер &gt;
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td colspan="2" class="col-sm-12"><label for="input1hTable">Таблица часовых данных</label>
+                                <input class="form-control" type="text" id="input1hTbale" placeholder="Таблица часовых данных" >
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-12"><label for="input24hTable">Таблица суточных данных</label>
+                                <input class="form-control nmc-text-input-form" type="text" id="input24hTable" placeholder="Таблица суточных данных">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <hr class="nmc-hr-in-modal">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><label class="nmc-form-label">Схема подключения точек учета (укажите тип теплосистем):</label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-3"><label for="inputSystem1" >Система №1</label>
+                                </td>
+                                <td class="col-md-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputSystem1">
+                                        <option>Нет</option>
+                                        <option>ГВС</option>
+                                        <option>ХВ</option>
+                                        <option>Теплоснабжение</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-3"><label for="inputSystem2" >Система №2</label>
+                                </td>
+                                <td class="col-md-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputSystem2">
+                                        <option>Нет</option>
+                                        <option>ГВС</option>
+                                        <option>ХВ</option>
+                                        <option>Теплоснабжение</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputSystem3">Система №3</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputSystem3">
+                                        <option>Нет</option>
+                                        <option>ГВС</option>
+                                        <option>ХВ</option>
+                                        <option>Теплоснабжение</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <hr class="nmc-hr-in-modal">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><label class="nmc-form-label">Управление загрузкой данных из базы "Взлет":</label>
+                                </td>
+                            </tr>                            
+                            <tr>
+                                <td colspan="2" ><input type="checkbox" class="nmc-checkbox-form"/><label for="inputCC">Исключать из загрузки пустые поля</label>
+                                </td>                                
+                            </tr>
+                            <tr>
+                                <td colspan="2"><input type="checkbox" class="nmc-checkbox-form"/><label for="inputMode">Загружать данные, описанные в схеме данных прибора</label>
+                                </td>                                
+                            </tr>       
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="updateObject(currentObject)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+    
+<!--window: Device selection-->
+<div id="deviceSelectionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deviceSelectionLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deviceSelectionLabel" class="nmc-h3">
+				Выберете прибор для редактирования метаданных
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well" style="">
+                        
+                                <select class="form-control nmc-select-form" id="inputDevice">
+                                        <option>Модель: "Такая"; номер: "Такой"</option>
+                                        <option>Модель: 1; номер: 1999</option>
+                                    </select>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-ok-button"
+                                   data-dismiss="modal"
+                                   data-target="#metaDataEditorModal"
+                                   data-toggle="modal"
+                                   
+
+								value="Ок" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
 						</div>

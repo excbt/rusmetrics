@@ -387,7 +387,7 @@ console.log("Objects directive.");
 //                            "</th>"+
 //                        "</tr>"+
 //                        "</thead>    ";
-                    trHTML+="<td></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
+                    trHTML+="<td class=\"nmc-td-for-buttons-in-object-page\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
