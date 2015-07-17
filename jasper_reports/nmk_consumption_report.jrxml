@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-07-10T12:47:54 -->
+<!-- 2015-07-16T13:49:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -43,13 +43,15 @@
 			<parameterDescription><![CDATA[organization id]]></parameterDescription>
 			<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
 		</parameter>
+		<parameter name="cont_ids" class="java.lang.String">
+			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select * from 
-get_data_consumption_report($P{org_id}, $P{begin_date}, $P{end_date})]]>
+get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
-		<field name="org_name" class="java.lang.String"/>
 		<field name="heat_area" class="java.lang.Double"/>
 		<field name="d_date1" class="java.sql.Timestamp"/>
 		<field name="sum_h_delta1" class="java.lang.Double"/>
@@ -97,14 +99,16 @@ get_data_consumption_report($P{org_id}, $P{begin_date}, $P{end_date})]]>
 			<parameterDescription><![CDATA[organization id]]></parameterDescription>
 			<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
 		</parameter>
+		<parameter name="cont_ids" class="java.lang.String">
+			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		</parameter>
 		<queryString>
 			<![CDATA[select * from 
-get_data_consumption_chart($P{org_id}, $P{begin_date}, $P{end_date})
+get_data_consumption_chart($P{cont_ids}, $P{begin_date}, $P{end_date})
 order by d_date]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
-		<field name="org_name" class="java.lang.String"/>
 		<field name="heat_area" class="java.lang.Double"/>
 		<field name="d_date" class="java.sql.Timestamp"/>
 		<field name="sum_h_delta" class="java.lang.Double"/>
@@ -120,19 +124,28 @@ order by d_date]]>
 	</subDataset>
 	<parameter name="begin_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,02,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="end_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Long(20160480)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cont_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="show_chart" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select 	coalesce(o.organization_full_name, o.organization_name) as org_name
-from organization o
+from subscriber s, organization o
 
-where o.id	= $P{org_id}]]>
+where s.id	= $P{org_id}
+		and	o.id = s.organization_id]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<background>
@@ -154,15 +167,15 @@ where o.id	= $P{org_id}]]>
 			<componentElement>
 				<reportElement x="0" y="0" width="2180" height="90" uuid="9da5e62e-3d54-4c02-af98-3b806e309d60"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dt1" uuid="aaa61909-a0a9-47ec-acfc-8ec016037935">
+					<datasetRun subDataset="dt1" uuid="0a815ede-68c2-4cd9-8bcb-ac93be80b31a">
 						<datasetParameter name="begin_date">
 							<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="end_date">
 							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
 						</datasetParameter>
-						<datasetParameter name="org_id">
-							<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
+						<datasetParameter name="cont_ids">
+							<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -224,10 +237,10 @@ where o.id	= $P{org_id}]]>
 							</box>
 							<staticText>
 								<reportElement x="0" y="0" width="200" height="30" uuid="8ef06f81-861a-4ddc-bbbb-030117d9ca07"/>
-								<textElement textAlignment="Center" verticalAlignment="Bottom">
+								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic" size="10"/>
 								</textElement>
-								<text><![CDATA[Наименование подведомственного бюджетного учреждения]]></text>
+								<text><![CDATA[Адрес объекта]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:column width="200" uuid="34db8338-9ca0-421a-9ac2-c004003e273b">
@@ -1493,7 +1506,9 @@ where o.id	= $P{org_id}]]>
 			</componentElement>
 			<lineChart>
 				<chart evaluationTime="Report">
-					<reportElement positionType="Float" x="0" y="150" width="1480" height="200" uuid="07a55a09-9758-455c-b9b6-c49e3eb8e5d2"/>
+					<reportElement positionType="Float" x="0" y="150" width="1480" height="200" uuid="c0420125-094b-4398-a577-4f8adef6ee7a">
+						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
+					</reportElement>
 					<chartTitle>
 						<font fontName="Arial cyrillic"/>
 					</chartTitle>
@@ -1506,15 +1521,15 @@ where o.id	= $P{org_id}]]>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt2" uuid="b9eed0dc-a374-40d0-934f-0255e9e09eb4">
+						<datasetRun subDataset="dt2" uuid="1e2419e3-bdd9-433d-aadf-853c01fe1af6">
 							<datasetParameter name="begin_date">
 								<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 							</datasetParameter>
 							<datasetParameter name="end_date">
 								<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
 							</datasetParameter>
-							<datasetParameter name="org_id">
-								<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
+							<datasetParameter name="cont_ids">
+								<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
 							</datasetParameter>
 						</datasetRun>
 					</dataset>
