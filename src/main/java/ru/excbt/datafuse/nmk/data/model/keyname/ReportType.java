@@ -61,90 +61,45 @@ public class ReportType extends AbstractKeynameEntity {
 		return caption;
 	}
 
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getComment() {
 		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public boolean is_enabled() {
-		return _enabled;
-	}
-
-	public void set_enabled(boolean _enabled) {
-		this._enabled = _enabled;
 	}
 
 	public String getSuffix() {
 		return suffix;
 	}
 
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
-
-	public ReportMetaParamCommon getReportMetaParamCommon() {
-		return reportMetaParamCommon;
-	}
-
-	public void setReportMetaParamCommon(
-			ReportMetaParamCommon reportMetaParamCommon) {
-		this.reportMetaParamCommon = reportMetaParamCommon;
-	}
-
-	public Collection<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
-		return reportMetaParamSpecialList;
-	}
-
-	public void setReportMetaParamSpecialList(
-			Collection<ReportMetaParamSpecial> reportMetaParamSpecialList) {
-		this.reportMetaParamSpecialList = reportMetaParamSpecialList;
+	public boolean is_enabled() {
+		return _enabled;
 	}
 
 	public Boolean getIsDevMode() {
 		return isDevMode;
 	}
 
-	public void setIsDevMode(Boolean isDevMode) {
-		this.isDevMode = isDevMode;
-	}
-
 	public String getPreviewUrl() {
 		return previewUrl;
 	}
 
-	public void setPreviewUrl(String previewUrl) {
-		this.previewUrl = previewUrl;
+	public int getVersion() {
+		return version;
 	}
 
+	public ReportMetaParamCommon getReportMetaParamCommon() {
+		return reportMetaParamCommon;
+	}
+
+	public Collection<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
+		return reportMetaParamSpecialList;
+	}
+	
+	
 }

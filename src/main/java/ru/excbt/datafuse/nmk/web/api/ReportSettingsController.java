@@ -52,7 +52,7 @@ public class ReportSettingsController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTypeJson() {
+	public ResponseEntity<?> getReportType() {
 		return ResponseEntity.ok(reportTypeService
 				.findAllReportTypes(currentUserService.isSystem()));
 	}

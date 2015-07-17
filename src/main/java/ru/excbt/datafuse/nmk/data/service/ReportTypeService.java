@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,9 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 @Service
 @Transactional(readOnly = true)
 public class ReportTypeService {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(ReportTypeService.class);
 
 	@Autowired
 	private ReportTypeRepository reportTypeRepository;
@@ -71,10 +76,14 @@ public class ReportTypeService {
 	public List<ReportType> findAllReportTypes(boolean devMode) {
 		List<ReportType> preResult = reportTypeRepository.findAll();
 
-		List<ReportType> result = preResult
-				.stream()
-				.filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode())
-						|| devMode).collect(Collectors.toList());
+		List<ReportType> result = preResult.stream().sorted((t1, t2) -> {
+			if (t1.getCaption() != null && t2.getCaption() != null) {
+				return t1.getCaption().compareTo(t2.getCaption());
+			}
+			return 0;
+		}).filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode()) || devMode)
+				.collect(Collectors.toList());
+
 		return result;
 	}
 
