@@ -68,7 +68,7 @@
         <td class="nmc-td-for-buttons">
             <div class="btn-toolbar">
                 <div class="btn-group">
-                    <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
+                    <i title="Редактировать тариф" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
                 </div>
             </div>
         </td>
@@ -93,7 +93,7 @@
         <td>
             <div class="btn-toolbar">
                 <div class="btn-group">                   
-                    <i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    <i title="Удалить тариф" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                 </div>
             </div>
         </td>
@@ -168,7 +168,7 @@
 <!--                                    <div id = "available_objects" class = "">-->
                                     <table id="table_objects_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="object in availableEntities">
-                                            <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form"/>{{object.fullName}}
+                                            <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form"/>{{object.fullName || object.contGroupName}}
                                             </td>
                                         </tr>
                                     </table>
@@ -339,11 +339,11 @@
                                 <div>
                                     <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
-                                            <td>
+                                            <td class="col-md-11">
 <!--                                                <input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
                                                 {{object.fullName}}
                                             </td>
-                                            <td><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+                                            <td class="col-md-1"><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
 <!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                             </td>
                                         </tr>
@@ -363,7 +363,7 @@
 <!--                             <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>-->
                             <div class="btn-group">
                               <button title="Редактирование мета данных прибора" type="button" class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
-                                      ng-click="" 
+                                      ng-click="prepareObjectsList()" 
                                       ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">
                                   Добавить объекты
 <!--                                <span class="caret"></span>-->

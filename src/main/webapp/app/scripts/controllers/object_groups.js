@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', function($scope, crudGridDataFactory, notificationFactory){
+.controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, crudGridDataFactory, notificationFactory, objectSvc){
     //
     $scope.groups = [
 //        {'name':"Group 1"},
@@ -65,8 +65,14 @@ angular.module('portalNMC')
         crudGridDataFactory(url).query(function (data) {
             switch (type){
                 case "groups": $scope.groups = data; break;
-                case "availableObjects": $scope.availableObjects = data; break;
-                case "selectedObjects": $scope.selectedObjects = data; break;    
+                case "availableObjects": 
+                    $scope.availableObjects = data; 
+                    objectSvc.sortObjectsByFullName($scope.availableObjects);
+                    break;
+                case "selectedObjects": 
+                    $scope.selectedObjects = data; 
+                    objectSvc.sortObjectsByFullName($scope.selectedObjects);
+                    break;    
                 default: console.log("Data type is undefined.");
             }
         });
