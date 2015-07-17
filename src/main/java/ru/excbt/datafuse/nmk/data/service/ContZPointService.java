@@ -39,7 +39,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = false)
-	public ContZPoint findOne(long contZPointId) {
+	public ContZPoint findContZPoint(long contZPointId) {
 		return contZPointRepository.findOne(contZPointId);
 	}
 
@@ -156,7 +156,7 @@ public class ContZPointService implements SecuredRoles {
 	}
 
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public ContZPoint saveOne(ContZPoint contZPoint) {
+	public ContZPoint saveContZPoint(ContZPoint contZPoint) {
 		checkNotNull(contZPoint);
 		checkArgument(!contZPoint.isNew());
 		return contZPointRepository.save(contZPoint);

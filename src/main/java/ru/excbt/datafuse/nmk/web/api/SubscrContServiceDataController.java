@@ -135,7 +135,7 @@ public class SubscrContServiceDataController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -221,7 +221,7 @@ public class SubscrContServiceDataController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -285,7 +285,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -407,7 +407,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -494,7 +494,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @param multipartFile
 	 * @return
 	 */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> serviceUploadManualDataHWater(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
@@ -512,7 +512,7 @@ public class SubscrContServiceDataController extends WebApiController {
 							.validationError("Data of 1h is not supported for uploading"));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
 			return ResponseEntity

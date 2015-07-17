@@ -131,7 +131,8 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 		MockMultipartFile firstFile = new MockMultipartFile("file",
 				srcFilename, "text/plain", fileBytes);
 
-		String url = apiSubscrUrl(String.format("/%d/service/24h/%d/csv",
+		String url = apiSubscrUrl(String.format(
+				"/contObjects/%d/contZPoints/%d/service/24h/csv",
 				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
 
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders

@@ -423,7 +423,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(inData);
 		checkArgument(inData.size() > 0);
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+		ContZPoint zpoint = contZPointService.findContZPoint(contZPointId);
 
 		checkNotNull(zpoint, String.format(
 				"ContZPoint with id:%d is not found", contZPointId));
@@ -445,7 +445,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 			logger.debug("Cont Object is saved. Id:{}", deviceObject.getId());
 
 			zpoint.getDeviceObjects().add(deviceObject);
-			contZPointService.saveOne(zpoint);
+			contZPointService.saveContZPoint(zpoint);
 
 			logger.debug("ContZPoint is saved. Id:{}", zpoint.getId());
 		} else {
