@@ -1,0 +1,1554 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2015-07-16T13:49:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dt1" uuid="752b2ced-098d-4ac4-bec6-471f2be2747b">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+		<parameter name="begin_date" class="java.util.Date">
+			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		</parameter>
+		<parameter name="end_date" class="java.util.Date">
+			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		</parameter>
+		<parameter name="org_id" class="java.lang.Long">
+			<parameterDescription><![CDATA[organization id]]></parameterDescription>
+			<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+		</parameter>
+		<parameter name="cont_ids" class="java.lang.String">
+			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select * from 
+get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
+		</queryString>
+		<field name="co_id" class="java.lang.Long"/>
+		<field name="cont_address" class="java.lang.String"/>
+		<field name="heat_area" class="java.lang.Double"/>
+		<field name="d_date1" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta1" class="java.lang.Double"/>
+		<field name="d_date2" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta2" class="java.lang.Double"/>
+		<field name="d_date3" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta3" class="java.lang.Double"/>
+		<field name="d_date4" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta4" class="java.lang.Double"/>
+		<field name="d_date5" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta5" class="java.lang.Double"/>
+		<field name="d_date6" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta6" class="java.lang.Double"/>
+		<field name="d_date7" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta7" class="java.lang.Double"/>
+		<field name="d_date8" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta8" class="java.lang.Double"/>
+		<field name="d_date9" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta9" class="java.lang.Double"/>
+		<field name="d_date10" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta10" class="java.lang.Double"/>
+		<field name="d_date11" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta11" class="java.lang.Double"/>
+		<field name="d_date12" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta12" class="java.lang.Double"/>
+		<field name="avg_h_delta" class="java.lang.Double"/>
+		<field name="avg_spec_h_delta" class="java.lang.Double"/>
+		<variable name="count" class="java.lang.Long" calculation="Count">
+			<variableExpression><![CDATA[+1]]></variableExpression>
+			<initialValueExpression><![CDATA[1]]></initialValueExpression>
+		</variable>
+		<variable name="category" class="java.lang.Long">
+			<variableExpression><![CDATA[(($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.25 ? (long) 1 : ($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.5 ? (long) 2 : (long) 3)]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="dt2" uuid="628db370-0ac9-48a1-89e7-cbdedd93adb3">
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+		<parameter name="begin_date" class="java.util.Date">
+			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		</parameter>
+		<parameter name="end_date" class="java.util.Date">
+			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		</parameter>
+		<parameter name="org_id" class="java.lang.Long">
+			<parameterDescription><![CDATA[organization id]]></parameterDescription>
+			<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+		</parameter>
+		<parameter name="cont_ids" class="java.lang.String">
+			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[select * from 
+get_data_consumption_chart($P{cont_ids}, $P{begin_date}, $P{end_date})
+order by d_date]]>
+		</queryString>
+		<field name="co_id" class="java.lang.Long"/>
+		<field name="cont_address" class="java.lang.String"/>
+		<field name="heat_area" class="java.lang.Double"/>
+		<field name="d_date" class="java.sql.Timestamp"/>
+		<field name="sum_h_delta" class="java.lang.Double"/>
+		<field name="avg_h_delta" class="java.lang.Double"/>
+		<field name="avg_spec_h_delta" class="java.lang.Double"/>
+		<variable name="count" class="java.lang.Long" calculation="Count">
+			<variableExpression><![CDATA[+1]]></variableExpression>
+			<initialValueExpression><![CDATA[1]]></initialValueExpression>
+		</variable>
+		<variable name="category" class="java.lang.Long">
+			<variableExpression><![CDATA[(($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.25 ? (long) 1 : ($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.5 ? (long) 2 : (long) 3)]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="begin_date" class="java.util.Date">
+		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,02,01)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.util.Date">
+		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="org_id" class="java.lang.Long">
+		<parameterDescription><![CDATA[organization id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cont_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="show_chart" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 	coalesce(o.organization_full_name, o.organization_name) as org_name
+from subscriber s, organization o
+
+where s.id	= $P{org_id}
+		and	o.id = s.organization_id]]>
+	</queryString>
+	<field name="org_name" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="20" y="10" width="1420" height="30" uuid="1a95e246-700f-46af-bb8c-49c0cc19ff5a"/>
+				<textElement>
+					<font fontName="Arial cyrillic" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Отчет по удельному потреблению тепла по организациям присодиненным к " + $F{org_name} + " в период " + new SimpleDateFormat("MMMM yyyy").format($P{begin_date}) + "-" + new SimpleDateFormat("MMMM yyyy").format($P{end_date}) + " года"]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="367" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="0" width="2180" height="90" uuid="9da5e62e-3d54-4c02-af98-3b806e309d60"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dt1" uuid="0a815ede-68c2-4cd9-8bcb-ac93be80b31a">
+						<datasetParameter name="begin_date">
+							<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="cont_ids">
+							<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="30" uuid="bc128250-818c-49c0-b4c9-f508cf767de0">
+						<jr:columnHeader height="30">
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="30" height="30" uuid="3d279f97-9b63-4b44-851e-540ec15d2a6d"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom">
+									<font fontName="Arial cyrillic" size="10"/>
+								</textElement>
+								<text><![CDATA[№п/п]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="30" uuid="b78111d1-6efd-4872-aec0-866f88f77223">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="30" height="15" uuid="ed481c46-4d84-4971-8067-d06bff025016"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="3"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="200" uuid="4df0a518-b6bf-4d8a-8354-9498861ea3a2">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="200" height="30" uuid="8ef06f81-861a-4ddc-bbbb-030117d9ca07"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic" size="10"/>
+								</textElement>
+								<text><![CDATA[Адрес объекта]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="200" uuid="34db8338-9ca0-421a-9ac2-c004003e273b">
+							<jr:columnHeader height="30">
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField>
+									<reportElement x="0" y="0" width="200" height="15" uuid="4d58709e-0df8-457d-b801-2babf53f031d"/>
+									<textElement verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph leftIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{cont_address}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="60" uuid="d7120772-60d0-4175-bbe3-5205e95d3d50">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="60" height="30" uuid="42d38683-ee3f-40ea-812b-fd9b5d3a6127"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom">
+									<font fontName="Arial cyrillic" size="10"/>
+								</textElement>
+								<text><![CDATA[Площадь (м2)]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="5ac9673b-ed70-466d-bbb4-d03d3e470aa6">
+							<jr:columnHeader height="30">
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.0" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="019cd7cd-ef4c-43ae-96b3-f104c7aee2bf"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph leftIndent="0" rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{heat_area}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="4a8ae95f-b26c-4dff-87b7-f1e314cc27d1">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 1 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="15ed66b2-eba1-4505-94a9-94539abbff8f"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})-1, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="0240ae98-0bc2-4ec0-8627-3dd6e672c5e7">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="4c644dbe-338a-40bd-823e-7f1549caea32"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="2c35e948-6926-40ae-b381-94f996326aa5"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta1}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="eceb5cfa-0e66-456d-9829-178cc88f7461">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="38c56191-e7d5-41b6-af6b-8778d40962e7"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="17c42d71-0355-4148-996c-d746c4289b60"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta1}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="44093494-0421-4a60-991f-f5d8f0a11a03">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 2 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="6e46f6d5-e567-459a-8b27-199fa7d1a1ef"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date}), DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="9c01a73b-0677-4590-8550-a610c12261fc">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="bfb0368a-2c48-4cb5-840a-a736eb4ffe49"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="4e273280-b5a1-4c96-ae8e-c0bf30cd93b8"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta2}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="5bba16e9-bb47-4119-b970-3ac020dff208">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="5d6173d5-a717-407c-b833-0e3a6f0feefe"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="94ac71fc-4599-40a8-96e1-8d61f59e0aad"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta2}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="a45c5988-2a7b-41b1-9e22-5d5ba4ba6ee1">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 3 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="985c1a56-53b1-49cb-924e-636e1a1c1d86"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+1, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="8d729123-f842-4583-9ade-9994cc4bccd7">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="e9441894-8ecc-4bad-827b-fdcb73c68898"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="0ce10feb-90f3-401f-864a-c4fd1263cd6e"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta3}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="7a5a059c-38df-4781-a6c9-93ace490e6d3">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="3c59874d-8899-481b-80a2-5546e40ce38a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="5b8391ea-2ba3-412e-9364-498b54c71f05"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta3}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="51d016c4-6802-4f99-a82f-ebac0b577340">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 4 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="76ca7f3e-7b91-463c-825f-3458fa5c06c4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+2, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="3db3eff0-0b25-40e7-99af-c90c4dc88a21">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="b7977398-e26d-4645-96a1-376dd90fe587"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="964cd942-d180-43f8-8cec-361728f66c69"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta4}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="47a1ff61-eb68-4fc9-925a-213d58ac3366">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="b8179682-9235-4c13-91cd-9ae3d67ca1c6"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="e71871a9-7e10-4a09-b86d-775b61293f03"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta4}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="bb8d1b82-11b0-434c-b1ae-e3e165802981">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 5 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="9a4bca8a-3d55-4d82-aff9-5c13f35297c6"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+3, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="23e4207b-7a59-443c-a988-b5f0a542338a">
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="990a3fde-6b48-49b9-8ecf-70dbca84d81a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="9f84e098-a6ec-480a-b84c-a94c9345cb8e"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta5}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="f7a23f34-167a-4919-aaf0-2d82f02d9c9c">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="2a8a4dc5-c646-4101-b9f6-9d4ccab709a9"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="d23f74d8-efb6-456a-914b-71d15bb549e9"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta5}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="caf56162-0479-4937-b949-e8c635fa62cb">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 6 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="8e4449af-a797-4709-8e16-acf2ecbf9188"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+4, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="a4eee0b6-091f-4cf4-a54b-de25dc787c0a">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="e6a048c6-441a-43da-8dd5-284b1bef8a50"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="066ee404-a678-47dc-be21-ec03af97637e"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta6}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="a11e9783-d0e6-442f-9a5c-a83b361644e0">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="04e158bc-ac56-4745-9ef3-fd4aab6cac31"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="efa74e9e-9b53-487d-b1af-d2148f4c5007"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta6}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="2f7641d4-7207-4ac2-881a-411d595733f5">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 7 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="8a067fc2-1f33-4663-97e0-eca4b4f02721"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+5, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="f415661f-d818-4821-ae69-2654a0a27d8a">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="d86a06b3-1556-43d6-9822-5f89e0d023ce"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="739968c6-d196-45c7-87ec-8724e1c814b2"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta7}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="1fdb6b20-e983-4bbf-82c5-66dd235ab944">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="e1321e99-24c3-49a5-9ad4-d9e79997169a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="45c28f63-9e67-4f65-bb98-a60c3296de75"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta7}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="b1ad5c80-f781-4c66-be92-d84d0fa550d9">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 8 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="da70262d-e4fd-4aed-9e2f-8f7b6d63cf71"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+6, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="5d9c5aab-c76a-4932-b05b-7378625f2a6d">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="decc9335-4509-4c0c-8d7b-4264909eed8c"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="49cf4307-a308-4a92-bc22-02b97ae708e9"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta8}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="08ef6af0-c44d-420e-aa70-4ac6feb94977">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="f5668c3c-ac1d-424f-bc86-76056b8fe232"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="b031bfd8-6f9a-4d05-acf1-4f6cb33b9e7e"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta8}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="d299bb2b-1fed-47bf-8969-a178a5d9e2b1">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 9 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="5046042b-cace-4293-9a79-5196d7522ae7"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+7, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="f3fc13c9-9239-4ae4-8c3e-87dfdc18b7a9">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="c17c76ea-5449-40c7-afbd-2dfc35b0565e"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="31c2df9c-e8c5-43b3-b57e-5158312d1d83"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta9}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="c98e10ff-62e0-435b-9743-e11998478263">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="3b7479a0-1727-4dc7-af56-e1edfb352004"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="78f55622-5468-4111-9cfb-023941e24754"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta9}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="bb27c1ce-06ff-49be-bafb-f63c09acd356">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 10 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="a2580293-06a0-4d6d-8dba-6df3794b6977"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+8, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="4bba076d-8cfb-4454-98e4-de09e813dd79">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="ab057fdc-54d3-4dfa-9dce-1a47f7029a2f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="69eadea8-0523-4062-973d-948c8b98f4dc"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta10}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="63fab776-2cce-4544-b96e-43d5e09d9045">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="d6202a94-591f-44c5-a91a-c901640c5615"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="da6619b0-84bd-4217-8ba4-9334eb7465b7"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta10}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="1e884056-3f46-4717-8c39-350739931d05">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 11 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="28caf9b9-ae86-4e69-b6b3-3d208dd6fdfb"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+9, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="22c6bd1d-c967-4a8c-a961-d33c84aa68e0">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="f56f9170-7f23-41f5-b411-e765ec55b3b9"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="872957f3-251d-467a-8a79-9dcb8c97211d"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta11}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="c6efdafa-af95-425b-8313-d5207a6d2174">
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="a8114a5d-dd3e-4ec9-a01d-bf7d0c3a13e4"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="a5d8cf9f-548b-426e-adde-8c8cfd9fb7c9"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta11}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="120" uuid="4b0a0ff6-af57-419b-9e7b-855a862b0878">
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 12 ? true : false)]]></printWhenExpression>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="120" height="30" uuid="04530914-1449-47ce-8e3e-a19aed61e896"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+10, DAY($P{begin_date}))]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="65081412-0b4e-4235-a24a-f822dcd14542">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="4c5b335b-239d-42c7-a849-1fc0935a1547"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Общий расход тепла (Гкал)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="9e4be891-9e15-4c98-a2a6-86888b9fe302"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta12}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="84fbb1aa-a6d7-4f4d-b853-d7850f9d4865">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="a4ee5738-1c37-418d-b216-1930be89213f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="8"/>
+									</textElement>
+									<text><![CDATA[Удельный расход тепла (Гкал/м2)]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="67994268-e89b-46fe-b4af-726d10ad6545"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h_delta12}/($F{heat_area})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="80" uuid="44d4f49a-e64c-4016-8758-18498f87d3dc">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<textField>
+								<reportElement x="0" y="0" width="80" height="30" uuid="4ade01e4-75fe-4f1c-b374-8958f5d756e1"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom">
+									<font fontName="Arial cyrillic" size="8"/>
+								</textElement>
+								<textFieldExpression><![CDATA["Итоговый удельный расход тепла (Гкал/м2)"]]></textFieldExpression>
+							</textField>
+						</jr:columnHeader>
+						<jr:column width="80" uuid="21c618c0-1201-497d-a28d-5d9aaab3bc65">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<jr:columnHeader height="30">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000">
+									<reportElement x="0" y="0" width="80" height="30" uuid="3c759f6a-85e3-4bb5-8a92-2a2d039e24f6"/>
+									<box>
+										<topPen lineWidth="1.0"/>
+										<leftPen lineWidth="1.0"/>
+										<bottomPen lineWidth="1.0"/>
+										<rightPen lineWidth="1.0"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{avg_spec_h_delta}]]></textFieldExpression>
+								</textField>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField pattern="#0.000" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="80" height="15" uuid="b1462cab-8335-4133-bb25-fffec395738b"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{avg_h_delta}/$F{heat_area}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="100" uuid="f7511039-ddbe-4324-b94a-bee25e06cbcf">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="30">
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="100" height="30" uuid="9064e396-d07f-487e-9930-a6e4b30f05a6"/>
+								<textElement textAlignment="Center" verticalAlignment="Bottom">
+									<font fontName="Arial cyrillic" size="10"/>
+								</textElement>
+								<text><![CDATA[Категория проведения ]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="100" uuid="8bd819d0-0308-4c80-a602-75e1e4a578d8">
+							<jr:columnHeader height="30">
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="100" height="30" uuid="4a8f1f58-4ad1-41fd-813c-d66279f37c77"/>
+									<textElement textAlignment="Center">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[необходимых мероприятий]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:detailCell height="15">
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="100" height="15" uuid="23efd241-f595-4430-bbde-04c329c87c82"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{category}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<lineChart>
+				<chart evaluationTime="Report">
+					<reportElement positionType="Float" x="0" y="150" width="1480" height="200" uuid="c0420125-094b-4398-a577-4f8adef6ee7a">
+						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
+					</reportElement>
+					<chartTitle>
+						<font fontName="Arial cyrillic"/>
+					</chartTitle>
+					<chartSubtitle>
+						<font fontName="Arial cyrillic"/>
+					</chartSubtitle>
+					<chartLegend>
+						<font fontName="Arial cyrillic"/>
+					</chartLegend>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="dt2" uuid="1e2419e3-bdd9-433d-aadf-853c01fe1af6">
+							<datasetParameter name="begin_date">
+								<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="end_date">
+								<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="cont_ids">
+								<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[$F{cont_address}]]></seriesExpression>
+						<categoryExpression><![CDATA[($F{d_date} == null ? "" : new SimpleDateFormat("MMM.yy").format($F{d_date}))]]></categoryExpression>
+						<valueExpression><![CDATA[(($F{heat_area} == null) || ($F{sum_h_delta} == null) || ($F{heat_area} == 0.0) || ($F{sum_h_delta} == 0.0)  ? 0.0 : $F{sum_h_delta}/$F{heat_area})]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

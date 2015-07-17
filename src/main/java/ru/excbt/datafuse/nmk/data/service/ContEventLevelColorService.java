@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
 @Service

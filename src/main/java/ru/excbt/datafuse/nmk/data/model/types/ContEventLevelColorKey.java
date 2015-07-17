@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.constant;
+package ru.excbt.datafuse.nmk.data.model.types;
 
 import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
 import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;

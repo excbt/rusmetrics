@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -16,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 
 public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 
@@ -42,10 +41,10 @@ public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectByZPointDated() {
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-		DateTime srcDate = formatter.parseDateTime("2013-10-01");
+		LocalDateTime srcDate = formatter.parseLocalDateTime("2013-10-01");
 		checkNotNull(srcDate);
-		DateTime beginDate = srcDate.dayOfMonth().withMinimumValue();
-		DateTime endDate = srcDate.dayOfMonth().withMaximumValue();
+		LocalDateTime beginDate = srcDate.dayOfMonth().withMinimumValue();
+		LocalDateTime endDate = srcDate.dayOfMonth().withMaximumValue();
 
 		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
 				TimeDetailKey.TYPE_24H, beginDate, endDate);

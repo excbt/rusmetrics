@@ -21,15 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.constant.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
@@ -112,7 +112,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 				: contEventTypeService
 						.selectContEventTypesPaired(contEventTypeList);
 
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -129,7 +129,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		Pageable pageRequest = SubscrContEventNotifiicationService
 				.setupPageRequestSort(pageable, sortDesc);
 
-		DatePeriod requestDatePeriod = DatePeriod.emptyPeriod();
+		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
 		if (datePeriodParser.isOk()
 				&& datePeriodParser.getDatePeriod().isValidEq()) {
@@ -247,7 +247,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 				: contEventTypeService
 						.selectContEventTypesPaired(contEventTypeList);
 
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -261,7 +261,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		DatePeriod requestDatePeriod = DatePeriod.emptyPeriod();
+		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
 		if (datePeriodParser.isOk()
 				&& datePeriodParser.getDatePeriod().isValidEq()) {
@@ -271,7 +271,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		}
 
-		final DatePeriod actionDP = requestDatePeriod;
+		final LocalDatePeriod actionDP = requestDatePeriod;
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
@@ -298,7 +298,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -343,7 +343,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -389,7 +389,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -424,7 +424,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		DatePeriodParser datePeriodParser = DatePeriodParser.parse(fromDateStr,
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
 				toDateStr);
 
 		checkNotNull(datePeriodParser);
@@ -482,7 +482,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 			monitorColor = contEventLevelColorService
 					.getEventColorCached(ContEventLevelColorKey.GREEN);
 
-			DatePeriodParser datePeriodParser = DatePeriodParser.parse(
+			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
 					fromDateStr, toDateStr);
 
 			if (datePeriodParser.isOk()

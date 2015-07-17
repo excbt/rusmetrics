@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.model.support.ReportMetaParamSpecialTypeKey;
+import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeKey;
 
 @Service
 @Transactional(readOnly = true)
@@ -47,11 +47,11 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId) {
+	public ReportMakerParam newReportMakerParam(long reportParamsetId) {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
 
-		return getReportMakerParam(reportParamset, null, false);
+		return newReportMakerParam(reportParamset, null, false);
 
 	}
 
@@ -60,12 +60,12 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+	public ReportMakerParam newReportMakerParam(long reportParamsetId,
 			boolean previewMode) {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
 
-		return getReportMakerParam(reportParamset, null, previewMode);
+		return newReportMakerParam(reportParamset, null, previewMode);
 
 	}
 
@@ -74,11 +74,11 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+	public ReportMakerParam newReportMakerParam(long reportParamsetId,
 			Long[] contObjectIdList) {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
-		return getReportMakerParam(reportParamset, contObjectIdList, false);
+		return newReportMakerParam(reportParamset, contObjectIdList, false);
 	}
 
 	/**
@@ -86,11 +86,11 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(long reportParamsetId,
+	public ReportMakerParam newReportMakerParam(long reportParamsetId,
 			Long[] contObjectIds, boolean previewMode) {
 		ReportParamset reportParamset = reportParamsetService
 				.findOne(reportParamsetId);
-		return getReportMakerParam(reportParamset, contObjectIds, previewMode);
+		return newReportMakerParam(reportParamset, contObjectIds, previewMode);
 	}
 
 	/**
@@ -99,9 +99,9 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
+	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset,
 			Long[] contObjectIds) {
-		return getReportMakerParam(reportParamset, contObjectIds, false);
+		return newReportMakerParam(reportParamset, contObjectIds, false);
 	}
 
 	/**
@@ -110,8 +110,8 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset) {
-		return getReportMakerParam(reportParamset, null, false);
+	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset) {
+		return newReportMakerParam(reportParamset, null, false);
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	public ReportMakerParam getReportMakerParam(ReportParamset reportParamset,
+	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset,
 			Long[] contObjectIds, boolean previewMode) {
 		checkNotNull(reportParamset);
 
@@ -137,11 +137,18 @@ public class ReportMakerParamService {
 
 		if (resultContObjectIdList.isEmpty()) {
 
-			Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset
-					.getSubscriber().getId() : reportParamset.getSubscriberId();
+			if (!Boolean.TRUE.equals(reportParamset.getReportTemplate()
+					.getReportType().getReportMetaParamCommon()
+					.getNoContObjectsRequired())) {
 
-			resultContObjectIdList = subscriberService
-					.selectSubscriberContObjectIds(subscriberId);
+				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset
+						.getSubscriber().getId() : reportParamset
+						.getSubscriberId();
+
+				resultContObjectIdList = subscriberService
+						.selectSubscriberContObjectIds(subscriberId);
+			}
+
 		}
 
 		return new ReportMakerParam(reportParamset, resultContObjectIdList,

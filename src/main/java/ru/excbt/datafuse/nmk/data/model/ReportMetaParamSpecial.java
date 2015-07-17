@@ -63,85 +63,51 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	@Column(name = "param_special_default_value2")
 	private String paramSpecialDefaultValue2;
 
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
+
 	public ReportTypeKey getReportTypeKey() {
 		return reportTypeKey;
-	}
-
-	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
-		this.reportTypeKey = reportTypeKey;
 	}
 
 	public ReportType getReportType() {
 		return reportType;
 	}
 
-	public void setReportType(ReportType reportType) {
-		this.reportType = reportType;
-	}
-
 	public ReportMetaParamSpecialType getParamSpecialType() {
 		return paramSpecialType;
-	}
-
-	public void setParamSpecialType(ReportMetaParamSpecialType paramSpecialType) {
-		this.paramSpecialType = paramSpecialType;
 	}
 
 	public String getParamSpecialKeyname() {
 		return paramSpecialKeyname;
 	}
 
-	public void setParamSpecialKeyname(String paramSpecialKeyname) {
-		this.paramSpecialKeyname = paramSpecialKeyname;
-	}
-
 	public String getParamSpecialCaption() {
 		return paramSpecialCaption;
-	}
-
-	public void setParamSpecialCaption(String paramSpecialCaption) {
-		this.paramSpecialCaption = paramSpecialCaption;
 	}
 
 	public Boolean getParamSpecialRequired() {
 		return paramSpecialRequired;
 	}
 
-	public void setParamSpecialRequired(Boolean paramSpecialRequired) {
-		this.paramSpecialRequired = paramSpecialRequired;
-	}
-
 	public String getParamSpecialName1() {
 		return paramSpecialName1;
-	}
-
-	public void setParamSpecialName1(String paramSpecialName1) {
-		this.paramSpecialName1 = paramSpecialName1;
 	}
 
 	public String getParamSpecialName2() {
 		return paramSpecialName2;
 	}
 
-	public void setParamSpecialName2(String paramSpecialName2) {
-		this.paramSpecialName2 = paramSpecialName2;
-	}
-
 	public String getParamSpecialDefaultValue1() {
 		return paramSpecialDefaultValue1;
-	}
-
-	public void setParamSpecialDefaultValue1(String paramSpecialDefaultValue1) {
-		this.paramSpecialDefaultValue1 = paramSpecialDefaultValue1;
 	}
 
 	public String getParamSpecialDefaultValue2() {
 		return paramSpecialDefaultValue2;
 	}
 
-	public void setParamSpecialDefaultValue2(String paramSpecialDefaultValue2) {
-		this.paramSpecialDefaultValue2 = paramSpecialDefaultValue2;
+	public Boolean getIsDisabled() {
+		return isDisabled;
 	}
 
-	
 }

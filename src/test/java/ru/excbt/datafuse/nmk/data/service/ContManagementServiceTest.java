@@ -37,7 +37,7 @@ public class ContManagementServiceTest extends JpaSupportTest {
 
 		// contManagementService.selectActiveManagement(contObjectId,
 		// TestConstants.ORGANIZATION_TEST_IZH)
-		List<ContObject> list = contObjectService.findByFullName("%Ижевск%");
+		List<ContObject> list = contObjectService.findContObjectsByFullName("%Ижевск%");
 
 		if (list.size() == 0) {
 			return;

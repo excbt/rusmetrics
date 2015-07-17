@@ -14,12 +14,16 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime"})
 public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	/**
@@ -39,7 +43,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	@JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private ContZPoint contZPoint;
-	
+
 	@Column(name = "cont_zpoint_id")
 	@JsonIgnore
 	private Long contZPointId;
@@ -100,6 +104,9 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	@Column(name = "work_time")
 	private BigDecimal workTime;
+
+	@Column(name = "fail_time")
+	private BigDecimal failTime;
 
 	public Date getDataDate() {
 		return dataDate;
@@ -283,6 +290,14 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	public void setContZPointId(Long contZPointId) {
 		this.contZPointId = contZPointId;
+	}
+
+	public BigDecimal getFailTime() {
+		return failTime;
+	}
+
+	public void setFailTime(BigDecimal failTime) {
+		this.failTime = failTime;
 	}
 
 }

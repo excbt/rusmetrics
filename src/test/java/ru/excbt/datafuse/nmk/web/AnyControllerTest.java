@@ -16,6 +16,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,6 +83,9 @@ public class AnyControllerTest {
 
 	protected MockMvc mockMvc;
 
+	@Autowired
+	protected ServletContext servletContext;	
+	
 	@Before
 	public void setup() {
 		this.auditorAware.setAuditUser(entityManager.getReference(
@@ -210,7 +214,7 @@ public class AnyControllerTest {
 	 * @param a
 	 * @return
 	 */
-	protected static String ListToString(List<Long> a) {
+	protected static String listToString(List<Long> a) {
 		if (a == null)
 			return "null";
 		int iMax = a.size() - 1;
@@ -409,6 +413,16 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String urlStr, Object sendObject)
 			throws Exception {
 		testJsonUpdate(urlStr, sendObject, null);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	protected String apiSubscrUrl(String url) {
+		checkNotNull(url);
+		return "/api/subscr" + url;
 	}
 
 }

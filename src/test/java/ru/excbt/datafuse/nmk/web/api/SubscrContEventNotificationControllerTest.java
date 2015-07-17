@@ -80,8 +80,8 @@ public class SubscrContEventNotificationControllerTest extends
 		ResultActions resultActionsAll = mockMvc.perform(get(
 				"/api/subscr/contEvent/notifications/paged")
 				.param("fromDate", "2015-06-01").param("toDate", "2015-06-30")
-				.param("contObjectIds", ListToString(contObjectList))
-				.param("contEventTypeIds", ListToString(contEventTypeIdList))
+				.param("contObjectIds", listToString(contObjectList))
+				.param("contEventTypeIds", listToString(contEventTypeIdList))
 				.param("page", "0").param("size", "100")
 				.param("sortDesc", "false").with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON));
@@ -116,7 +116,7 @@ public class SubscrContEventNotificationControllerTest extends
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 			@Override
 			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("notificationIds", ListToString(updateIds));
+				builder.param("notificationIds", listToString(updateIds));
 			}
 		};
 

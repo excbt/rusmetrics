@@ -2,13 +2,20 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
 @Service
@@ -19,6 +26,9 @@ public class CurrentSubscriberService {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private ContObjectService contObjectService;
 
 	@Autowired
 	private CurrentUserService currentUserService;
@@ -60,7 +70,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Subscriber getSubscriber() {
-		
+
 		AuditUserPrincipal userPrincipal = currentUserService
 				.getCurrentAuditUserPrincipal();
 
@@ -78,4 +88,39 @@ public class CurrentSubscriberService {
 		return subscriberService.findOne(subscriberId);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public LocalDateTime getSubscriberCurrentTime_Joda() {
+		Date pre = subscriberService
+				.getSubscriberCurrentTime(getSubscriberId());
+		return pre == null ? null : new LocalDateTime(pre);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Instant getSubscriberCurrentTimeInstant_JDK() {
+		Date pre = subscriberService
+				.getSubscriberCurrentTime(getSubscriberId());
+		return pre == null ? null : pre.toInstant();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<ContObject> getCurrentSubscriberContObjects() {
+		return contObjectService.selectSubscriberContObjects(getSubscriberId());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getCurrentUserId() {
+		return currentUserService.getCurrentUserId();
+	}
 }

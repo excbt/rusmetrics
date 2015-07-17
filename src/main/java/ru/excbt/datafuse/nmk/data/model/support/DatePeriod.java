@@ -138,4 +138,10 @@ public class DatePeriod {
 
 	}
 
+	@Override
+	public String toString() {
+		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo="
+				+ dateTimeTo + "]";
+	}
+
 }

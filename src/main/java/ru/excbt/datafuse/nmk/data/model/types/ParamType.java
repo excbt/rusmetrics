@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.constant;
+package ru.excbt.datafuse.nmk.data.model.types;
 
 public enum ParamType {
 	NUMBER("Number"), BOOLEAN("Boolean"), STRING("String");

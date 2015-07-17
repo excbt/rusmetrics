@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 @Controller
 @RequestMapping(value = "/api/reportSettings")
@@ -25,8 +26,11 @@ public class ReportSettingsController extends WebApiController {
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
+	// @Autowired
+	// private ReportTypeRepository reportTypeRepository;
+
 	@Autowired
-	private ReportTypeRepository reportTypeRepository;
+	private ReportTypeService reportTypeService;
 
 	@Autowired
 	private ReportPeriodRepository reportPeriodRepository;
@@ -39,14 +43,18 @@ public class ReportSettingsController extends WebApiController {
 
 	@Autowired
 	private ReportActionTypeRepository reportActionTypeRepository;
-	
+
+	@Autowired
+	private CurrentUserService currentUserService;
+
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTypeJson() {
-		return ResponseEntity.ok(reportTypeRepository.findAll());
+	public ResponseEntity<?> getReportType() {
+		return ResponseEntity.ok(reportTypeService
+				.findAllReportTypes(currentUserService.isSystem()));
 	}
 
 	/**
@@ -58,7 +66,6 @@ public class ReportSettingsController extends WebApiController {
 		return ResponseEntity.ok(reportPeriodRepository.findAll());
 	}
 
-
 	/**
 	 * 
 	 * @return
@@ -67,7 +74,6 @@ public class ReportSettingsController extends WebApiController {
 	public ResponseEntity<?> getReportSheduleTypeJson() {
 		return ResponseEntity.ok(reportActionTypeRepository.findAll());
 	}
-	
 
 	/**
 	 * 
@@ -77,8 +83,5 @@ public class ReportSettingsController extends WebApiController {
 	public ResponseEntity<?> getReportActionTypeJson() {
 		return ResponseEntity.ok(reportSheduleTypeRepository.findAll());
 	}
-	
-
-
 
 }

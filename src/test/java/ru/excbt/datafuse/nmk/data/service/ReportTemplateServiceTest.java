@@ -309,4 +309,34 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 				ReportTypeKey.COMMERCE_REPORT, 28618263, true);
 	}
 
+	@Test
+	public void updateCommonConsumptionReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.CONSUMPTION_REPORT, ReportConstants.IS_ACTIVE,
+				ReportConstants.IS_COMPILED);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.CONSUMPTION_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
+		}
+	}
+
+	@Test
+	public void updateCommonConsumptionHistoryReportTemplateTest() {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
+				ReportConstants.IS_ACTIVE, ReportConstants.IS_COMPILED);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
+			reportTemplateService
+					.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
+		}
+	}
+
 }

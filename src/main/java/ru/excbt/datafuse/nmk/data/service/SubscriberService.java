@@ -1,6 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,9 @@ public class SubscriberService {
 
 	@Autowired
 	private ContEventRepository contEventRepository;
+
+	@PersistenceContext
+	private EntityManager em;
 
 	/**
 	 * 
@@ -110,6 +117,21 @@ public class SubscriberService {
 		List<Long> resultIds = subscriberRepository.selectContObjectId(
 				subscriberId, contObjectId);
 		return resultIds.size() > 0;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	public Date getSubscriberCurrentTime(Long subscriberId) {
+		Object dbResult = em
+				.createNativeQuery("SELECT get_subscriber_current_time(?1);")
+				.setParameter(1, subscriberId).getSingleResult();
+		if (dbResult == null) {
+			return null;
+		}
+		return (Date) dbResult;
 	}
 
 }

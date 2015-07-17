@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model.support;
+package ru.excbt.datafuse.nmk.data.model.types;
 
 
 public enum ReportMetaParamSpecialTypeKey {

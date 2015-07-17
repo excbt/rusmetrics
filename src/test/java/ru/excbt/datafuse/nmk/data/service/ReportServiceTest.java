@@ -31,6 +31,7 @@ public class ReportServiceTest extends JpaSupportTest {
 	private final static long COMMERCE_TEST_PARAMSET_ID = 28618264;
 	private final static long CONS_T1_TEST_PARAMSET_ID = 28820411;
 	private final static long CONS_T2_TEST_PARAMSET_ID = 28841247;
+	private final static long CONSUMPTION_PARAMSET_ID = 53141233;
 
 	@Autowired
 	private ReportService reportService;
@@ -54,7 +55,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeEventReport.zip");) {
 
 			ReportMakerParam reportMakerParam = reportMakerParamService
-					.getReportMakerParam(EVENT_TEST_PARAMSET_ID);
+					.newReportMakerParam(EVENT_TEST_PARAMSET_ID);
 
 			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
@@ -68,7 +69,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeCommerceReport.zip");) {
 
 			ReportMakerParam reportMakerParam = reportMakerParamService
-					.getReportMakerParam(COMMERCE_TEST_PARAMSET_ID);
+					.newReportMakerParam(COMMERCE_TEST_PARAMSET_ID);
 
 			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
@@ -82,7 +83,7 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeConsT1Report.pdf");) {
 
 			ReportMakerParam reportMakerParam = reportMakerParamService
-					.getReportMakerParam(CONS_T1_TEST_PARAMSET_ID);
+					.newReportMakerParam(CONS_T1_TEST_PARAMSET_ID);
 
 			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
@@ -96,8 +97,22 @@ public class ReportServiceTest extends JpaSupportTest {
 				"./out/testMakeConsT2Report.pdf");) {
 
 			ReportMakerParam reportMakerParam = reportMakerParamService
-					.getReportMakerParam(CONS_T2_TEST_PARAMSET_ID);
+					.newReportMakerParam(CONS_T2_TEST_PARAMSET_ID);
 
+			reportService.makeReportByParamset(reportMakerParam,
+					LocalDateTime.now(), fos);
+		}
+	}
+
+	@Test
+	public void testMakeConsumptionReport() throws IOException {
+		
+		try (FileOutputStream fos = new FileOutputStream(
+				"./out/testMakeConsupmtionReport.pdf");) {
+			
+			ReportMakerParam reportMakerParam = reportMakerParamService
+					.newReportMakerParam(CONSUMPTION_PARAMSET_ID);
+			
 			reportService.makeReportByParamset(reportMakerParam,
 					LocalDateTime.now(), fos);
 		}

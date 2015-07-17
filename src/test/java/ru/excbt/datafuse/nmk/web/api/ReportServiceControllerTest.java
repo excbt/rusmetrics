@@ -86,7 +86,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				"/api/reportService/commerce/%d/download", reportParamsetId);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(
 				MediaType.APPLICATION_JSON).with(testSecurityContext()));
@@ -150,7 +150,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				"/api/reportService/commerce/%d/download", reportParamsetId);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		reportMakerParam.getReportParamset().setOutputFileType(
 				ReportOutputFileType.PDF);
@@ -207,10 +207,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				modReportParamsetId);
 
 		ReportMakerParam modReportMakerParam = reportMakerParamService
-				.getReportMakerParam(modReportParamsetId);
+				.newReportMakerParam(modReportParamsetId);
 
 		ReportMakerParam srcParam = reportMakerParamService
-				.getReportMakerParam(srcParamsetId);
+				.newReportMakerParam(srcParamsetId);
 
 		List<Long> contObjectIds = srcParam.getContObjectList().subList(0, 1);
 
@@ -273,7 +273,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				reportParamsetId);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 
@@ -313,7 +313,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				reportParamsetId);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 
@@ -349,7 +349,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				reportParamsetId);
 
 		ReportMakerParam reportMakerParam = reportMakerParamService
-				.getReportMakerParam(reportParamsetId);
+				.newReportMakerParam(reportParamsetId);
 
 		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
 

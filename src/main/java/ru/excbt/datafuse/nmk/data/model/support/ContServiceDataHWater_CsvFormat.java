@@ -7,18 +7,21 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class ContServiceDataHWaterCsvFormat {
+public abstract class ContServiceDataHWater_CsvFormat {
+
+	@JsonIgnore
+	abstract Long getId();
 	
 	@JsonProperty("date")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	abstract Date getDataDate();
-	
+
 	@JsonIgnore
 	abstract int getVersion();
-	
+
 	@JsonProperty("work_time")
 	abstract BigDecimal getWorkTime();
-	
+
 	@JsonProperty("detail_type")
 	abstract String getTimeDetailType();
 }
