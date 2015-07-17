@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,10 @@ public class FullUserInfo implements Serializable {
 	@JoinColumn(name = "subscriber_id", updatable = false, insertable = false)
 	private Subscriber subscriber;
 
+	@Column(name = "user_uuid")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID userUUID;	
+	
 	public FullUserInfo() {
 
 	}
@@ -59,6 +64,7 @@ public class FullUserInfo implements Serializable {
 			this._system = src._system;
 			this.subscriberId = src.subscriberId;
 			this.subscriber = src.subscriber;
+			this.userUUID = src.userUUID;
 		}
 	}
 
@@ -92,6 +98,10 @@ public class FullUserInfo implements Serializable {
 
 	public Subscriber getSubscriber() {
 		return subscriber;
+	}
+
+	public UUID getUserUUID() {
+		return userUUID;
 	}
 
 }

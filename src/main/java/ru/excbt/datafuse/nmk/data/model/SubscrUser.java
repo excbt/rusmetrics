@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +58,10 @@ public class SubscrUser extends AbstractAuditableModel {
 	@JoinColumn(name="subscriber_id")
 	private Subscriber subscriber; 
 	
+	@Column(name = "user_uuid")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID userUUID;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -112,6 +117,14 @@ public class SubscrUser extends AbstractAuditableModel {
 
 	public void setSubscriber(Subscriber subscriber) {
 		this.subscriber = subscriber;
+	}
+
+	public UUID getUserUUID() {
+		return userUUID;
+	}
+
+	public void setUserUUID(UUID userUUID) {
+		this.userUUID = userUUID;
 	}
 
 	
