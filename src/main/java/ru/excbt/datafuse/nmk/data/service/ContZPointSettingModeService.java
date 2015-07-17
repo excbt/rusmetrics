@@ -129,7 +129,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	@Transactional
 	public void initContZPointSettingMode(long contZPointId) {
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			throw new PersistenceException(String.format(

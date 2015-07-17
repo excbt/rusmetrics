@@ -135,7 +135,7 @@ public class SubscrContServiceDataController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -221,7 +221,7 @@ public class SubscrContServiceDataController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -285,7 +285,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -407,7 +407,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (contZPoint == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -512,7 +512,7 @@ public class SubscrContServiceDataController extends WebApiController {
 							.validationError("Data of 1h is not supported for uploading"));
 		}
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
 			return ResponseEntity
