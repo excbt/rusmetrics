@@ -65,7 +65,7 @@
                                                       <tr>
                                                         <td>
 -->
-                                                            <i title="Сформировать" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="createReport(object,oldObject)" ng-disabled="!oldObject.allRequiredParamsPassed" ng-class="{'nmc-button-in-table-run-disabled':!oldObject.allRequiredParamsPassed}"></i>
+                                                            <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="createReport(object,oldObject)" ng-disabled="!oldObject.allRequiredParamsPassed" ng-class="{'nmc-button-in-table-run-disabled':!oldObject.allRequiredParamsPassed}"></i>
 <!--
                                                         </td>
                                                         <td>
@@ -75,7 +75,7 @@
                                                         </td>
                                                         <td>
 -->
-                                                          <i title="Предпросмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table" ng-click="previewReport(object,oldObject)" ng-disabled="object.reportType=='COMMERCE_REPORT'"></i>                                      
+                                                          <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table" ng-click="previewReport(object,oldObject)" ng-disabled="object.reportType=='COMMERCE_REPORT'"></i>                                      
 <!--
                                                         </td>
                                                       </tr>
@@ -455,7 +455,7 @@
 <!--                                                <input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
                                                 {{object.fullName}}
                                             </td>
-                                            <td><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+                                            <td><button title="Удалить объект из списка выбранных объектов" ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
 <!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                             </td>
                                         </tr>

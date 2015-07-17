@@ -60,6 +60,7 @@ console.log("MainCtrl");
           if (!menuFlag){
               $scope.setDefaultMenuState();
           };
+//console.log("Menu flag = "+menuFlag);          
 //console.log($scope.menuMassive);          
 //console.log($location.path());          
           if ($location.path()!=""){
@@ -110,6 +111,7 @@ console.log("MainCtrl");
     };
 
     $scope.setDefaultMenuState = function(){
+console.log("setDefaultMenuState");        
       for (var k in $scope.menuMassive){
         //console.log(k);                    
         //console.log($cookies[k]); 

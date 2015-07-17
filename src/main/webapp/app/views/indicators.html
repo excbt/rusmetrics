@@ -52,9 +52,15 @@
 
 <div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
 <div class="col-md-2">
-    <div class="btn-group">
-        <i ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile()"></i>
-    </div>    
+    <div class="pull-right">
+        <div class="btn-group nmc-line-right">
+            <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="" data-target="#upLoadFileModal" data-toggle="modal"></i>
+            <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
+        </div>  
+        <div class="btn-group">
+            <i title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt" ng-click="saveIndicatorsToFile()"></i>
+        </div>    
+    </div>
 </div>  
 <div class="col-md-12 noPadding marginBottom10 nmc-main-workspace-header">
     <hr>
@@ -91,7 +97,7 @@
                     </div>
             </div>
             <div class="col-md-1 noPadding nmc-div-refresh">
-                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
+                <button title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
             </div>
             <div class="col-md-4">    
  
@@ -191,7 +197,7 @@
                 </td>
                 <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
                     <span ng-if="summary.diffs[column.name]!='-'">
-                         <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
+                         <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i title="Показать детали по интеграторам" class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
                     </span>    
 
                 </td>
@@ -199,6 +205,121 @@
         </table>    
     </div>    
 </div>
+
+<!-- window: upload file-->
+<div id="upLoadFileModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="upLoadFileLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low nmc-modal-narrow-dialog">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="upLoadFileLabel" class="nmc-h3">
+				Загрузка показаний из файла 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p class="marginLeft15">
+                    <input type="file" name="indicatorFile">
+<!--
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
+					</label> 
+					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+-->
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-4 col-md-5">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="confirmAction();"
+								value="Загрузить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete indicators-->
+<div id="deleteIndicatorsModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteIndicatorsLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low nmc-modal-narrow-dialog">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteIndicatorsLabel" class="nmc-h3">
+				Удаление показаний 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p class="marginLeft15">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="">
+                                    <label title="Задайте период, за который будут удалены показания" class="nmc-form-label">
+                                        
+                                        Задайте период:</label>
+                                </div>    
+                                <div ng-controller="DataRangeSettings" class="">
+                                        <div class="input-group">
+                                            <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                                            <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                                type="text" ng-model="indicatorDates" options="queryDateOptsIndicatorRu"/>
+                                        </div> 
+                                </div>
+
+                            </div>                
+                        </div>
+                    </div>
+                
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="confirmAction();"
+								value="Ок" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+
 
 <!-- Окно с графиком-->
 <div id="chartModal" class="modal fade" role="dialog"

@@ -21,6 +21,7 @@ var app = angular
     'daterangepicker'
       ,'angularUtils.directives.dirPagination'
       ,'ngIdle'
+      ,'infinite-scroll'
   ]);
 
 //routing config

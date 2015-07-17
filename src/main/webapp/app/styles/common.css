@@ -193,6 +193,9 @@
 */
     background: linear-gradient(to left, #BEBEBE, #969696); /*#A0A0A0 #AAAAAA*/
     /*background: linear-gradient(to left, #b5bdc8, /*#828c95 36%,*/ #28343b);*/
+    
+    min-height: 600px;
+    min-width: 800px;
 }
 
 
@@ -406,13 +409,30 @@ tr.nmc-tr-odd>td{
 
 
     /*Стиль колонки с кнопками*/
+.nmc-td-for-button{
+    min-width: 35px;
+    width: 2%;
+}
 .nmc-td-for-buttons{
     min-width: 65px;
     width: 4%;
 }
+
+.nmc-td-for-buttons-in-object-page{
+    padding-left: 5px;
+    min-width: 120px;
+    width: 4%;
+    border-right: 1px solid #969696;
+}
     /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
 .nmc-td-for-buttons-3{
     min-width: 90px;
+    width: 4%;
+}
+
+    /*Стиль колонки с кнопками - для колонок с 4мя кнопками*/
+.nmc-td-for-buttons-4{
+    min-width: 110px;
     width: 4%;
 }
 /*
@@ -931,6 +951,12 @@ tr.nmc-main-table-header > th {
 .nmc-toggle-monitor{
     min-width: 222px;
 }
+
+/*    Кнопка Удалить показания в правом верхнем углу на странице Показания*/
+.nmc-button-trash{
+    padding-left: 0;
+    padding-right: 24px;
+}
  
 /**************************************************************************************
  *  Разметка модального окна
@@ -994,7 +1020,7 @@ tr.nmc-main-table-header > th {
 }
 
 
-    /* Вспогомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
+    /* Вспомогательные классы для разметки модального окна Конструктора шаблонов отчетов 
         и вариантов отчетов
     */
     /* Высота листа с колоноками отчета*/
@@ -1146,6 +1172,11 @@ tr.nmc-main-table-header > th {
 .nmc-img2 {
 }
 
+    /*Вертикальная линия в кнопках на странице Объекты*/
+.nmc-line-right{
+    border-right: 1px solid black;
+}
+
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
 /******************************************************************************************************/
 .noMarginTop {
@@ -1193,6 +1224,9 @@ tr.nmc-main-table-header > th {
     margin:10px;
 }
 
+.marginRight2 {
+    margin-right:2px;
+}
 .marginRight15 {
     margin-right:15px;
 }

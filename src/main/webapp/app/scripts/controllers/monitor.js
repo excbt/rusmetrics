@@ -1,5 +1,8 @@
 angular.module('portalNMC')
   .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, monitorSvc){
+      
+      
+console.log("Monitor Controller.");      
     //object url
     var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -15,8 +18,8 @@ angular.module('portalNMC')
 //console.log("====================== end $scope.objects=================");            
 
     //default date interval settings
-    $rootScope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-    $rootScope.monitorEnd =  moment().endOf('day').format('YYYY-MM-DD');    
+    $rootScope.monitorStart = $cookies.fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+    $rootScope.monitorEnd =  $cookies.toDate || moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
@@ -298,10 +301,20 @@ console.log(url);
         };
     };
     
+      //<a href> right click performer
+    $scope.getNoticesByObjectOnRightClick = function(objId){
+        $scope.setNoticeFilterByObject(objId);
+        window.open(noticesUrl);
+    };
+      
+    $scope.getNoticesByObjectAndRevisionOnRightClick = function(objId){
+        $scope.setNoticeFilterByObjectAndRevision(objId);
+        window.open(noticesUrl);
+    };
 
     //Рисуем таблицу с объектами
     function makeObjectTable(objectArray, isNewFlag){
-        var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];       
+        var objTable = document.getElementById('objectMonitorTable').getElementsByTagName('tbody')[0];       
 //        var temptableHTML = "";
         var tableHTML = "";
         if (!isNewFlag){
@@ -332,18 +345,22 @@ console.log(url);
             tableHTML += "<td>";
             tableHTML += "<table>";
             tableHTML += "<tr>";
-            tableHTML +="<td class=\"nmc-td-for-buttons\"> "+globalElementIndex+" <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
+            tableHTML +="<td class=\"nmc-td-for-buttons\"> <i title=\"Показать/Скрыть список типов событий\" id=\"btnDetail"+element.contObject.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\"></i>";
             tableHTML += "<img id=\"imgObj"+element.contObject.id+"\" title=\"\" height=\""+imgSize+"\" width=\""+imgSize+"\" src=\""+"images/object-state-"+element.statusColor.toLowerCase()+".png"+"\" />";
 //            ng-mouseover=\"getMonitorEventsByObject("+element.contObject.id+")\"
 //            if (element.statusColor.toLowerCase()!="green"){
 //                tableHTML +="<i title=\"Узнать причину оценки\" class=\"btn btn-xs glyphicon glyphicon-bookmark\" ng-click=\"getNoticesByObject("+element.contObject.id+")\" data-target=\"#showNoticesModal\" data-toggle=\"modal\"></i>";
 //            };
             tableHTML+= "</td>";
-            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-mouseover=\"setNoticeFilterByObject("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-mouseover=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
+            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectOnRightClick("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectAndRevisionOnRightClick("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
-            tableHTML += "<td class=\"nmc-td-for-buttons\"><i class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
-            tableHTML += "<td class=\"col-md-3\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\">"+element.contObject.fullName+" <span ng-show=\"isSystemuser()\">(id = "+element.contObject.id+")</span></td>";
+            tableHTML += "<td class=\"nmc-td-for-buttons\"><i title=\"Показать диаграмму уведомлений\" class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
+            tableHTML += "<td class=\"col-md-3\" ng-click=\"toggleShowGroupDetails("+element.contObject.id+")\">"+element.contObject.fullName;
+            if ($scope.isSystemuser()){
+                tableHTML+= " <span>(id = "+element.contObject.id+")</span>";
+            };
+            tableHTML+="</td>";
             tableHTML += "<td class=\"col-md-8\"></td></tr>";
 //            tableHTML += "</tr>";
             tableHTML += "</table>";
@@ -361,7 +378,10 @@ console.log(url);
     
     //Формируем таблицу с событиями объекта
     function makeEventTypesByObjectTable(obj){        
-        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);      
+        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);  
+        if (angular.isUndefined(trObjEvents)){
+            return;
+        };
         var trHTML = "";
         trHTML = "<td style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">";
         trHTML+="<thead>";
@@ -382,14 +402,19 @@ console.log(url);
         obj.eventTypes.forEach(function(event){
             trHTML +="<tr id=\"trEvent"+event.id+"\" >";
             trHTML +="<td class=\"nmc-td-for-buttons\">"+
-                    "<a href=\""+noticesUrl+"\" ng-mouseover=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                    "<a href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndType("+obj.contObject.id+","+event.id+")\" ng-right-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
 //                        "ng-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\""+
                         "title=\"Посмотреть уведомления\">"+
                     "</i></a>"+
                 "</td>";
             $scope.eventColumns.forEach(function(column){
                 switch (column.name){
-                    case "typeName": trHTML += "<td class=\"col-md-11\" ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\">"+event[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+event.id+")</span></td>"; break;
+                    case "typeName": trHTML += "<td class=\"col-md-11\" ng-class=\"{'nmc-positive-notice':"+(!event.isBaseEvent)+"}\">"+event[column.name];
+                        if ($scope.isSystemuser()){
+                            trHTML +="<span>(id = "+event.id+")</span>";
+                        };
+                        trHTML+="</td>"; 
+                        break;
                     case "typeCategory" : 
                         var size = 16;
                         var title = "";
@@ -407,7 +432,7 @@ console.log(url);
             });
             trHTML +="</tr>";
         });    
-        trHTML += "</table></td>";      
+        trHTML += "</table></td>";   
         trObjEvents.innerHTML = trHTML;
         $compile(trObjEvents)($scope);
     };
@@ -423,7 +448,7 @@ console.log(url);
         $cookies.toDate = $rootScope.monitorEnd;
         $rootScope.reportStart = $rootScope.monitorStart;
         $rootScope.reportEnd = $rootScope.monitorEnd;
-//console.log(" $cookies.isNew ="+ $cookies.isNew);        
+//console.log($cookies);        
     };
     
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
@@ -441,6 +466,7 @@ console.log(url);
 //console.log("getNoticesByObjectAndType");        
         $scope.setNoticeFilterByObjectAndType(objId, typeId);
 //        window.location.assign(noticesUrl);
+        window.open(noticesUrl);
     };
     
     
@@ -470,7 +496,7 @@ console.log(url);
     
     //Watching for the change period 
     $scope.$watch('monitorStart', function (newDates, oldDates) {
-//console.log("monitorStart watch");  
+console.log("monitorStart watch");  
 //console.log(newDates);        
 //console.log(oldDates);   
         if (oldDates===newDates){
@@ -507,7 +533,10 @@ console.log(url);
 //    });
       
     window.onscroll = function(){
-        console.log("Window. On scroll");
+//        console.log("Window. On scroll");
+        if(angular.isUndefined($scope.objects) || ($scope.objects.length===0)){
+            return;
+        };
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 //console.log("scrollTop = "+scrollTop);
 //        $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
@@ -646,7 +675,7 @@ console.log(url);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
 //console.log($cookies.objectMonitorId);          
         if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!=="null"){
-console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
+//console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
             $scope.getEventTypesByObject(Number($cookies.objectMonitorId), false);
             $cookies.objectMonitorId = null;
 //console.log($cookies.objectMonitorId);            
@@ -668,10 +697,12 @@ console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonit
         $rootScope.$broadcast('monitor:updateObjectsRequest');
     };
       
-//    $scope.$on('$destroy', function() {
+    $scope.$on('$destroy', function() {
 //        alert("Way out");
 //        $cookies.objectMonitorId = null;
-//    }); 
+console.log("Monitor destroy");        
+        window.onscroll = undefined;
+    }); 
     
         //chart
     $scope.runChart = function(objId){

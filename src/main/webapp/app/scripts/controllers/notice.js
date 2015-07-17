@@ -409,9 +409,13 @@ console.log("getObjects");
 console.log("watch notice");        
 //console.log(newDates); 
 //console.log(oldDates);
+        if (angular.isUndefined(oldDates)){
+            return;
+        };
         if(oldDates === newDates){
             return;
         };
+//console.log("oldDates !== newDates");        
         if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
 //console.log("if = true");            
             $scope.getObjects();                              
