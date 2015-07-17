@@ -16,6 +16,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.Filter;
+import javax.servlet.ServletContext;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -82,6 +83,9 @@ public class AnyControllerTest {
 
 	protected MockMvc mockMvc;
 
+	@Autowired
+	protected ServletContext servletContext;	
+	
 	@Before
 	public void setup() {
 		this.auditorAware.setAuditUser(entityManager.getReference(

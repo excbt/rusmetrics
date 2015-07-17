@@ -2,17 +2,20 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -21,19 +24,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterCsv;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
 @Transactional
-public class ContServiceDataHWaterService {
+public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContServiceDataHWaterService.class);
@@ -42,6 +50,12 @@ public class ContServiceDataHWaterService {
 
 	@Autowired
 	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
+
+	@Autowired
+	private ContZPointService contZPointService;
+
+	@Autowired
+	private DeviceObjectService deviceObjectService;
 
 	@PersistenceContext
 	private EntityManager em;
@@ -68,7 +82,7 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+	private List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, DateTime beginDate, DateTime endDate) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
@@ -78,6 +92,47 @@ public class ContServiceDataHWaterService {
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param beginDate
+	 * @param endDate
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDateTime beginDate,
+			LocalDateTime endDate) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(beginDate, "beginDate is null");
+		checkNotNull(endDate, "endDate is null");
+		checkArgument(beginDate.compareTo(endDate) <= 0);
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param datePeriod
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDatePeriod datePeriod) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(datePeriod, "beginDate is null");
+		checkArgument(datePeriod.isValid());
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), datePeriod.getDateFrom(),
+				datePeriod.getDateTo());
 	}
 
 	/**
@@ -101,6 +156,29 @@ public class ContServiceDataHWaterService {
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate(),
 				pageable);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetail
+	 * @param datePeriod
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId,
+			TimeDetailKey timeDetail, LocalDatePeriod datePeriod,
+			Pageable pageable) {
+		checkArgument(contZPointId > 0);
+		checkNotNull(timeDetail);
+		checkNotNull(datePeriod, "beginDate is null");
+		checkArgument(datePeriod.isValid());
+		checkNotNull(pageable);
+
+		return contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), datePeriod.getDateFrom(),
+				datePeriod.getDateTo(), pageable);
 	}
 
 	/**
@@ -303,19 +381,19 @@ public class ContServiceDataHWaterService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<ContServiceDataHWaterCsv> selectByContZPointCsvData(
+	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(
 			long contZPointId, TimeDetailKey timeDetail, DateTime beginDate,
 			DateTime endDate) {
 
 		List<ContServiceDataHWater> srcDataList = selectByContZPoint(
 				contZPointId, timeDetail, beginDate, endDate);
 
-		List<ContServiceDataHWaterCsv> cvsDataList = new ArrayList<>();
+		List<ContServiceDataHWaterAbs_Csv> cvsDataList = new ArrayList<>();
 		try {
 
 			for (ContServiceDataHWater data : srcDataList) {
-				ContServiceDataHWaterCsv cvsData;
-				cvsData = ContServiceDataHWaterCsv.newInstance(data);
+				ContServiceDataHWaterAbs_Csv cvsData;
+				cvsData = ContServiceDataHWaterAbs_Csv.newInstance(data);
 				ContServiceDataHWater abs = selectLastAbsData(
 						data.getContZPointId(), timeDetail, new LocalDateTime(
 								data.getDataDate()));
@@ -325,11 +403,70 @@ public class ContServiceDataHWaterService {
 
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			logger.error("Can't create intance of {}: {}",
-					ContServiceDataHWaterCsv.class, e);
+					ContServiceDataHWaterAbs_Csv.class, e);
 			cvsDataList.clear();
 		}
 
 		return cvsDataList;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param inData
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public void manualLoadDataHWater(Long contZPointId,
+			List<ContServiceDataHWater> inData) {
+
+		checkNotNull(contZPointId);
+		checkNotNull(inData);
+		checkArgument(inData.size() > 0);
+
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+
+		checkNotNull(zpoint, String.format(
+				"ContZPoint with id:%d is not found", contZPointId));
+
+		checkState(
+				BooleanUtils.isTrue(zpoint.getIsManualLoading()),
+				String.format(
+						"Manual Loading for ContZPoint with id:%d is not allowed",
+						contZPointId));
+
+		// Device Object Check And Save
+		DeviceObject deviceObject = null;
+
+		if (zpoint.getDeviceObjects().isEmpty()) {
+
+			logger.debug("Device Object is not found. Create new");
+
+			deviceObject = deviceObjectService.createPortalDeviceObject();
+			logger.debug("Cont Object is saved. Id:{}", deviceObject.getId());
+
+			zpoint.getDeviceObjects().add(deviceObject);
+			contZPointService.saveOne(zpoint);
+
+			logger.debug("ContZPoint is saved. Id:{}", zpoint.getId());
+		} else {
+			deviceObject = zpoint.getDeviceObjects().get(0);
+		}
+
+		Optional<ContServiceDataHWater> checkIsNewElements = inData.stream()
+				.filter((i) -> !i.isNew()).findAny();
+
+		checkState(!checkIsNewElements.isPresent(),
+				"Elements in data list is not new");
+
+		final DeviceObject dObject = deviceObject;
+		inData.forEach((d) -> {
+			d.setContZPointId(contZPointId);
+			d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
+			d.setDeviceObject(dObject);
+		});
+
+		contServiceDataHWaterRepository.save(inData);
+
 	}
 
 }

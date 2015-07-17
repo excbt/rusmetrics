@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,4 +55,27 @@ public class ReportTypeService {
 		return reportMetaParamSpecialRepository
 				.findByReportTypeKey(reportTypeKey);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<ReportType> findAllReportTypes() {
+		return findAllReportTypes(false);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<ReportType> findAllReportTypes(boolean devMode) {
+		List<ReportType> preResult = reportTypeRepository.findAll();
+
+		List<ReportType> result = preResult
+				.stream()
+				.filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode())
+						|| devMode).collect(Collectors.toList());
+		return result;
+	}
+
 }

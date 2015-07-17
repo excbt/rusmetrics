@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Ignore;
@@ -13,23 +14,29 @@ public class DeviceModelServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private DeviceModelService deviceModelService;
-	
+
 	@Test
 	@Ignore
 	public void testDeviceModelService() {
 		assertNotNull(deviceModelService);
-		
+
 		DeviceModel entity = new DeviceModel();
-		
+
 		entity.setExCode("CODE_EX");
 		entity.setModelName("Model1");
-		//entity.setRowAudit(RowAudit.newInstanceNow());
-		
+		// entity.setRowAudit(RowAudit.newInstanceNow());
+
 		entity = deviceModelService.save(entity);
 		assertNotNull(entity);
 		assertNotNull(entity.getId());
 		deviceModelService.delete(entity.getId());
-		
+
+	}
+
+	@Test
+	public void testDeviceModelPortal() throws Exception {
+		DeviceModel deviceModel = deviceModelService.findPortalDeviceModel();
+		checkNotNull(deviceModel);
 	}
 
 }

@@ -1,57 +1,44 @@
 package ru.excbt.datafuse.nmk.web;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
-import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
+import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {SpringMvcConfig.class, JpaConfigCli.class})
-public class WebTest {
+public class WebTest extends AnyControllerTest {
 
 	public final static String CHARSET_UTF8 = "charset=UTF-8";
-	public final static String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON + ";" + CHARSET_UTF8;
-	
+	public final static String APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON
+			+ ";" + CHARSET_UTF8;
+
+	private static final Logger logger = LoggerFactory.getLogger(WebTest.class);
+
 	@Autowired
-	private WebApplicationContext wac;
-
-	protected MockMvc mockMvc;
-
-	@Before
-	public void setup() {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-	}
+	private WebAppPropsService webAppPropsService;
 
 	@Test
 	public void test() {
-		assertNotNull(mockMvc);
-		
+
+		logger.info("WebAppHomeDirectory:{}",
+				webAppPropsService.getWebAppHomeDirectory());
+
 		try {
 			restGetJson("/rest/check");
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail();
 		}
-		
+
 	}
 
 	/**

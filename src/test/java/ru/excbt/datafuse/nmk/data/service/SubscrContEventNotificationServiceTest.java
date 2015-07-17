@@ -20,8 +20,8 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.DatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -127,7 +127,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSubscrContEventNotifications() {
-		DatePeriod dp = DatePeriod.lastWeek();
+		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
 
 		List<?> list = subscrContEventNotifiicationService
 				.selectMonitorContEventNotificationStatus(
@@ -141,7 +141,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	public void selectContEventTypeMonitorStatusTest() throws Exception {
 
 		long contObjectId = 20118695;
-		DatePeriodParser dpp = DatePeriodParser.parse("2015-06-01",
+		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01",
 				"2015-06-30");
 
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
@@ -161,7 +161,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	public void selectContEventTypeMonitorStatusCollapseTest() throws Exception {
 		
 		long contObjectId = 20118695;
-		DatePeriodParser dpp = DatePeriodParser.parse("2015-06-01",
+		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01",
 				"2015-06-30");
 		
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService

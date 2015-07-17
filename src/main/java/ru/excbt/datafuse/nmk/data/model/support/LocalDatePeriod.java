@@ -5,76 +5,77 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
-public class DatePeriod {
+public class LocalDatePeriod {
 
 	public static class Builder {
 
-		private DateTime dateTimeFrom = null;
-		private DateTime dateTimeTo = null;
+		private LocalDateTime dateTimeFrom = null;
+		private LocalDateTime dateTimeTo = null;
 
 		private Builder() {
 
 		}
 
-		private Builder(DatePeriod src) {
+		private Builder(LocalDatePeriod src) {
 			this.dateTimeFrom = src.dateTimeFrom;
 			this.dateTimeTo = src.dateTimeTo;
 		}
 
-		public Builder dateFrom(DateTime d) {
+		public Builder dateFrom(LocalDateTime d) {
 			this.dateTimeFrom = d;
 			return this;
 		}
 
-		public Builder dateTo(DateTime d) {
+		public Builder dateTo(LocalDateTime d) {
 			this.dateTimeTo = d;
 			return this;
 		}
 
-		public DatePeriod build() {
-			return new DatePeriod(this);
+		public LocalDatePeriod build() {
+			return new LocalDatePeriod(this);
 		}
 
 	}
 
-	private final DateTime dateTimeFrom;
-	private final DateTime dateTimeTo;
+	private final LocalDateTime dateTimeFrom;
+	private final LocalDateTime dateTimeTo;
 
-	protected DatePeriod() {
+	protected LocalDatePeriod() {
 		this.dateTimeFrom = null;
 		this.dateTimeTo = null;
 	}
 
-	protected DatePeriod(Builder b) {
+	protected LocalDatePeriod(Builder b) {
 		this.dateTimeFrom = b.dateTimeFrom;
 		this.dateTimeTo = b.dateTimeTo;
 	}
 
-	public static DatePeriod emptyPeriod() {
-		return new DatePeriod();
+	public static LocalDatePeriod emptyPeriod() {
+		return new LocalDatePeriod();
 	}
 
-	private static DateTime endOfDay(DateTime dateTime) {
+	private static LocalDateTime endOfDay(LocalDateTime dateTime) {
 		checkNotNull(dateTime);
-		DateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
+		LocalDateTime endOfDay = dateTime.withHourOfDay(23)
+				.withMinuteOfHour(59).withSecondOfMinute(59)
+				.withMillisOfSecond(999);
 		return endOfDay;
 	}
 
-	private static DateTime startOfDay(DateTime dateTime) {
+	private static LocalDateTime startOfDay(LocalDateTime dateTime) {
 		checkNotNull(dateTime);
-		DateTime endOfDay = dateTime.withMillisOfDay(0);
+		LocalDateTime endOfDay = dateTime.withMillisOfDay(0);
 		return endOfDay;
 	}
 
-	public static DatePeriod lastWeek() {
-		DatePeriod result = builder()
-				.dateFrom(startOfDay(DateTime.now().minusWeeks(1)))
-				.dateTo(endOfDay(DateTime.now())).build();
+	public static LocalDatePeriod lastWeek() {
+		LocalDatePeriod result = builder()
+				.dateFrom(startOfDay(LocalDateTime.now().minusWeeks(1)))
+				.dateTo(endOfDay(LocalDateTime.now())).build();
 		return result;
 	}
 
@@ -82,15 +83,15 @@ public class DatePeriod {
 		return new Builder();
 	}
 
-	public static Builder builder(DatePeriod src) {
+	public static Builder builder(LocalDatePeriod src) {
 		return new Builder(src);
 	}
 
-	public DateTime getDateTimeFrom() {
+	public LocalDateTime getDateTimeFrom() {
 		return dateTimeFrom;
 	}
 
-	public DateTime getDateTimeTo() {
+	public LocalDateTime getDateTimeTo() {
 		return dateTimeTo;
 	}
 
@@ -129,12 +130,12 @@ public class DatePeriod {
 	 * 
 	 * @return
 	 */
-	public DatePeriod buildEndOfDay() {
+	public LocalDatePeriod buildEndOfDay() {
 
 		checkState(isValidEq(), "Can't build DatePeriod from invalid source");
-		DateTime endOfDay = JodaTimeUtils.endOfDay(dateTimeTo);
+		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(dateTimeTo);
 
-		return DatePeriod.builder(this).dateTo(endOfDay).build();
+		return LocalDatePeriod.builder(this).dateTo(endOfDay).build();
 
 	}
 

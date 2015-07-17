@@ -42,6 +42,12 @@ public class ReportType extends AbstractKeynameEntity {
 	@Column(name = "report_type_enabled")
 	private boolean _enabled;
 
+	@Column(name = "is_dev_mode")
+	private Boolean isDevMode;
+
+	@Column(name = "preview_url")
+	private String previewUrl;
+
 	@Version
 	private int version;
 
@@ -123,6 +129,22 @@ public class ReportType extends AbstractKeynameEntity {
 	public void setReportMetaParamSpecialList(
 			Collection<ReportMetaParamSpecial> reportMetaParamSpecialList) {
 		this.reportMetaParamSpecialList = reportMetaParamSpecialList;
+	}
+
+	public Boolean getIsDevMode() {
+		return isDevMode;
+	}
+
+	public void setIsDevMode(Boolean isDevMode) {
+		this.isDevMode = isDevMode;
+	}
+
+	public String getPreviewUrl() {
+		return previewUrl;
+	}
+
+	public void setPreviewUrl(String previewUrl) {
+		this.previewUrl = previewUrl;
 	}
 
 }

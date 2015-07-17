@@ -1,8 +1,8 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -52,10 +52,8 @@ public class ContZPoint extends AbstractAuditableModel {
 	private Date endDate;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "cont_zpoint_device", 
-			joinColumns = @JoinColumn(name = "cont_zpoint_id"), 
-			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	private Collection<DeviceObject> deviceObjects = new ArrayList<>();
+	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
 	private int version;
@@ -72,6 +70,9 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	@Column(name = "is_double_pipe")
 	private Boolean doublePipe;
+
+	@Column(name = "is_manual_loading")
+	private Boolean isManualLoading;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -105,11 +106,11 @@ public class ContZPoint extends AbstractAuditableModel {
 		this.endDate = endDate;
 	}
 
-	public Collection<DeviceObject> getDeviceObjects() {
+	public List<DeviceObject> getDeviceObjects() {
 		return deviceObjects;
 	}
 
-	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
+	public void setDeviceObjects(List<DeviceObject> deviceObjects) {
 		this.deviceObjects = deviceObjects;
 	}
 
@@ -159,6 +160,14 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	public void setRso(Organization rso) {
 		this.rso = rso;
+	}
+
+	public Boolean getIsManualLoading() {
+		return isManualLoading;
+	}
+
+	public void setIsManualLoading(Boolean isManualLoading) {
+		this.isManualLoading = isManualLoading;
 	}
 
 }

@@ -7,16 +7,20 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.DynamicUpdate;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
-
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 
 @Entity
-@Table(name="cont_object")
+@Table(name = "cont_object")
+@DynamicUpdate
 public class ContObject extends AbstractAuditableModel {
 
 	/**
@@ -28,53 +32,55 @@ public class ContObject extends AbstractAuditableModel {
 	 * 
 	 */
 
-	
-	@Column(name="cont_object_name")
+	@Column(name = "cont_object_name")
 	private String name;
 
-	@Column(name="cont_object_full_name")
+	@Column(name = "cont_object_full_name")
 	private String fullName;
-	
-	@Column(name="cont_object_full_address")
+
+	@Column(name = "cont_object_full_address")
 	private String fullAddress;
 
-	@Column(name="cont_object_number")
+	@Column(name = "cont_object_number")
 	private String number;
 
-	@Column(name="cont_object_owner")
+	@Column(name = "cont_object_owner")
 	private String owner;
 
-	@Column(name="owner_contacts")
+	@Column(name = "owner_contacts")
 	private String ownerContacts;
 
-//	@OneToMany (fetch = FetchType.LAZY)
-//    @JoinTable(name="cont_device_object",
-//    joinColumns=@JoinColumn(name="cont_object_id"),
-//    inverseJoinColumns=@JoinColumn(name="device_object_id"))
-//	@JsonIgnore
-//	private Collection<DeviceObject> deviceObjects;	
-	
+	// @OneToMany (fetch = FetchType.LAZY)
+	// @JoinTable(name="cont_device_object",
+	// joinColumns=@JoinColumn(name="cont_object_id"),
+	// inverseJoinColumns=@JoinColumn(name="device_object_id"))
+	// @JsonIgnore
+	// private Collection<DeviceObject> deviceObjects;
+
 	@Column(name = "current_setting_mode")
 	private String currentSettingMode;
-	
+
 	@Column(name = "cont_object_description")
 	private String description;
 
 	@Column(name = "cont_object_comment")
 	private String comment;
-	
+
 	@Column(name = "cont_object_cw_temp")
 	private BigDecimal cwTemp;
 
 	@Column(name = "cont_object_heat_area")
 	private BigDecimal heatArea;
-	
 
 	@Version
-    private int version; 
-	
+	private int version;
+
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private List<ContManagement> contManagements = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "timezone_def")
+	private TimezoneDef timezoneDef;	
 	
 	public String getName() {
 		return name;
@@ -132,13 +138,13 @@ public class ContObject extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-//	public Collection<DeviceObject> getDeviceObjects() {
-//		return deviceObjects;
-//	}
-//
-//	public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
-//		this.deviceObjects = deviceObjects;
-//	}
+	// public Collection<DeviceObject> getDeviceObjects() {
+	// return deviceObjects;
+	// }
+	//
+	// public void setDeviceObjects(Collection<DeviceObject> deviceObjects) {
+	// this.deviceObjects = deviceObjects;
+	// }
 
 	public String getCurrentSettingMode() {
 		return currentSettingMode;
@@ -155,7 +161,6 @@ public class ContObject extends AbstractAuditableModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
 
 	public BigDecimal getCwTemp() {
 		return cwTemp;
@@ -189,6 +194,12 @@ public class ContObject extends AbstractAuditableModel {
 		this.comment = comment;
 	}
 
+	public TimezoneDef getTimezoneDef() {
+		return timezoneDef;
+	}
 
-	
+	public void setTimezoneDef(TimezoneDef timezoneDef) {
+		this.timezoneDef = timezoneDef;
+	}
+
 }

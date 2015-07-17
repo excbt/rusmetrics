@@ -40,7 +40,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
@@ -196,7 +196,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
-			Long subscriberId, final DatePeriod datePeriod,
+			Long subscriberId, final LocalDatePeriod datePeriod,
 			final List<Long> contObjectList,
 			final List<Long> contEventTypeList, final Boolean isNew,
 			final Pageable pageable) {
@@ -226,7 +226,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
-			Long subscriberId, final DatePeriod datePeriod,
+			Long subscriberId, final LocalDatePeriod datePeriod,
 			final Pageable pageable) {
 		return selectByConditions(subscriberId, datePeriod, null, null, null,
 				pageable);
@@ -242,7 +242,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 */
 	public void updateRevisionByConditions(Long subscriberId,
-			final DatePeriod datePeriod, final List<Long> contObjectList,
+			final LocalDatePeriod datePeriod, final List<Long> contObjectList,
 			final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
 
@@ -553,7 +553,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId,
-			final Long contObjectId, final DatePeriod datePeriod) {
+			final Long contObjectId, final LocalDatePeriod datePeriod) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -575,7 +575,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId,
-			final Long contObjectId, final DatePeriod datePeriod, Boolean isNew) {
+			final Long contObjectId, final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -599,7 +599,7 @@ public class SubscrContEventNotifiicationService {
 	@Transactional(readOnly = true)
 	@Deprecated
 	public long selectContEventTypeCount(final Long subscriberId,
-			final Long contObjectId, final DatePeriod datePeriod) {
+			final Long contObjectId, final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
@@ -622,7 +622,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public long selectContEventTypeCountGroup(final Long subscriberId,
-			final Long contObjectId, final DatePeriod datePeriod) {
+			final Long contObjectId, final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
@@ -647,7 +647,7 @@ public class SubscrContEventNotifiicationService {
 	@Transactional(readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(
 			final Long subscriberId, final Long contObjectId,
-			final DatePeriod datePeriod) {
+			final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
@@ -698,7 +698,7 @@ public class SubscrContEventNotifiicationService {
 	@Transactional(readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
 			final Long subscriberId, final Long contObjectId,
-			final DatePeriod datePeriod) {
+			final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
@@ -746,7 +746,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(
-			final Long subscriberId, final DatePeriod datePeriod) {
+			final Long subscriberId, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
@@ -837,7 +837,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
-			final Long subscriberId, final DatePeriod datePeriod) {
+			final Long subscriberId, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
@@ -923,7 +923,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	private List<CounterInfo> selectContEventNotificationInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
-			final DatePeriod datePeriod) {
+			final LocalDatePeriod datePeriod) {
 		return selectContEventNotificationInfoList(subscriberId, contObjectIds,
 				datePeriod, null);
 	}
@@ -938,7 +938,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	private List<CounterInfo> selectContEventNotificationInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
-			final DatePeriod datePeriod, Boolean isNew) {
+			final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
@@ -974,7 +974,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
-			final DatePeriod datePeriod) {
+			final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
@@ -1001,7 +1001,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(
 			final Long subscriberId, final List<Long> contObjectIds,
-			final DatePeriod datePeriod) {
+			final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
