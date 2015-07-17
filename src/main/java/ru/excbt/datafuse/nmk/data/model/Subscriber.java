@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -57,6 +58,10 @@ public class Subscriber extends AbstractAuditableModel {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
+
+	@Column(name = "subscriber_uuid")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID subscriberUUID;
 
 	@Version
 	private int version;
@@ -131,6 +136,14 @@ public class Subscriber extends AbstractAuditableModel {
 
 	public void setTimezoneDef(TimezoneDef timezoneDef) {
 		this.timezoneDef = timezoneDef;
+	}
+
+	public UUID getSubscriberUUID() {
+		return subscriberUUID;
+	}
+
+	public void setSubscriberUUID(UUID subscriberUUID) {
+		this.subscriberUUID = subscriberUUID;
 	}
 
 }
