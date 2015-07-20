@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -48,6 +49,35 @@ public class SubscrDeviceObjectController extends WebApiController {
 				.selectDeviceObjectsByContObjectId(contObjectId);
 
 		return ResponseEntity.ok(deviceObjects);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectMetaVzlet(
+			@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId) {
+
+		List<Long> contObjectIds = subscriberService
+				.selectSubscriberContObjectIds(currentSubscriberService
+						.getSubscriberId());
+
+		if (!contObjectIds.contains(contObjectId)) {
+			return responseForbidden();
+		}
+
+		DeviceObjectMetaVzlet result = deviceObjectService
+				.selectDeviceObjectMetaVzlet(deviceObjectId);
+
+		if (result == null) {
+			ResponseEntity.ok();
+		}
+
+		return ResponseEntity.ok(result);
 	}
 
 }

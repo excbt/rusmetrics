@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -23,7 +25,10 @@ public class DeviceObjectService implements SecuredRoles {
 	private DeviceObjectRepository deviceObjectRepository;
 
 	@Autowired
-	private DeviceModelService DeviceModelService;
+	private DeviceModelService deviceModelService;
+
+	@Autowired
+	private DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository;
 
 	/**
 	 * 
@@ -44,7 +49,7 @@ public class DeviceObjectService implements SecuredRoles {
 	public DeviceObject createPortalDeviceObject() {
 
 		DeviceObject deviceObject = new DeviceObject();
-		DeviceModel deviceModel = DeviceModelService.findPortalDeviceModel();
+		DeviceModel deviceModel = deviceModelService.findPortalDeviceModel();
 		checkNotNull(deviceModel, "DeviceModel of Portal is not found");
 
 		deviceObject.setDeviceModel(deviceModel);
@@ -67,9 +72,26 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<DeviceObject> selectDeviceObjectsByContObjectId(Long contObjectId) {
+	public List<DeviceObject> selectDeviceObjectsByContObjectId(
+			Long contObjectId) {
 		return deviceObjectRepository
 				.selectDeviceObjectsByContObjectId(contObjectId);
 	}
 
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public DeviceObjectMetaVzlet selectDeviceObjectMetaVzlet(Long deviceObjectId) {
+		List<DeviceObjectMetaVzlet> vList = deviceObjectMetaVzletRepository
+				.findByDeviceObjectId(deviceObjectId);
+		
+		DeviceObjectMetaVzlet result = vList.size() > 0 ? vList.get(0) : null;
+		result.getVzletSystem1();
+		result.getVzletSystem2();
+		result.getVzletSystem3();
+		return result;
+	}
 }
