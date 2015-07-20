@@ -73,10 +73,6 @@ public class SubscrDeviceObjectController extends WebApiController {
 		DeviceObjectMetaVzlet result = deviceObjectService
 				.selectDeviceObjectMetaVzlet(deviceObjectId);
 
-		if (result == null) {
-			ResponseEntity.ok();
-		}
-
 		return ResponseEntity.ok(result);
 	}
 
