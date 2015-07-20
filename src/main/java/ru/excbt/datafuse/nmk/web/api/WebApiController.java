@@ -3,10 +3,14 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.data.domain.Auditable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
 public class WebApiController {
 
@@ -36,4 +40,23 @@ public class WebApiController {
 			Auditable<AuditUser, ?> newEntity) {
 		AuditableTools.copyAuditableProps(currentEntity, newEntity);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseForbidden() {
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+				ApiResult.build(ApiResultCode.ERR_ACCESS_DENIED));
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseBadRequest() {
+		return ResponseEntity.badRequest().build();
+	}
+	
+
 }

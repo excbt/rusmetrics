@@ -84,8 +84,8 @@ public class AnyControllerTest {
 	protected MockMvc mockMvc;
 
 	@Autowired
-	protected ServletContext servletContext;	
-	
+	protected ServletContext servletContext;
+
 	@Before
 	public void setup() {
 		this.auditorAware.setAuditUser(entityManager.getReference(
@@ -129,6 +129,38 @@ public class AnyControllerTest {
 				resultActions.andExpect(status().isOk()).andExpect(
 						content().contentType(
 								WebApiController.APPLICATION_JSON_UTF8));
+
+			}
+		};
+
+		testGet(url, requestExtraInitializer, resultActionsTester);
+
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @throws Exception
+	 */
+	protected void testJsonGetNoContentCheck(String url) throws Exception {
+
+		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
+
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.accept(MediaType.APPLICATION_JSON);
+
+			}
+		};
+
+		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+				resultActions.andDo(MockMvcResultHandlers.print());
+
+				resultActions.andExpect(status().isOk());
 
 			}
 		};
@@ -250,12 +282,12 @@ public class AnyControllerTest {
 	/**
 	 * 
 	 * @param sendObject
-	 * @param urlStr
+	 * @param url
 	 * @param requestExtraInitializer
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String urlStr, Object sendObject,
+	protected Long testJsonCreate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = new ResultActionsTester() {
@@ -270,25 +302,25 @@ public class AnyControllerTest {
 			}
 		};
 
-		return testJsonCreate(urlStr, sendObject, requestExtraInitializer,
+		return testJsonCreate(url, sendObject, requestExtraInitializer,
 				tester);
 
 	}
 
 	/**
 	 * 
-	 * @param urlStr
+	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
 	 * @param resultActionsTester
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String urlStr, Object sendObject,
+	protected Long testJsonCreate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
-		logger.info("Testing CREATE on URL: {}", urlStr);
+		logger.info("Testing CREATE on URL: {}", url);
 
 		String jsonBody = null;
 		try {
@@ -300,7 +332,7 @@ public class AnyControllerTest {
 
 		logger.info("Request JSON: {}", jsonBody);
 
-		MockHttpServletRequestBuilder request = post(urlStr)
+		MockHttpServletRequestBuilder request = post(url)
 				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
@@ -328,20 +360,20 @@ public class AnyControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String urlStr, Object sendObject)
+	protected Long testJsonCreate(String url, Object sendObject)
 			throws Exception {
 
-		return testJsonCreate(urlStr, sendObject, null);
+		return testJsonCreate(url, sendObject, null);
 	}
 
 	/**
 	 * 
 	 * @param sendObject
-	 * @param urlStr
+	 * @param url
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String urlStr, Object sendObject,
+	protected void testJsonUpdate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = new ResultActionsTester() {
@@ -356,24 +388,24 @@ public class AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, sendObject, requestExtraInitializer, tester);
+		testJsonUpdate(url, sendObject, requestExtraInitializer, tester);
 	}
 
 	/**
 	 * 
-	 * @param urlStr
+	 * @param url
 	 * @param sendObject
 	 * @param requestExtraInitializer
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String urlStr, Object sendObject,
+	protected void testJsonUpdate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
-		logger.info("Testing UPDATE on URL: {}", urlStr);
+		logger.info("Testing UPDATE on URL: {}", url);
 
-		MockHttpServletRequestBuilder request = put(urlStr).with(
+		MockHttpServletRequestBuilder request = put(url).with(
 				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
@@ -407,12 +439,12 @@ public class AnyControllerTest {
 	/**
 	 * 
 	 * @param sendObject
-	 * @param urlStr
+	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String urlStr, Object sendObject)
+	protected void testJsonUpdate(String url, Object sendObject)
 			throws Exception {
-		testJsonUpdate(urlStr, sendObject, null);
+		testJsonUpdate(url, sendObject, null);
 	}
 
 	/**
