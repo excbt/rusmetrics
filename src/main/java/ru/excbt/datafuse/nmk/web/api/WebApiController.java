@@ -49,4 +49,14 @@ public class WebApiController {
 		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
 				ApiResult.build(ApiResultCode.ERR_ACCESS_DENIED));
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseBadRequest() {
+		return ResponseEntity.badRequest().build();
+	}
+	
+
 }

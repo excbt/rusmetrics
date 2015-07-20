@@ -87,11 +87,40 @@ public class DeviceObjectService implements SecuredRoles {
 	public DeviceObjectMetaVzlet selectDeviceObjectMetaVzlet(Long deviceObjectId) {
 		List<DeviceObjectMetaVzlet> vList = deviceObjectMetaVzletRepository
 				.findByDeviceObjectId(deviceObjectId);
-		
+
 		DeviceObjectMetaVzlet result = vList.size() > 0 ? vList.get(0) : null;
-		result.getVzletSystem1();
-		result.getVzletSystem2();
-		result.getVzletSystem3();
+		if (result != null) {
+			result.getVzletSystem1();
+			result.getVzletSystem2();
+			result.getVzletSystem3();
+		}
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectMetaVzlet
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public DeviceObjectMetaVzlet updateDeviceObjectMetaVzlet(
+			DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
+		checkNotNull(deviceObjectMetaVzlet);
+		return deviceObjectMetaVzletRepository.save(deviceObjectMetaVzlet);
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectMetaVzlet
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public void deleteDeviceObjectMetaVzlet(Long deviceObjectId) {
+		checkNotNull(deviceObjectId);
+
+		DeviceObjectMetaVzlet entity = selectDeviceObjectMetaVzlet(deviceObjectId);
+		if (entity != null) {
+			deviceObjectMetaVzletRepository.delete(entity);
+		}
 	}
 }
