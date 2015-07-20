@@ -6,12 +6,15 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "device_object_meta_vzlet")
-public class DeviceObjectMetaVzlet extends AbstractPersistableEntity<Long> {
+public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -19,26 +22,43 @@ public class DeviceObjectMetaVzlet extends AbstractPersistableEntity<Long> {
 	private static final long serialVersionUID = 2778200912535462611L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id")	
+	@JoinColumn(name = "device_object_id", insertable = false, updatable = false)
+	@JsonIgnore
 	private DeviceObject deviceObject;
-	
-	@Column (name = "vzlet_table_hour")
+
+	@Column(name = "device_object_id")
+	@JsonIgnore
+	private Long deviceObjectId;
+
+	@Column(name = "vzlet_table_hour")
 	private String vzletTableHour;
-	
-	@Column (name = "vzlet_table_day")
+
+	@Column(name = "vzlet_table_day")
 	private String vzletTableDay;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "vzlet_system_id1")	
+	@JoinColumn(name = "vzlet_system_id1", insertable = false, updatable = false)
 	private VzletSystem vzletSystem1;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "vzlet_system_id2")	
+	@JoinColumn(name = "vzlet_system_id2", insertable = false, updatable = false)
 	private VzletSystem vzletSystem2;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "vzlet_system_id3")	
+	@JoinColumn(name = "vzlet_system_id3", insertable = false, updatable = false)
 	private VzletSystem vzletSystem3;
+
+	@Column(name = "vzlet_system_id1")
+	private Long vzletSystemId1;
+
+	@Column(name = "vzlet_system_id2")
+	private Long vzletSystemId2;
+
+	@Column(name = "vzlet_system_id3")
+	private Long vzletSystemId3;
+
+	@Version
+	private int version;
 
 	public DeviceObject getDeviceObject() {
 		return deviceObject;
@@ -68,23 +88,43 @@ public class DeviceObjectMetaVzlet extends AbstractPersistableEntity<Long> {
 		return vzletSystem1;
 	}
 
-	public void setVzletSystem1(VzletSystem vzletSystem1) {
-		this.vzletSystem1 = vzletSystem1;
-	}
-
 	public VzletSystem getVzletSystem2() {
 		return vzletSystem2;
-	}
-
-	public void setVzletSystem2(VzletSystem vzletSystem2) {
-		this.vzletSystem2 = vzletSystem2;
 	}
 
 	public VzletSystem getVzletSystem3() {
 		return vzletSystem3;
 	}
 
-	public void setVzletSystem3(VzletSystem vzletSystem3) {
-		this.vzletSystem3 = vzletSystem3;
+	public Long getVzletSystemId1() {
+		return vzletSystemId1;
+	}
+
+	public void setVzletSystemId1(Long vzletSystemId1) {
+		this.vzletSystemId1 = vzletSystemId1;
+	}
+
+	public Long getVzletSystemId2() {
+		return vzletSystemId2;
+	}
+
+	public void setVzletSystemId2(Long vzletSystemId2) {
+		this.vzletSystemId2 = vzletSystemId2;
+	}
+
+	public Long getVzletSystemId3() {
+		return vzletSystemId3;
+	}
+
+	public void setVzletSystemId3(Long vzletSystemId3) {
+		this.vzletSystemId3 = vzletSystemId3;
+	}
+
+	public Long getDeviceObjectId() {
+		return deviceObjectId;
+	}
+
+	public void setDeviceObjectId(Long deviceObjectId) {
+		this.deviceObjectId = deviceObjectId;
 	}
 }
