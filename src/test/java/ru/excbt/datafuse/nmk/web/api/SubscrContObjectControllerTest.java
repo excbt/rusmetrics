@@ -43,14 +43,18 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testContObjectFiasGet() throws Exception {
+		ContObject testCO = findFirstContObject();
+
+		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
+				testCO.getId());
+		testJsonGetSuccessfull(url);
+	}
+
+	@Test
 	public void testUpdate() throws Exception {
-		List<ContObject> subscriberContObject = subscriberService
-				.selectSubscriberContObjects(currentSubscriberService
-						.getSubscriberId());
 
-		assertTrue(subscriberContObject.size() > 0);
-
-		ContObject testCO = subscriberContObject.get(0);
+		ContObject testCO = findFirstContObject();
 		logger.info("Found ContObject (id={})", testCO.getId());
 		testCO.setComment("Updated by REST test at "
 				+ DateTime.now().toString());
@@ -102,6 +106,21 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null,
 				extraInitializer);
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private ContObject findFirstContObject() {
+		List<ContObject> subscriberContObject = subscriberService
+				.selectSubscriberContObjects(currentSubscriberService
+						.getSubscriberId());
+
+		assertTrue(subscriberContObject.size() > 0);
+
+		ContObject testCO = subscriberContObject.get(0);
+		return testCO;
 	}
 
 }

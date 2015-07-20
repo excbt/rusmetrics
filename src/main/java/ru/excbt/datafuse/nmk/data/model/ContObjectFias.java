@@ -15,6 +15,8 @@ import org.hibernate.annotations.Type;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "cont_object_fias")
 @DynamicUpdate
@@ -27,6 +29,7 @@ public class ContObjectFias extends AbstractAuditableModel {
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+	@JsonIgnore
 	private ContObject contObject;
 
 	@Column(name = "cont_object_id")

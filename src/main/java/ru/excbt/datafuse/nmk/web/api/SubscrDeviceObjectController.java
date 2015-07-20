@@ -15,26 +15,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrDeviceObjectController extends WebApiController {
+public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private SubscriberService subscriberService;
 
 	/**
 	 * 
@@ -207,21 +200,6 @@ public class SubscrDeviceObjectController extends WebApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionDelete(action);
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @return
-	 */
-	private boolean canAccessContObject(Long contObjectId) {
-		if (contObjectId == null) {
-			return false;
-		}
-		List<Long> contObjectIds = subscriberService
-				.selectSubscriberContObjectIds(currentSubscriberService
-						.getSubscriberId());
-		return contObjectIds.contains(contObjectId);
 	}
 
 }
