@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -50,9 +52,24 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectRepository.save(deviceObject);
 	}
 
+	/**
+	 * 
+	 * @param deviceObjectId
+	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(Long deviceObjectId) {
 		deviceObjectRepository.delete(deviceObjectId);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<DeviceObject> selectDeviceObjectsByContObjectId(Long contObjectId) {
+		return deviceObjectRepository
+				.selectDeviceObjectsByContObjectId(contObjectId);
 	}
 
 }
