@@ -1,9 +1,19 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.io.File;
+import java.io.InputStream;
+
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Auditable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
@@ -72,6 +82,76 @@ public class WebApiController {
 	 */
 	protected ResponseEntity<?> responseBadRequest() {
 		return ResponseEntity.badRequest().build();
+	}
+
+	/**
+	 * 
+	 * @param apiResult
+	 * @return
+	 */
+	protected ResponseEntity<?> responseBadRequest(ApiResult apiResult) {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+				apiResult);
+	}
+
+	/**
+	 * 
+	 * @param is
+	 * @param mediaType
+	 * @param contentLength
+	 * @param filename
+	 * @return
+	 */
+	protected ResponseEntity<?> processDownloadInputStream(InputStream is,
+			MediaType mediaType, long contentLength, String filename) {
+		checkNotNull(is);
+
+		InputStreamResource isr = new InputStreamResource(is);
+		return processDownloadResource(isr, mediaType, contentLength, filename);
+	}
+
+	/**
+	 * 
+	 * @param resource
+	 * @param mediaType
+	 * @param file
+	 * @return
+	 */
+	protected ResponseEntity<?> processDownloadFile(File file,
+			MediaType mediaType) {
+		checkNotNull(file);
+		FileSystemResource fsr = new FileSystemResource(file);
+		return processDownloadResource(fsr, mediaType, file.length(),
+				file.getName());
+	}
+
+	/**
+	 * 
+	 * @param resource
+	 * @param mediaType
+	 * @param contentLength
+	 * @param filename
+	 * @return
+	 */
+	protected ResponseEntity<?> processDownloadResource(Resource resource,
+			MediaType mediaType, long contentLength, String filename) {
+
+		checkNotNull(resource);
+		checkNotNull(mediaType);
+		checkNotNull(filename);
+
+		// set content attributes for the response
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(mediaType);
+		headers.setContentLength(contentLength);
+
+		// set headers for the response
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"",
+				filename);
+		headers.set(headerKey, headerValue);
+
+		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	}
 
 }

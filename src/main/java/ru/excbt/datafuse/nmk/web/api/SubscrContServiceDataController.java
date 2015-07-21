@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,7 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
@@ -55,6 +57,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import com.fasterxml.jackson.databind.MappingIterator;
@@ -596,23 +599,41 @@ public class SubscrContServiceDataController extends WebApiController {
 	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableOutCsvDownloads() {
 
-		String fileDir = webAppPropsService.getHWatersCsvOutputDir()
-				+ File.separator
-				+ Long.toString(currentSubscriberService.getSubscriberId());
-		
-		File dir = new File(fileDir);
-		if (!dir.isDirectory()) {
+		List<File> listFiles = HWatersCsvFileUtils.getOutFiles(
+				webAppPropsService, currentSubscriberService.getSubscriberId());
+
+		if (listFiles == null || listFiles.isEmpty()) {
 			return responseNotFound();
 		}
 
-		List<File> listFiles = Arrays.asList(dir.listFiles());
-		List<FileInfoMD5> resultFiles = listFiles
-				.stream()
-				.filter((i) -> i.isFile()
-						&& !FileInfoMD5.isMD5File(i.getName())).map((i) -> {
-					return new FileInfoMD5(i.getName());
-				}).collect(Collectors.toList());
+		List<FileInfoMD5> resultFiles = listFiles.stream().map((i) -> {
+			return new FileInfoMD5(i.getName());
+		}).collect(Collectors.toList());
 
 		return ResponseEntity.ok(resultFiles);
 	}
+
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	@RequestMapping(value = "/service/out/csv/{filename}", method = RequestMethod.GET)
+	public ResponseEntity<?> getOutCsvDownload(
+			@PathVariable("filename") String filename) {
+
+		logger.debug("Request for downloading file: {}", filename);
+
+		File file = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
+				currentSubscriberService.getSubscriberId(), filename);
+
+		if (file == null) {
+			return responseBadRequest(ApiResult.build(
+					ApiResultCode.ERR_VALIDATION, "File not found"));
+		}
+
+		return processDownloadFile(file, MediaType.valueOf("text/csv"));
+
+	}
+
 }

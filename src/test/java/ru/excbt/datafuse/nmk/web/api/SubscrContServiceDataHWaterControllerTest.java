@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -22,6 +25,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -30,7 +35,8 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest {
+public class SubscrContServiceDataHWaterControllerTest extends
+		AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContServiceDataHWaterControllerTest.class);
@@ -55,6 +61,9 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	@Autowired
 	private WebAppPropsService webAppPropsService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	@Test
 	public void testHWater24h() throws Exception {
@@ -138,6 +147,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
 				.fileUpload(url).file(firstFile).with(testSecurityContext()));
 
+		resultActions.andDo(MockMvcResultHandlers.print());
 		resultActions.andExpect(status().isOk());
 		String resultContent = resultActions.andReturn().getResponse()
 				.getContentAsString();
@@ -150,5 +160,35 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	public void testGetAvailableFiles() throws Exception {
 		String url = apiSubscrUrl("/service/out/csv");
 		testJsonGet(url);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDownloadCsvFile() throws Exception {
+
+		List<File> files = HWatersCsvFileUtils.getOutFiles(webAppPropsService,
+				currentSubscriberService.getSubscriberId());
+
+		assertTrue(files.size() > 0);
+
+		String filename = files.get(0).getName();
+
+		
+		File f = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
+				currentSubscriberService.getSubscriberId(), filename);
+		
+		assertNotNull(f);
+		
+		String url = apiSubscrUrl("/service/out/csv/" + filename);
+
+		ResultActions resultActions = mockMvc.perform(get(url).contentType(
+				MediaType.APPLICATION_JSON).with(testSecurityContext()));
+
+		resultActions.andDo(MockMvcResultHandlers.print());		
+		resultActions.andExpect(status().isOk());
+
 	}
 }
