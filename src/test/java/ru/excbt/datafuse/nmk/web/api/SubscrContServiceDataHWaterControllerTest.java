@@ -30,10 +30,10 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
+public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ContServiceDataHWaterControllerTest.class);
+			.getLogger(SubscrContServiceDataHWaterControllerTest.class);
 
 	public final static String API_SERVICE_URL = "/api/subscr";
 	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL
