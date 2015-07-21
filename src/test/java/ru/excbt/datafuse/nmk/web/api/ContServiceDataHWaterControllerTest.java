@@ -145,4 +145,10 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 		logger.info("Uploaded MD5:{}", resultContent);
 
 	}
+
+	@Test
+	public void testGetAvailableFiles() throws Exception {
+		String url = apiSubscrUrl("/service/out/csv");
+		testJsonGet(url);
+	}
 }

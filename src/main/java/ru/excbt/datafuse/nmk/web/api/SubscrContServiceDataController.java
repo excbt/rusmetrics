@@ -3,12 +3,14 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +49,7 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
+import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -584,5 +587,32 @@ public class SubscrContServiceDataController extends WebApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAvailableOutCsvDownloads() {
+
+		String fileDir = webAppPropsService.getHWatersCsvOutputDir()
+				+ File.separator
+				+ Long.toString(currentSubscriberService.getSubscriberId());
+		
+		File dir = new File(fileDir);
+		if (!dir.isDirectory()) {
+			return responseNotFound();
+		}
+
+		List<File> listFiles = Arrays.asList(dir.listFiles());
+		List<FileInfoMD5> resultFiles = listFiles
+				.stream()
+				.filter((i) -> i.isFile()
+						&& !FileInfoMD5.isMD5File(i.getName())).map((i) -> {
+					return new FileInfoMD5(i.getName());
+				}).collect(Collectors.toList());
+
+		return ResponseEntity.ok(resultFiles);
 	}
 }
