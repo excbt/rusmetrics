@@ -57,6 +57,12 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 	@Column(name = "vzlet_system_id3")
 	private Long vzletSystemId3;
 
+	@Column(name = "exclude_nulls")
+	private Boolean excludeNulls;
+
+	@Column(name = "meta_props_only")
+	private Boolean metaPropsOnly;
+	
 	@Version
 	private int version;
 
@@ -126,5 +132,21 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 
 	public void setDeviceObjectId(Long deviceObjectId) {
 		this.deviceObjectId = deviceObjectId;
+	}
+
+	public Boolean getExcludeNulls() {
+		return excludeNulls;
+	}
+
+	public void setExcludeNulls(Boolean excludeNulls) {
+		this.excludeNulls = excludeNulls;
+	}
+
+	public Boolean getMetaPropsOnly() {
+		return metaPropsOnly;
+	}
+
+	public void setMetaPropsOnly(Boolean metaPropsOnly) {
+		this.metaPropsOnly = metaPropsOnly;
 	}
 }

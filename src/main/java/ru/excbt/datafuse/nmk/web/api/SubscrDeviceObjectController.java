@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.VzletSystem;
+import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -28,6 +31,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
+
+	@Autowired
+	private VzletSystemRepository vzletSystemRepository;
 
 	/**
 	 * 
@@ -202,4 +208,16 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/metaVzlet/system", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectMetaVzletSystem() {
+		List<VzletSystem> preList = vzletSystemRepository.findAll();
+		List<VzletSystem> result = preList.stream().sorted((s1, s2) -> {
+			return Long.compare(s1.getId(), s2.getId());
+		}).collect(Collectors.toList());
+		return ResponseEntity.ok(result);
+	}
 }
