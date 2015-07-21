@@ -10,6 +10,11 @@ console.log("Object Service. Run.");
         var loading = true;
         var crudTableName = '../api/subscr/contObjects';
         var urlRefRange = '../api/subscr/contObjects/';
+        
+        var getObjectsUrl = function(){
+            return crudTableName;
+        };         
+        
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
@@ -76,7 +81,8 @@ console.log("Object Service. Run.");
             promise,
             getZpointsDataByObject,
             getRefRangeByObjectAndZpoint,
-            sortObjectsByFullName
+            sortObjectsByFullName,
+            getObjectsUrl
         }
     
 }]);

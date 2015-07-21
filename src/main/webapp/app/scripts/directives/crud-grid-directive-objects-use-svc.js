@@ -41,6 +41,7 @@ console.log("Objects directive.");
                 //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
 //                $scope.monitorSettings.noGreenObjectsFlag = false;
 
+                $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
@@ -76,6 +77,7 @@ console.log("Objects directive.");
 //                        };
 //                        return 0;
 //                    }); 
+                    $scope.objectsWithoutFilter = $scope.objects;
                     tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                     $scope.objectsOnPage = tempArr;
 //                    makeObjectTable(tempArr, true);
@@ -166,22 +168,77 @@ console.log("Objects directive.");
                 $scope.toggleEditMode = function (object) {
                     object.editMode = !object.editMode;
                 };
+                
+                var successCallbackOnZpointUpdate = function(e){
+                    notificationFactory.success();
+                    $('#showZpointOptionModal').modal('hide');
+                    var curIndex = -1;
+                    $scope.currentObject.zpoints.some(function(elem, index){
+                        if (elem.id === $scope.zpointSettings.id){
+                            curIndex = index;
+                            return true;
+                        };
+                    });
+                    if ((curIndex >-1)&&($scope.zpointSettings.customServiceName!=="")&&($scope.currentObject.zpoints[curIndex].zpointName!==$scope.zpointSettings.customServiceName)){
+//                        if (){
+//                            $scope.currentObject.zpoints[curIndex].customServiceName = $scope.zpointSettings.customServiceName;
+//                            $scope.currentObject.zpoints[curIndex].zpointName = $scope.zpointSettings.customServiceName;
+                            var objectIndex = -1;
+                            $scope.objects.some(function(elem, ind){
+                                if($scope.currentObject.id === elem.id){
+                                    objectIndex = ind;
+                                };
+                            });
+                            if (objectIndex>-1){
+                                $scope.objects[objectIndex].zpoints[curIndex].customServiceName = $scope.zpointSettings.customServiceName;
+                                $scope.objectsOnPage[objectIndex].zpoints[curIndex].zpointName = $scope.zpointSettings.customServiceName;
+                            };
+                            makeZpointTable($scope.objectsOnPage[objectIndex]);
+//                        };
+                    };
+                    $scope.zpointSettings = {};
+
+                };
+                
+                var successCallbackOnSetMode = function(e){
+                    notificationFactory.success();                    
+                    $scope.objectCtrlSettings.allSelected = false;
+                    $scope.objects.forEach(function(el){
+                        if (el.selected === true){
+                            el.currentSettingMode = $scope.settedMode;
+                            el.imgsrc='images/object-mode-'+el.currentSettingMode+'.png';
+                        };
+                        el.selected = false
+                    });
+                    $scope.objectsOnPage.forEach(function(el){
+                        if (el.selected === true){
+                            el.currentSettingMode = $scope.settedMode;
+                            el.imgsrc='images/object-mode-'+el.currentSettingMode+'.png';
+                        };
+                        el.selected = false
+                    });
+                };
 
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
                     $('#showObjOptionModal').modal('hide');
-                    var elIndex = -1;
-                    $scope.objects.some(function(element, index){
-                        if (element.id == $scope.currentObject.id){
-                            elIndex = index;
-                            return true;
+                    var elIndex = -1;                 
+                    if ((angular.isDefined($scope.currentObject))&&($scope.currentObject!=={})){
+                        $scope.objects.some(function(element, index){                     
+                            if (element.id == $scope.currentObject.id){
+                                elIndex = index;
+                                return true;
+                            };
+                        });
+                        if(elIndex!=-1){
+                            $scope.objects[elIndex]=$scope.currentObject;
+                            $scope.objects[elIndex].imgsrc='images/object-mode-'+$scope.currentObject.currentSettingMode+'.png';
+                            $scope.objectsOnPage[elIndex]=$scope.currentObject;
+                            $scope.objectsOnPage[elIndex].imgsrc='images/object-mode-'+$scope.currentObject.currentSettingMode+'.png';                       
                         };
-                    });
-                    if(elIndex!=-1){
-                        $scope.objects[elIndex]=$scope.currentObject;
+                        $scope.currentObject={};
                     };
-                    $scope.currentObject={};
                 };
 
                 var successPostCallback = function (e) {
@@ -264,6 +321,7 @@ console.log("Objects directive.");
                         }
                     });
                     $scope.currentZpoint = curZpoint;
+//console.log($scope.currentObject);                    
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
@@ -305,11 +363,13 @@ console.log("Objects directive.");
                                 tmp = data;
                             };
                             var zPointsByObject = tmp;
+//console.log(tmp);                            
                             var zpoints = [];
                             for(var i=0;i<zPointsByObject.length;i++){
                                 var zpoint = {};
                                 zpoint.id = zPointsByObject[i].id;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
+                                zpoint.customServiceName = zPointsByObject[i].customServiceName;
                                 zpoint.zpointName = zPointsByObject[i].customServiceName || zPointsByObject[i].contServiceType.caption;
                                 if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso!=null)){
                                     zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
@@ -603,6 +663,7 @@ console.log("Objects directive.");
                     var object = $scope.currentZpoint;
                     var zps = {};
                     zps.id = object.id;
+                    zps.customServiceName = object.customServiceName;
                     zps.zpointName = object.zpointName;
                     switch (object.zpointType){
                        case "heat" :  zps.zpointType="ТС"; break;
@@ -731,20 +792,52 @@ console.log("Objects directive.");
                      $scope.zpointSettings={};
                 };
                 
-                $scope.updateZpointSettings = function(){                   
+                //Update the common zpoint setiing - for example, Name
+                $scope.updateZpointCommonSettings = function(){
+//console.log($scope.zpointSettings);                    
+                    var url = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id;
+                    $http({
+                        url: url,
+                        method: 'PUT',
+                        data: $scope.zpointSettings
+                    })
+                        .then(successCallbackOnZpointUpdate, errorCallback);
+//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
+                };
+                
+                //Update the zpoint settings, which set the mode for Summer or Winter season
+                $scope.updateZpointModeSettings = function(){                   
                     var tableSummer = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
                     crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
                 };
                 
                 // search objects
                 $scope.searchObjects = function(searchString){
-                    var tmpArray = [];
-                    $scope.objects.forEach(function(element){
-                        if(element.fullName.indexOf(searchString)!=-1){
-                            tmpArray.push(element);
+                    if (($scope.objects.length<=0)){
+                        return;
+                    };
+                    
+                    if (angular.isUndefined(searchString) || (searchString==='')){                      
+                        var tempArr = [];
+                        var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
+                        if((endIndex >= $scope.objects.length)){
+                            endIndex = $scope.objects.length;
                         };
-                    });
-//                    makeObjectTable(tmpArray, true);
+//console.log(endIndex);
+//console.log($scope.objectCtrlSettings.objectsOnPage);  
+                        tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
+                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                    }else{
+//                        $scope.objectsOnPage = $scope.objects;
+                        var tempArr = [];
+                        
+                        $scope.objects.forEach(function(elem){
+                            if (elem.fullName.indexOf(searchString)!=-1){
+                                tempArr.push(elem);
+                            };
+                        });
+                        $scope.objectsOnPage = tempArr;
+                    };
                 };
                 
                 $scope.$on('$destroy', function() {
@@ -839,17 +932,71 @@ console.log("Window.On load event");
                 };
                 
                 $scope.addMoreObjects = function(){
-console.log("addMoreObjects. Run");   
-                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll);
+//console.log("addMoreObjects. Run");
+                    if (($scope.objects.length<=0)){
+                        return;
+                    };
+                    var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
+//console.log($scope.objects.length);                    
+                    if((endIndex >= $scope.objects.length)){
+                        endIndex = $scope.objects.length;
+                    };
+                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
+//console.log($scope.objectCtrlSettings.objectsOnPage);                    
+//console.log(endIndex);                    
+//console.log(tempArr);                    
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                    $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                    if(endIndex >= ($scope.objects.length)){
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
+                    }else{
+                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                    };
                 };
                 
                 
                 // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){
+                    var result = false;
                     $scope.userInfo = $rootScope.userInfo;
-                    return $scope.userInfo._system;
+                    if (angular.isDefined($scope.userInfo)){
+                        result = $scope.userInfo._system;
+                    };
+                    return result;
+                };
+                
+                //toggle all objects - selected/unselected
+                $scope.toggleObjects = function(flag){
+                    $scope.objects.forEach(function(el){
+                        el.selected = flag;
+                    });
+                    $scope.objectsOnPage.forEach(function(el){
+                        el.selected = flag;
+                    });
+                };
+                
+                $scope.setModeForObjects = function(mode){
+                    $scope.settedMode = mode;
+                    //get the object ids array
+                    var contObjectIds = [];
+                    if ($scope.objectCtrlSettings.allSelected===true){
+                        contObjectIds = $scope.objects.map(function(el){return el.id});
+                    }else{
+                        $scope.objectsOnPage.forEach(function(el){
+                            if(el.selected===true){
+                                contObjectIds.push(el.id);
+                            };
+                        });
+                    };
+                    
+                    //send data to server
+                    var url = objectSvc.getObjectsUrl()+"/settingModeType";
+                    $http({
+                        url: url, 
+                        method: "PUT",
+                        params: { contObjectIds:contObjectIds, currentSettingMode: mode },
+                        data: null
+                    })
+                    .then(successCallbackOnSetMode, errorCallback);
                 };
                 
                 //checkers            
