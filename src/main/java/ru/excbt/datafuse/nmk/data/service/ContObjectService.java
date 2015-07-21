@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -44,7 +47,7 @@ public class ContObjectService implements SecuredRoles {
 	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
-	private SubscrContEventNotifiicationService contEventNotifiicationService;
+	private ContObjectFiasRepository contObjectFiasRepository;
 
 	/**
 	 * 
@@ -52,7 +55,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ContObject findOneContObject(long id) {
+	public ContObject findOneContObject(Long id) {
 		return contObjectRepository.findOne(id);
 	}
 
@@ -120,6 +123,7 @@ public class ContObjectService implements SecuredRoles {
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length > 0);
 		checkNotNull(subscriberId);
+		checkNotNull(currentSettingMode);
 
 		List<Long> updatedIds = new ArrayList<>();
 
@@ -133,7 +137,11 @@ public class ContObjectService implements SecuredRoles {
 				.collect(Collectors.toList());
 
 		for (ContObject co : updateCandidate) {
-			co.setCurrentSettingMode(currentSettingMode);
+			if (!currentSettingMode.equals(co.getCurrentSettingMode())) {
+				co.setCurrentSettingMode(currentSettingMode);
+				co.setSettingModeMDate(new Date());
+			}
+
 			contObjectRepository.save(co);
 			updatedIds.add(co.getId());
 		}
@@ -150,6 +158,19 @@ public class ContObjectService implements SecuredRoles {
 	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
 		checkNotNull(subscriberId);
 		return contObjectRepository.selectSubscrContObjects(subscriberId);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public ContObjectFias findContObjectFias(Long contObjectId) {
+		checkNotNull(contObjectId);
+		List<ContObjectFias> vList = contObjectFiasRepository
+				.findByContObjectId(contObjectId);
+		return vList.isEmpty() ? null : vList.get(0);
 	}
 
 }

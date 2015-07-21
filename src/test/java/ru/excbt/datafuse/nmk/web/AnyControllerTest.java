@@ -142,7 +142,7 @@ public class AnyControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGetNoContentCheck(String url) throws Exception {
+	protected void testJsonGetNoJsonCheck(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
 
@@ -169,6 +169,43 @@ public class AnyControllerTest {
 
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @throws Exception
+	 */
+	protected void testJsonGetSuccessfull(String url) throws Exception {
+
+		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
+
+			@Override
+			public void doInit(MockHttpServletRequestBuilder builder) {
+				builder.accept(MediaType.APPLICATION_JSON);
+
+			}
+		};
+
+		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions)
+					throws Exception {
+				resultActions.andDo(MockMvcResultHandlers.print());
+
+				resultActions.andExpect(status().is2xxSuccessful());
+
+			}
+		};
+
+		testGet(url, requestExtraInitializer, resultActionsTester);
+
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @throws Exception
+	 */
 	protected void testHtmlGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
@@ -302,8 +339,7 @@ public class AnyControllerTest {
 			}
 		};
 
-		return testJsonCreate(url, sendObject, requestExtraInitializer,
-				tester);
+		return testJsonCreate(url, sendObject, requestExtraInitializer, tester);
 
 	}
 
