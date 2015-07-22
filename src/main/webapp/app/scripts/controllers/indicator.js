@@ -1,6 +1,28 @@
 
 angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory){
+        //Functions for work with date
+            //function for date converting
+        var DateNMC = function(millisec){
+            var coeffecient = 0;//3600*3*1000;
+            var userOffset = (new Date()).getTimezoneOffset()*60000;
+            var tempDate = new Date(millisec-userOffset);
+//            tempDate.getTi
+            return tempDate;
+            
+        };
+            //convert date to string
+        var printDateNMC = function(dateNMC){
+            function pad(num){
+                num = num.toString();
+                if (num.length == 1) return "0"+num;
+                return num;
+            }
+            
+            var dateToString = pad(dateNMC.getUTCDate())+"."+pad(dateNMC.getUTCMonth()+1)+"."+pad(dateNMC.getUTCFullYear())+" "+pad(dateNMC.getUTCHours())+":"+pad(dateNMC.getUTCMinutes());
+            // +1 to month, because month start with index=0
+            return dateToString;
+        };
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -442,42 +464,20 @@ angular.module('portalNMC')
 //console.log(table);        
         crudGridDataFactory(table).get(function (data) {           
                 $scope.totalIndicators = data.totalElements;
-//                var iCol = 0;
-//                var notUserColumns = new Set(["id","toJSON","$get", "$save", "$query", "$remove", "$delete", "$update", "version", "timeDetailType"]);
-//                for (var k in data.objects[0]){ 
-//                    if (notUserColumns.has(k)){continue;};      
-//                    var column = {};
-//                    column.header = listColumns[k].header || k; 
-//                    column.headerClass = listColumns[k].headerClass || "col-md-1";
-//                    column.dataClass = listColumns[k].dataClass || "col-md-1";
-//                    column.fieldName = k; 
-//console.log(column.header +" = "+k);                    
-//                    $scope.columns[iCol] = column;
-//                    iCol=iCol+1;                          
-//                };
-//                $scope.tableDef.columns =$scope.columns;
-//console.log($scope.tableDef.columns);   
+ 
                 $scope.columns = $scope.tableDef.columns;
                 var tmp = data.objects.map(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-                          var datad = new Date(el.dataDate);
-//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
-//console.log(el.dataDate);                   
-//console.log("el.Date1 = "+datad.toLocaleDateString());                            
-//console.log("el.Time1 = "+datad.toLocaleTimeString());                                                     
-                            el.dataDate = datad.toLocaleDateString();
-                            if ($scope.timeDetailType=="1h"){
-                                var time = datad.toLocaleTimeString();
-                                if (time.indexOf(':')<=1){
-                                    time="0"+time;
-                                };
-                                el.dataDate +=" "+time;
-                            };
-//                            el.dataDate = moment(el.dataDate).format("DD.MM.YY HH:mm");
-//                            el.dateDate = timeConverter(el.dataDate);
-//  console.log("el.dateDate = "+el.dateDate);
+                          var datad = DateNMC(el.dataDate);
+
+console.log(datad.getTimezoneOffset());
+
+console.log(datad.toLocaleString());                            
+
+                            el.dataDate=printDateNMC(datad);
+
                             continue;
                         }
                         if (el[$scope.columns[i].fieldName]!=null){
