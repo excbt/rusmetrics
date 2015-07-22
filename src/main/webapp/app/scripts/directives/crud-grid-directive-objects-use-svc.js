@@ -48,6 +48,12 @@ console.log("Objects directive.");
                 $scope.objectCtrlSettings.objectTopOnPage =0;
                 $scope.objectCtrlSettings.objectBottomOnPage =50;
                 
+                //list of system for meta data editor
+                $scope.objectCtrlSettings.vzletSystemList = [];
+                
+                //flag on/off extended user interface
+                $scope.objectCtrlSettings.extendedInterfaceFlag = true;
+                
                 
                 $scope.object = {};
                 $scope.objects = [];
@@ -447,7 +453,7 @@ console.log("Objects directive.");
 //                            "</th>"+
 //                        "</tr>"+
 //                        "</thead>    ";
-                    trHTML+="<td class=\"nmc-td-for-buttons-in-object-page\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
+                    trHTML+="<td class=\"nmc-td-for-buttons-in-object-page\" ng-hide=\"!objectCtrlSettings.extendedInterfaceFlag\"></td><td></td><td style=\"padding-top: 2px !important;\"><table id=\"zpointTable"+object.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table\">";
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
@@ -997,6 +1003,69 @@ console.log("Window.On load event");
                         data: null
                     })
                     .then(successCallbackOnSetMode, errorCallback);
+                };
+                
+                //Work with devices
+                    //get the list of the systems for meta data editor
+                $scope.getVzletSystemList = function(){
+                    var tmpSystemList = objectSvc.getVzletSystemList();
+                    if (tmpSystemList.length===0){
+                        objectSvc.getDeviceMetaDataSystemList()
+                            .then(
+                            function(response){
+                                $scope.objectCtrlSettings.vzletSystemList = response.data;                           
+                            },
+                            function(e){
+                                notificationFactory.errorInfo(e.statusText,e.description);
+                            }
+                        );
+                    }else{
+                        $scope.objectCtrlSettings.vzletSystemList =tmpSystemList;
+                    };
+                };
+                $scope.getVzletSystemList();
+                    //get devices
+                $scope.getDevices = function(obj){
+                    objectSvc.getDevicesByObject(obj).then(
+                        function(response){
+                            obj.devices = response.data; 
+                        },
+                        function(error){
+                            notificationFactory.errorInfo(error.statusText,error.description);
+                        }
+                    );
+                };
+                
+                    //get device meta data and show it
+                $scope.getDeviceMetaData = function(obj, device){
+                    objectSvc.getDeviceMetaData(obj, device).then(
+                        function(response){
+console.log(response);                            
+                            device.metaData = response.data; 
+                            $scope.currentDevice =  device;
+console.log($scope.currentDevice);                            
+                            $('#metaDataEditorModal').modal();
+                        },
+                        function(error){
+                            notificationFactory.errorInfo(error.statusText,error.description);
+                        }
+                    );
+                };
+                
+                $scope.updateDeviceMetaData = function(device){
+console.log(device);                    
+                    var url = "../api/subscr/contObjects/"+device.contObject.id+"/deviceObjects/"+device.id+"/metaVzlet";
+                    $http.put(url, device.metaData).then(
+//                    objectSvc.putDeviceMetaData(device).then(
+                        function(response){
+                            $scope.currentDevice =  {};
+                            $('#metaDataEditorModal').modal('hide');
+                        },
+                        function(error){
+                            console.log(error);                            
+                            notificationFactory.errorInfo(error.statusText,error.description);
+                        }
+                    );
                 };
                 
                 //checkers            

@@ -119,7 +119,6 @@
 /*    width: 1920px;*/
 }
 
-
 .nmc-main-workspace {
     margin-left: 10pt;
     width: 87%;
@@ -145,6 +144,12 @@
 /*    border-radius: 0;*/
     background-color: #FFFFFF; /*background color of main area*/
 /*    padding-top: 10px;*/
+}
+
+/* главная область в распахнутом состоянии - при минимизации левого меню*/
+.nmc-main-workspace-maximize{
+    width: 96%;
+    margin-left: 0;
 }
 
 /* Футер */
@@ -206,6 +211,12 @@
 .nmc-main-menu {
     min-width: 155px;
     width: 10%;
+}
+/* Главное меню в минимизированном состоянии*/
+.nmc-main-menu-minimize {
+    min-width: 45px;
+    width: 4%;
+    padding-right: 10px;
 }
 
     /* Пункт главного меню - неактивный*/

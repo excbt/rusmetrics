@@ -10,6 +10,9 @@ console.log("Object Service. Run.");
         var loading = true;
         var crudTableName = '../api/subscr/contObjects';
         var urlRefRange = '../api/subscr/contObjects/';
+        var urlDeviceObjects = '/deviceObjects';
+        var urlDeviceMetaData = '/metaVzlet';
+        var urlDeviceMetaDataSystemList = '../api/subscr/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
         
         var getObjectsUrl = function(){
             return crudTableName;
@@ -19,22 +22,7 @@ console.log("Object Service. Run.");
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
             return $http.get(url);
-//            .success(function(data){
-//                if(data[0] != null){
-//                    var beginDate = new Date(data[0].periodBeginDate);
-//                    var endDate =  new Date(data[0].periodEndDate);                                   
-//                    zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
-//                    zpoint.zpointRefRangeAuto = data[0]._auto?"auto":"manual";
-//                }
-//                else {
-//                    zpoint.zpointRefRange = "Не задан";
-//                    zpoint.zpointRefRangeAuto = "notSet";
-//                }
-//            })
-//            .error(function(e){
-//                console.log(e);
-//            });
-        }
+        };
                  
         var zPointsByObject = [];
         var getZpointsDataByObject = function(obj, mode){ 
@@ -43,14 +31,46 @@ console.log("Object Service. Run.");
             return $http.get(table);
         };         
         
+        var getDevicesByObject = function(obj){
+            var url = crudTableName+"/"+obj.id+urlDeviceObjects;
+            return $http.get(url);
+        };
+                 
+        var getDeviceMetaData = function(obj, device){                     
+            var url = crudTableName+"/"+obj.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
+            return $http.get(url);
+        };
+        var putDeviceMetaData = function(device){                     
+            var url = crudTableName+"/"+device.contObject.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
+            var result = $http.put(url, device.metaData);
+console.log(result);            
+            return result;
+        };
+                 
+        var getDeviceMetaDataSystemList = function(){                     
+            return $http.get(urlDeviceMetaDataSystemList);
+        };
+        var vzletSystemList = [];
+        var getVzletSystemListFromServer = function(){
+            getDeviceMetaDataSystemList()
+            .then(
+                function(response){
+                    vzletSystemList = response.data;
+                },
+                function(e){
+                    console.log(e);
+                }
+            );
+        };         
+        getVzletSystemListFromServer();
+        var getVzletSystemList = function(){
+            return vzletSystemList;
+        };
+    
+        
+        //get objects
         var getData = function () {
            return $http.get(crudTableName);
-//               .success(function (data) {
-//                var tmp = data;    
-//                var curObjId = $cookies.contObject;                   
-//                svcObjects = tmp;
-//                if (cb) cb();
-//            });
         };
                  
             // sort the object array by the fullname
@@ -77,12 +97,18 @@ console.log("Object Service. Run.");
                     
         return {
 //            getObjects,
+            getDevicesByObject,
+            getDeviceMetaData,
+            getDeviceMetaDataSystemList,
+            getObjectsUrl,
+            getRefRangeByObjectAndZpoint,
+            getVzletSystemList,
+            getZpointsDataByObject,
             loading,
             promise,
-            getZpointsDataByObject,
-            getRefRangeByObjectAndZpoint,
+            putDeviceMetaData,
             sortObjectsByFullName,
-            getObjectsUrl
+            
         }
     
 }]);

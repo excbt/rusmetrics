@@ -11,6 +11,10 @@ var app = angular.module('portalNMC');
   app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc) {
 console.log("MainCtrl");      
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
+      //main ctrl settings
+    $scope.mainCtrlSettings = {};  
+      //show on/off menu title
+    $scope.mainCtrlSettings.showFullMenuFlag = true;  
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
