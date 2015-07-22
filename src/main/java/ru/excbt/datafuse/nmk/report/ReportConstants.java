@@ -1,6 +1,5 @@
-package ru.excbt.datafuse.nmk.data.constant;
+package ru.excbt.datafuse.nmk.report;
 
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportConstants {
 
