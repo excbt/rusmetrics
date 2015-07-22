@@ -4,12 +4,10 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import ru.excbt.datafuse.nmk.data.service.ReportService;
-
 public class LocalDatePeriodParser {
 
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
-			.forPattern(ReportService.DATE_TEMPLATE);
+			.forPattern(LocalDatePeriod.DATE_TEMPLATE);
 
 	public final static LocalDatePeriodParser EMPTY_PARSER = new LocalDatePeriodParser();
 
@@ -69,7 +67,7 @@ public class LocalDatePeriodParser {
 		return !isEmpty && datePeriod != null;
 	}
 
-	public LocalDatePeriod getDatePeriod() {
+	public LocalDatePeriod getLocalDatePeriod() {
 		return datePeriod;
 	}
 

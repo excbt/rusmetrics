@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.utils;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -29,26 +31,42 @@ public class FileWriterUtils {
 	public static String writeFile(InputStream uploadedInputStream,
 			String outputFilename, boolean writeMD5) throws IOException {
 
-		File f = new File(outputFilename);
-		File dir = f.getParentFile();
+		File outputFile = new File(outputFilename);
+		
+		return writeFile(uploadedInputStream, outputFile, writeMD5);
+	}
+
+	/**
+	 * 
+	 * @param uploadedInputStream
+	 * @param outputFile
+	 * @param writeMD5
+	 * @return
+	 * @throws IOException
+	 */
+	public static String writeFile(InputStream uploadedInputStream,
+			File outputFile, boolean writeMD5) throws IOException {
+
+		checkNotNull(outputFile);
+		File dir = outputFile.getParentFile();
 
 		if (!dir.exists()) {
 			logger.info("Making dir: {}", dir.getAbsolutePath());
 			dir.mkdirs();
 		}
 
-		try (FileOutputStream fos = new FileOutputStream(outputFilename)) {
+		try (FileOutputStream fos = new FileOutputStream(outputFile)) {
 			IOUtils.copy(uploadedInputStream, fos);
 		}
 
 		String digestMD5 = null;
-		try (FileInputStream fis = new FileInputStream(f)) {
+		try (FileInputStream fis = new FileInputStream(outputFile)) {
 			digestMD5 = DigestUtils.md5Hex(fis);
 		}
 
 		if (writeMD5) {
-			String md5File = FilenameUtils.removeExtension(outputFilename)
-					+ ".md5";
+			String md5File = FilenameUtils.removeExtension(outputFile
+					.getAbsolutePath()) + ".md5";
 
 			try (PrintStream out = new PrintStream(
 					new FileOutputStream(md5File))) {
@@ -56,8 +74,8 @@ public class FileWriterUtils {
 			}
 		}
 
-		logger.info("Writed file: {}. Size:{} . MD5: {}", outputFilename,
-				f.length(), digestMD5);
+		logger.info("Writed file: {}. Size:{} . MD5: {}",
+				outputFile.getAbsolutePath(), outputFile.length(), digestMD5);
 
 		return digestMD5;
 	}
@@ -72,6 +90,18 @@ public class FileWriterUtils {
 	public static String writeFile(InputStream uploadedInputStream,
 			String outputFilename) throws IOException {
 		return writeFile(uploadedInputStream, outputFilename, true);
+	}
+
+	/**
+	 * 
+	 * @param uploadedInputStream
+	 * @param outputFile
+	 * @return
+	 * @throws IOException
+	 */
+	public static String writeFile(InputStream uploadedInputStream,
+			File outputFile) throws IOException {
+		return writeFile(uploadedInputStream, outputFile, true);
 	}
 
 }

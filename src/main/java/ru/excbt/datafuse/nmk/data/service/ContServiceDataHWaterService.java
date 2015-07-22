@@ -4,6 +4,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.BooleanUtils;
@@ -36,7 +40,9 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
@@ -59,6 +65,9 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	private HWatersCsvService hWatersCsvService;
 
 	/**
 	 * 
@@ -416,8 +425,8 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param inData
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public void manualLoadDataHWater(Long contZPointId,
-			List<ContServiceDataHWater> inData) {
+	public void insertManualLoadDataHWater(Long contZPointId,
+			List<ContServiceDataHWater> inData, File outFile) {
 
 		checkNotNull(contZPointId);
 		checkNotNull(inData);
@@ -467,6 +476,54 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 		contServiceDataHWaterRepository.save(inData);
 
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param localDatePeriod
+	 * @param outFile
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	public List<ContServiceDataHWater> deleteManualDataHWater(
+			Long contZPointId, LocalDatePeriod localDatePeriod, File outFile) {
+
+		checkNotNull(contZPointId);
+
+		checkNotNull(localDatePeriod);
+
+		ContZPoint zpoint = contZPointService.findContZPoint(contZPointId);
+
+		checkNotNull(zpoint, String.format(
+				"ContZPoint with id:%d is not found", contZPointId));
+
+		checkState(
+				BooleanUtils.isTrue(zpoint.getIsManualLoading()),
+				String.format(
+						"Manual Loading and Deleting for ContZPoint with id:%d is not allowed",
+						contZPointId));
+
+		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(
+				contZPointId, TimeDetailKey.TYPE_24H, localDatePeriod);
+
+		try {
+			ByteArrayInputStream is = new ByteArrayInputStream(
+					hWatersCsvService.writeHWaterDataToCsv(deleteCandidate));
+
+			@SuppressWarnings("unused")
+			String digestMD5 = FileWriterUtils.writeFile(is, outFile);
+
+		} catch (IOException e) {
+			throw new PersistenceException(
+					String.format(
+							"Can't save into file (%s) cadidate for delete rows for contZPointId=%d",
+							outFile.getAbsolutePath(), contZPointId));
+		}
+
+		// contServiceDataHWaterRepository.delete(deleteCandidate);
+
+		return deleteCandidate;
 	}
 
 }

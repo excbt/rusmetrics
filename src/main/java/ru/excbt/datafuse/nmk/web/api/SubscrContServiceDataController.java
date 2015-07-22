@@ -3,12 +3,14 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -46,22 +47,23 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
-import com.fasterxml.jackson.databind.MappingIterator;
-import com.fasterxml.jackson.databind.ObjectReader;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataController extends WebApiController {
+public class SubscrContServiceDataController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrContServiceDataController.class);
@@ -82,7 +84,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	private ContZPointService contZPointService;
 
 	@Autowired
-	private TimeZoneService timeZoneService;
+	private HWatersCsvService hWatersCsvService;
 
 	@Autowired
 	private WebAppPropsService webAppPropsService;
@@ -100,7 +102,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> serviceDataHWater(
+	public ResponseEntity<?> getDataHWater(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
@@ -127,7 +129,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		}
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -169,7 +171,7 @@ public class SubscrContServiceDataController extends WebApiController {
 
 		List<ContServiceDataHWater> result = contServiceDataHWaterService
 				.selectByContZPoint(contZPointId, timeDetail, datePeriodParser
-						.getDatePeriod().buildEndOfDay());
+						.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(result);
 
@@ -185,7 +187,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> serviceDataHWaterPaged(
+	public ResponseEntity<?> getDataHWaterPaged(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
@@ -213,7 +215,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		}
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -255,7 +257,7 @@ public class SubscrContServiceDataController extends WebApiController {
 
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService
 				.selectByContZPoint(contZPointId, timeDetail, datePeriodParser
-						.getDatePeriod().buildEndOfDay(), pageable);
+						.getLocalDatePeriod().buildEndOfDay(), pageable);
 
 		return ResponseEntity
 				.ok(new PageInfoList<ContServiceDataHWater>(result));
@@ -272,7 +274,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> serviceDataHWaterSummary(
+	public ResponseEntity<?> getDataHWaterSummary(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
@@ -392,7 +394,7 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.GET)
-	public void serviceDataHWater_AbsCsvDownload(
+	public void getDataHWater_CsvAbsDownload(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
@@ -454,30 +456,21 @@ public class SubscrContServiceDataController extends WebApiController {
 		List<ContServiceDataHWaterAbs_Csv> cvsDataList = contServiceDataHWaterService
 				.selectDataAbs_Csv(contZPointId, timeDetail, beginD, endOfDay);
 
-		CsvMapper mapper = new CsvMapper();
-
-		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class,
-				ContServiceDataHWater_CsvFormat.class);
-
-		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class)
-				.withHeader();
-
-		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(cvsDataList);
+		byte[] byteArray = hWatersCsvService
+				.writeHWaterDataToCsvAbs(cvsDataList);
 
 		response.setContentType(MIME_CSV);
 		response.setContentLength(byteArray.length);
 
 		String outputFilename = String.format(
-				"HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s)",
+				"HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s).csv",
 				contObjectId, contObjectId, timeDetailType, beginDateS,
 				endDateS);
 
 		// set headers for the response
 		String headerKey = "Content-Disposition";
 		String headerValue = String.format("attachment; filename=\"%s\"",
-				outputFilename + FILE_CSV_EXT);
+				outputFilename);
 		response.setHeader(headerKey, headerValue);
 		//
 		OutputStream outStream = response.getOutputStream();
@@ -491,15 +484,91 @@ public class SubscrContServiceDataController extends WebApiController {
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv/noAbs", method = RequestMethod.GET)
+	public ResponseEntity<?> getDataHWater_CsvDownload(
+			@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId,
+			@PathVariable("timeDetailType") String timeDetailType,
+			@RequestParam("beginDate") String fromDateStr,
+			@RequestParam("endDate") String toDateStr) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} and toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		TimeDetailKey timeDetail = TimeDetailKey.valueOf(timeDetailType);
+		if (timeDetail == null) {
+			return responseBadRequest();
+		}
+
+		LocalDatePeriod ldp = datePeriodParser.getLocalDatePeriod();
+
+		List<ContServiceDataHWater> dataHWaterList = contServiceDataHWaterService
+				.selectByContZPoint(contZPointId, timeDetail,
+						ldp.buildEndOfDay());
+
+		byte[] csaBytes;
+		try {
+			csaBytes = hWatersCsvService.writeHWaterDataToCsv(dataHWaterList);
+		} catch (JsonProcessingException e) {
+			return responseInternalServerError(ApiResult.error(e));
+		}
+
+		ByteArrayInputStream is = new ByteArrayInputStream(csaBytes);
+
+		String outputFilename = String.format(
+				"HWaters_(contObject_%d)_(contZPoint_%d)_%s_(%s-%s)_noabs.csv",
+				contObjectId, contObjectId, timeDetailType,
+				ldp.getDateFromStr(), ldp.getDateToStr());
+
+		return processDownloadInputStream(is, HWatersCsvService.MEDIA_TYPE_CSV,
+				csaBytes.length, outputFilename);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @param timeDetailType
 	 * @param multipartFile
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> serviceUploadManualDataHWater(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId,
+	public ResponseEntity<?> uploadManualDataHWater(
+			@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("file") MultipartFile multipartFile) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -521,68 +590,174 @@ public class SubscrContServiceDataController extends WebApiController {
 							.validationError("ContZPoint is not suported manual loading"));
 		}
 
-		String filename = webAppPropsService.getHWatersCsvInputDir()
+		String inFilename = webAppPropsService.getHWatersCsvInputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(
 						currentSubscriberService.getSubscriberId(),
 						currentSubscriberService.getCurrentUserId());
 
-		String digestMD5;
+		File inFile = new File(inFilename);
+
 		try {
-			digestMD5 = FileWriterUtils.writeFile(
-					multipartFile.getInputStream(), filename);
+			@SuppressWarnings("unused")
+			String digestMD5 = FileWriterUtils.writeFile(
+					multipartFile.getInputStream(), inFile);
 		} catch (IOException e) {
 			logger.error("Exception:{}", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResult.error(e));
-
+			return responseInternalServerError(ApiResult.error(e));
 		}
 
-		CsvMapper mapper = new CsvMapper();
-		mapper.addMixInAnnotations(ContServiceDataHWater.class,
-				ContServiceDataHWater_CsvFormat.class);
-
-		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
-				.withHeader();
-
-		ObjectReader reader = mapper.reader(ContServiceDataHWater.class).with(
-				schema);
-
-		MappingIterator<ContServiceDataHWater> iterator = null;
-		List<ContServiceDataHWater> inData = new ArrayList<>();
-
-		boolean parsingResult = true;
-		try (FileInputStream fio = new FileInputStream(filename)) {
-			iterator = reader.readValues(fio);
-			while (iterator.hasNext()) {
-				ContServiceDataHWater d = iterator.next();
-				inData.add(d);
-			}
+		List<ContServiceDataHWater> inData;
+		try (FileInputStream fio = new FileInputStream(inFilename)) {
+			inData = hWatersCsvService.parseHWaterDataCsv(fio);
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
-			parsingResult = false;
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResult.error(e));
-
+			return responseInternalServerError(ApiResult.error(e));
 		}
 
-		if (!parsingResult) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.build();
-		}
-
-		ApiAction action = new AbstractEntityApiAction<String>() {
+		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
 
 			@Override
 			public void process() {
-				contServiceDataHWaterService.manualLoadDataHWater(contZPointId,
-						inData);
-
-				setResultEntity(digestMD5);
+				contServiceDataHWaterService.insertManualLoadDataHWater(
+						contZPointId, inData, inFile);
+				FileInfoMD5 resultFileInfo = new FileInfoMD5(inFile);
+				setResultEntity(resultFileInfo);
 			}
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOutCsvDownloadsAvailable() {
+
+		List<File> listFiles = HWatersCsvFileUtils.getOutFiles(
+				webAppPropsService, currentSubscriberService.getSubscriberId());
+
+		if (listFiles == null || listFiles.isEmpty()) {
+			return responseNotFound();
+		}
+
+		List<FileInfoMD5> resultFiles = listFiles.stream().map((i) -> {
+			return new FileInfoMD5(i.getName());
+		}).collect(Collectors.toList());
+
+		return ResponseEntity.ok(resultFiles);
+	}
+
+	/**
+	 * 
+	 * @param filename
+	 * @return
+	 */
+	@RequestMapping(value = "/service/out/csv/{filename}", method = RequestMethod.GET)
+	public ResponseEntity<?> getOutCsvDownload(
+			@PathVariable("filename") String filename) {
+
+		logger.debug("Request for downloading file: {}", filename);
+
+		File file = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
+				currentSubscriberService.getSubscriberId(), filename);
+
+		if (file == null) {
+			return responseBadRequest(ApiResult.build(
+					ApiResultCode.ERR_VALIDATION, "File not found"));
+		}
+
+		return processDownloadFile(file, HWatersCsvService.MEDIA_TYPE_CSV);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param contZPointId
+	 * @param timeDetailType
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteManualDataHWater(
+			@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId,
+			@PathVariable("timeDetailType") String timeDetailType,
+			@RequestParam("beginDate") String fromDateStr,
+			@RequestParam("endDate") String toDateStr) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		checkNotNull(timeDetailType);
+		checkNotNull(contZPointId);
+		checkNotNull(fromDateStr);
+		checkNotNull(toDateStr);
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} and toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
+			return ResponseEntity
+					.badRequest()
+					.body(ApiResult
+							.validationError("Data of 1h is not supported for uploading"));
+		}
+
+		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+
+		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
+			return ResponseEntity
+					.badRequest()
+					.body(ApiResult
+							.validationError("ContZPoint is not suported manual loading"));
+		}
+
+		String outFilename = webAppPropsService.getHWatersCsvOutputDir()
+				+ webAppPropsService.getSubscriberCsvFilename(
+						currentSubscriberService.getSubscriberId(),
+						currentSubscriberService.getCurrentUserId());
+
+		File outFile = new File(outFilename);
+
+		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
+
+			@Override
+			public void process() {
+
+				@SuppressWarnings("unused")
+				List<ContServiceDataHWater> deletedRecords = contServiceDataHWaterService
+						.deleteManualDataHWater(contZPointId, datePeriodParser
+								.getLocalDatePeriod().buildEndOfDay(), outFile);
+				FileInfoMD5 resultFileInfo = new FileInfoMD5(outFile);
+				setResultEntity(resultFileInfo);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
 }

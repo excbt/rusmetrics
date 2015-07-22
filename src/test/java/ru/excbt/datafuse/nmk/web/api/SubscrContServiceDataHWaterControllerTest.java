@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.List;
 
 import org.junit.Test;
@@ -18,22 +21,21 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
-import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-
-public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
+public class SubscrContServiceDataHWaterControllerTest extends
+		AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ContServiceDataHWaterControllerTest.class);
+			.getLogger(SubscrContServiceDataHWaterControllerTest.class);
 
 	public final static String API_SERVICE_URL = "/api/subscr";
 	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL
@@ -55,6 +57,12 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private WebAppPropsService webAppPropsService;
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private HWatersCsvService HWatersCsvService;
 
 	@Test
 	public void testHWater24h() throws Exception {
@@ -104,27 +112,12 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 		// Prepare File
 		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
 		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(
-				SRC_HW_CONT_ZPOINT_ID, TimeDetailKey.TYPE_24H,
-				dp.getDateTimeFrom(), dp.getDateTimeTo());
+				SRC_HW_CONT_ZPOINT_ID, TimeDetailKey.TYPE_24H, dp);
 
-		CsvMapper mapper = new CsvMapper();
-
-		mapper.addMixInAnnotations(ContServiceDataHWater.class,
-				ContServiceDataHWater_CsvFormat.class);
-
-		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
-				.withHeader();
-
-		byte[] fileBytes = mapper.writer(schema).writeValueAsBytes(dataHWater);
+		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
 
 		String srcFilename = webAppPropsService.getHWatersCsvOutputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
-
-		ByteArrayInputStream is = new ByteArrayInputStream(fileBytes);
-
-		FileWriterUtils.writeFile(is, srcFilename);
 
 		// Processing POST
 
@@ -138,11 +131,65 @@ public class ContServiceDataHWaterControllerTest extends AnyControllerTest {
 		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
 				.fileUpload(url).file(firstFile).with(testSecurityContext()));
 
-		resultActions.andExpect(status().isOk());
+		resultActions.andDo(MockMvcResultHandlers.print());
+		resultActions.andExpect(status().is2xxSuccessful());
 		String resultContent = resultActions.andReturn().getResponse()
 				.getContentAsString();
 
-		logger.info("Uploaded MD5:{}", resultContent);
+		logger.info("Uploaded FileInfoMD5:{}", resultContent);
+
+	}
+
+	@Test
+	public void testGetAvailableFiles() throws Exception {
+		String url = apiSubscrUrl("/service/out/csv");
+		testJsonGet(url);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDownloadCsvFile() throws Exception {
+
+		List<File> files = HWatersCsvFileUtils.getOutFiles(webAppPropsService,
+				currentSubscriberService.getSubscriberId());
+
+		assertTrue(files.size() > 0);
+
+		String filename = files.get(0).getName();
+
+		File f = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
+				currentSubscriberService.getSubscriberId(), filename);
+
+		assertNotNull(f);
+
+		String url = apiSubscrUrl("/service/out/csv/" + filename);
+
+		testJsonGetNoJsonCheck(url);
+	}
+
+	@Test
+	public void testManualDeleteData() throws Exception {
+
+		LocalDatePeriod datePeriod = LocalDatePeriod.lastWeek();
+
+		String url = apiSubscrUrl(String.format(
+				"/contObjects/%d/contZPoints/%d/service/24h/csv",
+				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+
+		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(),
+				datePeriod.getDateToStr());
+
+		ResultActions resultAction = mockMvc.perform(delete(url)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", datePeriod.getDateFromStr())
+				.param("endDate", datePeriod.getDateToStr())
+				.with(testSecurityContext()));
+
+		resultAction.andDo(MockMvcResultHandlers.print());
+		resultAction.andExpect(status().is2xxSuccessful());
 
 	}
 }

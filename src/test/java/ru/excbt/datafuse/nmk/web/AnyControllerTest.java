@@ -160,7 +160,7 @@ public class AnyControllerTest {
 					throws Exception {
 				resultActions.andDo(MockMvcResultHandlers.print());
 
-				resultActions.andExpect(status().isOk());
+				resultActions.andExpect(status().is2xxSuccessful());
 
 			}
 		};
@@ -313,7 +313,7 @@ public class AnyControllerTest {
 						MediaType.APPLICATION_JSON));
 
 		deleteResultActions.andDo(MockMvcResultHandlers.print());
-		deleteResultActions.andExpect(status().isNoContent());
+		deleteResultActions.andExpect(status().is2xxSuccessful());
 	}
 
 	/**

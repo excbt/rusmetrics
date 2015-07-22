@@ -147,7 +147,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
 				.selectMonitorContEventTypeStatus(
 						currentSubscriberService.getSubscriberId(),
-						contObjectId, dpp.getDatePeriod());
+						contObjectId, dpp.getLocalDatePeriod());
 
 		assertNotNull(checkList);
 		assertFalse(checkList.isEmpty());
@@ -167,7 +167,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
 				.selectMonitorContEventTypeStatusCollapse(
 						currentSubscriberService.getSubscriberId(),
-						contObjectId, dpp.getDatePeriod());
+						contObjectId, dpp.getLocalDatePeriod());
 		
 		assertNotNull(checkList);
 		assertFalse(checkList.isEmpty());
