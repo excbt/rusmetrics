@@ -20,14 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
-import ru.excbt.datafuse.nmk.report.model.ReportColumn;
-import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.ReportColumn;
+import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.nmk.reports.ColumnElement;
 import ru.excbt.nmk.reports.ReportConvert;

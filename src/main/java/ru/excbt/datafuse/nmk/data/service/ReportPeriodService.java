@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 @Service
 @Transactional(readOnly = true)

@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.report.model;
+package ru.excbt.datafuse.nmk.report;
 
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 

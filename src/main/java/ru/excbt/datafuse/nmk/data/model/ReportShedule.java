@@ -17,11 +17,11 @@ import javax.persistence.Version;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportActionKey;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportActionType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType;
+import ru.excbt.datafuse.nmk.report.ReportActionKey;
+import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

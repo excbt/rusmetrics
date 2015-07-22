@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.report.model;
+package ru.excbt.datafuse.nmk.report;
 
 import java.util.ArrayList;
 import java.util.List;

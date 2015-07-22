@@ -4,7 +4,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.joda.time.LocalDateTime;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
+
 
 public class ReportParamsetUtils {
 
