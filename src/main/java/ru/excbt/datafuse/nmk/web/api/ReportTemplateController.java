@@ -64,7 +64,7 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneAny(
+	public ResponseEntity<?> getAnyList(
 			@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey
@@ -81,26 +81,13 @@ public class ReportTemplateController extends WebApiController {
 		return ResponseEntity.ok(result);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	// @RequestMapping(value = "/cons", method = RequestMethod.GET, produces =
-	// APPLICATION_JSON_UTF8)
-	// public ResponseEntity<?> getReportTemplatesConsOld() {
-	// List<ReportTemplate> result = reportTemplateService
-	// .getAllReportTemplates(
-	// currentSubscriberService.getSubscriberId(),
-	// ReportTypeKey.CONS_T2_REPORT, ReportConstants.IS_ACTIVE);
-	// return ResponseEntity.ok(result);
-	// }
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneArchiveAny(
+	public ResponseEntity<?> getAnyArchList(
 			@PathVariable("reportUrlName") String reportUrlName) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey
@@ -119,19 +106,74 @@ public class ReportTemplateController extends WebApiController {
 
 	/**
 	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
 	 * @return
 	 */
-	// @RequestMapping(value = "/archive/cons", method = RequestMethod.GET,
-	// produces = APPLICATION_JSON_UTF8)
-	// public ResponseEntity<?> getReportTemplatesArchiveConsOld() {
-	// List<ReportTemplate> result = reportTemplateService
-	// .getAllReportTemplates(
-	// currentSubscriberService.getSubscriberId(),
-	// ReportTypeKey.CONS_T2_REPORT,
-	// ReportConstants.IS_NOT_ACTIVE);
-	// return ResponseEntity.ok(result);
-	// }
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
+		if (result == null) {
+			return responseBadRequest();
+		}
+
+		return responseOK(result);
+	}	
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
+	 * @param reportTemplate
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
+			@RequestBody ReportTemplate reportTemplate) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return updateInternal(reportTemplateId, reportTemplate, reportTypeKey);
+	}	
+	
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOneArch(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportTemplateId") long reportTemplateId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return deleteInternal(reportTemplateId);
+	}	
+	
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -149,52 +191,6 @@ public class ReportTemplateController extends WebApiController {
 		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
-	/**
-	 * 
-	 * @param reportUrlName
-	 * @param reportTemplateId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOneArchiveAny(
-			@PathVariable("reportUrlName") String reportUrlName,
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
-		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
-		}
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @param reportUrlName
-	 * @param reportTemplateId
-	 * @return
-	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneAny(
-			@PathVariable("reportUrlName") String reportUrlName,
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
-		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
-		}
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			return responseBadRequest();
-		}
-
-		return responseOK(result);
-	}
 
 	/**
 	 * 
@@ -227,28 +223,6 @@ public class ReportTemplateController extends WebApiController {
 
 	}
 
-	/**
-	 * 
-	 * @param reportUrlName
-	 * @param reportTemplateId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneAny(
-			@PathVariable("reportUrlName") String reportUrlName,
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
-		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
-		}
-
-		return updateInternal(reportTemplateId, reportTemplate, reportTypeKey);
-	}
 
 	/**
 	 * 
