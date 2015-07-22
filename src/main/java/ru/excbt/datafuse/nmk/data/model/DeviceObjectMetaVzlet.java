@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -58,11 +59,13 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 	private Long vzletSystemId3;
 
 	@Column(name = "exclude_nulls")
+	@NotNull
 	private Boolean excludeNulls;
 
 	@Column(name = "meta_props_only")
+	@NotNull
 	private Boolean metaPropsOnly;
-	
+
 	@Version
 	private int version;
 
