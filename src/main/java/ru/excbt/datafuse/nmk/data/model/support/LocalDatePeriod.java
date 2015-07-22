@@ -11,6 +11,8 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 public class LocalDatePeriod {
 
+	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
+
 	public static class Builder {
 
 		private LocalDateTime dateTimeFrom = null;
@@ -79,6 +81,20 @@ public class LocalDatePeriod {
 		return result;
 	}
 
+	public static LocalDatePeriod lastMonth() {
+		LocalDatePeriod result = builder()
+				.dateFrom(startOfDay(LocalDateTime.now().minusMonths(1)))
+				.dateTo(endOfDay(LocalDateTime.now())).build();
+		return result;
+	}
+
+	public static LocalDatePeriod lastYear() {
+		LocalDatePeriod result = builder()
+				.dateFrom(startOfDay(LocalDateTime.now().minusYears(1)))
+				.dateTo(endOfDay(LocalDateTime.now())).build();
+		return result;
+	}
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -143,6 +159,14 @@ public class LocalDatePeriod {
 	public String toString() {
 		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo="
 				+ dateTimeTo + "]";
+	}
+
+	public String getDateFromStr() {
+		return dateTimeTo == null ? null : dateTimeFrom.toString(DATE_TEMPLATE);
+	}
+
+	public String getDateToStr() {
+		return dateTimeTo == null ? null : dateTimeTo.toString(DATE_TEMPLATE);
 	}
 
 }

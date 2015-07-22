@@ -86,12 +86,27 @@ public class WebApiController {
 
 	/**
 	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseOK() {
+		return ResponseEntity.ok().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected ResponseEntity<?> responseOK(Object body) {
+		return ResponseEntity.ok(body);
+	}
+
+	/**
+	 * 
 	 * @param apiResult
 	 * @return
 	 */
 	protected ResponseEntity<?> responseBadRequest(ApiResult apiResult) {
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-				apiResult);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResult);
 	}
 
 	/**

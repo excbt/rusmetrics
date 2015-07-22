@@ -118,7 +118,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& !datePeriodParser.getDatePeriod().isValidEq()) {
+				&& !datePeriodParser.getLocalDatePeriod().isValidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -132,9 +132,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isValidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
 
-			requestDatePeriod = datePeriodParser.getDatePeriod()
+			requestDatePeriod = datePeriodParser.getLocalDatePeriod()
 					.buildEndOfDay();
 
 		}
@@ -253,7 +253,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -264,9 +264,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isValidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
 
-			requestDatePeriod = datePeriodParser.getDatePeriod()
+			requestDatePeriod = datePeriodParser.getLocalDatePeriod()
 					.buildEndOfDay();
 
 		}
@@ -304,7 +304,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -315,7 +315,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
 				.selectMonitorContEventNotificationStatus(
 						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getDatePeriod().buildEndOfDay());
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		List<MonitorContEventNotificationStatus> resultList = null;
 
@@ -349,7 +349,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -360,7 +360,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
 				.selectMonitorContEventNotificationStatusCollapse(
 						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getDatePeriod().buildEndOfDay());
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		List<MonitorContEventNotificationStatus> resultList = null;
 
@@ -395,7 +395,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -406,7 +406,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
 				.selectMonitorContEventTypeStatus(currentSubscriberService
 						.getSubscriberId(), contObjectId, datePeriodParser
-						.getDatePeriod().buildEndOfDay());
+						.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -430,7 +430,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		checkNotNull(datePeriodParser);
 
 		if (datePeriodParser.isOk()
-				&& datePeriodParser.getDatePeriod().isInvalidEq()) {
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
 			return ResponseEntity
 					.badRequest()
 					.body(String
@@ -441,7 +441,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
 				.selectMonitorContEventTypeStatusCollapse(
 						currentSubscriberService.getSubscriberId(),
-						contObjectId, datePeriodParser.getDatePeriod()
+						contObjectId, datePeriodParser.getLocalDatePeriod()
 								.buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
@@ -486,11 +486,11 @@ public class SubscrContEventNotificationController extends WebApiController {
 					fromDateStr, toDateStr);
 
 			if (datePeriodParser.isOk()
-					&& datePeriodParser.getDatePeriod().isValidEq()) {
+					&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
 				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
 						.selectByConditions(currentSubscriberService
 								.getSubscriberId(), datePeriodParser
-								.getDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
+								.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService

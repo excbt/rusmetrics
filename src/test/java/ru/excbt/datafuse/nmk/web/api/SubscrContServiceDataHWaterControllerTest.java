@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -132,7 +133,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
 
 		File srcFile = new File(srcFilename);
-		
+
 		ByteArrayInputStream is = new ByteArrayInputStream(fileBytes);
 
 		FileWriterUtils.writeFile(is, srcFile);
@@ -178,19 +179,40 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		String filename = files.get(0).getName();
 
-		
 		File f = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
 				currentSubscriberService.getSubscriberId(), filename);
-		
+
 		assertNotNull(f);
-		
+
 		String url = apiSubscrUrl("/service/out/csv/" + filename);
 
 		ResultActions resultActions = mockMvc.perform(get(url).contentType(
 				MediaType.APPLICATION_JSON).with(testSecurityContext()));
 
-		resultActions.andDo(MockMvcResultHandlers.print());		
+		resultActions.andDo(MockMvcResultHandlers.print());
 		resultActions.andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testManualDeleteData() throws Exception {
+
+		LocalDatePeriod datePeriod = LocalDatePeriod.lastWeek();
+
+		String url = apiSubscrUrl(String.format(
+				"/contObjects/%d/contZPoints/%d/service/24h/csv",
+				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+
+		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(),
+				datePeriod.getDateToStr());
+
+		ResultActions resultAction = mockMvc.perform(delete(url)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", datePeriod.getDateFromStr())
+				.param("endDate", datePeriod.getDateToStr())
+				.with(testSecurityContext()));
+
+		resultAction.andDo(MockMvcResultHandlers.print());
 
 	}
 }
