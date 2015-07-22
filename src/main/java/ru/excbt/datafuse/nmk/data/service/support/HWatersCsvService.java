@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 @Service
 public class HWatersCsvService {
 
+	public static final MediaType MEDIA_TYPE_CSV = MediaType.valueOf("text/csv");
+	
 	@Autowired
 	public TimeZoneService timeZoneService;
 	

@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.List;
 
@@ -22,19 +21,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
+import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
-import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
-
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 public class SubscrContServiceDataHWaterControllerTest extends
 		AnyControllerTest {
@@ -65,6 +60,9 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private HWatersCsvService HWatersCsvService;
 
 	@Test
 	public void testHWater24h() throws Exception {
@@ -114,29 +112,12 @@ public class SubscrContServiceDataHWaterControllerTest extends
 		// Prepare File
 		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
 		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(
-				SRC_HW_CONT_ZPOINT_ID, TimeDetailKey.TYPE_24H,
-				dp.getDateTimeFrom(), dp.getDateTimeTo());
+				SRC_HW_CONT_ZPOINT_ID, TimeDetailKey.TYPE_24H, dp);
 
-		CsvMapper mapper = new CsvMapper();
-
-		mapper.addMixInAnnotations(ContServiceDataHWater.class,
-				ContServiceDataHWater_CsvFormat.class);
-
-		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
-				.withHeader();
-
-		byte[] fileBytes = mapper.writer(schema).writeValueAsBytes(dataHWater);
+		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
 
 		String srcFilename = webAppPropsService.getHWatersCsvOutputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
-
-		File srcFile = new File(srcFilename);
-
-		ByteArrayInputStream is = new ByteArrayInputStream(fileBytes);
-
-		FileWriterUtils.writeFile(is, srcFile);
 
 		// Processing POST
 
@@ -151,11 +132,11 @@ public class SubscrContServiceDataHWaterControllerTest extends
 				.fileUpload(url).file(firstFile).with(testSecurityContext()));
 
 		resultActions.andDo(MockMvcResultHandlers.print());
-		resultActions.andExpect(status().isOk());
+		resultActions.andExpect(status().is2xxSuccessful());
 		String resultContent = resultActions.andReturn().getResponse()
 				.getContentAsString();
 
-		logger.info("Uploaded MD5:{}", resultContent);
+		logger.info("Uploaded FileInfoMD5:{}", resultContent);
 
 	}
 
@@ -186,12 +167,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		String url = apiSubscrUrl("/service/out/csv/" + filename);
 
-		ResultActions resultActions = mockMvc.perform(get(url).contentType(
-				MediaType.APPLICATION_JSON).with(testSecurityContext()));
-
-		resultActions.andDo(MockMvcResultHandlers.print());
-		resultActions.andExpect(status().isOk());
-
+		testJsonGetNoJsonCheck(url);
 	}
 
 	@Test
@@ -213,6 +189,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 				.with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
+		resultAction.andExpect(status().is2xxSuccessful());
 
 	}
 }
