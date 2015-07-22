@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -11,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -60,6 +63,10 @@ public class ContObject extends AbstractAuditableModel {
 	@Column(name = "current_setting_mode")
 	private String currentSettingMode;
 
+	@Column(name = "setting_mode_mdate")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date settingModeMDate;
+
 	@Column(name = "cont_object_description")
 	private String description;
 
@@ -80,8 +87,8 @@ public class ContObject extends AbstractAuditableModel {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
-	private TimezoneDef timezoneDef;	
-	
+	private TimezoneDef timezoneDef;
+
 	public String getName() {
 		return name;
 	}
@@ -200,6 +207,14 @@ public class ContObject extends AbstractAuditableModel {
 
 	public void setTimezoneDef(TimezoneDef timezoneDef) {
 		this.timezoneDef = timezoneDef;
+	}
+
+	public Date getSettingModeMDate() {
+		return settingModeMDate;
+	}
+
+	public void setSettingModeMDate(Date settingModeMDate) {
+		this.settingModeMDate = settingModeMDate;
 	}
 
 }

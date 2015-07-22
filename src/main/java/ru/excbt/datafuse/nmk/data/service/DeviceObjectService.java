@@ -106,6 +106,12 @@ public class DeviceObjectService implements SecuredRoles {
 	public DeviceObjectMetaVzlet updateDeviceObjectMetaVzlet(
 			DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
 		checkNotNull(deviceObjectMetaVzlet);
+		if (deviceObjectMetaVzlet.getExcludeNulls() == null) {
+			deviceObjectMetaVzlet.setExcludeNulls(false);
+		}
+		if (deviceObjectMetaVzlet.getMetaPropsOnly() == null) {
+			deviceObjectMetaVzlet.setMetaPropsOnly(false);;
+		}
 		return deviceObjectMetaVzletRepository.save(deviceObjectMetaVzlet);
 	}
 
@@ -123,4 +129,15 @@ public class DeviceObjectService implements SecuredRoles {
 			deviceObjectMetaVzletRepository.delete(entity);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Transactional (readOnly = true)
+	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
+		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
+	}
+		
 }

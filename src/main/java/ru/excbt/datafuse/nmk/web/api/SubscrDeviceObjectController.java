@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,27 +15,25 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.VzletSystem;
+import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrDeviceObjectController extends WebApiController {
+public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
 
 	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private SubscriberService subscriberService;
+	private VzletSystemRepository vzletSystemRepository;
 
 	/**
 	 * 
@@ -72,10 +71,6 @@ public class SubscrDeviceObjectController extends WebApiController {
 
 		DeviceObjectMetaVzlet result = deviceObjectService
 				.selectDeviceObjectMetaVzlet(deviceObjectId);
-
-		if (result == null) {
-			ResponseEntity.ok();
-		}
 
 		return ResponseEntity.ok(result);
 	}
@@ -215,17 +210,14 @@ public class SubscrDeviceObjectController extends WebApiController {
 
 	/**
 	 * 
-	 * @param contObjectId
 	 * @return
 	 */
-	private boolean canAccessContObject(Long contObjectId) {
-		if (contObjectId == null) {
-			return false;
-		}
-		List<Long> contObjectIds = subscriberService
-				.selectSubscriberContObjectIds(currentSubscriberService
-						.getSubscriberId());
-		return contObjectIds.contains(contObjectId);
+	@RequestMapping(value = "/deviceObjects/metaVzlet/system", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectMetaVzletSystem() {
+		List<VzletSystem> preList = vzletSystemRepository.findAll();
+		List<VzletSystem> result = preList.stream().sorted((s1, s2) -> {
+			return Long.compare(s1.getId(), s2.getId());
+		}).collect(Collectors.toList());
+		return ResponseEntity.ok(result);
 	}
-
 }

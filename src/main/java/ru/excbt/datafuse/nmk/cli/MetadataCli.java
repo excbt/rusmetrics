@@ -25,7 +25,6 @@ import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectDataJsonService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetaService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.metadata.MetadataFieldValue;
@@ -41,9 +40,6 @@ public class MetadataCli extends AbstractDBToolCli {
 	 private final static long[] DEVICE_OBJECTS = { 22 };
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
-
-	@Autowired
-	private DeviceObjectMetaService deviceObjectMetaService;
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -107,8 +103,8 @@ public class MetadataCli extends AbstractDBToolCli {
 
 		boolean result = true;
 
-		List<DeviceObjectMetaVzlet> metaList = deviceObjectMetaService
-				.findMetaVzlet(deviceObjectId);
+		List<DeviceObjectMetaVzlet> metaList = deviceObjectService
+				.findDeviceObjectMetaVzlet(deviceObjectId);
 
 		checkState(metaList.size() > 0);
 

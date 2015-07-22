@@ -1,0 +1,8 @@
+@charset "UTF-8";
+@font-face {
+	font-family: 'Arial-en_US';
+	src: local('☺'),
+		url('Arial-en_US.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}

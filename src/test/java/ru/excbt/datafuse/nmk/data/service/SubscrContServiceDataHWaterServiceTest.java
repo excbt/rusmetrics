@@ -19,10 +19,10 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 
-public class ContServiceDataHWaterServiceTest extends JpaSupportTest {
+public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ContServiceDataHWaterServiceTest.class);
+			.getLogger(SubscrContServiceDataHWaterServiceTest.class);
 
 	private final static long ZPOINT_ID = 18811557;
 

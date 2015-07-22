@@ -45,6 +45,13 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 				.addResourceLocations("/app/bower_components/");
 		registry.addResourceHandler("/app/vendor_components/**")
 				.addResourceLocations("/app/vendor_components/");
+
+		registry.addResourceHandler("/jasper/preview/**").addResourceLocations(
+				"/jasper/preview/");
+
+		registry.addResourceHandler("/app/jasper/preview/**")
+				.addResourceLocations("/jasper/preview/");
+
 	}
 
 	@Override
@@ -94,19 +101,21 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 		registry.addInterceptor(webContentInterceptor);
 	}
 
-//	@Override
-//	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-//		//ByteArrayHttpMessageConverter byteArrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
-////		MediaType zip = new MediaType("application", "zip");
-////		MediaType pdf = new MediaType("application", "pdf");
-////		MediaType xlsx = new MediaType("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-////		MediaType xls = new MediaType("application", "vnd.ms-excel");
-////		byteArrayHttpMessageConverter.getSupportedMediaTypes().add(zip);
-////		byteArrayHttpMessageConverter.getSupportedMediaTypes().add(pdf);
-////		byteArrayHttpMessageConverter.getSupportedMediaTypes().add(xlsx);
-////		byteArrayHttpMessageConverter.getSupportedMediaTypes().add(xls);
-//		//converters.add(byteArrayHttpMessageConverter);
-//	}
-	
-	
+	// @Override
+	// public void configureMessageConverters(List<HttpMessageConverter<?>>
+	// converters) {
+	// //ByteArrayHttpMessageConverter byteArrayHttpMessageConverter = new
+	// ByteArrayHttpMessageConverter();
+	// // MediaType zip = new MediaType("application", "zip");
+	// // MediaType pdf = new MediaType("application", "pdf");
+	// // MediaType xlsx = new MediaType("application",
+	// "vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+	// // MediaType xls = new MediaType("application", "vnd.ms-excel");
+	// // byteArrayHttpMessageConverter.getSupportedMediaTypes().add(zip);
+	// // byteArrayHttpMessageConverter.getSupportedMediaTypes().add(pdf);
+	// // byteArrayHttpMessageConverter.getSupportedMediaTypes().add(xlsx);
+	// // byteArrayHttpMessageConverter.getSupportedMediaTypes().add(xls);
+	// //converters.add(byteArrayHttpMessageConverter);
+	// }
+
 }

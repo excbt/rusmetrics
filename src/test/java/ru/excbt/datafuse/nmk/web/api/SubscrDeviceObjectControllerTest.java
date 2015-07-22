@@ -27,7 +27,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		String url = apiSubscrUrl(String.format(
 				"/contObjects/%d/deviceObjects/%d/metaVzlet", DEV_CONT_OBJECT,
 				DEV_DEVICE_OBJECT));
-		testJsonGetNoContentCheck(url);
+		testJsonGetNoJsonCheck(url);
 	}
 
 	@Test
@@ -51,6 +51,12 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		testJsonUpdate(url, metaVzlet);
 
 		testJsonDelete(url);
+	}
+
+	@Test
+	public void testGetDeviceObjectsVzletSystem() throws Exception {
+		String url = apiSubscrUrl("/deviceObjects/metaVzlet/system");
+		testJsonGet(url);
 	}
 
 }

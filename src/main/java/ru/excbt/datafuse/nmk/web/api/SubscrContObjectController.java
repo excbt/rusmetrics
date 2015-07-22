@@ -3,7 +3,9 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,17 +19,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContObjectController extends WebApiController {
+public class SubscrContObjectController extends SubscrApiController {
 
 	// private final static int TEST_SUBSCRIBER_ID = 728;
 
@@ -37,21 +39,52 @@ public class SubscrContObjectController extends WebApiController {
 	@Autowired
 	private ContObjectService contObjectService;
 
-	@Autowired
-	private SubscriberService subscriberService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
+	/**
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectsList() {
-		logger.debug("Fire listAll");
-
 		List<ContObject> resultList = subscriberService
 				.selectSubscriberContObjects(currentSubscriberService
 						.getSubscriberId());
 
 		return ResponseEntity.ok().body(resultList);
+	}
+
+	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObject(
+			@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		ContObject result = contObjectService.findOneContObject(contObjectId);
+		return ResponseEntity.ok().body(result);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/fias", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectFias(
+			@PathVariable("contObjectId") Long contObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		ContObjectFias result = contObjectService
+				.findContObjectFias(contObjectId);
+
+		if (result == null) {
+			return responseNoContent();
+		}
+
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -67,6 +100,10 @@ public class SubscrContObjectController extends WebApiController {
 
 		checkNotNull(contObjectId);
 		checkNotNull(contObject);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
 
 		if (contObject.isNew()) {
 			return ResponseEntity.badRequest().build();
@@ -110,6 +147,15 @@ public class SubscrContObjectController extends WebApiController {
 		checkNotNull(currentSettingMode);
 		checkArgument(ContObjectCurrentSettingTypeKey
 				.isValid(currentSettingMode));
+
+		List<Long> contObjectIdList = Arrays.asList(contObjectIds);
+
+		Optional<Long> checkAccess = contObjectIdList.stream()
+				.filter((i) -> !canAccessContObject(i)).findAny();
+
+		if (checkAccess.isPresent()) {
+			return responseForbidden();
+		}
 
 		ApiAction action = new AbstractEntityApiAction<List<Long>>() {
 
