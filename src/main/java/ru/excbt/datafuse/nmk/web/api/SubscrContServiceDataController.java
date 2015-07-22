@@ -527,15 +527,17 @@ public class SubscrContServiceDataController extends WebApiController {
 							.validationError("ContZPoint is not suported manual loading"));
 		}
 
-		String filename = webAppPropsService.getHWatersCsvInputDir()
+		String inFilename = webAppPropsService.getHWatersCsvInputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(
 						currentSubscriberService.getSubscriberId(),
 						currentSubscriberService.getCurrentUserId());
 
-		String digestMD5;
+		File inFile = new File(inFilename);
+
+		String digestMD5 = null;
 		try {
 			digestMD5 = FileWriterUtils.writeFile(
-					multipartFile.getInputStream(), filename);
+					multipartFile.getInputStream(), inFile);
 		} catch (IOException e) {
 			logger.error("Exception:{}", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -559,7 +561,7 @@ public class SubscrContServiceDataController extends WebApiController {
 		List<ContServiceDataHWater> inData = new ArrayList<>();
 
 		boolean parsingResult = true;
-		try (FileInputStream fio = new FileInputStream(filename)) {
+		try (FileInputStream fio = new FileInputStream(inFilename)) {
 			iterator = reader.readValues(fio);
 			while (iterator.hasNext()) {
 				ContServiceDataHWater d = iterator.next();
@@ -578,14 +580,14 @@ public class SubscrContServiceDataController extends WebApiController {
 					.build();
 		}
 
-		ApiAction action = new AbstractEntityApiAction<String>() {
+		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
 
 			@Override
 			public void process() {
 				contServiceDataHWaterService.manualLoadDataHWater(contZPointId,
 						inData);
-
-				setResultEntity(digestMD5);
+				FileInfoMD5 result = new FileInfoMD5(inFile.getName());
+				setResultEntity(result);
 			}
 		};
 

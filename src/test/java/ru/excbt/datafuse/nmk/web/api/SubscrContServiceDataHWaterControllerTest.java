@@ -131,9 +131,11 @@ public class SubscrContServiceDataHWaterControllerTest extends
 		String srcFilename = webAppPropsService.getHWatersCsvOutputDir()
 				+ webAppPropsService.getSubscriberCsvFilename(728L, 123L);
 
+		File srcFile = new File(srcFilename);
+		
 		ByteArrayInputStream is = new ByteArrayInputStream(fileBytes);
 
-		FileWriterUtils.writeFile(is, srcFilename);
+		FileWriterUtils.writeFile(is, srcFile);
 
 		// Processing POST
 
