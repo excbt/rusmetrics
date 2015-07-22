@@ -4,9 +4,12 @@ angular.module('portalNMC')
         //Functions for work with date
             //function for date converting
         var DateNMC = function(millisec){
-            var coeffecient = 0;//3600*3*1000;
-            var userOffset = (new Date()).getTimezoneOffset()*60000;
-            var tempDate = new Date(millisec-userOffset);
+//            var coeffecient = 0;//3600*3*1000;
+//            var userOffset = (new Date()).getTimezoneOffset()*60000;
+console.log(millisec);
+            var tempDate = new Date(millisec);
+console.log(tempDate.getTime());   
+            console.log(tempDate); 
 //            tempDate.getTi
             return tempDate;
             
@@ -471,13 +474,9 @@ angular.module('portalNMC')
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
                           var datad = DateNMC(el.dataDate);
-
-console.log(datad.getTimezoneOffset());
-
-console.log(datad.toLocaleString());                            
-
+//console.log(datad.getTimezoneOffset());
+//console.log(datad.toLocaleString());                            
                             el.dataDate=printDateNMC(datad);
-
                             continue;
                         }
                         if (el[$scope.columns[i].fieldName]!=null){
