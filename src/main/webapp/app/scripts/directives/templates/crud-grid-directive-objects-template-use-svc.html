@@ -56,8 +56,10 @@
     <tbody></tbody>
 </table>
 -->
-
-<div infinite-scroll="addMoreObjects()" infinte-scroll-distance='50'>
+<div class="row" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
+    <h3 class="nmc-h3">Объектов нет.</h3>
+</div>
+<div ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50'>
     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
             <tr>
@@ -66,15 +68,15 @@
                         <thead>
                             <tr class="nmc-child-table-header">
                                 <th class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
-                                    <input title="Выбрать / отменить все" type="checkbox" />
+                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
                                     <div class="btn-group" style="vertical-align: initial;">
 
                                       <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="">{{messages.setSelectedInWinterMode}}</a></li>
-                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> 
+                                        <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
+                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
                                       </ul>
                                     </div>
                                 </th>
@@ -86,37 +88,13 @@
                 </th>
             </tr>
         </thead>
-<!--
-        <tr>
-            <td class="nmc-td-for-buttons">
-                    <span class="paddingTop3">
-                        <input title="Выделить/снять выделение со всех объектов" type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/>
-                    </span>    
-                    <div class="btn-group">
-
-                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="caret"></span>
-                      </button>
-                      <ul class="dropdown-menu">
-                        <li><a href="" ng-click="">{{messages.markAllOn}}</a></li>
-                        <li><a href="" ng-click="">{{messages.markAllOff}}</a></li>
-                        <li role="separator" class="divider"></li> 
-                        <li><a href="" ng-click="">{{messages.setSelectedInWinterMode}}</a></li>
-                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li>
-                        <li role="separator" class="divider"></li> 
-                        <li><a href="" ng-click="confirmationText=messages.markOnPageAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.setAllInWinterMode}}</a></li> 
-                        <li><a href="" ng-click="confirmationText=messages.markAllAsRevision" data-target="#confirmActionModal" data-toggle="modal">{{messages.setAllInSummerMode}}</a></li>  
-                      </ul>
-                    </div>  
-            </td>
-        </tr>
--->
         <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
         
                         <td class="nmc-td-for-buttons-in-object-page">
+<!--                            <span>{{$index}}</span>-->
                             <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
                             <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
@@ -138,7 +116,7 @@
                             
                         </td>
 
-                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}
+                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
 
                         </td>
                     </tr>
@@ -215,7 +193,8 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="showZpointOptionLabel" class="nmc-h3">
-				Свойства точки учета "{{zpointSettings.zpointName}}"
+				Свойства точки учета 
+<!--                "{{zpointSettings.zpointName}}"-->
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
@@ -228,7 +207,7 @@
                                     <label for="inputName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input ng-disabled="isSystemuser()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.zpointName">
+                                	<input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName">
                                 </td>
                             </tr>
                             <tr>
@@ -341,16 +320,16 @@
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid  ">
 					<div class="row">
-<!--                         <div class="col-xs-offset-6 col-md-3">
+                        <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                ng-click="addRefRange()"
+                                ng-click="updateZpointCommonSettings()"
 								value="Сохранить" />
-								ng-disabled="!checkZpointSettingsFrom(zpointSettings)" 
-						</div> -->
+<!--								ng-disabled="!checkZpointSettingsFrom(zpointSettings)" -->
+						</div> 
 						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
 							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
 								ng-click="exit('#currentObject')">
-								Закрыть
+								Отменить
 							</button>
 						</div>
 					</div>
@@ -831,7 +810,7 @@
                         <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
                                 ng-disabled="!checkZpointSettingsFrom(zpointSettings)"   
-								ng-click="updateZpointSettings()"
+								ng-click="updateZpointModeSettings()"
 								value="Сохранить" />
 						</div>
 						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
