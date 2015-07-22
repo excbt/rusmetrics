@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.utils;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.File;
 import java.io.Serializable;
 
 import org.apache.commons.io.FilenameUtils;
@@ -23,6 +24,12 @@ public class FileInfoMD5 implements Serializable {
 		checkNotNull(filename);
 		this.filename = filename;
 		this.md5file = FilenameUtils.removeExtension(filename) + MD5_EXT;
+	}
+
+	public FileInfoMD5(File file) {
+		checkNotNull(file);
+		this.filename = file.getName();
+		this.md5file = FilenameUtils.removeExtension(file.getName()) + MD5_EXT;
 	}
 
 	public String getFilename() {

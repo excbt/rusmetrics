@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -540,9 +539,7 @@ public class SubscrContServiceDataController extends WebApiController {
 					multipartFile.getInputStream(), inFile);
 		} catch (IOException e) {
 			logger.error("Exception:{}", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResult.error(e));
-
+			return responseInternalServerError(ApiResult.error(e));
 		}
 
 		CsvMapper mapper = new CsvMapper();
@@ -570,14 +567,12 @@ public class SubscrContServiceDataController extends WebApiController {
 		} catch (IOException e) {
 			logger.error("Exception: {}", e);
 			parsingResult = false;
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.body(ApiResult.error(e));
-
+			return responseInternalServerError(ApiResult.error(e));
 		}
 
 		if (!parsingResult) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-					.build();
+			return responseInternalServerError(ApiResult
+					.validationError("Can't parse input file"));
 		}
 
 		ApiAction action = new AbstractEntityApiAction<FileInfoMD5>() {
@@ -586,7 +581,7 @@ public class SubscrContServiceDataController extends WebApiController {
 			public void process() {
 				contServiceDataHWaterService.manualLoadDataHWater(contZPointId,
 						inData);
-				FileInfoMD5 result = new FileInfoMD5(inFile.getName());
+				FileInfoMD5 result = new FileInfoMD5(inFile);
 				setResultEntity(result);
 			}
 		};

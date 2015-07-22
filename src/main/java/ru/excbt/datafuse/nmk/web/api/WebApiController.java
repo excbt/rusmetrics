@@ -90,8 +90,27 @@ public class WebApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> responseBadRequest(ApiResult apiResult) {
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+				apiResult);
+	}
+
+	/**
+	 * 
+	 * @param apiResult
+	 * @return
+	 */
+	protected ResponseEntity<?> responseInternalServerError(ApiResult apiResult) {
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
 				apiResult);
+	}
+
+	/**
+	 * 
+	 * @param apiResult
+	 * @return
+	 */
+	protected ResponseEntity<?> responseInternalServerError() {
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 
 	/**
