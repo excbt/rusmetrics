@@ -74,7 +74,7 @@ public class HWatersCsvService {
 		
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
 		
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class)
 				.withHeader();
 		
 		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(
