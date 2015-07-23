@@ -341,7 +341,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+	private ContServiceDataHWater selectLastAbsData(long contZPointId,
 			LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
@@ -363,22 +363,48 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	private ContServiceDataHWater selectLastAbsData(long contZPointId,
-			TimeDetailKey timeDetail, LocalDateTime localDateTime) {
+	public ContServiceDataHWater selectLastAbsData(long contZPointId,
+			TimeDetailKey timeDetail, LocalDateTime localDateTime,
+			boolean isEndDate) {
 
 		checkNotNull(localDateTime);
 		checkNotNull(timeDetail);
 
-		String[] timeDetails = { // TimeDetailKey.TYPE_ABS.getKeyname(),
-				// timeDetail.getAbsPair()
-				TimeDetailKey.TYPE_1H.getAbsPair(),
+		String[] dataTimeDetails = { timeDetail.getKeyname() };
+
+		Date dataDateLimit;
+
+		if (isEndDate) {
+			List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
+					.selectLastDetailDataByZPoint(contZPointId,
+							dataTimeDetails, localDateTime.toDate(),
+							LIMIT1_PAGE_REQUEST);
+
+			if (dataList.isEmpty()) {
+				return null;
+			}
+
+			dataDateLimit = dataList.get(0).getDataDate();
+			if (timeDetail.isTruncDate()) {
+				LocalDateTime ldt = new LocalDateTime(dataDateLimit);
+				dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1))
+						.toDate();
+			} 
+		} else {
+			dataDateLimit = localDateTime.toDate();
+		}
+
+//		logger.info("dataDateLimit: {}", dataDateLimit);
+		
+		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(),
 				TimeDetailKey.TYPE_24H.getAbsPair() };
 
-		List<ContServiceDataHWater> dataList = contServiceDataHWaterRepository
-				.selectLastDetailDataByZPoint(contZPointId, timeDetails,
-						localDateTime.toDate(), LIMIT1_PAGE_REQUEST);
+		List<ContServiceDataHWater> integratorList = contServiceDataHWaterRepository
+				.selectLastDetailDataByZPoint(contZPointId,
+						integratorTimeDetails, dataDateLimit,
+						LIMIT1_PAGE_REQUEST);
 
-		return dataList.size() > 0 ? dataList.get(0) : null;
+		return integratorList.size() > 0 ? integratorList.get(0) : null;
 	}
 
 	/**
@@ -405,7 +431,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 				cvsData = ContServiceDataHWaterAbs_Csv.newInstance(data);
 				ContServiceDataHWater abs = selectLastAbsData(
 						data.getContZPointId(), timeDetail, new LocalDateTime(
-								data.getDataDate()));
+								data.getDataDate()), false);
 				cvsData.copyAbsData(abs);
 				cvsDataList.add(cvsData);
 			}

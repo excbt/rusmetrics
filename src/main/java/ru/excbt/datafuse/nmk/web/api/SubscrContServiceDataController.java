@@ -346,10 +346,10 @@ public class SubscrContServiceDataController extends SubscrApiController {
 						endOfDay);
 
 		ContServiceDataHWater firstAbs = contServiceDataHWaterService
-				.selectLastAbsData(contZPointId, beginD);
+				.selectLastAbsData(contZPointId, timeDetail, beginD, false);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService
-				.selectLastAbsData(contZPointId, endOfPeriod);
+				.selectLastAbsData(contZPointId, timeDetail, endOfPeriod, true);
 
 		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
 		result.setTotals(totals);
