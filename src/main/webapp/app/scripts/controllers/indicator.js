@@ -1,41 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory){
-        //Functions for work with date
-            //function for date converting
-        var DateNMC = function(millisec){
-//            var coeffecient = 0;//3600*3*1000;
-//            var userOffset = (new Date()).getTimezoneOffset()*60000;
-console.log(millisec);
-            var tempDate = new Date(millisec);
-console.log(tempDate.getTime());   
-            console.log(tempDate); 
-//            tempDate.getTi
-            return tempDate;
-            
-        };
-            //convert date to string
-        var printDateNMC = function(dateNMC){
-            function pad(num){
-                num = num.toString();
-                if (num.length == 1) return "0"+num;
-                return num;
-            }
-            
-            var dateToString = pad(dateNMC.getUTCDate())+"."+pad(dateNMC.getUTCMonth()+1)+"."+pad(dateNMC.getUTCFullYear())+" "+pad(dateNMC.getUTCHours())+":"+pad(dateNMC.getUTCMinutes());
-            // +1 to month, because month start with index=0
-            return dateToString;
-        };
-        
-                // Проверка пользователя - системный/ не системный
-        $scope.isSystemuser = function(){
-            var result = false;
-            $scope.userInfo = $rootScope.userInfo;
-            if (angular.isDefined($scope.userInfo)){
-                result = $scope.userInfo._system;
-            };
-            return result;
-        };
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory', 'FileUploader', 'notificationFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory, FileUploader, notificationFactory){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -456,7 +421,69 @@ console.log(tempDate.getTime());
     $scope.data = [];    
     $scope.pagination = {
         current: 1
-    };         
+    };
+        
+    //file upload settings
+    var initFileUploader =  function(){    
+         var contZPoint = $cookies.contZPoint;
+         var timeDetailType = "24h";
+         var contObject = $cookies.contObject;
+//         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
+        $scope.uploader = new FileUploader({
+            url: url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZPoint+"/service/"+timeDetailType+"/csv",
+            removeAfterUpload: true
+            
+        });
+//        $scope.uploader.onErrorItem(function(item, response, status, headers){
+//console.log(item);            
+//console.log(response);            
+//console.log(status);            
+//console.log(headers);                        
+//            notificationFactory.error();
+//        });
+        
+        $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
+            console.info('onErrorItem', fileItem, response, status, headers);
+            notificationFactory
+        };
+    };
+    initFileUploader();
+        
+        //Functions for work with date
+        //function for date converting
+    var DateNMC = function(millisec){
+//            var coeffecient = 0;//3600*3*1000;
+//            var userOffset = (new Date()).getTimezoneOffset()*60000;
+console.log(millisec);
+        var tempDate = new Date(millisec);
+console.log(tempDate.getTime());   
+        console.log(tempDate); 
+//            tempDate.getTi
+        return tempDate;
+
+    };
+        //convert date to string
+    var printDateNMC = function(dateNMC){
+        function pad(num){
+            num = num.toString();
+            if (num.length == 1) return "0"+num;
+            return num;
+        }
+
+        var dateToString = pad(dateNMC.getUTCDate())+"."+pad(dateNMC.getUTCMonth()+1)+"."+pad(dateNMC.getUTCFullYear())+" "+pad(dateNMC.getUTCHours())+":"+pad(dateNMC.getUTCMinutes());
+        // +1 to month, because month start with index=0
+        return dateToString;
+    };
+
+            // Проверка пользователя - системный/ не системный
+    $scope.isSystemuser = function(){
+        var result = false;
+        $scope.userInfo = $rootScope.userInfo;
+        if (angular.isDefined($scope.userInfo)){
+            result = $scope.userInfo._system;
+        };
+        return result;
+    };    
         
       //Получаем показания
     $scope.columns = [];

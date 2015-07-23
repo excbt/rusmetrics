@@ -22,6 +22,7 @@ var app = angular
       ,'angularUtils.directives.dirPagination'
       ,'ngIdle'
       ,'infinite-scroll'
+      ,'angularFileUpload'
   ]);
 
 //routing config

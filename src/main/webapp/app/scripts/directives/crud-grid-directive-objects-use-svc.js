@@ -185,10 +185,16 @@ console.log("Objects directive.");
                             return true;
                         };
                     });
-                    if ((curIndex >-1)&&($scope.zpointSettings.customServiceName!=="")&&($scope.currentObject.zpoints[curIndex].zpointName!==$scope.zpointSettings.customServiceName)){
+                    
+                    //update view name for zpoint
+                    if ((curIndex >-1)){
 //                        if (){
 //                            $scope.currentObject.zpoints[curIndex].customServiceName = $scope.zpointSettings.customServiceName;
 //                            $scope.currentObject.zpoints[curIndex].zpointName = $scope.zpointSettings.customServiceName;
+                            var repaintZpointTableFlag = false;
+                            if(($scope.currentObject.zpoints[curIndex].zpointName!==$scope.zpointSettings.customServiceName)){
+                                repaintZpointTableFlag = true;
+                            };
                             var objectIndex = -1;
                             $scope.objects.some(function(elem, ind){
                                 if($scope.currentObject.id === elem.id){
@@ -196,10 +202,16 @@ console.log("Objects directive.");
                                 };
                             });
                             if (objectIndex>-1){
+                                //update zpoint data in arrays
                                 $scope.objects[objectIndex].zpoints[curIndex].customServiceName = $scope.zpointSettings.customServiceName;
                                 $scope.objectsOnPage[objectIndex].zpoints[curIndex].zpointName = $scope.zpointSettings.customServiceName;
+                                $scope.objects[objectIndex].zpoints[curIndex].isManualLoading = $scope.zpointSettings.isManualLoading;
+                                $scope.objectsOnPage[objectIndex].zpoints[curIndex].isManualLoading = $scope.zpointSettings.isManualLoading;
                             };
-                            makeZpointTable($scope.objectsOnPage[objectIndex]);
+                            //remake zpoint table
+                            if((repaintZpointTableFlag)){
+                                makeZpointTable($scope.objectsOnPage[objectIndex]);
+                            };
 //                        };
                     };
                     $scope.zpointSettings = {};
@@ -375,6 +387,7 @@ console.log("Objects directive.");
                                 var zpoint = {};
                                 zpoint.id = zPointsByObject[i].id;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
+                                zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
                                 zpoint.customServiceName = zPointsByObject[i].customServiceName;
                                 zpoint.zpointName = zPointsByObject[i].customServiceName || zPointsByObject[i].contServiceType.caption;
                                 if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso!=null)){
@@ -670,6 +683,7 @@ console.log("Objects directive.");
                     var object = $scope.currentZpoint;
                     var zps = {};
                     zps.id = object.id;
+                    zps.isManualLoading = object.isManualLoading;
                     zps.customServiceName = object.customServiceName;
                     zps.zpointName = object.zpointName;
                     switch (object.zpointType){
