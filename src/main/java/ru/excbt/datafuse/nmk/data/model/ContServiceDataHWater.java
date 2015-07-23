@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime"})
+@JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime" })
 public class ContServiceDataHWater extends AbstractAuditableModel {
 
 	/**
@@ -300,4 +301,11 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 		this.failTime = failTime;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDataDateString() {
+		return DateFormatUtils.formatDateTime(this.dataDate);
+	}
 }
