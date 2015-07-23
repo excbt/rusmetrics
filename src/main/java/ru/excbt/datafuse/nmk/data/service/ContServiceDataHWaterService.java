@@ -385,17 +385,13 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 			}
 
 			dataDateLimit = dataList.get(0).getDataDate();
-			if (timeDetail.isTruncDate()) {
-				LocalDateTime ldt = new LocalDateTime(dataDateLimit);
-				dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1))
-						.toDate();
-			} 
+			// Truncate dataDateLimit
+			LocalDateTime ldt = new LocalDateTime(dataDateLimit);
+			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();
 		} else {
 			dataDateLimit = localDateTime.toDate();
 		}
 
-//		logger.info("dataDateLimit: {}", dataDateLimit);
-		
 		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(),
 				TimeDetailKey.TYPE_24H.getAbsPair() };
 
