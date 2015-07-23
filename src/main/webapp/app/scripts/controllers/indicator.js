@@ -296,7 +296,7 @@ angular.module('portalNMC')
                 header : "Дата",
                 headerClass : "col-md-2",
                 dataClass : "col-md-2",
-                fieldName: "dataDate"
+                fieldName: "dataDateString"
             }, 
             {
                 header : "Время наработки, час",
@@ -431,20 +431,12 @@ angular.module('portalNMC')
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
         $scope.uploader = new FileUploader({
             url: url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZPoint+"/service/"+timeDetailType+"/csv",
-            removeAfterUpload: true
             
         });
-//        $scope.uploader.onErrorItem(function(item, response, status, headers){
-//console.log(item);            
-//console.log(response);            
-//console.log(status);            
-//console.log(headers);                        
-//            notificationFactory.error();
-//        });
         
         $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
-            console.info('onErrorItem', fileItem, response, status, headers);
-            notificationFactory
+            console.info('onErrorItem', status, response);
+            notificationFactory.errorInfo(response.resultCode, response.description);
         };
     };
     initFileUploader();
