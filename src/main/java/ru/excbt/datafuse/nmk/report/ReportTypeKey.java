@@ -15,9 +15,11 @@ public enum ReportTypeKey {
 	LOG_JOURNAL_REPORT("log_journal");
 
 	private final String urlName;
+	private final String defaultFileName;
 
 	private ReportTypeKey(String urlName) {
 		this.urlName = urlName;
+		this.defaultFileName = urlName;
 	}
 
 	public String getUrlName() {
@@ -34,5 +36,9 @@ public enum ReportTypeKey {
 				.filter((i) -> i.urlName.equals(urlName)).findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
+	}
+
+	public String getDefaultFileName() {
+		return defaultFileName;
 	}
 }

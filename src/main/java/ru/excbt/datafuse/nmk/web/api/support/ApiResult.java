@@ -106,4 +106,14 @@ public class ApiResult {
 		return build(ApiResultCode.describeException(e), description);
 	}
 
+	/**
+	 * 
+	 * @param e
+	 * @return
+	 */
+	public static ApiResult internalError(String description) {
+		return build(ApiResultCode.ERR_INTERNAL, description);
+	}
+	
+	
 }

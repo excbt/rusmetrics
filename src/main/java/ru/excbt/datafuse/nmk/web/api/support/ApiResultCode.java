@@ -13,7 +13,8 @@ public enum ApiResultCode {
 			false, "Access Denied"), ERR_UNPROCESSABLE_TRANSACTION(false,
 			"Unprocessable Transaction"), ERR_DATABASE_ERROR(false,
 			"Database Error"), ERR_BRM_VALIDATION(false,
-			"Buisiness Rule Validation Error"), ERR_VALIDATION (false, "Data Validation Error");
+			"Buisiness Rule Validation Error"), ERR_VALIDATION (false, "Data Validation Error"),
+			ERR_INTERNAL(false, "Internal server error");
 
 	private final boolean ok;
 
