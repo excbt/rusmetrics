@@ -152,4 +152,12 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 	public void setMetaPropsOnly(Boolean metaPropsOnly) {
 		this.metaPropsOnly = metaPropsOnly;
 	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 }
