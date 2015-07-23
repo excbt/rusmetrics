@@ -26,6 +26,16 @@ console.log(tempDate.getTime());
             // +1 to month, because month start with index=0
             return dateToString;
         };
+        
+                // Проверка пользователя - системный/ не системный
+        $scope.isSystemuser = function(){
+            var result = false;
+            $scope.userInfo = $rootScope.userInfo;
+            if (angular.isDefined($scope.userInfo)){
+                result = $scope.userInfo._system;
+            };
+            return result;
+        };
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -453,16 +463,16 @@ console.log(tempDate.getTime());
     $scope.getData = function (pageNumber) {
 //console.log("getData");        
         $scope.pagination.current = pageNumber;   
-         var contZPoint = $cookies.contZPoint;
+         $scope.contZPoint = $cookies.contZPoint;
          $scope.contZPointName = $cookies.contZPointName;
-         var contObject = $cookies.contObject;
+         $scope.contObject = $cookies.contObject;
          $scope.contObjectName = $cookies.contObjectName;
         
 //console.log($scope.timeDetailType);
 //console.log($cookies.timeDetailType);        
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-         $scope.zpointTable = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
+         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
         var table =  $scope.zpointTable;
 //console.log(table);        
         crudGridDataFactory(table).get(function (data) {           
@@ -781,7 +791,7 @@ console.log(tempDate.getTime());
         return object.detail;
     };
         
-    $scope.saveIndicatorsToFile = function(){
+    $scope.saveIndicatorsToFile = function(exForUrl){
 //        var csv = "hello text";
 //console.log(csv);                
 //        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
@@ -799,9 +809,25 @@ console.log(tempDate.getTime());
 
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv"+exForUrl+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         window.open(url);
     }; 
+        
+    $scope.uploadDataFromFile = function(file){
+        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv";
+        $http({
+            url: url,
+            method: 'POST',
+            params: {file: file},
+            data: null
+        })
+        .success(function(){
+            notificationFactory.success();
+        })
+        .error(function(error){
+            notificationFactory.errorInf(error.title, error.description);
+        });
+    };
     
     //check indicators for data (проверка: есть данные для отображения или нет)
     $scope.isHaveData = function(){
