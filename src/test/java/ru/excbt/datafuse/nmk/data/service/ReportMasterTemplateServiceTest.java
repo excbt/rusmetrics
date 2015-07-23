@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 
@@ -52,7 +52,7 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 			throws IOException {
 
 		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Paths.COMM_FILE_COMPILED,
+				ReportConstants.Files.COMM_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
@@ -64,35 +64,35 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	public void testLoadCommerce_MasterReportTemplateJrxml() throws IOException {
 
 		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Paths.COMM_FILE_JRXML,
+				ReportConstants.Files.COMM_FILE_JRXML,
 				ReportConstants.IS_NOT_COMPILED);
 	}
 
 	@Test
 	public void testLoadEvent_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.EVENT_REPORT,
-				ReportConstants.Paths.EVENT_FILE_COMPILED,
+				ReportConstants.Files.EVENT_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadConsT1_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
-				ReportConstants.Paths.CONS_T1_FILE_COMPILED,
+				ReportConstants.Files.CONS_T1_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadConsT2_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				ReportConstants.Paths.CONS_T2_FILE_COMPILED,
+				ReportConstants.Files.CONS_T2_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadMetrological_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
-				ReportConstants.Paths.METROLOGICAL_FILE_COMPILED,
+				ReportConstants.Files.METROLOGICAL_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 

@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
@@ -25,6 +23,8 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeKey;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 @Service
 @Transactional(readOnly = true)

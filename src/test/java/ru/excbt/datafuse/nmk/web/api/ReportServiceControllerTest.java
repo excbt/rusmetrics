@@ -20,11 +20,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;

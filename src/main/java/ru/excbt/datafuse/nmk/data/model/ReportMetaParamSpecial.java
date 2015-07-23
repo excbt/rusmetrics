@@ -10,10 +10,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

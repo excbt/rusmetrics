@@ -14,12 +14,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ReportTemplateControllerTest extends AnyControllerTest {
@@ -33,15 +33,9 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-	
 	@Test
 	public void testGetCommReportTemplates() throws Exception {
 		testJsonGet("/api/reportTemplate/commerce");
-	}
-
-	@Test
-	public void testGetConsReportTemplates() throws Exception {
-		testJsonGet("/api/reportTemplate/cons");
 	}
 
 	@Test
@@ -57,11 +51,6 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	@Test
 	public void testGetCommReportTemplatesArch() throws Exception {
 		testJsonGet("/api/reportTemplate/archive/commerce");
-	}
-
-	@Test
-	public void testGetConsReportTemplatesArch() throws Exception {
-		testJsonGet("/api/reportTemplate/archive/cons");
 	}
 
 	@Test
@@ -150,6 +139,5 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 	public void testGetAvailableContbjects() throws Exception {
 		testJsonGet("/api/reportParamset/0/contObject/available");
 	}
-
 
 }

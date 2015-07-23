@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
 
 public class SystemParamServiceTest extends JpaSupportTest {
 

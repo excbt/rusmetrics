@@ -7,7 +7,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
+
 
 public class ReportParamsetUtilsTest {
 

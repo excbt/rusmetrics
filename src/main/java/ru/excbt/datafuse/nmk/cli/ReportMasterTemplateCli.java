@@ -9,10 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.service.ReportMasterTemplateBodyService;
+import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
@@ -21,6 +22,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
+
+	@Autowired
+	private ReportTemplateService reportTemplateService;
 
 	/**
 	 * 
@@ -35,6 +39,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		app.showAppStatus();
 		app.loadAllCompiledReportMasterTemplates();
 		app.loadAllJrxmlReportMasterTemplates();
+		app.updateAllCommonReportTemplate();
 
 		logger.info("All Reports was loaded successfully");
 		System.out.println();
@@ -50,7 +55,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 * @throws IOException
 	 */
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString, boolean isBodyCompiled)
+			String fileResourceString)
 			throws IOException {
 
 		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
@@ -66,7 +71,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		boolean res = false;
 		res = reportMasterTemplateBodyService.saveReportMasterTemplateBody(
-				templateBody.getId(), fileResourceString, isBodyCompiled);
+				templateBody.getId(), fileResourceString, ReportConstants.IS_COMPILED);
 
 		checkState(res);
 
@@ -86,32 +91,28 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 */
 	private void loadAllCompiledReportMasterTemplates() throws IOException {
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Paths.COMM_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.COMM_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.EVENT_REPORT,
-				ReportConstants.Paths.EVENT_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.EVENT_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
-				ReportConstants.Paths.CONS_T1_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.CONS_T1_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				ReportConstants.Paths.CONS_T2_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.CONS_T2_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
-				ReportConstants.Paths.METROLOGICAL_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.METROLOGICAL_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT,
-				ReportConstants.Paths.CONSUMPTION_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.CONSUMPTION_FILE_COMPILED);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-				ReportConstants.Paths.CONSUMPTION_HISTORY_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED);
+
+		loadReportMasterTemplate(ReportTypeKey.LOG_JOURNAL_REPORT,
+				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED);
 	}
 
 	/**
@@ -121,8 +122,32 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	private void loadAllJrxmlReportMasterTemplates() throws IOException {
 
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Paths.COMM_FILE_JRXML,
-				ReportConstants.IS_NOT_COMPILED);
+				ReportConstants.Files.COMM_FILE_JRXML);
+	}
+
+	/**
+	 * 
+	 */
+	private void updateAllCommonReportTemplate() {
+		updateAnyCommonReportTemplate(ReportTypeKey.LOG_JOURNAL_REPORT);
+	}
+
+	/**
+	 * 
+	 * @param reportTypeKey
+	 */
+	private void updateAnyCommonReportTemplate(ReportTypeKey reportTypeKey) {
+		int result = reportTemplateService.updateCommonReportTemplateBody(
+				reportTypeKey, ReportConstants.IS_ACTIVE,
+				ReportConstants.IS_COMPILED);
+
+		if (result == 0) {
+			logger.info(
+					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+					reportTypeKey);
+			reportTemplateService
+					.createCommonReportTemplate(reportTypeKey);
+		}
 	}
 
 }

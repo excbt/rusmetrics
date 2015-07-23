@@ -8,12 +8,12 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportWizardServiceTest extends JpaSupportTest {
 

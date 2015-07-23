@@ -11,9 +11,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportActionKey;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.repository.ReportSheduleRepository;
+import ru.excbt.datafuse.nmk.report.ReportActionKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
