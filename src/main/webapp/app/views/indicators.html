@@ -50,15 +50,18 @@
 </div> 
 -->
 
-<div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} &gt; - &lt; {{contZPointName}} &gt;</h2></div>
+<div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;</h2></div>
 <div class="col-md-2">
     <div class="pull-right">
         <div class="btn-group nmc-line-right">
+            <span ng-if="isSystemuser()">
+                <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile('/noAbs')"></i>
+            </span>    
             <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="" data-target="#upLoadFileModal" data-toggle="modal"></i>
             <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
         </div>  
         <div class="btn-group">
-            <i title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt" ng-click="saveIndicatorsToFile()"></i>
+            <i title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt" ng-click="saveIndicatorsToFile('')"></i>
         </div>    
     </div>
 </div>  
@@ -238,7 +241,7 @@
 					<div class="row">
 						<div class="col-xs-offset-4 col-md-5">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="confirmAction();"
+								ng-click="uploadData();"
 								value="Загрузить" />
 						</div>
 
