@@ -139,6 +139,7 @@
             <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
                 <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.dataClass || column.headerClass">
                     {{indicator[column.fieldName]}}
+                    <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                 </td>
             </tr>
         </table>
@@ -224,7 +225,18 @@
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<p class="marginLeft15">
-                    <input type="file" name="indicatorFile">
+                    <input type="file" nv-file-select uploader="uploader"/><br/>
+                    <div class="col-md-12">
+                        <p ng-repeat="item in uploader.queue">
+                            Файл: <span ng-bind="item.file.name"></span><br/>
+                            <button ng-click="item.upload()">Загрузить</button>
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                        </p>
+                    </div>
+
+<!--                    <input type="file" name="indicatorFile">-->
 <!--
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
 					</label> 
@@ -241,8 +253,8 @@
 					<div class="row">
 						<div class="col-xs-offset-4 col-md-5">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="uploadData();"
-								value="Загрузить" />
+								ng-click=""
+								value="Ок" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">

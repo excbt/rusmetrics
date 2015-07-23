@@ -1,41 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory){
-        //Functions for work with date
-            //function for date converting
-        var DateNMC = function(millisec){
-//            var coeffecient = 0;//3600*3*1000;
-//            var userOffset = (new Date()).getTimezoneOffset()*60000;
-console.log(millisec);
-            var tempDate = new Date(millisec);
-console.log(tempDate.getTime());   
-            console.log(tempDate); 
-//            tempDate.getTi
-            return tempDate;
-            
-        };
-            //convert date to string
-        var printDateNMC = function(dateNMC){
-            function pad(num){
-                num = num.toString();
-                if (num.length == 1) return "0"+num;
-                return num;
-            }
-            
-            var dateToString = pad(dateNMC.getUTCDate())+"."+pad(dateNMC.getUTCMonth()+1)+"."+pad(dateNMC.getUTCFullYear())+" "+pad(dateNMC.getUTCHours())+":"+pad(dateNMC.getUTCMinutes());
-            // +1 to month, because month start with index=0
-            return dateToString;
-        };
-        
-                // Проверка пользователя - системный/ не системный
-        $scope.isSystemuser = function(){
-            var result = false;
-            $scope.userInfo = $rootScope.userInfo;
-            if (angular.isDefined($scope.userInfo)){
-                result = $scope.userInfo._system;
-            };
-            return result;
-        };
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory', 'FileUploader', 'notificationFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory, FileUploader, notificationFactory){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -456,7 +421,61 @@ console.log(tempDate.getTime());
     $scope.data = [];    
     $scope.pagination = {
         current: 1
-    };         
+    };
+        
+    //file upload settings
+    var initFileUploader =  function(){    
+         var contZPoint = $cookies.contZPoint;
+         var timeDetailType = "24h";
+         var contObject = $cookies.contObject;
+//         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
+        $scope.uploader = new FileUploader({
+            url: url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZPoint+"/service/"+timeDetailType+"/csv",
+            
+        });
+        
+        $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
+            console.info('onErrorItem', status, response);
+            notificationFactory.errorInfo(response.resultCode, response.description);
+        };
+    };
+    initFileUploader();
+        
+        //Functions for work with date
+        //function for date converting
+    var DateNMC = function(millisec){
+//            var coeffecient = 0;//3600*3*1000;
+//            var userOffset = (new Date()).getTimezoneOffset()*60000;
+console.log(millisec);
+        var tempDate = new Date(millisec);
+console.log(tempDate.getTime());   
+        console.log(tempDate); 
+//            tempDate.getTi
+        return tempDate;
+
+    };
+        //convert date to string
+    var printDateNMC = function(dateNMC){
+        function pad(num){
+            num = num.toString();
+            if (num.length == 1) return "0"+num;
+            return num;
+        }
+
+        var dateToString = pad(dateNMC.getUTCDate())+"."+pad(dateNMC.getUTCMonth()+1)+"."+pad(dateNMC.getUTCFullYear())+" "+pad(dateNMC.getUTCHours())+":"+pad(dateNMC.getUTCMinutes());
+        // +1 to month, because month start with index=0
+        return dateToString;
+    };
+
+            // Проверка пользователя - системный/ не системный
+    $scope.isSystemuser = function(){
+        var result = false;
+        $scope.userInfo = $rootScope.userInfo;
+        if (angular.isDefined($scope.userInfo)){
+            result = $scope.userInfo._system;
+        };
+        return result;
+    };    
         
       //Получаем показания
     $scope.columns = [];
@@ -486,10 +505,10 @@ console.log(tempDate.getTime());
                           var datad = DateNMC(el.dataDate);
 //console.log(datad.getTimezoneOffset());
 //console.log(datad.toLocaleString());                            
-                            el.dataDate=printDateNMC(datad);
+                            el.dataDate=el.dataDateString;//printDateNMC(datad);
                             continue;
                         }
-                        if (el[$scope.columns[i].fieldName]!=null){
+                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].fieldName !== "dataDateString")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
                         
@@ -564,9 +583,11 @@ console.log(tempDate.getTime());
                         return;
                     };
                     var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+" ";
-                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+                    textDetails+="(Дата = "+ $scope.summary.firstData['dataDateString']+");<br><br>";
                     textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+" ";
-                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+                    textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
                     var targetDOM = "#total"+columnName;
