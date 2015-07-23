@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,6 +32,9 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -6897555657365451006L;
+
+	private static final String DATE_FORMAT_STR_FULL = "dd-MM-yyyy HH:mm";
+	private static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
 
 	@Column(name = "data_date")
 	private Date dataDate;
@@ -306,6 +310,15 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	 * @return
 	 */
 	public String getDataDateString() {
-		return DateFormatUtils.formatDateTime(this.dataDate);
+
+		TimeDetailKey timeDetailKey = TimeDetailKey
+				.searchKeyname(this.timeDetailType);
+		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
+			return DateFormatUtils.formatDateTime(this.dataDate,
+					DATE_FORMAT_STR_TRUNC);
+		}
+
+		return DateFormatUtils.formatDateTime(this.dataDate,
+				DATE_FORMAT_STR_FULL);
 	}
 }

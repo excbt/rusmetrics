@@ -25,6 +25,7 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 			.getLogger(SubscrContServiceDataHWaterServiceTest.class);
 
 	private final static long ZPOINT_ID = 18811557;
+	private final static long FAVORITE_ZPOINT_ID = 18811586;
 
 	@Autowired
 	private ContServiceDataHWaterService service;
@@ -64,11 +65,22 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 	@Test
 	public void testTotals() {
 		ContServiceDataHWaterTotals result = service.selectContZPointTotals(
-				ZPOINT_ID, TimeDetailKey.TYPE_1H,
-				LocalDateTime.now().minusMonths(1).withDayOfMonth(1),
-				LocalDateTime.now().withDayOfMonth(1).minusDays(1));
+				ZPOINT_ID, TimeDetailKey.TYPE_1H, LocalDateTime.now()
+						.minusMonths(1).withDayOfMonth(1), LocalDateTime.now()
+						.withDayOfMonth(1).minusDays(1));
 		assertNotNull(result);
-		//assertNotNull(result.getM_in());
+		// assertNotNull(result.getM_in());
 	}
 
+	@Test
+	public void testLastAbsData() throws Exception {
+		LocalDateTime n = LocalDateTime.now();
+
+		ContServiceDataHWater data = service.selectLastAbsData(
+				FAVORITE_ZPOINT_ID, TimeDetailKey.TYPE_1H, n, true);
+		logger.info("now Date:{}", n);
+		logger.info("dataDate:{}", data.getDataDate());
+		LocalDateTime ldt = new LocalDateTime(data.getDataDate());
+		logger.info("Local dataDate:{}", ldt);
+	}
 }

@@ -10,11 +10,30 @@ public class DateFormatUtils {
 
 	}
 	
-	public static String formatDateTime(Date arg) {
-		if (arg == null) {
+	/**
+	 * 
+	 * @param date
+	 * @return
+	 */
+	public static String formatDateTime(Date date) {
+		if (date == null) {
 			return null;
 		}
-		LocalDateTime ldt = new LocalDateTime(arg);
+		LocalDateTime ldt = new LocalDateTime(date);
 		return ldt.toString("yyyy-MM-dd HH:mm");
+	}
+
+	/**
+	 * 
+	 * @param date
+	 * @param formatString
+	 * @return
+	 */
+	public static String formatDateTime(Date date, String formatString) {
+		if (date == null) {
+			return null;
+		}
+		LocalDateTime ldt = new LocalDateTime(date);
+		return ldt.toString(formatString);
 	}
 }
