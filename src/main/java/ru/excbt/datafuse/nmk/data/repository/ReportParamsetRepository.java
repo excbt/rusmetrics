@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public interface ReportParamsetRepository extends
 		CrudRepository<ReportParamset, Long> {

@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
@@ -60,224 +60,120 @@ public class ReportTemplateController extends WebApiController {
 
 	/**
 	 * 
+	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesCommerce() {
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyList(
+			@PathVariable("reportUrlName") String reportUrlName) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT,
-						ReportConstants.IS_ACTIVE);
+						reportTypeKey, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
+
 
 	/**
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesConsT1() {
+	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyArchList(
+			@PathVariable("reportUrlName") String reportUrlName) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
 		List<ReportTemplate> result = reportTemplateService
 				.getAllReportTemplates(
 						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T1_REPORT, ReportConstants.IS_ACTIVE);
+						reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
 	/**
 	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesConsT2() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
+		if (result == null) {
+			return responseBadRequest();
+		}
+
+		return responseOK(result);
+	}	
 
 	/**
 	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
+	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesConsOld() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT, ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
+			@RequestBody ReportTemplate reportTemplate) {
 
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return updateInternal(reportTemplateId, reportTemplate, reportTypeKey);
+	}	
+	
 	/**
 	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesEvent() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.EVENT_REPORT, ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOneArch(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportTemplateId") long reportTemplateId) {
 
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesMetrological() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.METROLOGICAL_REPORT,
-						ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesConsumption() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONSUMPTION_REPORT,
-						ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesConsumptionHistory() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-						ReportConstants.IS_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveCommerce() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.COMMERCE_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveConsT1() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T1_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveConsT2() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveConsOld() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONS_T2_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveEvent() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.EVENT_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveMetrological() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.METROLOGICAL_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveConsumption() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONSUMPTION_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption_history", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportTemplatesArchiveConsumptionHistory() {
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-						ReportConstants.IS_NOT_ACTIVE);
-		return ResponseEntity.ok(result);
-	}
-
+		return deleteInternal(reportTemplateId);
+	}	
+	
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -295,215 +191,6 @@ public class ReportTemplateController extends WebApiController {
 		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/commerce/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveCommerce(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t1/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveConsT1(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t2/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveConsT2(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveConsOld(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/event/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveEvent(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/metrological/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveMetrological(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveConsumption(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption_history/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteReportTemplatesArchiveConsumptionHistory(
-			@PathVariable("reportTemplateId") long reportTemplateId) {
-
-		return deleteInternal(reportTemplateId);
-	}
-
-	/** */
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneCommerce(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneConsT1(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneConsT2(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneConsOld(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneEvent(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/** */
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneMetrological(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneConsumption(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOneConsumptionHistory(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
-
-		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
-		if (result == null) {
-			ResponseEntity.badRequest().build();
-		}
-		return ResponseEntity.ok(result);
-	}
 
 	/**
 	 * 
@@ -536,117 +223,6 @@ public class ReportTemplateController extends WebApiController {
 
 	}
 
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneCommerce(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.COMMERCE_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneConsT1(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONS_T1_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneConsT2(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONS_T2_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneConsOld(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONS_T2_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/event/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneEvent(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.EVENT_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneMetrological(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.METROLOGICAL_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneConsumption(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONSUMPTION_REPORT);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneConsumptionHistory(
-			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
-			@RequestBody ReportTemplate reportTemplate) {
-		return updateInternal(reportTemplateId, reportTemplate,
-				ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
-	}
 
 	/**
 	 * 

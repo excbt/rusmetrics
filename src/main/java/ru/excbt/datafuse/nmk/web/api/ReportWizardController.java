@@ -20,8 +20,8 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.report.model.ReportColumnSettings;
-import ru.excbt.datafuse.nmk.report.model.ReportWizardParam;
+import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
+import ru.excbt.datafuse.nmk.report.ReportWizardParam;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 

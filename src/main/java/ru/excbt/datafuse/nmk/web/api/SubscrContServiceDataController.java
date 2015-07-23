@@ -522,7 +522,7 @@ public class SubscrContServiceDataController extends SubscrApiController {
 									fromDateStr, toDateStr));
 		}
 
-		TimeDetailKey timeDetail = TimeDetailKey.valueOf(timeDetailType);
+		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return responseBadRequest();
 		}

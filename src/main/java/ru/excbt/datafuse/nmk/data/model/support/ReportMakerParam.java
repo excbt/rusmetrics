@@ -13,11 +13,12 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportMakerParam {
 
@@ -68,7 +69,7 @@ public class ReportMakerParam {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIdList);
-		//checkArgument(!contObjectIdList.isEmpty());
+		// checkArgument(!contObjectIdList.isEmpty());
 		this.reportParamset = reportParamset;
 		this.contObjectIds = contObjectIdList.toArray(new Long[0]);
 		this.previewMode = previewMode;
@@ -300,4 +301,13 @@ public class ReportMakerParam {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public ReportTypeKey getReportTypeKey() {
+		ReportTemplate rt = getParamserReportTemplate();
+		return rt != null ? rt.getReportTypeKey() : null;
+	}
+	
 }

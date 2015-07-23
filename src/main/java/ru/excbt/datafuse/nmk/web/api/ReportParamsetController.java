@@ -23,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportTypeKey;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
@@ -33,6 +31,8 @@ import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
+import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
@@ -67,450 +67,189 @@ public class ReportParamsetController extends WebApiController {
 
 	/**
 	 * 
+	 * @param reportUrlName
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCommerceReportParamsetList() {
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyList(
+			@PathVariable("reportUrlName") String reportUrlName) {
 
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCommerceReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsT1Report_ParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsT1Report_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsT2Report_ParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsT2Report_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	@Deprecated
-	public ResponseEntity<?> getCons_ReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
-						true, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	@Deprecated
-	public ResponseEntity<?> getCons_ReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getEventReport_ParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT, true,
-						currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getEventReport_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getMetrologicalReport_ParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(
-						ReportTypeKey.METROLOGICAL_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getMetrologicalReport_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsumptionReport_ParamsetList() {
-		
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(
-						ReportTypeKey.CONSUMPTION_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-		
-		return ResponseEntity.ok(reportParamsetList);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsumptionReport_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsumptionHistoryReport_ParamsetList() {
-		
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(
-						ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
-		
-		return ResponseEntity.ok(reportParamsetList);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getConsumptionHistoryReport_ParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_CommerceReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_CommerceReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t1", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsT1ReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T1_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsT1ReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t2", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsT2ReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsT2ReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONS_T2_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/event", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_EventReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.EVENT_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/event/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_EventReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/metrological", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_MetroligicalReportParamsetList() {
-
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.METROLOGICAL_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-
-		return ResponseEntity.ok(reportParamsetList);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/metrological/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_MetroligicalReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsumptionReportParamsetList() {
-		
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONSUMPTION_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-		
-		return ResponseEntity.ok(reportParamsetList);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsumptionReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption_hisotry", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsumptionHistoryReportParamsetList() {
-		
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-						false, currentSubscriberService.getSubscriberId());
-		
-		return ResponseEntity.ok(reportParamsetList);
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption_hisotry/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getArch_ConsumptionHistoryReportParamsetGet(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getReportParamsetList(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		checkNotNull(reportParamsetId);
-
-		ReportParamset result = reportParamsetService.findOne(reportParamsetId);
-		if (result == null) {
-			return ResponseEntity.badRequest().build();
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
 		}
 
-		if (result.getReportTemplate() == null) {
-			return ResponseEntity.badRequest().build();
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(reportTypeKey,
+						ReportConstants.IS_ACTIVE,
+						currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok(reportParamsetList);
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyArchList(
+			@PathVariable("reportUrlName") String reportUrlName) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		List<ReportParamset> reportParamsetList = reportParamsetService
+				.selectReportTypeParamsetList(reportTypeKey,
+						ReportConstants.IS_NOT_ACTIVE,
+						currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok(reportParamsetList);
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOneArch(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return ResponseEntity.ok(reportParamsetService
+				.findOne(reportParamsetId));
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportTemplateId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset,
+			HttpServletRequest request) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return createInternal(reportTemplateId, reportParamset, contObjectIds,
+				request);
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @param contObjectIds
+	 * @param reportParamset
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestBody ReportParamset reportParamset) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOne(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return deleteInternal(reportParamsetId);
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOneArch(
+			@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey
+				.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError(
+					"Report of type %s is not supported", reportUrlName));
+		}
+
+		return deleteInternal(reportParamsetId);
 	}
 
 	/**
@@ -599,114 +338,18 @@ public class ReportParamsetController extends WebApiController {
 
 	/**
 	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
+	 * @param id
 	 */
-	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_Commerce(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
+	private ResponseEntity<?> deleteInternal(final Long id) {
 
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_ConsT1(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
+		ApiAction action = new AbstractApiAction() {
+			@Override
+			public void process() {
+				reportParamsetService.deleteOne(id);
+			}
+		};
 
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_ConsT2(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_Cons(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_Event(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_Metrological(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
-	
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_Consumption(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
-	}
-	
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne_ConsumptionHistory(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset) {
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -748,135 +391,6 @@ public class ReportParamsetController extends WebApiController {
 				+ +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_Commerce(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_ConsT1(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_ConsT2(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/cons", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	@Deprecated
-	public ResponseEntity<?> createOne_Cons(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/event", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_Event(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_Metrological(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-	
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_Consumption(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
-	}
-	
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne_ConsumptionHistory(
-			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
 	}
 
 	/**
@@ -1042,215 +556,6 @@ public class ReportParamsetController extends WebApiController {
 		}
 
 		return ResponseEntity.accepted().build();
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_Commerce(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/commerce/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_CommerceArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsT1(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t1/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsT1Archive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsT2(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons_t2/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsT2Archive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	@Deprecated
-	public ResponseEntity<?> deleteOne_Cons(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/cons/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_Event(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/event/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_EventArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/metrological/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_Metrological(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/metrological/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_MetrologicalArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-
-		return deleteInternal(reportParamsetId);
-	}
-	
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_Consumption(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return deleteInternal(reportParamsetId);
-	}
-	
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsumptionArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return deleteInternal(reportParamsetId);
-	}
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/consumption_history/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsumptionHisotry(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return deleteInternal(reportParamsetId);
-	}
-	
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@RequestMapping(value = "/archive/consumption_history/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne_ConsumptionHisotryArchive(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
-		
-		return deleteInternal(reportParamsetId);
-	}
-
-	/**
-	 * 
-	 * @param id
-	 */
-	private ResponseEntity<?> deleteInternal(final Long id) {
-
-		ApiAction action = new AbstractApiAction() {
-			@Override
-			public void process() {
-				reportParamsetService.deleteOne(id);
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }

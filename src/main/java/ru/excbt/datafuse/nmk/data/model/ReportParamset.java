@@ -21,10 +21,10 @@ import javax.persistence.Version;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportOutputFileType;
-import ru.excbt.datafuse.nmk.data.constant.ReportConstants.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
+import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

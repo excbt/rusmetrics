@@ -1,4 +1,5 @@
-package ru.excbt.datafuse.nmk.data.constant;
+package ru.excbt.datafuse.nmk.report;
+
 
 public class ReportConstants {
 
@@ -12,7 +13,7 @@ public class ReportConstants {
 	public static final boolean IS_ACTIVE = true;
 	public static final boolean IS_NOT_ACTIVE = false;
 
-	public static class Paths {
+	public static class Files {
 
 		public static final String COMM_FILE_COMPILED = "jasper_reports/nmk_com_report.jasper";
 		public static final String COMM_FILE_JRXML = "jasper_reports/nmk_com_report.jrxml";
@@ -22,57 +23,12 @@ public class ReportConstants {
 		public static final String METROLOGICAL_FILE_COMPILED = "jasper_reports/nmk_metrological_rep.jasper";
 		public static final String CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_consumption_report.jasper";
 		public static final String CONSUMPTION_HISTORY_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
+		public static final String LOG_JOURNAL_FILE_COMPILED = "jasper_reports/nmk_log_journal.jasper";		
 
-		private Paths() {
+		private Files() {
 
 		}
 
-	}
-
-	public enum ReportOutputFileType {
-		HTML("text/html", ".html"), PDF("application/pdf", ".pdf"), XLS(
-				"application/vnd.ms-excel", ".xlsx"), XLSX(
-				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-				".xlsx");
-
-		private final String mimeType;
-		private final String ext;
-
-		private ReportOutputFileType(String mimeType, String ext) {
-			this.mimeType = mimeType;
-			this.ext = ext;
-		}
-
-		public String toLowerName() {
-			return this.name().toLowerCase();
-		}
-
-		public String getMimeType() {
-			return mimeType;
-		}
-
-		public String getExt() {
-			return ext;
-		}
-	};
-
-	public enum ReportTypeKey {
-		COMMERCE_REPORT, // CONS_REPORT,
-		EVENT_REPORT, CONS_T1_REPORT, CONS_T2_REPORT, METROLOGICAL_REPORT, //
-		CONSUMPTION_REPORT, CONSUMPTION_HISTORY_REPORT, CONSUMPTION_ETALON_REPORT, //
-		LOG_JOURNAL_REPORT
-	}
-
-	public enum ReportPeriodKey {
-		CURRENT_MONTH, INTERVAL, LAST_MONTH, TODAY, YESTERDAY, DAY
-	}
-
-	public enum ReportActionKey {
-		EMAIL_LIST_DELIVERY, EMAIL_RAW_DELIVERY
-	}
-
-	public enum ReportSheduleTypeKey {
-		DAILY, MONTHLY, SINGLE, WEEKLY
 	}
 
 	private ReportConstants() {
