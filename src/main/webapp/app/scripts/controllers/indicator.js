@@ -296,7 +296,7 @@ angular.module('portalNMC')
                 header : "Дата",
                 headerClass : "col-md-2",
                 dataClass : "col-md-2",
-                fieldName: "dataDateString"
+                fieldName: "dataDate"
             }, 
             {
                 header : "Время наработки, час",
@@ -505,10 +505,10 @@ console.log(tempDate.getTime());
                           var datad = DateNMC(el.dataDate);
 //console.log(datad.getTimezoneOffset());
 //console.log(datad.toLocaleString());                            
-                            el.dataDate=printDateNMC(datad);
+                            el.dataDate=el.dataDateString;//printDateNMC(datad);
                             continue;
                         }
-                        if (el[$scope.columns[i].fieldName]!=null){
+                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].fieldName !== "dataDateString")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
                         
@@ -583,9 +583,11 @@ console.log(tempDate.getTime());
                         return;
                     };
                     var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+" ";
-                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
+                    textDetails+="(Дата = "+ $scope.summary.firstData['dataDateString']+");<br><br>";
                     textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+" ";
-                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+//                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
+                    textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
                     var targetDOM = "#total"+columnName;
