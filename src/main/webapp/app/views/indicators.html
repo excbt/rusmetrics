@@ -226,15 +226,16 @@
 			<form name="confirmActionForm" novalidate>
 				<p class="marginLeft15">
                     <input type="file" nv-file-select uploader="uploader"/><br/>
-                    <ul>
-                        <li ng-repeat="item in uploader.queue">
+                    <div class="col-md-12">
+                        <p ng-repeat="item in uploader.queue">
                             Файл: <span ng-bind="item.file.name"></span><br/>
                             <button ng-click="item.upload()">Загрузить</button>
-                        </li>
-                    </ul>
-                    <div class="progress" style="">
-                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            </div>
+                        </p>
                     </div>
+
 <!--                    <input type="file" name="indicatorFile">-->
 <!--
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
