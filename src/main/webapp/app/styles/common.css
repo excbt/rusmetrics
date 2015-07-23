@@ -437,7 +437,7 @@ tr.nmc-tr-odd>td{
 }
     /*Стиль колонки с кнопками - для колонок с 3мя кнопками*/
 .nmc-td-for-buttons-3{
-    min-width: 90px;
+    min-width: 95px;
     width: 4%;
 }
 

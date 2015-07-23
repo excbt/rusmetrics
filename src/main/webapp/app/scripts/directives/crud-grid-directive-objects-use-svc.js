@@ -466,6 +466,10 @@ console.log("Objects directive.");
                     object.zpoints.forEach(function(zpoint){
                         trHTML +="<tr id=\"trZpoint"+zpoint.id+"\" ng-dblclick=\"getIndicators("+object.id+","+zpoint.id+")\">";
                         trHTML +="<td class=\"nmc-td-for-buttons-3\">"+
+                                "<i class=\"btn btn-sm glyphicon glyphicon-list nmc-button-in-table\""+
+                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                    "title=\"Показания точки учёта\">"+
+                                "</i>"+
                                 "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\""+
                                     "ng-click=\"getZpointSettings("+object.id+","+zpoint.id+")\""+
                                     "data-target=\"#showZpointOptionModal\""+
@@ -481,10 +485,7 @@ console.log("Objects directive.");
                                     "title=\"Эксплуатационные параметры точки учёта\">"+
                                         "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
                                 "</i>"+
-                                "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-                                    "title=\"Показания точки учёта\">"+
-                                "</i>"+
+
                             "</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){

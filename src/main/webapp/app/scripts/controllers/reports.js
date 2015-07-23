@@ -25,6 +25,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     ];
     $scope.crudTableName = "../api/reportParamset"; 
     
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
+    };
     //report types
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
@@ -36,6 +40,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var newObject = {};
             for (var i = 0; i<data.length; i++){
                 if (!data[i]._enabled){
+                    continue;
+                };
+                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};

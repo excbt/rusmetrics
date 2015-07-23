@@ -18,6 +18,11 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
     
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
+    };
+    
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
@@ -29,6 +34,9 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
                 if (!data[i]._enabled){
                     continue;
                 };
+                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
+                    continue;
+                };
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
@@ -37,7 +45,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
                 newObjects.push(newObject);
             };           
             $scope.objects = newObjects;
-            
+console.log($scope.reportTypes);            
             $scope.getActive();
         });
     };
@@ -300,6 +308,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         $scope.currentReportType.suffix=object.suffix;
     };
     $scope.editTemplate = function(object, oldObject){
+//console.log(object);        
         $scope.selectedItem(oldObject);
         $scope.setCurrentReportType(object);
     };
@@ -311,10 +320,13 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
         $('#createTemplateModal').modal();
     };
     
-    $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
+    $scope.preview = function(template){
+        var url = template.reportType.previewUrl;
+//console.log(template);        
+        window.open(url);
     };
+    
+
 
     
 }]);

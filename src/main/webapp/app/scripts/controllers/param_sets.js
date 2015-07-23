@@ -32,6 +32,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     
     $scope.objects = [];
     
+    $scope.isSystemuser = function(){
+        $scope.userInfo = $rootScope.userInfo;
+        return $scope.userInfo._system;
+    };
+    
     //report types
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
@@ -43,6 +48,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             var newObject = {};
             for (var i = 0; i<data.length; i++){
                 if (!data[i]._enabled){
+                    continue;
+                };
+                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
@@ -613,11 +621,6 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         };
               
     }, false);
-    
-    $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
-    };
     
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
