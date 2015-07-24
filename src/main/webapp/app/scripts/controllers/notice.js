@@ -174,6 +174,7 @@ console.log("initCtrl");
     var dataParse = function(arr){
         var oneNotice = {};
         var tmp = arr.map(function(el){
+console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
             oneNotice.noticeType = el.contEvent.contEventType.caption;
@@ -207,11 +208,29 @@ console.log("initCtrl");
             oneNotice.isNew = el.isNew;
             switch (el.contEvent.contServiceType)
             {
-                        case "heat" : oneNotice.noticeZpoint = "ТС"; break;
-                        case "hw" : oneNotice.noticeZpoint = "ГВС"; break;
-                        case "cw" : oneNotice.noticeZpoint = "ХВ"; break;
-                        case null : oneNotice.noticeZpoint = ""; break;
-                        default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
+                case "heat" : oneNotice.noticeZpoint = "Теплоснабжение"; 
+                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
+                    break;
+                case "hw" : oneNotice.noticeZpoint = "ГВС";
+                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
+                    break;
+                case "cw" : oneNotice.noticeZpoint = "ХВС"; 
+                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
+                    break;
+                case "gas" : oneNotice.noticeZpoint = "Газ"; 
+                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
+                    break;
+                case "env" : oneNotice.noticeZpoint = "Климат"; 
+                    oneNotice.imgSTPath = "images/es.png";
+                    break;
+                case "el" : oneNotice.noticeZpoint = "Элка"; 
+                    oneNotice.imgSTPath = "images/es.png";
+                    break;    
+                case null : oneNotice.noticeZpoint = ""; 
+                    oneNotice.imgSTPath = "null";
+                    break;
+                default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
+                    oneNotice.imgSTPath = ""+el.contServiceType+"";
              }
 //console.log(oneNotice);            
             return oneNotice;

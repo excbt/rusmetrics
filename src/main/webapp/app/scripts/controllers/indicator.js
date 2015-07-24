@@ -416,6 +416,11 @@ angular.module('portalNMC')
     };
         //The flag for the link to the file with delete data
     $scope.showLinkToFileFlag = false;
+        //flag for zpoint, which control manual loading data - true: on manual loading, false: off manual loading
+    $scope.isManualLoading = $cookies.isManualLoading==="true"?true:false;
+        
+console.log($cookies.isManualLoading);        
+console.log($scope.isManualLoading);        
         
     //file upload settings
     var initFileUploader =  function(){    
@@ -707,6 +712,7 @@ console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/100
                 $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/"+ data.filename;
                 $scope.fileWithDeleteData = data.filename;
                 $scope.showLinkToFileFlag = true;
+                $scope.getData(1);
             })
             .error(function(err){
                 notificationFactory.errorInfo(err.title, err.description)

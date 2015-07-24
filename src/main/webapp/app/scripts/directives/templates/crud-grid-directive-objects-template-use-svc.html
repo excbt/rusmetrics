@@ -2,29 +2,9 @@
 <div  ng-show="loading" class="nmc-loading">
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
-<!--Фильтр-->
-<!--
-<div ng-hide="bReports" ng-show="!bObject && !bGroupByObject">
-    <div>
-        Фильтры:
-    </div>
-</div>
--->
 
 <!-- Common filter-->
 <div class="container-fluid" ng-hide="loading">
-<!--
-<div class="row">
-    <div class="col-md-12">
-        
-    </div>
-</div>    
-<div class="row">
-    <div class="col-md-12">
-        <hr>
-    </div>
-</div>
--->
 <div class="row nmc-main-workspace-header">
     <div class="col-md-3 noPadding">
         <h2 class="noMargin nmc-h2">Объекты учета
@@ -82,7 +62,19 @@
                                 </th>
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
-                                    <span class="pull-right"><input type="checkbox" title="Включить/выключить расширенный интерфейс" ng-model="objectCtrlSettings.extendedInterfaceFlag"></span>
+<!--                                    <span class="pull-right"><input type="checkbox" title="Включить/выключить расширенный интерфейс" ng-model="objectCtrlSettings.extendedInterfaceFlag"></span>-->
+                                    <div class="btn-group pull-right" style="vertical-align: initial;">
+
+                                      <button title="Настройки" type="button" class="btn btn-default btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
+                                        </li>
+<!--                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> -->
+                                      </ul>
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -101,17 +93,18 @@
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
                             <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
                             <div class="btn-group">
-                              <i title="Редактирование мета данных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">
+                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">
 <!--                                <span class="caret"></span>-->
                               </i>
                               <ul class="dropdown-menu">
                                   <li ng-repeat="device in object.devices">
                                       <a href="" ng-click="getDeviceMetaData(object,device)">прибор Модель:{{device.deviceModel.modelName}} <span ng-if="device.number!=null">- №: </span> {{device.number}}</a>
                                   </li>
-<!--
-                                <li><a href="" ng-click="" data-target="#metaDataEditorModal" data-toggle="modal">Прибор №1 Модель 1</a></li>
-                                <li><a href="" ng-click="" data-target="#metaDataEditorModal" data-toggle="modal">Прибор №2 Модель 2</a></li> 
--->
+                                  <li ng-show="object.devices.length==0" style="width:400px;">
+                                      <span>
+                                      Нет доступных для редактирования приборов.
+                                          </span>
+                                  </li>
                               </ul>
                             </div>
 
@@ -128,63 +121,6 @@
                         </td>
                     </tr>
                     <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
-<!--                        ng-show="object.showGroupDetailsFlag">-->
-<!--
-                        <td></td>
-                        <td style="padding-top: 2px !important;">
-                            <table ng-attr-id={{"zpointTable"+object.id}} class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table">
-                                <thead>
-                                        <tr class="nmc-child-table-header">
-                                            <th ng-show="bObject || bList" class="nmc-td-for-buttons-3"></th>
-                                            <th ng-repeat="column in oldColumns" ng-class="column.class">
-                                                {{column.header || column.name}}
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                <tbody>
-                                        <tr ng-repeat="zpoint in object.zpoints" ng-attr-id="{{'trZpoint'+zpoint.id}}" ng-dblclick="getIndicators(object.id, zpoint.id)">
-                                            <td class="nmc-td-for-buttons-3">
-                                                <i class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table"
-                                                    ng-click="getZpointSettings(object.id,zpoint.id)"
-                                                    data-target="#showZpointOptionModal"
-                                                    data-toggle="modal"
-                                                    data-placement="bottom"
-                                                    title="Свойства точки учёта">
-                                                </i>
-                                                <i class="btn btn-xs nmc-button-in-table"
-                                                    ng-click="getZpointSettings(object.id, zpoint.id)"
-                                                    data-target="#showZpointExplParameters"
-                                                    data-toggle="modal"
-                                                    data-placement="bottom"
-                                                    title="Эксплуатационные параметры точки учёта">
-                                                    <img height=12 width=12 src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png" />
-                                                </i>
-                                                <i class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table"
-                                                    ng-click="getIndicators(object.id, zpoint.id)"
-                                                    title="Показания точки учёта">
-                                                </i>
-                                            </td>
-                                            <td ng-repeat="column in oldColumns">
-                                                <span ng-switch on="column.name">
-                                                    <span ng-switch-when="zpointName">
-                                                        {{zpoint[column.name]}} <span ng-show="isSystemuser()">(id = {{zpoint.id}})</span>
-                                                    </span>
-                                                    <span ng-switch-when="zpointLastDataDate">
-                                                        {{zpoint[column.name] | date: 'dd.MM.yyyy HH:mm'}}
-                                                    </span>
-                                                    <span ng-switch-default>
-                                                        {{zpoint[column.name]}}
-                                                    </span>
-
-                                                </span>
-                                            </td>
-
-                                          
-                                        </tr>
-                                </tbody>        
-                            </table>
-                        </td>
--->
                     </tr>
                 </table>
              </td>        
@@ -235,8 +171,8 @@
                                 </td>
                                 <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
                                     <div ng-show="zpointSettings.piped">
-                                        <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.singlePipe">Однотрубная
-                                        <input disabled="true" type="radio" name="gvstype" ng-model="zpointSettings.doublePipe">Двухтрубная
+                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
+                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
                                     </div>    
                                 </td>
                             </tr>
@@ -1083,59 +1019,6 @@
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentDevice')">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
-	</div>
-</div>
-    
-<!--window: Device selection-->
-<div id="deviceSelectionModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="deviceSelectionLabel" tabindex="-1">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="deviceSelectionLabel" class="nmc-h3">
-				Выберете прибор для редактирования метаданных
-			</h3>
-		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12 well" style="">
-                        
-                                <select class="form-control nmc-select-form" id="inputDevice">
-                                        <option>Модель: "Такая"; номер: "Такой"</option>
-                                        <option>Модель: 1; номер: 1999</option>
-                                    </select>
-                    </div>    
-                </div>  
-            </div>        
-		</div>
-		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid  ">
-
-					<div class="row">
-                        <div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-ok-button"
-                                   data-dismiss="modal"
-                                   data-target="#metaDataEditorModal"
-                                   data-toggle="modal"
-                                   
-
-								value="Ок" />
-						</div>
-						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-								ng-click="exit('#currentObject')">
 								Отменить
 							</button>
 						</div>
