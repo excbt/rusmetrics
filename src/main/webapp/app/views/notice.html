@@ -151,6 +151,7 @@
                 <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>
             </td>
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
                 <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
             </td>
         </tr>

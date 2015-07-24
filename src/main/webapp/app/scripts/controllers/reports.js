@@ -23,7 +23,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         ,{"name":"period","header":"Период", "class":"col-md-1"}
         ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
     ];
+    $scope.groupUrl = "../api/contGroup";
     $scope.crudTableName = "../api/reportParamset"; 
+    
+        //Headers of modal window
+    $scope.headers = {}
+    $scope.headers.addObjects = "Доступные объекты";//header of add objects window
     
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
@@ -258,6 +263,7 @@ console.log(curObject.paramsets);
     //Account objects
     $scope.availableObjects = [];
     $scope.selectedObjects = [];
+    $scope.availableObjectGroups = [];
     
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
@@ -275,14 +281,121 @@ console.log(curObject.paramsets);
         });
     };
     
-        $scope.removeSelectedObject = function(object){
+    $scope.prepareObjectsList = function(){
+        $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+    };
+    
+    $scope.getGroupObjects = function(group){
+        var url = $scope.groupUrl+"/"+group.id+"/contObject";
+        crudGridDataFactory(url).query(function(data){           
+            group.objects = data;     
+        });
+        
+    };    
+    
+    $scope.getAvailableObjectGroups = function(){         
+        crudGridDataFactory($scope.groupUrl).query(function(data){           
+            var tempGroupArr = data;
+            tempGroupArr.forEach(function(group){
+                $scope.getGroupObjects(group);
+            });
+            $scope.availableObjectGroups = tempGroupArr;          
+        });        
+    };
+    
+    $scope.getAvailableObjectGroups();
+    
+    $scope.viewAvailableObjects = function(objectGroupFlag){
+        $scope.showAvailableObjects_flag=!$scope.showAvailableObjects_flag;
+        $scope.showAvailableObjectGroups_flag=objectGroupFlag;
+        if (objectGroupFlag){
+            $scope.headers.addObjects = "Доступные группы объектов";
+            //prepare the object goups to view in table
+//            var tmpArr = $scope.availableObjectGroups.map(function(element){
+//                var result = element;
+//                result.fullName = element.contGroupName;//set the field, which view entity name in table
+//                return result;
+//            });
+            $scope.availableEntities = $scope.availableObjectGroups;//tmpArr;
+        }else{
+            $scope.headers.addObjects = "Доступные объекты";
+            $scope.availableEntities = $scope.availableObjects;
+        };
+    };
+    
+    $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
         objectSvc.sortObjectsByFullName($scope.availableObjects);
-    }
+    };
     
-    $scope.addSelectedObjects = function(){
-    //console.log($scope.availableObjects);          
+    $scope.joinObjectsFromSelectedGroups = function(groups){
+        var result = [];
+        groups.forEach(function(group){
+                if(group.selected){
+                    Array.prototype.push.apply(result, group.objects);
+//                    totalGroupObjects = group.objects;
+                };
+        });                 
+        return result;
+    };
+    
+    $scope.deleteDoublesObjects = function(targetArray){
+        var arrLength = targetArray.length;
+        while (arrLength>=2){
+            arrLength--;                                               
+            if (targetArray[arrLength].fullName===targetArray[arrLength-1].fullName){                   
+                targetArray.splice(arrLength, 1);
+            };
+        }; 
+    };
+    
+    $scope.addUniqueObjectsFromGroupsToSelectedObjects = function(arrFrom, arrTo){
+        for (var j=0; j < arrFrom.length; j++){
+            var uniqueFlag = true;
+            for (var i = 0; i<arrTo.length; i++){
+                if(arrFrom[j].fullName===arrTo[i].fullName){
+                    uniqueFlag = false;
+                    break;
+                };
+            };
+            if (uniqueFlag){
+                arrTo.push(arrFrom[j]);
+            };
+        }; 
+        
+    };
+    
+    $scope.removeGroupObjectsFromAvailableObjects = function(objectsFromGroup, availableObjects){
+        for (var j=0; j < objectsFromGroup.length; j++){
+            var elementIndex = -1;
+            for (var i = 0; i<availableObjects.length; i++){
+                if(objectsFromGroup[j].fullName===availableObjects[i].fullName){
+                    elementIndex = i;
+                    break;
+                };
+            };
+            if (elementIndex>=0){
+                availableObjects.splice(elementIndex,1);
+            };
+        }; 
+    };
+    
+    $scope.addSelectedEntities = function(){
+    //console.log($scope.availableObjects);  
+        if ($scope.showAvailableObjectGroups_flag){
+            var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.availableEntities);   
+console.log(totalGroupObjects);            
+            objectSvc.sortObjectsByFullName(totalGroupObjects);
+            //del doubles
+            
+            $scope.deleteDoublesObjects(totalGroupObjects);
+            //add groupObjects to selected objects
+                //add only unique objects
+            $scope.addUniqueObjectsFromGroupsToSelectedObjects(totalGroupObjects, $scope.selectedObjects);   
+            //remove groupObjects from availableObjects
+            $scope.removeGroupObjectsFromAvailableObjects(totalGroupObjects, $scope.availableObjects);   
+        };
         var tmpArray = angular.copy($scope.availableObjects);
         for(var i =0; i<$scope.availableObjects.length; i++){
             var curObject = $scope.availableObjects[i];

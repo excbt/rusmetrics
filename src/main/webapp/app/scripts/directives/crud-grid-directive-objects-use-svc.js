@@ -52,7 +52,7 @@ console.log("Objects directive.");
                 $scope.objectCtrlSettings.vzletSystemList = [];
                 
                 //flag on/off extended user interface
-                $scope.objectCtrlSettings.extendedInterfaceFlag = true;
+                $scope.objectCtrlSettings.extendedInterfaceFlag = false;
                 
                 
                 $scope.object = {};
@@ -286,31 +286,10 @@ console.log("Objects directive.");
                     crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
                 };
 
-//                $scope.getData123 = function (cb) {
-//                    crudGridDataFactory($scope.crudTableName).query(function (data) {
-//                        var tmp = data;    
-//                        var curObjId = $cookies.contObject;
-//console.log(curObjId);                        
-//                        for (var i=0; i<tmp.length; i++){                                                    
-//                            $scope.getZpointsDataByObject(tmp[i], "Ex");  
-//console.log(tmp[i].id);                               
-//                            if (tmp[i].id == curObjId){tmp[i].showGroupDetails=true};
-//                        }
-//                        $scope.objects = tmp;
-//                        $cookies.contObject = null;
-//                        if (cb) cb();
-//                    });
-//                };
-
                 $scope.setOrderBy = function (field) {
                     var asc = $scope.orderBy.field === field ? !$scope.orderBy.asc : true;
                     $scope.orderBy = { field: field, asc: asc };
                 };
-
-//                $scope.getData(
-//                    function () {
-//                        $scope.loading = false;
-//                });
               
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);
@@ -385,6 +364,7 @@ console.log("Objects directive.");
                             var zpoints = [];
                             for(var i=0;i<zPointsByObject.length;i++){
                                 var zpoint = {};
+//console.log(zPointsByObject[i]);                                
                                 zpoint.id = zPointsByObject[i].id;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
@@ -397,14 +377,15 @@ console.log("Objects directive.");
                                 };
                                 zpoint.checkoutTime = zPointsByObject[i].checkoutTime;
                                 zpoint.checkoutDay = zPointsByObject[i].checkoutDay;
-                                if(typeof zPointsByObject[i].doublePipe == 'undefined'){
+                                if((typeof zPointsByObject[i].doublePipe == 'undefined')){
                                     zpoint.piped = false;
 
                                 }else {
                                     zpoint.piped = true;
-                                    zpoint.doublePipe = zPointsByObject[i].doublePipe;
+                                    zpoint.doublePipe = (zPointsByObject[i].doublePipe===null)?false:zPointsByObject[i].doublePipe;
                                     zpoint.singlePipe = !zpoint.doublePipe;
                                 };
+//console.log(zpoint);
                                 if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length>0)){                                
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
@@ -502,7 +483,35 @@ console.log("Objects directive.");
                             "</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){
-                                case "zpointName": trHTML += "<td>"+zpoint[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+zpoint.id+")</span></td>"; break;
+                                case "zpointName": 
+                                    var imgPath = "";                                  
+                                    switch(zpoint['zpointType']){
+                                        case "cw":
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
+                                            break;
+                                        case "hw":
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
+                                            break;
+                                        case "heat":
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
+                                            break;
+                                        case "gas":
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
+                                            break;
+                                        case "env":
+                                            imgPath = "images/es.png";
+                                            break;
+                                        case "el":
+                                            imgPath = "images/es.png";
+                                            break;
+                                        default:
+                                            imgPath = column['zpointType'];
+                                            break;   
+                                    };                                   
+                                    trHTML += "<td>";
+                                    trHTML += "<img height=12 width=12 src=\""+imgPath+"\"> <span class='paddingLeft5'></span>";
+                                    trHTML += zpoint[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+zpoint.id+")</span></td>"; 
+                                    break;
                                 case "zpointLastDataDate" : trHTML +="<td>{{"+zpoint[column.name]+" | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
                                 case "zpointRefRange": trHTML += "<td id=\"zpointRefRange"+zpoint.id+"\"></td>"; break;
                                 default : trHTML += "<td>"+zpoint[column.name]+"</td>"; break;
@@ -669,6 +678,8 @@ console.log("Objects directive.");
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
                     $cookies.timeDetailType="24h";
+                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
+console.log($scope.currentZpoint);                    
                     $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
                     $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
@@ -691,7 +702,11 @@ console.log("Objects directive.");
                        case "hw" : zps.zpointType="ГВС"; break;
                        case "cw" : zps.zpointType="ХВ"; break;    
                         default : zps.zpointType=object.zpointType;        
-                    }
+                    };
+                    zps.piped = object.piped;
+                    zps.singlePipe = object.singlePipe;
+                    zps.doublePipe = object.doublePipe;
+//console.log(zps);
                     zps.zpointModel = object.zpointModel;
                     zps.zpointRSO = object.zpointRSO;
                     zps.checkoutTime = object.checkoutTime;
@@ -1043,7 +1058,14 @@ console.log("Window.On load event");
                 $scope.getDevices = function(obj){
                     objectSvc.getDevicesByObject(obj).then(
                         function(response){
-                            obj.devices = response.data; 
+                            //select only vzlet devices
+                            var tmpArr = [];//response.data;
+                            response.data.forEach(function(element){
+                                if (element.metaVzletExpected === true){
+                                    tmpArr.push(element);
+                                };
+                            });
+                            obj.devices = tmpArr;//response.data; 
                         },
                         function(error){
                             notificationFactory.errorInfo(error.statusText,error.description);
@@ -1068,9 +1090,21 @@ console.log($scope.currentDevice);
                 };
                 
                 $scope.updateDeviceMetaData = function(device){
-console.log(device);                    
+//console.log(device);    
+                    var method = "";
+                    if(angular.isDefined(device.metaData.id)&&(device.metaData.id!==null)){
+                        method = "PUT";
+                    }else{
+                        method = "POST";
+                    };
                     var url = "../api/subscr/contObjects/"+device.contObject.id+"/deviceObjects/"+device.id+"/metaVzlet";
-                    $http.put(url, device.metaData).then(
+                    $http({
+                        url: url,
+                        method: method,
+                        data: device.metaData
+                    })
+//                    $http.put(url, device.metaData)
+                        .then(
 //                    objectSvc.putDeviceMetaData(device).then(
                         function(response){
                             $scope.currentDevice =  {};
