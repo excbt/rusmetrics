@@ -40,7 +40,11 @@ public class ContObjectFias extends AbstractAuditableModel {
 	private UUID fiasUUID;
 
 	@Column(name = "fias_full_address")
+	@JsonIgnore
 	private String fiasFullAddress;
+
+	@Column(name = "geo_full_address")
+	private String geoFullAddress;
 
 	@Column(name = "geo_json")
 	@Type(type = "StringJsonObject")
@@ -49,40 +53,32 @@ public class ContObjectFias extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	public Long getContObjectId() {
-		return contObjectId;
+	public ContObject getContObject() {
+		return contObject;
 	}
 
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
+	public Long getContObjectId() {
+		return contObjectId;
 	}
 
 	public UUID getFiasUUID() {
 		return fiasUUID;
 	}
 
-	public void setFiasUUID(UUID fiasUUID) {
-		this.fiasUUID = fiasUUID;
-	}
-
 	public String getFiasFullAddress() {
 		return fiasFullAddress;
-	}
-
-	public void setFiasFullAddress(String fiasFullAddress) {
-		this.fiasFullAddress = fiasFullAddress;
 	}
 
 	public String getGeoJson() {
 		return geoJson;
 	}
 
-	public void setGeoJson(String geoJson) {
-		this.geoJson = geoJson;
+	public int getVersion() {
+		return version;
 	}
 
-	public ContObject getContObject() {
-		return contObject;
+	public String getGeoFullAddress() {
+		return geoFullAddress;
 	}
 
 }
