@@ -148,6 +148,21 @@ app
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
     }, false);
     
+        //Страница с показаниями - удаление показаний
+    $scope.deleteIndicatorDates = {
+        startDate : moment().subtract(6, 'days').startOf('day'),
+        endDate :  moment().endOf('day')
+    };
+    
+    $scope.$watch('deleteIndicatorDates', function (newDates) {
+//console.log("Date-range-settings indicatorDates");        
+        if ($location.path()!=="/objects/indicators"){
+            return;
+        };
+//console.log("Date-range-settings indicatorDates1");                
+        $rootScope.startDateToDel = moment(newDates.startDate).format('YYYY-MM-DD');
+        $rootScope.endDateToDel = moment(newDates.endDate).format('YYYY-MM-DD');                                
+    }, false);
     
     
     //monitor settings
