@@ -1,44 +1,3 @@
-<script>
-//exampleApp = angular.module('portalNMC');
-//exampleApp.controller('TestCtrl', function($scope, $interval) {
-//    $scope.date = {
-//        startDate: moment().subtract("days", 1),
-//        endDate: moment()
-//    };
-//    $scope.date2 = {
-//        startDate: moment().subtract("days", 1),
-//        endDate: moment()
-//    };
-//
-//    $scope.opts = {
-//        locale: {
-//            applyClass: 'btn-green',
-//            applyLabel: "Použít",
-//            fromLabel: "Od",
-//            toLabel: "Do",
-//            cancelLabel: 'Zrušit',
-//            customRangeLabel: 'Vlastní rozsah',
-//            daysOfWeek: ['Ne', 'Po', 'Út', 'St', 'Čt', 'Pá', 'So'],
-//            firstDay: 1,
-//            monthNames: ['Leden', 'Únor', 'Březen', 'Duben', 'Květen', 'Červen', 'Červenec', 'Srpen', 'Září',
-//                'Říjen', 'Listopad', 'Prosinec'
-//            ]
-//
-//        },
-//        ranges: {
-//            'Last 7 Days': [moment().subtract('days', 6), moment()],
-//            'Last 30 Days': [moment().subtract('days', 29), moment()]
-//        }
-//    };
-//
-//    //Watch for date changes
-//    $scope.$watch('date', function(newDate) {
-//        console.log('New date set: ', newDate);
-//    }, false);
-//
-//});
-//    angular.bootstrap(document, ['portalNMC']);
-</script>
 <!--<div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>-->
 <!--
 <div>
@@ -57,7 +16,7 @@
             <span ng-if="isSystemuser()">
                 <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile('/noAbs')"></i>
             </span>    
-            <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="" data-target="#upLoadFileModal" data-toggle="modal"></i>
+            <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="uploader.clearQueue()" data-target="#upLoadFileModal" data-toggle="modal"></i>
             <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
         </div>  
         <div class="btn-group">
@@ -113,7 +72,6 @@
                         <option>50</option>
                         <option>75</option>
                         <option>100</option>
-            <!--            <option>100</option>-->
                     </select>
                 </div>
                 <div class="col-md-5">
@@ -146,15 +104,6 @@
         <div class="col-md-9">
             <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
         </div>
-
-    <!--
-        <div class="col-md-3 noPadding">
-                 <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                     <input type="text"  class="form-control"  ng-model="indicatorsfilter">
-                </div>     
-        </div> 
-    -->
     </div>    
 <!--    In total-->
     <div class="row" ng-show="data.length >0">
@@ -164,11 +113,6 @@
                 </th>
                 <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{'min-width': column.ngstyle+'px'}">
                     {{column.header}}
-<!--                        <img class="divergenceIndicatorImg" src="images/plug.png">-->
-<!--
-                        <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorAlert.png" ng-class="{'hideM':!divergenceIndicatorAlert_flag, 'showM':divergenceIndicatorAlert_flag}">
-                        <img class="divergenceIndicatorImg hideM" src="images/divergenceIndicatorCrit.png" ng-class="{'hideM':!divergenceIndicatorCrit_flag, 'showM':divergenceIndicatorCrit_flag}">
--->
                         <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.title}}"/>
                 </th>
             </tr>
@@ -180,24 +124,14 @@
             </tr> 
             <tr>
                 <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
-<!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
                 </td>
                 <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.diffs[column.name]!='-','nmc-text-align-center':summary.diffs[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
 <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                     {{summary.diffs[column.name]}}
-<!--
-                    <div ng-show="summary.lastData.detail">
-                        <div>Начальное значение = {{summary.firstData[column.name]}}</div>
-                        <div>(Дата = {{summary.firstData['dataDate']| date: 'dd.MM.yyyy HH:mm'}});</div>
-                        <div>Конечное значение = {{summary.lastData[column.name]}} </div>
-                        <div>(Дата = {{summary.lastData['dataDate'] | date: 'dd.MM.yyyy HH:mm'}});</div>
-                    </div>
--->
                 </td>
             </tr>
             <tr>
                 <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
-<!--                    <i title="Открыть подробности" class="btn btn-xs glyphicon glyphicon-chevron-right paddingBottom5" ng-class="{'glyphicon-chevron-right':!summary.lastData.detail,'glyphicon-chevron-down':summary.lastData.detail}" ng-click="toggleDetail(summary.lastData)"></i>-->
                 </td>
                 <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
                     <span ng-if="summary.diffs[column.name]!='-'">
@@ -214,7 +148,7 @@
 <div id="upLoadFileModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="upLoadFileLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content nmc-modal-dialog-low nmc-modal-narrow-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low ">
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -226,41 +160,36 @@
 			<form name="confirmActionForm" novalidate>
 				<p class="marginLeft15">
                     <input type="file" nv-file-select uploader="uploader"/><br/>
-                    <div class="col-md-12">
-                        <p ng-repeat="item in uploader.queue">
-                            Файл: <span ng-bind="item.file.name"></span><br/>
-                            <button ng-click="item.upload()">Загрузить</button>
-                            <div class="progress" style="">
-                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                  
+<!--                <div>-->
+                    <div class="marginLeft15" >
+                        Файл: <span ng-bind="uploader.queue[uploader.queue.length-1].file.name"></span><br/>
+<!--                        <button ng-click="item.upload()">Загрузить</button>-->
+                        <div class="progress" style="">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" ng-style="{ 'width': uploader.queue[uploader.queue.length-1].progress + '%' }">
+                                {{uploader.queue[uploader.queue.length-1].progress + '%'}}
                             </div>
-                        </p>
-                    </div>
+                        </div>
 
-<!--                    <input type="file" name="indicatorFile">-->
-<!--
-					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
-					</label> 
-					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
-					<label
-						class="text-warning nmc-form-label"> ? </label>
--->
-				</p>
+                    </div>
+                </p>
 			</form>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-4 col-md-5">
+						<div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click=""
-								value="Ок" />
+								ng-click="uploadFile()"
+								value="Загрузить" />
 						</div>
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
 							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
 								ng-click="exit('#confirmActionModal');">
-								Отменить
+								Закрыть
 							</button>
 						</div>
 					</div>
@@ -278,7 +207,7 @@
 <div id="deleteIndicatorsModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteIndicatorsLabel" tabindex="-1">
 
-	<div class="modal-dialog  modal-content nmc-modal-dialog-low nmc-modal-narrow-dialog">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -301,11 +230,16 @@
                                         <div class="input-group">
                                             <span class="input-group-addon nmc-date-interval-form-addon">с</span>
                                             <input date-range-picker class="form-control date-picker nmc-date-interval-form"
-                                                type="text" ng-model="indicatorDates" options="queryDateOptsIndicatorRu"/>
+                                                type="text" ng-model="deleteIndicatorDates" options="queryDateOptsIndicatorRu"/>
                                         </div> 
                                 </div>
 
                             </div>                
+                        </div>
+                        <div class="row nmc-hide" ng-class="{'nmc-hide':!showLinkToFileFlag, 'nmc-show':showLinkToFileFlag}">
+                            <div>
+                                Ссылка на файл с удаленными данными:<a ng-attr-href="{{linkToFileWithDeleteData}}">{{fileWithDeleteData}}</a>
+                            </div>
                         </div>
                     </div>
                 
@@ -318,7 +252,7 @@
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="confirmAction();"
+								ng-click="deleteData();"
 								value="Ок" />
 						</div>
 
@@ -331,44 +265,5 @@
 					</div>
 				</div>		
 		</div>
-	</div>
-</div>
-
-
-
-<!-- Окно с графиком-->
-<div id="chartModal" class="modal fade" role="dialog"
-	aria-labelledby="chartLabel" tabindex="-1">
-
-	<div class="modal-dialog  modal-content modalWindow_moreWide">
-
-		<div class="modal-header">
-			<h3 id="showNoticeLabel">
-				График потребления ГКал. 
-			</h3>
-		</div>
-		<div class="modal-body">
-            <div id="indicatorChart" class="paddingBottom40">
-                <div id="indicatorChart-area"></div>
-		  </div>
- 
-
-        </div>     
-		<div class="modal-footer">
-				<div class="container-fluid  ">
-
-					<div class="row">
-
-
-						<div class="col-xs-offset-2 col-md-3 pull-right">
-							<button class="btn btn-xs btn-default btn-primary btn-block" data-dismiss="modal"
-								ng-click="exit();">
-								Ок
-							</button>
-						</div>
-					</div>
-				</div>		
-		</div>
-
 	</div>
 </div>

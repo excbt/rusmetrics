@@ -1,6 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', 'crudGridDataFactory', 'FileUploader', 'notificationFactory',function($scope, $rootScope, $cookies, $window, crudGridDataFactory, FileUploader, notificationFactory){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', 'crudGridDataFactory', 'FileUploader', 'notificationFactory',function($scope, $rootScope, $cookies, $window, $http, crudGridDataFactory, FileUploader, notificationFactory){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -406,15 +406,7 @@ angular.module('portalNMC')
             }]
     };
     
-    $scope.summary = {};
-//    $scope.summary.intotal ={};// [5,1,2,3,4];
-//    $scope.summary.integrators = [[1,1],[2,1],[3,1],[4,1],[5,2]];    
-//    $scope.summary.firstData = {};
-//    $scope.summary.lastData = {};    
-        
-//    $rootScope.reportStart = moment().format('YYYY-MM-DD');
-//    $rootScope.reportEnd = moment().format('YYYY-MM-DD');
-        
+    $scope.summary = {};        
     $scope.totalIndicators = 0;
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page    
     $scope.timeDetailType = "24h";    
@@ -422,6 +414,8 @@ angular.module('portalNMC')
     $scope.pagination = {
         current: 1
     };
+        //The flag for the link to the file with delete data
+    $scope.showLinkToFileFlag = false;
         
     //file upload settings
     var initFileUploader =  function(){    
@@ -431,12 +425,16 @@ angular.module('portalNMC')
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
         $scope.uploader = new FileUploader({
             url: url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZPoint+"/service/"+timeDetailType+"/csv",
-            
+           
         });
         
         $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
             console.info('onErrorItem', status, response);
             notificationFactory.errorInfo(response.resultCode, response.description);
+        };
+        
+        $scope.uploader.onSuccessItem = function(item, response, status, headers){
+console.log(item);            
         };
     };
     initFileUploader();
@@ -502,7 +500,10 @@ console.log(tempDate.getTime());
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-                          var datad = DateNMC(el.dataDate);
+console.log("Indicator id = "+el.id);                            
+console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
+console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/1000.0)+3*3600));                            
+//                          var datad = DateNMC(el.dataDate);
 //console.log(datad.getTimezoneOffset());
 //console.log(datad.toLocaleString());                            
                             el.dataDate=el.dataDateString;//printDateNMC(datad);
@@ -533,23 +534,7 @@ console.log(tempDate.getTime());
         
         // get summary
         var table_summary = table.replace("paged", "summary");
-        crudGridDataFactory(table_summary).get(function(data){
-//var indicatorTh = document.getElementById("indicators_th_h_delta");           
-//for (var k in indicatorTh){
-//   console.log("indicatorTh["+k+"]= "+indicatorTh[k]); 
-//};           
-                    //set styles for score/integrators
-//                var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
-//                var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
-//                var totalThHead = document.getElementById("totals_th_head"); 
-//                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
-////                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
-//                $scope.intotalColumns.forEach(function(element){
-//                    var indicatorTh = document.getElementById("indicators_th_"+element.name);
-//                    element.ngstyle =indicatorTh.clientWidth+2;
-//                    
-//                });
-            
+        crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
                 $scope.summary = data;            
                 if ($scope.summary.hasOwnProperty('diffs')){
@@ -671,11 +656,8 @@ console.log(tempDate.getTime());
                     };
                     element.imgpath = EMPTY_IMG_PATH;
                     element.imgclass= "";
-                    element.title = "";
-                    
+                    element.title = "";   
                 });
-            
-                
 //console.log(data);            
         });
     };
@@ -697,157 +679,38 @@ console.log(tempDate.getTime());
     wind.bind('resize', function(){
         $scope.setScoreStyles();
         $scope.$apply();
-    });
-    
-//    $scope.setTitle = function(fieldName){ 
-//        if ((typeof $scope.summary.firstData=='undefined')||($scope.summary.firstData==null)||($scope.summary.firstData == {})){
-//            return;
-//        };
-//        return "Начальное значение = "+$scope.summary.firstData[fieldName] +"(Дата = "+
-//            (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");" +"\n"+
-//                "Конечное значение = "+$scope.summary.lastData[fieldName] +"(Дата = "+
-//            (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+")";
-//    }; 
-    
-
+    }); 
         
-    $scope.getIndicatorImage = function(columnName){        
-        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
-            return;
-        };
-//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
-//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
-//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
-//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));    
-        
-        //work with fractional part
-        //search the shortest fractional part
-        var lengthFractPart = 0;
-        var diff = $scope.summary.diffs[columnName];
-        var total = $scope.summary.totals[columnName];
-        var diffStr = diff.toString();
-        var tempStrArr = diffStr.split(".");
-        var diffFractPart = tempStrArr[1];
-        var totalStr = total.toString();
-        tempStrArr = totalStr.split(".");
-        var totalFractPart = tempStrArr[1];
-        lengthFractPart = totalFractPart.length>diffFractPart.length ? diffFractPart.length : totalFractPart.length;
-        $scope.summary.diffs[columnName] = diff.toFixed(lengthFractPart);
-        $scope.summary.totals[columnName] = total.toFixed(lengthFractPart);
-        
-        var precision = Number("0.00000000000000000000".substring(0, lengthFractPart+1)+"1");
-//console.log("diff = "+$scope.summary.diffs[columnName]);           
-//console.log("total = "+$scope.summary.totals[columnName]);           
-//console.log("precision = "+precision);        
-        
-        var difference = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
-//console.log("difference = "+difference);         
-//        var difference = Math.abs(total - diff);
-        if ((difference >precision)&&(difference <= 1))
-        {
-//console.log(ALERT_IMG_PATH);         
-            return ALERT_IMG_PATH;
-
-        };
-        if ((difference >1))
-        {  
-//console.log(CRIT_IMG_PATH);            
-            return CRIT_IMG_PATH;
-        };
-
-    };    
-        
-    $scope.setBgColor = function(columnName){
-        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
-            return;
-        };
-//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
-//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
-//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
-//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
-        var diff = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
-//console.log("Diff ="+diff); 
-//        diff = diff.toFixed(2);
-//        if ((diff >=0)&&(diff < 0.005))
-//        {
-//            return '#66CC00';
-//        };
-        if ((diff >=0.0000000000001)&&(diff <= 1))
-        {
-            return '3px solid yellow';
-        };
-        if ((diff >1))
-        {
-            return '3px solid red';
-        };
-    }; 
-        
-    $scope.setLiColor = function(columnName){
-        if (($scope.summary.lastData == null)||($scope.summary.firstData == null)||($scope.summary.totals == null)){
-            return;
-        };
-//console.log("$scope.summary.lastData["+columnName+"]="+$scope.summary.lastData[columnName]);
-//console.log("$scope.summary.firstData["+columnName+"]="+$scope.summary.firstData[columnName]);
-//console.log("$scope.summary.totals["+columnName+"]="+$scope.summary.totals[columnName]);  
-//console.log("$scope.summary.lastData["+columnName+"]-"+"$scope.summary.firstData["+columnName+"]="+($scope.summary.lastData[columnName]-$scope.summary.firstData[columnName]));        
-        var diff = Math.abs(($scope.summary.diffs[columnName]-$scope.summary.totals[columnName]));
-//console.log("Diff ="+diff); 
-//        diff = diff.toFixed(2);
-//        if ((diff >=0)&&(diff < 0.005))
-//        {
-//            return '#66CC00';
-//        };
-        if ((diff >=0.0000000000001)&&(diff <= 1))
-        {
-            return {display: 'inherit', color: 'yellow'};
-        };
-        if ((diff >1))
-        {
-            return {display: 'inherit', color: 'red'};
-        };
-    };     
-    
-    $scope.toggleDetail = function(object){
-        object.detail = !object.detail;
-        return object.detail;
-    };
-        
-    $scope.saveIndicatorsToFile = function(exForUrl){
-//        var csv = "hello text";
-//console.log(csv);                
-//        var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
-//console.log(window.location.href);    
-//        window.open("",'_blank');
-//        window.location.href = csvData;
-//        this.target = '_blank';
-//        this.download = 'filename.csv';
-//        alert("Нажата кнопка сохранить страницу с показаниями в файл.");
-          
+    $scope.saveIndicatorsToFile = function(exForUrl){ 
         var contZPoint = $cookies.contZPoint;
-//        $scope.contZPointName = $cookies.contZPointName;
         var contObject = $cookies.contObject;
-//        $scope.contObjectName = $cookies.contObjectName;
-
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
-         
         var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv"+exForUrl+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         window.open(url);
-    }; 
-        
-    $scope.uploadDataFromFile = function(file){
-        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv";
-        $http({
-            url: url,
-            method: 'POST',
-            params: {file: file},
-            data: null
-        })
-        .success(function(){
-            notificationFactory.success();
-        })
-        .error(function(error){
-            notificationFactory.errorInf(error.title, error.description);
-        });
+    };
+        //Upload file with the indicator data to the server
+    $scope.uploadFile =function(){
+        $scope.uploader.queue[$scope.uploader.queue.length-1].upload();
+    };
+    
+        //delete indicator data for period
+    $scope.deleteData = function(){
+        var contObject = $scope.contObject || $cookies.contObject;
+        var contZpoint = $scope.contZPoint || $cookies.contZpoint;      
+        var timeDetailType = "24h";
+        var fromDate = $rootScope.startDateToDel;
+        var toDate = $rootScope.endDateToDel;
+        var url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZpoint+"/service/"+timeDetailType+"/csv"+"?beginDate="+fromDate+"&endDate="+toDate;
+        $http.delete(url)
+            .success(function(data){       
+                notificationFactory.success();
+                $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/"+ data.filename;
+                $scope.fileWithDeleteData = data.filename;
+                $scope.showLinkToFileFlag = true;
+            })
+            .error(function(err){
+                notificationFactory.errorInfo(err.title, err.description)
+            });
     };
     
     //check indicators for data (проверка: есть данные для отображения или нет)
@@ -857,57 +720,5 @@ console.log(tempDate.getTime());
         };
         return true;
     };
-        
-     //chart
-    $scope.runChart = function(){
-        var data = [];
-        for (var i=0; i<$scope.data.length; i++){
-            data.push([$scope.data[i].dataDate, $scope.data[i].h_delta]);
-//            data.push([i, $scope.data[i].h_delta]);
-        };
-//        for (var i = 0; i < 14; i += 0.5) {
-//			data.push([i, Math.sin(i)]);
-//		}
-//console.log("data before====================");
-//console.log(data);    
-//console.log("----------------------------------");        
-        for(var i = 0; i < data.length; i++){
-//console.log(Date.parse(data[i][0]));            
-//            data[i][0] = Date.parse(data[i][0]);
-//            moment(el.dataDate).format("DD.MM.YY HH:mm");
-//console.log("====================");              
-//console.log(moment(data[i][0], "DD.MM.YY HH:mm"));   
-//console.log(moment.utc(data[i][0]));              
-//console.log("====================");              
-            data[i][0] = moment(data[i][0], "DD.MM.YY HH:mm");
-        };
-//console.log("data after====================");        
-//console.log(data);
-//console.log("====================");                
-        // свойства графика
-        var plotConf = {
-         series: {
-           lines: {
-             show: true,
-             lineWidth: 2
-           }
-         },
-         xaxis: {
-           mode: "time",
-           timeformat: "%d.%m.%y %h:%M",
-         }
-        };
-        var plotData = [];
-        plotData.push(data);
-        // выводим график
-        $("#indicatorChart-area").width(600);
-        $("#indicatorChart-area").height(300);
-       // $("#chartModal.modal-dialog").width(700);
-        $('#chartModal').modal();
-        
-        $.plot('#indicatorChart-area', plotData, plotConf);
-        
-    };
-      
-        
+                
 }]);
