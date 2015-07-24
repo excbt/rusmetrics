@@ -55,8 +55,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 * @throws IOException
 	 */
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString)
-			throws IOException {
+			String fileResourceString) throws IOException {
 
 		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
 				fileResourceString);
@@ -71,7 +70,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		boolean res = false;
 		res = reportMasterTemplateBodyService.saveReportMasterTemplateBody(
-				templateBody.getId(), fileResourceString, ReportConstants.IS_COMPILED);
+				templateBody.getId(), fileResourceString,
+				ReportConstants.IS_COMPILED);
 
 		checkState(res);
 
@@ -111,6 +111,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
 				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED);
 
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT,
+				ReportConstants.Files.CONSUMPTION_ETALON_FILE_COMPILED);
+
 		loadReportMasterTemplate(ReportTypeKey.LOG_JOURNAL_REPORT,
 				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED);
 	}
@@ -130,6 +133,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 */
 	private void updateAllCommonReportTemplate() {
 		updateAnyCommonReportTemplate(ReportTypeKey.LOG_JOURNAL_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT);
 	}
 
 	/**
@@ -145,8 +149,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 			logger.info(
 					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					reportTypeKey);
-			reportTemplateService
-					.createCommonReportTemplate(reportTypeKey);
+			reportTemplateService.createCommonReportTemplate(reportTypeKey);
 		}
 	}
 
