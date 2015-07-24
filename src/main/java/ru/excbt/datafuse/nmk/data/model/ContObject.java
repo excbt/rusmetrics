@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -89,6 +90,9 @@ public class ContObject extends AbstractAuditableModel {
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
+	private ContObjectFias contObjectFias;
+	
 	public String getName() {
 		return name;
 	}
@@ -215,6 +219,10 @@ public class ContObject extends AbstractAuditableModel {
 
 	public void setSettingModeMDate(Date settingModeMDate) {
 		this.settingModeMDate = settingModeMDate;
+	}
+
+	public ContObjectFias getContObjectFias() {
+		return contObjectFias;
 	}
 
 }
