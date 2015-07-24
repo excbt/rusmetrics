@@ -543,7 +543,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 							outFile.getAbsolutePath(), contZPointId));
 		}
 
-		// contServiceDataHWaterRepository.delete(deleteCandidate);
+		contServiceDataHWaterRepository.delete(deleteCandidate);
 
 		return deleteCandidate;
 	}
