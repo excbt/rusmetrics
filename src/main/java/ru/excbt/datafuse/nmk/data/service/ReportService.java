@@ -413,6 +413,10 @@ public class ReportService {
 			result = ReportType.RPT_CONSUMPTION_HISTORY;
 			break;
 		}
+		case CONSUMPTION_ETALON_REPORT: {
+			result = ReportType.RPT_CONSUMPTION_ETALON;
+			break;
+		}
 		default: {
 			break;
 		}
