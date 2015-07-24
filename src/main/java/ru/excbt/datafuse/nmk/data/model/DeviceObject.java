@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
 @Entity
 @Table(name = "device_object")
@@ -85,6 +86,10 @@ public class DeviceObject extends AbstractAuditableModel {
 
 	public ContObject getContObject() {
 		return contObject;
+	}
+
+	public boolean isMetaVzletExpected() {
+		return ExSystemKey.VZLET.getKeyname().equals(this.exSystem);
 	}
 
 }
