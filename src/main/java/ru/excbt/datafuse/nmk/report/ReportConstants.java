@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.report;
 
-
 public class ReportConstants {
 
 	public final static String COMMERCIAL_REPORT_TEMPLATE_PATH = "COMMERCIAL_REPORT_TEMPLATE_PATH";
@@ -23,7 +22,8 @@ public class ReportConstants {
 		public static final String METROLOGICAL_FILE_COMPILED = "jasper_reports/nmk_metrological_rep.jasper";
 		public static final String CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_consumption_report.jasper";
 		public static final String CONSUMPTION_HISTORY_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
-		public static final String LOG_JOURNAL_FILE_COMPILED = "jasper_reports/nmk_log_journal.jasper";		
+		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
+		public static final String LOG_JOURNAL_FILE_COMPILED = "jasper_reports/nmk_log_journal.jasper";
 
 		private Files() {
 
