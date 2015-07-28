@@ -2,6 +2,8 @@
  *  Файл со стилями, используемыми во всём интерфейсе
  */
 
+/*html,body {overflow-y:hidden}*/
+
 /********************
  * Разметка страницы
  ********************/
@@ -132,7 +134,7 @@
 	height: 85%;
 /*	height: 865px; */
 /*    overflow: hidden;*/
-    overflow-y: auto;
+/*    overflow-y: auto;*/
     
 /*
     min-height: 900px;

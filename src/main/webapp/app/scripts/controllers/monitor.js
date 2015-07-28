@@ -36,6 +36,17 @@ console.log("Monitor Controller.");
     $scope.monitorSettings.objectTopOnPage =0;
     $scope.monitorSettings.objectBottomOnPage =50;
       
+    $scope.monitorSettings.isCtrlEnd = false;
+
+//      tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+//                    $scope.objectsOnPage = tempArr;
+    $scope.objectsOnPage = ($scope.objects.length===0)?[]:$scope.objects.slice(0, $scope.monitorSettings.objectsPerScroll);
+                    $scope.objectsOnPage.forEach(function(element){
+                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+                            monitorSvc.getMonitorEventsByObject(element);
+                        }
+                    });
+      
     
     //monitor state
     $scope.monitorState = {};
@@ -57,57 +68,6 @@ console.log("Monitor Controller.");
     };
 //    $scope.getMonitorState();
     
-    //get objects function
-    $scope.getObjects111 = function(url){ 
-        var targetUrl = url+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&noGreenColor="+$scope.monitorSettings.noGreenObjectsFlag;
-//console.log(targetUrl);  
-        
-        $http.get(targetUrl)
-            .success(function(data){
-                $scope.objects = data;
-//console.log(data);            
-                //sort objects by name
-                $scope.objects.sort(function(a, b){
-                    if (a.contObject.fullName>b.contObject.fullName){
-                        return 1;
-                    };
-                    if (a.contObject.fullName<b.contObject.fullName){
-                        return -1;
-                    };
-                    return 0;
-                });  
-                //get the list of the events, which set the object color
-                $scope.objects.forEach(function(element){
-                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-                        $scope.getMonitorEventsByObject(element);
-                    }
-                });
-//                $scope.objects.forEach(function(element){
-//                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-//                        $scope.getMonitorEventsByObjectAW(element);
-//                    }
-//                });
-//                 for(var i=0; i<$scope.objects.length;i++){
-//                     var element = $scope.objects[i];
-//                    if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-//                        $scope.getMonitorEventsByObject(element);
-//                    }
-//                };
-                var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
-                makeObjectTable(tempArr, true);
-            $scope.monitorSettings.loadingFlag = false;//data has been loaded
-            if (angular.isDefined($rootScope.monitor) && $rootScope.monitor.objectId!==null){
-console.log($rootScope.monitor.objectId);                
-                $scope.getEventTypesByObject($rootScope.monitor.objectId, false);
-                $rootScope.monitor.objectId = null;
-            };
-            })
-            .error(function(e){
-                console.log(e);
-            });
-        $scope.monitorSettings.noGreenObjectsFlag = false; //reset flag
-    };
-    
     $scope.eventColumns = [
              {"name":"typeCategory", "header" : " ", "class":""},
             {"name":"typeEventCount", "header" : " ", "class":""},
@@ -119,28 +79,28 @@ console.log($rootScope.monitor.objectId);
 //console.log("getMonitorEventsByObjectAW");        
         var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";
         var imgObj = "#imgObj"+obj.contObject.id;          
-        $(imgObj).qtip({
-            content:{
-                text: function(event, api){
-                    $.ajax({url: url})
-                        .done(function(data){
-console.log(data);                        
-                            api.set('content.text', data)
-                        })
-                        .fail(function(xhr, status, error){
-console.log(error);                        
-                            api.set('content.text', status+'; '+error)
-                        })
-                    return 'Загрузка ... ';
-                }
-            },
-            position:{
-                viewport: $(window)
-            },
-            style:{
-                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-            }
-        });
+//        $(imgObj).qtip({
+//            content:{
+//                text: function(event, api){
+//                    $.ajax({url: url})
+//                        .done(function(data){
+//console.log(data);                        
+//                            api.set('content.text', data)
+//                        })
+//                        .fail(function(xhr, status, error){
+//console.log(error);                        
+//                            api.set('content.text', status+'; '+error)
+//                        })
+//                    return 'Загрузка ... ';
+//                }
+//            },
+//            position:{
+//                viewport: $(window)
+//            },
+//            style:{
+//                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+//            }
+//        });
     };
     //get monitor events
     $scope.getMonitorEventsByObject111 = function(obj){       
@@ -186,15 +146,15 @@ console.log(error);
 //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
 //                imgObj.title = obj.monitorEvents;
             
-                var imgObj = "#imgObj"+obj.contObject.id;          
-                $(imgObj).qtip({
-                    content:{
-                        text: obj.monitorEvents
-                    },
-                    style:{
-                        classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-                    }
-                });         
+//                var imgObj = "#imgObj"+obj.contObject.id;          
+//                $(imgObj).qtip({
+//                    content:{
+//                        text: obj.monitorEvents
+//                    },
+//                    style:{
+//                        classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+//                    }
+//                });         
 //                makeEventTypesByObjectTable(obj);
             })
             .error(function(e){
@@ -222,7 +182,7 @@ console.log(error);
         };
       
         var url = objectUrl+"/"+obj.contObject.id+"/eventTypes/statusCollapse"+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
-console.log(url);          
+//console.log(url);          
         $http.get(url)
             .success(function(data){
             //if data is not array - exit
@@ -293,7 +253,9 @@ console.log(url);
             btnDetail.classList.add("glyphicon-chevron-down");
         }//else if curObject.showGroupDetails = false => hide child zpoint table
         else{
-            var trObjEvents = document.getElementById("trObjEvents"+curObject.contObject.id);
+            var trObj = document.getElementById("obj"+curObject.contObject.id);
+            var trObjEvents = trObj.getElementsByClassName("nmc-tr-object-events")[0];//.getElementById("trObjZp");
+//            var trObjEvents = document.getElementById("trObjEvents"+curObject.contObject.id);
             trObjEvents.innerHTML = "";
             var btnDetail = document.getElementById("btnDetail"+curObject.contObject.id);
             btnDetail.classList.remove("glyphicon-chevron-down");
@@ -313,7 +275,7 @@ console.log(url);
     };
 
     //Рисуем таблицу с объектами
-    function makeObjectTable(objectArray, isNewFlag){
+    function makeObjectTable121212(objectArray, isNewFlag){
         var objTable = document.getElementById('objectMonitorTable').getElementsByTagName('tbody')[0];       
 //        var temptableHTML = "";
         var tableHTML = "";
@@ -365,6 +327,7 @@ console.log(url);
 //            tableHTML += "</tr>";
             tableHTML += "</table>";
             tableHTML += "</td>";
+            tableHTML +="</tr>";
             tableHTML +="<tr id=\"trObjEvents"+element.contObject.id+"\">";
             tableHTML += "</tr>";
         });
@@ -377,13 +340,16 @@ console.log(url);
     };
     
     //Формируем таблицу с событиями объекта
-    function makeEventTypesByObjectTable(obj){        
-        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);  
+    function makeEventTypesByObjectTable(obj){ 
+        var trObj = document.getElementById("obj"+obj.contObject.id);
+//console.log(obj);        
+        var trObjEvents = trObj.getElementsByClassName("nmc-tr-object-events")[0];
+//        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);  
         if (angular.isUndefined(trObjEvents)){
             return;
         };
         var trHTML = "";
-        trHTML = "<td style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">";
+        trHTML = "<td colspan='5' style=\"padding-top: 2px !important;\"><table id=\"eventTable"+obj.contObject.id+"\" class=\"crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table\">";
         trHTML+="<thead>";
         trHTML+="<tr class=\"nmc-child-table-header\">";
         trHTML+="<th class=\"nmc-td-for-buttons\">";
@@ -513,10 +479,13 @@ console.log("monitorStart watch");
       
       
     $scope.$on('monitorObjects:getObjectEvents',function(event, args){
+//console.log('On monitorObjects:getObjectEvents');        
 //console.log(event);
 //console.log(args);   
         var obj = args.obj;
-        var imgObj = "#imgObj"+obj.contObject.id;          
+        var imgObj = "#imgObj"+obj.contObject.id; 
+//console.log(obj); 
+//console.log($(imgObj));        
         $(imgObj).qtip({
             content:{
                 text: obj.monitorEvents
@@ -532,7 +501,8 @@ console.log("monitorStart watch");
 //        
 //    });
       
-    window.onscroll = function(){
+//    window.onscroll = 
+        var fnc = function(){
 //        console.log("Window. On scroll");
         if(angular.isUndefined($scope.objects) || ($scope.objects.length===0)){
             return;
@@ -553,7 +523,7 @@ console.log("monitorStart watch");
             $scope.monitorSettings.objectBottomOnPage+=rowCount;
             //draw new table
             var tempArr = $scope.objects.slice($scope.monitorSettings.objectBottomOnPage-rowCount, $scope.monitorSettings.objectBottomOnPage);
-            makeObjectTable(tempArr, false);
+//            makeObjectTable(tempArr, false);
             
 //            window.
 
@@ -563,14 +533,14 @@ console.log("monitorStart watch");
         for(var i = 0; i<=$scope.monitorSettings.objectBottomOnPage; i++){
             var obj = $scope.objects[i];
             var imgObj = "#imgObj"+obj.contObject.id;          
-            $(imgObj).qtip({
-                content:{
-                    text: obj.monitorEvents
-                },
-                style:{
-                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-                }
-            }); 
+//            $(imgObj).qtip({
+//                content:{
+//                    text: obj.monitorEvents
+//                },
+//                style:{
+//                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+//                }
+//            }); 
         };
         //up to some row
 //        if (deltaScroll <=-22){
@@ -600,6 +570,7 @@ console.log("monitorStart watch");
 //**************************************************************************  
     $scope.$on('monitorObjects:updated',function(){
         $scope.objects = monitorSvc.getAllMonitorObjects();
+//console.log($scope.objects);        
 //console.log("Monitor ctrl. Objects are got."); 
 //var time = new Date();
 //console.log(time);  
@@ -610,9 +581,16 @@ console.log("monitorStart watch");
         $scope.monitorSettings.objectTopOnPage =0;
         $scope.monitorSettings.objectBottomOnPage =50;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
-        makeObjectTable(tempArr, true);
+//        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.monitorSvcSettings.noGreenObjectsFlag;
+        $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
+        $scope.objectsOnPage = tempArr;
+        $scope.objectsOnPage.forEach(function(element){
+            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+                monitorSvc.getMonitorEventsByObject(element);
+            }
+        });
     });
     
 //    var interval;
@@ -628,7 +606,48 @@ console.log("monitorStart watch");
 //        alert("Ушли со страницы?");
 //        stopRefreshing();
 //    });
-    
+    $scope.$on('$destroy', function() {
+    //        alert("Way out");
+    //        $cookies.objectMonitorId = null;
+    //console.log("Objects page destroy");        
+    //                    window.onscroll = undefined;
+        window.onkeydown = undefined;
+    }); 
+
+    window.onkeydown = function(e){
+    //console.log("Window key down");                                            
+        if ((e.ctrlKey && e.keyCode == 35) && ($scope.monitorSettings.objectsOnPage<$scope.objects.length)){
+//            console.log("Ctrl + End");
+//                $scope.loading =  true;    
+//            console.log($scope.loading);                        
+            //                        $scope.$apply();
+                var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,$scope.objects.length);
+                tempArr.forEach(function(element){
+                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+                            monitorSvc.getMonitorEventsByObject(element);
+                        }
+                });
+                Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                $scope.monitorSettings.objectsOnPage+=$scope.objects.length;
+
+                $scope.monitorSettings.isCtrlEnd = true;
+
+            //                        $scope.objectsOnPage = $scope.objects;
+            };
+    };
+                
+    $scope.onTableLoad = function(){
+//                    var time = new Date();
+//console.log("On table load");                                        
+//console.log(time.toLocaleString());                    
+
+        if ($scope.monitorSettings.isCtrlEnd === true){                    
+            var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
+            window.scrollTo(0, Math.round(pageHeight));
+            $scope.monitorSettings.isCtrlEnd = false;
+//            $scope.loading =  false;
+        };
+    };
     
     //watch for the change of the refresh period
     $scope.$watch('monitorSettings.refreshPeriod', function (newPeriod, oldPeriod) {
@@ -671,7 +690,7 @@ console.log("monitorStart watch");
         //if array is not empty -> make table
 //console.log("$scope.objects.length!=0")    
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
-        makeObjectTable(tempArr, true);
+//        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
 //console.log($cookies.objectMonitorId);          
         if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!=="null"){
@@ -680,17 +699,17 @@ console.log("monitorStart watch");
             $cookies.objectMonitorId = null;
 //console.log($cookies.objectMonitorId);            
         };
-        $scope.objects.forEach(function(obj){
-            var imgObj = "#imgObj"+obj.contObject.id;          
-            $(imgObj).qtip({
-                content:{
-                    text: obj.monitorEvents
-                },
-                style:{
-                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-                }
-            });
-        });
+//        $scope.objects.forEach(function(obj){
+//            var imgObj = "#imgObj"+obj.contObject.id;          
+//            $(imgObj).qtip({
+//                content:{
+//                    text: obj.monitorEvents
+//                },
+//                style:{
+//                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+//                }
+//            });
+//        });
         
     }else if($scope.monitorSettings.loadingFlag===false){//else -> send request
 //console.log("$scope.objects.length!=0");        
@@ -703,6 +722,65 @@ console.log("monitorStart watch");
 console.log("Monitor destroy");        
         window.onscroll = undefined;
     }); 
+    
+    $scope.setMonitorEventsForObject = function(obj){
+console.log(obj);        
+        if (angular.isUndefined(obj.monitorEvents)){
+            return;
+        };
+        var imgObj = "#imgObj"+obj.contObject.id; 
+//            imgObj = "#"+imgObj;
+        $(imgObj).ready(function(){
+console.log(imgObj+" ready!");
+            $(imgObj).qtip({
+                content:{
+                    text: obj.monitorEvents
+                },
+                style:{
+                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                }
+            });
+        });
+console.log($(imgObj));            
+//            $(imgObj).qtip({
+//                content:{
+//                    text: obj.monitorEvents
+//                },
+//                style:{
+//                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+//                }
+//            });
+    };
+      
+    $scope.addMoreObjectsForMonitor = function(){
+//console.log("addMoreObjectsForMonitor. Run");
+        if (($scope.objects.length<=0)){
+            return;
+        };
+        var endIndex = $scope.monitorSettings.objectsOnPage+$scope.monitorSettings.objectsPerScroll;
+//console.log($scope.objects.length);                    
+        if((endIndex >= $scope.objects.length)){
+            endIndex = $scope.objects.length;
+        };
+//console.log($scope.objects);        
+        var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,endIndex);
+//console.log(tempArr);        
+        //add tooltip for next the part of the objects
+//console.log($scope.objectCtrlSettings.objectsOnPage);                    
+//console.log(endIndex);                    
+//console.log(tempArr);                    
+        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                    tempArr.forEach(function(element){
+                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+                            monitorSvc.getMonitorEventsByObject(element);
+                        }
+                    });
+        if(endIndex >= ($scope.objects.length)){
+            $scope.monitorSettings.objectsOnPage = $scope.objects.length;
+        }else{
+            $scope.monitorSettings.objectsOnPage+=$scope.monitorSettings.objectsPerScroll;
+        };
+    };
     
         //chart
     $scope.runChart = function(objId){

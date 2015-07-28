@@ -93,14 +93,24 @@
                                             </th>
                                             <th>
                                                 Действует с 
-                                            </th>    
+                                            </th> 
+<!--
+                                            <th>
+                                            </th>
+-->
                                         </tr>
                                     </thead>
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
-                                         <td class="nmc-td-for-buttons">
+                                         <td class="nmc-td-for-buttons-3">
                                             <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
+
                                             <i title="В архив" ng-disabled="object.reportType!='COMMERCE_REPORT'" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                            <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table"
+                                                title="Предварительный просмотр"   
+                                                ng-click="preview(oldObject)"
+                                                >
+                                            </i>
                                          </td>
                                          <td class="col-md-3">
                                             <div ng-class="{'nmc-distinguish': oldObject._default}">     
@@ -112,6 +122,16 @@
                                                 {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
                                              </div>
                                          </td>
+<!--
+                                         <td>
+                                            <p class="btn btn-xs nmc-add-button-in-modal"
+                                                title="Предварительный просмотр"   
+                                                ng-click="preview(oldObject)"
+                                                >
+                                                Предпросмотр
+                                            </p>
+                                         </td>
+-->
 
 <!--                                         <td class="col-md-12">-->
 <!--

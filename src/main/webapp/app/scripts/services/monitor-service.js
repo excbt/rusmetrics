@@ -52,11 +52,11 @@ console.log("MonitorSvc. Get objects");
                         return 0;
                     });  
                     //get the list of the events, which set the object color
-                    objectsMonitorSvc.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
-                            getMonitorEventsByObject(element);
-                        }
-                    });
+//                    objectsMonitorSvc.forEach(function(element){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                            getMonitorEventsByObject(element);
+//                        }
+//                    });
 
                 monitorSvcSettings.loadingFlag = false;//data has been loaded
                 $rootScope.$broadcast('monitorObjects:updated');
@@ -75,7 +75,8 @@ console.log("MonitorSvc. Get objects");
         getObjects(objectUrl, monitorSvcSettings);
         
             //get monitor events
-       var getMonitorEventsByObject = function(obj){       
+       var getMonitorEventsByObject = function(obj){ 
+//console.log("MonitorSvc. getMonitorEventsByObject");           
     //        var obj = findObjectById(objId);    
             //if cur object = null => exit function
     //        if (obj == null){
@@ -180,7 +181,8 @@ console.log("MonitorSvc. monitor:updateObjectsRequest");
         
          return {
             monitorSvcSettings,
-            getAllMonitorObjects
+            getAllMonitorObjects,
+            getMonitorEventsByObject 
         };
         
     }]);

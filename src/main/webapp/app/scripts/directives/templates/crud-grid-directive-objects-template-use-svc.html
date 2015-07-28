@@ -39,8 +39,9 @@
 <div class="row" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
     <h3 class="nmc-h3">Объектов нет.</h3>
 </div>
-<div ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50'>
-    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+
+<div ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50' >
+        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
             <tr>
                 <th style="padding: 0; border-bottom-width: 0px;">
@@ -63,11 +64,37 @@
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
 <!--                                    <span class="pull-right"><input type="checkbox" title="Включить/выключить расширенный интерфейс" ng-model="objectCtrlSettings.extendedInterfaceFlag"></span>-->
+<!--
+                                    <div class="btn-group pull-right" style="vertical-align: initial; padding-top: 4px;">
+
+                                      <p title="Настройки" class="btn btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: url(images/config_tool_icon2_white.png); height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -3px;">
+                                        <span class="caret"></span>
+                                      </p>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div class="btn-group pull-right" style="vertical-align: initial; padding-top: 4px;">
+
+                                      <p title="Настройки" class="btn btn-xs " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: url(images/config_tool_icon_white.png); height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -3px;">
+                                        <span class="caret"></span>
+                                      </p>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    
+-->
+                                    
                                     <div class="btn-group pull-right" style="vertical-align: initial;">
 
-                                      <button title="Настройки" type="button" class="btn btn-default btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
-                                        <span class="caret"></span>
-                                      </button>
+                                      <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
+<!--                                        <span class="caret"></span>-->
+                                      </p>
                                       <ul class="dropdown-menu">
                                         <li>
                                             <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
@@ -82,7 +109,12 @@
                 </th>
             </tr>
         </thead>
-        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
+<!--    </table>-->
+
+<!--    <div >-->
+<!--    <table class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">-->
+        <tbody>
+        <tr ng-repeat='object in objectsOnPage | filter:filter track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
@@ -117,6 +149,7 @@
                         </td>
 
                         <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+<!--                            <span ng-if="$index===objectsOnPage.length-1">{{onTableLoad()}}</span>-->
 
                         </td>
                     </tr>
@@ -125,7 +158,12 @@
                 </table>
              </td>        
          </tr>
+        <tr class="nmc-hide">
+            <td>{{onTableLoad()}}</td>
+        </tr>
+        </tbody>
     </table>
+<!--        </div>-->
 </div>
 
 

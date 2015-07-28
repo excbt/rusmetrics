@@ -174,7 +174,7 @@ console.log("initCtrl");
     var dataParse = function(arr){
         var oneNotice = {};
         var tmp = arr.map(function(el){
-console.log(el);            
+//console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
             oneNotice.noticeType = el.contEvent.contEventType.caption;

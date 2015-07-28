@@ -40,7 +40,7 @@ console.log("Objects directive.");
             //console.log($scope.monitorSettings.loadingFlag);      
                 //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
 //                $scope.monitorSettings.noGreenObjectsFlag = false;
-
+                $scope.objectCtrlSettings.isCtrlEnd =false;
                 $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
@@ -460,10 +460,6 @@ console.log("Objects directive.");
                     object.zpoints.forEach(function(zpoint){
                         trHTML +="<tr id=\"trZpoint"+zpoint.id+"\" ng-dblclick=\"getIndicators("+object.id+","+zpoint.id+")\">";
                         trHTML +="<td class=\"nmc-td-for-buttons-3\">"+
-                                "<i class=\"btn btn-sm glyphicon glyphicon-list nmc-button-in-table\""+
-                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-                                    "title=\"Показания точки учёта\">"+
-                                "</i>"+
                                 "<i class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\""+
                                     "ng-click=\"getZpointSettings("+object.id+","+zpoint.id+")\""+
                                     "data-target=\"#showZpointOptionModal\""+
@@ -478,6 +474,10 @@ console.log("Objects directive.");
                                     "data-placement=\"bottom\""+
                                     "title=\"Эксплуатационные параметры точки учёта\">"+
                                         "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
+                                "</i>"+
+                                "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                    "title=\"Показания точки учёта\">"+
                                 "</i>"+
 
                             "</td>";
@@ -887,19 +887,31 @@ console.log($scope.currentZpoint);
                 window.onkeydown = function(e){
 //console.log("Window key down");                                            
                     if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
-//console.log("Ctrl + End");
+console.log("Ctrl + End");
+                        $scope.loading =  true;    
+console.log($scope.loading);                        
+//                        $scope.$apply();
                         var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
-                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
-console.log(pageHeight);
-                        window.scrollTo(0, Math.round(20*$scope.objects.length));
+                        
+                        $scope.objectCtrlSettings.isCtrlEnd = true;
+                        
 //                        $scope.objectsOnPage = $scope.objects;
                     };
                 };
                 
-                window.onload = function(e){
-console.log("Window.On load event");                    
+                $scope.onTableLoad = function(){
+//                    var time = new Date();
+//console.log("On table load");                                        
+//console.log(time.toLocaleString());                    
+   
+                    if ($scope.objectCtrlSettings.isCtrlEnd === true){                    
+                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
+                        window.scrollTo(0, Math.round(pageHeight));
+                        $scope.objectCtrlSettings.isCtrlEnd = false;
+                        $scope.loading =  false;
+                    };
                 };
                 
                 //onScroll listener
@@ -968,7 +980,7 @@ console.log("Window.On load event");
                 };
                 
                 $scope.addMoreObjects = function(){
-//console.log("addMoreObjects. Run");
+console.log("addMoreObjects. Run");
                     if (($scope.objects.length<=0)){
                         return;
                     };
