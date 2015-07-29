@@ -40,7 +40,7 @@ console.log("MonitorSvc. Get objects");
             $http.get(targetUrl)
                 .success(function(data){
                     objectsMonitorSvc = data;
-    //console.log(data);            
+//    console.log(data);            
                     //sort objects by name
                     objectsMonitorSvc.sort(function(a, b){
                         if (a.contObject.fullName>b.contObject.fullName){
