@@ -92,6 +92,9 @@ public class ContObject extends AbstractAuditableModel {
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectFias contObjectFias;
+
+	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
+	private ContObjectGeoPos contObjectGeo;
 	
 	public String getName() {
 		return name;
@@ -223,6 +226,18 @@ public class ContObject extends AbstractAuditableModel {
 
 	public ContObjectFias getContObjectFias() {
 		return contObjectFias;
+	}
+
+	public ContObjectGeoPos getContObjectGeo() {
+		return contObjectGeo;
+	}
+
+	public void setContObjectFias(ContObjectFias contObjectFias) {
+		this.contObjectFias = contObjectFias;
+	}
+
+	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
+		this.contObjectGeo = contObjectGeo;
 	}
 
 }
