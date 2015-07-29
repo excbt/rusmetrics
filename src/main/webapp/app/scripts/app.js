@@ -23,6 +23,7 @@ var app = angular
       ,'ngIdle'
       ,'infinite-scroll'
       ,'angularFileUpload'
+      ,'leaflet-directive'
   ]);
 
 //routing config
@@ -43,6 +44,10 @@ app.config(function ($routeProvider) {
       .when('/notices/monitor', {
         templateUrl: 'views/monitor.html',
         controller: 'MonitorCtrl'
+      })
+      .when('/notices/monitor_map', {
+        templateUrl: 'views/monitor_map.html',
+        controller: 'MonitorMapCtrl'
       })
       .when('/private', {
         templateUrl: 'views/private_office.html',
