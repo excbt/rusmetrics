@@ -10,16 +10,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Type;
-
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "cont_object_fias")
-@DynamicUpdate
+@JsonInclude(Include.NON_NULL)
 public class ContObjectFias extends AbstractAuditableModel {
 
 	/**
@@ -46,9 +45,14 @@ public class ContObjectFias extends AbstractAuditableModel {
 	@Column(name = "geo_full_address")
 	private String geoFullAddress;
 
-	@Column(name = "geo_json")
-	@Type(type = "StringJsonObject")
-	private String geoJson;
+	@Column(name = "short_address_1")
+	private String shortAddress1;
+
+	@Column(name = "short_address_2")
+	private String shortAddress2;
+
+	@Column(name = "short_address_3")
+	private String shortAddress3;
 
 	@Version
 	private int version;
@@ -67,14 +71,6 @@ public class ContObjectFias extends AbstractAuditableModel {
 
 	public String getFiasFullAddress() {
 		return fiasFullAddress;
-	}
-
-	public String getGeoJson() {
-		return geoJson;
-	}
-
-	public int getVersion() {
-		return version;
 	}
 
 	public String getGeoFullAddress() {
