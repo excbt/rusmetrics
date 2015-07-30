@@ -972,6 +972,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param datePeriod
 	 * @return
 	 */
+	@Deprecated
 	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(
 			final Long subscriberId, final List<Long> contObjectIds,
 			final LocalDatePeriod datePeriod) {
