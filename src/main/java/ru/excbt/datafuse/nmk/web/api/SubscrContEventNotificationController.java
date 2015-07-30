@@ -3,7 +3,11 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -26,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventCityStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -112,8 +117,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 				: contEventTypeService
 						.selectContEventTypesPaired(contEventTypeList);
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -247,8 +252,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 				: contEventTypeService
 						.selectContEventTypesPaired(contEventTypeList);
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -293,13 +298,13 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationContObjects(
+	public ResponseEntity<?> notificationsContObjects(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -338,13 +343,13 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationContObjectsStatusCollapse(
+	public ResponseEntity<?> notificationsContObjectsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -382,15 +387,87 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
+	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationsContObjectsCityStatusCollapse(
+			@RequestParam(value = "fromDate", required = true) String fromDateStr,
+			@RequestParam(value = "toDate", required = true) String toDateStr,
+			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
+									fromDateStr, toDateStr));
+		}
+
+		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
+				.selectMonitorContEventNotificationStatusCollapse(
+						currentSubscriberService.getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+		List<MonitorContEventNotificationStatus> resultObjects = null;
+
+		if (Boolean.TRUE.equals(noGreenColor)) {
+			resultObjects = preResultList
+					.stream()
+					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
+					.collect(Collectors.toList());
+		} else {
+			resultObjects = preResultList;
+		}
+
+		final Map<UUID, MonitorContEventCityStatus> cityStatusMap = new HashMap<>();
+
+		resultObjects
+				.stream()
+				.filter((i) -> i.getContObject().getContObjectFias() != null
+						&& i.getContObject().getContObjectFias()
+								.getCityFiasUUID() != null)
+				.forEach(
+						(i) -> {
+							UUID cityUUID = i.getContObject()
+									.getContObjectFias().getCityFiasUUID();
+							MonitorContEventCityStatus cityStatus = cityStatusMap
+									.get(cityUUID);
+							if (cityStatus == null) {
+								cityStatus = new MonitorContEventCityStatus(
+										cityUUID);
+								if (cityStatusMap.putIfAbsent(cityUUID,
+										cityStatus) != null) {
+									throw new IllegalStateException(
+											"cityStatusMap error collapse");
+								}
+							}
+							cityStatus.getContEventNotificationStatuses()
+									.add(i);
+						});
+
+		Collection<MonitorContEventCityStatus> result = cityStatusMap.values();
+		return ResponseEntity.ok(result);
+	}
+
+	/**
+	 * 
+	 * @param fromDateStr
+	 * @param toDateStr
+	 * @return
+	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationContObjectEventTypes(
+	public ResponseEntity<?> notificationsContObjectEventTypes(
 			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -418,14 +495,14 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationContObjectEventTypesStatusCollapse(
+	public ResponseEntity<?> notificationsContObjectEventTypesStatusCollapse(
 			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr,
-				toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -453,7 +530,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationContObjectMonitorEvents(
+	public ResponseEntity<?> notificationsContObjectMonitorEvents(
 			@PathVariable(value = "contObjectId") Long contObjectId) {
 
 		checkNotNull(contObjectId);
@@ -469,7 +546,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/monitorColor", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationMonitorColor(
+	public ResponseEntity<?> notificationsMonitorColor(
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr) {
 
@@ -482,15 +559,16 @@ public class SubscrContEventNotificationController extends WebApiController {
 			monitorColor = contEventLevelColorService
 					.getEventColorCached(ContEventLevelColorKey.GREEN);
 
-			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-					fromDateStr, toDateStr);
+			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser
+					.parse(fromDateStr, toDateStr);
 
 			if (datePeriodParser.isOk()
 					&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
 				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
 						.selectByConditions(currentSubscriberService
 								.getSubscriberId(), datePeriodParser
-								.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
+								.getLocalDatePeriod().buildEndOfDay(),
+								PAGE_LIMIT_1);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService

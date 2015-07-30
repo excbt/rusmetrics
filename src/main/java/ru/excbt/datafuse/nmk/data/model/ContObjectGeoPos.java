@@ -41,7 +41,7 @@ public class ContObjectGeoPos implements Serializable {
 	private BigDecimal cityGeoPosX;
 
 	@Column(name = "city_geo_pos_y")
-	private BigDecimal cityGeoPosy;
+	private BigDecimal cityGeoPosY;
 
 	public Long getContObjectId() {
 		return contObjectId;
@@ -63,7 +63,7 @@ public class ContObjectGeoPos implements Serializable {
 		return cityGeoPosX;
 	}
 
-	public BigDecimal getCityGeoPosy() {
-		return cityGeoPosy;
+	public BigDecimal getCityGeoPosY() {
+		return cityGeoPosY;
 	}
 }
