@@ -173,6 +173,26 @@ public class SubscrContEventNotificationControllerTest extends
 	 * @throws Exception
 	 */
 	@Test
+	public void testNotifiicationsContObjectCityStatusCollapse() throws Exception {
+		
+		ResultActions resultActionsAll = mockMvc
+				.perform(get("/api/subscr/contEvent/notifications/contObject/cityStatusCollapse")
+						.param("fromDate", "2015-06-01")
+						.param("toDate", "2015-06-30")
+						.with(testSecurityContext())
+						.accept(MediaType.APPLICATION_JSON));
+		
+		resultActionsAll.andDo(MockMvcResultHandlers.print());
+		
+		resultActionsAll.andExpect(status().isOk()).andExpect(
+				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
 	public void testNotificationsContObjectEventTypes() throws Exception {
 
 		long contObjectId = 20118695;

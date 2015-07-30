@@ -42,6 +42,10 @@ public class ContObjectFias extends AbstractAuditableModel {
 	@JsonIgnore
 	private String fiasFullAddress;
 
+	@Column(name = "city_fias_uuid")
+	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	private UUID cityFiasUUID;
+
 	@Column(name = "geo_full_address")
 	private String geoFullAddress;
 
@@ -75,6 +79,30 @@ public class ContObjectFias extends AbstractAuditableModel {
 
 	public String getGeoFullAddress() {
 		return geoFullAddress;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	public UUID getCityFiasUUID() {
+		return cityFiasUUID;
+	}
+
+	public String getShortAddress1() {
+		return shortAddress1;
+	}
+
+	public String getShortAddress2() {
+		return shortAddress2;
+	}
+
+	public String getShortAddress3() {
+		return shortAddress3;
+	}
+
+	public int getVersion() {
+		return version;
 	}
 
 }
