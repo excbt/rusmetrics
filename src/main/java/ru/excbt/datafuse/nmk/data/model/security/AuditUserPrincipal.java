@@ -8,6 +8,7 @@ import java.security.Principal;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 
+@Deprecated
 public class AuditUserPrincipal implements Principal, Serializable {
 
 	/**

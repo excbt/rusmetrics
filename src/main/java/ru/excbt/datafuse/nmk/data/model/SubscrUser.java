@@ -16,12 +16,13 @@ import javax.persistence.Version;
 import org.hibernate.annotations.Where;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
 
 @Entity
 @Table(name="subscr_user")
 @Where(clause="id > 0 and deleted = 0")
-public class SubscrUser extends AbstractAuditableModel {
+public class SubscrUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**
 	 * 
@@ -111,6 +112,7 @@ public class SubscrUser extends AbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}
