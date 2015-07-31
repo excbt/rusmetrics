@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
+import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 @Service
 public class CurrentUserService {
@@ -33,6 +34,20 @@ public class CurrentUserService {
 	 * @return
 	 */
 	public AuditUser getCurrentAuditUser() {
+		SubscriberUserDetails subscriberUserDetails = getCurrentUserDetails();
+		if (subscriberUserDetails == null) {
+			return getMockAuditUser();
+		}
+		return new AuditUser(subscriberUserDetails);
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Deprecated
+	protected AuditUser getCurrentAuditUserOld() {
 		AuditUserPrincipal userPrincipal = getCurrentAuditUserPrincipal();
 		if (userPrincipal == null) {
 			return getMockAuditUser();
@@ -45,7 +60,8 @@ public class CurrentUserService {
 	 * 
 	 * @return
 	 */
-	public AuditUserPrincipal getCurrentAuditUserPrincipal() {
+	@Deprecated
+	protected AuditUserPrincipal getCurrentAuditUserPrincipal() {
 		Authentication auth = getContextAuth();
 		if (auth == null) {
 			return null;
@@ -58,6 +74,28 @@ public class CurrentUserService {
 			return null;
 		}
 		return userPrincipal;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public SubscriberUserDetails getCurrentUserDetails() {
+		Authentication auth = getContextAuth();
+		if (auth == null) {
+			return null;
+		}
+
+		SubscriberUserDetails result = null;
+		if (auth.getPrincipal() instanceof SubscriberUserDetails) {
+			result = (SubscriberUserDetails) auth.getPrincipal();
+		} else {
+			logger.error(
+					"Proncipal is not of type SubscriberUserDetails. Actual type: {}",
+					auth.getPrincipal().getClass().getName());
+			logger.error("Token Principal: {}", auth.getPrincipal().toString());
+		}
+		return result;
 	}
 
 	/**

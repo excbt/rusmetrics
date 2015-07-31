@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
+import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 @Entity
 @Table(name = "audit_user")
@@ -66,7 +67,6 @@ public class AuditUser implements Serializable {
 	@Column(name = "is_system")
 	private Boolean _system;
 
-
 	public AuditUser() {
 
 	}
@@ -89,5 +89,13 @@ public class AuditUser implements Serializable {
 		this._system = srcObject.is_system();
 	}
 
+	public AuditUser(SubscriberUserDetails srcObject) {
+		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
+
+		this.userName = srcObject.getUsername();
+		this.version = srcObject.getVersion();
+		this.id = srcObject.getId();
+		this._system = srcObject.is_system();
+	}
 
 }
