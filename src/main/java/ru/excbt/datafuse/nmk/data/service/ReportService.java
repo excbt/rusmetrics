@@ -417,6 +417,10 @@ public class ReportService {
 			result = ReportType.RPT_CONSUMPTION_ETALON;
 			break;
 		}
+		case LOG_JOURNAL_REPORT: {
+			result = ReportType.RPT_LOG_JOURNAL;
+			break;
+		}
 		default: {
 			break;
 		}

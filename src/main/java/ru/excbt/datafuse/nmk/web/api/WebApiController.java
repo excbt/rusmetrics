@@ -146,6 +146,23 @@ public class WebApiController {
 
 	/**
 	 * 
+	 * @param is
+	 * @param mediaType
+	 * @param contentLength
+	 * @param filename
+	 * @param makeAttach
+	 * @return
+	 */
+	protected ResponseEntity<?> processDownloadInputStream(InputStream is,
+			MediaType mediaType, long contentLength, String filename, boolean makeAttach) {
+		checkNotNull(is);
+		
+		InputStreamResource isr = new InputStreamResource(is);
+		return processDownloadResource(isr, mediaType, contentLength, filename, makeAttach);
+	}
+
+	/**
+	 * 
 	 * @param resource
 	 * @param mediaType
 	 * @param file
@@ -168,7 +185,8 @@ public class WebApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> processDownloadResource(Resource resource,
-			MediaType mediaType, long contentLength, String filename) {
+			MediaType mediaType, long contentLength, String filename,
+			boolean makeAttach) {
 
 		checkNotNull(resource);
 		checkNotNull(mediaType);
@@ -179,13 +197,30 @@ public class WebApiController {
 		headers.setContentType(mediaType);
 		headers.setContentLength(contentLength);
 
-		// set headers for the response
-		String headerKey = "Content-Disposition";
-		String headerValue = String.format("attachment; filename=\"%s\"",
-				filename);
-		headers.set(headerKey, headerValue);
+		if (makeAttach) {
+			// set headers for the response
+			String headerKey = "Content-Disposition";
+			String headerValue = String.format("attachment; filename=\"%s\"",
+					filename);
+			headers.set(headerKey, headerValue);
+		}
 
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
+	}
+
+	/**
+	 * 
+	 * @param resource
+	 * @param mediaType
+	 * @param contentLength
+	 * @param filename
+	 * @return
+	 */
+	protected ResponseEntity<?> processDownloadResource(Resource resource,
+			MediaType mediaType, long contentLength, String filename) {
+
+		return processDownloadResource(resource, mediaType, contentLength,
+				filename, true);
 	}
 
 }
