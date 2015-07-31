@@ -146,6 +146,9 @@
 /*    border-radius: 0;*/
     background-color: #FFFFFF; /*background color of main area*/
 /*    padding-top: 10px;*/
+    
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
 }
 
 /* главная область в распахнутом состоянии - при минимизации левого меню*/
@@ -1110,8 +1113,8 @@ tr.nmc-main-table-header > th {
 *               Карты
 ********************************************************/
 .nmc-map-monitor{
-    height: 800px;
-    width: 1563px;
+    height: 865px;
+    width: 100%;
 }
  
 /*****************************

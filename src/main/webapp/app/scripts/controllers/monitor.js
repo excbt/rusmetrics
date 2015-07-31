@@ -368,7 +368,7 @@ console.log("Monitor Controller.");
         obj.eventTypes.forEach(function(event){
             trHTML +="<tr id=\"trEvent"+event.id+"\" >";
             trHTML +="<td class=\"nmc-td-for-buttons\">"+
-                    "<a href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndType("+obj.contObject.id+","+event.id+")\" ng-right-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                    "<a href=\""+noticesUrl+"\" ng-mousedown=\"setNoticeFilterByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
 //                        "ng-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\""+
                         "title=\"Посмотреть уведомления\">"+
                     "</i></a>"+
