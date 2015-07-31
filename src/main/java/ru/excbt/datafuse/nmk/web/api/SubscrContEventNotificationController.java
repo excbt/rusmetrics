@@ -3,11 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -362,21 +358,11 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
+		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationService
 				.selectMonitorContEventNotificationStatusCollapse(
 						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
-
-		List<MonitorContEventNotificationStatus> resultList = null;
-
-		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultList = preResultList
-					.stream()
-					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
-					.collect(Collectors.toList());
-		} else {
-			resultList = preResultList;
-		}
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
+						noGreenColor);
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -407,49 +393,12 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatusCollapse(
+		List<MonitorContEventCityStatus> result = subscrContEventNotifiicationService
+				.selectMonitoryContObjectCityStatus(
 						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
+						noGreenColor);
 
-		List<MonitorContEventNotificationStatus> resultObjects = null;
-
-		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultObjects = preResultList
-					.stream()
-					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
-					.collect(Collectors.toList());
-		} else {
-			resultObjects = preResultList;
-		}
-
-		final Map<UUID, MonitorContEventCityStatus> cityStatusMap = new HashMap<>();
-
-		resultObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectFias() != null
-						&& i.getContObject().getContObjectFias()
-								.getCityFiasUUID() != null)
-				.forEach(
-						(i) -> {
-							UUID cityUUID = i.getContObject()
-									.getContObjectFias().getCityFiasUUID();
-							MonitorContEventCityStatus cityStatus = cityStatusMap
-									.get(cityUUID);
-							if (cityStatus == null) {
-								cityStatus = new MonitorContEventCityStatus(
-										cityUUID);
-								if (cityStatusMap.putIfAbsent(cityUUID,
-										cityStatus) != null) {
-									throw new IllegalStateException(
-											"cityStatusMap error collapse");
-								}
-							}
-							cityStatus.getContEventNotificationStatuses()
-									.add(i);
-						});
-
-		Collection<MonitorContEventCityStatus> result = cityStatusMap.values();
 		return ResponseEntity.ok(result);
 	}
 

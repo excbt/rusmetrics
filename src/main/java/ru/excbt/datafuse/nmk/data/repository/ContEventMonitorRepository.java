@@ -18,14 +18,12 @@ public interface ContEventMonitorRepository extends
 	 */
 	public List<ContEventMonitor> findByContObjectId(Long contObjectId);
 
-	
 	@Query("SELECT m FROM ContEventMonitor m "
 			+ "WHERE m.contObjectId = :contObjectId "
 			+ " ORDER BY m.contEventTime ")
 	public List<ContEventMonitor> selectByContObjectId(
 			@Param("contObjectId") Long contObjectId);
 
-	
 	/**
 	 * 
 	 * @param contObjectId
@@ -45,6 +43,20 @@ public interface ContEventMonitorRepository extends
 			+ "SELECT co.id FROM Subscriber s LEFT JOIN s.contObjects co "
 			+ " WHERE s.id = :subscriberId)")
 	public List<ContEventMonitor> selectBySubscriberId(
+			@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query(value = "SELECT CAST(f.city_fias_uuid as TEXT) city_fias_uuid, COUNT(cet.cont_event_id) cont_object_count "
+			+ "FROM cont_event_monitor cet, cont_object_fias f, subscr_cont_object sco "
+			+ "WHERE cet.cont_object_id = f.cont_object_id "
+			+ "AND cet.cont_object_id = sco.cont_object_id "
+			+ "AND sco.subscriber_id = :subscriberId "
+			+ "GROUP BY city_fias_uuid ", nativeQuery = true)
+	public List<Object[]> selectCityContObjectMonitorEventCount(
 			@Param("subscriberId") Long subscriberId);
 
 }

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "cityFiasUUID", "monitorEventCount", "cityName", "cityGeoPosX", "cityGeoPosY" })
 public class MonitorContEventCityStatus implements Serializable {
 
 	/**
@@ -17,6 +20,8 @@ public class MonitorContEventCityStatus implements Serializable {
 	private final UUID cityFiasUUID;
 
 	private final List<MonitorContEventNotificationStatus> contEventNotificationStatuses = new ArrayList<>();
+
+	private Long monitorEventCount = 0L;
 
 	/**
 	 * 
@@ -78,6 +83,14 @@ public class MonitorContEventCityStatus implements Serializable {
 								.getCityGeoPosY() != null).findFirst();
 		return item.isPresent() ? item.get().getContObject().getContObjectGeo()
 				.getCityGeoPosY() : null;
+	}
+
+	public Long getMonitorEventCount() {
+		return monitorEventCount;
+	}
+
+	public void setMonitorEventCount(Long monitorEventCount) {
+		this.monitorEventCount = monitorEventCount;
 	}
 
 }
