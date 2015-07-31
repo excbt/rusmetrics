@@ -1,8 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -59,6 +62,16 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 					"(ContObjectId:{}) findContEventMonitorColor colorKey:{}",
 					co.getId(), colorKey.getKeyname());
 		}
-
 	}
+
+	@Test
+	public void testCityContObjectStatus() throws Exception {
+		Map<UUID,Long> result = 
+		contEventMonitorService
+				.selectCityContObjectMonitorEventCount(currentSubscriberService
+						.getSubscriberId());
+		assertNotNull(result);
+		assertFalse(result.isEmpty());
+	}
+
 }

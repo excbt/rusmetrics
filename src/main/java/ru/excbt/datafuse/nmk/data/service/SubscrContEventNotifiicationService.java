@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -41,6 +43,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventCityStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
@@ -575,7 +578,8 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod, Boolean isNew) {
+			final Long contObjectId, final LocalDatePeriod datePeriod,
+			Boolean isNew) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -664,7 +668,7 @@ public class SubscrContEventNotifiicationService {
 						objects[1])).collect(Collectors.toList());
 
 		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
-		
+
 		for (CounterInfo ci : selectList) {
 
 			ContEventType contEventType = contEventTypeService.findOne(ci.id);
@@ -837,7 +841,8 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
-			final Long subscriberId, final LocalDatePeriod datePeriod) {
+			final Long subscriberId, final LocalDatePeriod datePeriod,
+			Boolean noGreenColor) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
@@ -863,7 +868,7 @@ public class SubscrContEventNotifiicationService {
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
-		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
+		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
 			List<ContEventMonitor> availableMonitors = monitorContObjectsMap
@@ -908,10 +913,21 @@ public class SubscrContEventNotifiicationService {
 			item.setEventsTypesCount(typesCnt);
 			item.setContEventLevelColorKey(resultColorKey);
 
-			result.add(item);
+			monitorStatusList.add(item);
 		}
 
-		return result;
+		List<MonitorContEventNotificationStatus> resultList = null;
+
+		if (Boolean.TRUE.equals(noGreenColor)) {
+			resultList = monitorStatusList
+					.stream()
+					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
+					.collect(Collectors.toList());
+		} else {
+			resultList = monitorStatusList;
+		}
+
+		return resultList;
 	}
 
 	/**
@@ -1019,4 +1035,55 @@ public class SubscrContEventNotifiicationService {
 
 		return resultList;
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public List<MonitorContEventCityStatus> selectMonitoryContObjectCityStatus(
+			final Long subscriberId, final LocalDatePeriod datePeriod,
+			Boolean noGreenColor) {
+
+		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
+				subscriberId, datePeriod, noGreenColor);
+
+		final Map<UUID, MonitorContEventCityStatus> cityStatusMap = new HashMap<>();
+
+		resultObjects
+				.stream()
+				.filter((i) -> i.getContObject().getContObjectFias() != null)
+				.forEach(
+						(i) -> {
+							UUID cityUUID = i.getContObject()
+									.getContObjectFias().getCityFiasUUID();
+							MonitorContEventCityStatus cityStatus = cityStatusMap
+									.get(cityUUID);
+							if (cityStatus == null) {
+								cityStatus = new MonitorContEventCityStatus(
+										cityUUID);
+								if (cityStatusMap.putIfAbsent(cityUUID,
+										cityStatus) != null) {
+									throw new IllegalStateException(
+											"cityStatusMap error collapse");
+								}
+							}
+							cityStatus.getContEventNotificationStatuses()
+									.add(i);
+						});
+
+		Map<UUID, Long> cityEventCount = contEventMonitorService
+				.selectCityContObjectMonitorEventCount(subscriberId);
+
+		List<MonitorContEventCityStatus> result = new ArrayList<>(
+				cityStatusMap.values());
+
+		result.forEach((i) -> {
+			Long cnt = cityEventCount.get(i.getCityFiasUUID());
+			i.setMonitorEventCount(cnt != null ? cnt : 0);
+		});
+
+		return result;
+	}
+
 }

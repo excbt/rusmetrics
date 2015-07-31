@@ -2,12 +2,14 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -65,10 +67,10 @@ public class ContEventMonitorService {
 	 */
 	public List<ContEventMonitor> selectByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
-		
+
 		List<ContEventMonitor> result = contEventMonitorRepository
 				.selectByContObjectId(contObjectId);
-		
+
 		return result;
 	}
 
@@ -188,6 +190,29 @@ public class ContEventMonitorService {
 		// .collect(
 		// Collectors.toMap(ContEventMonitor::getContObjectId,
 		// m -> m.getContEventLevelColorKey()));
+		return resultMap;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	public Map<UUID, Long> selectCityContObjectMonitorEventCount(
+			Long subscriberId) {
+
+		Map<UUID, Long> resultMap = new HashMap<>();
+
+		List<Object[]> cityContEventCount = contEventMonitorRepository
+				.selectCityContObjectMonitorEventCount(subscriberId);
+
+		cityContEventCount.forEach((i) -> {
+			String strUUID = (String) i[0];
+			UUID cityUUID = strUUID != null ? UUID.fromString(strUUID) : null;
+			BigInteger count = (BigInteger) i[1];
+			resultMap.put(cityUUID, count.longValue());
+		});
+
 		return resultMap;
 	}
 
