@@ -83,7 +83,7 @@
                         <img ng-attr-id="{{'imgObj'+object.contObject.id}}" title="" height="" width="" ng-src="{{'images/object-state-'+object.statusColor.toLowerCase()+'.png'}}"/>
                         
                             </td>
-                        <td class="col-md-1"><a title="Всего уведомлений" href="#/notices/list/" ng-click="setNoticeFilterByObject(object.contObject.id)" ng-right-click="getNoticesByObjectOnRightClick(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" href="#/notices/list/" ng-click="setNoticeFilterByObjectAndRevision(object.contObject.id)" ng-right-click="getNoticesByObjectAndRevisionOnRightClick(object.contObject.id)">{{object.newEventsCount}}</a>)
+                        <td class="col-md-1"><a title="Всего уведомлений" href="#/notices/list/" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" href="#/notices/list/" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
 
                         </td>
                         <td class="nmc-td-for-buttons"><i title="Показать диаграмму уведомлений" class="btn btn-xs" ng-click="getEventTypesByObject(object.contObject.id, true)"><img height="16" width="16" src='images/roundDiagram4.png'/></i></td>

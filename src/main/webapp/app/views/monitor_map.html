@@ -14,9 +14,31 @@
     </div>
 </div>
 
+
 <!--
 <div class="nmc-map-monitor" id="map">
     
-</div>-->
+</div>
+-->
+<!--
+<div><span context-menu data-target="menu-{{ $index }}" id="">Ntest context menu</span>
+</div>
+<div context-menu class="panel panel-default position-fixed"
+     data-target="menu-{{ $index }}">
+  test context menu
+</div>
+-->
+<leaflet class="nmc-map-monitor" center="mapCenter" tiles="currentTile" markers="markers"></leaflet>
 
-<leaflet class="nmc-map-monitor" center="mapCenter" markers="markers"></leaflet>
+
+<div class="dropdown position-fixed" id="menu-{{ $index }}">
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a class="pointer" role="menuitem" tabindex="1">
+<!--         ng-click="getNoticesByObjectAndType(objId, typeId)">-->
+         Открыть в новой вкладке {{$index+1}}
+      </a>
+    </li>
+    
+  </ul>
+</div>
