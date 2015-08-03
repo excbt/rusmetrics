@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
 public class ContObjectServiceTypeInfo implements Serializable {
 
@@ -16,7 +17,7 @@ public class ContObjectServiceTypeInfo implements Serializable {
 
 	private final ContObjectShort contObject;
 
-	private final List<ServiceTypeART> serviceTypeARTs = new ArrayList<>();
+	private final List<ServiceTypeInfoART> serviceTypeARTs = new ArrayList<>();
 
 	/**
 	 * 
@@ -38,7 +39,7 @@ public class ContObjectServiceTypeInfo implements Serializable {
 	 * 
 	 * @return
 	 */
-	public List<ServiceTypeART> getServiceTypeARTs() {
+	public List<ServiceTypeInfoART> getServiceTypeARTs() {
 		return Collections.unmodifiableList(serviceTypeARTs);
 	}
 
@@ -47,8 +48,9 @@ public class ContObjectServiceTypeInfo implements Serializable {
 	 * @param serviceTypeKeyname
 	 * @return
 	 */
-	public ServiceTypeART addServiceTypeART(String serviceTypeKeyname) {
-		ServiceTypeART item = new ServiceTypeART(serviceTypeKeyname);
+	public ServiceTypeInfoART addServiceTypeART(String serviceTypeKeyname) {
+		ServiceTypeInfoART item = new ServiceTypeInfoART(
+				ContServiceTypeKey.searchKeyname(serviceTypeKeyname));
 		serviceTypeARTs.add(item);
 		return item;
 	}
