@@ -147,7 +147,7 @@
     background-color: #FFFFFF; /*background color of main area*/
 /*    padding-top: 10px;*/
     
-    white-space: nowrap; /* Запрещаем перенос строк */
+/*    white-space: nowrap; /* Запрещаем перенос строк */
     overflow: auto; /*Обрезаем все, что не вмещается*/
 }
 
