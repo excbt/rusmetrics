@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 public class SubscrContServiceDataHWaterControllerTest extends
@@ -198,13 +199,33 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("dateFrom", "2015-07-01").param("dateTo", "2015-07-31")
-				.with(testSecurityContext()));
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.contentType(MediaType.APPLICATION_JSON)
+					.param("dateFrom", "2015-07-01")
+					.param("dateTo", "2015-07-31");
+		};
 
-		resultAction.andDo(MockMvcResultHandlers.print()).andExpect(
-				status().is2xxSuccessful());
+		testGet(urlStr, requestExtraInitializer);
+
+	}
+
+	@Test
+	public void testContObjectServiceTypeInfoOne() throws Exception {
+
+		List<Long> ids = currentSubscriberService.getSubscriberContObjectIds();
+		assertTrue(ids.size() > 0);
+
+		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/"
+				+ ids.get(0));
+
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.contentType(MediaType.APPLICATION_JSON)
+					.param("dateFrom", "2015-07-01")
+					.param("dateTo", "2015-07-31");
+		};
+
+		testGet(urlStr, requestExtraInitializer);
+
 	}
 
 }

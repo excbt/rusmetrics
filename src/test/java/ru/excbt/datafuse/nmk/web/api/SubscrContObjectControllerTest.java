@@ -88,7 +88,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	public void testSettingModeUpdate() throws Exception {
 
 		List<ContObject> contObjects = currentSubscriberService
-				.getCurrentSubscriberContObjects();
+				.getSubscriberContObjects();
 
 		assertNotNull(contObjects);
 		assertTrue(contObjects.size() > 0);

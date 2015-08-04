@@ -110,27 +110,16 @@ public class AnyControllerTest {
 	 */
 	protected void testJsonGet(String url) throws Exception {
 
-		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
-
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.accept(MediaType.APPLICATION_JSON);
-
-			}
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.APPLICATION_JSON);
 		};
 
-		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
 
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-				resultActions.andDo(MockMvcResultHandlers.print());
-
-				resultActions.andExpect(status().isOk()).andExpect(
-						content().contentType(
-								WebApiController.APPLICATION_JSON_UTF8));
-
-			}
+			resultActions.andExpect(status().isOk()).andExpect(
+					content().contentType(
+							WebApiController.APPLICATION_JSON_UTF8));
 		};
 
 		testGet(url, requestExtraInitializer, resultActionsTester);
@@ -144,25 +133,13 @@ public class AnyControllerTest {
 	 */
 	protected void testJsonGetNoJsonCheck(String url) throws Exception {
 
-		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
-
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.accept(MediaType.APPLICATION_JSON);
-
-			}
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.APPLICATION_JSON);
 		};
 
-		ResultActionsTester resultActionsTester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-				resultActions.andDo(MockMvcResultHandlers.print());
-
-				resultActions.andExpect(status().is2xxSuccessful());
-
-			}
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
 		testGet(url, requestExtraInitializer, resultActionsTester);
@@ -176,25 +153,14 @@ public class AnyControllerTest {
 	 */
 	protected void testJsonGetSuccessfull(String url) throws Exception {
 
-		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
-
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.accept(MediaType.APPLICATION_JSON);
-
-			}
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.APPLICATION_JSON);
 		};
 
-		ResultActionsTester resultActionsTester = new ResultActionsTester() {
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
 
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-				resultActions.andDo(MockMvcResultHandlers.print());
-
-				resultActions.andExpect(status().is2xxSuccessful());
-
-			}
+			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
 		testGet(url, requestExtraInitializer, resultActionsTester);
@@ -208,24 +174,13 @@ public class AnyControllerTest {
 	 */
 	protected void testHtmlGet(String url) throws Exception {
 
-		RequestExtraInitializer requestExtraInitializer = new RequestExtraInitializer() {
-
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.accept(MediaType.TEXT_HTML);
-
-			}
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.TEXT_HTML);
 		};
 
-		ResultActionsTester resultActionsTester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-				resultActions.andExpect(status().isOk()).andExpect(
-						content().contentType(MediaType.TEXT_HTML));
-
-			}
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andExpect(status().isOk()).andExpect(
+					content().contentType(MediaType.TEXT_HTML));
 		};
 
 		testGet(url, requestExtraInitializer, resultActionsTester);
@@ -255,6 +210,23 @@ public class AnyControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param resultActionsTester
+	 * @throws Exception
+	 */
+	protected void testGet(String url,
+			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print()).andExpect(
+					status().is2xxSuccessful());
+		};
+
+		testGet(url, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -327,16 +299,9 @@ public class AnyControllerTest {
 	protected Long testJsonCreate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-
-				resultActions.andDo(MockMvcResultHandlers.print());
-				resultActions.andExpect(status().isCreated());
-
-			}
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().isCreated());
 		};
 
 		return testJsonCreate(url, sendObject, requestExtraInitializer, tester);
@@ -412,16 +377,9 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
-		ResultActionsTester tester = new ResultActionsTester() {
-
-			@Override
-			public void testResultActions(ResultActions resultActions)
-					throws Exception {
-
-				resultActions.andDo(MockMvcResultHandlers.print());
-				resultActions.andExpect(status().isOk());
-
-			}
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().isOk());
 		};
 
 		testJsonUpdate(url, sendObject, requestExtraInitializer, tester);

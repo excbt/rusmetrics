@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
@@ -769,8 +770,6 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	 * 
 	 * @param dateFromStr
 	 * @param toDateStr
-	 * @param serviceType
-	 * @param timeDetailType
 	 * @return
 	 */
 	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
@@ -809,11 +808,60 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		// datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getCityContObjectsSeriveTypeInfos(
-						currentSubscriberService.getSubscriberId(),
+				.getCityContObjectsSeriveTypeInfoList(getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param dateFromStr
+	 * @param dateToStr
+	 * @return
+	 */
+	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/{contObjectId}", method = RequestMethod.GET)
+	public ResponseEntity<?> getContObjectsServiceTypeInfoOne(
+			@PathVariable("contObjectId") long contObjectId,
+			@RequestParam("dateFrom") String dateFromStr,
+			@RequestParam("dateTo") String dateToStr) {
+
+		checkNotNull(dateFromStr);
+		checkNotNull(dateToStr);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				dateFromStr, dateToStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters dateFrom:{} and dateTo:{}",
+							dateFromStr, dateToStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
+									dateFromStr, dateToStr));
+		}
+
+		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
+				.getContObjectServiceTypeInfoList(getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
+						contObjectId);
+
+		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null
+				: contObjectServiceTypeInfos.get(0));
 	}
 
 }

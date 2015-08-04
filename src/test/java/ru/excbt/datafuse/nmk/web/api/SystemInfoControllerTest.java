@@ -7,8 +7,13 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 public class SystemInfoControllerTest extends AnyControllerTest {
 
 	@Test
-	public void test() throws Exception {
+	public void testFullUserInfo() throws Exception {
 		testJsonGet("/api/systemInfo/fullUserInfo");
+	}
+
+	@Test
+	public void testReadOnlyMode() throws Exception {
+		testJsonGet("/api/systemInfo/readOnlyMode");
 	}
 
 }
