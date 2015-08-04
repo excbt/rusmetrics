@@ -173,6 +173,14 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
+	public List<Long> getSubscriberContObjectIds() {
+		return subscriberService.selectSubscriberContObjectIds(getSubscriberId());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public Long getCurrentUserId() {
 		return currentUserService.getCurrentUserId();
 	}

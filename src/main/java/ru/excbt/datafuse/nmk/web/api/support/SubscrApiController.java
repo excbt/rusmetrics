@@ -31,4 +31,12 @@ public class SubscrApiController extends WebApiController {
 		return contObjectIds.contains(contObjectId);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	protected long getSubscriberId() {
+		return currentSubscriberService.getSubscriberId();
+	}
+	
 }

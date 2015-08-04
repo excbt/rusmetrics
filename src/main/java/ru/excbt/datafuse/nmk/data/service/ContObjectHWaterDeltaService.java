@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.slf4j.Logger;
@@ -190,24 +190,39 @@ public class ContObjectHWaterDeltaService {
 	 * @return
 	 */
 	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfoList(
-			Long subscriberId, LocalDatePeriod ldp) {
+			Long subscriberId, LocalDatePeriod ldp, Long contObjectId) {
 
-		List<ContObject> subscriberContObjects = contObjectService
-				.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = new ArrayList<>();
 
-		subscriberContObjects.stream().collect(
-				Collectors.toMap(ContObject::getId, (i) -> i));
+		if (contObjectId == null) {
+			contObjects.addAll(contObjectService
+					.selectSubscriberContObjects(subscriberId));
+		} else {
+			ContObject contObject = contObjectService
+					.findOneContObject(contObjectId);
+
+			if (contObject == null) {
+				throw new PersistenceException(String.format(
+						"ContObject (id=%d) is not found", contObjectId));
+			}
+
+			contObjects.add(contObject);
+		}
+
+		// subscriberContObjects.stream().collect(
+		// Collectors.toMap(ContObject::getId, (i) -> i));
 
 		List<ContObjectServiceTypeInfo> resultList = new ArrayList<>();
 
 		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART(
-				subscriberId, ldp, ContServiceTypeKey.HW, TimeDetailKey.TYPE_1H);
+				subscriberId, ldp, ContServiceTypeKey.HW,
+				TimeDetailKey.TYPE_1H, contObjectId);
 
 		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART(
 				subscriberId, ldp, ContServiceTypeKey.HEAT,
-				TimeDetailKey.TYPE_1H);
+				TimeDetailKey.TYPE_1H, contObjectId);
 
-		subscriberContObjects.forEach((contObject) -> {
+		contObjects.forEach((contObject) -> {
 			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(
 					contObject);
 
@@ -240,11 +255,11 @@ public class ContObjectHWaterDeltaService {
 	 * @param ldp
 	 * @return
 	 */
-	public List<CityContObjectsServiceTypeInfo> getCityContObjectsSeriveTypeInfos(
+	public List<CityContObjectsServiceTypeInfo> getCityContObjectsSeriveTypeInfoList(
 			Long subscriberId, LocalDatePeriod ldp) {
 
 		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfoList(
-				subscriberId, ldp);
+				subscriberId, ldp, null);
 
 		List<CityContObjectsServiceTypeInfo> result = CityContObjects
 				.makeCityContObjects(allInfo,
