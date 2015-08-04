@@ -6,9 +6,9 @@ import java.util.UUID;
 public class CityContObjectsServiceTypeInfo extends
 		CityContObjects<ContObjectServiceTypeInfo> {
 
-	public static CityContObjectsServiceTypeInfoFactory FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
+	public static CityContObjectsFactory<CityContObjectsServiceTypeInfo> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
-	public static class CityContObjectsServiceTypeInfoFactory implements
+	static class CityContObjectsServiceTypeInfoFactory implements
 			CityContObjectsFactory<CityContObjectsServiceTypeInfo> {
 
 		@Override

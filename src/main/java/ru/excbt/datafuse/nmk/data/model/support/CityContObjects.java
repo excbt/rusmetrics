@@ -16,7 +16,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 public abstract class CityContObjects<T extends ContObjectHolder> implements
 		Serializable {
 
-	protected interface CityContObjectsFactory<T extends CityContObjects<? extends ContObjectHolder>> {
+	interface CityContObjectsFactory<T extends CityContObjects<? extends ContObjectHolder>> {
 		public T newInstance(UUID uuid);
 	}
 	

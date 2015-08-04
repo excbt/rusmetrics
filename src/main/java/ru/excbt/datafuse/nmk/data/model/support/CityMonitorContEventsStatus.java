@@ -20,14 +20,14 @@ public class CityMonitorContEventsStatus extends
 	 */
 	private static final long serialVersionUID = 1510890454161328379L;
 
-	public static final CityContObjectsServiceTypeInfoFactory FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
+	public static final CityContObjectsFactory<CityMonitorContEventsStatus> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
 	/**
 	 * 
 	 * @author kovtonyk
 	 *
 	 */
-	public static class CityContObjectsServiceTypeInfoFactory implements
+	static class CityContObjectsServiceTypeInfoFactory implements
 			CityContObjectsFactory<CityMonitorContEventsStatus> {
 
 		@Override
