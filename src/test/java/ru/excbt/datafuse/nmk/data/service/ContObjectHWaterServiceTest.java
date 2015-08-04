@@ -36,7 +36,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 		List<Object[]> result = contObjectHWaterService
 				.selectContObjectHWaterDeltaAgr(728L,
 						LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,
-						TimeDetailKey.TYPE_1H);
+						TimeDetailKey.TYPE_1H, null);
 
 		assertNotNull(result);
 	}
@@ -47,7 +47,8 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 		Map<Long, ServiceTypeInfoART> resultMap =
 
 		contObjectHWaterService.selectContObjectHWaterDeltaART(728L,
-				LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW, TimeDetailKey.TYPE_1H);
+				LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,
+				TimeDetailKey.TYPE_1H);
 
 		assertNotNull(resultMap);
 		resultMap.forEach((k, v) -> {
