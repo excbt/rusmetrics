@@ -773,8 +773,8 @@ public class SubscrContServiceDataController extends SubscrApiController {
 	 * @param timeDetailType
 	 * @return
 	 */
-	@RequestMapping(value = "/service/hwater/contObjectServiceTypeInfo", method = RequestMethod.GET)
-	public ResponseEntity<?> getContObjectServiceTypeInfo(
+	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
+	public ResponseEntity<?> getContObjectsServiceTypeInfo(
 			@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr) {
 

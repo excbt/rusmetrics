@@ -196,7 +196,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testContObjectServiceTypeInfo() throws Exception {
 
-		String urlStr = apiSubscrUrl("/service/hwater/contObjectServiceTypeInfo");
+		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
 
 		ResultActions resultAction = mockMvc.perform(get(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
