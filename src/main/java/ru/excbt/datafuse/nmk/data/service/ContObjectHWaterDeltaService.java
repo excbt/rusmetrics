@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
+import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -187,7 +189,7 @@ public class ContObjectHWaterDeltaService {
 	 * @param timeDetailKey
 	 * @return
 	 */
-	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo(
+	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfoList(
 			Long subscriberId, LocalDatePeriod ldp) {
 
 		List<ContObject> subscriberContObjects = contObjectService
@@ -214,13 +216,6 @@ public class ContObjectHWaterDeltaService {
 						.getId());
 				if (hwART != null) {
 
-//					if (hwART.getAbsConsValue() != null
-//							&& contObject.getHeatArea() != null) {
-//						BigDecimal relValue = hwART.getAbsConsValue().divide(
-//								contObject.getHeatArea());
-//						hwART.setRelConsValue(relValue);
-//					}
-
 					item.addServiceTypeART(hwART);
 				}
 
@@ -229,13 +224,6 @@ public class ContObjectHWaterDeltaService {
 				ContServiceTypeInfoART heatART = heatContObjectARTs
 						.get(contObject.getId());
 				if (heatART != null) {
-//					if (heatART.getAbsConsValue() != null
-//							&& contObject.getHeatArea() != null) {
-//						BigDecimal relValue = heatART.getAbsConsValue().divide(
-//								contObject.getHeatArea());
-//						heatART.setRelConsValue(relValue);
-//					}
-
 					item.addServiceTypeART(heatART);
 				}
 			}
@@ -244,6 +232,25 @@ public class ContObjectHWaterDeltaService {
 		});
 
 		return resultList;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param ldp
+	 * @return
+	 */
+	public List<CityContObjectsServiceTypeInfo> getCityContObjectsSeriveTypeInfos(
+			Long subscriberId, LocalDatePeriod ldp) {
+
+		List<ContObjectServiceTypeInfo> allInfo = getContObjectServiceTypeInfoList(
+				subscriberId, ldp);
+
+		List<CityContObjectsServiceTypeInfo> result = CityContObjects
+				.makeCityContObjects(allInfo,
+						CityContObjectsServiceTypeInfo.FACTORY_INSTANCE);
+
+		return result;
 	}
 
 }

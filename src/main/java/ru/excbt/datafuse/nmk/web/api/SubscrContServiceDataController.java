@@ -36,7 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
+import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
@@ -802,8 +802,14 @@ public class SubscrContServiceDataController extends SubscrApiController {
 									dateFromStr, dateToStr));
 		}
 
-		List<ContObjectServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfo(
+		// List<ContObjectServiceTypeInfo> resultList =
+		// contObjectHWaterDeltaService
+		// .getContObjectServiceTypeInfoList(
+		// currentSubscriberService.getSubscriberId(),
+		// datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
+				.getCityContObjectsSeriveTypeInfos(
 						currentSubscriberService.getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 

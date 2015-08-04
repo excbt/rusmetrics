@@ -10,7 +10,8 @@ import java.util.List;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
-public class ContObjectServiceTypeInfo implements Serializable {
+public class ContObjectServiceTypeInfo implements ContObjectHolder,
+		Serializable {
 
 	/**
 	 * 
@@ -33,7 +34,8 @@ public class ContObjectServiceTypeInfo implements Serializable {
 	 * 
 	 * @return
 	 */
-	public ContObjectShort getContObject() {
+	@Override
+	public ContObject getContObject() {
 		return contObject;
 	}
 
