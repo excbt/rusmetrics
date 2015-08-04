@@ -165,7 +165,7 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
-	public List<ContObject> getCurrentSubscriberContObjects() {
+	public List<ContObject> getSubscriberContObjects() {
 		return contObjectService.selectSubscriberContObjects(getSubscriberId());
 	}
 
