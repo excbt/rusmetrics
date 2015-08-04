@@ -4,12 +4,15 @@ import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
 import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
 
 public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
-	GREEN, YELLOW, ORANGE, RED;
+	GREEN(100), YELLOW(80), ORANGE(50), RED(0);
 
 	private final String keyname;
 
-	private ContEventLevelColorKey() {
+	private final int colorRank;
+	
+	private ContEventLevelColorKey(int colorRank) {
 		this.keyname = this.name().toUpperCase();
+		this.colorRank = colorRank;
 	}
 
 	@Override
@@ -52,6 +55,10 @@ public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
 	@Override
 	public String getStatusColor() {
 		return this.name();
+	}
+
+	public int getColorRank() {
+		return colorRank;
 	}
 
 }

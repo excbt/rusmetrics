@@ -9,7 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 
 public class MonitorContEventNotificationStatus implements Serializable,
-		StatusColorObject {
+		StatusColorObject, ContObjectHolder {
 
 	/**
 	 * 
@@ -30,6 +30,7 @@ public class MonitorContEventNotificationStatus implements Serializable,
 		this.contObject = ContObjectShort.newInstance(contObject);
 	}
 
+	@Override
 	public ContObject getContObject() {
 		return contObject;
 	}

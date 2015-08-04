@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.security;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
-import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
@@ -34,7 +34,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
-	
+
 	@Autowired
 	private SystemUserService systemUserService;
 
@@ -49,7 +49,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 			throws AuthenticationException {
 
 		logger.info("UserAuthenticationProvider.authenticate");
-		
+
 		String name = authentication.getName();
 		String password = authentication.getCredentials().toString();
 		List<SubscrUser> subscrUsers = subscriberService
@@ -58,19 +58,18 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		if (subscrUsers.size() > 1) {
 			return null;
 		}
-		
+
 		if (subscrUsers.size() == 0) {
 			return checkSystemUser(authentication);
 		}
 
 		SubscrUser sUser = subscrUsers.get(0);
 
-		if (!passwordService.passwordEncoder().matches(password, sUser.getPassword())) {
+		if (!passwordService.passwordEncoder().matches(password,
+				sUser.getPassword())) {
 			return null;
 		}
 
-		logger.info("Login Subscr User: {}", sUser.getUserName());
-		
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
 		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser
@@ -79,17 +78,18 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		for (SubscrRole sr : roles) {
 			String roleName = sr.getRoleName();
 			grantedAuths.add(new SimpleGrantedAuthority(roleName));
-			logger.debug("Subscr User Role: {}", roleName);
 		}
 
-		AuditUserPrincipal auditUserPrincipal = new AuditUserPrincipal(sUser);
-		
-		Authentication auth = new UsernamePasswordAuthenticationToken(auditUserPrincipal,
-				password, grantedAuths);
-		return auth;
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
+				sUser, password, grantedAuths);
 
+		return buildAuthenticationToken(subscriberUserDetails, password,
+				grantedAuths);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
@@ -104,31 +104,59 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		String userName = authentication.getName();
 		String password = authentication.getCredentials().toString();
 
-		SystemUser systemUser = systemUserService.findByUsername(userName);
-		if (systemUser == null) {
+		SystemUser sUser = systemUserService.findByUsername(userName);
+		if (sUser == null
+				|| !passwordService.passwordEncoder().matches(password,
+						sUser.getPassword())) {
 			return null;
 		}
+		List<GrantedAuthority> grantedAuths = makeAdminAuths();
 
-		if (!passwordService.passwordEncoder().matches(password, systemUser.getPassword())) {
-			return null;
-		}
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
+				sUser, password, grantedAuths);
 
+		return buildAuthenticationToken(subscriberUserDetails, password,
+				grantedAuths);
+	}
+
+	/**
+	 * 
+	 * @param subscriberUserDetails
+	 * @param password
+	 * @param grantedAuths
+	 * @return
+	 */
+	private UsernamePasswordAuthenticationToken buildAuthenticationToken(
+			SubscriberUserDetails subscriberUserDetails, Object password,
+			Collection<? extends GrantedAuthority> grantedAuths) {
+
+		logger.info(
+				"Login {}: {} ",
+				subscriberUserDetails.is_system() ? "SystemUser" : "SubscrUser",
+				subscriberUserDetails.getUsername());
+
+		grantedAuths.forEach((i) -> {
+			logger.debug("User {} Granted Authority:",
+					subscriberUserDetails.getUsername(), i.getAuthority());
+		});
+
+		return new UsernamePasswordAuthenticationToken(subscriberUserDetails,
+				password, grantedAuths);
+
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private List<GrantedAuthority> makeAdminAuths() {
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.ROLE_SUBSCR_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.ROLE_SUBSCR_USER));
-
-		AuditUserPrincipal auditUserPrincipal = new AuditUserPrincipal(systemUser);
-		
-		Authentication auth = new UsernamePasswordAuthenticationToken(auditUserPrincipal,
-				password, grantedAuths);
-		
-		logger.debug("LOGIN as a SystemUser. Authentication complete. userName:{}", userName);
-		
-		return auth;
-
+		return grantedAuths;
 	}
 
 }

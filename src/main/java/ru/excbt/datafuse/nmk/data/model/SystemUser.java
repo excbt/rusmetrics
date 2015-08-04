@@ -9,10 +9,11 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
 @Entity
 @Table(name="system_user")
-public class SystemUser extends AbstractAuditableModel {
+public class SystemUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**
 	 * 
@@ -38,6 +39,7 @@ public class SystemUser extends AbstractAuditableModel {
 	@JoinColumn(name="subscriber_id")
 	private Subscriber subscriber; 
     
+	@Override
 	public Subscriber getSubscriber() {
 		return subscriber;
 	}

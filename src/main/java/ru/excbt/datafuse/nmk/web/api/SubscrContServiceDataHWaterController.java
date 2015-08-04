@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterSummary;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
@@ -43,6 +44,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.service.ContObjectHWaterDeltaService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
@@ -63,10 +65,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataController extends SubscrApiController {
+public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContServiceDataController.class);
+			.getLogger(SubscrContServiceDataHWaterController.class);
 
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
@@ -91,6 +93,9 @@ public class SubscrContServiceDataController extends SubscrApiController {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
+
+	@Autowired
+	private ContObjectHWaterDeltaService contObjectHWaterDeltaService;
 
 	/**
 	 * 
@@ -677,8 +682,8 @@ public class SubscrContServiceDataController extends SubscrApiController {
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
-	 * @param fromDateStr
-	 * @param toDateStr
+	 * @param dateFromStr
+	 * @param dateToStr
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
@@ -686,8 +691,8 @@ public class SubscrContServiceDataController extends SubscrApiController {
 			@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId,
 			@PathVariable("timeDetailType") String timeDetailType,
-			@RequestParam("beginDate") String fromDateStr,
-			@RequestParam("endDate") String toDateStr) {
+			@RequestParam("beginDate") String dateFromStr,
+			@RequestParam("endDate") String dateToStr) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
@@ -695,11 +700,11 @@ public class SubscrContServiceDataController extends SubscrApiController {
 
 		checkNotNull(timeDetailType);
 		checkNotNull(contZPointId);
-		checkNotNull(fromDateStr);
-		checkNotNull(toDateStr);
+		checkNotNull(dateFromStr);
+		checkNotNull(dateToStr);
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+				dateFromStr, dateToStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -708,7 +713,7 @@ public class SubscrContServiceDataController extends SubscrApiController {
 					.badRequest()
 					.body(String
 							.format("Invalid parameters fromDateStr:{} and toDateStr:{}",
-									fromDateStr, toDateStr));
+									dateFromStr, dateToStr));
 		}
 
 		if (datePeriodParser.isOk()
@@ -717,7 +722,7 @@ public class SubscrContServiceDataController extends SubscrApiController {
 					.badRequest()
 					.body(String
 							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+									dateFromStr, dateToStr));
 		}
 
 		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
@@ -758,6 +763,57 @@ public class SubscrContServiceDataController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param dateFromStr
+	 * @param toDateStr
+	 * @param serviceType
+	 * @param timeDetailType
+	 * @return
+	 */
+	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
+	public ResponseEntity<?> getContObjectsServiceTypeInfo(
+			@RequestParam("dateFrom") String dateFromStr,
+			@RequestParam("dateTo") String dateToStr) {
+
+		checkNotNull(dateFromStr);
+		checkNotNull(dateToStr);
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				dateFromStr, dateToStr);
+
+		checkNotNull(datePeriodParser);
+
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters dateFrom:{} and dateTo:{}",
+							dateFromStr, dateToStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
+									dateFromStr, dateToStr));
+		}
+
+		// List<ContObjectServiceTypeInfo> resultList =
+		// contObjectHWaterDeltaService
+		// .getContObjectServiceTypeInfoList(
+		// currentSubscriberService.getSubscriberId(),
+		// datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
+				.getCityContObjectsSeriveTypeInfos(
+						currentSubscriberService.getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+		return responseOK(resultList);
 	}
 
 }
