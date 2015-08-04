@@ -65,10 +65,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataController extends SubscrApiController {
+public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContServiceDataController.class);
+			.getLogger(SubscrContServiceDataHWaterController.class);
 
 	public static final String HEAT = "heat";
 	public static final String HW = "hw";
