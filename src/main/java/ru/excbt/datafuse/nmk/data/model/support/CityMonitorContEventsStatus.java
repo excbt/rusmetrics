@@ -2,12 +2,15 @@ package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "cityFiasUUID", "cityName", "cityGeoPosX", "cityGeoPosY",
-		"monitorEventCount" })
+		"monitorEventCount", "cityContEventLevelColor" })
 public class CityMonitorContEventsStatus extends
 		CityContObjects<MonitorContEventNotificationStatus> implements
 		Serializable {
@@ -54,6 +57,22 @@ public class CityMonitorContEventsStatus extends
 
 	public void setMonitorEventCount(Long monitorEventCount) {
 		this.monitorEventCount = monitorEventCount;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ContEventLevelColorKey getCityContEventLevelColor() {
+
+		Optional<MonitorContEventNotificationStatus> item = cityObjects
+				.stream()
+				.filter((i) -> i.getContEventLevelColorKey() != null)
+				.sorted((x, y) -> Integer.compare(x.getContEventLevelColorKey()
+						.getColorRank(), y.getContEventLevelColorKey()
+						.getColorRank())).findFirst();
+
+		return item.isPresent() ? item.get().getContEventLevelColorKey(): null;
 	}
 
 }
