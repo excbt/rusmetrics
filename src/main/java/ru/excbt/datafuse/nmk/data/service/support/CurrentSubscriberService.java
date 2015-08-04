@@ -43,9 +43,9 @@ public class CurrentSubscriberService {
 	 */
 	public long getSubscriberId() {
 
-		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
-		
-		
+		SubscriberUserDetails userDetails = currentUserService
+				.getCurrentUserDetails();
+
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
 			return mockSubscriberService.getMockSubscriberId();
@@ -65,21 +65,21 @@ public class CurrentSubscriberService {
 		return result;
 
 	}
-	
+
 	/**
 	 * 
 	 * @return
 	 */
 	protected long getSubscriberIdOld() {
-		
+
 		AuditUserPrincipal userPrincipal = currentUserService
 				.getCurrentAuditUserPrincipal();
-		
+
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
 			return mockSubscriberService.getMockSubscriberId();
 		}
-		
+
 		Long result = null;
 		Long subscriberId = userPrincipal.getSubscriberId();
 		if (subscriberId != null) {
@@ -88,11 +88,11 @@ public class CurrentSubscriberService {
 			logger.warn("ATTENTION!!! Property subscriberId of AuditUserPrincipal is null. Using mockUserService");
 			result = mockSubscriberService.getMockSubscriberId();
 		}
-		
+
 		checkNotNull(result, "getSubscriberId() is NULL");
-		
+
 		return result;
-		
+
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class CurrentSubscriberService {
 	 */
 	public Subscriber getSubscriber() {
 
-		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
-		
+		SubscriberUserDetails userDetails = currentUserService
+				.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -123,21 +123,21 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	protected Subscriber getSubscriberOld() {
-		
+
 		AuditUserPrincipal userPrincipal = currentUserService
 				.getCurrentAuditUserPrincipal();
-		
+
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
 			return mockSubscriberService.getMockSubscriber();
 		}
-		
+
 		Long subscriberId = userPrincipal.getSubscriberId();
 		if (subscriberId == null) {
 			logger.warn("ATTENTION!!! Property subscriberId of AuditUserPrincipal is null. Using mockUserService");
 			return mockSubscriberService.getMockSubscriber();
 		}
-		
+
 		return subscriberService.findOne(subscriberId);
 	}
 
@@ -166,7 +166,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<ContObject> getSubscriberContObjects() {
-		return contObjectService.selectSubscriberContObjects(getSubscriberId());
+		return subscriberService.selectSubscriberContObjects(getSubscriberId());
 	}
 
 	/**
@@ -174,7 +174,8 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<Long> getSubscriberContObjectIds() {
-		return subscriberService.selectSubscriberContObjectIds(getSubscriberId());
+		return subscriberService
+				.selectSubscriberContObjectIds(getSubscriberId());
 	}
 
 	/**

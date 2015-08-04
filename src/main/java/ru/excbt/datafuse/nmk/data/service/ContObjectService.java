@@ -129,8 +129,8 @@ public class ContObjectService implements SecuredRoles {
 
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
-		List<ContObject> contObjects = contObjectRepository
-				.selectSubscrContObjects(subscriberId);
+		List<ContObject> contObjects = subscriberService
+				.selectSubscriberContObjects(subscriberId);
 
 		List<ContObject> updateCandidate = contObjects.stream()
 				.filter((i) -> updateCandidateIds.contains(i.getId()))
@@ -149,16 +149,6 @@ public class ContObjectService implements SecuredRoles {
 		return updatedIds;
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(Long subscriberId) {
-		checkNotNull(subscriberId);
-		return contObjectRepository.selectSubscrContObjects(subscriberId);
-	}
 
 	/**
 	 * 

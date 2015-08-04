@@ -42,6 +42,9 @@ public class ContObjectHWaterDeltaService {
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private SubscriberService subscriberService;
+
 	/**
 	 * 
 	 * @param subscriberId
@@ -195,7 +198,7 @@ public class ContObjectHWaterDeltaService {
 		List<ContObject> contObjects = new ArrayList<>();
 
 		if (contObjectId == null) {
-			contObjects.addAll(contObjectService
+			contObjects.addAll(subscriberService
 					.selectSubscriberContObjects(subscriberId));
 		} else {
 			ContObject contObject = contObjectService
