@@ -2,9 +2,11 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,11 +14,14 @@ import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.ServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -24,13 +29,16 @@ import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
 @Service
 @Transactional(readOnly = true)
-public class ContObjectHWaterService {
+public class ContObjectHWaterDeltaService {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ContObjectHWaterService.class);
+			.getLogger(ContObjectHWaterDeltaService.class);
 
 	@PersistenceContext
 	private EntityManager em;
+
+	@Autowired
+	private ContObjectService contObjectService;
 
 	/**
 	 * 
@@ -110,14 +118,14 @@ public class ContObjectHWaterService {
 	 * @param timeDetailType
 	 * @return
 	 */
-	public Map<Long, ServiceTypeInfoART> selectContObjectHWaterDeltaART(
+	public Map<Long, ContServiceTypeInfoART> selectContObjectHWaterDeltaART(
 			Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey) {
 
 		List<Object[]> contObjectHWaterDeltaAgr = selectContObjectHWaterDeltaAgr(
 				subscriberId, ldp, contServiceTypeKey, timeDetailKey);
 
-		Map<Long, ServiceTypeInfoART> resultMap = getServiceTypeARTRecords(
+		Map<Long, ContServiceTypeInfoART> resultMap = getServiceTypeARTRecords(
 				contServiceTypeKey, contObjectHWaterDeltaAgr);
 
 		return resultMap;
@@ -131,7 +139,7 @@ public class ContObjectHWaterService {
 	 * @param timeDetailKey
 	 * @return
 	 */
-	public Map<Long, ServiceTypeInfoART> selectContObjectHWaterDeltaART(
+	public Map<Long, ContServiceTypeInfoART> selectContObjectHWaterDeltaART(
 			Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey,
 			Long contObjectId) {
@@ -140,7 +148,7 @@ public class ContObjectHWaterService {
 				subscriberId, ldp, contServiceTypeKey, timeDetailKey,
 				contObjectId);
 
-		Map<Long, ServiceTypeInfoART> resultMap = getServiceTypeARTRecords(
+		Map<Long, ContServiceTypeInfoART> resultMap = getServiceTypeARTRecords(
 				contServiceTypeKey, contObjectHWaterDeltaAgr);
 
 		return resultMap;
@@ -152,12 +160,13 @@ public class ContObjectHWaterService {
 	 * @param contServiceTypeKey
 	 * @return
 	 */
-	private Map<Long, ServiceTypeInfoART> getServiceTypeARTRecords(
+	private Map<Long, ContServiceTypeInfoART> getServiceTypeARTRecords(
 			ContServiceTypeKey contServiceTypeKey, List<Object[]> dbResult) {
-		Map<Long, ServiceTypeInfoART> resultMap = new HashMap<>();
+		Map<Long, ContServiceTypeInfoART> resultMap = new HashMap<>();
 		for (Object[] row : dbResult) {
 			Long contObjectId = DBRowUtils.asLong(row[0]);
-			ServiceTypeInfoART art = new ServiceTypeInfoART(contServiceTypeKey);
+			ContServiceTypeInfoART art = new ContServiceTypeInfoART(
+					contServiceTypeKey);
 			if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.V_M3) {
 				art.setAbsConsValue(DBRowUtils.asBigDecimal(row[2])); // sum_v_delta
 			} else if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.W_GCAL) {
@@ -168,6 +177,73 @@ public class ContObjectHWaterService {
 		}
 
 		return resultMap;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param ldp
+	 * @param contServiceTypeKey
+	 * @param timeDetailKey
+	 * @return
+	 */
+	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo(
+			Long subscriberId, LocalDatePeriod ldp) {
+
+		List<ContObject> subscriberContObjects = contObjectService
+				.selectSubscriberContObjects(subscriberId);
+
+		subscriberContObjects.stream().collect(
+				Collectors.toMap(ContObject::getId, (i) -> i));
+
+		List<ContObjectServiceTypeInfo> resultList = new ArrayList<>();
+
+		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART(
+				subscriberId, ldp, ContServiceTypeKey.HW, TimeDetailKey.TYPE_1H);
+
+		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART(
+				subscriberId, ldp, ContServiceTypeKey.HEAT,
+				TimeDetailKey.TYPE_1H);
+
+		subscriberContObjects.forEach((contObject) -> {
+			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(
+					contObject);
+
+			{
+				ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject
+						.getId());
+				if (hwART != null) {
+
+//					if (hwART.getAbsConsValue() != null
+//							&& contObject.getHeatArea() != null) {
+//						BigDecimal relValue = hwART.getAbsConsValue().divide(
+//								contObject.getHeatArea());
+//						hwART.setRelConsValue(relValue);
+//					}
+
+					item.addServiceTypeART(hwART);
+				}
+
+			}
+			{
+				ContServiceTypeInfoART heatART = heatContObjectARTs
+						.get(contObject.getId());
+				if (heatART != null) {
+//					if (heatART.getAbsConsValue() != null
+//							&& contObject.getHeatArea() != null) {
+//						BigDecimal relValue = heatART.getAbsConsValue().divide(
+//								contObject.getHeatArea());
+//						heatART.setRelConsValue(relValue);
+//					}
+
+					item.addServiceTypeART(heatART);
+				}
+			}
+
+			resultList.add(item);
+		});
+
+		return resultList;
 	}
 
 }

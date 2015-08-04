@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.ServiceTypeInfoART;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 
@@ -23,7 +23,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 			.getLogger(ContObjectHWaterServiceTest.class);
 
 	@Autowired
-	private ContObjectHWaterService contObjectHWaterService;
+	private ContObjectHWaterDeltaService contObjectHWaterService;
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class ContObjectHWaterServiceTest extends JpaSupportTest {
 	@Test
 	public void testDeltaInfo() throws Exception {
 
-		Map<Long, ServiceTypeInfoART> resultMap =
+		Map<Long, ContServiceTypeInfoART> resultMap =
 
 		contObjectHWaterService.selectContObjectHWaterDeltaART(728L,
 				LocalDatePeriod.lastMonth(), ContServiceTypeKey.HW,

@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +19,7 @@ public class ContObjectServiceTypeInfo implements Serializable {
 
 	private final ContObjectShort contObject;
 
-	private final List<ServiceTypeInfoART> serviceTypeARTs = new ArrayList<>();
+	private final List<ContServiceTypeInfoART> serviceTypeARTs = new ArrayList<>();
 
 	/**
 	 * 
@@ -39,7 +41,7 @@ public class ContObjectServiceTypeInfo implements Serializable {
 	 * 
 	 * @return
 	 */
-	public List<ServiceTypeInfoART> getServiceTypeARTs() {
+	public List<ContServiceTypeInfoART> getServiceTypeARTs() {
 		return Collections.unmodifiableList(serviceTypeARTs);
 	}
 
@@ -48,10 +50,19 @@ public class ContObjectServiceTypeInfo implements Serializable {
 	 * @param serviceTypeKeyname
 	 * @return
 	 */
-	public ServiceTypeInfoART addServiceTypeART(String serviceTypeKeyname) {
-		ServiceTypeInfoART item = new ServiceTypeInfoART(
+	public ContServiceTypeInfoART addServiceTypeART(String serviceTypeKeyname) {
+		ContServiceTypeInfoART item = new ContServiceTypeInfoART(
 				ContServiceTypeKey.searchKeyname(serviceTypeKeyname));
 		serviceTypeARTs.add(item);
 		return item;
+	}
+
+	/**
+	 * 
+	 * @param item
+	 */
+	public void addServiceTypeART(ContServiceTypeInfoART item) {
+		checkNotNull(item);
+		serviceTypeARTs.add(item);
 	}
 }
