@@ -24,7 +24,6 @@ var app = angular
       ,'infinite-scroll'
       ,'angularFileUpload'
       ,'leaflet-directive'
-      ,'ng-context-menu'
   ]);
 
 //routing config
