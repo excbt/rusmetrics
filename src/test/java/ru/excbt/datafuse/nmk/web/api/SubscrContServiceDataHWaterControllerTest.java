@@ -192,4 +192,19 @@ public class SubscrContServiceDataHWaterControllerTest extends
 		resultAction.andExpect(status().is2xxSuccessful());
 
 	}
+
+	@Test
+	public void testContObjectServiceTypeInfo() throws Exception {
+
+		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
+
+		ResultActions resultAction = mockMvc.perform(get(urlStr)
+				.contentType(MediaType.APPLICATION_JSON)
+				.param("dateFrom", "2015-07-01").param("dateTo", "2015-07-31")
+				.with(testSecurityContext()));
+
+		resultAction.andDo(MockMvcResultHandlers.print()).andExpect(
+				status().is2xxSuccessful());
+	}
+
 }

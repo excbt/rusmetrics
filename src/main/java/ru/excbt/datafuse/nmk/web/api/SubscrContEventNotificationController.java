@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventCityStatus;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -374,7 +374,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjectsCityStatusCollapse(
+	public ResponseEntity<?> notificationsCityContObjectsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
@@ -393,7 +393,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 									fromDateStr, toDateStr));
 		}
 
-		List<MonitorContEventCityStatus> result = subscrContEventNotifiicationService
+		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
 				.selectMonitoryContObjectCityStatus(
 						currentSubscriberService.getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),

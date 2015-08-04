@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +41,9 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventCityStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
@@ -1041,42 +1041,19 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(readOnly = true)
-	public List<MonitorContEventCityStatus> selectMonitoryContObjectCityStatus(
+	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(
 			final Long subscriberId, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberId, datePeriod, noGreenColor);
 
-		final Map<UUID, MonitorContEventCityStatus> cityStatusMap = new HashMap<>();
-
-		resultObjects
-				.stream()
-				.filter((i) -> i.getContObject().getContObjectFias() != null)
-				.forEach(
-						(i) -> {
-							UUID cityUUID = i.getContObject()
-									.getContObjectFias().getCityFiasUUID();
-							MonitorContEventCityStatus cityStatus = cityStatusMap
-									.get(cityUUID);
-							if (cityStatus == null) {
-								cityStatus = new MonitorContEventCityStatus(
-										cityUUID);
-								if (cityStatusMap.putIfAbsent(cityUUID,
-										cityStatus) != null) {
-									throw new IllegalStateException(
-											"cityStatusMap error collapse");
-								}
-							}
-							cityStatus.getContEventNotificationStatuses()
-									.add(i);
-						});
+		List<CityMonitorContEventsStatus> result = CityContObjects
+				.makeCityContObjects(resultObjects,
+						CityMonitorContEventsStatus.FACTORY_INSTANCE);
 
 		Map<UUID, Long> cityEventCount = contEventMonitorService
 				.selectCityContObjectMonitorEventCount(subscriberId);
-
-		List<MonitorContEventCityStatus> result = new ArrayList<>(
-				cityStatusMap.values());
 
 		result.forEach((i) -> {
 			Long cnt = cityEventCount.get(i.getCityFiasUUID());
