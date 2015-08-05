@@ -110,7 +110,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 						sUser.getPassword())) {
 			return null;
 		}
-		List<GrantedAuthority> grantedAuths = makeAdminAuths();
+		List<GrantedAuthority> grantedAuths = AdminUtils.makeAdminAuths();
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
 				sUser, password, grantedAuths);
@@ -145,18 +145,5 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	private List<GrantedAuthority> makeAdminAuths() {
-		List<GrantedAuthority> grantedAuths = new ArrayList<>();
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_SUBSCR_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_SUBSCR_USER));
-		return grantedAuths;
-	}
 
 }

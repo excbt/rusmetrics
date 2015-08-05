@@ -38,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
+import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
@@ -50,7 +51,8 @@ import com.jayway.jsonpath.JsonPath;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class })
+@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class,
+		LocalSecurityConfig.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
