@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +24,9 @@ import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 @Service
 public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SAMLSubscriberUserDetailsService.class);
+
 	public static final String DUMMY_PASSWORD = "DUMMY_PASSWORD";
 
 	@Autowired
@@ -38,8 +43,13 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 			throws UsernameNotFoundException {
 
 		String username = credential.getNameID().getValue();
+		logger.debug("Starting processing SubscriberUserDetails for {}",
+				username);
 
 		SubscriberUserDetails subscriberUserDetails = checkSubscrUser(username);
+
+		logger.debug("subscriberUserDetails : {}",
+				subscriberUserDetails == null ? "INVALID" : "VALID");
 
 		return subscriberUserDetails;
 	}

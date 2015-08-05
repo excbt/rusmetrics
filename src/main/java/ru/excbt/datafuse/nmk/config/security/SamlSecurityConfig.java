@@ -41,6 +41,7 @@ import org.springframework.security.saml.key.KeyManager;
 import org.springframework.security.saml.log.SAMLDefaultLogger;
 import org.springframework.security.saml.metadata.CachingMetadataManager;
 import org.springframework.security.saml.metadata.ExtendedMetadata;
+import org.springframework.security.saml.metadata.ExtendedMetadataDelegate;
 import org.springframework.security.saml.metadata.MetadataDisplayFilter;
 import org.springframework.security.saml.metadata.MetadataGenerator;
 import org.springframework.security.saml.metadata.MetadataGeneratorFilter;
@@ -277,9 +278,8 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				"/saml/logout/**"), samlLogoutFilter()));
 		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
 				"/saml/metadata/**"), metadataDisplayFilter()));
-		// chains.add(new DefaultSecurityFilterChain(new
-		// AntPathRequestMatcher("/saml/SSO/**"),
-		// samlWebSSOProcessingFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
+				"/saml/SSO/**"), samlWebSSOProcessingFilter()));
 		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
 				"/saml/SSOHoK/**"), samlWebSSOHoKProcessingFilter()));
 		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
@@ -293,12 +293,12 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SAMLDiscovery samlIDPDiscovery() {
 		SAMLDiscovery idpDiscovery = new SAMLDiscovery();
-		idpDiscovery.setIdpSelectionPath("/saml/idpSelection");
+		// idpDiscovery.setIdpSelectionPath("/saml/idpSelection");
 		return idpDiscovery;
 	}
 
 	@Bean(name = "idp-ssocircle")
-	public HTTPMetadataProvider httpMetadataProvider()
+	public ExtendedMetadataDelegate httpMetadataProvider()
 			throws MetadataProviderException {
 
 		@SuppressWarnings("deprecation")
@@ -306,7 +306,13 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				"http://nmk-1.local.excbt.ru:8080/openam/saml2/jsp/exportmetadata.jsp",
 				5000);
 		httpMetadataProvider.setParserPool(parserPool());
-		return httpMetadataProvider;
+
+		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(
+				httpMetadataProvider, extendedMetadata());
+		extendedMetadataDelegate.setMetadataTrustCheck(false);
+		extendedMetadataDelegate.setMetadataRequireSignature(false);
+
+		return extendedMetadataDelegate;
 	}
 
 	@Bean(name = "metadata")
@@ -327,10 +333,10 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		DefaultResourceLoader loader = new DefaultResourceLoader();
 		Resource storeFile = loader
 				.getResource("classpath:security/samlKeystore.jks");
-		String storePass = "nalle123";
+		String storePass = "cUtlXNJRoSm28xBgaJmy";
 		Map<String, String> passwords = new HashMap<String, String>();
-		passwords.put("apollo", "nalle123");
-		String defaultKey = "apollo";
+		passwords.put("nmk-key", "Pwy2ytv10NSTTAijZ2wy");
+		String defaultKey = "nmk-key";
 		return new JKSKeyManager(storeFile, storePass, passwords, defaultKey);
 	}
 
@@ -427,8 +433,10 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public ExtendedMetadata extendedMetadata() {
 		ExtendedMetadata extendedMetadata = new ExtendedMetadata();
-		extendedMetadata.setIdpDiscoveryEnabled(false);
-		extendedMetadata.setSignMetadata(true);
+		extendedMetadata.setIdpDiscoveryEnabled(true);
+		// extendedMetadata.setSignMetadata(false);
+		// extendedMetadata.setAlias("nmk-p");
+		// extendedMetadata.setSigningKey("nmk-key");
 		return extendedMetadata;
 	}
 
@@ -436,7 +444,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
-		metadataGenerator.setEntityId("nmk-protal");
+		metadataGenerator.setEntityId("nmk-p");
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager());
