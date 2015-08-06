@@ -62,7 +62,9 @@
 
 
       <div class="navbar-fixed-bottom row-fluid nmc-main-footer" >
-			<p class="muted credit pull-right"><a class="btn btn-default btn-xs" href="./saml/login" role="button">SSO</a></p>
+			<p class="muted credit pull-right"><a class="btn btn-default btn-xs" href="./saml/login" role="button">SSO</a>
+			<a class="btn btn-default btn-xs" href="./saml/logout" role="button">o</a>
+			</p>
       </div>
 
 	<script
