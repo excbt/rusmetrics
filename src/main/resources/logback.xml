@@ -45,6 +45,7 @@
 	
 	<logger name="org.springframework.web" level="trace" />
 
+	<logger name="org.springframework.security.saml" level="info" />
 
 	<root level="info">
 		<appender-ref ref="console" />

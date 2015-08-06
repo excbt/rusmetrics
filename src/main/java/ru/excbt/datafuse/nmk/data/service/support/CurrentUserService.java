@@ -83,6 +83,7 @@ public class CurrentUserService {
 	public SubscriberUserDetails getCurrentUserDetails() {
 		Authentication auth = getContextAuth();
 		if (auth == null) {
+			logger.warn("auth is null");
 			return null;
 		}
 
@@ -91,7 +92,7 @@ public class CurrentUserService {
 			result = (SubscriberUserDetails) auth.getPrincipal();
 		} else {
 			logger.error(
-					"Proncipal is not of type SubscriberUserDetails. Actual type: {}",
+					"Principal is not of type SubscriberUserDetails. Actual type: {}",
 					auth.getPrincipal().getClass().getName());
 			logger.error("Token Principal: {}", auth.getPrincipal().toString());
 		}

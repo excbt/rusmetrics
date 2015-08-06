@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.http.MediaType;
@@ -18,14 +19,13 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
-import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
 import ru.excbt.datafuse.nmk.web.interceptor.LoginInterceptor;
 
 @Configuration
 @EnableWebMvc
 @EnableSpringDataWebSupport
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" })
-@Import({ PropertyConfig.class, WebSecurityConfig.class })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk" }, excludeFilters = { @ComponentScan.Filter(type = FilterType.REGEX, pattern = "ru.excbt.datafuse.nmk.config.*") })
+@Import({ PropertyConfig.class})
 public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Autowired
