@@ -6,5 +6,9 @@
     <meta name="author" content="Vladimir Schafer" />
     <link rel="icon" type="image/png" href="<c:url value="/devTools/images/favicon.png"/>"/>
     <link rel="stylesheet" type="text/css" href="<c:url value="/devTools/css/style.css"/>" media="screen" />
+	<link rel="stylesheet"
+		href="<c:url value="/bower_components/bootstrap/dist/css/bootstrap.css"/>" />
+	<link rel="stylesheet" href="<c:url value="/resources/styles/main.css"/>" media="screen">
+    
     <title>NMK portal</title>
 </head>
