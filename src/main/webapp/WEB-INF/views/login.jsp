@@ -54,12 +54,16 @@
 		<div class="container">
 			<div class="text-left">
 				<p>
-<!-- 					<b>LOGO</b> -->
+					
 				</p>
 			</div>
 		</div>
 	</div>
 
+
+      <div class="navbar-fixed-bottom row-fluid nmc-main-footer" >
+			<p class="muted credit pull-right"><a class="btn btn-default btn-xs" href="./saml/login" role="button">SSO</a></p>
+      </div>
 
 	<script
 		src="bower_components/jquery/dist/jquery.js"></script>
