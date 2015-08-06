@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.opensaml.saml2.core.NameIDType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +42,17 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 	public Object loadUserBySAML(SAMLCredential credential)
 			throws UsernameNotFoundException {
 
-		String username = credential.getNameID().getValue();
+		String attrUID = credential.getAttributeAsString("uid");
+		String attrUserId = credential.getAttributeAsString("userId");
+
+		logger.info("attr {}: {}", "uid", attrUID == null ? "NULL" : attrUID);
+		logger.info("attr {}: {}", "attrUserId", attrUserId == null ? "NULL" : attrUserId);
+		
+		
+		String username = attrUID;
 		logger.debug("Starting processing SubscriberUserDetails for {}",
 				username);
 
-		logger.info("attr {}: {}", NameIDType.NAME_QUALIFIER_ATTRIB_NAME,
-				credential.getAttribute(NameIDType.NAME_QUALIFIER_ATTRIB_NAME));
 
 		SubscriberUserDetails subscriberUserDetails = checkSubscrUser(username);
 
