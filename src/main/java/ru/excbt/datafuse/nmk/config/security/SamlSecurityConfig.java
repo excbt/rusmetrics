@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.velocity.app.VelocityEngine;
+import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
@@ -53,7 +54,6 @@ import org.springframework.security.saml.processor.HTTPRedirectDeflateBinding;
 import org.springframework.security.saml.processor.HTTPSOAP11Binding;
 import org.springframework.security.saml.processor.SAMLBinding;
 import org.springframework.security.saml.processor.SAMLProcessorImpl;
-import org.springframework.security.saml.trust.MetadataCredentialResolver;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.saml.websso.ArtifactResolutionProfile;
 import org.springframework.security.saml.websso.ArtifactResolutionProfileImpl;
@@ -136,10 +136,11 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public SAMLContextProviderImpl contextProvider()
 			throws MetadataProviderException {
 		SAMLContextProviderImpl sAMLContextProviderImpl = new SAMLContextProviderImpl();
-		MetadataCredentialResolver metadataCredentialResolver = new MetadataCredentialResolver(
-				metadata(), keyManager());
-		metadataCredentialResolver.setUseXmlMetadata(false);
-		sAMLContextProviderImpl.setMetadataResolver(metadataCredentialResolver);
+		// MetadataCredentialResolver metadataCredentialResolver = new
+		// MetadataCredentialResolver(
+		// metadata(), keyManager());
+		// metadataCredentialResolver.setUseXmlMetadata(false);
+		// sAMLContextProviderImpl.setMetadataResolver(metadataCredentialResolver);
 		return sAMLContextProviderImpl;
 	}
 
@@ -250,6 +251,9 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public WebSSOProfileOptions defaultWebSSOProfileOptions() {
 		WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
 		webSSOProfileOptions.setIncludeScoping(false);
+		// TODO
+		// webSSOProfileOptions.setNameID(NameIDType.TRANSIENT);
+		webSSOProfileOptions.setNameID(NameIDType.EMAIL);
 		return webSSOProfileOptions;
 	}
 
@@ -388,7 +392,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public SimpleUrlAuthenticationFailureHandler authenticationFailureHandler() {
 		SimpleUrlAuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 		failureHandler.setUseForward(true);
-		failureHandler.setDefaultFailureUrl("/error");
+		failureHandler.setDefaultFailureUrl("/devTools/error.jsp");
 		return failureHandler;
 	}
 
@@ -488,9 +492,17 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		// данным
 
 		http.authorizeRequests().antMatchers("/").permitAll()
+				.antMatchers("/devTools/**").permitAll()
+				.antMatchers("/index.html").permitAll().antMatchers("/index")
+				.permitAll().antMatchers("/error").permitAll()
+				.antMatchers("/login").permitAll().antMatchers("/saml/**")
+				.permitAll();
+
+		http.authorizeRequests().antMatchers("/").permitAll()
 				.antMatchers("/WEB-INF/**").denyAll().antMatchers("/app/**")
 				.authenticated().antMatchers("/api/**").permitAll()
 				.antMatchers("/resources/**").permitAll()
+
 				.antMatchers("/bower_components/**").permitAll()
 				.antMatchers("/vendor_components/**").permitAll().and();
 
@@ -499,6 +511,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				.loginPage("/login")
 				// указываем action с формы логина
 				.loginProcessingUrl("/j_spring_security_check")
+
 				// указываем URL при неудачном логине
 				.failureUrl("/login?error")
 				// Указываем параметры логина и пароля с формы логина

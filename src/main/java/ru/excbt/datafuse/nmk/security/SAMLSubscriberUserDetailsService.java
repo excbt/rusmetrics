@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.opensaml.saml2.core.NameIDType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +47,17 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 		logger.debug("Starting processing SubscriberUserDetails for {}",
 				username);
 
+		logger.info("attr {}: {}", NameIDType.NAME_QUALIFIER_ATTRIB_NAME,
+				credential.getAttribute(NameIDType.NAME_QUALIFIER_ATTRIB_NAME));
+
 		SubscriberUserDetails subscriberUserDetails = checkSubscrUser(username);
 
-		logger.debug("subscriberUserDetails : {}",
-				subscriberUserDetails == null ? "INVALID" : "VALID");
+		if (subscriberUserDetails == null) {
+			logger.error("subscriberUserDetails : INVALID");
+		} else {
+			logger.debug("subscriberUserDetails : {}",
+					subscriberUserDetails.toString());
+		}
 
 		return subscriberUserDetails;
 	}
