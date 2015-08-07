@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-07-16T13:41:23 -->
+<!-- 2015-08-06T19:38:45 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_history_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -61,12 +61,18 @@
 			<![CDATA[select * from get_data_consumption_history_report($P{cont_ids}, $P{org_id}, $P{begin_date}, $P{end_date}, $P{rep_detail_type}, '1h', $P{sys1}, $P{sys2})]]>
 		</queryString>
 		<field name="d_date" class="java.sql.Timestamp"/>
-		<field name="sum_h1" class="java.math.BigDecimal"/>
-		<field name="sum_m1" class="java.math.BigDecimal"/>
-		<field name="sum_h2" class="java.math.BigDecimal"/>
-		<field name="sum_m2" class="java.math.BigDecimal"/>
-		<field name="etalon_h1" class="java.math.BigDecimal"/>
-		<field name="etalon_h2" class="java.math.BigDecimal"/>
+		<field name="sum_h1" class="java.lang.Double"/>
+		<field name="sum_m1" class="java.lang.Double"/>
+		<field name="sum_h2" class="java.lang.Double"/>
+		<field name="sum_m2" class="java.lang.Double"/>
+		<field name="etalon_h1" class="java.lang.Double"/>
+		<field name="etalon_h2" class="java.lang.Double"/>
+		<variable name="delta_etalon_h1" class="java.lang.Double">
+			<variableExpression><![CDATA[$F{sum_h1} - $F{etalon_h1}]]></variableExpression>
+		</variable>
+		<variable name="delta_etalon_h2" class="java.lang.Double">
+			<variableExpression><![CDATA[$F{sum_h2} - $F{etalon_h2}]]></variableExpression>
+		</variable>
 	</subDataset>
 	<parameter name="begin_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
@@ -78,10 +84,10 @@
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="cont_ids" class="java.lang.String">
-		<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("{20118663,20118664,20118665}")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="sys1" class="java.lang.String">
 		<defaultValueExpression><![CDATA["heat"]]></defaultValueExpression>
@@ -138,7 +144,7 @@ where
 	<summary>
 		<band height="333" splitType="Stretch">
 			<componentElement>
-				<reportElement x="40" y="0" width="500" height="70" uuid="8fbfed6f-47cb-4a4f-a67b-afccb7e486b6"/>
+				<reportElement x="0" y="0" width="550" height="70" uuid="8fbfed6f-47cb-4a4f-a67b-afccb7e486b6"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="dt1" uuid="49d44343-db60-41f1-a256-e1c54adb58db">
 						<datasetParameter name="begin_date">
@@ -209,18 +215,18 @@ where
 									<bottomPen lineWidth="1.0"/>
 									<rightPen lineWidth="1.0"/>
 								</box>
-								<textField pattern="dd.MM.yy">
+								<textField pattern="">
 									<reportElement x="0" y="0" width="60" height="15" uuid="f49ccafb-6f55-430f-bffe-b8f4bea28217"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic"/>
 									</textElement>
-									<textFieldExpression><![CDATA[$F{d_date}]]></textFieldExpression>
+									<textFieldExpression><![CDATA[($P{rep_detail_type}.equals("month") ? new SimpleDateFormat("MM.yy").format($F{d_date}) : new SimpleDateFormat("dd.MM.yy").format($F{d_date}))]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
 					</jr:columnGroup>
-					<jr:columnGroup width="180" uuid="d9421970-72b5-4fcd-881d-fee8ee6d6bac">
-						<jr:columnGroup width="180" uuid="99cd27ce-714b-4114-914e-727098ff8dbc">
+					<jr:columnGroup width="240" uuid="d9421970-72b5-4fcd-881d-fee8ee6d6bac">
+						<jr:columnGroup width="240" uuid="99cd27ce-714b-4114-914e-727098ff8dbc">
 							<jr:columnHeader height="30">
 								<box>
 									<topPen lineWidth="1.0"/>
@@ -229,126 +235,165 @@ where
 									<rightPen lineWidth="1.0"/>
 								</box>
 								<textField>
-									<reportElement x="0" y="0" width="180" height="30" uuid="d8d88bfc-085f-4b75-8a84-a1c9938cb25f"/>
+									<reportElement x="0" y="0" width="240" height="30" uuid="d8d88bfc-085f-4b75-8a84-a1c9938cb25f"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic"/>
 									</textElement>
 									<textFieldExpression><![CDATA["Теплосистема 1. " + $P{s_name1}]]></textFieldExpression>
 								</textField>
 							</jr:columnHeader>
-							<jr:columnGroup width="180" uuid="702a9323-42fa-49ff-a130-9e336fb0580c">
-								<jr:column width="60" uuid="6e2a87b9-dd5b-40d1-85de-88a6d1b951fd">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.height" value="px"/>
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="a7edd017-7879-44ad-98b1-68b2914a8a1f"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[Гкал]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="70b8b2bb-088c-4558-b6d7-d112ee688fb8"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{sum_h1}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
-								<jr:column width="60" uuid="47a1d459-0b1f-4df9-b305-ab7c850e58e5">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="dc0518a2-a1ce-4df5-a4bd-aa2d967205e5"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[м2]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="d3cbbedd-4821-4480-82f8-1ffd8f0b40fb"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{sum_m1}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
-								<jr:column width="60" uuid="c172f68e-fa01-4d5f-8af4-e3a99107598b">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="0fc8734a-f0e3-48d6-9a39-46cad1dede7d"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[Гкал эталон]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="ce5485c2-3647-4d99-93bf-e87b8e120aad"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{etalon_h1}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
+							<jr:columnGroup width="240" uuid="702a9323-42fa-49ff-a130-9e336fb0580c">
+								<jr:columnGroup width="240" uuid="78d0b5d0-e1e9-4b60-a65a-9de45e1b33ed">
+									<jr:column width="60" uuid="6e2a87b9-dd5b-40d1-85de-88a6d1b951fd">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.height" value="px"/>
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="a7edd017-7879-44ad-98b1-68b2914a8a1f"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[Гкал]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="70b8b2bb-088c-4558-b6d7-d112ee688fb8"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{sum_h1}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="47a1d459-0b1f-4df9-b305-ab7c850e58e5">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="dc0518a2-a1ce-4df5-a4bd-aa2d967205e5"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[м3]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="d3cbbedd-4821-4480-82f8-1ffd8f0b40fb"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{sum_m1}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="c172f68e-fa01-4d5f-8af4-e3a99107598b">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="0fc8734a-f0e3-48d6-9a39-46cad1dede7d"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[Гкал эталон]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="ce5485c2-3647-4d99-93bf-e87b8e120aad"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{etalon_h1}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="b961e002-d760-46f3-b86d-e03e2ffe1a83">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="b2a781e4-49aa-4191-9b9a-9eff44864556"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[изм. Гкал ]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="c697a5d4-28f0-4fe5-b6e9-4f6b5c978167"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$V{delta_etalon_h1}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+								</jr:columnGroup>
 							</jr:columnGroup>
 						</jr:columnGroup>
 					</jr:columnGroup>
-					<jr:columnGroup width="180" uuid="c74042bb-8038-4aa9-8a6c-9edbd4a03ec3">
-						<jr:columnGroup width="180" uuid="5cfdcf76-4131-447b-b88d-724a5cb7b21c">
+					<jr:columnGroup width="240" uuid="c74042bb-8038-4aa9-8a6c-9edbd4a03ec3">
+						<jr:columnGroup width="240" uuid="5cfdcf76-4131-447b-b88d-724a5cb7b21c">
 							<jr:columnHeader height="30">
 								<box>
 									<topPen lineWidth="1.0"/>
@@ -357,122 +402,162 @@ where
 									<rightPen lineWidth="1.0"/>
 								</box>
 								<textField>
-									<reportElement x="0" y="0" width="180" height="30" uuid="532c0c39-488f-4514-bb98-1ff579886f41"/>
+									<reportElement x="0" y="0" width="240" height="30" uuid="532c0c39-488f-4514-bb98-1ff579886f41"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic"/>
 									</textElement>
 									<textFieldExpression><![CDATA["Теплосистема 2. " + $P{s_name2}]]></textFieldExpression>
 								</textField>
 							</jr:columnHeader>
-							<jr:columnGroup width="180" uuid="58b9b8c6-df26-4cb3-aa65-f3ce23e57bd4">
-								<jr:column width="60" uuid="828f9c52-3fe6-470e-9a89-fc3d3bceba67">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<property name="com.jaspersoft.studio.unit.height" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="3cee0170-ea34-4bec-b792-29cfff312eb4"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[Гкал]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="0ce2a794-9783-4b80-b6ee-6e32482558ef"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{sum_h2}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
-								<jr:column width="60" uuid="fcb2121a-c506-4117-9967-7777c9d921b3">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="34850b4e-df14-4c97-b327-2e7e06f65ab1"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[м2]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="b4cfb9bf-1861-4cf1-ad6f-244d59e6e9f7"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{sum_m2}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
-								<jr:column width="60" uuid="449ad6a8-382d-4e5c-a6b0-e98ea1d83369">
-									<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
-									<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
-									<jr:columnHeader height="15">
-										<property name="com.jaspersoft.studio.unit.width" value="px"/>
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<staticText>
-											<reportElement x="0" y="0" width="60" height="15" uuid="5e50dfb2-2362-49d4-9ce1-7e6d0a62bfcd"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic"/>
-											</textElement>
-											<text><![CDATA[Гкал эталон]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell height="15">
-										<box>
-											<topPen lineWidth="1.0"/>
-											<leftPen lineWidth="1.0"/>
-											<bottomPen lineWidth="1.0"/>
-											<rightPen lineWidth="1.0"/>
-										</box>
-										<textField pattern="#0.000" isBlankWhenNull="true">
-											<reportElement x="0" y="0" width="60" height="15" uuid="2f17e282-f9c7-41d0-84ff-65ffdd333af2"/>
-											<textElement textAlignment="Right" verticalAlignment="Middle">
-												<font fontName="Arial cyrillic" size="9"/>
-												<paragraph rightIndent="2"/>
-											</textElement>
-											<textFieldExpression><![CDATA[$F{etalon_h2}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
+							<jr:columnGroup width="240" uuid="58b9b8c6-df26-4cb3-aa65-f3ce23e57bd4">
+								<jr:columnGroup width="240" uuid="4d340420-c485-466e-828d-46cb7128ef78">
+									<jr:column width="60" uuid="828f9c52-3fe6-470e-9a89-fc3d3bceba67">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<property name="com.jaspersoft.studio.unit.height" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="3cee0170-ea34-4bec-b792-29cfff312eb4"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[Гкал]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="0ce2a794-9783-4b80-b6ee-6e32482558ef"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{sum_h2}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="fcb2121a-c506-4117-9967-7777c9d921b3">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="34850b4e-df14-4c97-b327-2e7e06f65ab1"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[м3]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="b4cfb9bf-1861-4cf1-ad6f-244d59e6e9f7"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{sum_m2}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="449ad6a8-382d-4e5c-a6b0-e98ea1d83369">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+										<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<property name="com.jaspersoft.studio.unit.height" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="5e50dfb2-2362-49d4-9ce1-7e6d0a62bfcd"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[Гкал эталон]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="2f17e282-f9c7-41d0-84ff-65ffdd333af2"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$F{etalon_h2}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+									<jr:column width="60" uuid="96dd775f-34df-4b0c-b349-f7f3674a3195">
+										<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+										<printWhenExpression><![CDATA[$P{show_etalon}]]></printWhenExpression>
+										<jr:columnHeader height="15">
+											<property name="com.jaspersoft.studio.unit.width" value="px"/>
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<staticText>
+												<reportElement x="0" y="0" width="60" height="15" uuid="c228660a-b3df-4125-af3b-db892786becb"/>
+												<textElement textAlignment="Center" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic"/>
+												</textElement>
+												<text><![CDATA[изм. Гкал ]]></text>
+											</staticText>
+										</jr:columnHeader>
+										<jr:detailCell height="15">
+											<box>
+												<topPen lineWidth="1.0"/>
+												<leftPen lineWidth="1.0"/>
+												<bottomPen lineWidth="1.0"/>
+												<rightPen lineWidth="1.0"/>
+											</box>
+											<textField pattern="#0.000" isBlankWhenNull="true">
+												<reportElement x="0" y="0" width="60" height="15" uuid="8c731479-2d57-454f-a72c-ed3111bce54f"/>
+												<textElement textAlignment="Right" verticalAlignment="Middle">
+													<font fontName="Arial cyrillic" size="9"/>
+													<paragraph rightIndent="2"/>
+												</textElement>
+												<textFieldExpression><![CDATA[$V{delta_etalon_h2}]]></textFieldExpression>
+											</textField>
+										</jr:detailCell>
+									</jr:column>
+								</jr:columnGroup>
 							</jr:columnGroup>
 						</jr:columnGroup>
 					</jr:columnGroup>
@@ -480,7 +565,7 @@ where
 			</componentElement>
 			<lineChart>
 				<chart evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="0" y="133" width="560" height="200" uuid="f7ccc5fc-cb69-4abd-a5e0-9500a8913f84">
+					<reportElement positionType="Float" x="0" y="133" width="560" height="200" uuid="3df14c11-78b5-425d-a5b4-43ab6126634f">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -495,7 +580,7 @@ where
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="91a2e373-39e6-4ed0-ba41-1430f16f611d">
+						<datasetRun subDataset="dt1" uuid="1d5c222b-b86e-4beb-9254-93d7e4ed4a44">
 							<datasetParameter name="begin_date">
 								<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -533,12 +618,12 @@ where
 						<valueExpression><![CDATA[$F{sum_h2}]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
-						<seriesExpression><![CDATA["Система 1/м2"]]></seriesExpression>
+						<seriesExpression><![CDATA["Система 1/м3"]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
 						<valueExpression><![CDATA[$F{sum_m1}]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
-						<seriesExpression><![CDATA["Система 2/м2"]]></seriesExpression>
+						<seriesExpression><![CDATA["Система 2/м3"]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
 						<valueExpression><![CDATA[$F{sum_m2}]]></valueExpression>
 					</categorySeries>
