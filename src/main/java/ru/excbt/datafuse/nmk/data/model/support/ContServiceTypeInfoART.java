@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 public class ContServiceTypeInfoART implements Serializable {
 
@@ -58,9 +59,10 @@ public class ContServiceTypeInfoART implements Serializable {
 
 	@Override
 	public String toString() {
-		return "ServiceTypeART [contServiceTypeKey=" + contServiceTypeKey
-				+ ", absConsValue=" + absConsValue + ", tempValue=" + tempValue
-				+ ", getMeasureUnit()=" + getMeasureUnit() + "]";
+		return MoreObjects.toStringHelper(ContServiceTypeInfoART.class)
+				.add("contServiceTypeKey", contServiceTypeKey)
+				.add("absConsValue", absConsValue).add("tempValue", tempValue)
+				.add("getMeasureUnit()", getMeasureUnit()).toString();
 	}
 
 }

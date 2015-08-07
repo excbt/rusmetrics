@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -769,7 +770,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	/**
 	 * 
 	 * @param dateFromStr
-	 * @param toDateStr
+	 * @param dateToStr
 	 * @return
 	 */
 	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
@@ -801,14 +802,8 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 									dateFromStr, dateToStr));
 		}
 
-		// List<ContObjectServiceTypeInfo> resultList =
-		// contObjectHWaterDeltaService
-		// .getContObjectServiceTypeInfoList(
-		// currentSubscriberService.getSubscriberId(),
-		// datePeriodParser.getLocalDatePeriod().buildEndOfDay());
-
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getCityContObjectsSeriveTypeInfoList(getSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return responseOK(resultList);
@@ -822,7 +817,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/{contObjectId}", method = RequestMethod.GET)
-	public ResponseEntity<?> getContObjectsServiceTypeInfoOne(
+	public ResponseEntity<?> getContObjectsServiceTypeInfoContObject(
 			@PathVariable("contObjectId") long contObjectId,
 			@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr) {
@@ -839,20 +834,9 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		checkNotNull(datePeriodParser);
 
-		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters dateFrom:{} and dateTo:{}",
-							dateFromStr, dateToStr));
-		}
-
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
-									dateFromStr, dateToStr));
+		ResponseEntity<?> checkDatePeriodResponse = checkDatePeriodArguments(datePeriodParser);
+		if (checkDatePeriodResponse != null) {
+			return checkDatePeriodResponse;
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
@@ -862,6 +846,49 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null
 				: contObjectServiceTypeInfos.get(0));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param dateFromStr
+	 * @param dateToStr
+	 * @return
+	 */
+	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/city", method = RequestMethod.GET)
+	public ResponseEntity<?> getContObjectsServiceTypeInfoCity(
+			@RequestParam("dateFrom") String dateFromStr,
+			@RequestParam("dateTo") String dateToStr,
+			@RequestParam("cityFias") String cityFiasStr) {
+
+		checkNotNull(dateFromStr);
+		checkNotNull(dateToStr);
+		checkNotNull(cityFiasStr);
+
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
+				dateFromStr, dateToStr);
+
+		checkNotNull(datePeriodParser);
+
+		ResponseEntity<?> checkDatePeriodResponse = checkDatePeriodArguments(datePeriodParser);
+		if (checkDatePeriodResponse != null) {
+			return checkDatePeriodResponse;
+		}
+
+		UUID cityFiasUUID = null;
+		try {
+			cityFiasUUID = UUID.fromString(cityFiasStr);
+		} catch (Exception e) {
+			return responseBadRequest(ApiResult
+					.validationError("cityFias is not valid UUID"));
+		}
+
+		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
+				.getOneCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
+						cityFiasUUID);
+
+		return responseOK(resultList);
 	}
 
 }
