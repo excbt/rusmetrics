@@ -1,26 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-06-21T12:53:36 -->
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2015-07-17T12:51:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
 	<style name="Style1" isDefault="true" hAlign="Left" vAlign="Middle" fontName="Arial cyrillic"/>
 	<parameter name="begin_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,06,02)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="end_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,07,02)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[id subscriber]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="cont_ids" class="java.lang.String" nestedType="Long">
 		<parameterDescription><![CDATA[ids container]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new String("{18811504, 18811505}")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("{20118664, 20118665}")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from 	get_data_cons1_report($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})
-]]>
+		<![CDATA[select * from 	get_data_cons1_report($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 	</queryString>
 	<field name="hw_sum_work_time" class="java.lang.Double"/>
 	<field name="hw_sum_h_delta" class="java.lang.Double"/>
@@ -39,8 +41,7 @@
 		<variableExpression><![CDATA[new java.lang.Double(($P{end_date}.getTime() - $P{begin_date}.getTime()) / (60 * 60 * 1000))]]></variableExpression>
 	</variable>
 	<variable name="Var6" class="java.lang.Double">
-		<variableExpression><![CDATA[($V{sum_hour} > $F{heat_sum_work_time} && $F{heat_sum_work_time} > 0 ? $F{heat_sum_h_delta}/$F{heat_sum_work_time}*($V{sum_hour} - $F{heat_sum_work_time}): 0.0)
-]]></variableExpression>
+		<variableExpression><![CDATA[($V{sum_hour} > $F{heat_sum_work_time} && $F{heat_sum_work_time} > 0 ? $F{heat_sum_h_delta}/$F{heat_sum_work_time}*($V{sum_hour} - $F{heat_sum_work_time}): 0.0)]]></variableExpression>
 	</variable>
 	<variable name="Var7" class="java.lang.Double">
 		<variableExpression><![CDATA[($V{sum_hour} > $F{hw_sum_work_time} && $F{hw_sum_work_time} > 0 ? $F{hw_sum_v_delta}/$F{hw_sum_work_time}*($V{sum_hour} - $F{hw_sum_work_time}): 0.0)]]></variableExpression>

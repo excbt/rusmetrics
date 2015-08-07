@@ -677,14 +677,19 @@ console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/100
             return;
         }
         $scope.getData(1);                              
-    }, false); 
+    }, false);  
         
     //listen window resize
     var wind = angular.element($window);
-    wind.bind('resize', function(){
+    var windowResize = function(){
         $scope.setScoreStyles();
         $scope.$apply();
-    }); 
+    };
+    wind.bind('resize', windowResize); 
+        
+    $scope.$on('$destroy', function() {
+        wind.unbind('resize', windowResize);
+    });        
         
     $scope.saveIndicatorsToFile = function(exForUrl){ 
         var contZPoint = $cookies.contZPoint;
