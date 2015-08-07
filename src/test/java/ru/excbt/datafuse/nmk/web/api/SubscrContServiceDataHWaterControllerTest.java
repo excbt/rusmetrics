@@ -210,6 +210,22 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	}
 
 	@Test
+	public void testOneCityContObjectServiceTypeInfo() throws Exception {
+		
+		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/city");
+		
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.contentType(MediaType.APPLICATION_JSON)
+			.param("dateFrom", "2015-07-01")
+			.param("dateTo", "2015-07-31")
+			.param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f");
+		};
+		
+		testGet(urlStr, requestExtraInitializer);
+		
+	}
+
+	@Test
 	public void testContObjectServiceTypeInfoOne() throws Exception {
 
 		List<Long> ids = currentSubscriberService.getSubscriberContObjectIds();

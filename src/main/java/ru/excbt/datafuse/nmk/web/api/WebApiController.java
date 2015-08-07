@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
@@ -188,4 +189,33 @@ public class WebApiController {
 		return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 * @param datePeriodParser
+	 * @param dateFromStr
+	 * @param dateToStr
+	 * @return
+	 */
+	protected ResponseEntity<?> checkDatePeriodArguments(
+			LocalDatePeriodParser datePeriodParser) {
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity.badRequest().body(
+					String.format(
+							"Invalid parameters dateFrom:{} and dateTo:{}",
+							datePeriodParser.getParserArguments().dateFromStr,
+							datePeriodParser.getParserArguments().dateToStr));
+		}
+
+		if (datePeriodParser.isOk()
+				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity
+					.badRequest()
+					.body(String
+							.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
+									datePeriodParser.getParserArguments().dateFromStr,
+									datePeriodParser.getParserArguments().dateToStr));
+		}
+
+		return null;
+	}
 }
