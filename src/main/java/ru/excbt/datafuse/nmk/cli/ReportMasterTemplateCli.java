@@ -38,6 +38,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		app.autowireBeans();
 		app.showAppStatus();
 		app.loadAllCompiledReportMasterTemplates();
+		app.loadAllRawReportMasterTemplates();
 		app.loadAllJrxmlReportMasterTemplates();
 		app.updateAllCommonReportTemplate();
 
@@ -55,7 +56,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 * @throws IOException
 	 */
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString) throws IOException {
+			String fileResourceString, boolean isCompiled) throws IOException {
 
 		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
 				fileResourceString);
@@ -70,8 +71,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		boolean res = false;
 		res = reportMasterTemplateBodyService.saveReportMasterTemplateBody(
-				templateBody.getId(), fileResourceString,
-				ReportConstants.IS_COMPILED);
+				templateBody.getId(), fileResourceString, isCompiled);
 
 		checkState(res);
 
@@ -83,6 +83,12 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				"Report %s was successfully loaded from fils '%s'",
 				reportTypeKey.name(), fileResourceString));
 		System.out.println();
+	}
+
+	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
+			String fileResourceString) throws IOException {
+		loadReportMasterTemplate(reportTypeKey, fileResourceString,
+				ReportConstants.IS_NOT_COMPILED);
 	}
 
 	/**
@@ -118,6 +124,12 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED);
 	}
 
+	private void loadAllRawReportMasterTemplates() throws IOException {
+		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
+				ReportConstants.Files.COMM_FILE_COMPILED,
+				ReportConstants.IS_NOT_COMPILED);
+	}
+
 	/**
 	 * 
 	 * @throws IOException
@@ -133,6 +145,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 */
 	private void updateAllCommonReportTemplate() {
 		updateAnyCommonReportTemplate(ReportTypeKey.LOG_JOURNAL_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONS_T2_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
