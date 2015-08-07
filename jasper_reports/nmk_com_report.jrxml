@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.0.4.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-06-17T16:33:46 -->
+<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
+<!-- 2015-07-30T15:30:43 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_com_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="ireport.jasperserver.url" value="http://192.168.84.251:8080/jasperserver/"/>
@@ -33,18 +33,23 @@
 	</subDataset>
 	<parameter name="begin_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="end_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2015,06,02)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="cont_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[container id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(20118664)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="par_signature1" class="java.lang.String">
 		<parameterDescription><![CDATA[ФИО ответственного лица]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new String("Иванов Петр Сидорович")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select 
@@ -2004,7 +2009,7 @@ on (heat.data_date = hw.data_date);]]>
 				<text><![CDATA[Интеграторы]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="Style1" x="70" y="210" width="198" height="20" uuid="af726bbe-6c1c-4edd-8c28-47479e1bdfc4">
+				<reportElement style="Style1" positionType="Float" x="70" y="210" width="198" height="20" uuid="af726bbe-6c1c-4edd-8c28-47479e1bdfc4">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>
@@ -2729,7 +2734,7 @@ on (heat.data_date = hw.data_date);]]>
 				</jr:list>
 			</componentElement>
 			<textField>
-				<reportElement style="Style1" x="480" y="210" width="220" height="20" uuid="8989d6c8-4ebf-4da0-b233-847b06402295">
+				<reportElement style="Style1" positionType="Float" x="480" y="210" width="220" height="20" uuid="8989d6c8-4ebf-4da0-b233-847b06402295">
 					<property name="local_mesure_unity" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					<property name="local_mesure_unitheight" value="pixel"/>

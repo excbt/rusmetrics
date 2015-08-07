@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-07-16T13:49:57 -->
+<!-- 2015-08-06T18:48:15 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -124,7 +124,7 @@ order by d_date]]>
 	</subDataset>
 	<parameter name="begin_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,02,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[DATE(2015,01,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="end_date" class="java.util.Date">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
@@ -132,10 +132,10 @@ order by d_date]]>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Long(728)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Long(20160618)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="cont_ids" class="java.lang.String">
-		<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("{20118663, 20118664, 20118665, 20118666, 20118667, 20118668, 20118669, 20118670, 20118671, 20118672}")]]></defaultValueExpression>
 	</parameter>
 	<parameter name="show_chart" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
@@ -158,7 +158,7 @@ where s.id	= $P{org_id}
 				<textElement>
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по удельному потреблению тепла по организациям присодиненным к " + $F{org_name} + " в период " + new SimpleDateFormat("MMMM yyyy").format($P{begin_date}) + "-" + new SimpleDateFormat("MMMM yyyy").format($P{end_date}) + " года"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по удельному потреблению тепла по организациям присодиненным к " + $F{org_name} + " в период с " + new SimpleDateFormat("dd MMMM yyyy").format($P{begin_date}) + " по " + new SimpleDateFormat("dd MMMM yyyy").format($P{end_date}) + " года."]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -316,7 +316,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="4a8ae95f-b26c-4dff-87b7-f1e314cc27d1">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 1 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 0 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -406,7 +406,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="44093494-0421-4a60-991f-f5d8f0a11a03">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 2 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 1 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -497,7 +497,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="a45c5988-2a7b-41b1-9e22-5d5ba4ba6ee1">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 3 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 2 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -586,7 +586,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="51d016c4-6802-4f99-a82f-ebac0b577340">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 4 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 3 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -675,7 +675,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="bb8d1b82-11b0-434c-b1ae-e3e165802981">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 5 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 4 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -765,7 +765,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="caf56162-0479-4937-b949-e8c635fa62cb">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 6 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 5 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -854,7 +854,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="2f7641d4-7207-4ac2-881a-411d595733f5">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 7 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 6 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -943,7 +943,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="b1ad5c80-f781-4c66-be92-d84d0fa550d9">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 8 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 7 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -1032,7 +1032,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="d299bb2b-1fed-47bf-8969-a178a5d9e2b1">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 9 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 8 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -1121,7 +1121,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="bb27c1ce-06ff-49be-bafb-f63c09acd356">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 10 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 9 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -1210,7 +1210,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="1e884056-3f46-4717-8c39-350739931d05">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 11 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 10 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
@@ -1299,7 +1299,7 @@ where s.id	= $P{org_id}
 						</jr:column>
 					</jr:columnGroup>
 					<jr:columnGroup width="120" uuid="4b0a0ff6-af57-419b-9e7b-855a862b0878">
-						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 12 ? true : false)]]></printWhenExpression>
+						<printWhenExpression><![CDATA[(MONTHS($P{begin_date}, $P{end_date}) >= 11 ? true : false)]]></printWhenExpression>
 						<jr:columnHeader height="30">
 							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<box>
