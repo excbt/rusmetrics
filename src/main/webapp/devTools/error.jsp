@@ -10,7 +10,7 @@
 <div id="site-wrapper">
 <%--     <jsp:include page="/WEB-INF/devTools/templates/navigation.jsp"/> --%>
     <div class="main" id="main-two-columns">
-        <div class="left" id="main-content">
+        <div class="left" id="main-content" style="width: 100%">
             <div class="section">
                 <div class="section-content">
                     <div class="post">
@@ -40,6 +40,7 @@
                                 <strong>Make sure to hide error content from your production environments to minimize leakage of useful data to potential
                                 attackers.</strong>
                             <% } %>
+
                         </div>
                     </div>
                     <div class="clearer">&nbsp;</div>
