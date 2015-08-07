@@ -228,4 +228,7 @@ app
 //console.log($rootScope.monitorEnd);         
 //console.log("Date-range-settings monitorDates1");         
     }, false);
+    
+
+    
 });

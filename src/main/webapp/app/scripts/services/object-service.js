@@ -13,6 +13,7 @@ console.log("Object Service. Run.");
         var urlDeviceObjects = '/deviceObjects';
         var urlDeviceMetaData = '/metaVzlet';
         var urlDeviceMetaDataSystemList = '../api/subscr/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
+        var urlCitiesData = "../api/subscr/service/hwater/contObjects/serviceTypeInfo";
         
         var getObjectsUrl = function(){
             return crudTableName;
@@ -43,7 +44,7 @@ console.log("Object Service. Run.");
         var putDeviceMetaData = function(device){                     
             var url = crudTableName+"/"+device.contObject.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
             var result = $http.put(url, device.metaData);
-console.log(result);            
+//console.log(result);            
             return result;
         };
                  
@@ -69,8 +70,19 @@ console.log(result);
     
         
         //get objects
-        var getData = function () {
+        var getObjectsData = function () {
            return $http.get(crudTableName);
+        };
+         
+                 //Get data for the setting period for the city by cityId
+        var getObjectConsumingData = function(settings, objId){
+            var url=urlCitiesData+"/"+objId+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
+            return $http.get(url);
+        };
+                 //get data for the setting period for all cities
+        var getCitiesConsumingData = function(settings){
+            var url=urlCitiesData+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
+            return $http.get(url);
         };
                  
             // sort the object array by the fullname
@@ -86,7 +98,7 @@ console.log(result);
             }); 
         };
 
-       var promise = getData();
+       var promise = getObjectsData();
 //       $interval(function(){
 //           var time = (new Date()).toLocaleString();
 //           document.getElementById('timeOutput').innerHTML="Время: "+time;
@@ -97,6 +109,8 @@ console.log(result);
                     
         return {
 //            getObjects,
+            getCitiesConsumingData,
+            getObjectConsumingData,
             getDevicesByObject,
             getDeviceMetaData,
             getDeviceMetaDataSystemList,
@@ -107,7 +121,7 @@ console.log(result);
             loading,
             promise,
             putDeviceMetaData,
-            sortObjectsByFullName,
+            sortObjectsByFullName
             
         }
     

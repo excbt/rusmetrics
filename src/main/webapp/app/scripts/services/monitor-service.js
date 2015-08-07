@@ -55,7 +55,7 @@ console.log("MonitorSvc. Get cities and objects");
 
             $http.get(targetUrl)
                 .success(function(data){
-                    citiesMonitorSvc = data;
+                    citiesMonitorSvc = [data[3]];
                     objectsMonitorSvc = getObjectsFromCities(data);
 //    console.log(data);            
                     //sort objects by name
@@ -170,7 +170,7 @@ console.log("MonitorSvc. Get objects");
     //                });
                     obj.monitorEvents = tmpMessage;
                     obj.monitorEventsForMap = data;
-console.log(obj);                
+//console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
                     //Display message
     //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);

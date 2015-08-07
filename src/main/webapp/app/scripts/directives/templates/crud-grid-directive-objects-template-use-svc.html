@@ -3,8 +3,22 @@
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
 
-<!-- Common filter-->
 <div class="container-fluid" ng-hide="loading">
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+        <li role="presentation" ><a class="nmc-main-tab-button" href="#/objects/map/" aria-controls="objects_map" role="tab" data-target="#objects_map" data-toggle="tab">Карта</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="monitor">
+      </div>
+    </div>
+</div>    
+ 
 <div class="row nmc-main-workspace-header">
     <div class="col-md-3 noPadding">
         <h2 class="noMargin nmc-h2">Объекты учета
@@ -519,7 +533,7 @@
                             <div class="col-md-12 paddingBottom10 noPadding" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid ">
-                                        <div class="col-xs-12 "><h4>Утечки и прорывы воды</h4></div>
+                                        <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
                                     </div>    
                                     <div class="row-fluid">
                                         <div class="col-xs-12">
@@ -731,7 +745,7 @@
                             <div class="col-md-12 paddingBottom10 noPadding" >      
                                 <div class="row-fluid">
                                     <div class="row-fluid ">
-                                        <div class="col-xs-12 "><h4>Утечки и прорывы воды</h4></div>
+                                        <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
                                     </div>    
                                     <div class="row-fluid">
                                         <div class="col-xs-12">
