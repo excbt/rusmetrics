@@ -259,7 +259,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		webSSOProfileOptions.setIncludeScoping(false);
 		// TODO
 		// webSSOProfileOptions.setNameID(NameIDType.TRANSIENT);
-		//webSSOProfileOptions.setNameID(NameIDType.EMAIL);
+		// webSSOProfileOptions.setNameID(NameIDType.EMAIL);
 		return webSSOProfileOptions;
 	}
 
@@ -530,7 +530,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		// разрешаем делать логаут всем
 				.permitAll()
 				// указываем URL логаута
-				.logoutUrl("/logout")
+				.logoutUrl("/local/logout")
 				// указываем URL при удачном логауте
 				.logoutSuccessUrl("/")
 				// делаем не валидной текущую сессию

@@ -42,7 +42,6 @@ public class SystemInfoController extends WebApiController {
 			return samlAuthMode;
 		}
 
-
 	}
 
 	@Autowired
@@ -93,8 +92,11 @@ public class SystemInfoController extends WebApiController {
 	public ResponseEntity<?> getSamlAuth() {
 		Authentication auth = currentUserService.getAuthentication();
 
+		if (auth == null) {
+			responseOK(new SamlAuthMode(false));
+		}
+
 		return responseOK(new SamlAuthMode(
 				auth.getCredentials() instanceof SAMLCredential));
 	}
-
 }
