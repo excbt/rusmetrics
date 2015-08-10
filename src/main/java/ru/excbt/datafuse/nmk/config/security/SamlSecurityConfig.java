@@ -9,16 +9,17 @@ import java.util.Map;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.velocity.app.VelocityEngine;
-import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -84,9 +85,13 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@PropertySource(value = "classpath:META-INF/saml-idp.properties")
 @ComponentScan(basePackages = { "org.springframework.security.saml" })
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Value("${saml.entityId}")
+	private String samlEntityId;
 
 	@Autowired
 	private SAMLSubscriberUserDetailsService samlSubscriberUserDetailsService;
@@ -232,7 +237,8 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	// SAML 2.0 WebSSO Assertion Consumer
 	@Bean
 	public WebSSOProfileConsumer webSSOprofileConsumer() {
-		return new WebSSOProfileConsumerImpl();
+		WebSSOProfileConsumer result = new WebSSOProfileConsumerImpl();
+		return result;
 	}
 
 	// Processor
@@ -253,7 +259,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		webSSOProfileOptions.setIncludeScoping(false);
 		// TODO
 		// webSSOProfileOptions.setNameID(NameIDType.TRANSIENT);
-		webSSOProfileOptions.setNameID(NameIDType.EMAIL);
+		//webSSOProfileOptions.setNameID(NameIDType.EMAIL);
 		return webSSOProfileOptions;
 	}
 
@@ -448,7 +454,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
-		metadataGenerator.setEntityId("nmk-p");
+		metadataGenerator.setEntityId(samlEntityId);
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager());
