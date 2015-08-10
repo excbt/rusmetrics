@@ -142,4 +142,13 @@ public class CurrentUserService {
 		}
 		return info.is_system();
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public Authentication getAuthentication() {
+		Authentication auth = getContextAuth();
+		return auth;
+	}
 }
