@@ -1,0 +1,30 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" ><a id="monitorTab" class="nmc-main-tab-button" href="#/objects/list/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="objects_map" role="tab" data-target="#objects_map" data-toggle="tab">Карта</a></li>
+        <div class="col-md-9">
+            <div class="col-md-4 paddingTop5">
+                <label class="nmc-form-label pull-right">
+
+                    Период потребления:</label>
+            </div>
+            <div class="col-md-8 noPadding">   
+                <div class="input-group marginRight15">
+                    <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">с</span>
+                    <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                        type="text" ng-model="objectDates" options="queryDateOptsObjMapRu" aria-describedby="leftAddon"/>
+                </div>    
+            </div>
+        </div>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="objects_map">
+      </div>
+    </div>
+</div>
+
+
+<leaflet class="nmc-map-objects" center="mapCenter" tiles="currentTile" markers="markersOnMap"></leaflet>

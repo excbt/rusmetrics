@@ -4,6 +4,18 @@
 
 /*html,body {overflow-y:hidden}*/
 
+.leaflet-popup-content {
+/*    width: auto;*/
+}
+
+.nmc-leaflet-popup-content-wrapper-compare {
+    margin-left: -200px !important;
+}
+
+.nmc-leaflet-popup-content-wrapper-compare > .leaflet-popup-content{
+    width: 500px !important;
+}
+
 /********************
  * Разметка страницы
  ********************/
@@ -741,6 +753,20 @@ tr.nmc-main-table-header > th {
 /**********
  * Кнопки
  **********/
+/* Кнопка техподдержки - на странице в правом верхнем углу*/
+.nmc-button-support{
+    width: 16px;
+    height: 16px;
+    background: url(../images/support_16x16.png) top no-repeat;
+}
+
+/* Кнопка помощи - на странице в правом верхнем углу под кнопкой техподдержки*/
+.nmc-button-help{
+    width: 16px;
+    height: 17px;
+    background: url(../images/question-white-16x16.png) top no-repeat;
+}
+
 /* Ок */
 .nmc-ok-button {
     height: 24px;
