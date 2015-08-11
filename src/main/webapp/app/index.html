@@ -70,23 +70,25 @@
 					
 				</div>
 			
+<!--
               <ul class="col-md-1 nav navbar-nav nmc-main-header-menu">
                   <li><a href="http://otrs.local.excbt.ru/otrs/customer.pl">Поддержка</a>
                   </li>
                  </ul>
+-->
 				
 <!--				<li>-->
                 <div class="col-md-6 nmc-main-header-title"> Система учета и обработки метрологической информации </div>
 <!--                </li>						-->
 <!--			</ul>-->
                 
-                <ul class="nav navbar-nav col-md-2 nmc-main-header-menu">	
+                <ul class="nav navbar-nav col-md-3 nmc-main-header-menu">	
 
 <!--
                     <li>Система учета и обработки метрологической информации
                     </li>
 -->
-                    <li class="dropdown pull-right">
+                    <li class="dropdown">
                         <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
                                 class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
                             </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
@@ -100,6 +102,20 @@
                             </p></a></li>
                         </ul>    
 
+                    </li>
+                    <li class="pull-right">
+                        <div class="btn-group-vertical" role="group" aria-label="help_group">
+<!--
+                            <button class="btn btn-xs nmc-button-support"></button>
+                            <button class="btn btn-xs nmc-button-help"></button>
+-->
+                            <p>
+                            <a href="http://otrs.local.excbt.ru/otrs/customer.pl"><button class="btn btn-xs nmc-button-support"></button></a>
+                                </p>
+                            <p>
+                            <a href=""><button class="btn btn-xs nmc-button-help"></button></a>
+                                </p>
+                        </div>
                     </li>
                 </ul>					
 			</div>

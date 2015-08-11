@@ -74,11 +74,17 @@ console.log("Object Service. Run.");
            return $http.get(crudTableName);
         };
          
-                 //Get data for the setting period for the city by cityId
+                 //Get data for the setting period for the city by objectId
         var getObjectConsumingData = function(settings, objId){
             var url=urlCitiesData+"/"+objId+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
             return $http.get(url);
         };
+                 
+                //get data for the setting period for one city
+        var getCityConsumingData = function(cityFias, settings){
+            var url=urlCitiesData+"/city/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo+"&cityFias="+cityFias;
+            return $http.get(url);
+        };         
                  //get data for the setting period for all cities
         var getCitiesConsumingData = function(settings){
             var url=urlCitiesData+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
@@ -109,6 +115,7 @@ console.log("Object Service. Run.");
                     
         return {
 //            getObjects,
+            getCityConsumingData,
             getCitiesConsumingData,
             getObjectConsumingData,
             getDevicesByObject,

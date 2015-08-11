@@ -80,13 +80,93 @@ angular.module('portalNMC')
         var markerMessage = "<div id='"+obj.contObject.id+"'>";
         markerMessage += ""+obj.contObject.fullName+"<br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        markerMessage +="<a title='Всего уведомлений' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+" / "+obj.eventsTypesCount +"</a>(<a title='Непрочитанные уведомления' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a>)<br>";
+        markerMessage +="Уведомлений: <a title='Всего уведомлений' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+"</a>, непрочитанных: <a title='Непрочитанные уведомления' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a><br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        marker = {
-            focus: false,
-            lng: obj.contObject.contObjectGeo.geoPosX,
-            lat: obj.contObject.contObjectGeo.geoPosY,
-            getMessageScope: function () { 
+        if (obj.eventsCount === 0){
+            markerMessage+="<div>";
+            markerMessage+="За указанный период на объекте не было нештатных ситуаций";
+            markerMessage+="</div>";
+        };
+//        marker = {
+//            focus: false,
+//            lng: obj.contObject.contObjectGeo.geoPosX,
+//            lat: obj.contObject.contObjectGeo.geoPosY,
+//            getMessageScope: function () { 
+//                var newScope = $scope.$new(true);
+////                angular.extend(newScope, {ngClickExample: $scope.ngClickExample});
+//                angular.extend(newScope, {setNoticeFilterByObject: $scope.setNoticeFilterByObject});
+//                angular.extend(newScope, {setNoticeFilterByObjectAndRevision: $scope.setNoticeFilterByObjectAndRevision});
+//                angular.extend(newScope, {setNoticeFilterByObjectAndType: $scope.setNoticeFilterByObjectAndType});
+//                
+//                var promise = $scope.getEventTypesByObjectModFn(obj.contObject.id);
+//                promise.success(function(data){
+////        console.log(data);            
+//                    //if data is not array - exit
+//                        if (!data.hasOwnProperty('length')||(data.length == 0)){
+//                            return;
+//                        };
+//                        //temp array
+//                        var tmpTypes = [];
+//                        //make the new array of the types wich formatted to display
+//                        data.forEach(function(element){
+//                            var tmpType = {};
+//                            tmpType.id = element.contEventType.id;
+//                            tmpType.isBaseEvent = element.contEventType.isBaseEvent;
+//                            tmpType.typeCategory = element.statusColor.toLowerCase();
+//                            tmpType.typeEventCount = element.totalCount;
+//                            tmpType.typeName = element.contEventType.caption;
+//                            tmpTypes.push(tmpType);
+//                        });
+//                        tmpTypes.sort(function(a, b){
+//                            if (a.typeEventCount > b.typeEventCount){
+//                                return -1;
+//                            };
+//                            if (a.typeEventCount < b.typeEventCount){
+//                                return 1;
+//                            };
+//                            return 0;
+//                        });
+//                        obj.eventTypes = tmpTypes;
+//                        if (angular.isDefined(obj.eventTypes)){
+//                            var eventMessages = [];
+//                            obj.eventTypes.forEach(function(eventType){
+//                                var eventMessage = {};
+//                                eventMessage.id = eventType.id;
+//                                var size = 16;
+//                                var title = "";
+//                                if (eventType['typeCategory']=="green"){
+//                                    size = 1;
+//                                };
+//                                switch (eventType['typeCategory']){
+//                                    case "red": title = "Критическая ситуация"; break;
+//                                    case "orange": title = "Некритическая ситуация"; break;
+//
+//                                };
+//                                eventMessage.size = size;
+//                                eventMessage.title = title;
+//                                eventMessage.imgpath = "images/object-state-"+eventType['typeCategory']+".png";
+//                                eventMessage.name = eventType['typeName'];
+//                                eventMessage.count = eventType['typeEventCount'];
+//                                eventMessages.push(eventMessage);
+//
+//
+//                            });
+//                            angular.extend(newScope, {eventMessages: eventMessages});
+//                        };     
+//                    })
+//                    .error(function(e){
+//                        console.log(e);
+//                    });               
+//                return newScope; },
+//            message : ""+markerMessage+"<div ng-repeat='em in eventMessages'> <a href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndType("+obj.contObject.id+",em.id)'><img ng-attr-title='{{em.title}}'ng-src='{{em.imgpath}}'/>{{em.name}} ({{em.count}}) </a></div>"+"</div>",
+//            compileMessage : true,
+//            icon : monitorMarker //set current marker
+//        };
+        //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ marker
+        marker.focus=false;
+        marker.lng=obj.contObject.contObjectGeo.geoPosX;
+        marker.lat= obj.contObject.contObjectGeo.geoPosY;
+        marker.getMessageScope= function () { 
                 var newScope = $scope.$new(true);
 //                angular.extend(newScope, {ngClickExample: $scope.ngClickExample});
                 angular.extend(newScope, {setNoticeFilterByObject: $scope.setNoticeFilterByObject});
@@ -152,11 +232,11 @@ angular.module('portalNMC')
                     .error(function(e){
                         console.log(e);
                     });               
-                return newScope; },
-            message : ""+markerMessage+"<div ng-repeat='em in eventMessages'> <a href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndType("+obj.contObject.id+",em.id)'><img ng-attr-title='{{em.title}}'ng-src='{{em.imgpath}}'/>{{em.name}} ({{em.count}}) </a></div>"+"</div>",
-            compileMessage : true,
-            icon : monitorMarker //set current marker
-        };
+                return newScope; };
+        marker.message = ""+markerMessage+"<div ng-repeat='em in eventMessages'> <a href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndType("+obj.contObject.id+",em.id)'><img ng-attr-title='{{em.title}}'ng-src='{{em.imgpath}}'/>{{em.name}} ({{em.count}}) </a></div>"+"</div>",
+        marker.compileMessage = true;
+        marker.icon = monitorMarker; //set current marker
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         marker.contObjectId = obj.contObject.id;
         marker.isCityMarker = false;
         marker.icon.markerColor = obj.statusColor.toLowerCase();
@@ -165,15 +245,17 @@ angular.module('portalNMC')
     
     var viewObjectsOnMap = function(cityFiasUUID){
 console.log("viewObjectsOnMap."); 
-//console.log($scope);        
+        //clear popup
+        var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+        popupPane[0].innerHTML = "";
+       
         var mc = {};
+        var curCity = null;
         $scope.cities.some(function(elem){
             if (elem.cityFiasUUID === cityFiasUUID){
                 mc.lat = elem.cityGeoPosY;
                 mc.lng = elem.cityGeoPosX;
-//                $scope.mapCenter.lat = elem.cityGeoPosY;
-//                $scope.mapCenter.lng = elem.cityGeoPosX;
-//console.log(elem);                
+                curCity = elem;             
                 return true;
             };
         });
@@ -181,7 +263,15 @@ console.log("viewObjectsOnMap.");
         mc.zoom = $scope.mapSettings.zoomBound+2;
 //        $scope.mapCenter.zoom = $scope.mapSettings.zoomBound+1;
         angular.extend($scope, {mapCenter: mc});
-console.log($scope.mapCenter);        
+console.log($scope.mapCenter);  
+        
+        var tmpObjects = curCity.contEventNotificationStatuses;
+        $scope.setObjectsOnMap(tmpObjects, markers);     
+
+        $scope.viewCurrentCityObjectsFlag = true;
+        markersOnMap = markers;
+    //console.log(markersOnMap);    
+        angular.extend($scope, {markersOnMap});
     };
     
     var viewObjectDetails = function(cityFiasUUID){        
@@ -213,22 +303,40 @@ console.log(marker == markerArray[0]) ;
         markerMessage += ""+city.cityName+", "+city.contEventNotificationStatuses.length+" объектов <button class='glyphicon glyphicon-search marginLeft5' ng-click='viewObjectsOnMap(\""+city.cityFiasUUID+"\")' title='См. объекты на карте'></button><br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
         
-        markerMessage+=""+city.monitorEventCount+" нештатных ситуаций <button class='marginLeft5' ng-click='viewObjectDetails(\""+city.cityFiasUUID+"\")'>Подробнее...</button>";
-        marker = {
-            focus: false,
-            lng: city.cityGeoPosX,
-            lat: city.cityGeoPosY,
-            getMessageScope: function () { 
-                var newScope = $scope.$new(true);
-                angular.extend(newScope, {curMarker: marker});
-                angular.extend(newScope, {viewObjectsOnMap: viewObjectsOnMap});
-                angular.extend(newScope, {viewObjectDetails: viewObjectDetails});
-console.log(newScope);                
-                return newScope; },
-            message : ""+markerMessage+"",
-            compileMessage : true,
-            icon : monitorMarker //set current marker
+        markerMessage+=""+city.monitorEventCount+" нештатных ситуаций";
+        if(city.monitorEventCount!==0){
+            markerMessage+="<button class='marginLeft5' ng-click='viewObjectDetails(\""+city.cityFiasUUID+"\")'>Подробнее...</button>";
         };
+//        marker = {
+//            focus: false,
+//            lng: city.cityGeoPosX,
+//            lat: city.cityGeoPosY,
+//            getMessageScope: function () { 
+//                var newScope = $scope.$new(true);
+//                angular.extend(newScope, {curMarker: marker});
+//                angular.extend(newScope, {viewObjectsOnMap: viewObjectsOnMap});
+//                angular.extend(newScope, {viewObjectDetails: viewObjectDetails});
+//console.log(newScope);                
+//                return newScope; },
+//            message : ""+markerMessage+"",
+//            compileMessage : true,
+//            icon : monitorMarker //set current marker
+//        };
+        
+        marker.focus= false;
+        marker.lng= city.cityGeoPosX;
+        marker.lat= city.cityGeoPosY;
+        marker.getMessageScope= function () { 
+            var newScope = $scope.$new(true);
+            angular.extend(newScope, {curMarker: marker});
+            angular.extend(newScope, {viewObjectsOnMap: viewObjectsOnMap});
+            angular.extend(newScope, {viewObjectDetails: viewObjectDetails});
+console.log(newScope);                
+            return newScope; },
+        marker.message = ""+markerMessage+"";
+        marker.compileMessage = true;
+        marker.icon= monitorMarker //set current marker
+        
         marker.cityFiasUUID = city.cityFiasUUID;
         marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
         marker.isCityMarker = true;
@@ -320,7 +428,7 @@ console.warn(elem);
             };
 console.log(marker == markerArray[0]) ;              
             marker= $scope.prepareCityMarker(elem, marker, markerArray);
-            marker.focus = false;
+//            marker.focus = false;
 //            marker.visible = false;
 //            marker
 //console.log(marker);    
@@ -372,7 +480,7 @@ console.warn(elem);
                 });
             };
             marker= $scope.prepareObjectMarker(elem, marker);
-            marker.focus = false;
+//            marker.focus = false;
 //console.log(marker);    
             if (isMarkerExists!==true){
                 markerArray.push(marker);  
@@ -429,18 +537,29 @@ console.log('monitorObjects:updated');
     
 
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
-//console.log(newZoom);        
-//console.log(oldZoom);                
+console.log(newZoom);
+console.log(oldZoom); 
+        
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
             {  
-                $scope.setObjectsOnMap($scope.objects, markers);
+                //clear open popup
+                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane[0].innerHTML = "";
+                
+                if ($scope.viewCurrentCityObjectsFlag === true){
+                    $scope.viewCurrentCityObjectsFlag = false;
+                    return;
+                }else{
+                    $scope.setObjectsOnMap($scope.objects, markers);
+                };
             };
-            //zoom is large then zoomBound
-//console.log("Zoom >= zoomBound");            
         };
         if (newZoom<=$scope.mapSettings.zoomBound){
             if (oldZoom>$scope.mapSettings.zoomBound){
+                //clear open popup
+                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane[0].innerHTML = "";
                 $scope.setCitiesOnMap($scope.cities, markers);
             };    
         };
@@ -488,4 +607,5 @@ console.log('monitorObjects:updated');
         $scope.setNoticeFilterByObject(objId);
         $cookies.typeIds = [typeId];
     };
+    
 });

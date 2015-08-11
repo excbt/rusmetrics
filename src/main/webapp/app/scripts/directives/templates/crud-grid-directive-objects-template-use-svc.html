@@ -2,9 +2,7 @@
 <div  ng-show="loading" class="nmc-loading">
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
-
-<div class="container-fluid" ng-hide="loading">
-<div role="tabpanel" class="nmc-main-tab-panel">
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
@@ -18,6 +16,8 @@
       </div>
     </div>
 </div>    
+
+<div class="container-fluid" ng-hide="loading">
  
 <div class="row nmc-main-workspace-header">
     <div class="col-md-3 noPadding">

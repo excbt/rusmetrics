@@ -55,7 +55,7 @@ console.log("MonitorSvc. Get cities and objects");
 
             $http.get(targetUrl)
                 .success(function(data){
-                    citiesMonitorSvc = [data[3]];
+                    citiesMonitorSvc = data;                
                     objectsMonitorSvc = getObjectsFromCities(data);
 //    console.log(data);            
                     //sort objects by name
