@@ -4,7 +4,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.saml.SAMLCredential;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,16 +19,29 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @RequestMapping(value = "/api/systemInfo")
 public class SystemInfoController extends WebApiController {
 
-	private class ReadOnlyMode {
+	protected class ReadOnlyMode {
 		final boolean readOnlyMode;
 
-		private ReadOnlyMode(boolean readOnlyMode) {
-			this.readOnlyMode = readOnlyMode;
+		private ReadOnlyMode(boolean arg) {
+			this.readOnlyMode = arg;
 		}
 
 		public boolean isReadOnlyMode() {
 			return readOnlyMode;
 		}
+	}
+
+	protected class SamlAuthMode {
+		final boolean samlAuthMode;
+
+		private SamlAuthMode(boolean arg) {
+			this.samlAuthMode = arg;
+		}
+
+		public boolean isSamlAuthMode() {
+			return samlAuthMode;
+		}
+
 	}
 
 	@Autowired
@@ -69,4 +84,19 @@ public class SystemInfoController extends WebApiController {
 		return responseOK(new ReadOnlyMode(!adminRole.isPresent()));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/samlAuthMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSamlAuth() {
+		Authentication auth = currentUserService.getAuthentication();
+
+		if (auth == null) {
+			responseOK(new SamlAuthMode(false));
+		}
+
+		return responseOK(new SamlAuthMode(
+				auth.getCredentials() instanceof SAMLCredential));
+	}
 }
