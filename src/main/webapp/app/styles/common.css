@@ -1190,6 +1190,25 @@ tr.nmc-main-table-header > th {
 .nmc-common-text-in-field {
     /*font-size: 14px;*/
 }
+
+/* Классы для цветовой индикации - используются на карте объектов в попапах*/
+.nmc-alert{
+    color:red;
+}
+
+.nmc-warning{
+    color:yellow;
+}
+
+.nmc-normal{
+    color:green;
+}
+
+/* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
+.nmc-bg-distinguish{
+    background-color: #eee;
+}
+
  
 /* Заголовки */
 
