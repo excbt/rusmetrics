@@ -274,11 +274,11 @@ public class ContObjectHWaterDeltaService {
 
 		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART(
 				subscriberId, ldp, ContServiceTypeKey.HW,
-				TimeDetailKey.TYPE_1H, contObjectId);
+				TimeDetailKey.TYPE_24H, contObjectId);
 
 		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART(
 				subscriberId, ldp, ContServiceTypeKey.HEAT,
-				TimeDetailKey.TYPE_1H, contObjectId);
+				TimeDetailKey.TYPE_24H, contObjectId);
 
 		List<ContObjectServiceTypeInfo> resultList = processContObjectServiceTypeInfo(
 				contObjects, hwContObjectARTs, heatContObjectARTs);
@@ -314,11 +314,11 @@ public class ContObjectHWaterDeltaService {
 
 		Map<Long, ContServiceTypeInfoART> hwContObjectARTs = selectContObjectHWaterDeltaART_ByCity(
 				subscriberId, ldp, ContServiceTypeKey.HW,
-				TimeDetailKey.TYPE_1H, cityFiasUUID);
+				TimeDetailKey.TYPE_24H, cityFiasUUID);
 
 		Map<Long, ContServiceTypeInfoART> heatContObjectARTs = selectContObjectHWaterDeltaART_ByCity(
 				subscriberId, ldp, ContServiceTypeKey.HEAT,
-				TimeDetailKey.TYPE_1H, cityFiasUUID);
+				TimeDetailKey.TYPE_24H, cityFiasUUID);
 
 		List<ContObjectServiceTypeInfo> resultList = processContObjectServiceTypeInfo(
 				cityContObjects, hwContObjectARTs, heatContObjectARTs);

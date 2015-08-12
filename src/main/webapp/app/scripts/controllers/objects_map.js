@@ -84,6 +84,8 @@ angular.module('portalNMC')
                             $scope.newCityData = response.data[0];
                             $scope.markerSettings.isNewDataFlag = true;
                             calculateCityServicesSummary($scope.newCityData);
+console.log($scope.newCityData);            
+console.log(city);
                             //city vs newCity
                             var tmpDiff = {};
                             tmpDiff.hw = ((city.servicesSummary.hw-$scope.newCityData.servicesSummary.hw)).toFixed(2);
@@ -93,10 +95,10 @@ angular.module('portalNMC')
                             tmpDiff.heatPerCent = ($scope.newCityData.servicesSummary.heat>0)?((city.servicesSummary.heat-$scope.newCityData.servicesSummary.heat)*100/$scope.newCityData.servicesSummary.heat).toFixed(2):null;
                             tmpDiff.hwMeasureUnit = 'м3';
                             tmpDiff.heatArea = city.servicesSummary.heatArea;
-                            tmpDiff.heatAveragePerCent = ($scope.newCityData.servicesSummary.heatAverage>0)?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)*100/$scope.newCityData.servicesSummary.heatAverage).toFixed(2):null;
-                            tmpDiff.heatAverage = ((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)).toFixed(2);
-                            tmpDiff.hwAveragePerCent = ($scope.newCityData.servicesSummary.hwAverage>0)?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)*100/$scope.newCityData.servicesSummary.hwAverage).toFixed(2):null;
-                            tmpDiff.hwAverage = ((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)).toFixed(2);
+                            tmpDiff.heatAveragePerCent = (($scope.newCityData.servicesSummary.heatAverage>0)&&(tmpDiff.heatArea>0))?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)*100/$scope.newCityData.servicesSummary.heatAverage).toFixed(2):null;
+                            tmpDiff.heatAverage = ($scope.newCityData.servicesSummary.heatAverage>0)?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)).toFixed(2):null;
+                            tmpDiff.hwAveragePerCent = (($scope.newCityData.servicesSummary.hwAverage>0)&&(tmpDiff.heatArea>0))?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)*100/$scope.newCityData.servicesSummary.hwAverage).toFixed(2):null;
+                            tmpDiff.hwAverage = (($scope.newCityData.servicesSummary.hwAverage>0))?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)).toFixed(2):null;
 console.log(tmpDiff);            
                             $scope.diffCityData = tmpDiff;
                             $scope.markerSettings.isDiffDataFlag = true;
@@ -214,9 +216,9 @@ console.log($scope.mapCenter);
                 $scope.newObjectData = response.data;
                 for (var i=0;i<$scope.newObjectData.serviceTypeARTs.length;i++){
                     var curData = $scope.newObjectData.serviceTypeARTs[i];
-//                    console.log(curData);                        
-                    curData.absConsValue = (curData.absConsValue===null)?null:curData.absConsValue.toFixed(2);
-                    curData.tempValue = (curData.tempValue===null)?null:curData.tempValue.toFixed(2);
+console.log(curData);                        
+                    curData.absConsValue = (curData.absConsValue===null)?null:Number(curData.absConsValue.toFixed(2));
+                    curData.tempValue = (curData.tempValue===null)?null:Number(curData.tempValue.toFixed(2));
                     
 //console.log(curData);                    
                 };
@@ -225,13 +227,19 @@ console.log($scope.mapCenter);
                     for (var i=0; i<$scope.newObjectData.serviceTypeARTs.length;i++){
                         var curData = $scope.newObjectData.serviceTypeARTs[i];
                         if (serv.contServiceType === curData.contServiceType){
+console.log(curData);                            
+console.log(serv);                                                        
                             var tmp = {};
                             tmp.contServiceType= serv.contServiceType;
                             tmp.measureUnit = serv.measureUnit;
-                            tmp.absConsValue = (serv.absConsValue - curData.absConsValue).toFixed(2);
-                            tmp.tempValue = (serv.tempValue - curData.tempValue).toFixed(2);
-                            tmp.absConsValuePerCent =(curData.absConsValue>0)? ((serv.absConsValue - curData.absConsValue)/curData.absConsValue*100).toFixed(2): null;
-                            tmp.tempValuePerCent = (curData.tempValue>0)?((serv.tempValue - curData.tempValue)/curData.tempValue*100).toFixed(2):null;
+                            tmp.absConsValue = Number((serv.absConsValue - curData.absConsValue).toFixed(2));
+                            tmp.absConsValueAverage = (object.contObject.heatArea>0)?Number((tmp.absConsValue/object.contObject.heatArea).toFixed(2)):null;
+                          
+                            tmp.absConsValueAveragePerCent = ((object.contObject.heatArea>0)&&((curData.absConsValue!==null))&&(curData.absConsValue!==0))?Number((tmp.absConsValueAverage/curData.absConsValue*object.contObject.heatArea*100).toFixed(2)):null;
+//                                (object.contObject.heatArea>0)?Number(((tmp.absConsValue)*100/curData.absConsValue).toFixed(2)):null;
+                            tmp.tempValue = Number((serv.tempValue - curData.tempValue).toFixed(2));
+                            tmp.absConsValuePerCent =(curData.absConsValue>0)? Number(((serv.absConsValue - curData.absConsValue)/curData.absConsValue*100).toFixed(2)): null;
+                            tmp.tempValuePerCent = (curData.tempValue>0)?Number(((serv.tempValue - curData.tempValue)/curData.tempValue*100).toFixed(2)):null;
                             tmpDiffArray.push(tmp);
                         };
                     };
@@ -350,22 +358,22 @@ console.log($scope.diffObjectData);
             // center column
         markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isDiffDataFlag,'nmc-show':markerSettings.isDiffDataFlag}\">";
         markerMessage+="                <br>";
-        markerMessage+="                <div><span ng-if='diffCityData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffCityData.hwPerCent<100),'nmc-alert':(diffCityData.hwPerCent>=100)}\"></i></span><span ng-if='diffCityData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwPerCent>=100),'nmc-normal':(diffCityData.hwPerCent<100)}\"></i></span><span ng-if='diffCityData.hwPerCent!=null'>{{diffCityData.hwPerCent}}% </span> {{diffCityData.hw}} м<sup>3</sup></div>";
-        markerMessage+="                <div><span ng-if='diffCityData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAveragePerCent!=null'>{{diffCityData.hwAveragePerCent}}%</span> {{diffCityData.hwAverage}}м<sup>3</sup></div>";
+        markerMessage+="                <div><span ng-if='diffCityData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffCityData.hwPerCent<100),'nmc-alert':(diffCityData.hwPerCent>=100)}\"></i></span><span ng-if='diffCityData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwPerCent>=100),'nmc-normal':(diffCityData.hwPerCent<100)}\"></i></span><span ng-if='diffCityData.hwPerCent!=null'>{{diffCityData.hwPerCent}}%  {{diffCityData.hw}} м<sup>3</sup></span></div>";
+        markerMessage+="                <div><span ng-if='diffCityData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAveragePerCent!=null'>{{diffCityData.hwAveragePerCent}}% {{diffCityData.hwAverage}}м<sup>3</sup></span></div>";
         markerMessage+="                   <br>";
-        markerMessage+="                <div><span ng-if='diffCityData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatPerCent>=100),'nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':'diffCityData.heatPerCent>=100','nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heatPerCent!=null'>{{diffCityData.heatPerCent}}%</span> {{diffCityData.heat}} ГКал</div>";
-        markerMessage+="                <div><span ng-if='diffCityData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100), 'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100),'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAveragePerCent!=null'>{{diffCityData.heatAveragePerCent}}%</span> {{diffCityData.heatAverage}}ГКал</div>";
+        markerMessage+="                <div><span ng-if='diffCityData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatPerCent>=100),'nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':'diffCityData.heatPerCent>=100','nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heatPerCent!=null'>{{diffCityData.heatPerCent}}% {{diffCityData.heat}} ГКал</span></div>";
+        markerMessage+="                <div><span ng-if='diffCityData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100), 'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100),'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAveragePerCent!=null'>{{diffCityData.heatAveragePerCent}}% {{diffCityData.heatAverage}}ГКал</span></div>";
         markerMessage+="    </div>";
 
             //right column
         markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isNewDataFlag,'nmc-show':markerSettings.isNewDataFlag}\">";
         markerMessage+="    <label>Горячая вода:</label><br>";
         markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.hw.toFixed(2)}}{{newCityData.servicesSummary.hwMeasureUnit}}<br>";
-            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.hwAverage.toFixed(2)}} {{newCityData.servicesSummary.hwAverageMeasureUnit}}</span><br>";
+            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.hwAverage.toFixed(2)}} {{newCityData.servicesSummary.hwAverageMeasureUnit}}</span>";
         markerMessage+="        </div>";
         markerMessage+="    <label>Отопление:</label><br>";
         markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.heat.toFixed(2)}} {{newCityData.servicesSummary.heatMeasureUnit}}<br>";
-            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.heatAverage.toFixed(2)}} {{newCityData.servicesSummary.heatAverageMeasureUnit}}</span><br>";
+            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.heatAverage.toFixed(2)}} {{newCityData.servicesSummary.heatAverageMeasureUnit}}</span>";
         markerMessage+="        </div>";
 
         markerMessage+="    </div>";
@@ -562,11 +570,12 @@ console.warn(elem);
         markerMessage+="    </div>";
             // center column
         markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.cmpFlag,'nmc-show':markerSettings.cmpFlag}\">";
-        
+                    
         markerMessage+="    <div ng-repeat='diff in diffObjectData'>";
         markerMessage+="<br>";
-        markerMessage+="       <div> <span ng-if='diff.absConsValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValuePerCent!=null'>{{diff.absConsValuePerCent}}%</span> {{diff.absConsValue}} <span ng-switch on='diff.measureUnit'><span ng-switch-when='V_M3'>м <sup>3</sup></span> <span ng-switch-when='V_GCAL'>ГКал</span></span></div>";
-        markerMessage+="       <div> <span ng-if='diff.tempValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValuePerCent!=null'>{{diff.tempValuePerCent}}%</span> {{diff.tempValue}} </div>";
+        markerMessage+="       <div> <span ng-if='diff.absConsValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValuePerCent!=null'>{{diff.absConsValuePerCent}}% {{diff.absConsValue}} <span ng-switch on='diff.measureUnit'><span ng-switch-when='V_M3'>м <sup>3</sup></span> <span ng-switch-when='V_GCAL'>ГКал</span></span></span></div>";
+        markerMessage+="       <div> <span ng-if='diff.absConsValueAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.absConsValueAveragePerCent<100),'nmc-alert':(diff.absConsValueAveragePerCent>=100)}\"></i></span><span ng-if='diff.absConsValueAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal':(diff.absConsValueAveragePerCent<100),'nmc-alert':(diff.absConsValueAveragePerCent>=100)}\"></i></span><span ng-if='diff.absConsValueAveragePerCent!=null'>{{diff.absConsValueAveragePerCent}}% {{diff.absConsValueAverage}} <span ng-switch on='diff.measureUnit'><span ng-switch-when='V_M3'>м <sup>3</sup></span> <span ng-switch-when='V_GCAL'>ГКал</span></span></span></div>";
+        markerMessage+="       <div> <span ng-if='diff.tempValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValuePerCent!=null'>{{diff.tempValuePerCent}}% {{diff.tempValue}} </span></div>";
         markerMessage+="<br>";
         markerMessage+="    </div>";
         markerMessage+="    </div>";

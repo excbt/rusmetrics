@@ -161,8 +161,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     };
     
     $scope.checkAndSaveParamset = function(object){
-console.log($scope.currentParamSpecialList);        
-return;        
+//console.log($scope.currentParamSpecialList);        
+//return;        
         var flag = $scope.checkRequiredFieldsOnSave();
         if (flag===false){
             $('#messageForUserModal').modal();
@@ -203,7 +203,7 @@ return;
             object.paramsetStartDate = null;
             object.paramsetEndDate = null;
         }
-
+console.log(object);
         if ($scope.createByTemplate_flag){
             object.id = null;          
             object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
@@ -342,7 +342,7 @@ return;
         });
         $scope.paramsetStartDateFormat = (new Date());
         $scope.paramsetEndDateFormat= (new Date());
-        $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
+//        $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
         $scope.set_of_objects_flag=false;
         $scope.showAvailableObjects_flag = false;
        
