@@ -25,18 +25,18 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON)
-					.param("oldPassword", "admin1")
-					.param("newPassword", "admin");
+					.param("oldPassword", "admin")
+					.param("newPassword", "admin1");
 		};
 
-		testJsonPost(urlStr, requestExtraInitializer);
+		testJsonPut(urlStr, requestExtraInitializer);
 
 		RequestExtraInitializer requestExtraInitializerBack = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON)
-			.param("oldPassword", "admin")
-			.param("newPassword", "admin1");
+			.param("oldPassword", "admin1")
+			.param("newPassword", "admin");
 		};
 		
-		testJsonPost(urlStr, requestExtraInitializerBack);
+		testJsonPut(urlStr, requestExtraInitializerBack);
 	}
 }

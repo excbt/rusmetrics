@@ -122,7 +122,7 @@ public class SystemInfoController extends WebApiController {
 	 * @param newPassword
 	 * @return
 	 */
-	@RequestMapping(value = "/passwordChange", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/passwordChange", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePassword(
 			@RequestParam(value = "oldPassword", required = true) final String oldPassword,
 			@RequestParam(value = "newPassword", required = true) final String newPassword) {
