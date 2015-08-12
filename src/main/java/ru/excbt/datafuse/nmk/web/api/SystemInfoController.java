@@ -10,15 +10,23 @@ import org.springframework.security.saml.SAMLCredential;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 @Controller
 @RequestMapping(value = "/api/systemInfo")
 public class SystemInfoController extends WebApiController {
 
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	protected class ReadOnlyMode {
 		final boolean readOnlyMode;
 
@@ -31,6 +39,11 @@ public class SystemInfoController extends WebApiController {
 		}
 	}
 
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	protected class SamlAuthMode {
 		final boolean samlAuthMode;
 
@@ -46,6 +59,9 @@ public class SystemInfoController extends WebApiController {
 
 	@Autowired
 	private CurrentUserService currentUserService;
+
+	@Autowired
+	private LdapService ldapService;
 
 	/**
 	 * 
@@ -98,5 +114,38 @@ public class SystemInfoController extends WebApiController {
 
 		return responseOK(new SamlAuthMode(
 				auth.getCredentials() instanceof SAMLCredential));
+	}
+
+	/**
+	 * 
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return
+	 */
+	@RequestMapping(value = "/passwordChange", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updatePassword(
+			@RequestParam(value = "oldPassword", required = true) final String oldPassword,
+			@RequestParam(value = "newPassword", required = true) final String newPassword) {
+
+		if (oldPassword == null || newPassword == null
+				|| oldPassword.equals(newPassword)) {
+			return responseBadRequest(ApiResult
+					.validationError("request params is not valid"));
+		}
+
+		FullUserInfo fullUserInfo = currentUserService.getFullUserInfo();
+		if (fullUserInfo == null) {
+			return responseForbidden();
+		}
+
+		String username = fullUserInfo.getUserName();
+
+		boolean changeResult = ldapService.changePassword(username,
+				oldPassword, newPassword);
+		if (changeResult) {
+			return responseOK(ApiResult.ok("Password successfully changed"));
+		}
+
+		return responseBadRequest();
 	}
 }

@@ -37,6 +37,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
+import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
@@ -52,7 +53,7 @@ import com.jayway.jsonpath.JsonPath;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class,
-		LocalSecurityConfig.class })
+		LocalSecurityConfig.class, LdapConfig.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER" })
 public class AnyControllerTest {
@@ -441,6 +442,51 @@ public class AnyControllerTest {
 	protected void testJsonUpdate(String url, Object sendObject)
 			throws Exception {
 		testJsonUpdate(url, sendObject, null);
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void testJsonPost(String urlStr,
+			RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
+		logger.info("Testing UPDATE on URL: {}", urlStr);
+
+		MockHttpServletRequestBuilder request = post(urlStr).with(
+				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions resultActions = mockMvc.perform(request);
+
+		if (resultActionsTester != null) {
+			resultActionsTester.testResultActions(resultActions);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void testJsonPost(String urlStr,
+			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().is2xxSuccessful());
+		};
+
+		testJsonPost(urlStr, requestExtraInitializer, tester);
+
 	}
 
 	/**
