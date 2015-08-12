@@ -48,7 +48,8 @@ app.controller(
 					if($scope.paramsets[zx].id == $scope.cur_rep_shdl.reportParamset.id){
 						var tmpl_id = $scope.paramsets[zx].reportTemplate.id;
 					}
-				}
+				};
+console.log($scope.cur_rep_shdl);                
 				// Проверяем, создаётся новая рассылка или модифицируется имеющаяся
 				if($scope.cur_rep_shdl.id == 'new'){
 					var url = $scope.url_rep_shdls + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
@@ -234,12 +235,13 @@ app.controller(
 				document.getElementById("inp_minute").disabled = false;
 				// Разбиваем поле, содержащее расписание рассылки в формате cron на массив
 				// И приводим элементы к валидному для форм виду
-				$scope.time = $scope.cur_rep_shdl.sheduleTimeTemplate.split(' ');
+				$scope.time = $scope.cur_rep_shdl.sheduleTimeTemplate.split(' ');               
 				if($scope.time[3] == '*'){
 					$scope.time[3] = new Date();
 				}
 				else {
 					var year = new Date();
+                    $scope.time[3]-=1;//вычитаем 1 для корректного отображения месяца - js считает месяцы от 0, а нам приходит порядковый номер месяца считая от 1.
 					$scope.time[3] = new Date(year.getFullYear(), $scope.time[3], $scope.time[2]);
 				}
 				// Определяем, какая периодичность выбрана
@@ -340,7 +342,7 @@ app.controller(
 					}
 					switch ($scope.cur_rep_shdl.reportSheduleTypeKey) {
 					case "SINGLE":
-						$scope.cur_rep_shdl.sheduleTimeTemplate = $scope.cur_rep_shdl.sheduleTimeTemplate + $scope.time[3].getDate() + " " + $scope.time[3].getMonth() + " *";
+						$scope.cur_rep_shdl.sheduleTimeTemplate = $scope.cur_rep_shdl.sheduleTimeTemplate + $scope.time[3].getDate() + " " + ($scope.time[3].getMonth()+1) + " *";
 						break;
 					case "DAILY":
 						$scope.cur_rep_shdl.sheduleTimeTemplate = $scope.cur_rep_shdl.sheduleTimeTemplate + "* * *";
