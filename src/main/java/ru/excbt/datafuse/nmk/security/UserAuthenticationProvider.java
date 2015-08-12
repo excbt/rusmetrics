@@ -22,9 +22,12 @@ import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 @Component("userAuthenticationProvider")
 public class UserAuthenticationProvider implements AuthenticationProvider {
+
+	private static final boolean USE_LDAP_PASSWORD = true;
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(UserAuthenticationProvider.class);
@@ -41,6 +44,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	@Autowired
 	private PasswordService passwordService;
 
+	@Autowired
+	private LdapService ldapService;
+
 	/**
 	 * 
 	 */
@@ -50,10 +56,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		logger.info("UserAuthenticationProvider.authenticate");
 
-		String name = authentication.getName();
+		String username = authentication.getName();
 		String password = authentication.getCredentials().toString();
 		List<SubscrUser> subscrUsers = subscriberService
-				.findUserByUsername(name);
+				.findUserByUsername(username);
 
 		if (subscrUsers.size() > 1) {
 			return null;
@@ -65,8 +71,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		SubscrUser sUser = subscrUsers.get(0);
 
-		if (!passwordService.passwordEncoder().matches(password,
-				sUser.getPassword())) {
+		if (!doAuthenticate(username, password, sUser.getPassword())) {
 			return null;
 		}
 
@@ -101,15 +106,18 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	 * @return
 	 */
 	private Authentication checkSystemUser(Authentication authentication) {
-		String userName = authentication.getName();
+		String username = authentication.getName();
 		String password = authentication.getCredentials().toString();
 
-		SystemUser sUser = systemUserService.findByUsername(userName);
-		if (sUser == null
-				|| !passwordService.passwordEncoder().matches(password,
-						sUser.getPassword())) {
+		SystemUser sUser = systemUserService.findByUsername(username);
+		if (sUser == null) {
 			return null;
 		}
+
+		if (!doAuthenticate(username, password, sUser.getPassword())) {
+			return null;
+		}
+
 		List<GrantedAuthority> grantedAuths = AdminUtils.makeAdminAuths();
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
@@ -145,5 +153,28 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	}
 
+	/**
+	 * 
+	 * @param username
+	 * @param password
+	 * @param actualPassword
+	 * @return
+	 */
+	private boolean doAuthenticate(String username, String password,
+			String actualPassword) {
+
+		if (USE_LDAP_PASSWORD) {
+			if (ldapService.doAuthentificate(username, password)) {
+				return true;
+			}
+		} else {
+			if (passwordService.passwordEncoder().matches(password,
+					actualPassword)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 }
