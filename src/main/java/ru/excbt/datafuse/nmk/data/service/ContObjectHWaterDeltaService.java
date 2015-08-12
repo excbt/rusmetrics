@@ -67,6 +67,15 @@ public class ContObjectHWaterDeltaService {
 			return null;
 		}
 
+		logger.trace("CALL STORED PROC (get_cont_object_hwater_delta_agr) with params");
+		logger.trace("p_subscriber_id:{}", subscriberId);
+		logger.trace("p_date_from:{}", ldp.getDateFrom());
+		logger.trace("p_date_to:{}", ldp.getDateTo());
+		logger.trace("p_cont_service_type:{}", contServiceTypeKey.getKeyname());
+		logger.trace("p_time_detail_type:{}", timeDetailKey.getKeyname());
+		logger.trace("p_cont_object_id:{}", contObjectId);
+		
+		
 		String qString = "SELECT cont_object_id," // 0
 				+ "sum_m_delta," // 1
 				+ "sum_v_delta," // 2
@@ -116,6 +125,14 @@ public class ContObjectHWaterDeltaService {
 			return null;
 		}
 
+		logger.trace("CALL STORED PROC (get_cont_object_hwater_delta_agr_city) with params");
+		logger.trace("p_subscriber_id:{}", subscriberId);
+		logger.trace("p_date_from:{}", ldp.getDateFrom());
+		logger.trace("p_date_to:{}", ldp.getDateTo());
+		logger.trace("p_cont_service_type:{}", contServiceTypeKey.getKeyname());
+		logger.trace("p_time_detail_type:{}", timeDetailKey.getKeyname());
+		logger.trace("p_city_fias_str:{}", cityFiasUUID.toString());
+		
 		String qString = "SELECT cont_object_id," // 0
 				+ "sum_m_delta," // 1
 				+ "sum_v_delta," // 2

@@ -446,6 +446,79 @@ public class AnyControllerTest {
 
 	/**
 	 * 
+	 * @param sendObject
+	 * @param url
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void testJsonPut(String url,
+			RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		ResultActionsTester tester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+			resultActions.andExpect(status().isOk());
+		};
+
+		testJsonPut(url, null, requestExtraInitializer, tester);
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param sendObject
+	 * @param requestExtraInitializer
+	 * @param resultActionsTester
+	 * @throws Exception
+	 */
+	protected void testJsonPut(String url, Object sendObject,
+			RequestExtraInitializer requestExtraInitializer,
+			ResultActionsTester resultActionsTester) throws Exception {
+
+		logger.info("Testing UPDATE on URL: {}", url);
+
+		MockHttpServletRequestBuilder request = put(url).with(
+				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+
+		if (sendObject != null) {
+			String jsonBody = null;
+			try {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+			} catch (JsonProcessingException e) {
+				logger.error("Can't create json: {}", e);
+				e.printStackTrace();
+				fail();
+			}
+
+			logger.info("Request JSON: {}", jsonBody);
+
+			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
+
+		}
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions resultActions = mockMvc.perform(request);
+
+		if (resultActionsTester != null) {
+			resultActionsTester.testResultActions(resultActions);
+		}
+
+	}
+
+	/**
+	 * 
+	 * @param sendObject
+	 * @param url
+	 * @throws Exception
+	 */
+	protected void testJsonPut(String url) throws Exception {
+		testJsonUpdate(url, null, null);
+	}
+
+	/**
+	 * 
 	 * @param urlStr
 	 * @param requestExtraInitializer
 	 * @throws Exception
