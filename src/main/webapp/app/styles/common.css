@@ -1204,6 +1204,14 @@ tr.nmc-main-table-header > th {
     color:green;
 }
 
+.nmc-normal-alt{
+    color:blue;
+}
+
+.nmc-normal-alter{
+    color:green;
+}
+
 /* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
 .nmc-bg-distinguish{
     background-color: #eee;
@@ -1275,6 +1283,10 @@ tr.nmc-main-table-header > th {
 }
 .marginBottom15 {
     margin-bottom: 15px;
+}
+
+.marginBottom0_8em{
+    margin-bottom: .8em;
 }
 
 .marginLeft5 {

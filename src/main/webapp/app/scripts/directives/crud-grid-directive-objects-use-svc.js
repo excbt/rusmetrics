@@ -74,25 +74,16 @@ console.log("Objects directive.");
                     $scope.objects = response.data;
                     //sort by name
                     objectSvc.sortObjectsByFullName($scope.objects);
-//                    $scope.objects.sort(function(a, b){
-//                        if (a.fullName>b.fullName){
-//                            return 1;
-//                        };
-//                        if (a.fullName<b.fullName){
-//                            return -1;
-//                        };
-//                        return 0;
-//                    }); 
+                    
                     $scope.objectsWithoutFilter = $scope.objects;
                     tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                     $scope.objectsOnPage = tempArr;
 //                    makeObjectTable(tempArr, true);
-                    $scope.loading = false;                  
+                    $scope.loading = false;  
+                    $rootScope.$broadcast('objectSvc:loaded');
                 });
                 
                 function makeObjectTable(objectArray, isNewFlag){
-//var timeStart = (new Date()).getTime();                   
-//console.log("Start makeObjectTable"+(new Date()).toLocaleString());
                     
                     var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];       
             //        var temptableHTML = "";
@@ -100,8 +91,7 @@ console.log("Objects directive.");
                     if (!isNewFlag){
                         tableHTML = objTable.innerHTML;
                     };
-//                    var objTable = document.getElementById('objectTable');
-//                    var tableHTML = "";
+
                     objectArray.forEach(function(element, index){
                         var globalElementIndex = $scope.objectCtrlSettings.objectBottomOnPage-objectArray.length+index;
                         var trClass= globalElementIndex%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
@@ -123,17 +113,11 @@ console.log("Objects directive.");
                     };
 //console.log(objTable);                    
                     $compile(objTable)($scope);
-//var timeEnd = (new Date()).getTime();                    
-//console.log("End makeObjectTable"+(new Date()).toLocaleString());
-//var difff = (timeEnd-timeStart);        
-//console.log(timeStart);                    
-//console.log(timeEnd);                                        
                     
-//console.log("Time length = "+difff);                    
                 };
                 
 //                $scope.objects = objectSvc.getObjects();
-                $scope.loading = objectSvc.loading;
+                $scope.loading = objectSvc.getLoadingStatus();//loading;
                 $scope.columns = angular.fromJson($attrs.columns);
                 $scope.captions = angular.fromJson($attrs.captions);
                 $scope.extraProps = angular.fromJson($attrs.exprops);
@@ -884,28 +868,22 @@ console.log($scope.currentZpoint);
                     window.onkeydown = undefined;
                 }); 
                 
-                window.onkeydown = function(e){
-//console.log("Window key down");                                            
+                
+                //keydown listener for ctrl+end
+                window.onkeydown = function(e){                                          
                     if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
-console.log("Ctrl + End");
                         $scope.loading =  true;    
-console.log($scope.loading);                        
-//                        $scope.$apply();
                         var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
                         
                         $scope.objectCtrlSettings.isCtrlEnd = true;
                         
-//                        $scope.objectsOnPage = $scope.objects;
                     };
                 };
                 
-                $scope.onTableLoad = function(){
-//                    var time = new Date();
-//console.log("On table load");                                        
-//console.log(time.toLocaleString());                    
-   
+                //function set cursor to the bottom of the object table, when ctrl+end pressed
+                $scope.onTableLoad = function(){ 
                     if ($scope.objectCtrlSettings.isCtrlEnd === true){                    
                         var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
                         window.scrollTo(0, Math.round(pageHeight));
@@ -914,85 +892,22 @@ console.log($scope.loading);
                     };
                 };
                 
-                //onScroll listener
-//                window.onscroll = 
-                    var funt = function(){
-            //        console.log("Window. On scroll");
-                    if(angular.isUndefined($scope.objects) || ($scope.objects.length===0)){
-                        return;
-                    };
-                    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            //console.log("scrollTop = "+scrollTop);
-            //        $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
-            //        $scope.monitorSettings.objectTopOnPage =0;
-            //        $scope.monitorSettings.objectBottomOnPage =49;
-
-                    var deltaScroll = scrollTop - $scope.objectCtrlSettings.currentScrollYPos;
-            //console.log(deltaScroll);        
-                    if (deltaScroll >=22){//down to 1 row
-            //console.log("deltaScroll +");            
-
-                        var rowCount = Math.round(deltaScroll/22);
-                        $scope.objectCtrlSettings.objectTopOnPage+=rowCount;
-                        $scope.objectCtrlSettings.objectBottomOnPage+=rowCount;
-                        //draw new table
-                        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectBottomOnPage-rowCount, $scope.objectCtrlSettings.objectBottomOnPage);
-                        makeObjectTable(tempArr, false);
-
-            //            window.
-
-                        $scope.objectCtrlSettings.currentScrollYPos = scrollTop;
-                    };
-
-//                    for(var i = 0; i<=$scope.monitorSettings.objectBottomOnPage; i++){
-//                        var obj = $scope.objects[i];
-//                        var imgObj = "#imgObj"+obj.contObject.id;          
-//                        $(imgObj).qtip({
-//                            content:{
-//                                text: obj.monitorEvents
-//                            },
-//                            style:{
-//                                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//                            }
-//                        }); 
-//                    };
-                    //up to some row
-            //        if (deltaScroll <=-22){
-            //console.log("deltaScroll -"); 
-            //            var rowCount = Math.round(Math.abs(deltaScroll/22));
-            //            $scope.monitorSettings.objectTopOnPage-=rowCount;
-            //            $scope.monitorSettings.objectBottomOnPage-=rowCount;            
-            //            //draw new table
-            //            var tempArr = $scope.objects.slice($scope.monitorSettings.objectTopOnPage, $scope.monitorSettings.objectBottomOnPage);
-            //            makeObjectTable(tempArr, true);
-            //
-            //            $scope.monitorSettings.currentScrollYPos = scrollTop;
-            //        };
-
-            //        if ($scope.monitorSettings.objectsOnPage>=$scope.objects.length){
-            //            return;
-            //        };
-            //        var startPos = $scope.monitorSettings.objectsOnPage;
-            //        var endPos = $scope.monitorSettings.objectsOnPage + $scope.monitorSettings.objectsPerScroll;
-            //        var tempArr = $scope.objects.slice(startPos, endPos);
-            //        makeObjectTable(tempArr, false);
-            //        $scope.monitorSettings.objectsOnPage = endPos;
-                };
-                
+                //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){
 console.log("addMoreObjects. Run");
                     if (($scope.objects.length<=0)){
                         return;
                     };
+                    
+                    //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
                     var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
 //console.log($scope.objects.length);                    
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
                     };
+                    //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
                     var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
-//console.log($scope.objectCtrlSettings.objectsOnPage);                    
-//console.log(endIndex);                    
-//console.log(tempArr);                    
+                        //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
@@ -1088,11 +1003,9 @@ console.log("addMoreObjects. Run");
                     //get device meta data and show it
                 $scope.getDeviceMetaData = function(obj, device){
                     objectSvc.getDeviceMetaData(obj, device).then(
-                        function(response){
-console.log(response);                            
+                        function(response){                           
                             device.metaData = response.data; 
-                            $scope.currentDevice =  device;
-console.log($scope.currentDevice);                            
+                            $scope.currentDevice =  device;                           
                             $('#metaDataEditorModal').modal();
                         },
                         function(error){

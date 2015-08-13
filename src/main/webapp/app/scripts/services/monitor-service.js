@@ -22,13 +22,11 @@ console.log("Monitor service. Run Monitor service.");
         monitorSvcSettings.fromDate = $rootScope.monitorStart;
         monitorSvcSettings.toDate = $rootScope.monitorEnd;
         
+        var getLoadingStatus = function(){
+            return monitorSvcSettings.loadingFlag;
+        };
+        
         var getAllMonitorObjects = function(){
-//console.log("Monitor service. getAllMonitorObjects."); 
-//var time = new Date();
-//console.log(time);            
-//            if (objectsMonitorSvc.length===0){
-//                $rootScope.$broadcast('monitor:updateObjectsRequest');
-//            };
             return objectsMonitorSvc;
         };
         
@@ -55,9 +53,11 @@ console.log("MonitorSvc. Get cities and objects");
 
             $http.get(targetUrl)
                 .success(function(data){
+//console.log(data);                
                     citiesMonitorSvc = data;                
                     objectsMonitorSvc = getObjectsFromCities(data);
-//    console.log(data);            
+                
+//console.log(objectsMonitorSvc);            
                     //sort objects by name
                     objectsMonitorSvc.sort(function(a, b){
                         if (a.contObject.fullName>b.contObject.fullName){
@@ -205,18 +205,13 @@ console.log("MonitorSvc. Get objects");
 
         //watch for the change of the refresh period
         $rootScope.$on('monitor:periodChanged', function () {
-    console.log("MonitorSvc monitorSvcSettings.refreshPeriod watch");
-//    console.log("new period = "+newPeriod);        
-            //cancel previous interval
+console.log("MonitorSvc monitorSvcSettings.refreshPeriod watch");
             stopRefreshing();
             //set new interval
             interval = $interval(function(){
                 var time = (new Date()).toLocaleString();
-    //console.log("new interval");            
-    console.log(time);
-    //console.log(Number($scope.monitorSvcSettings.refreshPeriod)); 
+console.log(time);
                 monitorSvcSettings.loadingFlag = true;
-//                getObjects(objectUrl, monitorSvcSettings);
                 getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
             },Number(monitorSvcSettings.refreshPeriod)*1000);
 
@@ -244,10 +239,12 @@ console.log("MonitorSvc. monitor:updateObjectsRequest");
         });
         
          return {
-            monitorSvcSettings,
+            
             getAllMonitorObjects,
             getAllMonitorCities,
-            getMonitorEventsByObject 
+            getLoadingStatus,
+            getMonitorEventsByObject, 
+            monitorSvcSettings 
         };
         
     }]);
