@@ -5,6 +5,9 @@
         <li role="presentation" ><a id="monitorTab" class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+        <div  ng-show="mapSettings.loadingFlag" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
 
     </ul>
 
@@ -14,20 +17,6 @@
     </div>
 </div>
 
-
-<!--
-<div class="nmc-map-monitor" id="map">
-    
-</div>
--->
-<!--
-<h1>Center map example</h1>
-     <ul>
-         <li><input type="number" step="any" ng-model="mapCenter.lat" /> Latitude</li>
-         <li><input type="number" step="any" ng-model="mapCenter.lng" /> Longitude</li>
-         <li><input type="number" step="any" ng-model="mapCenter.zoom" /> Zoom</li>
-     </ul>
--->
 
 <leaflet class="nmc-map-monitor" center="mapCenter" tiles="currentTile" markers="markersOnMap"></leaflet>
 

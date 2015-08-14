@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-    .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval',
-             function(crudGridDataFactory, $http, $cookies, $interval)
+    .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
+             function(crudGridDataFactory, $http, $cookies, $interval, $rootScope)
 //             function()
              {
 console.log("Object Service. Run.");                 
@@ -19,6 +19,9 @@ console.log("Object Service. Run.");
             return crudTableName;
         };         
         
+        var getLoadingStatus = function(){
+            return loading;
+        };         
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
@@ -111,7 +114,11 @@ console.log("Object Service. Run.");
 //console.log(time);           
 //       },10000);
                  
-        
+                 //if data loaded
+        promise.then(function(response){
+            loading = false;
+            $rootScope.$broadcast('objectSvc:loaded');
+        });
                     
         return {
 //            getObjects,
@@ -121,6 +128,7 @@ console.log("Object Service. Run.");
             getDevicesByObject,
             getDeviceMetaData,
             getDeviceMetaDataSystemList,
+            getLoadingStatus,
             getObjectsUrl,
             getRefRangeByObjectAndZpoint,
             getVzletSystemList,

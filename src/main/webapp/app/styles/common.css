@@ -16,6 +16,14 @@
     width: 500px !important;
 }
 
+.leaflet-popup-content-wrapper {
+    margin-left: -200px !important;
+}
+
+.leaflet-popup-content{
+    width: 500px !important;
+}
+
 /********************
  * Разметка страницы
  ********************/
@@ -572,6 +580,16 @@ tr.nmc-main-table-header > th {
 	height: 150px;
 	overflow: auto;
 }
+
+/* Таблица с данными по потреблению в попапе*/
+.nmc-table-popup{
+    
+}
+
+.nmc-table-popup > tbody > tr > td{
+    padding: 0 !important;
+}
+
 
 /* Стиль, запрещающий многострочность в ячейке таблицы. Используются на страницах Уведомления и Показания для того,
     чтобы данные внутри ячейки отображались в одну строку.
@@ -1181,6 +1199,10 @@ tr.nmc-main-table-header > th {
 /**********************
  * Вспомогательные
  *********************/
+/*Класс для форматирования дива, в который выводятся данные о потребелении*/
+.nmc-div-data{
+    height: 2em;
+}
 /* Шрифты */
     /* Заголовок в 2х этажных полях*/
 .nmc-caption-in-field {
@@ -1201,6 +1223,14 @@ tr.nmc-main-table-header > th {
 }
 
 .nmc-normal{
+    color:green;
+}
+
+.nmc-normal-alt{
+    color:blue;
+}
+
+.nmc-normal-alter{
     color:green;
 }
 
@@ -1275,6 +1305,10 @@ tr.nmc-main-table-header > th {
 }
 .marginBottom15 {
     margin-bottom: 15px;
+}
+
+.marginBottom0_8em{
+    margin-bottom: .8em;
 }
 
 .marginLeft5 {
