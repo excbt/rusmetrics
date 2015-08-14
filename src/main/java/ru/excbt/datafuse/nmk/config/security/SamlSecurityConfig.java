@@ -96,6 +96,9 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${saml.metadataProvider}")
 	private String samlMetadataProvider;
 
+	@Value("${saml.forceLocalLogin}")
+	private boolean forceLocalLogin;
+
 	@Autowired
 	private SAMLSubscriberUserDetailsService samlSubscriberUserDetailsService;
 
@@ -539,5 +542,9 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				// делаем не валидной текущую сессию
 				.invalidateHttpSession(true);
 
+	}
+
+	public boolean isForceLocalLogin() {
+		return forceLocalLogin;
 	}
 }
