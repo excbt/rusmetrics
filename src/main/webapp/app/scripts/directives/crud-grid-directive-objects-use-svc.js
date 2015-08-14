@@ -459,10 +459,11 @@ console.log("Objects directive.");
                                     "title=\"Эксплуатационные параметры точки учёта\">"+
                                         "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
                                 "</i>"+
-                                "<i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                "<a href='#/objects/indicators/'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+//                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                    "ng-mousedown=\"setIndicators("+object.id+","+zpoint.id+")\""+
                                     "title=\"Показания точки учёта\">"+
-                                "</i>"+
+                                "</i></a>"+
 
                             "</td>";
                         $scope.oldColumns.forEach(function(column){
@@ -668,6 +669,21 @@ console.log($scope.currentZpoint);
                     $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
                     window.location.assign("#/objects/indicators/");
+                };
+                
+                $scope.setIndicators = function(objectId, zpointId){
+                    $scope.selectedZpoint(objectId, zpointId);
+                    $cookies.contZPoint = $scope.currentZpoint.id;
+                    $cookies.contObject=$scope.currentObject.id;
+                    $cookies.contZPointName = $scope.currentZpoint.zpointName;
+                    $cookies.contObjectName=$scope.currentObject.fullName;
+                    $cookies.timeDetailType="24h";
+                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
+console.log($scope.currentZpoint);                    
+                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
+                                      
+//                    window.location.assign("#/objects/indicators/");
                 };
                 
                 //Свойства точки учета

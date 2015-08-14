@@ -211,6 +211,7 @@ console.log($scope.mapCenter);
         objectSvc.getObjectConsumingData(tmpSettings,object.contObject.id)
             .then(function(response){
                 $scope.newObjectData = response.data;
+console.log($scope.newObjectData);            
                 for (var i=0;i<$scope.newObjectData.serviceTypeARTs.length;i++){
                     var curData = $scope.newObjectData.serviceTypeARTs[i];
 console.log(curData);                        
@@ -220,13 +221,63 @@ console.log(curData);
 //console.log(curData);                    
                 };
                 var tmpDiffArray = [];
+                var tmpDiff = {};
                 object.serviceTypeARTs.forEach(function(serv){
                     for (var i=0; i<$scope.newObjectData.serviceTypeARTs.length;i++){
                         var curData = $scope.newObjectData.serviceTypeARTs[i];
                         if (serv.contServiceType === curData.contServiceType){
 console.log(curData);                            
-console.log(serv);                                                        
+console.log(serv);          
+                            var servType = serv;   
+                            switch (servType.contServiceType){
+                                case "hw": 
+                                    if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
+                                        tmpDiff.hw = "Нет данных";
+                                        tmpDiff.hwMeasureUnit ="";
+                                        tmpDiff.hwAverage = "Нет данных";
+                                        tmpDiff.hwAverageMeasureUnit ="";
+                                    }else{
+                                        tmpDiff.hw = (servType.absConsValue-curData.absConsValue).toFixed(2);
+                                        tmpDiff.hwPerCent = ((servType.absConsValue-curData.absConsValue)*100/curData.absConsValue).toFixed(2);
+                                        tmpDiff.hwMeasureUnit = " м3";//servType.measureUnit;//"м<sup>3</sup>";
+                                        if (object.contObject.heatArea>0){
+                                            tmpDiff.hwAverage = ((servType.absConsValue-curData.absConsValue)/object.contObject.heatArea).toFixed(2);
+                                            tmpDiff.hwAveragePerCent = ((servType.absConsValue-curData.absConsValue)*100/object.contObject.heatArea).toFixed(2);
+                                            tmpDiff.hwAverageMeasureUnit = "m3/m2";//"м<sup>3</sup>/м<sup>2</sup>";
+                                        }else{
+                                            tmpDiff.hwAverage = "Не задана площадь";
+                                            tmpDiff.hwAverageMeasureUnit="";
+                                        };
+                                    };
+                                    break;
+                                case "heat": 
+                                    if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
+                                        tmpDiff.heat = "Нет данных";
+                                        tmpDiff.heatMeasureUnit ="";
+                                        tmpDiff.heatAverage = "Нет данных";
+                                        tmpDiff.heatAverageMeasureUnit ="";
+                                    }else{;
+                                        tmpDiff.heat = servType.absConsValue;
+                                        tmpDiff.heatMeasureUnit = "ГКал";
+                                        if (object.contObject.heatArea>0){
+                                            tmpDiff.heatAverage = (servType.absConsValue/object.contObject.heatArea).toFixed(2);
+                                            tmpDiff.heatAverageMeasureUnit = "ГКал/м<sup>2</sup>";
+                                        }else{
+                                            tmpDiff.heatAverage = "Не задана площадь";
+                                            tmpDiff.heatAverageMeasureUnit="";
+                                        };
+                                    }
+                                    break;
+                                default: 
+                                    tmpDiff.wtf = servType.absConsValue;
+                                    tmpDiff.wtfMeasureUnit = "Wtf";
+                                    break;
+                            };
+
+                            
+//                            tmpDiff[contServiceType] = {};
                             var tmp = {};
+                            
                             tmp.contServiceType= serv.contServiceType;
                             tmp.measureUnit = serv.measureUnit;
                             tmp.absConsValue = Number((serv.absConsValue - curData.absConsValue).toFixed(2));
@@ -242,8 +293,9 @@ console.log(serv);
                     };
                 });
                 $scope.diffObjectData = tmpDiffArray;
+                $scope.diffData = tmpDiff;
                 $scope.comparingFlag = false;
-//console.log($scope.diffObjectData);            
+console.log($scope.diffData);            
             });
         
 //        var 
@@ -286,9 +338,10 @@ console.log(serv);
                 return;
             };
             obj.serviceTypeARTs.forEach(function(sys){
-if(sys.absConsValue<0){                
-    console.log(obj);      
-};
+//serch indicators <0                
+//if(sys.absConsValue<0){                
+//    console.log(obj);      
+//};
                 switch (sys.contServiceType){
                     case "heat":heatSum+=sys.absConsValue; break;
                     case "hw" : hwSum+=sys.absConsValue; break;
@@ -501,6 +554,64 @@ console.warn(elem);
     
      //create message for object marker
     var createMessageForObjectMarker = function(currentObject){
+        //prepare data
+        var curData = {};
+        if ((angular.isUndefined(currentObject.serviceTypeARTs))||(currentObject.serviceTypeARTs===null)||(currentObject.serviceTypeARTs.length===0)){
+            curData.hw = "Нет данных";
+            curData.hwMeasureUnit ="";
+            curData.heat = "Нет данных";
+            curData.heatMeasureUnit ="";
+            curData.hwAverage = "Нет данных";
+            curData.hwAverageMeasureUnit ="";
+            curData.heatAverage = "Нет данных";
+            curData.heatAverageMeasureUnit ="";
+        };
+        currentObject.serviceTypeARTs.forEach(function(servType){
+            switch (servType.contServiceType){
+                case "hw": 
+                    if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
+                        curData.hw = "Нет данных";
+                        curData.hwMeasureUnit ="";
+                        curData.hwAverage = "Нет данных";
+                        curData.hwAverageMeasureUnit ="";
+                    }else{
+                        curData.hw = servType.absConsValue.toFixed(2);
+                        curData.hwMeasureUnit = "м<sup>3</sup>";
+                        if (currentObject.contObject.heatArea>0){
+                            curData.hwAverage = (servType.absConsValue/currentObject.contObject.heatArea).toFixed(2);
+                            curData.hwAverageMeasureUnit = "м<sup>3</sup>/м<sup>2</sup>";
+                        }else{
+                            curData.hwAverage = "Не задана площадь";
+                            curData.hwAverageMeasureUnit="";
+                        };
+                    };
+                    break;
+                case "heat": 
+                    if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
+                        curData.heat = "Нет данных";
+                        curData.heatMeasureUnit ="";
+                        curData.heatAverage = "Нет данных";
+                        curData.heatAverageMeasureUnit ="";
+                    }else{;
+                        curData.heat = servType.absConsValue;
+                        curData.heatMeasureUnit = "ГКал";
+                        if (currentObject.contObject.heatArea>0){
+                            curData.heatAverage = (servType.absConsValue/currentObject.contObject.heatArea).toFixed(2);
+                            curData.heatAverageMeasureUnit = "ГКал/м<sup>2</sup>";
+                        }else{
+                            curData.heatAverage = "Не задана площадь";
+                            curData.heatAverageMeasureUnit="";
+                        };
+                    }
+                    break;
+                default: 
+                    curData.wtf = servType.absConsValue;
+                    curData.wtfMeasureUnit = "Wtf";
+                    break;
+            };
+        });
+      
+        
         var markerMessage = "<div id='"+currentObject.contObject.id+"' class=''>";
         markerMessage += "<label>"+currentObject.contObject.fullName+"</label><br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
@@ -528,38 +639,109 @@ console.warn(elem);
         markerMessage+="</div>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
         markerMessage+="    <div class='container-fluid'>";
+        markerMessage+="<table class='table table-striped table-condensed nmc-table-popup'>";
+        markerMessage+="    <tr>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="            <label>Горячая вода:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="            <label>Горячая вода:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";          
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            "+curData.hw+" "+curData.hwMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='diffData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='diffData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='diffData.hwPerCent!=null'>{{diffData.hwPerCent}}% {{diffData.hw}} {{diffData.hwMeasureUnit}}</span>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            "+curData.hwAverage+" "+curData.hwAverageMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <label >Отопление:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <label>Отопление:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            "+curData.heat+" "+curData.heatMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
         
-        markerMessage+="        <div class='row'>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            "+curData.heatAverage+" "+curData.heatAverageMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="</table>";
+//        markerMessage+="        <div class='row'>";
                 //left column
-        markerMessage+="            <div class='col-md-4 noPadding'>";
+//        markerMessage+="            <div class='col-md-4 noPadding'>";
         
-        currentObject.serviceTypeARTs.forEach(function(servType){
+//        currentObject.serviceTypeARTs.forEach(function(servType){
 //            if(!angular.isNumber(servType.absConsValue) || !angular.isNumber(servType.tempValue)){
 //                return;
 //            };
-            var measureUnit = "";
-            switch (servType.contServiceType){
-                case "hw": 
-                    markerMessage+="    <label>Горячая вода:</label><br>";
-                    measureUnit="м<sup>3</sup>";
-                    break;
-                case "heat": 
-                    markerMessage+="    <label>Отопление:</label><br>";
-                    measureUnit="ГКал";
-                    break;
-                default: markerMessage +=""+servType.contServiceType+"";
-                    break;
-            };
-        
-            markerMessage+="        <div class='paddingLeft5'>Всего: "+(angular.isNumber(servType.absConsValue)?servType.absConsValue.toFixed(2):"0")+" "+measureUnit+"<br>";
-            if (currentObject.contObject.heatArea>0){
-                markerMessage+="        Удельное: "+(servType.absConsValue/currentObject.contObject.heatArea).toFixed(2)+" "+measureUnit+"<br>";
-            };
-            markerMessage+="        t : "+(angular.isNumber(servType.tempValue)?servType.tempValue.toFixed(2):"")+" &deg;C";
-            markerMessage+="        </div>";                   
-        });
-        
-        markerMessage+="    </div>";
+//            var measureUnit = "";
+//            markerMessage+="<div class='nmc-div-data'>";
+//            switch (servType.contServiceType){
+//                case "hw": 
+//                    markerMessage+="    <label>Горячая вода:</label><br>";
+//                    measureUnit="м<sup>3</sup>";
+//                    break;
+//                case "heat": 
+//                    markerMessage+="    <label>Отопление:</label><br>";
+//                    measureUnit="ГКал";
+//                    break;
+//                default: markerMessage +=""+servType.contServiceType+"";
+//                    break;
+//            };
+//            markerMessage+="</div>";
+//            markerMessage+="        <div class='paddingLeft5'>Всего: "+(angular.isNumber(servType.absConsValue)?servType.absConsValue.toFixed(2):"0")+" "+measureUnit+"<br>";
+//            if (currentObject.contObject.heatArea>0){
+//                markerMessage+="        Удельное: "+(servType.absConsValue/currentObject.contObject.heatArea).toFixed(2)+" "+measureUnit+"<br>";
+//            };
+//            markerMessage+="        t : "+(angular.isNumber(servType.tempValue)?servType.tempValue.toFixed(2):"")+" &deg;C";
+//            markerMessage+="        </div>";                   
+//        });
+//        
+//        markerMessage+="    </div>";
             // center column
         markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.cmpFlag,'nmc-show':markerSettings.cmpFlag}\">";
                     
@@ -710,7 +892,7 @@ console.warn(elem);
             };      
 //console.log(marker == markerArray[0]) ;             
         });
-console.log(markerArray.length);        
+//console.log(markerArray.length);        
         var arrLength = markerArray.length;
         while (arrLength>=1){
             arrLength--;                                               
@@ -846,9 +1028,10 @@ console.log('Watch objectDates');
         $scope.newCityData = {};
         $scope.diffCityData = {};
         $scope.markerSettings = {};
+        $scope.diffData ={};
         //set the width of the popup window
-        var popup = document.getElementsByClassName("leaflet-popup-content-wrapper");
-        popup[0].className = "leaflet-popup-content-wrapper nmc-leaflet-popup-content-wrapper-compare";
+//        var popup = document.getElementsByClassName("leaflet-popup-content-wrapper");
+//        popup[0].className = "leaflet-popup-content-wrapper nmc-leaflet-popup-content-wrapper-compare";
     });
     //
     $rootScope.$on('objectSvc:loaded',function(){
