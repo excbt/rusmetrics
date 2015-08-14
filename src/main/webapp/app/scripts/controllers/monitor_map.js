@@ -26,6 +26,16 @@ angular.module('portalNMC')
     };
     
     var mapCenter = $scope.izhevsk; //center of map
+    //get map settings from user context
+    if (angular.isDefined($cookies.monitorMapZoom)){
+        mapCenter.zoom = Number($cookies.monitorMapZoom);
+    };
+    if (angular.isDefined($cookies.monitorMapLat)){
+        mapCenter.lat = Number($cookies.monitorMapLat);
+    };
+    if (angular.isDefined($cookies.monitorMapLng)){
+        mapCenter.lng = Number($cookies.monitorMapLng);
+    };
     
     angular.extend($scope,{
        mapCenter 
@@ -458,7 +468,7 @@ console.warn(elem);
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log(newZoom);
 //console.log(oldZoom); 
-        
+        $cookies.monitorMapZoom = newZoom;
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
             {  
@@ -494,6 +504,13 @@ console.warn(elem);
 //        angular.extend($scope,{markersOnMap});
         ///////////////////////////////////////
     }, false);
+    
+    $scope.$watch('mapCenter.lat',function(newLat){
+        $cookies.monitorMapLat = newLat;
+    });
+    $scope.$watch('mapCenter.lng',function(newLng){
+        $cookies.monitorMapLng = newLng;
+    });
     
     function findObjectById(objId){
         var obj = null;

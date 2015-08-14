@@ -321,7 +321,13 @@ angular.module('portalNMC')
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "m_out"
-            }, 
+            },
+            {
+                header : "Разность масс, т",
+                headerClass : "col-md-1",
+                dataClass : "col-md-1",
+                fieldName: "m_delta"
+            },
             {
                 header : "Темп. подачи",
                 headerClass : "col-md-1",
@@ -350,12 +356,7 @@ angular.module('portalNMC')
                 fieldName: "t_outdoor"
                 ,dataType: "temperature"                
             },
-            {
-                header : "Разность масс, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
-                fieldName: "m_delta"
-            },
+
             {
                 header : "Объем подачи, м3",
                 headerClass : "col-md-1",
@@ -505,9 +506,9 @@ console.log(tempDate.getTime());
                     var result  = {};
                     for(var i in $scope.columns){
                         if ($scope.columns[i].fieldName == "dataDate"){
-console.log("Indicator id = "+el.id);                            
-console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
-console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/1000.0)+3*3600));                            
+//console.log("Indicator id = "+el.id);                            
+//console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
+//console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/1000.0)+3*3600));                            
 //                          var datad = DateNMC(el.dataDate);
 //console.log(datad.getTimezoneOffset());
 //console.log(datad.toLocaleString());                            
@@ -516,6 +517,21 @@ console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/100
                         }
                         if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].fieldName !== "dataDateString")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
+                        };
+                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "m_delta")){
+                            if((el.m_out!=null)&&(el.m_in!=null)){
+                                el[$scope.columns[i].fieldName] = (el.m_out-el.m_in).toFixed(3);
+                            };
+                        };
+                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "v_delta")){
+                            if((el.v_out!=null)&&(el.v_in!=null)){
+                                el[$scope.columns[i].fieldName] = (el.v_out-el.v_in).toFixed(3);
+                            };
+                        };
+                        if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "p_delta")){
+                            if((el.p_out!=null)&&(el.p_in!=null)){
+                                el[$scope.columns[i].fieldName] = (el.p_out-el.p_in).toFixed(3);
+                            };
                         };
                         
                     };                    

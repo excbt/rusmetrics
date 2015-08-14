@@ -527,7 +527,7 @@ console.log("Objects directive.");
                             zpoint.zpointRefRange = "Не задан";
                             zpoint.zpointRefRangeAuto = "notSet";
                         }
-//                        viewRefRangeInTable(zpoint);
+                        viewRefRangeInTable(zpoint);
                     })
                     .error(function(e){
                         console.log(e);

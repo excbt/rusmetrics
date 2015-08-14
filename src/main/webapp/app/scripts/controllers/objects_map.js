@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ObjectsMapCtrl', function($rootScope, $scope, objectSvc){
+.controller('ObjectsMapCtrl', function($rootScope, $scope, $cookies, objectSvc){
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
     $scope.mapSettings.dateFrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD');
@@ -27,8 +27,19 @@ angular.module('portalNMC')
         lng: 53.216667,
         zoom: 8
     };
-    
     var mapCenter = $scope.izhevsk; //center of map
+    //get map settings from user context
+    if (angular.isDefined($cookies.objectMapZoom)){
+        mapCenter.zoom = Number($cookies.objectMapZoom);
+    };
+    if (angular.isDefined($cookies.objectMapLat)){
+        mapCenter.lat = Number($cookies.objectMapLat);
+    };
+    if (angular.isDefined($cookies.objectMapLng)){
+        mapCenter.lng = Number($cookies.objectMapLng);
+    };
+    
+    
     angular.extend($scope,{
        mapCenter 
     });
@@ -86,19 +97,28 @@ console.log($scope.newCityData);
 console.log(city);
                             //city vs newCity
                             var tmpDiff = {};
-                            tmpDiff.hw = ((city.servicesSummary.hw-$scope.newCityData.servicesSummary.hw)).toFixed(2);
-                            tmpDiff.hwPerCent = ($scope.newCityData.servicesSummary.hw>0)?((city.servicesSummary.hw-$scope.newCityData.servicesSummary.hw)*100/$scope.newCityData.servicesSummary.hw).toFixed(2):null;
-                            tmpDiff.hwMeasureUnit = 'м3';
-                            tmpDiff.heat = ((city.servicesSummary.heat-$scope.newCityData.servicesSummary.heat)).toFixed(2);
-                            tmpDiff.heatPerCent = ($scope.newCityData.servicesSummary.heat>0)?((city.servicesSummary.heat-$scope.newCityData.servicesSummary.heat)*100/$scope.newCityData.servicesSummary.heat).toFixed(2):null;
-                            tmpDiff.hwMeasureUnit = 'м3';
                             tmpDiff.heatArea = city.servicesSummary.heatArea;
-                            tmpDiff.heatAveragePerCent = (($scope.newCityData.servicesSummary.heatAverage>0)&&(tmpDiff.heatArea>0))?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)*100/$scope.newCityData.servicesSummary.heatAverage).toFixed(2):null;
-                            tmpDiff.heatAverage = ($scope.newCityData.servicesSummary.heatAverage>0)?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)).toFixed(2):null;
-                            tmpDiff.hwAveragePerCent = (($scope.newCityData.servicesSummary.hwAverage>0)&&(tmpDiff.heatArea>0))?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)*100/$scope.newCityData.servicesSummary.hwAverage).toFixed(2):null;
-                            tmpDiff.hwAverage = (($scope.newCityData.servicesSummary.hwAverage>0))?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)).toFixed(2):null;
+                            if ((city.servicesSummary.hw!=="Нет данных")&&($scope.newCityData.servicesSummary.hw!=="Нет данных")){
+                                tmpDiff.hw = ((city.servicesSummary.hw-$scope.newCityData.servicesSummary.hw)).toFixed(2);
+                                tmpDiff.hwPerCent = ((city.servicesSummary.hw-$scope.newCityData.servicesSummary.hw)*100/$scope.newCityData.servicesSummary.hw).toFixed(2);
+                                tmpDiff.hwMeasureUnit = 'м3';
+                                tmpDiff.hwAveragePerCent = ((tmpDiff.heatArea>0))?((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)*100/$scope.newCityData.servicesSummary.hwAverage).toFixed(2):null;
+                                tmpDiff.hwAverage = ((city.servicesSummary.hwAverage-$scope.newCityData.servicesSummary.hwAverage)).toFixed(2);
+                            };
+                            if ((city.servicesSummary.heat!=="Нет данных")&&($scope.newCityData.servicesSummary.heat!=="Нет данных")){
+                                tmpDiff.heat = ((city.servicesSummary.heat-$scope.newCityData.servicesSummary.heat)).toFixed(2);
+                                tmpDiff.heatPerCent = ((city.servicesSummary.heat-$scope.newCityData.servicesSummary.heat)*100/$scope.newCityData.servicesSummary.heat).toFixed(2);
+                                tmpDiff.heatMeasureUnit = 'м3';
+                                tmpDiff.heatAveragePerCent = ((tmpDiff.heatArea>0))?((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)*100/$scope.newCityData.servicesSummary.heatAverage).toFixed(2):null;
+                                tmpDiff.heatAverage = ((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)).toFixed(2);
+                            };
+                            
+console.log((tmpDiff.heatAveragePerCent));                              
+console.log((tmpDiff.heatAveragePerCent!==Infinity));                            
 console.log(tmpDiff);            
                             $scope.diffCityData = tmpDiff;
+                            $scope.diffData = tmpDiff;
+                            $scope.newData = angular.copy($scope.newCityData.servicesSummary);
                             $scope.markerSettings.isDiffDataFlag = true;
                             $scope.comparingFlag = false;
                         },
@@ -203,7 +223,8 @@ console.log($scope.mapCenter);
     //записываем новые полученные данные за заданный период в массив newObjectData
     //делаем расчет разностей
     // записываем полученные разности в массив diffObjectData
-    var getObjectsConsumingForObject = function(object, settings){
+    var getObjectsConsumingForObject = function(object, settings){    
+        $scope.markerSettings.cmpDataFlag = true;
         $scope.markerSettings.runFlag = true;
         var tmpSettings = angular.copy(settings);
 //        tmpSettings.objectCompareFlag == true;
@@ -211,19 +232,21 @@ console.log($scope.mapCenter);
         objectSvc.getObjectConsumingData(tmpSettings,object.contObject.id)
             .then(function(response){
                 $scope.newObjectData = response.data;
-console.log($scope.newObjectData);            
+//console.log($scope.newObjectData);            
                 for (var i=0;i<$scope.newObjectData.serviceTypeARTs.length;i++){
                     var curData = $scope.newObjectData.serviceTypeARTs[i];
-console.log(curData);                        
+//console.log(curData);                        
                     curData.absConsValue = (curData.absConsValue===null)?null:Number(curData.absConsValue.toFixed(2));
                     curData.tempValue = (curData.tempValue===null)?null:Number(curData.tempValue.toFixed(2));
                     
 //console.log(curData);                    
                 };
-            
+//console.log(object);            
                 var tmpDiff = {};
                 $scope.newData = prepareObjectData(response.data);
                 var curData = prepareObjectData(object);
+//console.log(curData);
+//console.log($scope.newData);            
             
 //                if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
 //                    tmpDiff.hw = "Нет данных";
@@ -263,7 +286,7 @@ console.log(curData);
                 };
 
             
-            
+     ///// to deleeteeee
                 var tmpDiffArray = [];
                 
                 object.serviceTypeARTs.forEach(function(serv){
@@ -300,6 +323,7 @@ console.log($scope.diffData);
     };
     
     var getObjectsConsumingForCity = function(city, settings){
+        $scope.markerSettings.cmpDataFlag=true;
         $scope.markerSettings.runFlag = true;
         var tmpCities = [];
         var tmpObjects = [];
@@ -347,16 +371,27 @@ console.log($scope.diffData);
             });
         });
         var servicesSummary = {};
-        servicesSummary.hw = hwSum;
+        servicesSummary.hw = "Нет данных";
+        servicesSummary.hwMeasureUnit = '';
+        servicesSummary.heat = "Нет данных";
+        servicesSummary.heatMeasureUnit = '';
+        servicesSummary.heatArea = null;
+        servicesSummary.heatAreaMeasureUnit = '';
+        servicesSummary.heatAverage = "Не задана площадь";
+        servicesSummary.heatAverageMeasureUnit = '';
+        servicesSummary.hwAverage = "Не задана площадь";
+        servicesSummary.hwAverageMeasureUnit = '';
+        
+        servicesSummary.hw = hwSum.toFixed(2);
         servicesSummary.hwMeasureUnit = 'м3';
-        servicesSummary.heat = heatSum;
+        servicesSummary.heat = heatSum.toFixed(2);
         servicesSummary.heatMeasureUnit = 'ГКал';
-        servicesSummary.heatArea = areaSum;
+        servicesSummary.heatArea = areaSum.toFixed(2);
         servicesSummary.heatAreaMeasureUnit = 'м2';
         if (areaSum != 0){
-            servicesSummary.heatAverage = heatSum/areaSum;
+            servicesSummary.heatAverage = (heatSum/areaSum).toFixed(2);
             servicesSummary.heatAverageMeasureUnit = 'ГКал/м2';
-            servicesSummary.hwAverage = hwSum/areaSum;
+            servicesSummary.hwAverage = (hwSum/areaSum).toFixed(2);
             servicesSummary.hwAverageMeasureUnit = 'м3/м2';
         };
         city.servicesSummary =servicesSummary; 
@@ -390,49 +425,134 @@ console.log($scope.diffData);
         markerMessage+="    <i class='btn btn-xs glyphicon glyphicon-chevron-down' ng-class=\"{'glyphicon-chevron-down':!markerSettings.cmpFlag,'glyphicon-chevron-up':markerSettings.cmpFlag}\" ng-click='compareWith()'></i>";
         markerMessage+="</div>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        markerMessage+="    <div class='container-fluid'>";
-        markerMessage+="        <div class='row'>";
+        
+        markerMessage+="<table class='table table-striped table-condensed nmc-table-popup'>";
+        markerMessage+="    <tr>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="            <label>Горячая вода:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td class='col-md-4'>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><label>Горячая вода:</label></span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";          
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            "+city.servicesSummary.hw+" "+city.servicesSummary.hwMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")&&(diffData.hw>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")&&(diffData.hw<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")'>{{diffData.hwPerCent}}% {{diffData.hw}} м<sup>3</sup></span>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            {{newData.hw}} <span ng-if='(newData.hw!=null)&&(newData.hw!=\"NaN\")&&(newData.hw!=\"Infinity\")&&(newData.hw!=\"Нет данных\")&&(newData.hw!=\"Не задана площадь\")'>м<sup>3</sup></span></span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            "+city.servicesSummary.hwAverage+" "+city.servicesSummary.hwAverageMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")&&(diffData.hwAverage>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")&&(diffData.hwAverage<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")'>{{diffData.hwAveragePerCent}}% {{diffData.hwAverage}} м<sup>3</sup>/м<sup>2</sup></span>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="           <span ng-if='markerSettings.cmpDataFlag'> <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            {{newData.hwAverage}} <span ng-if='(newData.hwAverage!=null)&&(newData.hwAverage!=\"NaN\")&&(newData.hwAverage!=\"Infinity\")&&(newData.hwAverage!=\"Нет данных\")&&(newData.hwAverage!=\"Не задана площадь\")'>м<sup>3</sup>/м<sup>2</sup></span></span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <label >Отопление:</label>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><label>Отопление:</label></span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            "+city.servicesSummary.heat+" "+city.servicesSummary.heatMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatPerCent!=\"NaN\")&&(diffData.heatPerCent!=\"Infinity\")&&(diffData.heat>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatPerCent!=\"NaN\")&&(diffData.heatPerCent!=\"Infinity\")&&(diffData.heat<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatPerCent!=\"NaN\")&&(diffData.heatPerCent!==\"Infinity\")'>{{diffData.heatPerCent}}% {{diffData.heat}} ГКал</span>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="           <span ng-if='markerSettings.cmpDataFlag'> <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            {{newData.heat}} {{newData.heatMeasureUnit}}</span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="    <tr >";
+        markerMessage+="        <td>";
+        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            "+city.servicesSummary.heatAverage+" "+city.servicesSummary.heatAverageMeasureUnit;
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!=\"Infinity\")&&(diffData.heatAverage>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!=\"Infinity\")&&(diffData.heatAverage<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!==\"Infinity\")'>{{diffData.heatAveragePerCent}}% {{diffData.heatAverage}} ГКал/м<sup>2</sup></span>";
+        markerMessage+="        </td>";
+        markerMessage+="        <td>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            {{newData.heatAverage}} <span ng-if='(newData.heatAverage!=null)&&(newData.heatAverage!=\"NaN\")&&(newData.heatAverage!=\"Infinity\")&&(newData.heatAverage!=\"Нет данных\")&&(newData.heatAverage!=\"Не задана площадь\")'>ГКал/м<sup>2</sup></span></span>";
+        markerMessage+="        </td>";
+        markerMessage+="    </tr>";
+        markerMessage+="</table>";
+        
+        
+//        markerMessage+="    <div class='container-fluid'>";
+//        markerMessage+="        <div class='row'>";
                 //left column
-        markerMessage+="            <div class='col-md-4 noPadding'>";
-        markerMessage+="    <label>Горячая вода:</label><br>";
-        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.hw.toFixed(2)+" "+city.servicesSummary.hwMeasureUnit+"<br>";
-        if (city.servicesSummary.heatArea>0){
-            markerMessage+="        Удельное: "+city.servicesSummary.hwAverage.toFixed(2)+" "+city.servicesSummary.hwAverageMeasureUnit+"<br>";
-        };
-        markerMessage+="        </div>";
-        markerMessage+="    <label>Отопление:</label><br>";
-        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.heat.toFixed(2)+" "+city.servicesSummary.heatMeasureUnit+"<br>";
-        if (city.servicesSummary.heatArea>0){
-            markerMessage+="        Удельное: "+city.servicesSummary.heatAverage.toFixed(2)+" "+city.servicesSummary.heatAverageMeasureUnit+"<br>";
-        };
-        markerMessage+="        </div>";
-
-        markerMessage+="    </div>";
+//        markerMessage+="            <div class='col-md-4 noPadding'>";
+//        markerMessage+="    <label>Горячая вода:</label><br>";
+//        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.hw.toFixed(2)+" "+city.servicesSummary.hwMeasureUnit+"<br>";
+//        if (city.servicesSummary.heatArea>0){
+//            markerMessage+="        Удельное: "+city.servicesSummary.hwAverage.toFixed(2)+" "+city.servicesSummary.hwAverageMeasureUnit+"<br>";
+//        };
+//        markerMessage+="        </div>";
+//        markerMessage+="    <label>Отопление:</label><br>";
+//        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.heat.toFixed(2)+" "+city.servicesSummary.heatMeasureUnit+"<br>";
+//        if (city.servicesSummary.heatArea>0){
+//            markerMessage+="        Удельное: "+city.servicesSummary.heatAverage.toFixed(2)+" "+city.servicesSummary.heatAverageMeasureUnit+"<br>";
+//        };
+//        markerMessage+="        </div>";
+//
+//        markerMessage+="    </div>";
             // center column
-        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isDiffDataFlag,'nmc-show':markerSettings.isDiffDataFlag}\">";
-        markerMessage+="                <br>";
-        markerMessage+="                <div><span ng-if='diffCityData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffCityData.hwPerCent<100),'nmc-alert':(diffCityData.hwPerCent>=100)}\"></i></span><span ng-if='diffCityData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwPerCent>=100),'nmc-normal-alt':(diffCityData.hwPerCent<100)}\"></i></span><span ng-if='diffCityData.hwPerCent!=null'>{{diffCityData.hwPerCent}}%  {{diffCityData.hw}} м<sup>3</sup></span></div>";
-        markerMessage+="                <div><span ng-if='diffCityData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal-alt':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAveragePerCent!=null'>{{diffCityData.hwAveragePerCent}}% {{diffCityData.hwAverage}}м<sup>3</sup></span></div>";
-        markerMessage+="                   <br>";
-        markerMessage+="                    <div class='marginBottom0_8em'></div>";
-        markerMessage+="                <div><span ng-if='diffCityData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatPerCent>=100),'nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':'diffCityData.heatPerCent>=100','nmc-normal-alt':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heatPerCent!=null'>{{diffCityData.heatPerCent}}% {{diffCityData.heat}} ГКал</span></div>";
-        markerMessage+="                <div><span ng-if='diffCityData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100), 'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100),'nmc-normal-alt':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAveragePerCent!=null'>{{diffCityData.heatAveragePerCent}}% {{diffCityData.heatAverage}}ГКал</span></div>";
-        markerMessage+="    </div>";
+//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isDiffDataFlag,'nmc-show':markerSettings.isDiffDataFlag}\">";
+//        markerMessage+="                <br>";
+//        markerMessage+="                <div><span ng-if='diffCityData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffCityData.hwPerCent<100),'nmc-alert':(diffCityData.hwPerCent>=100)}\"></i></span><span ng-if='diffCityData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwPerCent>=100),'nmc-normal-alt':(diffCityData.hwPerCent<100)}\"></i></span><span ng-if='diffCityData.hwPerCent!=null'>{{diffCityData.hwPerCent}}%  {{diffCityData.hw}} м<sup>3</sup></span></div>";
+//        markerMessage+="                <div><span ng-if='diffCityData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal-alt':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAveragePerCent!=null'>{{diffCityData.hwAveragePerCent}}% {{diffCityData.hwAverage}}м<sup>3</sup></span></div>";
+//        markerMessage+="                   <br>";
+//        markerMessage+="                    <div class='marginBottom0_8em'></div>";
+//        markerMessage+="                <div><span ng-if='diffCityData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatPerCent>=100),'nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':'diffCityData.heatPerCent>=100','nmc-normal-alt':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heatPerCent!=null'>{{diffCityData.heatPerCent}}% {{diffCityData.heat}} ГКал</span></div>";
+//        markerMessage+="                <div><span ng-if='diffCityData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100), 'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100),'nmc-normal-alt':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAveragePerCent!=null'>{{diffCityData.heatAveragePerCent}}% {{diffCityData.heatAverage}}ГКал</span></div>";
+//        markerMessage+="    </div>";
 
             //right column
-        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isNewDataFlag,'nmc-show':markerSettings.isNewDataFlag}\">";
-        markerMessage+="    <label>Горячая вода:</label><br>";
-        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.hw.toFixed(2)}}{{newCityData.servicesSummary.hwMeasureUnit}}<br>";
-            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.hwAverage.toFixed(2)}} {{newCityData.servicesSummary.hwAverageMeasureUnit}}</span>";
-        markerMessage+="        </div>";
-        markerMessage+="    <label>Отопление:</label><br>";
-        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.heat.toFixed(2)}} {{newCityData.servicesSummary.heatMeasureUnit}}<br>";
-            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.heatAverage.toFixed(2)}} {{newCityData.servicesSummary.heatAverageMeasureUnit}}</span>";
-        markerMessage+="        </div>";
+//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isNewDataFlag,'nmc-show':markerSettings.isNewDataFlag}\">";
+//        markerMessage+="    <label>Горячая вода:</label><br>";
+//        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.hw.toFixed(2)}}{{newCityData.servicesSummary.hwMeasureUnit}}<br>";
+//            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.hwAverage.toFixed(2)}} {{newCityData.servicesSummary.hwAverageMeasureUnit}}</span>";
+//        markerMessage+="        </div>";
+//        markerMessage+="    <label>Отопление:</label><br>";
+//        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.heat.toFixed(2)}} {{newCityData.servicesSummary.heatMeasureUnit}}<br>";
+//            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.heatAverage.toFixed(2)}} {{newCityData.servicesSummary.heatAverageMeasureUnit}}</span>";
+//        markerMessage+="        </div>";
 
-        markerMessage+="    </div>";
-        
-        markerMessage+="        </div>";
+//        markerMessage+="    </div>";
+//        
+//        markerMessage+="        </div>";
         markerMessage+="    </div>";
         markerMessage+="</div>";  
         return markerMessage;
@@ -450,6 +570,7 @@ console.log($scope.diffData);
         var markerMessage = createMessageForCityMarker(city);
         
         marker.focus= false;
+        marker.city = city;
         marker.lng=city.cityGeoPosX;
             marker.lat= city.cityGeoPosY;
             marker.getMessageScope=function () {
@@ -460,7 +581,8 @@ console.log($scope.diffData);
                         dateTo: $scope.mapSettings.dateTo
                     }
                 });
-                angular.extend($scope, {curCity: city});
+                var tmpCity = angular.copy(marker.city);
+                angular.extend($scope, {curCity: tmpCity});
                 angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
                 angular.extend($scope,{compareWith: compareWith});
                 angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
@@ -565,8 +687,10 @@ console.warn(elem);
         if ((angular.isUndefined(currentObject.serviceTypeARTs))||(currentObject.serviceTypeARTs===null)||(currentObject.serviceTypeARTs.length===0)){
             curData.hw = "Нет данных";
             curData.hwMeasureUnit ="";
+            curData.hwTemp = "Нет данных";
             curData.heat = "Нет данных";
             curData.heatMeasureUnit ="";
+            curData.heatTemp = "Нет данных";
             curData.hwAverage = "Нет данных";
             curData.hwAverageMeasureUnit ="";
             curData.heatAverage = "Нет данных";
@@ -599,7 +723,7 @@ console.warn(elem);
                         curData.heatAverage = "Нет данных";
                         curData.heatAverageMeasureUnit ="";
                     }else{;
-                        curData.heat = servType.absConsValue;
+                        curData.heat = servType.absConsValue.toFixed(2);
                         curData.heatMeasureUnit = "ГКал";
                         if (currentObject.contObject.heatArea>0){
                             curData.heatAverage = (servType.absConsValue/currentObject.contObject.heatArea).toFixed(2);
@@ -650,7 +774,7 @@ console.warn(elem);
         markerMessage+="    <i class='btn btn-xs glyphicon glyphicon-chevron-down' ng-class=\"{'glyphicon-chevron-down':!markerSettings.cmpFlag,'glyphicon-chevron-up':markerSettings.cmpFlag}\" ng-click='compareWith()'></i>";
         markerMessage+="</div>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        markerMessage+="    <div class='container-fluid'>";
+//        markerMessage+="    <div class='container-fluid'>";
         markerMessage+="<table class='table table-striped table-condensed nmc-table-popup'>";
         markerMessage+="    <tr>";
         markerMessage+="        <td class='col-md-4'>";
@@ -659,7 +783,7 @@ console.warn(elem);
         markerMessage+="        <td class='col-md-4'>";
         markerMessage+="        </td>";
         markerMessage+="        <td class='col-md-4'>";
-        markerMessage+="            <label>Горячая вода:</label>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><label>Горячая вода:</label></span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="    <tr >";
@@ -668,13 +792,13 @@ console.warn(elem);
         markerMessage+="            "+curData.hw+" "+curData.hwMeasureUnit;
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span ng-if='diffData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.hwPerCent!=null'>{{diffData.hwPerCent}}% {{diffData.hw}} м<sup>3</sup></span>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")&&(diffData.hw>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")&&(diffData.hw<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwPerCent<100),'nmc-alert':(diffData.hwPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwPerCent!=null)&&(diffData.hwPerCent!=\"NaN\")&&(diffData.hwPerCent!=\"Infinity\")'>{{diffData.hwPerCent}}% {{diffData.hw}} м<sup>3</sup></span>";
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
-        markerMessage+="            {{newData.hw}} м<sup>3</sup>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><span class='marginLeft15'>Всего:</span></span>";
+        markerMessage+="            {{newData.hw}} <span ng-if='(newData.hw!=null)&&(newData.hw!=\"NaN\")&&(newData.hw!=\"Infinity\")&&(newData.hw!=\"Нет данных\")&&(newData.hw!=\"Не задана площадь\")'>м<sup>3</sup></span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="    <tr >";
@@ -683,13 +807,13 @@ console.warn(elem);
         markerMessage+="            "+curData.hwAverage+" "+curData.hwAverageMeasureUnit;
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span ng-if='diffData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.hwAveragePerCent!=null'>{{diffData.hwAveragePerCent}}% {{diffData.hwAverage}} м<sup>3</sup>/м<sup>2</sup></span>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")&&(diffData.hwAverage>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")&&(diffData.hwAverage<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.hwAveragePerCent<100),'nmc-alert':(diffData.hwAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.hwAveragePerCent!=null)&&(diffData.hwAveragePerCent!=\"NaN\")&&(diffData.hwAveragePerCent!=\"Infinity\")'>{{diffData.hwAveragePerCent}}% {{diffData.hwAverage}} м<sup>3</sup>/м<sup>2</sup></span>";
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
-        markerMessage+="            {{newData.hwAverage}} м<sup>3</sup>/м<sup>2</sup>";
+        markerMessage+="            <span ng-if='markerSettings.cmpDataFlag'><span class='marginLeft15'>Удельное:</span></span>";
+        markerMessage+="            {{newData.hwAverage}} <span ng-if='(newData.hwAverage!=null)&&(newData.hwAverage!=\"NaN\")&&(newData.hwAverage!=\"Infinity\")&&(newData.hwAverage!=\"Нет данных\")&&(newData.hwAverage!=\"Не задана площадь\")'>м<sup>3</sup>/м<sup>2</sup></span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="    <tr >";
@@ -699,7 +823,7 @@ console.warn(elem);
         markerMessage+="        <td>";
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <label>Отопление:</label>";
+        markerMessage+="           <span ng-if='markerSettings.cmpDataFlag'> <label>Отопление:</label></span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="    <tr >";
@@ -708,13 +832,13 @@ console.warn(elem);
         markerMessage+="            "+curData.heat+" "+curData.heatMeasureUnit;
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span ng-if='diffData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.heatAveragePerCent!=null'>{{diffData.heatPerCent}}% {{diffData.heat}} ГКал</span>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatPerCent!=\"NaN\")&&(diffData.heatPerCent!=\"Infinity\")&&(diffData.heat>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatPerCent!=\"NaN\")&&(diffData.heatPerCent!=\"Infinity\")&&(diffData.heat<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatPerCent<100),'nmc-alert':(diffData.heatPerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatPerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!=\"Infinity\")'>{{diffData.heatPerCent}}% {{diffData.heat}} ГКал</span>";
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span class='marginLeft15'>Всего:</span>";
-        markerMessage+="            {{newData.heat}} {{newData.heatMeasureUnit}}";
+        markerMessage+="           <span ng-if='markerSettings.cmpDataFlag'> <span class='marginLeft15'>Всего:</span>";
+        markerMessage+="            {{newData.heat}} {{newData.heatMeasureUnit}}</span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="    <tr >";
@@ -723,13 +847,13 @@ console.warn(elem);
         markerMessage+="            "+curData.heatAverage+" "+curData.heatAverageMeasureUnit;
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span ng-if='diffData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
-        markerMessage+="            <span ng-if='diffData.heatAveragePerCent!=null'>{{diffData.heatAveragePerCent}}% {{diffData.heatAverage}} ГКал/м<sup>2</sup></span>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!=\"Infinity\")&&(diffData.heatAverage>0)'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!=\"Infinity\")&&(diffData.heatAverage<0)'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diffData.heatAveragePerCent<100),'nmc-alert':(diffData.heatAveragePerCent>=100)}\"></i></span>";
+        markerMessage+="            <span ng-if='(diffData.heatAveragePerCent!=null)&&(diffData.heatAveragePerCent!=\"NaN\")&&(diffData.heatAveragePerCent!==\"Infinity\")'>{{diffData.heatAveragePerCent}}% {{diffData.heatAverage}} ГКал/м<sup>2</sup></span>";
         markerMessage+="        </td>";
         markerMessage+="        <td>";
-        markerMessage+="            <span class='marginLeft15'>Удельное:</span>";
-        markerMessage+="            {{newData.heatAverage}} ГКал/м<sup>2</sup>";
+        markerMessage+="           <span ng-if='markerSettings.cmpDataFlag'> <span class='marginLeft15'>Удельное:</span>";
+        markerMessage+="            {{newData.heatAverage}} <span ng-if='(newData.heatAverage!=null)&&(newData.heatAverage!=\"NaN\")&&(newData.heatAverage!=\"Infinity\")&&(newData.heatAverage!=\"Нет данных\")&&(newData.heatAverage!=\"Не задана площадь\")'>ГКал/м<sup>2</sup></span> </span>";
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="</table>";
@@ -798,7 +922,7 @@ console.warn(elem);
 //        markerMessage+="</div>";
 //        markerMessage+="    </div>";
         
-        markerMessage+="        </div>";
+//        markerMessage+="        </div>";//container-fluid
         markerMessage+="    </div>";
         markerMessage+="</div>";  
         return markerMessage;
@@ -811,12 +935,12 @@ console.warn(elem);
             return;
         }; 
         
-        var markerMessage = createMessageForObjectMarker(object);
-        
+        var markerMessage = createMessageForObjectMarker(object);      
         marker.focus= false;
+        marker.object = object;
         marker.lng=object.contObject.contObjectGeo.geoPosX;
-            marker.lat= object.contObject.contObjectGeo.geoPosY;
-            marker.getMessageScope=function () {
+        marker.lat= object.contObject.contObjectGeo.geoPosY;
+        marker.getMessageScope=function () {
                 angular.extend($scope, {
                     markerSettings:{
                         cmpFlag: false,
@@ -824,7 +948,8 @@ console.warn(elem);
                         dateTo: $scope.mapSettings.dateTo
                     }
                 });
-                angular.extend($scope,{curObject:object});
+                var obj = angular.copy(marker.object);
+                angular.extend($scope,{curObject:obj});
                 angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
                 angular.extend($scope,{compareWith: compareWith});
                 angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
@@ -835,6 +960,7 @@ console.warn(elem);
             marker.icon =  angular.copy(monitorMarker); //set current marker
         
         marker.contObjectId = object.contObject.id;
+        
                 
         return marker;
     };
@@ -944,13 +1070,17 @@ console.warn(elem);
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log($scope.objectsOfCities);
 //console.log($scope.cities);
+        $cookies.objectMapZoom = newZoom;
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
             {                  
                 if ($scope.viewCurrentCityObjectsFlag === true){
                     $scope.viewCurrentCityObjectsFlag = false;
                     return;
-                };                
+                };  
+                //clear open popup
+                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane[0].innerHTML = "";
 //                markers = $scope.setObjectsOnMap($scope.objectsOfCities, markers);   
                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
                 $scope.markersOnMap = markersForObjects;
@@ -959,6 +1089,9 @@ console.warn(elem);
         };
         if (newZoom<=$scope.mapSettings.zoomBound){
             if (oldZoom>$scope.mapSettings.zoomBound){
+                //clear open popup
+                var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+                popupPane[0].innerHTML = "";
 //                markers = $scope.setCitiesOnMap($scope.cities, markers);
                 markersForCities = $scope.setCitiesOnMap($scope.cities, markersForCities);
                 $scope.markersOnMap = markersForCities;
@@ -974,6 +1107,13 @@ console.warn(elem);
         
 //        angular.extend($scope, {markersOnMap: markers});
     }, false);
+    
+    $scope.$watch('mapCenter.lat',function(newLat){
+        $cookies.objectMapLat = newLat;
+    });
+    $scope.$watch('mapCenter.lng',function(newLng){
+        $cookies.objectMapLng = newLng;
+    });
     
     function findObjectById(objId){
         var obj = null;
@@ -1040,7 +1180,13 @@ console.log('Watch objectDates');
         var citySet = {};
         citySet.dateFrom = $scope.mapSettings.dateFrom;
         citySet.dateTo = $scope.mapSettings.dateTo; 
+        var openedPopup = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+console.log(openedPopup);        
+        if (angular.isDefined(openedPopup)){
+            openedPopup[0].innerHTML= "";
+        };
         $scope.mapSettings.loadingFlag = true;
+
         refreshCitiesData();
     }, false);
    
