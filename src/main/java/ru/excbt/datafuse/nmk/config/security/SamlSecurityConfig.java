@@ -93,6 +93,9 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${saml.entityId}")
 	private String samlEntityId;
 
+	@Value("${saml.metadataProvider}")
+	private String samlMetadataProvider;
+
 	@Autowired
 	private SAMLSubscriberUserDetailsService samlSubscriberUserDetailsService;
 
@@ -311,10 +314,10 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public ExtendedMetadataDelegate httpMetadataProvider()
 			throws MetadataProviderException {
 
+		// TODO
 		@SuppressWarnings("deprecation")
 		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
-				"http://nmk-1.local.excbt.ru:8080/openam/saml2/jsp/exportmetadata.jsp",
-				5000);
+				samlMetadataProvider, 5000);
 		httpMetadataProvider.setParserPool(parserPool());
 
 		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(
