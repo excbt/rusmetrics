@@ -179,7 +179,7 @@ console.log($scope.cur_rep_shdl);
 					document.getElementById("inp_rcpt_email").disabled = true;
 					document.getElementById('slct_rep_tmpl_var').disabled = true;
 					// Добавляем время по умолчанию:
-					$scope.cur_rep_shdl.sheduleTimeTemplate = '15 0 * * *';
+					$scope.cur_rep_shdl.sheduleTimeTemplate = '15 0 1 * 1';
 				}
 				else {
 					$scope.cur_rep_shdl = rep_shdl;

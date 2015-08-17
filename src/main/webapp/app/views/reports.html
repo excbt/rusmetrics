@@ -20,9 +20,9 @@
                             <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
-                                <tr>
+                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
 
-                                    <td ng-class="column.class">
+                                    <td ng-class="column.class" style="padding:0;">
 
                                         <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
@@ -30,9 +30,9 @@
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-3 noPadding"><b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+                                            <div class="col-md-5 noPadding"><b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                             </div>    
-                                            <div class="col-md-9" ng-show="object.reportType=='COMMERCE_REPORT'">
+                                            <div class="col-md-7" ng-show="object.reportType=='COMMERCE_REPORT'">
                                             </div>
                                         </div>
 

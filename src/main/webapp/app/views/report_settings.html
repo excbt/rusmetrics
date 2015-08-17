@@ -59,9 +59,9 @@
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
-                                <tr>
+                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
 
-                                    <td ng-class="column.class">
+                                    <td ng-class="column.class" >
 
                                         <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
 
@@ -69,9 +69,9 @@
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-2 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                            <div class="col-md-5 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
-                                            <div class="col-md-10" ng-show="object.reportType=='COMMERCE_REPORT'">
+                                            <div class="col-md-7" ng-show="object.reportType=='COMMERCE_REPORT'">
                                                 <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addTemplate(object)" >Добавить</button>
                                             </div>
                                         </div>
@@ -189,7 +189,7 @@
                     <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
-                                <tr>
+                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
                                     <td ng-class="column.class">
                                         <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
                                             <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>

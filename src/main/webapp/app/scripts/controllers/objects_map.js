@@ -5,6 +5,9 @@ angular.module('portalNMC')
     $scope.mapSettings.dateFrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD');
     $scope.mapSettings.dateTo = moment().endOf('day').format('YYYY-MM-DD');
     $scope.mapSettings.loadingFlag = objectSvc.getLoadingStatus();
+    $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
+//console.log($scope.mapSettings.loadingFlag);    
+console.log($scope.mapSettings.drawMarkersFlag);    
     
     var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -145,10 +148,12 @@ console.log(tmpDiff);
                                 angular.extend($scope, {markersOnMap: markersForCities});
                             };
                             $scope.mapSettings.loadingFlag = false;
+                            $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
                         },
                        function(err){
                             console.log(err);
                             $scope.mapSettings.loadingFlag = false;
+                            $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
                         }
         );
     };
@@ -663,7 +668,7 @@ console.warn(elem);
                 markerArray.splice(arrLength, 1);
             };
         }; 
-
+        $scope.mapSettings.drawMarkersFlag = false;
         return markerArray;
     };
     
@@ -1050,6 +1055,7 @@ console.warn(elem);
             };
         }; 
 //console.log(markerArray);
+        $scope.mapSettings.drawMarkersFlag = false;
         return markerArray;
     };
     
@@ -1186,6 +1192,7 @@ console.log(openedPopup);
             openedPopup[0].innerHTML= "";
         };
         $scope.mapSettings.loadingFlag = true;
+        $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
 
         refreshCitiesData();
     }, false);
@@ -1206,5 +1213,6 @@ console.log(openedPopup);
     //
     $rootScope.$on('objectSvc:loaded',function(){
         $scope.mapSettings.loadingFlag = objectSvc.getLoadingStatus();
+        $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
     });
 });

@@ -60,7 +60,7 @@
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
-                                <tr>
+                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
 
                                     <td ng-class="column.class">
 
@@ -69,13 +69,13 @@
                                             <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
-                                        <div class="col-md-3">
+                                        <div class="col-md-5">
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
                                         <div class="col-md-2">
                                              <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addParamSet(object)" data-target="#main_properties" data-toggle="tab">Добавить</button>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             
                                         </div>
                                     </td>
@@ -185,7 +185,7 @@
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
-                                <tr>
+                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
 
                                     <td ng-class="column.class">
 
@@ -791,6 +791,7 @@
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close marginRight5 nmc-close-button" ng-click="alert('This is SPRAVKA!!!111')"><span aria-hidden="true">?</span></button>
 			<h3 id="messageForUserLabel" class="nmc-h3">
 				Внимание! 
 			</h3>

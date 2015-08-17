@@ -1058,6 +1058,10 @@ console.log("addMoreObjects. Run");
                     );
                 };
                 
+                $scope.invokeHelp = function(){
+                    alert('This is SPRAVKA!!!111');
+                };
+                
                 //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    
                     var result = false;

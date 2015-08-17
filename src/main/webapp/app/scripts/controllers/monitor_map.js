@@ -93,11 +93,11 @@ angular.module('portalNMC')
         markerMessage+="<hr class='nmc-hr-in-modal'>";
         markerMessage +="Уведомлений: <a title='Всего уведомлений' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+"</a>, непрочитанных: <a title='Непрочитанные уведомления' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a><br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        if (obj.eventsCount === 0){
-            markerMessage+="<div>";
-            markerMessage+="За указанный период на объекте не было нештатных ситуаций";
-            markerMessage+="</div>";
-        };
+//        if (obj.eventsCount === 0){
+//            markerMessage+="<div>";
+//            markerMessage+="За указанный период на объекте не было нештатных ситуаций";
+//            markerMessage+="</div>";
+//        };
         
         marker = {};        
         marker.focus=false;
