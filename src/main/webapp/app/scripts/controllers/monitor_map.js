@@ -175,7 +175,7 @@ angular.module('portalNMC')
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         marker.contObjectId = obj.contObject.id;
         marker.isCityMarker = false;
-        marker.icon.markerColor = obj.statusColor.toLowerCase();    
+        marker.icon.markerColor = obj.statusColor.toLowerCase()==="orange"?"orange-dark":obj.statusColor.toLowerCase();    
         return marker;
     };
     
@@ -259,7 +259,8 @@ angular.module('portalNMC')
         marker.icon= angular.copy(monitorMarker); //set current marker
         
         marker.cityFiasUUID = city.cityFiasUUID;
-        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
+        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase()==="orange" ? "orange-dark" : city.cityContEventLevelColor.toLowerCase(); //city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
+        
         marker.isCityMarker = true;
 //console.log(marker.icon.markerColor);        
 //console.log(marker);                 
@@ -555,5 +556,21 @@ console.warn(elem);
     $rootScope.$on('monitor:updateObjectsRequest', function(){
         $scope.mapSettings.loadingFlag = true;
     });
+    
+        //key down listener
+    window.onkeydown = function(e){ 
+        if ((e.keyCode == 27)){
+            var openedPopup = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
+            if (angular.isDefined(openedPopup)){
+                openedPopup[0].innerHTML= "";
+            };
+            $scope.mapSettings.abortCompareFlag = true;
+        };
+    };
+    
+        //off keydown listener, when go away from page
+    $scope.$on('$destroy', function() {       
+        window.onkeydown = undefined;
+    }); 
     
 });

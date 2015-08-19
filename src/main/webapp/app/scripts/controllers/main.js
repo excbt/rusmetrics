@@ -10,7 +10,7 @@
 var app = angular.module('portalNMC');
   app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc) {
 console.log("MainCtrl");      
-    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
+//    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
       //main ctrl settings
     $scope.mainCtrlSettings = {};  
       //show on/off menu title
@@ -56,10 +56,11 @@ console.log("MainCtrl");
           $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
           var menuFlag = false;
           for (var k in $scope.menuMassive){
-              if (!$scope.menuMassive[k]){
+              if ($scope.menuMassive[k]===false){
                   continue;
               };
               menuFlag = true;
+              break;
           };
           if (!menuFlag){
               $scope.setDefaultMenuState();
@@ -123,7 +124,9 @@ console.log("setDefaultMenuState");
               $scope.menuMassive[k] = false;
           };
          $cookies.object_menu_item = true;         
-         $scope.menuMassive.object_menu_item=true;  
+         $scope.menuMassive.object_menu_item=true;
+console.log(window.location);        
+//         window.location.assign("");
         //          var el = document.getElementById(el_id);
         //          el.className = el.className + "excbt_a_list_group_item_selected";
     };
@@ -152,7 +155,8 @@ console.log("setDefaultMenuState");
           $scope.setDefaultMenuState();
       });
       
-      initMenu();
+//      initMenu();
+      $scope.setDefaultMenuState();
       
           // Проверка пользователя - системный/ не системный
 //    $scope.isSystemuser = function(){

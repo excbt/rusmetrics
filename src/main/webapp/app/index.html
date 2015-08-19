@@ -56,8 +56,9 @@
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
-			<div id="navbar-container" class="container-fluid">
-				<div class="navbar-header col-md-3">
+			<div id="navbar-container" >
+<!--                class="container-fluid"-->
+				<div class="navbar-header col-md-2">
 <!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
@@ -82,7 +83,7 @@
 <!--                </li>						-->
 <!--			</ul>-->
                 
-                <ul class="nav navbar-nav col-md-3 nmc-main-header-menu">	
+                <ul class="nav navbar-nav col-md-4 nmc-main-header-menu">	
 
 <!--
                     <li>Система учета и обработки метрологической информации
@@ -152,24 +153,6 @@
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
-                                
-                                                                <!-- Меню настроек -->
-<!--
-                                <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showSettings, 'nmc-hide': !showSettings}" id="sidebar-entries" >
-
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
-
-                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale nmc-main-menu-item-icon"></i> Тарифы</a>
-
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_report_menu_item}"
-
-                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard nmc-main-menu-item-icon"></i> Отчеты</a>
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_group_menu_item}"
-
-                                       ng-click="clickMenu('setting_group_menu_item');" href="#/settings/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open nmc-main-menu-item-icon"></i>Группы</a>
-                                </div>
--->
-                               
                                 
                                 <!--                                Администрирование-->
                                 <a class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system}"
@@ -353,6 +336,7 @@
       <script src="scripts/services/notification-factory.js"></script>
       <script src="scripts/services/object-service.js"></script>
       <script src="scripts/services/monitor-service.js"></script>
+      <script src="scripts/services/indicator-service.js"></script>
         <!-- endbuild -->
     
       <script src="scripts/controllers/data-range-settings.js"></script>

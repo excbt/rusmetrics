@@ -28,6 +28,7 @@ var app = angular
 
 //routing config
 app.config(function ($routeProvider) {
+console.log("Run routeProviderConfig");    
     $routeProvider
       .when('/', {
         templateUrl: 'views/objects_edit.html',
@@ -65,7 +66,7 @@ app.config(function ($routeProvider) {
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/objects/indicators', {
+      .when('/objects/indicators:params', {
         templateUrl: 'views/indicators.html',
         controller: 'MainCtrl'
       })
@@ -123,4 +124,10 @@ app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, Idl
 //start Idle service
 app.run(['Idle', function(Idle) {
   Idle.watch();
+}]);
+
+app.run(['objectSvc', 'monitorSvc', function(objectSvc, monitorSvc){
+console.log("Run object and monitor services.");  
+    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
+    var objectSvcInit = objectSvc.promise;
 }]);
