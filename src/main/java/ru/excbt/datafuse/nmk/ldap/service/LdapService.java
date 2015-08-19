@@ -111,7 +111,7 @@ public class LdapService {
 				});
 
 		if (result.size() != 1) {
-			throw new RuntimeException("User not found or not unique");
+			throw new RuntimeException("User not found or not unique. userName " + uid);
 		}
 
 		return (String) result.get(0);
