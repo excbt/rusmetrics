@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-06T18:48:15 -->
+<!-- 2015-08-20T13:47:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -33,10 +33,10 @@
 	</style>
 	<subDataset name="dt1" uuid="752b2ced-098d-4ac4-bec6-471f2be2747b">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
-		<parameter name="begin_date" class="java.util.Date">
+		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 		</parameter>
-		<parameter name="end_date" class="java.util.Date">
+		<parameter name="end_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 		</parameter>
 		<parameter name="org_id" class="java.lang.Long">
@@ -89,10 +89,10 @@ get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 	</subDataset>
 	<subDataset name="dt2" uuid="628db370-0ac9-48a1-89e7-cbdedd93adb3">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
-		<parameter name="begin_date" class="java.util.Date">
+		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 		</parameter>
-		<parameter name="end_date" class="java.util.Date">
+		<parameter name="end_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 		</parameter>
 		<parameter name="org_id" class="java.lang.Long">
@@ -122,11 +122,11 @@ order by d_date]]>
 			<variableExpression><![CDATA[(($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.25 ? (long) 1 : ($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.5 ? (long) 2 : (long) 3)]]></variableExpression>
 		</variable>
 	</subDataset>
-	<parameter name="begin_date" class="java.util.Date">
+	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2015,01,01)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="end_date" class="java.util.Date">
+	<parameter name="end_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
 	</parameter>

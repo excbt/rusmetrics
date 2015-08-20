@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-07-17T11:08:50 -->
+<!-- 2015-08-20T14:08:24 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_log_journal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="59da6482-33d5-407e-bb5d-4f3d0875b3f8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -32,11 +32,11 @@
 	</style>
 	<subDataset name="dt1" uuid="510c86ad-e1dc-4aca-8d0b-fe6a80ea4ff4">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
-		<parameter name="begin_date" class="java.util.Date">
+		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 			<defaultValueExpression><![CDATA[DATE(2015,04,01)]]></defaultValueExpression>
 		</parameter>
-		<parameter name="end_date" class="java.util.Date">
+		<parameter name="end_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 			<defaultValueExpression><![CDATA[DATE(2015,05,01)]]></defaultValueExpression>
 		</parameter>
@@ -71,11 +71,11 @@ order by zpoint_id, d_date]]>
 			<groupExpression><![CDATA[$F{zpoint_id}]]></groupExpression>
 		</group>
 	</subDataset>
-	<parameter name="begin_date" class="java.util.Date">
+	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2015,06,02)]]></defaultValueExpression>
 	</parameter>
-	<parameter name="end_date" class="java.util.Date">
+	<parameter name="end_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 		<defaultValueExpression><![CDATA[DATE(2015,06,10)]]></defaultValueExpression>
 	</parameter>
@@ -179,7 +179,7 @@ where s.id	= $P{org_id}
 							<jr:detailCell style="Table_TD" height="15">
 								<property name="com.jaspersoft.studio.unit.width" value="px"/>
 								<property name="com.jaspersoft.studio.unit.height" value="px"/>
-								<textField pattern="dd.MM.yy hh:mm">
+								<textField pattern="dd.MM.yy HH:mm">
 									<reportElement x="0" y="0" width="70" height="15" uuid="b80787f0-409e-44e2-8b49-11a19b235531"/>
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic" size="9"/>
