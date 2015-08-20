@@ -521,13 +521,13 @@ console.log($location.search());
         };
         
         if (angular.isUndefined(tmpZpName)||(tmpZpName===null)){
-            if (angular.isDefined($cookies.contZPointName)&&($cookies.contZPointName!=="null")){
-                indicatorSvc.setZpointName($cookies.contZPointName);
+            if (angular.isDefined(pathParams.zpointName)&&(pathParams.zpointName!=="null")){
+                indicatorSvc.setZpointName(pathParams.zpointName);
             };
         };
         if (angular.isUndefined(tmpContObjectName)||(tmpContObjectName===null)){
-            if (angular.isDefined($cookies.contObjectName)&&($cookies.contObjectName!=="null")){
-                indicatorSvc.setContObjectName($cookies.contObjectName);
+            if (angular.isDefined(pathParams.objectName)&&(pathParams.objectName!=="null")){
+                indicatorSvc.setContObjectName(pathParams.objectName);
             };
         };
         
@@ -537,11 +537,11 @@ console.log($location.search());
         $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";
         
         //clear cookies
-console.log($cookies);        
-        $cookies.contZPoint = null;
-        $cookies.contObject = null;
-        $cookies.contZPointName = null;
-        $cookies.contObjectName = null;
+//console.log($cookies);        
+//        $cookies.contZPoint = null;
+//        $cookies.contObject = null;
+//        $cookies.contZPointName = null;
+//        $cookies.contObjectName = null;
     };
         //run init method
     initIndicatorParams();

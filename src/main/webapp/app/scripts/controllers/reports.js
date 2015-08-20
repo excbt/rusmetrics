@@ -108,7 +108,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
     $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
-console.log(curObject.paramsets);        
+//console.log(curObject.paramsets);        
     };
     
     $scope.selectedItem = function(parentItem, item){
@@ -385,7 +385,7 @@ console.log(curObject.paramsets);
     //console.log($scope.availableObjects);  
         if ($scope.showAvailableObjectGroups_flag){
             var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.availableEntities);   
-console.log(totalGroupObjects);            
+//console.log(totalGroupObjects);            
             objectSvc.sortObjectsByFullName(totalGroupObjects);
             //del doubles
             
@@ -610,9 +610,7 @@ console.log(totalGroupObjects);
             })
             .catch(function(e){
                 notificationFactory.errorInfo(e.statusText,e.data.description);
-            });
-//        window.open(url);
-        
+            });    
     };
     
     $scope.previewReport = function(type,paramset){
@@ -620,34 +618,41 @@ console.log(totalGroupObjects);
         window.open(url);    
     };
     
-    $scope.createReportWithParams = function(type, paramset, previewFlag){
-        var tmpParamset = angular.copy(paramset);
+    //Формируем отчет с заданными параметрами
+    $scope.createReportWithParams = function(type // тип отчета
+                                            , paramset //вариант отчета
+                                            , previewFlag //флаг - формировать отчет или сделать предпросмотр
+                                            ){
+        var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
+        //формируем массив ИД объектов, для которых формируется отчет.
         var objectIds = $scope.selectedObjects.map(function(element){
             var result = element.id;
             return result;
         }); 
-         //set the list of the special params
+         //set the list of the special params - устанавливаем специальные параметры отчета
         tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
-        //
+        //Если вариант отчета создается за период, задаем начало и конец периода
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
             tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
             tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
         }else{
             tmpParamset.paramsetStartDate = null;
             tmpParamset.paramsetEndDate = null;
-        }
+        };
 
 //console.log(paramset);        
         var fileExt = "";
-        if (previewFlag){
-            tmpParamset.outputFileType="HTML";
-            tmpParamset.outputFileZipped=false;
+        if (previewFlag){//проверяем флаг предпросмотра,
+            //если флаг установлен, то
+            tmpParamset.outputFileType="HTML";//ставим формат выходного файла - HTML
+            tmpParamset.outputFileZipped=false;//ставим флаг -не архивировать полученный отчет
             fileExt = "html";
         }else{
             fileExt=tmpParamset.outputFileZipped?"zip":tmpParamset.outputFileType.toLowerCase();
         }
-        var url ="../api/reportService"+type.suffix+"/"+tmpParamset.id+"/download";  
-        var responseType = "arraybuffer";
+        var url ="../api/reportService"+type.suffix+"/"+tmpParamset.id+"/download";  //формируем url адрес запроса
+        var responseType = "arraybuffer";//указываем тип ответа от сервера
+        //делаем запрос на сервер
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
         $http({
             url: url, 
@@ -657,18 +662,20 @@ console.log(totalGroupObjects);
             responseType: responseType
         })
         .then(function(response) {
-           
-            var fileName = response.headers()['content-disposition']; 
-            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
-            var file = new Blob([response.data], { type: response.headers()['content-type'] });            
-            if (previewFlag){                
-                var url = window.URL.createObjectURL(file);
-                window.open(url);
+           //обрабатываем полученный результат запроса
+            var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
+            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);//вытаскиваем непосредственно название файла.
+            var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт
+            if (previewFlag){              
+                //если нажат предпросмотр, то
+                var url = window.URL.createObjectURL(file);//формируем url на сформированный файл
+                window.open(url);//открываем сформированный файл в новой вкладке браузера
             }else{    
-                saveAs(file,fileName);
+                saveAs(file,fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
         })
         .catch(function(e){
+            //если при запросе произошла ошибка, то выводим ее на экран во всплывающем окне
             notificationFactory.errorInfo(e.statusText,e);
         });
     };

@@ -457,7 +457,7 @@ console.log("Objects directive.");
                                     "title=\"Эксплуатационные параметры точки учёта\">"+
                                         "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
                                 "</i>"+
-                                "<a href='#/objects/indicators/'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                                "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
                                     "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
                                     "title=\"Показания точки учёта\">"+
@@ -593,7 +593,7 @@ console.log("Objects directive.");
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId);
+                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
