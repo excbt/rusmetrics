@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-06T19:38:45 -->
+<!-- 2015-08-20T13:35:31 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_history_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -32,10 +32,10 @@
 	</style>
 	<subDataset name="dt1" uuid="cd343de4-730d-4702-b09d-ab5385aaf91e">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
-		<parameter name="begin_date" class="java.util.Date">
+		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 		</parameter>
-		<parameter name="end_date" class="java.util.Date">
+		<parameter name="end_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
 		</parameter>
 		<parameter name="org_id" class="java.lang.Long">
@@ -58,7 +58,7 @@
 			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select * from get_data_consumption_history_report($P{cont_ids}, $P{org_id}, $P{begin_date}, $P{end_date}, $P{rep_detail_type}, '1h', $P{sys1}, $P{sys2})]]>
+			<![CDATA[select * from get_data_consumption_history_report1($P{cont_ids}, $P{org_id}, $P{begin_date}, $P{end_date}, $P{rep_detail_type}, '1h', $P{sys1}, $P{sys2})]]>
 		</queryString>
 		<field name="d_date" class="java.sql.Timestamp"/>
 		<field name="sum_h1" class="java.lang.Double"/>
@@ -66,21 +66,29 @@
 		<field name="sum_h2" class="java.lang.Double"/>
 		<field name="sum_m2" class="java.lang.Double"/>
 		<field name="etalon_h1" class="java.lang.Double"/>
+		<field name="etalon_m1" class="java.lang.Double"/>
 		<field name="etalon_h2" class="java.lang.Double"/>
+		<field name="etalon_m2" class="java.lang.Double"/>
 		<variable name="delta_etalon_h1" class="java.lang.Double">
 			<variableExpression><![CDATA[$F{sum_h1} - $F{etalon_h1}]]></variableExpression>
 		</variable>
 		<variable name="delta_etalon_h2" class="java.lang.Double">
 			<variableExpression><![CDATA[$F{sum_h2} - $F{etalon_h2}]]></variableExpression>
 		</variable>
+		<variable name="delta_etalon_m1" class="java.lang.Double">
+			<variableExpression><![CDATA[$F{sum_m1} - $F{etalon_m1}]]></variableExpression>
+		</variable>
+		<variable name="delta_etalon_m2" class="java.lang.Double">
+			<variableExpression><![CDATA[$F{sum_m2} - $F{etalon_m2}]]></variableExpression>
+		</variable>
 	</subDataset>
-	<parameter name="begin_date" class="java.util.Date">
+	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,02,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2015, 2, 1)))]]></defaultValueExpression>
 	</parameter>
-	<parameter name="end_date" class="java.util.Date">
+	<parameter name="end_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,07,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2015, 6, 30)) + 23*60*60*1000 + 59*60*1000 + 59*1000)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
@@ -327,13 +335,13 @@ where
 												<bottomPen lineWidth="1.0"/>
 												<rightPen lineWidth="1.0"/>
 											</box>
-											<staticText>
-												<reportElement x="0" y="0" width="60" height="15" uuid="0fc8734a-f0e3-48d6-9a39-46cad1dede7d"/>
+											<textField>
+												<reportElement x="0" y="0" width="60" height="15" uuid="f9042c5b-86e6-4434-8e06-ec2f68a16203"/>
 												<textElement textAlignment="Center" verticalAlignment="Middle">
 													<font fontName="Arial cyrillic"/>
 												</textElement>
-												<text><![CDATA[Гкал эталон]]></text>
-											</staticText>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys1}, "heat") ? "Гкал эталон" : "м3 эталон")]]></textFieldExpression>
+											</textField>
 										</jr:columnHeader>
 										<jr:detailCell height="15">
 											<box>
@@ -348,7 +356,7 @@ where
 													<font fontName="Arial cyrillic" size="9"/>
 													<paragraph rightIndent="2"/>
 												</textElement>
-												<textFieldExpression><![CDATA[$F{etalon_h1}]]></textFieldExpression>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys1}, "heat") ? $F{etalon_h1} : $F{etalon_m1})]]></textFieldExpression>
 											</textField>
 										</jr:detailCell>
 									</jr:column>
@@ -363,13 +371,13 @@ where
 												<bottomPen lineWidth="1.0"/>
 												<rightPen lineWidth="1.0"/>
 											</box>
-											<staticText>
-												<reportElement x="0" y="0" width="60" height="15" uuid="b2a781e4-49aa-4191-9b9a-9eff44864556"/>
+											<textField>
+												<reportElement x="0" y="0" width="60" height="15" uuid="d8a971c7-90f6-4612-bdc2-11d244edd117"/>
 												<textElement textAlignment="Center" verticalAlignment="Middle">
 													<font fontName="Arial cyrillic"/>
 												</textElement>
-												<text><![CDATA[изм. Гкал ]]></text>
-											</staticText>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys1}, "heat")  ? "изм. Гкал" : "изм. м3")]]></textFieldExpression>
+											</textField>
 										</jr:columnHeader>
 										<jr:detailCell height="15">
 											<box>
@@ -384,7 +392,7 @@ where
 													<font fontName="Arial cyrillic" size="9"/>
 													<paragraph rightIndent="2"/>
 												</textElement>
-												<textFieldExpression><![CDATA[$V{delta_etalon_h1}]]></textFieldExpression>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys1}, "heat")  ? $V{delta_etalon_h1} : $V{delta_etalon_m1})]]></textFieldExpression>
 											</textField>
 										</jr:detailCell>
 									</jr:column>
@@ -496,13 +504,13 @@ where
 												<bottomPen lineWidth="1.0"/>
 												<rightPen lineWidth="1.0"/>
 											</box>
-											<staticText>
-												<reportElement x="0" y="0" width="60" height="15" uuid="5e50dfb2-2362-49d4-9ce1-7e6d0a62bfcd"/>
+											<textField>
+												<reportElement x="0" y="0" width="60" height="15" uuid="63bbd65b-0651-46bf-9a99-24a21d20c93d"/>
 												<textElement textAlignment="Center" verticalAlignment="Middle">
 													<font fontName="Arial cyrillic"/>
 												</textElement>
-												<text><![CDATA[Гкал эталон]]></text>
-											</staticText>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys2}, "heat") ? "Гкал эталон" : "м3 эталон")]]></textFieldExpression>
+											</textField>
 										</jr:columnHeader>
 										<jr:detailCell height="15">
 											<box>
@@ -517,7 +525,7 @@ where
 													<font fontName="Arial cyrillic" size="9"/>
 													<paragraph rightIndent="2"/>
 												</textElement>
-												<textFieldExpression><![CDATA[$F{etalon_h2}]]></textFieldExpression>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys2}, "heat")  ? $F{etalon_h2} : $F{etalon_m2})]]></textFieldExpression>
 											</textField>
 										</jr:detailCell>
 									</jr:column>
@@ -532,13 +540,13 @@ where
 												<bottomPen lineWidth="1.0"/>
 												<rightPen lineWidth="1.0"/>
 											</box>
-											<staticText>
-												<reportElement x="0" y="0" width="60" height="15" uuid="c228660a-b3df-4125-af3b-db892786becb"/>
+											<textField>
+												<reportElement x="0" y="0" width="60" height="15" uuid="1d91edd7-c6a1-4a1d-b64b-8eccf0251920"/>
 												<textElement textAlignment="Center" verticalAlignment="Middle">
 													<font fontName="Arial cyrillic"/>
 												</textElement>
-												<text><![CDATA[изм. Гкал ]]></text>
-											</staticText>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys2}, "heat")  ? "изм. Гкал" : "изм. м3")]]></textFieldExpression>
+											</textField>
 										</jr:columnHeader>
 										<jr:detailCell height="15">
 											<box>
@@ -553,7 +561,7 @@ where
 													<font fontName="Arial cyrillic" size="9"/>
 													<paragraph rightIndent="2"/>
 												</textElement>
-												<textFieldExpression><![CDATA[$V{delta_etalon_h2}]]></textFieldExpression>
+												<textFieldExpression><![CDATA[(EQUALS($P{sys2}, "heat")  ? $V{delta_etalon_h2} : $V{delta_etalon_m2})]]></textFieldExpression>
 											</textField>
 										</jr:detailCell>
 									</jr:column>
@@ -565,7 +573,7 @@ where
 			</componentElement>
 			<lineChart>
 				<chart evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="0" y="133" width="560" height="200" uuid="3df14c11-78b5-425d-a5b4-43ab6126634f">
+					<reportElement positionType="Float" x="0" y="133" width="560" height="200" uuid="cf68038d-c5d6-4070-aea3-e4a3e99aa686">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -580,7 +588,7 @@ where
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="1d5c222b-b86e-4beb-9254-93d7e4ed4a44">
+						<datasetRun subDataset="dt1" uuid="a0673078-90dc-4256-9658-fe917e32fe26">
 							<datasetParameter name="begin_date">
 								<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -628,14 +636,14 @@ where
 						<valueExpression><![CDATA[$F{sum_m2}]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
-						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталон 1/Гкал" : "")]]></seriesExpression>
+						<seriesExpression><![CDATA[($P{show_etalon} ? (EQUALS($P{sys1}, "heat") ? "Эталон 1/Гкал" : "Эталон 1/m3") : "")]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
-						<valueExpression><![CDATA[$F{etalon_h1}]]></valueExpression>
+						<valueExpression><![CDATA[(EQUALS($P{sys1}, "heat") ? $F{etalon_h1} : $F{etalon_m1})]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
-						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталон 2/Гкал" : "")]]></seriesExpression>
+						<seriesExpression><![CDATA[($P{show_etalon} ? (EQUALS($P{sys2}, "heat") ? "Эталон 2/Гкал" : "Эталон 2/m3") : "")]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
-						<valueExpression><![CDATA[$F{etalon_h2}]]></valueExpression>
+						<valueExpression><![CDATA[(EQUALS($P{sys2}, "heat") ? $F{etalon_h2} : $F{etalon_m2})]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
 				<linePlot>

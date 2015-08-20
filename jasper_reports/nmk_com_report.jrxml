@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-07-30T15:30:43 -->
+<!-- 2015-08-20T13:44:00 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_com_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="ireport.jasperserver.url" value="http://192.168.84.251:8080/jasperserver/"/>
@@ -11,8 +11,8 @@
 	<subDataset name="int_ds" uuid="d8645f59-2e1f-4379-9ce6-7a072f402165">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 		<parameter name="int_cont_id" class="java.lang.Long"/>
-		<parameter name="int_begin_date" class="java.util.Date"/>
-		<parameter name="int_end_date" class="java.util.Date"/>
+		<parameter name="int_begin_date" class="java.sql.Timestamp"/>
+		<parameter name="int_end_date" class="java.sql.Timestamp"/>
 		<queryString language="SQL">
 			<![CDATA[select * from get_data_integrators($P{int_cont_id}, $P{int_begin_date}, $P{int_end_date}, 3);]]>
 		</queryString>
@@ -31,13 +31,13 @@
 		<field name="heat_work_time" class="java.math.BigDecimal"/>
 		<field name="hw_work_time" class="java.math.BigDecimal"/>
 	</subDataset>
-	<parameter name="begin_date" class="java.util.Date">
+	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2015, 8, 15)))]]></defaultValueExpression>
 	</parameter>
-	<parameter name="end_date" class="java.util.Date">
+	<parameter name="end_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,06,02)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2015, 8, 18)) + 23*60*60*1000 + 59*60*1000 + 59*1000)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
@@ -45,44 +45,45 @@
 	</parameter>
 	<parameter name="cont_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[container id]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Long(20118664)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Long(29863779)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="par_signature1" class="java.lang.String">
 		<parameterDescription><![CDATA[ФИО ответственного лица]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new String("Иванов Петр Сидорович")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select 
-heat.*,
-hw.data_date as hw_data_date, 
-	hw.t_in 	as hw_t_in, 		hw.t_out 		as hw_t_out, 	hw.t_cold 	as hw_cold, 		hw.t_outdoor as hw_outdoor, 
-	hw.m_in 	as hw_m_in, 	hw.m_out 	as hw_m_out, 	hw.m_delta 	as hw_m_delta, 
-	hw.v_in 	as hw_v_in, 		hw.v_out 		as hw_v_out, 	hw.v_delta 	as hw_v_delta, 
-	hw.h_in 	as hw_h_in, 		hw.h_out 		as hw_h_out, 	hw.h_delta 	as hw_h_delta, 
-	hw.p_in 	as hw_p_in, 		hw.p_out 		as hw_p_out, 	hw.p_delta 	as hw_p_delta, 
-	hw.work_time as hw_work_time
-
-from 		get_data_com_report($P{org_id},  $P{cont_id}, $P{begin_date}, $P{end_date}, 'heat') as heat
-full outer join	 	get_data_com_report($P{org_id}, $P{cont_id},  $P{begin_date}, $P{end_date}, 'hw') as hw
-on (heat.data_date = hw.data_date);]]>
+		<![CDATA[select * from 	get_data_hwater_com_report($P{org_id}, $P{cont_id},  $P{begin_date}, $P{end_date})]]>
 	</queryString>
-	<field name="data_date" class="java.sql.Timestamp"/>
-	<field name="m_in" class="java.math.BigDecimal"/>
-	<field name="m_out" class="java.math.BigDecimal"/>
-	<field name="m_delta" class="java.math.BigDecimal"/>
-	<field name="v_in" class="java.math.BigDecimal"/>
-	<field name="v_out" class="java.math.BigDecimal"/>
-	<field name="v_delta" class="java.math.BigDecimal"/>
-	<field name="h_in" class="java.math.BigDecimal"/>
-	<field name="h_out" class="java.math.BigDecimal"/>
-	<field name="h_delta" class="java.math.BigDecimal"/>
-	<field name="p_in" class="java.math.BigDecimal"/>
-	<field name="p_out" class="java.math.BigDecimal"/>
-	<field name="p_delta" class="java.math.BigDecimal"/>
-	<field name="work_time" class="java.math.BigDecimal"/>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="device_name" class="java.lang.String"/>
+	<field name="device_number" class="java.lang.String"/>
+	<field name="heat_data_date" class="java.sql.Timestamp"/>
+	<field name="heat_t_in" class="java.math.BigDecimal"/>
+	<field name="heat_t_out" class="java.math.BigDecimal"/>
+	<field name="heat_t_cold" class="java.math.BigDecimal"/>
+	<field name="heat_t_outdoor" class="java.math.BigDecimal"/>
+	<field name="heat_m_in" class="java.math.BigDecimal"/>
+	<field name="heat_m_out" class="java.math.BigDecimal"/>
+	<field name="heat_m_delta" class="java.math.BigDecimal"/>
+	<field name="heat_v_in" class="java.math.BigDecimal"/>
+	<field name="heat_v_out" class="java.math.BigDecimal"/>
+	<field name="heat_v_delta" class="java.math.BigDecimal"/>
+	<field name="heat_h_in" class="java.math.BigDecimal"/>
+	<field name="heat_h_out" class="java.math.BigDecimal"/>
+	<field name="heat_h_delta" class="java.math.BigDecimal"/>
+	<field name="heat_p_in" class="java.math.BigDecimal"/>
+	<field name="heat_p_out" class="java.math.BigDecimal"/>
+	<field name="heat_p_delta" class="java.math.BigDecimal"/>
+	<field name="heat_work_time" class="java.math.BigDecimal"/>
 	<field name="hw_data_date" class="java.sql.Timestamp"/>
+	<field name="hw_t_in" class="java.math.BigDecimal"/>
+	<field name="hw_t_out" class="java.math.BigDecimal"/>
+	<field name="hw_t_cold" class="java.math.BigDecimal"/>
+	<field name="hw_t_outdoor" class="java.math.BigDecimal"/>
 	<field name="hw_m_in" class="java.math.BigDecimal"/>
 	<field name="hw_m_out" class="java.math.BigDecimal"/>
+	<field name="hw_m_delta" class="java.math.BigDecimal"/>
 	<field name="hw_v_in" class="java.math.BigDecimal"/>
 	<field name="hw_v_out" class="java.math.BigDecimal"/>
 	<field name="hw_v_delta" class="java.math.BigDecimal"/>
@@ -93,42 +94,29 @@ on (heat.data_date = hw.data_date);]]>
 	<field name="hw_p_out" class="java.math.BigDecimal"/>
 	<field name="hw_p_delta" class="java.math.BigDecimal"/>
 	<field name="hw_work_time" class="java.math.BigDecimal"/>
-	<field name="hw_m_delta" class="java.math.BigDecimal"/>
-	<field name="org_name" class="java.lang.String"/>
-	<field name="address" class="java.lang.String"/>
-	<field name="t_in" class="java.math.BigDecimal"/>
-	<field name="t_out" class="java.math.BigDecimal"/>
-	<field name="t_cold" class="java.math.BigDecimal"/>
-	<field name="t_outdoor" class="java.math.BigDecimal"/>
-	<field name="device_name" class="java.lang.String"/>
-	<field name="device_number" class="java.lang.String"/>
-	<field name="hw_t_in" class="java.math.BigDecimal"/>
-	<field name="hw_t_out" class="java.math.BigDecimal"/>
-	<field name="hw_cold" class="java.math.BigDecimal"/>
-	<field name="hw_outdoor" class="java.math.BigDecimal"/>
 	<variable name="hw_v_delta" class="java.math.BigDecimal">
 		<variableExpression><![CDATA[$F{hw_v_in}.subtract($F{hw_v_out})]]></variableExpression>
 	</variable>
 	<variable name="aver_h_delta" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{h_delta}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_h_delta}]]></variableExpression>
 	</variable>
 	<variable name="aver_m_in" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{m_in}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_m_in}]]></variableExpression>
 	</variable>
 	<variable name="aver_t_in" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{t_in}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_t_in}]]></variableExpression>
 	</variable>
 	<variable name="aver_p_in" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{p_in}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_p_in}]]></variableExpression>
 	</variable>
 	<variable name="aver_m_out" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{m_out}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_m_out}]]></variableExpression>
 	</variable>
 	<variable name="aver_t_out" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{t_out}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_t_out}]]></variableExpression>
 	</variable>
 	<variable name="aver_p_out" class="java.math.BigDecimal" calculation="Average">
-		<variableExpression><![CDATA[$F{p_out}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_p_out}]]></variableExpression>
 	</variable>
 	<variable name="aver_hw_h_delta" class="java.math.BigDecimal" calculation="Average">
 		<variableExpression><![CDATA[$F{hw_h_delta}]]></variableExpression>
@@ -155,13 +143,13 @@ on (heat.data_date = hw.data_date);]]>
 		<variableExpression><![CDATA[$V{hw_v_delta}]]></variableExpression>
 	</variable>
 	<variable name="sum_h_delta" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{h_delta}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_h_delta}]]></variableExpression>
 	</variable>
 	<variable name="sum_m_in" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{m_in}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_m_in}]]></variableExpression>
 	</variable>
 	<variable name="sum_m_out" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{m_out}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_m_out}]]></variableExpression>
 	</variable>
 	<variable name="sum_hw_h_delta" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{hw_h_delta}]]></variableExpression>
@@ -176,7 +164,7 @@ on (heat.data_date = hw.data_date);]]>
 		<variableExpression><![CDATA[$V{hw_v_delta}]]></variableExpression>
 	</variable>
 	<variable name="sum_work_time" class="java.math.BigDecimal" calculation="Sum">
-		<variableExpression><![CDATA[$F{work_time}]]></variableExpression>
+		<variableExpression><![CDATA[$F{heat_work_time}]]></variableExpression>
 	</variable>
 	<variable name="sum_hw_work_time" class="java.math.BigDecimal" calculation="Sum">
 		<variableExpression><![CDATA[$F{hw_work_time}]]></variableExpression>
@@ -1017,7 +1005,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{data_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_data_date}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00" isBlankWhenNull="true">
 				<reportElement x="45" y="0" width="50" height="15" uuid="275b23c3-181b-4d20-80b7-f48aed6d5ce3">
@@ -1037,7 +1025,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font fontName="SansSerif" size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{work_time}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_work_time}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00" isBlankWhenNull="true">
 				<reportElement x="145" y="0" width="45" height="15" uuid="a9407776-4f6d-466d-a115-c8bf1e92c525">
@@ -1057,7 +1045,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_in}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_m_in}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00" isBlankWhenNull="true">
 				<reportElement x="190" y="0" width="45" height="15" uuid="2d2488b3-babd-4422-8be1-e442f31f7b82">
@@ -1077,7 +1065,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{t_in}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_t_in}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.0" isBlankWhenNull="true">
 				<reportElement x="235" y="0" width="45" height="15" uuid="a0ba19bc-474e-46f7-b5f8-79068af2c632">
@@ -1097,7 +1085,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{p_in}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_p_in}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00" isBlankWhenNull="true">
 				<reportElement x="280" y="0" width="45" height="15" uuid="4f697982-1bcd-411a-94e2-6eb3f4fdc1e3">
@@ -1117,7 +1105,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{m_out}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_m_out}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.00" isBlankWhenNull="true">
 				<reportElement x="325" y="0" width="45" height="15" uuid="8753106a-b4f7-44f6-8cae-6662f68ce2f1">
@@ -1137,7 +1125,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{t_out}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_t_out}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.0" isBlankWhenNull="true">
 				<reportElement x="370" y="0" width="45" height="15" uuid="26ed6505-9a03-4523-b05f-b49814407cd1">
@@ -1157,7 +1145,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{p_out}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_p_out}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#0.000" isBlankWhenNull="true">
 				<reportElement x="465" y="0" width="40" height="15" uuid="4de97fe5-3006-4289-876c-76062113476c">
@@ -1350,7 +1338,7 @@ on (heat.data_date = hw.data_date);]]>
 					<font size="8"/>
 					<paragraph rightIndent="2"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{h_delta}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{heat_h_delta}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
