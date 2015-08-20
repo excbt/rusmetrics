@@ -71,6 +71,21 @@ public class ReferencePeriodService implements SecuredRoles {
 		checkNotNull(referencePeriod.getSubscriber());
 		checkNotNull(referencePeriod.getContZPointId());
 
+		if (referencePeriod.getIsAuto() == null) {
+			referencePeriod.setIsAuto(false);
+		}
+
+		if (referencePeriod.getIsActive() == null) {
+			referencePeriod.setIsActive(false);
+		}
+
+		if (!Boolean.TRUE.equals(referencePeriod.getIsAuto())) {
+			referencePeriodRepository
+					.setManualIsActiveFalse(referencePeriod.getSubscriber()
+							.getId(), referencePeriod.getContZPointId());
+			referencePeriod.setIsActive(true);
+		}
+
 		ReferencePeriod result = referencePeriodRepository
 				.save(referencePeriod);
 
@@ -88,6 +103,14 @@ public class ReferencePeriodService implements SecuredRoles {
 		checkState(!referencePeriod.isNew());
 		checkNotNull(referencePeriod.getSubscriber());
 		checkNotNull(referencePeriod.getContZPointId());
+
+		if (referencePeriod.getIsAuto() == null) {
+			referencePeriod.setIsAuto(false);
+		}
+
+		if (referencePeriod.getIsActive() == null) {
+			referencePeriod.setIsActive(false);
+		}
 
 		ReferencePeriod result = referencePeriodRepository
 				.save(referencePeriod);

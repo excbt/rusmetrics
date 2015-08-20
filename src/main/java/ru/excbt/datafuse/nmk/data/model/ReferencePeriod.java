@@ -52,7 +52,7 @@ public class ReferencePeriod extends AbstractAuditableModel {
 	private Date endDate;
 
 	@Column(name = "is_auto")
-	private boolean _auto;
+	private Boolean isAuto;
 
 	@Column(name = "period_begin_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -68,6 +68,9 @@ public class ReferencePeriod extends AbstractAuditableModel {
 	@Column(name = "period_comment")
 	private String periodComment;
 
+	@Column(name = "is_active")
+	private Boolean isActive;
+	
 	@Version
 	private int version;
 
@@ -143,14 +146,6 @@ public class ReferencePeriod extends AbstractAuditableModel {
 		this.contZPointId = contZPointId;
 	}
 
-	public boolean is_auto() {
-		return _auto;
-	}
-
-	public void set_auto(boolean _auto) {
-		this._auto = _auto;
-	}
-
 	public String getTimeDetailType() {
 		return timeDetailType;
 	}
@@ -165,6 +160,22 @@ public class ReferencePeriod extends AbstractAuditableModel {
 
 	public void setPeriodComment(String periodComment) {
 		this.periodComment = periodComment;
+	}
+
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(Boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public Boolean getIsAuto() {
+		return isAuto;
+	}
+
+	public void setIsAuto(Boolean isAuto) {
+		this.isAuto = isAuto;
 	}
 
 }
