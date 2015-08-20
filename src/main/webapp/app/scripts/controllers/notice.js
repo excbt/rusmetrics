@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, crudGridDataFactory, objectSvc, notificationFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory){
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -20,6 +20,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.noticeTypesUrl= "../api/contEvent/types";
     //the path template of notice icon
     $scope.imgPathTmpl = "images/notice-state-";
+    
+    //get url params
+    var loca = $location.search();
+console.log(loca);    
+    
     
     //messages for user
     $scope.messages = {};
@@ -103,8 +108,9 @@ console.log("initCtrl");
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};
-        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
-            $cookies.monitorFlag = false;
+//        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
+        if ((angular.isDefined(loca))&&(loca.hasOwnProperty('monitorFlag'))&&(loca.monitorFlag==="true")){    
+            loca.monitorFlag = false;
 //            $rootScope.reportStart=$rootScope.monitor.fromDate;
 //            $rootScope.reportEnd=$rootScope.monitor.toDate;
             $scope.objectsInWindow = angular.copy($scope.objects);           

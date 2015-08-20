@@ -314,7 +314,8 @@ console.log("Monitor Controller.");
 //                tableHTML +="<i title=\"Узнать причину оценки\" class=\"btn btn-xs glyphicon glyphicon-bookmark\" ng-click=\"getNoticesByObject("+element.contObject.id+")\" data-target=\"#showNoticesModal\" data-toggle=\"modal\"></i>";
 //            };
             tableHTML+= "</td>";
-            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectOnRightClick("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectAndRevisionOnRightClick("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
+//        "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;            
+            tableHTML += "<td class=\"col-md-1\"><a title=\"Всего уведомлений\" href=\""+noticesUrl+"?objectMonitorId="+element.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"\" ng-click=\"setNoticeFilterByObject("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectOnRightClick("+element.contObject.id+")\">"+element.eventsCount+" / "+element.eventsTypesCount+"</a> (<a title=\"Новые уведомления\" href=\""+noticesUrl+"\" ng-click=\"setNoticeFilterByObjectAndRevision("+element.contObject.id+")\" ng-right-click=\"getNoticesByObjectAndRevisionOnRightClick("+element.contObject.id+")\">"+element.newEventsCount+"</a>)";
             
             tableHTML += "</td>";
             tableHTML += "<td class=\"nmc-td-for-buttons\"><i title=\"Показать диаграмму уведомлений\" class=\"btn btn-xs\" ng-click=\"getEventTypesByObject("+element.contObject.id+", true)\"><img height=\"16\" width=\"16\" src='images/roundDiagram4.png'/></i></td>";
@@ -365,10 +366,11 @@ console.log("Monitor Controller.");
         if (angular.isUndefined(obj)||!obj.hasOwnProperty('eventTypes')||(obj.eventTypes.length==0)){            
             return;
         };      
+//        "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         obj.eventTypes.forEach(function(event){
             trHTML +="<tr id=\"trEvent"+event.id+"\" >";
             trHTML +="<td class=\"nmc-td-for-buttons\">"+
-                    "<a href=\""+noticesUrl+"\" ng-mousedown=\"setNoticeFilterByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                    "<a href=\""+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&typeId="+event.id+"\" ng-mousedown=\"setNoticeFilterByObjectAndType("+obj.contObject.id+","+event.id+")\"> <i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
 //                        "ng-click=\"getNoticesByObjectAndType("+obj.contObject.id+","+event.id+")\""+
                         "title=\"Посмотреть уведомления\">"+
                     "</i></a>"+
@@ -405,6 +407,7 @@ console.log("Monitor Controller.");
     
     //Set filters for notice window
     $scope.setNoticeFilterByObject = function(objId){
+//        $scope.paramsString = "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $rootScope.monitor = {};
         $cookies.monitorFlag = true;
         $cookies.objectMonitorId = objId;
@@ -420,12 +423,13 @@ console.log("Monitor Controller.");
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
         $scope.setNoticeFilterByObject(objId);        
         $cookies.isNew = true;        
-
+//        $scope.paramsString+="&isNew=true";
     };
     
     $scope.setNoticeFilterByObjectAndType = function(objId, typeId){
         $scope.setNoticeFilterByObject(objId);
         $cookies.typeIds = [typeId];
+//        $scope.paramsString+="&typeIds="+typeId;
     };
     
     $scope.getNoticesByObjectAndType = function(objId, typeId){
