@@ -150,6 +150,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
+
 	}
 
 	/**
