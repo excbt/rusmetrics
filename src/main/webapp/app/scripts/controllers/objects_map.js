@@ -34,14 +34,24 @@ angular.module('portalNMC')
     };
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
-    if (angular.isDefined($cookies.objectMapZoom)){
-        mapCenter.zoom = Number($cookies.objectMapZoom);
+//    if (angular.isDefined($cookies.objectMapZoom)){
+//        mapCenter.zoom = Number($cookies.objectMapZoom);
+//    };
+//    if (angular.isDefined($cookies.objectMapLat)){
+//        mapCenter.lat = Number($cookies.objectMapLat);
+//    };
+//    if (angular.isDefined($cookies.objectMapLng)){
+//        mapCenter.lng = Number($cookies.objectMapLng);
+//    };
+    
+    if (angular.isDefined(objectSvc.getObjectSettings().objectMapZoom)){
+        mapCenter.zoom = Number(objectSvc.getObjectSettings().objectMapZoom);
     };
-    if (angular.isDefined($cookies.objectMapLat)){
-        mapCenter.lat = Number($cookies.objectMapLat);
+    if (angular.isDefined(objectSvc.getObjectSettings().objectMapLat)){
+        mapCenter.lat = Number(objectSvc.getObjectSettings().objectMapLat);
     };
-    if (angular.isDefined($cookies.objectMapLng)){
-        mapCenter.lng = Number($cookies.objectMapLng);
+    if (angular.isDefined(objectSvc.getObjectSettings().objectMapLng)){
+        mapCenter.lng = Number(objectSvc.getObjectSettings().objectMapLng);
     };
     
     
@@ -1094,7 +1104,8 @@ console.warn(elem);
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log($scope.objectsOfCities);
 //console.log($scope.cities);
-        $cookies.objectMapZoom = newZoom;
+//        $cookies.objectMapZoom = newZoom;
+        objectSvc.setObjectSettings({objectMapZoom:newZoom});
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
             {                  
@@ -1133,10 +1144,12 @@ console.warn(elem);
     }, false);
     
     $scope.$watch('mapCenter.lat',function(newLat){
-        $cookies.objectMapLat = newLat;
+//        $cookies.objectMapLat = newLat;
+        objectSvc.setObjectSettings({objectMapLat:newLat});
     });
     $scope.$watch('mapCenter.lng',function(newLng){
-        $cookies.objectMapLng = newLng;
+//        $cookies.objectMapLng = newLng;
+        objectSvc.setObjectSettings({objectMapLng:newLng});        
     });
     
     function findObjectById(objId){

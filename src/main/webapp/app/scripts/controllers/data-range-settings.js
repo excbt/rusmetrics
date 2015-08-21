@@ -2,11 +2,12 @@ var app = angular.module('portalNMC');
 app
     .controller('DataRangeSettings', function($scope, $interval, $rootScope, $location, $cookies){
   // Общие настройки элемента управления интервалом дат
-    if (angular.isDefined($cookies.fromDate) && ($location.path()==="/notices/list")){
+    var locParams = $location.search();
+    if (angular.isDefined(locParams.fromDate) && ($location.path()==="/notices/list")){
 //        $rootScope.monitor.toDate
         $scope.navPlayerDates = {
-            startDate :  $cookies.fromDate,
-            endDate : $cookies.toDate
+            startDate :  locParams.fromDate,
+            endDate : locParams.toDate
         };
     }else{
         $scope.navPlayerDates = {
@@ -39,8 +40,8 @@ app
                     moment().subtract(29, 'days').startOf('day'),
                     moment().endOf('day') ]
         },
-        startDate : moment().startOf('day'),
-        endDate : moment().endOf('day'),
+        startDate : moment($scope.navPlayerDates.startDate).startOf('day'),
+        endDate : moment($scope.navPlayerDates.endDate).endOf('day'),
 
         format : 'DD.MM.YYYY'
         ,separator: " по "
@@ -90,7 +91,10 @@ app
     
     $scope.$watch('navPlayerDates', function (newDates) {
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
+        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+        
+        $location.search("fromDate",$rootScope.reportStart);
+        $location.search("toDate",$rootScope.reportEnd);
 //console.log("data-range-settings");         
 //console.log($rootScope.reportStart); 
 //console.log($rootScope.reportEnd);         

@@ -66,7 +66,7 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/objects/indicators:params', {
+      .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
         controller: 'MainCtrl'
       })

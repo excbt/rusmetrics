@@ -24,6 +24,10 @@
     width: 550px !important;
 }
 
+body{
+/*    min-width: 1200px !important;*/
+}
+
 /********************
  * Разметка страницы
  ********************/
@@ -33,8 +37,9 @@
 /*    background: linear-gradient(to bottom, #689CD5 0%,#4074A3 50%,#225685 51%,#0E4271 100%);*/
     background: linear-gradient(to bottom, #86BAF3 0%, #5E92CB 10%, #043867 90%, #003463 100%);
     color: #FFFFFF;
-    height: 60px;
+/*    height: 60px;*/
     border: none;
+    min-width: 1200px;
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
@@ -48,10 +53,11 @@
 
 /*  Текст по центру шапки портала*/
 .nmc-main-header-title {
+    color: #fff !important;
     font: bold 190% arial;
     text-align: center;
     vertical-align: middle;
-    padding-top: 16px;
+/*    padding-top: 16px;*/
 }
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{
@@ -134,6 +140,11 @@
 
 .wrap > .container-fluid {
     padding-top: 50px;
+    min-width: 1320px;
+}
+
+.wrap > .container-fluid >.row {
+    min-width: 1320px;
 }
 
 .wrap > .container {

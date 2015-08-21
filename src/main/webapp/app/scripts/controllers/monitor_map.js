@@ -27,14 +27,14 @@ angular.module('portalNMC')
     
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
-    if (angular.isDefined($cookies.monitorMapZoom)){
-        mapCenter.zoom = Number($cookies.monitorMapZoom);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapZoom)){
+        mapCenter.zoom = Number(monitorSvc.getMonitorSettings().monitorMapZoom);
     };
-    if (angular.isDefined($cookies.monitorMapLat)){
-        mapCenter.lat = Number($cookies.monitorMapLat);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapLat)){
+        mapCenter.lat = Number(monitorSvc.getMonitorSettings().monitorMapLat);
     };
-    if (angular.isDefined($cookies.monitorMapLng)){
-        mapCenter.lng = Number($cookies.monitorMapLng);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapLng)){
+        mapCenter.lng = Number(monitorSvc.getMonitorSettings().monitorMapLng);
     };
     
     angular.extend($scope,{
@@ -91,7 +91,8 @@ angular.module('portalNMC')
         var markerMessage = "<div id='"+obj.contObject.id+"'>";
         markerMessage += ""+obj.contObject.fullName+"<br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
-        markerMessage +="Уведомлений: <a title='Всего уведомлений' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+"</a>, непрочитанных: <a title='Непрочитанные уведомления' href='"+noticesUrl+"' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a><br>";
+//        "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
+        markerMessage +="Уведомлений: <a title='Всего уведомлений' href='"+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"' ng-mousedown='setNoticeFilterByObject("+obj.contObject.id+")'>"+obj.eventsCount+"</a>, непрочитанных: <a title='Непрочитанные уведомления' href='"+noticesUrl+"?objectMonitorId="+obj.contObject.id+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd+"&isNew=true' ng-mousedown='setNoticeFilterByObjectAndRevision("+obj.contObject.id+")'>"+obj.newEventsCount+"</a><br>";
         markerMessage+="<hr class='nmc-hr-in-modal'>";
 //        if (obj.eventsCount === 0){
 //            markerMessage+="<div>";
@@ -175,7 +176,7 @@ angular.module('portalNMC')
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
         marker.contObjectId = obj.contObject.id;
         marker.isCityMarker = false;
-        marker.icon.markerColor = obj.statusColor.toLowerCase()==="orange"?"orange-dark":obj.statusColor.toLowerCase();    
+        marker.icon.markerColor = obj.statusColor.toLowerCase()==="orange"?"orange":obj.statusColor.toLowerCase();    
         return marker;
     };
     
@@ -259,7 +260,7 @@ angular.module('portalNMC')
         marker.icon= angular.copy(monitorMarker); //set current marker
         
         marker.cityFiasUUID = city.cityFiasUUID;
-        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase()==="orange" ? "orange-dark" : city.cityContEventLevelColor.toLowerCase(); //city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
+        marker.icon.markerColor = city.cityContEventLevelColor.toLowerCase()==="orange" ? "orange" : city.cityContEventLevelColor.toLowerCase(); //city.cityContEventLevelColor.toLowerCase();//city.statusColor.toLowerCase();
         
         marker.isCityMarker = true;
 //console.log(marker.icon.markerColor);        
@@ -469,7 +470,8 @@ console.warn(elem);
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log(newZoom);
 //console.log(oldZoom); 
-        $cookies.monitorMapZoom = newZoom;
+        monitorSvc.setMonitorSettings({monitorMapZoom:newZoom});
+//        $cookies.monitorMapZoom = newZoom;
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
             {  
@@ -507,10 +509,12 @@ console.warn(elem);
     }, false);
     
     $scope.$watch('mapCenter.lat',function(newLat){
-        $cookies.monitorMapLat = newLat;
+//        $cookies.monitorMapLat = newLat;
+        monitorSvc.setMonitorSettings({monitorMapLat:newLat});
     });
     $scope.$watch('mapCenter.lng',function(newLng){
-        $cookies.monitorMapLng = newLng;
+//        $cookies.monitorMapLng = newLng;
+        monitorSvc.setMonitorSettings({monitorMapLng:newLng});
     });
     
     function findObjectById(objId){
@@ -527,13 +531,13 @@ console.warn(elem);
     //Set filters for notice window
     $scope.setNoticeFilterByObject = function(objId){
 //console.log("setNoticeFilterByObject");        
-        $rootScope.monitor = {};
-        $cookies.monitorFlag = true;
-        $cookies.objectMonitorId = objId;
-        $cookies.isNew = null;
-        $cookies.typeIds = null;
-        $cookies.fromDate = $rootScope.monitorStart;
-        $cookies.toDate = $rootScope.monitorEnd;
+//        $rootScope.monitor = {};
+//        $cookies.monitorFlag = true;
+//        $cookies.objectMonitorId = objId;
+//        $cookies.isNew = null;
+//        $cookies.typeIds = null;
+//        $cookies.fromDate = $rootScope.monitorStart;
+//        $cookies.toDate = $rootScope.monitorEnd;
         $rootScope.reportStart = $rootScope.monitorStart;
         $rootScope.reportEnd = $rootScope.monitorEnd;
 //console.log($cookies);        
@@ -542,14 +546,14 @@ console.warn(elem);
     $scope.setNoticeFilterByObjectAndRevision = function(objId){
 //console.log("setNoticeFilterByObjectAndRevision");                
         $scope.setNoticeFilterByObject(objId);        
-        $cookies.isNew = true;        
+//        $cookies.isNew = true;        
 
     };
     
     $scope.setNoticeFilterByObjectAndType = function(objId, typeId){
 //console.log("setNoticeFilterByObjectAndType");                        
         $scope.setNoticeFilterByObject(objId);
-        $cookies.typeIds = [typeId];
+//        $cookies.typeIds = [typeId];
     };
     
     //listeners

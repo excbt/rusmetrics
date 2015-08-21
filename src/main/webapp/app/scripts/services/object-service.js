@@ -15,6 +15,18 @@ console.log("Object Service. Run.");
         var urlDeviceMetaDataSystemList = '../api/subscr/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
         var urlCitiesData = "../api/subscr/service/hwater/contObjects/serviceTypeInfo";                
         
+        var objectSvcSettings = {};
+        var getObjectSettings = function(){
+            return objectSvcSettings;
+        };
+        
+        var setObjectSettings = function(objectSettings){
+//            monitorSvcSettings = monitorSettings;
+            for (var key in objectSettings){
+                objectSvcSettings[key]=objectSettings[key];
+            };
+        };
+        
         var getObjectsUrl = function(){
             return crudTableName;
         };         
@@ -125,6 +137,7 @@ console.log("objectSvc:loaded");
             getCityConsumingData,
             getCitiesConsumingData,
             getObjectConsumingData,
+            getObjectSettings,
             getDevicesByObject,
             getDeviceMetaData,
             getDeviceMetaDataSystemList,
@@ -136,6 +149,7 @@ console.log("objectSvc:loaded");
             loading,
             promise,
             putDeviceMetaData,
+            setObjectSettings,
             sortObjectsByFullName
             
         };

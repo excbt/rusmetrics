@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, monitorSvc){
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc){
       
       
 console.log("Monitor Controller.");      
@@ -23,7 +23,7 @@ console.log("Monitor Controller.");
     
     //monitor settings
     $scope.monitorSettings = {};
-    $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
+    $scope.monitorSettings.refreshPeriod = monitorSvc.getMonitorSettings().refreshPeriod;//"180";
     $scope.monitorSettings.createRoundDiagram = false;
     $scope.monitorSettings.loadingFlag = true;//monitorSvc.monitorSvcSettings.loadingFlag;
 //console.log($scope.monitorSettings.loadingFlag);      
@@ -409,12 +409,13 @@ console.log("Monitor Controller.");
     $scope.setNoticeFilterByObject = function(objId){
 //        $scope.paramsString = "?objectMonitorId="+objId+"&monitorFlag=true&fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
         $rootScope.monitor = {};
-        $cookies.monitorFlag = true;
-        $cookies.objectMonitorId = objId;
-        $cookies.isNew = null;
-        $cookies.typeIds = null;
-        $cookies.fromDate = $rootScope.monitorStart;
-        $cookies.toDate = $rootScope.monitorEnd;
+//        $cookies.monitorFlag = true;
+//        $cookies.objectMonitorId = objId;
+//        $cookies.isNew = null;
+//        $cookies.typeIds = null;
+//        $cookies.fromDate = $rootScope.monitorStart;
+//        $cookies.toDate = $rootScope.monitorEnd;
+        monitorSvc.setMonitorSettings({objectMonitorId:objId});
         $rootScope.reportStart = $rootScope.monitorStart;
         $rootScope.reportEnd = $rootScope.monitorEnd;
 //console.log($cookies);        
@@ -458,7 +459,8 @@ console.log("Monitor Controller.");
     $scope.getNoGreenObjects= function(){
         $scope.monitorSettings.loadingFlag = true;
         $scope.monitorSettings.noGreenObjectsFlag = true;
-        monitorSvc.monitorSvcSettings.noGreenObjectsFlag = true;
+        monitorSvc.setMonitorSettings({noGreenObjectsFlag: true});
+//        monitorSvc.monitorSvcSettings.noGreenObjectsFlag = true;
 //console.log("request");                
         $rootScope.$broadcast('monitor:updateObjectsRequest');
 //        $scope.getObjects(objectUrl);
@@ -473,8 +475,12 @@ console.log("monitorStart watch");
             return;
         };
         $scope.monitorSettings.loadingFlag = true;
-        monitorSvc.monitorSvcSettings.fromDate = $rootScope.monitorStart;
-        monitorSvc.monitorSvcSettings.toDate = $rootScope.monitorEnd;
+        monitorSvc.setMonitorSettings({
+            fromDate:$rootScope.monitorStart,
+            toDate:$rootScope.monitorEnd
+        });
+//        monitorSvc.monitorSvcSettings.fromDate = $rootScope.monitorStart;
+//        monitorSvc.monitorSvcSettings.toDate = $rootScope.monitorEnd;
 //console.log("request");        
         $rootScope.$broadcast('monitor:updateObjectsRequest');
 //        $rootScope.$broadcast('monitor:periodChanged');
@@ -586,8 +592,8 @@ console.log("monitorStart watch");
         $scope.monitorSettings.objectBottomOnPage =50;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
 //        makeObjectTable(tempArr, true);
-        $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
-        $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.monitorSvcSettings.noGreenObjectsFlag;
+        $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
+        $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag;
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;
         $scope.objectsOnPage.forEach(function(element){
@@ -661,7 +667,8 @@ console.log("monitorStart watch");
         if (newPeriod===oldPeriod){
             return;
         };
-        monitorSvc.monitorSvcSettings.refreshPeriod = $scope.monitorSettings.refreshPeriod;
+        monitorSvc.setMonitorSettings({refreshPeriod:$scope.monitorSettings.refreshPeriod});
+//        monitorSvc.monitorSvcSettings.refreshPeriod = $scope.monitorSettings.refreshPeriod;
         $rootScope.$broadcast('monitor:periodChanged');
 //        $rootScope.$broadcast('monitor:updateObjectsRequest');
 //console.log("monitorSettings.refreshPeriod watch");
@@ -695,12 +702,13 @@ console.log("monitorStart watch");
 //console.log("$scope.objects.length!=0")    
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
 //        makeObjectTable(tempArr, true);
-        $scope.monitorSettings.loadingFlag = monitorSvc.monitorSvcSettings.loadingFlag;//false;
+        $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
 //console.log($cookies.objectMonitorId);          
-        if (angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!=="null"){
+        if (angular.isDefined(monitorSvc.getMonitorSettings().objectMonitorId) && monitorSvc.getMonitorSettings().objectMonitorId!=="null"){
 //console.log("angular.isDefined($cookies.objectMonitorId) && $cookies.objectMonitorId!==null" + $cookies.objectMonitorId)             
-            $scope.getEventTypesByObject(Number($cookies.objectMonitorId), false);
-            $cookies.objectMonitorId = null;
+            $scope.getEventTypesByObject(Number(monitorSvc.getMonitorSettings().objectMonitorId), false);
+//            $cookies.objectMonitorId = null;
+            monitorSvc.setMonitorSettings({objectMonitorId:null});
 //console.log($cookies.objectMonitorId);            
         };
 //        $scope.objects.forEach(function(obj){

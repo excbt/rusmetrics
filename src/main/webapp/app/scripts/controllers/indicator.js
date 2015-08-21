@@ -132,6 +132,15 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
+//                header : "Разница масс воды, т",
+                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "m_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
 //                header : "Температура подачи, град C",
                 header : "",
                 class : "col-md-1 nmc-th-invisible",
@@ -163,15 +172,6 @@ angular.module('portalNMC')
                 header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
-                "imgpath" : "",
-                "imgclass": "",
-                "title":""
-            },
-            {
-//                header : "Разница масс воды, т",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
-                name: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -484,10 +484,10 @@ angular.module('portalNMC')
     var initIndicatorParams = function(){
 console.log($location.search());
         var pathParams = $location.search();
-        var tmpZpId = indicatorSvc.getZpointId();    
-        var tmpContObjectId = indicatorSvc.getContObjectId();
-        var tmpZpName = indicatorSvc.getZpointName();    
-        var tmpContObjectName = indicatorSvc.getContObjectName();
+        var tmpZpId = null;//indicatorSvc.getZpointId();    
+        var tmpContObjectId = null;//indicatorSvc.getContObjectId();
+        var tmpZpName = null;//indicatorSvc.getZpointName();    
+        var tmpContObjectName = null;//indicatorSvc.getContObjectName();
 //        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
 //            if (angular.isDefined($cookies.contZPoint)&&($cookies.contZPoint!=="null")){
 //                indicatorSvc.setZpointId($cookies.contZPoint);
@@ -613,7 +613,7 @@ console.log($location.search());
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
             $scope.intotalColumns.forEach(function(element){
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                element.ngstyle =indicatorTh.clientWidth+1;
+                element.ngstyle =indicatorTh.clientWidth;
 
             });
         };
