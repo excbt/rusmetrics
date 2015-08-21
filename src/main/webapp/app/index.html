@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html class="no-js">
   <head>
@@ -11,6 +12,8 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
+      
+    <link rel="icon" type="image/png" href="fv_1.png" />  
     <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" />
     <!-- endbower -->
     <!-- endbuild -->
@@ -56,8 +59,9 @@
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
-			<div id="navbar-container" class="container-fluid">
-				<div class="navbar-header col-md-3">
+			<div id="navbar-container" >
+<!--                class="container-fluid"-->
+				<div class="navbar-header">
 <!--
 					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
 						<span class="sr-only">Toggle navigation</span> <span
@@ -78,11 +82,13 @@
 -->
 				
 <!--				<li>-->
-                <div class="col-md-6 nmc-main-header-title"> Система учета и обработки метрологической информации </div>
+            <div class="collapse navbar-collapse">
+                
+                <div class="navbar-text nmc-main-header-title"> Система учета и обработки метрологической информации </div>
 <!--                </li>						-->
 <!--			</ul>-->
                 
-                <ul class="nav navbar-nav col-md-3 nmc-main-header-menu">	
+                <ul class="nav navbar-nav navbar-right nmc-main-header-menu">	
 
 <!--
                     <li>Система учета и обработки метрологической информации
@@ -103,7 +109,7 @@
                         </ul>    
 
                     </li>
-                    <li class="pull-right">
+                    <li class="marginRight15">
                         <div class="btn-group-vertical" role="group" aria-label="help_group">
 <!--
                             <button class="btn btn-xs nmc-button-support"></button>
@@ -117,7 +123,9 @@
                                 </p>
                         </div>
                     </li>
-                </ul>					
+                </ul>
+            </div><!-- collapse -->    
+                
 			</div>
   </div>  
 <!--   энд оф Навигационная строка в верху страницы    -->
@@ -152,24 +160,6 @@
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
-                                
-                                                                <!-- Меню настроек -->
-<!--
-                                <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showSettings, 'nmc-hide': !showSettings}" id="sidebar-entries" >
-
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_tariff_menu_item}"
-
-                                       ng-click="clickMenu('setting_tariff_menu_item');" href="#/settings/tariffs/" data-toggle="offcanvas"><i class="glyphicon glyphicon-scale nmc-main-menu-item-icon"></i> Тарифы</a>
-
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_report_menu_item}"
-
-                                       ng-click="clickMenu('setting_report_menu_item');" href="#/settings/reports/" data-toggle="offcanvas"><i class="glyphicon glyphicon-blackboard nmc-main-menu-item-icon"></i> Отчеты</a>
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_group_menu_item}"
-
-                                       ng-click="clickMenu('setting_group_menu_item');" href="#/settings/object_groups/" data-toggle="offcanvas"><i class="glyphicon glyphicon-folder-open nmc-main-menu-item-icon"></i>Группы</a>
-                                </div>
--->
-                               
                                 
                                 <!--                                Администрирование-->
                                 <a class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system}"
@@ -279,7 +269,6 @@
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
-<!--      http://rusmetrics.ru/public/bower_components/jquery/dist/jquery.min.js-->
     <script src="/public/bower_components/jquery/dist/jquery.js"></script>
     <script src="/public/bower_components/angular/angular.min.js"></script>
     <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -354,6 +343,7 @@
       <script src="scripts/services/notification-factory.js"></script>
       <script src="scripts/services/object-service.js"></script>
       <script src="scripts/services/monitor-service.js"></script>
+      <script src="scripts/services/indicator-service.js"></script>
         <!-- endbuild -->
     
       <script src="scripts/controllers/data-range-settings.js"></script>
