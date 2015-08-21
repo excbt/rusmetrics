@@ -22,6 +22,17 @@ console.log("Monitor service. Run Monitor service.");
         monitorSvcSettings.fromDate = $rootScope.monitorStart;
         monitorSvcSettings.toDate = $rootScope.monitorEnd;
         
+        var getMonitorSettings = function(){
+            return monitorSvcSettings;
+        };
+        
+        var setMonitorSettings = function(monitorSettings){
+//            monitorSvcSettings = monitorSettings;
+            for (var key in monitorSettings){
+                monitorSvcSettings[key]=monitorSettings[key];
+            };
+        };
+        
         var getLoadingStatus = function(){
             return monitorSvcSettings.loadingFlag;
         };
@@ -244,7 +255,8 @@ console.log("MonitorSvc. monitor:updateObjectsRequest");
             getAllMonitorCities,
             getLoadingStatus,
             getMonitorEventsByObject, 
-            monitorSvcSettings 
+            getMonitorSettings,
+            setMonitorSettings,
         };
         
     }]);

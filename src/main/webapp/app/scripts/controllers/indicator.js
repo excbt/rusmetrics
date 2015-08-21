@@ -1,6 +1,6 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', 'crudGridDataFactory', 'FileUploader', 'notificationFactory',function($scope, $rootScope, $cookies, $window, $http, crudGridDataFactory, FileUploader, notificationFactory){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc){
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -132,6 +132,15 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
+//                header : "Разница масс воды, т",
+                header : "",
+                class : "col-md-1 nmc-th-invisible",
+                name: "m_delta",
+                "imgpath" : "",
+                "imgclass": "",
+                "title":""
+            },
+            {
 //                header : "Температура подачи, град C",
                 header : "",
                 class : "col-md-1 nmc-th-invisible",
@@ -163,15 +172,6 @@ angular.module('portalNMC')
                 header : "",
                 class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
-                "imgpath" : "",
-                "imgclass": "",
-                "title":""
-            },
-            {
-//                header : "Разница масс воды, т",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
-                name: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
@@ -420,8 +420,8 @@ angular.module('portalNMC')
         //flag for zpoint, which control manual loading data - true: on manual loading, false: off manual loading
     $scope.isManualLoading = $cookies.isManualLoading==="true"?true:false;
         
-console.log($cookies.isManualLoading);        
-console.log($scope.isManualLoading);        
+//console.log($cookies.isManualLoading);        
+//console.log($scope.isManualLoading);        
         
     //file upload settings
     var initFileUploader =  function(){    
@@ -440,7 +440,7 @@ console.log($scope.isManualLoading);
         };
         
         $scope.uploader.onSuccessItem = function(item, response, status, headers){
-console.log(item);            
+//console.log(item);            
         };
     };
     initFileUploader();
@@ -450,9 +450,9 @@ console.log(item);
     var DateNMC = function(millisec){
 //            var coeffecient = 0;//3600*3*1000;
 //            var userOffset = (new Date()).getTimezoneOffset()*60000;
-console.log(millisec);
+//console.log(millisec);
         var tempDate = new Date(millisec);
-console.log(tempDate.getTime());   
+//console.log(tempDate.getTime());   
         console.log(tempDate); 
 //            tempDate.getTi
         return tempDate;
@@ -479,17 +479,82 @@ console.log(tempDate.getTime());
             result = $scope.userInfo._system;
         };
         return result;
-    };    
+    };
+        //define init indicator params method
+    var initIndicatorParams = function(){
+console.log($location.search());
+        var pathParams = $location.search();
+        var tmpZpId = null;//indicatorSvc.getZpointId();    
+        var tmpContObjectId = null;//indicatorSvc.getContObjectId();
+        var tmpZpName = null;//indicatorSvc.getZpointName();    
+        var tmpContObjectName = null;//indicatorSvc.getContObjectName();
+//        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
+//            if (angular.isDefined($cookies.contZPoint)&&($cookies.contZPoint!=="null")){
+//                indicatorSvc.setZpointId($cookies.contZPoint);
+//            };
+//        };
+//        if (angular.isUndefined(tmpContObjectId)||(tmpContObjectId===null)){
+//            if (angular.isDefined($cookies.contObject)&&($cookies.contObject!=="null")){
+//                indicatorSvc.setContObjectId($cookies.contObject);
+//            };
+//        };
+//        
+//        if (angular.isUndefined(tmpZpName)||(tmpZpName===null)){
+//            if (angular.isDefined($cookies.contZPointName)&&($cookies.contZPointName!=="null")){
+//                indicatorSvc.setZpointName($cookies.contZPointName);
+//            };
+//        };
+//        if (angular.isUndefined(tmpContObjectName)||(tmpContObjectName===null)){
+//            if (angular.isDefined($cookies.contObjectName)&&($cookies.contObjectName!=="null")){
+//                indicatorSvc.setContObjectName($cookies.contObjectName);
+//            };
+//        };
+        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
+            if (angular.isDefined(pathParams.zpointId)&&(pathParams.zpointId!=="null")){
+                indicatorSvc.setZpointId(pathParams.zpointId);
+            };
+        };
+        if (angular.isUndefined(tmpContObjectId)||(tmpContObjectId===null)){
+            if (angular.isDefined(pathParams.objectId)&&(pathParams.objectId!=="null")){
+                indicatorSvc.setContObjectId(pathParams.objectId);
+            };
+        };
+        
+        if (angular.isUndefined(tmpZpName)||(tmpZpName===null)){
+            if (angular.isDefined(pathParams.zpointName)&&(pathParams.zpointName!=="null")){
+                indicatorSvc.setZpointName(pathParams.zpointName);
+            };
+        };
+        if (angular.isUndefined(tmpContObjectName)||(tmpContObjectName===null)){
+            if (angular.isDefined(pathParams.objectName)&&(pathParams.objectName!=="null")){
+                indicatorSvc.setContObjectName(pathParams.objectName);
+            };
+        };
+        
+        $scope.contZPoint = indicatorSvc.getZpointId();
+        $scope.contZPointName = indicatorSvc.getZpointName() || "Не задано";
+        $scope.contObject = indicatorSvc.getContObjectId();
+        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";
+        
+        //clear cookies
+//console.log($cookies);        
+//        $cookies.contZPoint = null;
+//        $cookies.contObject = null;
+//        $cookies.contZPointName = null;
+//        $cookies.contObjectName = null;
+    };
+        //run init method
+    initIndicatorParams();
         
       //Получаем показания
     $scope.columns = [];
     $scope.getData = function (pageNumber) {
 //console.log("getData");        
         $scope.pagination.current = pageNumber;   
-         $scope.contZPoint = $cookies.contZPoint;
-         $scope.contZPointName = $cookies.contZPointName;
-         $scope.contObject = $cookies.contObject;
-         $scope.contObjectName = $cookies.contObjectName;
+//         $scope.contZPoint = $cookies.contZPoint;
+//         $scope.contZPointName = $cookies.contZPointName;
+//         $scope.contObject = $cookies.contObject;
+//         $scope.contObjectName = $cookies.contObjectName;
         
 //console.log($scope.timeDetailType);
 //console.log($cookies.timeDetailType);        
@@ -548,12 +613,12 @@ console.log(tempDate.getTime());
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
             $scope.intotalColumns.forEach(function(element){
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                element.ngstyle =indicatorTh.clientWidth+1;
+                element.ngstyle =indicatorTh.clientWidth;
 
             });
         };
         
-        // get summary
+        // get summary (score)
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();

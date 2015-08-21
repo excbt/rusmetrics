@@ -10,7 +10,7 @@
 var app = angular.module('portalNMC');
   app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc) {
 console.log("MainCtrl");      
-    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
+//    var monitorSvcInit = monitorSvc.getAllMonitorObjects();
       //main ctrl settings
     $scope.mainCtrlSettings = {};  
       //show on/off menu title
@@ -41,25 +41,41 @@ console.log("MainCtrl");
 //          $cookies.menuMassive = {};
 //      }
       function initMenu(){
-          $scope.menuMassive.object_menu_item = ($cookies.object_menu_item==="true" ? true:false);
-          $scope.menuMassive.report_menu_item= ($cookies.report_menu_item==="true" ? true:false);
-          $scope.menuMassive.notice_menu_item = ($cookies.notice_menu_item==="true" ? true:false);
-          $scope.menuMassive.setting_menu_item = ($cookies.setting_menu_item==="true" ? true:false);
-          $scope.menuMassive.admin_menu_item = ($cookies.admin_menu_item==="true" ? true:false);
-          $scope.menuMassive.object_menu_list_item = ($cookies.object_menu_list_item==="true" ? true:false);
-          $scope.menuMassive.contact_menu_item= ($cookies.contact_menu_item==="true" ? true:false);
-          $scope.menuMassive.directory_menu_item= ($cookies.directory_menu_item==="true" ? true:false);
-          $scope.menuMassive.object_control_menu_item= ($cookies.object_control_menu_item==="true" ? true:false);
-          $scope.menuMassive.metadata_control_menu_item= ($cookies.metadata_control_menu_item==="true" ? true:false);
-          $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
-          $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
-          $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
+          var loca = $location.path();
+console.log(loca);          
+//          $scope.menuMassive.object_menu_item = ($cookies.object_menu_item==="true" ? true:false);
+//          $scope.menuMassive.report_menu_item= ($cookies.report_menu_item==="true" ? true:false);
+//          $scope.menuMassive.notice_menu_item = ($cookies.notice_menu_item==="true" ? true:false);
+//          $scope.menuMassive.setting_menu_item = ($cookies.setting_menu_item==="true" ? true:false);
+//          $scope.menuMassive.admin_menu_item = ($cookies.admin_menu_item==="true" ? true:false);
+//          $scope.menuMassive.object_menu_list_item = ($cookies.object_menu_list_item==="true" ? true:false);
+//          $scope.menuMassive.contact_menu_item= ($cookies.contact_menu_item==="true" ? true:false);
+//          $scope.menuMassive.directory_menu_item= ($cookies.directory_menu_item==="true" ? true:false);
+//          $scope.menuMassive.object_control_menu_item= ($cookies.object_control_menu_item==="true" ? true:false);
+//          $scope.menuMassive.metadata_control_menu_item= ($cookies.metadata_control_menu_item==="true" ? true:false);
+//          $scope.menuMassive.setting_group_menu_item= ($cookies.setting_group_menu_item==="true" ? true:false);
+//          $scope.menuMassive.setting_tariff_menu_item= ($cookies.setting_tariff_menu_item==="true" ? true:false);
+//          $scope.menuMassive.setting_report_menu_item= ($cookies.setting_report_menu_item==="true" ? true:false);
+          $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list")!=-1 ? true:false);
+          $scope.menuMassive.report_menu_item= (loca==="#/reports/" ? true:false);
+          $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/")!=-1 ? true:false);
+          $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/")!=-1 ? true:false);
+//          $scope.menuMassive.admin_menu_item = (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.object_menu_list_item = (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.contact_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.directory_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.object_control_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.metadata_control_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.setting_group_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.setting_tariff_menu_item= (loca.indexOf()!=-1 ? true:false);
+//          $scope.menuMassive.setting_report_menu_item= (loca.indexOf()!=-1 ? true:false);
           var menuFlag = false;
           for (var k in $scope.menuMassive){
-              if (!$scope.menuMassive[k]){
+              if ($scope.menuMassive[k]===false){
                   continue;
               };
               menuFlag = true;
+              break;
           };
           if (!menuFlag){
               $scope.setDefaultMenuState();
@@ -123,7 +139,9 @@ console.log("setDefaultMenuState");
               $scope.menuMassive[k] = false;
           };
          $cookies.object_menu_item = true;         
-         $scope.menuMassive.object_menu_item=true;  
+         $scope.menuMassive.object_menu_item=true;
+console.log(window.location);        
+//         window.location.assign("");
         //          var el = document.getElementById(el_id);
         //          el.className = el.className + "excbt_a_list_group_item_selected";
     };
@@ -153,6 +171,7 @@ console.log("setDefaultMenuState");
       });
       
       initMenu();
+//      $scope.setDefaultMenuState();
       
           // Проверка пользователя - системный/ не системный
 //    $scope.isSystemuser = function(){

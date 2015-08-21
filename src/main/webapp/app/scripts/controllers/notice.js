@@ -2,7 +2,8 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, crudGridDataFactory, objectSvc, notificationFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory){
+console.log("Load NoticeCtrl.");    
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -20,6 +21,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.noticeTypesUrl= "../api/contEvent/types";
     //the path template of notice icon
     $scope.imgPathTmpl = "images/notice-state-";
+    
+    //get url params
+    var loca = $location.search();
+console.log(loca);    
+    
     
     //messages for user
     $scope.messages = {};
@@ -103,14 +109,15 @@ console.log("initCtrl");
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};
-        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
-            $cookies.monitorFlag = false;
+//        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
+        if ((angular.isDefined(loca))&&(loca.hasOwnProperty('monitorFlag'))&&(loca.monitorFlag==="true")){    
+//            loca.monitorFlag = false;
 //            $rootScope.reportStart=$rootScope.monitor.fromDate;
 //            $rootScope.reportEnd=$rootScope.monitor.toDate;
             $scope.objectsInWindow = angular.copy($scope.objects);           
             var curIndex = -1; 
             $scope.objectsInWindow.some(function(element, index){
-                if (element.id === Number($cookies.objectMonitorId)){
+                if (element.id === Number(loca.objectMonitorId)){
                     curIndex = index;
                     return true;
                 }
@@ -121,12 +128,13 @@ console.log("initCtrl");
                 $scope.objectsInWindow[curIndex].selected=true;
                 performObjectsFilter();               
                 //new / revision               
-                $scope.isNew = $cookies.isNew==="null"?null:Boolean($cookies.isNew);               
+                $scope.isNew = loca.isNew==="null"?null:Boolean(loca.isNew); 
+//console.log($scope.isNew);                
                 if ($scope.isNew===true){
                     $scope.visibleText='Только новые';
                 };
                 //types
-                var tmpTypesArr = [Number($cookies.typeIds)];
+                var tmpTypesArr = [Number(loca.typeId)];
 //console.log(tmpTypesArr);                
                 if ((angular.isDefined(tmpTypesArr))&&(tmpTypesArr.hasOwnProperty('length'))&&(tmpTypesArr.length>0)){
                     $scope.typesInWindow = angular.copy($scope.noticeTypes);
@@ -152,6 +160,7 @@ console.log("initCtrl");
     };
     
     var getNotices = function(table, startDate, endDate, objectArray, eventTypeArray, isNew){
+//console.log("Run GetNotices");              
         if (isNew==null){
             return $resource(table, {},
                          {'get':{method:'GET', params:{fromDate: startDate, toDate: endDate, contEventTypeIds: eventTypeArray, contObjectIds: objectArray}}
@@ -162,6 +171,7 @@ console.log("initCtrl");
             });
         };
     }; 
+    
     $scope.pagination = {
         current: 1
     };
@@ -254,21 +264,22 @@ console.log("initCtrl");
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-        if ((angular.isDefined($cookies))){
-            $scope.startDate = $cookies.fromDate;
-            $scope.endDate = $cookies.toDate;  
+console.log(loca);        
+        if ((angular.isDefined(loca))){
+            $scope.startDate = loca.fromDate;
+            $scope.endDate = loca.toDate;  
         }else{
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-//console.log("****************** Запрос *****************");
-//console.log(url);        
-//console.log($scope.startDate);
-//console.log($scope.endDate);        
-//console.log($scope.selectedObjects); 
-//console.log($scope.selectedNoticeTypes);  
-//console.log($scope.isNew);    
-//console.log("88888888888888888888 the end ***********************");        
+console.log("****************** Запрос *****************");
+console.log(url);        
+console.log($scope.startDate);
+console.log($scope.endDate);        
+console.log($scope.selectedObjects); 
+console.log($scope.selectedNoticeTypes);  
+console.log($scope.isNew);    
+console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
@@ -322,6 +333,7 @@ console.log("initCtrl");
     };
     
     function performObjectsFilter(){
+console.log("performObjectsFilter");        
         $scope.objects = $scope.objectsInWindow;
         $scope.selectedObjects_list = "";
         $scope.selectedObjects = [];
@@ -424,24 +436,24 @@ console.log("getObjects");
         });
     };
     
-    $scope.$watch('reportStart', function (newDates, oldDates) {
-console.log("watch notice");        
+//    $scope.$watch('r_e_p_o_r_t_S_t_a_r_t123', function (newDates, oldDates) {
+//console.log("watch notice");        
 //console.log(newDates); 
 //console.log(oldDates);
-        if (angular.isUndefined(oldDates)){
-            return;
-        };
-        if(oldDates === newDates){
-            return;
-        };
+//        if (angular.isUndefined(oldDates)){
+//            return;
+//        };
+//        if(oldDates === newDates){
+//            return;
+//        };
 //console.log("oldDates !== newDates");        
-        if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
+//        if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
 //console.log("if = true");            
-            $scope.getObjects();                              
-        }else{
-            $scope.getResultsPage(1);
-        };
-    }, false);
+//            $scope.getObjects();                              
+//        }else{
+//            $scope.getResultsPage(1);
+//        };
+//    }, false);
     
     $scope.getNoticeTypes = function(url){
        $http.get(url)
@@ -628,13 +640,15 @@ console.log("$scope.noticeTypes");
 
     //Clear all filters
     $scope.clearAllFilters = function(){
+console.log("Clear all filters.");        
         $scope.clearObjectFilter();
         $scope.clearTypeFilter();
         $scope.isNew = null;
         $scope.getResultsPage(1);
     };
     
-    $scope.clearObjectFilter = function(){
+    $scope.clearObjectFilter = function(){  
+console.log("Clear Object filters.");                
         $scope.objects.forEach(function(el){
             el.selected = false;
         });
@@ -644,6 +658,7 @@ console.log("$scope.noticeTypes");
     };
     
     $scope.clearTypeFilter = function(){
+console.log("Clear Type filters.");         
         $scope.states.criticalTypes_flag = false;
         $scope.states.noCriticalTypes_flag = false;
         $scope.states.undefinedCriticalTypes_flag = false;
