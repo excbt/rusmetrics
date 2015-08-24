@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-24T17:46:23 -->
+<!-- 2015-08-24T18:10:29 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -710,7 +710,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial cyrillic" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Суммарный объем вычетов по прямым потребителям " + $F{org_name} + ", запитанным через коммерческие УК"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Суммарный объем вычетов по потребителям, запитанным через коммерческие УК"]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
