@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportMasterTemplateBodyRepository;
+import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -70,10 +72,16 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	public boolean saveReportMasterTemplateBody(
 			long reportMasterTemplateBodyId, String fileResource,
 			boolean isCompiled) throws IOException {
-		File file = new File (fileResource);
+		
+		String correctedFilename = FilenameUtils
+				.removeExtension(fileResource)
+				+ (isCompiled ? ReportConstants.EXT_JRXML
+						: ReportConstants.EXT_JASPER);		
+		
+		File file = new File (correctedFilename);
 
 		if (!file.exists()) {
-			throw new FileNotFoundException(fileResource);
+			throw new FileNotFoundException(correctedFilename);
 		}
 
 		byte[] fileBytes = null;

@@ -12,6 +12,10 @@ public class ReportConstants {
 	public static final boolean IS_ACTIVE = true;
 	public static final boolean IS_NOT_ACTIVE = false;
 
+	
+	public static final String EXT_JASPER = ".jasper";
+	public static final String EXT_JRXML = ".jrxml";
+	
 	public static class Files {
 
 		public static final String COMM_FILE_COMPILED = "jasper_reports/nmk_com_report.jasper";
