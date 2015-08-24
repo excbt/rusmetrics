@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-24T16:47:36 -->
+<!-- 2015-08-24T17:46:23 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -19,7 +19,7 @@
 	</parameter>
 	<parameter name="cont_ids" class="java.lang.String" nestedType="Long">
 		<parameterDescription><![CDATA[ids container]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new String("{20118664, 20118665}")]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new String("{20118664, 20118665, 20118666, 20118667, 20118668}")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
 		<![CDATA[select * from 	get_data_cons1_report($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
@@ -903,7 +903,7 @@
 				</textElement>
 			</textField>
 			<textField pattern="#0.000" isBlankWhenNull="true">
-				<reportElement style="Style1" isPrintRepeatedValues="false" x="295" y="0" width="35" height="15" uuid="5854dd75-2c19-47a1-b5d5-4c21c3b2700e">
+				<reportElement x="295" y="0" width="35" height="15" uuid="5854dd75-2c19-47a1-b5d5-4c21c3b2700e">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="local_mesure_unitx" value="pixel"/>
