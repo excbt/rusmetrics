@@ -60,8 +60,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		String correctedFilename = FilenameUtils
 				.removeExtension(fileResourceString)
-				+ (isCompiled ? ReportConstants.EXT_JRXML
-						: ReportConstants.EXT_JASPER);
+				+ (isCompiled ? ReportConstants.EXT_JASPER
+						: ReportConstants.EXT_JRXML);
 
 		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
 				correctedFilename);

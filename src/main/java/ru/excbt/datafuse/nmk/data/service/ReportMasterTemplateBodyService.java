@@ -75,8 +75,8 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 		
 		String correctedFilename = FilenameUtils
 				.removeExtension(fileResource)
-				+ (isCompiled ? ReportConstants.EXT_JRXML
-						: ReportConstants.EXT_JASPER);		
+				+ (isCompiled ? ReportConstants.EXT_JASPER
+						: ReportConstants.EXT_JRXML);		
 		
 		File file = new File (correctedFilename);
 
