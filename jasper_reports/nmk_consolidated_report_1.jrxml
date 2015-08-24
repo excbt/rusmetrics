@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-20T13:44:20 -->
+<!-- 2015-08-24T16:47:36 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
@@ -221,25 +221,6 @@
 					<font fontName="Arial cyrillic" size="9"/>
 				</textElement>
 				<text><![CDATA[Расчетные тепло потери]]></text>
-			</staticText>
-			<staticText>
-				<reportElement style="Style1" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="0" width="120" height="70" backcolor="#99CCFF" uuid="dcd4ccb2-c018-4fec-9597-e30a35a9b5f9">
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="local_mesure_unitx" value="pixel"/>
-					<property name="com.jaspersoft.studio.unit.x" value="px"/>
-					<property name="local_mesure_unitwidth" value="pixel"/>
-				</reportElement>
-				<box>
-					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
-				</box>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial cyrillic" size="9"/>
-				</textElement>
-				<text><![CDATA[Суммарный объем вычетовпо прямым потребителям ООО "УКС", запитанным через коммерч. УУ (заполняет УКС)]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="Style1" stretchType="RelativeToTallestObject" mode="Opaque" x="600" y="0" width="80" height="70" backcolor="#99CCFF" uuid="19988548-b66d-4bde-8a5c-17316a887949">
@@ -718,6 +699,19 @@
 				</textElement>
 				<text><![CDATA[(13)=(5)+(7)-(10)]]></text>
 			</staticText>
+			<textField>
+				<reportElement style="Style1" stretchType="RelativeToTallestObject" mode="Opaque" x="415" y="0" width="120" height="70" backcolor="#99CCFF" uuid="22bf8151-a052-4643-9b46-e29f6d540098"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Суммарный объем вычетов по прямым потребителям " + $F{org_name} + ", запитанным через коммерческие УК"]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -908,7 +902,7 @@
 					<paragraph leftIndent="3"/>
 				</textElement>
 			</textField>
-			<textField pattern="#0.000" isBlankWhenNull="false">
+			<textField pattern="#0.000" isBlankWhenNull="true">
 				<reportElement style="Style1" isPrintRepeatedValues="false" x="295" y="0" width="35" height="15" uuid="5854dd75-2c19-47a1-b5d5-4c21c3b2700e">
 					<property name="local_mesure_unitwidth" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
