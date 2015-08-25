@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.config.security;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,10 +11,12 @@ import java.util.Map;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.velocity.app.VelocityEngine;
-import org.opensaml.saml2.metadata.provider.HTTPMetadataProvider;
+import org.opensaml.saml2.metadata.provider.FilesystemMetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -21,6 +25,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -90,11 +95,17 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(SamlSecurityConfig.class);
+
 	@Value("${saml.entityId}")
 	private String samlEntityId;
 
 	@Value("${saml.metadataProvider}")
 	private String samlMetadataProvider;
+
+	@Value("${saml.metadataProviderFile}")
+	private String samlMetadataProviderFile;
 
 	@Value("${saml.forceLocalLogin}")
 	private boolean forceLocalLogin;
@@ -314,13 +325,28 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean(name = "idp-ssocircle")
-	public ExtendedMetadataDelegate httpMetadataProvider()
+	public ExtendedMetadataDelegate metadataProvider()
 			throws MetadataProviderException {
 
 		// TODO
 		@SuppressWarnings("deprecation")
-		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
-				samlMetadataProvider, 5000);
+		// HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(
+		// samlMetadataProvider, 5000);
+		// httpMetadataProvider.setParserPool(parserPool());
+		Resource resource = new ClassPathResource(samlMetadataProviderFile);
+
+		File metadataFile;
+		try {
+			metadataFile = resource.getFile();
+			logger.info("MetadataFile:{}", metadataFile.getAbsolutePath());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			throw new MetadataProviderException("metadtaFile"
+					+ samlMetadataProviderFile + " is not found");
+		}
+
+		FilesystemMetadataProvider httpMetadataProvider = new FilesystemMetadataProvider(
+				metadataFile);
 		httpMetadataProvider.setParserPool(parserPool());
 
 		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(
@@ -334,7 +360,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean(name = "metadata")
 	public CachingMetadataManager metadata() throws MetadataProviderException {
 		List<MetadataProvider> providers = new ArrayList<MetadataProvider>();
-		providers.add(httpMetadataProvider());
+		providers.add(metadataProvider());
 		return new CachingMetadataManager(providers);
 	}
 
