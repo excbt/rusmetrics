@@ -74,7 +74,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public ContObject updateOneContObject(ContObject entity) {
 		checkNotNull(entity);
 		checkArgument(!entity.isNew());
@@ -117,7 +117,7 @@ public class ContObjectService implements SecuredRoles {
 	 * 
 	 * @param contObjectIds
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public List<Long> updateContObjectCurrentSettingModeType(
 			Long[] contObjectIds, String currentSettingMode, Long subscriberId) {
 		checkNotNull(contObjectIds);

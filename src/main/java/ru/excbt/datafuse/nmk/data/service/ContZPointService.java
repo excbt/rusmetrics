@@ -155,7 +155,7 @@ public class ContZPointService implements SecuredRoles {
 		return resultList;
 	}
 
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint saveContZPoint(ContZPoint contZPoint) {
 		checkNotNull(contZPoint);
 		checkArgument(!contZPoint.isNew());
