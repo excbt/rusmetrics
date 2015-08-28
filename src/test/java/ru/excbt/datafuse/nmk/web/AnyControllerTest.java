@@ -55,7 +55,8 @@ import com.jayway.jsonpath.JsonPath;
 @ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigCli.class,
 		LocalSecurityConfig.class, LdapConfig.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
-		"SUBSCR_ADMIN", "SUBSCR_USER" })
+		"SUBSCR_ADMIN", "SUBSCR_USER", 
+		"CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN" })
 public class AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory

@@ -18,13 +18,15 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cont_zpoint")
-public class ContZPoint extends AbstractAuditableModel {
+public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject {
 
 	/**
 	 * 
@@ -32,14 +34,20 @@ public class ContZPoint extends AbstractAuditableModel {
 	private static final long serialVersionUID = 1L;
 
 	@OneToOne()
-	@JoinColumn(name = "cont_object_id")
+	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private ContObject contObject;
 
+	@Column(name = "cont_object_id")
+	private Long contObjectId;
+
 	@OneToOne
-	@JoinColumn(name = "cont_service_type")
+	@JoinColumn(name = "cont_service_type", updatable = false, insertable = false)
 	private ContServiceType contServiceType;
 
+	@Column(name = "cont_service_type")
+	private String contServiceTypeKeyname;
+	
 	@Column(name = "custom_service_name")
 	private String customServiceName;
 
@@ -58,7 +66,7 @@ public class ContZPoint extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	@ManyToOne(cascade = {})
+	@ManyToOne()
 	@JoinColumn(name = "rso_organization_id")
 	private Organization rso;
 
@@ -74,6 +82,14 @@ public class ContZPoint extends AbstractAuditableModel {
 	@Column(name = "is_manual_loading")
 	private Boolean isManualLoading;
 
+	@Column(name = "ex_system")
+	@JsonIgnore
+	private String exSystemKeyname;
+	
+	@Column(name = "ex_code")
+	@JsonIgnore
+	private String exCode;
+	
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -168,6 +184,36 @@ public class ContZPoint extends AbstractAuditableModel {
 
 	public void setIsManualLoading(Boolean isManualLoading) {
 		this.isManualLoading = isManualLoading;
+	}
+
+	public Long getContObjectId() {
+		return contObjectId;
+	}
+
+	public void setContObjectId(Long contObjectId) {
+		this.contObjectId = contObjectId;
+	}
+
+	public String getContServiceTypeKeyname() {
+		return contServiceTypeKeyname;
+	}
+
+	public void setContServiceTypeKeyname(String contServiceTypeKeyname) {
+		this.contServiceTypeKeyname = contServiceTypeKeyname;
+	}
+
+	@Override
+	public String getExSystemKeyname() {
+		return exSystemKeyname;
+	}
+
+	public void setExSystemKeyname(String exSystemKeyname) {
+		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	@Override
+	public String getExCode() {
+		return exCode;
 	}
 
 }

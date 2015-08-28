@@ -146,7 +146,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		checkArgument(contObjectIds.length > 0);
 		checkNotNull(currentSettingMode);
 		checkArgument(ContObjectCurrentSettingTypeKey
-				.isValid(currentSettingMode));
+				.isSupported(currentSettingMode));
 
 		List<Long> contObjectIdList = Arrays.asList(contObjectIds);
 

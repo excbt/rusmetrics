@@ -25,7 +25,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	@Test
 	public void testGetZPointEx() throws Exception {
 		ContObject co = getFirstContObject();
-		List<ContZPointEx> result = contZPointService.findContZPointsEx(co
+		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co
 				.getId());
 		assertTrue(result.size() > 0);
 		// assertNotNull(result.get(0).getLastDataDate());
