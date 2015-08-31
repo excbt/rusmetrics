@@ -60,4 +60,15 @@ public class DeviceModelService {
 
 		return result.isPresent() ? result.get() : null;
 	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(readOnly = true)
+	public DeviceModel findOne(Long id) {
+		return deviceModelRepository.findOne(id);
+	}
+
 }

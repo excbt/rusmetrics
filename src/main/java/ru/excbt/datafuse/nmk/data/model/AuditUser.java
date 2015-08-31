@@ -32,6 +32,9 @@ public class AuditUser implements Serializable {
 	@Version
 	private int version;
 
+	@Column(name = "is_system")
+	private Boolean isSystem;
+	
 	public Long getId() {
 		return id;
 	}
@@ -56,16 +59,8 @@ public class AuditUser implements Serializable {
 		this.version = version;
 	}
 
-	public Boolean get_system() {
-		return _system;
-	}
 
-	public void set_system(Boolean _system) {
-		this._system = _system;
-	}
 
-	@Column(name = "is_system")
-	private Boolean _system;
 
 	public AuditUser() {
 
@@ -77,7 +72,7 @@ public class AuditUser implements Serializable {
 		this.userName = srcObject.userName;
 		this.version = srcObject.version;
 		this.id = srcObject.id;
-		this._system = srcObject._system;
+		this.isSystem = srcObject.isSystem;
 	}
 
 	public AuditUser(AuditUserPrincipal srcObject) {
@@ -86,7 +81,7 @@ public class AuditUser implements Serializable {
 		this.userName = srcObject.getUserName();
 		this.version = srcObject.getVersion();
 		this.id = srcObject.getId();
-		this._system = srcObject.is_system();
+		this.isSystem = srcObject.getIsSystem();
 	}
 
 	public AuditUser(SubscriberUserDetails srcObject) {
@@ -95,7 +90,11 @@ public class AuditUser implements Serializable {
 		this.userName = srcObject.getUsername();
 		this.version = srcObject.getVersion();
 		this.id = srcObject.getId();
-		this._system = srcObject.is_system();
+		this.isSystem = srcObject.getIsSystem();
+	}
+
+	public Boolean getIsSystem() {
+		return isSystem;
 	}
 
 }

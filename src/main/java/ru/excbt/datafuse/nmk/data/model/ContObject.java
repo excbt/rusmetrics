@@ -20,12 +20,17 @@ import javax.persistence.Version;
 import org.hibernate.annotations.DynamicUpdate;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cont_object")
 @DynamicUpdate
-public class ContObject extends AbstractAuditableModel {
+public class ContObject extends AbstractAuditableModel implements
+		ExSystemObject, ExCodeObject {
 
 	/**
 	 * 
@@ -95,7 +100,15 @@ public class ContObject extends AbstractAuditableModel {
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectGeoPos contObjectGeo;
-	
+
+	@Column(name = "ex_system")
+	@JsonIgnore
+	private String exSystemKeyname;
+
+	@Column(name = "ex_code")
+	@JsonIgnore
+	private String exCode;
+
 	public String getName() {
 		return name;
 	}
@@ -238,6 +251,16 @@ public class ContObject extends AbstractAuditableModel {
 
 	public void setContObjectGeo(ContObjectGeoPos contObjectGeo) {
 		this.contObjectGeo = contObjectGeo;
+	}
+
+	@Override
+	public String getExSystemKeyname() {
+		return exSystemKeyname;
+	}
+
+	@Override
+	public String getExCode() {
+		return exCode;
 	}
 
 }

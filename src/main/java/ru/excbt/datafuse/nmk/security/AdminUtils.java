@@ -27,6 +27,8 @@ public class AdminUtils {
 				SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
 		grantedAuths.add(new SimpleGrantedAuthority(
 				SecuredRoles.ROLE_ZPOINT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(
+				SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
 		return grantedAuths;
 	}
 }

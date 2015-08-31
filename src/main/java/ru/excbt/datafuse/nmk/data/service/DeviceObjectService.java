@@ -1,8 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -40,20 +43,29 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectRepository.findOne(id);
 	}
 
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObject saveOne(DeviceObject deviceObject) {
 		return deviceObjectRepository.save(deviceObject);
 	}
 
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public DeviceObject createPortalDeviceObject() {
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	public DeviceObject createManualDeviceObject() {
 
 		DeviceObject deviceObject = new DeviceObject();
 		DeviceModel deviceModel = deviceModelService.findPortalDeviceModel();
 		checkNotNull(deviceModel, "DeviceModel of Portal is not found");
 
 		deviceObject.setDeviceModel(deviceModel);
-		deviceObject.setExSystem(ExSystemKey.PORTAL.getKeyname());
+		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
+		return deviceObjectRepository.save(deviceObject);
+	}
+
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	public DeviceObject createManualDeviceObject(DeviceObject deviceObject) {
+		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
+		checkArgument(deviceObject.isNew());
+		checkNotNull(deviceObject.getDeviceModel(), "Device Model is NULL");
+		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		return deviceObjectRepository.save(deviceObject);
 	}
 
@@ -61,8 +73,15 @@ public class DeviceObjectService implements SecuredRoles {
 	 * 
 	 * @param deviceObjectId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public void deleteOne(Long deviceObjectId) {
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	public void deleteManualDeviceObject(Long deviceObjectId) {
+		DeviceObject deviceObject = findOne(deviceObjectId);
+		if (ExSystemKey.MANUAL.isNotEquals(deviceObject.getExSystemKeyname())) {
+			throw new PersistenceException(
+					String.format(
+							"Delete DeviceObject(id=%d) with exSystem=%s is not supported ",
+							deviceObjectId, deviceObject.getExSystemKeyname()));
+		}
 		deviceObjectRepository.delete(deviceObjectId);
 	}
 
@@ -102,7 +121,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectMetaVzlet
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectMetaVzlet updateDeviceObjectMetaVzlet(
 			DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
 		checkNotNull(deviceObjectMetaVzlet);
@@ -110,7 +129,8 @@ public class DeviceObjectService implements SecuredRoles {
 			deviceObjectMetaVzlet.setExcludeNulls(false);
 		}
 		if (deviceObjectMetaVzlet.getMetaPropsOnly() == null) {
-			deviceObjectMetaVzlet.setMetaPropsOnly(false);;
+			deviceObjectMetaVzlet.setMetaPropsOnly(false);
+			;
 		}
 		return deviceObjectMetaVzletRepository.save(deviceObjectMetaVzlet);
 	}
@@ -120,7 +140,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectMetaVzlet
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObjectMetaVzlet(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 
@@ -129,15 +149,17 @@ public class DeviceObjectService implements SecuredRoles {
 			deviceObjectMetaVzletRepository.delete(entity);
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional (readOnly = true)
-	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
-		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
+	@Transactional(readOnly = true)
+	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(
+			long deviceObjectId) {
+		return deviceObjectMetaVzletRepository
+				.findByDeviceObjectId(deviceObjectId);
 	}
-		
+
 }

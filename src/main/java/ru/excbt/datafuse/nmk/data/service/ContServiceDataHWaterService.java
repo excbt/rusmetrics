@@ -472,11 +472,11 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 			logger.debug("Device Object is not found. Create new");
 
-			deviceObject = deviceObjectService.createPortalDeviceObject();
+			deviceObject = deviceObjectService.createManualDeviceObject();
 			logger.debug("Cont Object is saved. Id:{}", deviceObject.getId());
 
 			zpoint.getDeviceObjects().add(deviceObject);
-			contZPointService.saveContZPoint(zpoint);
+			contZPointService.updateContZPoint(zpoint);
 
 			logger.debug("ContZPoint is saved. Id:{}", zpoint.getId());
 		} else {

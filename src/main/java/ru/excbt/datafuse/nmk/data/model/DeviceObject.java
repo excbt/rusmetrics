@@ -11,11 +11,14 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "device_object")
-public class DeviceObject extends AbstractAuditableModel {
+public class DeviceObject extends AbstractAuditableModel implements ExSystemObject {
 
 	/**
 	 * 
@@ -30,10 +33,16 @@ public class DeviceObject extends AbstractAuditableModel {
 	private String number;
 
 	@Column(name = "ex_code")
+	@JsonIgnore
 	private String exCode;
 
+	@Column(name = "ex_label")
+	@JsonIgnore
+	private String exLabel;
+
 	@Column(name = "ex_system")
-	private String exSystem;
+	@JsonIgnore
+	private String exSystemKeyname;
 
 	@ManyToOne
 	@JoinTable(name = "cont_device_object", //
@@ -68,14 +77,6 @@ public class DeviceObject extends AbstractAuditableModel {
 		this.exCode = exCode;
 	}
 
-	public String getExSystem() {
-		return exSystem;
-	}
-
-	public void setExSystem(String exSystem) {
-		this.exSystem = exSystem;
-	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -89,7 +90,24 @@ public class DeviceObject extends AbstractAuditableModel {
 	}
 
 	public boolean isMetaVzletExpected() {
-		return ExSystemKey.VZLET.getKeyname().equals(this.exSystem);
+		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
+	}
+
+	@Override
+	public String getExSystemKeyname() {
+		return exSystemKeyname;
+	}
+
+	public void setExSystemKeyname(String exSystemKeyname) {
+		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	public String getExLabel() {
+		return exLabel;
+	}
+
+	public void setExLabel(String exLabel) {
+		this.exLabel = exLabel;
 	}
 
 }
