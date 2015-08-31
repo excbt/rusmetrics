@@ -2,11 +2,16 @@ package ru.excbt.datafuse.nmk.ldap.service;
 
 import java.util.List;
 
+import javax.naming.InvalidNameException;
+import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.LdapName;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextExecutor;
 import org.springframework.ldap.core.DirContextOperations;
@@ -14,6 +19,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
 import org.springframework.ldap.filter.EqualsFilter;
 import org.springframework.ldap.filter.Filter;
+import org.springframework.ldap.support.LdapNameBuilder;
 import org.springframework.ldap.support.LdapUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +27,11 @@ import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 
 @Service
 public class LdapService {
+
+	public static final String BASE_DN = "dc=nmk,dc=ru";
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(LdapService.class);
 
 	@Autowired
 	private LdapTemplate ldapTemplate;
@@ -55,7 +66,7 @@ public class LdapService {
 	 */
 	public boolean changePassword(String username, String newPassword) {
 
-		String dnString = getDnForUser(username);				
+		String dnString = getDnForUser(username);
 
 		ldapTemplate.executeReadOnly(new ContextExecutor<Object>() {
 			@Override
@@ -100,7 +111,7 @@ public class LdapService {
 	 * @return
 	 */
 	public String getDnForUser(String uid) {
-		
+
 		Filter f = new EqualsFilter("uid", uid);
 		List<Object> result = ldapTemplate.search(LdapUtils.emptyLdapName(),
 				f.toString(), new AbstractContextMapper<Object>() {
@@ -111,10 +122,54 @@ public class LdapService {
 				});
 
 		if (result.size() != 1) {
-			throw new RuntimeException("User not found or not unique. userName " + uid);
+			throw new RuntimeException(
+					"User not found or not unique. userName " + uid);
 		}
 
 		return (String) result.get(0);
+	}
+
+	/**
+	 * 
+	 * @param username
+	 * @param email
+	 * @return
+	 * @throws InvalidNameException
+	 */
+	public void updateEMail(String username, String email)
+			throws InvalidNameException {
+		Name dn = buildDn(username);
+
+		LdapName ldapName = new LdapName(getDnForUser(username));
+		logger.info("username dn__:{}", getDnForUser(username));
+		logger.info("username dn_2:{}", dn.toString());
+		logger.info("username dn_3:{}", ldapName.toString());
+
+		DirContextOperations context = ldapTemplate.lookupContext(dn);
+		context.setAttributeValue("mail", email);
+		ldapTemplate.modifyAttributes(context);
+
+	}
+
+	/**
+	 * 
+	 * @param username
+	 * @throws InvalidNameException
+	 */
+	public void updateEMail(String username) throws InvalidNameException {
+		updateEMail(username, username + "@rusmetrics.ru");
+	}
+
+	/**
+	 * 
+	 * @param username
+	 * @return
+	 */
+	protected Name buildDn(String username) {
+
+		return LdapNameBuilder.newInstance().add("ou", "people")
+				.add("ou", "RMA-Izhevsk").add("uid", username).build();
+
 	}
 
 }

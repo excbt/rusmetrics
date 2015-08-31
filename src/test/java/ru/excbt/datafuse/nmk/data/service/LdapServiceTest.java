@@ -55,4 +55,35 @@ public class LdapServiceTest extends JpaSupportTest {
 		assertTrue(authResult);
 
 	}
+	
+	@Test
+	public void testChangeEmail() throws Exception {
+		ldapService.updateEMail("west-snab");
+		ldapService.updateEMail("vsegingeo");
+		ldapService.updateEMail("okryabrskaya_45");
+		ldapService.updateEMail("zhek");
+		ldapService.updateEMail("kompribor");
+		ldapService.updateEMail("aspek");
+		ldapService.updateEMail("okeania");
+		ldapService.updateEMail("ooo_kts");
+		ldapService.updateEMail("turion");
+		ldapService.updateEMail("votkinsk");
+		ldapService.updateEMail("chekh");
+
+		
+//		String psw = "psw_12345";
+//		
+//		ldapService.changePassword("west-snab",psw);
+//		ldapService.changePassword("vsegingeo",psw);
+//		ldapService.changePassword("okryabrskaya_45",psw);
+//		ldapService.changePassword("zhek",psw);
+//		ldapService.changePassword("kompribor",psw);
+//		ldapService.changePassword("aspek",psw);
+//		ldapService.changePassword("okeania",psw);
+//		ldapService.changePassword("ooo_kts",psw);
+//		ldapService.changePassword("turion",psw);
+//		ldapService.changePassword("votkinsk",psw);
+//		ldapService.changePassword("chekh",psw);
+	}	
+	
 }
