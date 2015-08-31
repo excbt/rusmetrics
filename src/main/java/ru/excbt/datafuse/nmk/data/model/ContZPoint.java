@@ -90,6 +90,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@JsonIgnore
 	private String exCode;
 	
+	@Column(name = "ts_number")
+	private Integer tsNumber;
+	
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -214,6 +217,14 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Override
 	public String getExCode() {
 		return exCode;
+	}
+
+	public Integer getTsNumber() {
+		return tsNumber;
+	}
+
+	public void setTsNumber(Integer tsNumber) {
+		this.tsNumber = tsNumber;
 	}
 
 }

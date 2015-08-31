@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
@@ -55,6 +56,15 @@ public class DeviceObjectService implements SecuredRoles {
 		checkNotNull(deviceModel, "DeviceModel of Portal is not found");
 
 		deviceObject.setDeviceModel(deviceModel);
+		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
+		return deviceObjectRepository.save(deviceObject);
+	}
+
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	public DeviceObject createManualDeviceObject(DeviceObject deviceObject) {
+		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
+		checkArgument(deviceObject.isNew());
+		checkNotNull(deviceObject.getDeviceModel(), "Device Model is NULL");
 		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		return deviceObjectRepository.save(deviceObject);
 	}

@@ -10,12 +10,15 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
@@ -29,6 +32,9 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 @Transactional
 public class ContZPointService implements SecuredRoles {
 
+	private static final Logger logger = LoggerFactory
+			.getLogger(ContZPointService.class);
+	
 	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
 
 	@Autowired
@@ -180,7 +186,8 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint createManualZPoint(Long contObjectId,
-			ContServiceTypeKey contServiceTypeKey, LocalDate startDate) {
+			ContServiceTypeKey contServiceTypeKey, LocalDate startDate,
+			Integer tsNumber, Boolean isDoublePipe, DeviceObject deviceObject) {
 		checkNotNull(contObjectId);
 		checkNotNull(contServiceTypeKey);
 		checkNotNull(startDate);
@@ -190,9 +197,15 @@ public class ContZPointService implements SecuredRoles {
 		result.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		result.setIsManualLoading(true);
 		result.setStartDate(startDate.toDate());
+		result.setTsNumber(tsNumber);
+		result.setDoublePipe(isDoublePipe);
+		if (deviceObject != null) {
+			result.getDeviceObjects().add(deviceObject);
+		}
 		return contZPointRepository.save(result);
 	}
 
+	
 	/**
 	 * 
 	 * @param contZPointId
