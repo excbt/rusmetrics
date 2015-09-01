@@ -35,7 +35,7 @@ public class SubscriberService {
 	@Autowired
 	private ContEventRepository contEventRepository;
 
-	@PersistenceContext
+	@PersistenceContext (unitName="nmk-p")
 	private EntityManager em;
 
 	/**

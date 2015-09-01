@@ -20,13 +20,13 @@ import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { PropertyConfig.class, JpaConfigCli.class, LdapConfig.class })
+@ContextConfiguration(classes = { PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class })
 public class JpaConfigTest {
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;
 
-	@PersistenceContext
+	@PersistenceContext (unitName="nmk-p")
 	protected EntityManager entityManager;
 
 	@Autowired

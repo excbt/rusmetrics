@@ -63,7 +63,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	@Autowired
 	private DeviceObjectService deviceObjectService;
 
-	@PersistenceContext
+	@PersistenceContext (unitName="nmk-p")
 	private EntityManager em;
 
 	@Autowired

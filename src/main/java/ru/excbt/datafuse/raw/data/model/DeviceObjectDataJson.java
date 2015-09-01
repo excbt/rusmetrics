@@ -1,12 +1,11 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.raw.data.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -14,15 +13,12 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="device_object_data_json")
-@Deprecated
-public class DeviceObjectDataJson extends AbstractAuditableModel {
+public class DeviceObjectDataJson implements Serializable {
 
  
 	/**
@@ -30,6 +26,10 @@ public class DeviceObjectDataJson extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 8976999618636726672L;
 
+	@Id
+	@Column(name = "id")
+	private Long id;
+	
 	@Column(name="import_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date importDate;
@@ -46,10 +46,8 @@ public class DeviceObjectDataJson extends AbstractAuditableModel {
 	@Column(name="device_data_type")
 	private String deviceDataType;
 	
-	@OneToOne (fetch = FetchType.LAZY) 
-	@JoinColumn(name = "device_object_id")
-	@JsonIgnore
-	private DeviceObject deviceObject;
+	@Column(name="device_object_id")
+	private Long deviceObjectId;
 	
 	@Column(name="time_detail_type")
 	private String timeDetailType;
@@ -57,60 +55,37 @@ public class DeviceObjectDataJson extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	public Date getImportDate() {
-		return importDate;
+	public Long getId() {
+		return id;
 	}
 
-	public void setImportDate(Date importDate) {
-		this.importDate = importDate;
+	public Date getImportDate() {
+		return importDate;
 	}
 
 	public Date getDeviceDate() {
 		return deviceDate;
 	}
 
-	public void setDeviceDate(Date deviceDate) {
-		this.deviceDate = deviceDate;
-	}
-
 	public String getDataJson() {
 		return dataJson;
-	}
-
-	public void setDataJson(String dataJson) {
-		this.dataJson = dataJson;
 	}
 
 	public String getDeviceDataType() {
 		return deviceDataType;
 	}
 
-	public void setDeviceDataType(String deviceDataType) {
-		this.deviceDataType = deviceDataType;
-	}
-
-	public DeviceObject getDeviceObject() {
-		return deviceObject;
-	}
-
-	public void setDeviceObject(DeviceObject deviceObject) {
-		this.deviceObject = deviceObject;
-	}
-
 	public String getTimeDetailType() {
 		return timeDetailType;
-	}
-
-	public void setTimeDetailType(String timeDetailType) {
-		this.timeDetailType = timeDetailType;
 	}
 
 	public int getVersion() {
 		return version;
 	}
 
-	public void setVersion(int version) {
-		this.version = version;
+	public Long getDeviceObjectId() {
+		return deviceObjectId;
 	}
+
 	
 }
