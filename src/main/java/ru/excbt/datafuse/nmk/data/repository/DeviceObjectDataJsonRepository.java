@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
 
+@Deprecated
 public interface DeviceObjectDataJsonRepository extends
 		PagingAndSortingRepository<DeviceObjectDataJson, Long> {
 

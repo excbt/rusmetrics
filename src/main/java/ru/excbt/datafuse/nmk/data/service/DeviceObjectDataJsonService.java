@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataJsonRepository;
 
 @Service
 @Transactional
+@Deprecated
 public class DeviceObjectDataJsonService {
 
 	@Autowired
