@@ -35,7 +35,8 @@
     <!--[if lt IE 8]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
-      
+<!--    temp comment: for debug  -->
+<!--
         <div ng-controller="IdleCtrl">
               <div id="warnDialogModal" class="modal fade nmc-modal-window" role="dialog"
             aria-labelledby="warnLabel" tabindex="-1">
@@ -54,6 +55,7 @@
               </div>
 
         </div>
+-->
     <!-- Add your site or application content here -->
 <div id="wrap" class="wrap" ng-controller="MainCtrl">
 <!--    Навигационная строка в верху страницы-->
@@ -62,26 +64,9 @@
 			<div id="navbar-container" >
 <!--                class="container-fluid"-->
 				<div class="navbar-header">
-<!--
-					<button type="button" class="navbar-toggle" data-toggle="offcanvas">
-						<span class="sr-only">Toggle navigation</span> <span
-							class="icon-bar"></span> <span class="icon-bar"></span> <span
-							class="icon-bar"></span>
-					</button>
--->
-					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>
-                    
-					
+					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>				
 				</div>
 			
-<!--
-              <ul class="col-md-1 nav navbar-nav nmc-main-header-menu">
-                  <li><a href="http://otrs.local.excbt.ru/otrs/customer.pl">Поддержка</a>
-                  </li>
-                 </ul>
--->
-				
-<!--				<li>-->
             <div class="collapse navbar-collapse">
                 
                 <div class="navbar-text nmc-main-header-title"> Система учета и обработки метрологической информации </div>
@@ -193,12 +178,6 @@
                                 <a  class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_list_item}"
 
                                 ng-click="clickMenu('object_menu_list_item');" href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
-                                <!-- Контакты -->
-<!--
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.contact_menu_item}"
-
-                                   ng-click="clickMenu('contact_menu_item');" href="#/settings/contacts/" data-toggle="offcanvas">Контакты</a>
--->
                                 <!-- Справочники -->
                                 <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.directory_menu_item}"
 
@@ -225,19 +204,6 @@
           <div class="container" >
             
 			<p class="muted credit">
-<!--              <table>
-                  <tr>
-                      <td> -->
-<!--                         <react-component name="FooterComponent" props="person"/> -->
-<!--                        <p align="center" style="font-size: 16px;"><span class="glyphicon"></span> (c) "НМК" 2015 </p>-->
-                        
-<!--                      </td>   
-<!--                       <td align="right"> -->
-<!--                           <p>Телефон технической поддержки: +7(499)678-82-80</p> -->
-<!--                           <p>E-mail: support@excbt.ru</p> -->
-<!--                       </td> -->
-<!--                   </tr>   -->
-<!--               </table>--> -->
               
 
                </p> 

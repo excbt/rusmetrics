@@ -585,17 +585,17 @@ console.log($location.search());
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "m_delta")){
                             if((el.m_out!=null)&&(el.m_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.m_out-el.m_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.m_in-el.m_out).toFixed(3);
                             };
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "v_delta")){
                             if((el.v_out!=null)&&(el.v_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.v_out-el.v_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.v_in-el.v_out).toFixed(3);
                             };
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "p_delta")){
                             if((el.p_out!=null)&&(el.p_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.p_out-el.p_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.p_in-el.p_out).toFixed(3);
                             };
                         };
                         

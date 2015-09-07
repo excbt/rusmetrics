@@ -116,15 +116,15 @@ console.log("Run routeProviderConfig");
   });
 
 //config for ngIdle
-app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, IdleProvider) {
-  IdleProvider.idle(3600); //idle time in seconds
-  IdleProvider.timeout(30); //time out in seconds
-  KeepaliveProvider.interval(10);//keepAlive - not used
-}]);
+//app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, IdleProvider) {
+//  IdleProvider.idle(3600); //idle time in seconds
+//  IdleProvider.timeout(30); //time out in seconds
+//  KeepaliveProvider.interval(10);//keepAlive - not used
+//}]);
 //start Idle service
-app.run(['Idle', function(Idle) {
-  Idle.watch();
-}]);
+//app.run(['Idle', function(Idle) {
+//  Idle.watch();
+//}]);
 
 app.run(['objectSvc', 'monitorSvc', function(objectSvc, monitorSvc){
 console.log("Run object and monitor services.");  

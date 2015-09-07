@@ -53,11 +53,9 @@ body{
 
 /*  Текст по центру шапки портала*/
 .nmc-main-header-title {
+    padding-left: 10em;
     color: #fff !important;
     font: bold 190% arial;
-    text-align: center;
-    vertical-align: middle;
-/*    padding-top: 16px;*/
 }
 	/* Меню в строке заголовка*/
 .nmc-main-header-menu{

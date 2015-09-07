@@ -624,11 +624,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             ){
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
-        //формируем массив ИД объектов, для которых формируется отчет.
-        var objectIds = $scope.selectedObjects.map(function(element){
+        //формируем массив ИД объектов, для которых формируется отчет.          
+        var objectIds = $scope.selectedObjects.map(function(element){          
             var result = element.id;
             return result;
-        }); 
+        });      
          //set the list of the special params - устанавливаем специальные параметры отчета
         tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
         //Если вариант отчета создается за период, задаем начало и конец периода

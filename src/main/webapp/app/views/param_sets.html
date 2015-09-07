@@ -128,33 +128,6 @@
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
                                          </td>
-<!--                                         <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
-                                                            </td>
-                                                            <td><i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
-                                             <div class="col-md-7" ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                    {{oldObject.name}} <label class="marginLeft15"> </label> тип файла: {{oldObject.outputFileType}} <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label>интервал: {{oldObject.reportPeriod.caption}} <label class="marginLeft15"  ng-class="{'nmc-distinguish': oldObject._default}"> </label>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-2" ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                    действует с: {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
-                                            </div>
-                                         </td>
--->
 
                                      </tr>
                                     </table>         
@@ -240,36 +213,6 @@
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeEndDate | date:'dd.MM.yyyy'}}</span>
                                          </td>
-<!--                                        <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">-->
-<!--                                                  width:55px;-->
-<!--
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Просмотреть" class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
-                                                            </td>  
-                                                            <td><i title="Создать новый действующий вариант на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
--->
-<!--
-                                             <div class="col-md-7 " >     
-                                                    {{oldObject.name}} <span class="marginLeft15">тип файла: {{oldObject.outputFileType}}</span> <span class="marginLeft15">интервал: {{oldObject.reportPeriod.caption}}</span><span class="marginLeft15"> </span>шаблон отчета: {{oldObject.reportTemplate.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-2">     
-                                                    в архиве с: {{oldObject.activeEndDate | date:'dd.MM.yyyy'}}
-                                            </div>
--->
-<!--                                         </td>-->
                                          <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
@@ -635,14 +578,6 @@
                                                         <select class="form-control nmc-text-input-form" id="inputSpecParam" ng-model="paramSpecial.directoryValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired" ng-options="specvalue[paramSpecial.specialTypeDirectoryValue] as specvalue[paramSpecial.specialTypeDirectoryCaption] for specvalue in paramSpecial.specialTypeDirectoryValues"></select> 
                                                     </span>
                                                 </div>
-<!--
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=text  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_STRING'" ng-model="paramSpecial.textValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
-                                                <input class="form-control nmc-text-input-form nmc-input-digital-data" id="inputSpecParam" type=text  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_NUMERIC'" ng-model="paramSpecial.numericValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_DATE'" ng-model="paramSpecial.oneDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
-                                                <input class="form-control nmc-text-input-form" id="inputSpecParam" type=select  placeholder="" ng-show="paramSpecial.directoryValue==='SPECIAL_CONT_OBJECT_GROUP'" ng-model="paramSpecial.directoryValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">                                                
--->
                                             </td>
                                         </tr>
                                 </table>    
@@ -655,31 +590,15 @@
                 <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
                     <div class="container-fluid noPadding">
                         <div class="row-fluid ">
-               
-<!--
-                             <div class="col-md-6 nmc-object-list nmc-modal-panel-with-table" id="object_list">
-                                <div><label class="nmc-form-label">Доступные объекты</label></div>
-                                <div>
-                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" ng-disabled="isDisabled()">
-                                        <tr ng-repeat="object in availableObjects">
-                                            <td><input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="addObject(object)" class="nmc-checkbox-form">{{object.fullName}}
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
--->
                             <div class="col-md-12 noPadding nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
                                 <div><label class="nmc-form-label">Выбранные объекты</label></div>
                                 <div>
                                     <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
                                         <tr ng-repeat="object in selectedObjects">
                                             <td>
-<!--                                                <input ng-disabled="isDisabled()" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
                                                 {{object.fullName}}
                                             </td>
                                             <td><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
-<!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                             </td>
                                         </tr>
                                     </table>

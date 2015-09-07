@@ -186,10 +186,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         //set the list of the special params
         object.paramSpecialList = $scope.currentParamSpecialList;      
         var table="";       
-        //get the id's array of the selected objects - server expect array of object ids
-        var tmp = $scope.selectedObjects.map(function(elem){
+        //get the id's array of the selected objects - server expect array of object ids      
+        var tmp = $scope.selectedObjects.map(function(elem){      
             return elem.id;
-        });
+        });        
         //
         object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
                 
@@ -297,12 +297,6 @@ console.log(object);
         $http.get(url)
             .success(function(data){
                 obj.specialTypeDirectoryValues = data;
-//console.log(obj.specialTypeDirectoryValues[0].id);
-//console.log(obj);    
-//                obj.specialTypeDirectoryValues.forEach(function(element){
-//                    console.log(element[obj.specialTypeDirectoryValue]);
-//                    console.log(element[obj.specialTypeDirectoryCaption]);
-//                });
             })
             .error(function(e){
                 console.log(e);
@@ -626,13 +620,6 @@ $scope.prepareObjectsList = function(){
                 removeObject: {method: 'DELETE'}
             });
     };
- 
-//    $scope.addObject = function(object){
-//        $scope.addObject_flag = true;
-//        $scope.currentObjectId = object.id;
-//        objectPerform(true, object.id);
-//
-//    };
     
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
@@ -724,13 +711,10 @@ console.log(totalGroupObjects);
     }, false);
     
     $scope.isDisabled = function(){
-//console.log($scope.currentObject.common || !$scope.currentObject._active);        
         return $scope.currentObject.common || !$scope.currentObject._active;
     };
     
-    $scope.showAddObjectButton = function(){
-//console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
-//console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
+    $scope.showAddObjectButton = function(){      
         return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
     }
     
@@ -839,25 +823,10 @@ console.log(totalGroupObjects);
             result= false;
         };
         result =result && $scope.checkRequiredFields();  
-//        $scope.currentObject.showParamsBeforeRunReport =!result;
-        if (!result){
-//console.log("1");            
+        if (!result){            
             $scope.currentObject.showParamsBeforeRunReport = true;
         };
-//        else{
-//            $scope.currentObject.showParamsBeforeRunReport = false;
-//        };
         return result;
     };
-    
-    
-    
-//    $scope.$watch('currentObject',function(data){
-//console.log($scope.currentObject.common || !$scope.currentObject._active); 
-//console.log($scope.currentObject);        
-//console.log("daaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaattttttttttttttttttttttaaaaaaaaaaaaaaaaaa");        
-//console.log(data);        
-//console.log("===============================================================================");        
-//    },false);
 
 }]);
