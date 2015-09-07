@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +38,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		app.autowireBeans();
 		app.showAppStatus();
-		app.loadAllCompiledReportMasterTemplates();
-		app.loadAllRawReportMasterTemplates();
-		app.loadAllJrxmlReportMasterTemplates();
+		app.loadAllReportMasterTemplates(ReportConstants.IS_COMPILED);
+		app.loadAllReportMasterTemplates(ReportConstants.IS_NOT_COMPILED);
 		app.updateAllCommonReportTemplate();
 
 		logger.info("All Reports was loaded successfully");
@@ -58,8 +58,13 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
 			String fileResourceString, boolean isCompiled) throws IOException {
 
+		String correctedFilename = FilenameUtils
+				.removeExtension(fileResourceString)
+				+ (isCompiled ? ReportConstants.EXT_JASPER
+						: ReportConstants.EXT_JRXML);
+
 		logger.info("Loading {} from file:{}...", reportTypeKey.name(),
-				fileResourceString);
+				correctedFilename);
 
 		ReportMasterTemplateBody templateBody = reportMasterTemplateBodyService
 				.selectReportMasterTemplate(reportTypeKey);
@@ -71,73 +76,51 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		boolean res = false;
 		res = reportMasterTemplateBodyService.saveReportMasterTemplateBody(
-				templateBody.getId(), fileResourceString, isCompiled);
+				templateBody.getId(), correctedFilename, isCompiled);
 
 		checkState(res);
 
 		logger.info("Report {} was successfully loaded from fils '{}'",
-				reportTypeKey.name(), fileResourceString);
+				reportTypeKey.name(), correctedFilename);
 
 		System.out.println();
 		System.out.println(String.format(
 				"Report %s was successfully loaded from fils '%s'",
-				reportTypeKey.name(), fileResourceString));
+				reportTypeKey.name(), correctedFilename));
 		System.out.println();
 	}
 
-	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString) throws IOException {
-		loadReportMasterTemplate(reportTypeKey, fileResourceString,
-				ReportConstants.IS_NOT_COMPILED);
-	}
-
 	/**
 	 * 
 	 * @throws IOException
 	 */
-	private void loadAllCompiledReportMasterTemplates() throws IOException {
+	private void loadAllReportMasterTemplates(boolean isCompiled) throws IOException {
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Files.COMM_FILE_COMPILED);
+				ReportConstants.Files.COMM_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.EVENT_REPORT,
-				ReportConstants.Files.EVENT_FILE_COMPILED);
+				ReportConstants.Files.EVENT_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
-				ReportConstants.Files.CONS_T1_FILE_COMPILED);
+				ReportConstants.Files.CONS_T1_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				ReportConstants.Files.CONS_T2_FILE_COMPILED);
+				ReportConstants.Files.CONS_T2_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
-				ReportConstants.Files.METROLOGICAL_FILE_COMPILED);
+				ReportConstants.Files.METROLOGICAL_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT,
-				ReportConstants.Files.CONSUMPTION_FILE_COMPILED);
+				ReportConstants.Files.CONSUMPTION_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED);
+				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT,
-				ReportConstants.Files.CONSUMPTION_ETALON_FILE_COMPILED);
+				ReportConstants.Files.CONSUMPTION_ETALON_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.LOG_JOURNAL_REPORT,
-				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED);
-	}
-
-	private void loadAllRawReportMasterTemplates() throws IOException {
-		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Files.COMM_FILE_COMPILED,
-				ReportConstants.IS_NOT_COMPILED);
-	}
-
-	/**
-	 * 
-	 * @throws IOException
-	 */
-	private void loadAllJrxmlReportMasterTemplates() throws IOException {
-
-		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Files.COMM_FILE_JRXML);
+				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED, isCompiled);
 	}
 
 	/**

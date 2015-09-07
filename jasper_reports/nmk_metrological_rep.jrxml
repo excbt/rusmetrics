@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-20T13:51:57 -->
+<!-- 2015-08-24T16:19:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_metrological_rep" pageWidth="5000" pageHeight="2000" orientation="Landscape" columnWidth="4960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0cb06846-60fc-462a-bbf9-3ada50848c9b">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
@@ -88,6 +88,7 @@
 		<field name="subscr_id" class="java.lang.Long"/>
 		<field name="subscr_name" class="java.lang.String"/>
 		<field name="device_id" class="java.lang.Long"/>
+		<field name="device_object_number" class="java.lang.String"/>
 		<field name="device_model_id" class="java.lang.Long"/>
 		<field name="device_model_name" class="java.lang.String"/>
 		<field name="service_num1" class="java.lang.Long"/>
@@ -797,6 +798,7 @@
 	<field name="subscr_id" class="java.lang.Long"/>
 	<field name="subscr_name" class="java.lang.String"/>
 	<field name="device_id" class="java.lang.Long"/>
+	<field name="device_object_number" class="java.lang.String"/>
 	<field name="device_model_id" class="java.lang.Long"/>
 	<field name="device_model_name" class="java.lang.String"/>
 	<field name="service_num1" class="java.lang.Long"/>
@@ -983,14 +985,14 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Адрес установки прибора учета(" + $F{device_id} + "): " + $F{cont_address}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Адрес установки прибора учета: " + $F{cont_address}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="110" width="580" height="30" uuid="d2a69294-8209-49ad-a265-a6f9cb729358"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["прибор (" + $F{device_model_id} + "): " + $F{device_model_name} + " ("+ $F{ex_system} + ")"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["прибор: " + $F{device_model_name} + ", серийный номер: " + $F{device_object_number}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="180" y="0" width="700" height="30" uuid="f11e6275-c420-4bfc-b307-6198866e2ce3"/>
@@ -1004,7 +1006,7 @@
 				<textElement verticalAlignment="Middle">
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Абонент (" + $F{subscr_id} + "): " + $F{subscr_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Абонент: " + $F{subscr_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
