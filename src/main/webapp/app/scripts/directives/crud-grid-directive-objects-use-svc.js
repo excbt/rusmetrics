@@ -594,7 +594,7 @@ console.log(zpoint);
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+                    window.location.href("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
