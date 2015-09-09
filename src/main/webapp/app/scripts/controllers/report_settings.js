@@ -3,12 +3,17 @@ var app = angular.module('portalNMC');
 
 app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
     
+    //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    
     $scope.isPositionSystemChanged = false;
     $scope.active_tab_active_templates = true;
     $scope.currentObject = {};
     $scope.createByTemplate_flag = false;
     $scope.archiveTemplate = {};
     $scope.activeStartDateFormat = new Date();
+    $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     $scope.currentReportType = {};  
     $scope.objects = [];   
     $scope.columns = [
@@ -126,6 +131,9 @@ console.log($scope.reportTypes);
         var table = "";
         if ($scope.createByTemplate_flag){
             object.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+            var activeStartDate = new Date(object.activeStartDate);
+console.log(curObject);        
+        $scope.activeStartDateFormatted = (object.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveTemplate.id;    
             crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
             return;

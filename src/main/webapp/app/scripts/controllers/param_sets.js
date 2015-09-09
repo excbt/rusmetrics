@@ -208,16 +208,16 @@ console.log(curObject);
         object.allRequiredParamsPassed = !object.showParamsBeforeRunReport;
 //console.log(object.allRequiredParamsPassed);        
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
-            //perform start interval
-            var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601            
-            var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate()); 
-            object.paramsetStartDate = new Date(UTCstdt) || null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+            //perform start interval           
+            var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
+            var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());              
+            object.paramsetStartDate = (!isNaN(UTCstdt)) ?new Date(UTCstdt) : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
             
             //perform end interval
             var endDate = (new Date(moment($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
             var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
             
-            object.paramsetEndDate = new Date(UTCenddt) || null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+            object.paramsetEndDate = (!isNaN(UTCenddt)) ?new Date(UTCenddt) : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
         }else{
             object.paramsetStartDate = null;
             object.paramsetEndDate = null;
@@ -482,8 +482,8 @@ console.log(object);
 console.log(object);        
         $scope.currentSign = object.reportPeriod.sign;
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
-            $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
-            $scope.psStartDateFormatted =moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
+            $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));            
+            $scope.psStartDateFormatted =((object.paramsetStartDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
 console.log($scope.psStartDateFormatted);   
             
 //            $scope.paramsetStartDateFormatted ={
@@ -493,7 +493,7 @@ console.log($scope.psStartDateFormatted);
 //console.log($scope.paramsetStartDateFormatted.startDate);             
             
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
-            $scope.psEndDateFormatted =moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
+            $scope.psEndDateFormatted =(object.paramsetEndDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
 console.log($scope.psEndDateFormatted); 
             
 //            $scope.paramsetEndDateFormatted ={
