@@ -1,13 +1,18 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc){
-                     
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+    
+        //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
 
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
     $scope.activeStartDateFormat = new Date();
+    $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     
     //file types
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
@@ -116,7 +121,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
-        
+        var activeStartDate = new Date(curObject.activeStartDate);
+console.log(curObject);         
+        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
         $scope.getTemplates();       
     };
     
@@ -249,7 +256,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.currentSign = object.reportPeriod.sign;
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
+            $scope.psStartDateFormatted =moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
+            
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
+            $scope.psEndDateFormatted =moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
+console.log($scope.psEndDateFormatted);
         }
     //settings for activate tab "Main options", when edit window opened.
         $scope.set_of_objects_flag=false;
@@ -476,7 +487,71 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
 //console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
         return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
-    }
+    };
+    
+    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+                  $('#inputSingleDateStart').daterangepicker(
+                      { 
+                        locale : $scope.dateOptsParamsetRu.locale,
+                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+                        format: $scope.dateOptsParamsetRu.format
+                      }, 
+                      function(start, end, label) {
+                        console.log(start.toISOString(), end.toISOString(), label);
+                        }
+                  );
+        
+                  $('#inputSingleDateEnd').daterangepicker(
+                      { 
+                        locale : $scope.dateOptsParamsetRu.locale,
+                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+                        format: $scope.dateOptsParamsetRu.format
+                      }, 
+                      function(start, end, label) {
+                        console.log(start.toISOString(), end.toISOString(), label);
+                        }
+                  );
+        
+                  $('#inputStartDate').daterangepicker(
+                      { 
+                        locale : $scope.dateOptsParamsetRu.locale,
+                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+                        format: $scope.dateOptsParamsetRu.format
+                      }, 
+                      function(start, end, label) {
+                        console.log(start.toISOString(), end.toISOString(), label);
+                        }
+                  );
+    });
+    
+            //key down listener
+    window.onkeydown = function(e){ 
+        console.log(e.keyCode);
+        if (e.keyCode == 27){//ESC pressed
+//            $('#inputSingleDateStart').daterangepicker('hide');
+            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
+//console.log(datePikeckerDiv);            
+            if (angular.isDefined(datePikeckerDiv)){
+                for(var i = 0; i<datePikeckerDiv.length;i++){
+                    datePikeckerDiv[i].style.display = 'none';
+                };
+            };
+        };
+    };
+
+    
     
     //checkers
         //check date interval
@@ -497,7 +572,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             //if the paramset use interval
         if ($scope.currentSign==null){
                 //check interval
-            intervalValidate_flag = $scope.checkDateInterval($scope.paramsetStartDateFormat, $scope.paramsetEndDateFormat);
+            intervalValidate_flag = $scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
         
         result = !((($scope.currentObject.reportPeriodKey==null) ||   
@@ -541,12 +616,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             //start date
             //if the paramset use a date interval
         if ($scope.currentSign==null){
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
             {
                 $scope.messageForUser += "- Не задано начало периода"+"\n";
             };
                         //end date
-            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted=="")    
             {
                 $scope.messageForUser += "- Не задан конец периода"+"\n";
             };
@@ -633,8 +710,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
         //Если вариант отчета создается за период, задаем начало и конец периода
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
-            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
-            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+//            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+//            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+            tmpParamset.paramsetStartDate = (new Date(mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat))) || null;
+            tmpParamset.paramsetEndDate = (new Date(mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat))) || null;
         }else{
             tmpParamset.paramsetStartDate = null;
             tmpParamset.paramsetEndDate = null;

@@ -29,10 +29,22 @@ angular.module('portalNMC')
         monitorMapSettings = mapSettings;
     };
     
+    //methods for the work with the dates
+        //get UTC time from the string with date
+    var strDateToUTC = function(strWithDate, strFormat){
+        var stDate = (new Date(moment(strWithDate, strFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601
+        var result = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());
+        return result;
+    };
+    
+    //TODO: 
+    //get system user info
+    
     return {
         getMonitorMapSettings,
         getObjectMapSettings,
         setMonitorMapSettings,
-        setObjectMapSettings
+        setObjectMapSettings,
+        strDateToUTC
     };
 });
