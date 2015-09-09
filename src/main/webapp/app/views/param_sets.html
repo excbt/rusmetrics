@@ -17,7 +17,12 @@
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
-
+<!--
+<input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="testRen" options="dateOptsParamsetRu"/>
+-->
+<input id="inputSingleDate" class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="testRen"/>        
     </ul>
 
     <div class="tab-content">
@@ -430,11 +435,23 @@
                                                 <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
                                                 <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
+<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="text" ng-model="paramsetStartDateFormat">-->
+<!--
+                                                    <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="paramsetStartDateFormatted" options="dateOptsParamsetRu"/>
+-->
+                                                    <input ng-disabled="isDisabled()" id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psStartDateFormatted"/> 
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
+<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">-->
+<!--
+                                                    <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="paramsetEndDateFormatted" options="dateOptsParamsetRu"/>
+-->
+                                                    <input ng-disabled="isDisabled()" id="inputSingleDateEnd" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psEndDateFormatted"/> 
                                                 </div>
                                                 </span>    
                                             </div>    
@@ -448,9 +465,9 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="col-sm-3"><label for="inputPeriod" class="nmc-form-label">Тип файла</label>
+                                        <td class="col-sm-3"><label for="inputFileType" class="nmc-form-label">Тип файла</label>
                                         </td>
-                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputPeriod" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()" ng-options="fileType for fileType in fileTypes"> 
+                                        <td class="col-sm-9 nmc-text-align-left"><select class="form-control nmc-input-data nmc-select-form" id="inputFileType" placeholder="" ng-model="currentObject.outputFileType" ng-disabled="isDisabled()" ng-options="fileType for fileType in fileTypes"> 
 <!--
                                                 <option value="PDF" selected>PDF</option>
                                                 <option value="HTML">HTML</option>
@@ -470,7 +487,10 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
 
-                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+<!--                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()">-->
+                                            
+                                            <input ng-disabled="isDisabled()" id="inputStartDate" class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
+                                type="text" ng-model="activeStartDateFormatted"/> 
                                         </td>
 
                                     </tr>
