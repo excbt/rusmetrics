@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
+app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'mainSvc', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory, mainSvc){
     
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -146,7 +146,12 @@ console.log(curObject);
     $scope.saveTemplate = function(){
         var result = {};
         result.reportTemplate = $scope.currentObject;
-        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+//        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+        var astDate = (new Date($scope.activeStartDateFormatted));                    
+        var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
+        result.reportTemplate.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt.getTime();
+//        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+        
         result.reportTemplate._active = true;
         result.reportColumnSettings = {};
         result.reportColumnSettings.allTsList = $scope.systems;

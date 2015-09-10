@@ -2,6 +2,7 @@
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     
+//console.log(navigator.userAgent);    
         //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
@@ -716,6 +717,9 @@ console.log(curObject);
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });
+                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+                    fileName+=".xlsx";
+                };
                 saveAs(file,fileName);
             })
             .catch(function(e){
@@ -779,11 +783,17 @@ console.log(curObject);
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);//вытаскиваем непосредственно название файла.
             var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт
+//console.log(fileName);  
+//console.log(response.headers()['content-type']);              
+//console.log(file);            
             if (previewFlag){              
                 //если нажат предпросмотр, то
                 var url = window.URL.createObjectURL(file);//формируем url на сформированный файл
                 window.open(url);//открываем сформированный файл в новой вкладке браузера
-            }else{    
+            }else{  
+                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+                    fileName+=".xlsx";
+                };
                 saveAs(file,fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
         })

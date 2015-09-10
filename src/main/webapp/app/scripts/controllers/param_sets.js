@@ -201,9 +201,17 @@ console.log(curObject);
         });        
         //
 //        object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
-        var astDate = (new Date(moment($scope.activeStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601
-        var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate());
-        object.activeStartDate = ($scope.activeStartDateFormatted=="")?null:UTCastdt;            
+        //var astDate = (new Date(moment($scope.activeStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601
+    //    var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate());
+    //    object.activeStartDate = ($scope.activeStartDateFormatted=="")?null:UTCastdt; 
+        
+        var astDate = (new Date(moment($scope.activeStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
+        var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
+console.log($scope.activeStartDateFormatted);            
+console.log(mainSvc.checkStrForDate($scope.activeStartDateFormatted));            
+        object.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt.getTime(); 
+        
+        
         //set the param, which define - available auto/manual start report.
         object.allRequiredParamsPassed = !object.showParamsBeforeRunReport;
 //console.log(object.allRequiredParamsPassed);        
@@ -228,9 +236,8 @@ console.log(object);
         if ($scope.createByTemplate_flag){
             object.id = null;          
 //            object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
-            var astDate = (new Date($scope.activeStartDateFormatted));                    
-            var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
-            object.activeStartDate = ($scope.activeStartDateFormatted=="")?null:UTCastdt.getTime(); 
+//            var astDate = (new Date($scope.activeStartDateFormatted)); 
+
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;  
 //console.log("$scope.createByTemplate_flag"); 
 //console.log(tmp);            
@@ -783,7 +790,7 @@ console.log(totalGroupObjects);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
         
@@ -794,7 +801,7 @@ console.log(totalGroupObjects);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
         
@@ -805,14 +812,14 @@ console.log(totalGroupObjects);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
     });
     
             //key down listener
     window.onkeydown = function(e){ 
-        console.log(e.keyCode);
+//        console.log(e.keyCode);
         if (e.keyCode == 27){//ESC pressed
 //            $('#inputSingleDateStart').daterangepicker('hide');
             var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
@@ -827,7 +834,13 @@ console.log(totalGroupObjects);
     
     //checkers
         //check date interval
-    $scope.checkDateInterval = function(left, right){      
+    $scope.checkDateInterval = function(left, right){  
+        if (!mainSvc.checkStrForDate(left)){
+            return false;
+        };
+        if (!mainSvc.checkStrForDate(right)){
+            return false;
+        };        
         if ((left==null)|| (right==null)||(left=="")||(right=="")){return false;};
         var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
         var sd = (startDate!=null)?(new Date(startDate)) : null;         
@@ -893,14 +906,32 @@ console.log(totalGroupObjects);
             //start date
             //if the paramset use a date interval
         if ($scope.currentSign==null){
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted==null)
+//            {
+//                $scope.messageForUser += "- Не задано начало периода"+"\n";
+//            };
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec); 
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
             {
-                $scope.messageForUser += "- Не задано начало периода"+"\n";
+                $scope.messageForUser += "- Некорректно задано начало периода"+"\n";
             };
                         //end date
-            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted=="")    
+//            {
+//                $scope.messageForUser += "- Не задан конец периода"+"\n";
+//            };
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
             {
-                $scope.messageForUser += "- Не задан конец периода"+"\n";
+                $scope.messageForUser += "- Некорректно задан конец периода"+"\n";
+            };
+            
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+            {
+                $scope.messageForUser += "- Некорректно заданы границы периода"+"\n";
             };
         }
 
