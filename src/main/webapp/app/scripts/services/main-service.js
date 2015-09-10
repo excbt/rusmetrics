@@ -37,10 +37,19 @@ angular.module('portalNMC')
         return result;
     };
     
+    var checkStrForDate = function(strWithDate){
+        //check date for format: DD/MM/YYYY
+        if (/(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(strWithDate)){
+            return true;
+        };  
+        return false;
+    };
+    
     //TODO: 
     //get system user info
     
     return {
+        checkStrForDate,
         getMonitorMapSettings,
         getObjectMapSettings,
         setMonitorMapSettings,

@@ -257,10 +257,10 @@ console.log(curObject);
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
             $scope.psStartDateFormatted =(object.paramsetStartDate!=null)?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-console.log($scope.psStartDateFormatted);            
+//console.log($scope.psStartDateFormatted);            
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
             $scope.psEndDateFormatted =(object.paramsetEndDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-console.log($scope.psEndDateFormatted);
+//console.log($scope.psEndDateFormatted);
         }
     //settings for activate tab "Main options", when edit window opened.
         $scope.set_of_objects_flag=false;
@@ -538,7 +538,7 @@ console.log($scope.psEndDateFormatted);
     
             //key down listener
     window.onkeydown = function(e){ 
-        console.log(e.keyCode);
+//        console.log(e.keyCode);
         if (e.keyCode == 27){//ESC pressed
 //            $('#inputSingleDateStart').daterangepicker('hide');
             var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
@@ -555,14 +555,20 @@ console.log($scope.psEndDateFormatted);
     
     //checkers
         //check date interval
-    $scope.checkDateInterval = function(left, right){      
-        if ((left==null)|| (right==null)||(left=="")||(right=="")){return false;};
+    $scope.checkDateInterval = function(left, right){     
+        if (!mainSvc.checkStrForDate(left)){
+            return false;
+        };
+        if (!mainSvc.checkStrForDate(right)){
+            return false;
+        };
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){console.log("1");return false;};
         var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
         var sd = (startDate!=null)?(new Date(startDate)) : null;         
         var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
         var ed = (endDate!=null)?(new Date(endDate)) : null;                
 //        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
-        if ((sd==null)|| (ed==null)){return false;};               
+        if ((sd==null)|| (ed==null)){return console.log("2"); false;};               
         return ed>=sd;
     };
         //check fields
@@ -578,11 +584,13 @@ console.log($scope.psEndDateFormatted);
             //if the paramset use interval
         if ($scope.currentSign==null){
                 //check interval
-            var startDate = new Date($scope.psStartDateFormatted);
-            var endDate = new Date($scope.psEndDateFormatted);
-            intervalValidate_flag = (!isNaN(startDate.getTime()))||(!isNaN(endDate.getTime()))||$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec);            
+            intervalValidate_flag = (!isNaN(startDate.getTime()))&&(!isNaN(endDate.getTime()))&&$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
-console.log(intervalValidate_flag);        
+//console.log(intervalValidate_flag);        
         result = !((($scope.currentObject.reportPeriodKey==null) ||   
         ($scope.currentObject.reportTemplate.id==null)))
         &&intervalValidate_flag;
@@ -632,8 +640,8 @@ console.log(intervalValidate_flag);
             var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
             var startDate = new Date(startDateMillisec);
             var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
-            var endDate = new Date(endDateMillisec);
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && isNaN(startDate.getTime()))    
+            var endDate = new Date(endDateMillisec); 
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
             {
                 $scope.messageForUser += "- Некорректно задано начало периода"+"\n";
             };
@@ -643,9 +651,14 @@ console.log(intervalValidate_flag);
 //            {
 //                $scope.messageForUser += "- Не задан конец периода"+"\n";
 //            };
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && isNaN(endDate.getTime()))    
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
             {
                 $scope.messageForUser += "- Некорректно задан конец периода"+"\n";
+            };
+            
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+            {
+                $scope.messageForUser += "- Некорректно заданы границы периода"+"\n";
             };
         }
 
@@ -713,8 +726,7 @@ console.log(intervalValidate_flag);
     $scope.previewReport = function(type,paramset){
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
         window.open(url);    
-    };
-console.log(new Date(null));    
+    };  
     //Формируем отчет с заданными параметрами
     $scope.createReportWithParams = function(type // тип отчета
                                             , paramset //вариант отчета

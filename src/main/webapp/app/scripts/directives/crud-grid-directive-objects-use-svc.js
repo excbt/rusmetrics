@@ -995,7 +995,7 @@ console.log("addMoreObjects. Run");
                 
                 function isNumeric(n) {
                   return !isNaN(parseFloat(n)) && isFinite(n);
-                }
+                };
                 
                 $scope.checkNumericValue = function(numvalue){ 
                     var result = true;
