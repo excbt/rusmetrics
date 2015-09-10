@@ -31,9 +31,9 @@ angular.module('portalNMC')
     
     //methods for the work with the dates
         //get UTC time from the string with date
-    var strDateToUTC = function(strWithDate, strFormat){
-        var stDate = (new Date(moment(strWithDate, strFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601
-        var result = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());
+    var strDateToUTC = function(strWithDate, strFormat){       
+        var stDate = (new Date(moment(strWithDate, strFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601      
+        var result = (!isNaN(stDate.getTime()))?Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate()):null;
         return result;
     };
     

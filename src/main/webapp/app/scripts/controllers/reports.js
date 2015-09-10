@@ -257,7 +257,7 @@ console.log(curObject);
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
             $scope.psStartDateFormatted =(object.paramsetStartDate!=null)?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-            
+console.log($scope.psStartDateFormatted);            
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
             $scope.psEndDateFormatted =(object.paramsetEndDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
 console.log($scope.psEndDateFormatted);
@@ -509,7 +509,7 @@ console.log($scope.psEndDateFormatted);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
         
@@ -520,7 +520,7 @@ console.log($scope.psEndDateFormatted);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
         
@@ -531,7 +531,7 @@ console.log($scope.psEndDateFormatted);
                         format: $scope.dateOptsParamsetRu.format
                       }, 
                       function(start, end, label) {
-                        console.log(start.toISOString(), end.toISOString(), label);
+//                        console.log(start.toISOString(), end.toISOString(), label);
                         }
                   );
     });
@@ -555,9 +555,15 @@ console.log($scope.psEndDateFormatted);
     
     //checkers
         //check date interval
-    $scope.checkDateInterval = function(left, right){
-        if ((left==null)|| (right==null)){return false;};
-        return right>=left;
+    $scope.checkDateInterval = function(left, right){      
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){return false;};
+        var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
+        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
+        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+//        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
+        if ((sd==null)|| (ed==null)){return false;};               
+        return ed>=sd;
     };
         //check fields
     $scope.checkRequiredFields = function(){
@@ -572,9 +578,11 @@ console.log($scope.psEndDateFormatted);
             //if the paramset use interval
         if ($scope.currentSign==null){
                 //check interval
-            intervalValidate_flag = $scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
+            var startDate = new Date($scope.psStartDateFormatted);
+            var endDate = new Date($scope.psEndDateFormatted);
+            intervalValidate_flag = (!isNaN(startDate.getTime()))||(!isNaN(endDate.getTime()))||$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
-        
+console.log(intervalValidate_flag);        
         result = !((($scope.currentObject.reportPeriodKey==null) ||   
         ($scope.currentObject.reportTemplate.id==null)))
         &&intervalValidate_flag;
@@ -617,15 +625,27 @@ console.log($scope.psEndDateFormatted);
             //if the paramset use a date interval
         if ($scope.currentSign==null){
 //            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
+//            {
+//                $scope.messageForUser += "- Не задано начало периода"+"\n";
+//            };
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec);
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && isNaN(startDate.getTime()))    
             {
-                $scope.messageForUser += "- Не задано начало периода"+"\n";
+                $scope.messageForUser += "- Некорректно задано начало периода"+"\n";
             };
                         //end date
 //            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
-            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted=="")    
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted=="")    
+//            {
+//                $scope.messageForUser += "- Не задан конец периода"+"\n";
+//            };
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && isNaN(endDate.getTime()))    
             {
-                $scope.messageForUser += "- Не задан конец периода"+"\n";
+                $scope.messageForUser += "- Некорректно задан конец периода"+"\n";
             };
         }
 
@@ -694,7 +714,7 @@ console.log($scope.psEndDateFormatted);
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
         window.open(url);    
     };
-    
+console.log(new Date(null));    
     //Формируем отчет с заданными параметрами
     $scope.createReportWithParams = function(type // тип отчета
                                             , paramset //вариант отчета
@@ -712,8 +732,10 @@ console.log($scope.psEndDateFormatted);
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
 //            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
 //            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
-            tmpParamset.paramsetStartDate = (new Date(mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat))) || null;
-            tmpParamset.paramsetEndDate = (new Date(mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat))) || null;
+            var startDate = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            tmpParamset.paramsetStartDate = (startDate!=null)?(new Date(startDate)) : null;
+            var endDate = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            tmpParamset.paramsetEndDate = (endDate!=null)?(new Date(endDate)) : null;
         }else{
             tmpParamset.paramsetStartDate = null;
             tmpParamset.paramsetEndDate = null;

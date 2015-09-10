@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory','objectSvc',function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory','objectSvc', 'mainSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
@@ -827,9 +827,15 @@ console.log(totalGroupObjects);
     
     //checkers
         //check date interval
-    $scope.checkDateInterval = function(left, right){
-        if ((left==null)|| (right==null)){return false;};
-        return right>=left;
+    $scope.checkDateInterval = function(left, right){      
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){return false;};
+        var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
+        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
+        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+//        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
+        if ((sd==null)|| (ed==null)){return false;};               
+        return ed>=sd;
     };
         //check fields
     $scope.checkRequiredFields = function(){
@@ -844,7 +850,11 @@ console.log(totalGroupObjects);
             //if the paramset use interval
         if ($scope.currentSign==null){
                 //check interval
-            intervalValidate_flag = $scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec);
+            intervalValidate_flag = (!isNaN(startDate.getTime()))||(!isNaN(endDate.getTime()))||$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
         
         result = !((($scope.currentObject.reportPeriodKey==null) ||   
