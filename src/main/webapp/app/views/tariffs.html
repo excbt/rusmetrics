@@ -281,16 +281,21 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">  
 
-                                            <span class="form-group" ng-class="{'has-error':!checkDateIntervalWithRightNull(startDateFormat, endDateFormat)}">
+                                            <span class="form-group" ng-class="{'has-error':!checkDateIntervalWithRightNull(psStartDateFormatted, psEndDateFormatted)}">
                                             <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                         <div class="col-sm-5 noPadding">
-                                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (startDateFormat==null)}">
-                                                                <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="startDateFormat"> 
+                                                            <div class="form-group noMarginBottom">
+<!--                                                                ng-class="{'has-error': (startDateFormat==null)}">-->
+<!--                                                                <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="startDateFormat"> -->
+                                                                <input ng-disabled="isDisabled()" id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psStartDateFormatted"/>
                                                             </div>    
                                                         </div>    
                                                         <div class="col-sm-1 paddingTop5 paddingLeft5"><label class="nmc-form-label">по</label></div>
                                                         <div class="col-sm-5 paddingLeft10">
-                                                            <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="endDateFormat">
+<!--                                                            <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="endDateFormat">-->
+                                                            <input ng-disabled="isDisabled()" id="inputSingleDateEnd" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psEndDateFormatted"/>
                                                         </div>
                                             </span>                
                                     

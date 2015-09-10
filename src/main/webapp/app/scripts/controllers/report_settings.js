@@ -339,6 +339,49 @@ console.log(curObject);
         window.open(url);
     };
     
+    
+    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+        
+                  $('#inputStartDate').daterangepicker(
+                      { 
+                        locale : $scope.dateOptsParamsetRu.locale,
+                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+                        format: $scope.dateOptsParamsetRu.format
+                      }, 
+                      function(start, end, label) {
+//                        console.log(start.toISOString(), end.toISOString(), label);
+                        }
+                  );
+    });
+    
+            //key down listener
+    window.onkeydown = function(e){ 
+//        console.log(e.keyCode);
+        if (e.keyCode == 27){//ESC pressed
+//            $('#inputSingleDateStart').daterangepicker('hide');
+            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
+//console.log(datePikeckerDiv);            
+            if (angular.isDefined(datePikeckerDiv)){
+                for(var i = 0; i<datePikeckerDiv.length;i++){
+                    datePikeckerDiv[i].style.display = 'none';
+                };
+            };
+        };
+    };
+
+    
 
 
     
