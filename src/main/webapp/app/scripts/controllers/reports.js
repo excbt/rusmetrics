@@ -6,6 +6,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.selectedAll = false;
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -295,6 +296,7 @@ console.log(curObject);
     
     $scope.prepareObjectsList = function(){
         $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+        $scope.ctrlSettings.selectedAll = false;
     };
     
     $scope.getGroupObjects = function(group){
@@ -391,6 +393,12 @@ console.log(curObject);
                 availableObjects.splice(elementIndex,1);
             };
         }; 
+    };
+    
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
     };
     
     $scope.addSelectedEntities = function(){
@@ -503,12 +511,6 @@ console.log(curObject);
         format: $scope.ctrlSettings.dateFormat
     };
     $(document).ready(function() {
-                  $('#datepicker').datepicker({
-                      dateFormat: "dd.mm.yy",
-                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-                  });
                   $('#inputSingleDateStart').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
@@ -527,62 +529,9 @@ console.log(curObject);
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
-        
-//                  $('#inputSingleDateStart').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputSingleDateEnd').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputStartDate').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-    });
-    
-            //key down listener
-    window.onkeydown = function(e){ 
-        console.log(e.keyCode);
-//        if (e.keyCode == 9){//TAB pressed
-//            $().date
-//        };
-        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
-//            $('#inputSingleDateStart').daterangepicker('hide');
-            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
-//console.log(datePikeckerDiv);            
-            if (angular.isDefined(datePikeckerDiv)){
-                for(var i = 0; i<datePikeckerDiv.length;i++){
-                    datePikeckerDiv[i].style.display = 'none';
-//                    datePikeckerDiv[i].className+=" nmc-hide";
-                };
-            };
-//            var datePickerControl = document.getElementsByClassName('form-control date-picker nmc-date-input-form');
-//console.log(datePickerControl);                        
-//            if (angular.isDefined(datePickerControl)){
-//                for(var i = 0; i<datePickerControl.length;i++){
-//                    datePickerControl[i].className.replace("active","");
-//                    angular.element(datePickerControl[i]).removeClass("active");
-//                    datePikeckerDiv[i].className+=" nmc-hide";
-//                };
-//            };
-        };
-    };
 
-    
-    
+    });
+        
     //checkers
         //check date interval
     $scope.checkDateInterval = function(left, right){     

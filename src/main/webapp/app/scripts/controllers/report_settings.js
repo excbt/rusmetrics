@@ -149,7 +149,7 @@ console.log(curObject);
 //        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
         var astDate = (new Date($scope.activeStartDateFormatted));                    
         var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
-        result.reportTemplate.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt.getTime();
+        result.reportTemplate.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt;
 //        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
         
         result.reportTemplate._active = true;
@@ -353,14 +353,7 @@ console.log(curObject);
         format: $scope.ctrlSettings.dateFormat
     };
     $(document).ready(function() {
-        
-//                  $('#inputStartDate').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
+    
                   $('#inputStartDate').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
@@ -368,24 +361,5 @@ console.log(curObject);
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
     });
-    
-            //key down listener
-    window.onkeydown = function(e){ 
-//        console.log(e.keyCode);
-        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
-//            $('#inputSingleDateStart').daterangepicker('hide');
-            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
-//console.log(datePikeckerDiv);            
-            if (angular.isDefined(datePikeckerDiv)){
-                for(var i = 0; i<datePikeckerDiv.length;i++){
-                    datePikeckerDiv[i].style.display = 'none';
-                };
-            };
-        };
-    };
-
-    
-
-
     
 }]);

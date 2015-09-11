@@ -5,6 +5,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.selectedAll = false;
     
     $scope.crudTableName = "../api/subscr/tariff"; 
     $scope.groupUrl = "../api/contGroup";
@@ -55,7 +56,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         
         $scope.paramsetStartDateFormat = (new Date($scope.currentObject.startDate));            
             $scope.psStartDateFormatted =(($scope.currentObject.startDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-console.log($scope.psStartDateFormatted);   
+//console.log($scope.psStartDateFormatted);   
             
 //            $scope.paramsetStartDateFormatted ={
 //                startDate: moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]),
@@ -65,7 +66,7 @@ console.log($scope.psStartDateFormatted);
             
             $scope.paramsetEndDateFormat= (new Date($scope.currentObject.endDate));
             $scope.psEndDateFormatted =($scope.currentObject.endDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-console.log($scope.psEndDateFormatted);
+//console.log($scope.psEndDateFormatted);
 
      };
     
@@ -173,6 +174,7 @@ console.log($scope.psEndDateFormatted);
     
     $scope.prepareObjectsList = function(){
         $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+        $scope.ctrlSettings.selectedAll = false;
     };
     
     $scope.addTariff = function(){       
@@ -396,6 +398,12 @@ console.log($scope.psEndDateFormatted);
         }; 
     };
     
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+    };
+    
     $scope.addSelectedEntities = function(){
     //console.log($scope.availableObjects);       
         if ($scope.showAvailableObjectGroups_flag){
@@ -483,45 +491,8 @@ console.log(totalGroupObjects);
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
-//                  $('#inputSingleDateStart').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputSingleDateEnd').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputStartDate').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
+
     });
-    
-            //key down listener
-    window.onkeydown = function(e){ 
-//        console.log(e.keyCode);
-        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
-//            $('#inputSingleDateStart').daterangepicker('hide');
-            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
-//console.log(datePikeckerDiv);            
-            if (angular.isDefined(datePikeckerDiv)){
-                for(var i = 0; i<datePikeckerDiv.length;i++){
-                    datePikeckerDiv[i].style.display = 'none';
-                };
-            };
-        };
-    };
     
             //checkers            
     $scope.checkEmptyNullValue = function(numvalue){                    

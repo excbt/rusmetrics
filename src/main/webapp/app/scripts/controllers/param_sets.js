@@ -5,6 +5,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.selectedAll = false;
     
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
@@ -207,9 +208,10 @@ console.log(curObject);
         
         var astDate = (new Date(moment($scope.activeStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
         var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
-console.log($scope.activeStartDateFormatted);            
-console.log(mainSvc.checkStrForDate($scope.activeStartDateFormatted));            
-        object.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt.getTime(); 
+//console.log(UTCastdt);        
+//console.log($scope.activeStartDateFormatted);            
+//console.log(mainSvc.checkStrForDate($scope.activeStartDateFormatted));            
+        object.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt; 
         
         
         //set the param, which define - available auto/manual start report.
@@ -537,8 +539,9 @@ console.log($scope.psEndDateFormatted);
             objectSvc.sortObjectsByFullName($scope.selectedObjects);
         });
     };
-$scope.prepareObjectsList = function(){
+    $scope.prepareObjectsList = function(){
         $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+        $scope.ctrlSettings.selectedAll = false;
     };
     
     $scope.getGroupObjects = function(group){
@@ -676,7 +679,13 @@ $scope.prepareObjectsList = function(){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
         objectSvc.sortObjectsByFullName($scope.availableObjects);
-    }
+    };
+    
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+    };
     
     $scope.addSelectedEntities = function(){
     //console.log($scope.availableObjects);
@@ -801,45 +810,8 @@ console.log(totalGroupObjects);
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
-//                  $('#inputSingleDateStart').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputSingleDateEnd').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
-//        
-//                  $('#inputStartDate').daterangepicker(
-//                      { 
-//                        locale : $scope.dateOptsParamsetRu.locale,
-//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-//                        format: $scope.dateOptsParamsetRu.format
-//                      }
-//                  );
     });
-    
-            //key down listener
-    window.onkeydown = function(e){ 
-//        console.log(e.keyCode);
-        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
-//            $('#inputSingleDateStart').daterangepicker('hide');
-            var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
-//console.log(datePikeckerDiv);            
-            if (angular.isDefined(datePikeckerDiv)){
-                for(var i = 0; i<datePikeckerDiv.length;i++){
-                    datePikeckerDiv[i].style.display = 'none';
-                };
-            };
-        };
-    };
+
     
     //checkers
         //check date interval

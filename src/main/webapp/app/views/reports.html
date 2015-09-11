@@ -11,17 +11,7 @@
     <h2 class="noMargin nmc-h2">Отчеты</h2>
     <hr>
 </div>
-<!--<div class="input-group date">-->
-<!--
-    <input ng-disabled="isDisabled()" id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
-                                type="text" ng-model="psStartDateFormatted"/>
--->
-<!--
-    <div id="datepickedivr">
-        <input id="datepicker" type="text"/>
-    </div>
--->
-</div>    
+
 <div>
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
@@ -182,6 +172,7 @@
             <div class="modal-footer nmc-modal-footer">
                 <div class="container-fluid">
                     <div class="row">
+<!--
                         <div class="col-md-5 noPadding">
                             <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
 
@@ -192,6 +183,24 @@
                             <button class="btn btn-default btn-block btn-xs nmc-cancel-button"
                                 ng-click="showAvailableObjects_flag=false">
                                 Закрыть
+                            </button>
+                        </div>
+-->
+                        <div class="col-md-4 noPadding">
+                            <input class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
+    margin-top: 3px;">Выбрать все</p>
+                        </div>
+                        <div class="col-xs-offset-1 col-md-3 noPadding">
+                            <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
+
+                                ng-click="addSelectedEntities()"
+                                value="Добавить" />
+                        </div>
+
+                        <div class=" pull-right col-xs-offset-1 col-md-3 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right"
+                                ng-click="showAvailableObjects_flag=false">
+                                
                             </button>
                         </div>
 

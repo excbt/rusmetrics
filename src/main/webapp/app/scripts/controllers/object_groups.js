@@ -1,5 +1,9 @@
 angular.module('portalNMC')
 .controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, crudGridDataFactory, notificationFactory, objectSvc){
+    //controller settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.selectedAll = false;
+   
     //
     $scope.groups = [
 //        {'name':"Group 1"},
@@ -118,7 +122,13 @@ angular.module('portalNMC')
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
-    }
+    };
+    
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableObjects.length; index++){         
+            $scope.availableObjects[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+    };
     
     $scope.addSelectedObjects = function(){
 //console.log($scope.availableObjects);          
