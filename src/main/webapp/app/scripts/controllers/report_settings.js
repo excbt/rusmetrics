@@ -354,16 +354,19 @@ console.log(curObject);
     };
     $(document).ready(function() {
         
-                  $('#inputStartDate').daterangepicker(
-                      { 
-                        locale : $scope.dateOptsParamsetRu.locale,
-                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-                        format: $scope.dateOptsParamsetRu.format
-                      }, 
-                      function(start, end, label) {
-//                        console.log(start.toISOString(), end.toISOString(), label);
-                        }
-                  );
+//                  $('#inputStartDate').daterangepicker(
+//                      { 
+//                        locale : $scope.dateOptsParamsetRu.locale,
+//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+//                        format: $scope.dateOptsParamsetRu.format
+//                      }
+//                  );
+                  $('#inputStartDate').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
     });
     
             //key down listener

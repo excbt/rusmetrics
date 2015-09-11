@@ -783,38 +783,47 @@ console.log(totalGroupObjects);
         format: $scope.ctrlSettings.dateFormat
     };
     $(document).ready(function() {
-                  $('#inputSingleDateStart').daterangepicker(
-                      { 
-                        locale : $scope.dateOptsParamsetRu.locale,
-                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-                        format: $scope.dateOptsParamsetRu.format
-                      }, 
-                      function(start, end, label) {
-//                        console.log(start.toISOString(), end.toISOString(), label);
-                        }
-                  );
-        
-                  $('#inputSingleDateEnd').daterangepicker(
-                      { 
-                        locale : $scope.dateOptsParamsetRu.locale,
-                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-                        format: $scope.dateOptsParamsetRu.format
-                      }, 
-                      function(start, end, label) {
-//                        console.log(start.toISOString(), end.toISOString(), label);
-                        }
-                  );
-        
-                  $('#inputStartDate').daterangepicker(
-                      { 
-                        locale : $scope.dateOptsParamsetRu.locale,
-                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
-                        format: $scope.dateOptsParamsetRu.format
-                      }, 
-                      function(start, end, label) {
-//                        console.log(start.toISOString(), end.toISOString(), label);
-                        }
-                  );
+                  $('#inputSingleDateStart').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputSingleDateEnd').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputStartDate').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+//                  $('#inputSingleDateStart').daterangepicker(
+//                      { 
+//                        locale : $scope.dateOptsParamsetRu.locale,
+//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+//                        format: $scope.dateOptsParamsetRu.format
+//                      }
+//                  );
+//        
+//                  $('#inputSingleDateEnd').daterangepicker(
+//                      { 
+//                        locale : $scope.dateOptsParamsetRu.locale,
+//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+//                        format: $scope.dateOptsParamsetRu.format
+//                      }
+//                  );
+//        
+//                  $('#inputStartDate').daterangepicker(
+//                      { 
+//                        locale : $scope.dateOptsParamsetRu.locale,
+//                        singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
+//                        format: $scope.dateOptsParamsetRu.format
+//                      }
+//                  );
     });
     
             //key down listener
