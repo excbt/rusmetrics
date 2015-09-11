@@ -369,7 +369,7 @@ console.log(curObject);
             //key down listener
     window.onkeydown = function(e){ 
 //        console.log(e.keyCode);
-        if (e.keyCode == 27){//ESC pressed
+        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
 //            $('#inputSingleDateStart').daterangepicker('hide');
             var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
 //console.log(datePikeckerDiv);            

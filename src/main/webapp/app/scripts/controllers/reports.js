@@ -508,10 +508,11 @@ console.log(curObject);
                         locale : $scope.dateOptsParamsetRu.locale,
                         singleDatePicker: $scope.dateOptsParamsetRu.singleDatePicker,
                         format: $scope.dateOptsParamsetRu.format
-                      }, 
-                      function(start, end, label) {
+                      }
+//                      }, 
+//                      function(start, end, label) {
 //                        console.log(start.toISOString(), end.toISOString(), label);
-                        }
+//                        }
                   );
         
                   $('#inputSingleDateEnd').daterangepicker(
@@ -539,16 +540,29 @@ console.log(curObject);
     
             //key down listener
     window.onkeydown = function(e){ 
-//        console.log(e.keyCode);
-        if (e.keyCode == 27){//ESC pressed
+        console.log(e.keyCode);
+//        if (e.keyCode == 9){//TAB pressed
+//            $().date
+//        };
+        if ((e.keyCode == 27)||(e.keyCode==9)){//ESC or TAB pressed
 //            $('#inputSingleDateStart').daterangepicker('hide');
             var datePikeckerDiv = document.getElementsByClassName('daterangepicker dropdown-menu single opensright show-calendar');
 //console.log(datePikeckerDiv);            
             if (angular.isDefined(datePikeckerDiv)){
                 for(var i = 0; i<datePikeckerDiv.length;i++){
                     datePikeckerDiv[i].style.display = 'none';
+//                    datePikeckerDiv[i].className+=" nmc-hide";
                 };
             };
+//            var datePickerControl = document.getElementsByClassName('form-control date-picker nmc-date-input-form');
+//console.log(datePickerControl);                        
+//            if (angular.isDefined(datePickerControl)){
+//                for(var i = 0; i<datePickerControl.length;i++){
+//                    datePickerControl[i].className.replace("active","");
+//                    angular.element(datePickerControl[i]).removeClass("active");
+//                    datePikeckerDiv[i].className+=" nmc-hide";
+//                };
+//            };
         };
     };
 
