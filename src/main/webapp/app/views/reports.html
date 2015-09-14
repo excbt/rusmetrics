@@ -10,7 +10,8 @@
 <div class="nmc-main-workspace-header">
     <h2 class="noMargin nmc-h2">Отчеты</h2>
     <hr>
-</div>    
+</div>
+
 <div>
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
@@ -171,6 +172,7 @@
             <div class="modal-footer nmc-modal-footer">
                 <div class="container-fluid">
                     <div class="row">
+<!--
                         <div class="col-md-5 noPadding">
                             <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
 
@@ -181,6 +183,24 @@
                             <button class="btn btn-default btn-block btn-xs nmc-cancel-button"
                                 ng-click="showAvailableObjects_flag=false">
                                 Закрыть
+                            </button>
+                        </div>
+-->
+                        <div class="col-md-4 noPadding">
+                            <input class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
+    margin-top: 3px;">Выбрать все</p>
+                        </div>
+                        <div class="col-xs-offset-1 col-md-3 noPadding">
+                            <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
+
+                                ng-click="addSelectedEntities()"
+                                value="Добавить" />
+                        </div>
+
+                        <div class=" pull-right col-xs-offset-1 col-md-3 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right"
+                                ng-click="showAvailableObjects_flag=false">
+                                
                             </button>
                         </div>
 
@@ -264,14 +284,18 @@
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div ng-disabled="isDisabled()">
-                                                <span class="form-group" ng-class="{'has-error':!checkDateInterval(paramsetStartDateFormat, paramsetEndDateFormat)}">
+                                                <span class="form-group" ng-class="{'has-error':!checkDateInterval(psStartDateFormatted, psEndDateFormatted)}">
                                                 <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> 
+<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetStartDateFormat"> -->
+                                                    <input ng-disabled="isDisabled()" id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psStartDateFormatted"/> 
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
-                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">
+<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">-->
+                                                    <input ng-disabled="isDisabled()" id="inputSingleDateEnd" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psEndDateFormatted"/> 
                                                 </div>
                                                 </span>    
                                             </div>    
@@ -307,7 +331,9 @@
                                         </td>
                                         <td class="nmc-text-align-left col-sm-9">
 
-                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+<!--                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> -->
+                                            <input ng-disabled="isDisabled()" id="inputStartDate" class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
+                                type="text" ng-model="activeStartDateFormatted"/>
                                         </td>
 
                                     </tr>

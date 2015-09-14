@@ -1,7 +1,12 @@
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, objectSvc){
+app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     //set default values
+    //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.selectedAll = false;
+    
     $scope.crudTableName = "../api/subscr/tariff"; 
     $scope.groupUrl = "../api/contGroup";
     $scope.columns = [
@@ -47,7 +52,21 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
 		var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.startDateFormat = ($scope.currentObject.startDate == null) ? null : new Date($scope.currentObject.startDate);
-        $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate);  
+        $scope.endDateFormat = ($scope.currentObject.endDate == null) ? null : new Date($scope.currentObject.endDate); 
+        
+        $scope.paramsetStartDateFormat = (new Date($scope.currentObject.startDate));            
+            $scope.psStartDateFormatted =(($scope.currentObject.startDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+//console.log($scope.psStartDateFormatted);   
+            
+//            $scope.paramsetStartDateFormatted ={
+//                startDate: moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]),
+//                endDate : moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()])
+//            };
+//console.log($scope.paramsetStartDateFormatted.startDate);             
+            
+            $scope.paramsetEndDateFormat= (new Date($scope.currentObject.endDate));
+            $scope.psEndDateFormatted =($scope.currentObject.endDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+//console.log($scope.psEndDateFormatted);
 
      };
     
@@ -59,7 +78,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     var successCallback = function (e, cb) {
         notificationFactory.success();
         $('#deleteObjectModal').modal('hide');
-        $scope.currentObject={};
+//        $scope.currentObject={};
         $scope.getTariffs(cb);
 
     };
@@ -67,9 +86,14 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     var successPostCallback = function (e) {
         successCallback(e, function () {
            $('#editTariffModal').modal('hide');
-            
+//            $scope.currentObject={};
         });
     };
+    
+    //listener for edit tariff modal window
+    $('#editTariffModal').on('hide', function (e) {
+      $scope.currentObject={};
+    })
 
     var errorCallback = function (e) {
         notificationFactory.errorInfo(e.statusText,e.data.description);       
@@ -119,8 +143,19 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     $scope.saveObject = function(){   
         $scope.currentObject.tariffOptionKey = $scope.currentObject.tariffOption.keyname;
-        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
-        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
+        
+        
+        var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
+        var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());              
+        $scope.currentObject.startDate = (!isNaN(UTCstdt)) ?new Date(UTCstdt) : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+
+        //perform end interval
+        var endDate = (new Date(moment($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
+        var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
+
+        $scope.currentObject.endDate = (!isNaN(UTCenddt)) ?new Date(UTCenddt) : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+//        $scope.currentObject.startDate = $scope.startDateFormat==null ? null:(new Date($scope.startDateFormat));// || 
+//        $scope.currentObject.endDate = $scope.endDateFormat==null ? null: (new Date($scope.endDateFormat));// || $scope.currentObject.endDate;    
         var tmp = $scope.selectedObjects.map(function(elem){
             return elem.id;
         });
@@ -139,6 +174,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
     
     $scope.prepareObjectsList = function(){
         $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+        $scope.ctrlSettings.selectedAll = false;
     };
     
     $scope.addTariff = function(){       
@@ -147,6 +183,8 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         $scope.currentObject = {};
         $scope.startDateFormat = null;
         $scope.endDateFormat = null;
+        $scope.psStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);//(new Date());        
+        $scope.psEndDateFormatted= moment().format($scope.ctrlSettings.dateFormat);//(new Date()); 
         $scope.getAvailableObjects(0);
         
         $scope.set_of_objects_flag=false;
@@ -178,12 +216,14 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         if ((typeof $scope.currentObject.tariffOption=='undefined')||($scope.currentObject.tariffOption==null)){
             return false;
         };       
-        return !(($scope.startDateFormat==null) ||
+        return !(($scope.psStartDateFormatted==null) ||
+        ($scope.psStartDateFormatted=="") ||
         ($scope.currentObject.tariffOption.keyname==null) ||
         ($scope.currentObject.rso.id==null) ||
         ($scope.currentObject.tariffType.id==null))
         &&$scope.checkPositiveNumberValue($scope.currentObject.tariffPlanValue)
-        &&$scope.checkDateIntervalWithRightNull($scope.startDateFormat, $scope.endDateFormat);
+        &&$scope.checkDateIntervalWithRightNull($scope.psStartDateFormatted, $scope.psEndDateFormatted);
+//        &&$scope.checkDateIntervalWithRightNull($scope.startDateFormat, $scope.endDateFormat);
     };
     
     
@@ -358,6 +398,12 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         }; 
     };
     
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+    };
+    
     $scope.addSelectedEntities = function(){
     //console.log($scope.availableObjects);       
         if ($scope.showAvailableObjectGroups_flag){
@@ -411,7 +457,42 @@ console.log(totalGroupObjects);
 //console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
 //console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
         return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
-    }
+    };
+    
+    
+        //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+                  $('#inputSingleDateStart').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputSingleDateEnd').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputStartDate').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+
+    });
     
             //checkers            
     $scope.checkEmptyNullValue = function(numvalue){                    
@@ -451,8 +532,23 @@ console.log(totalGroupObjects);
     };
     
     $scope.checkDateIntervalWithRightNull = function(left, right){     
-        if (right == null){return true;};
-        return right>=left;
+        if ((left==null)||(left=="")){return false;};
+        if (!mainSvc.checkStrForDate(left)){
+            return false;
+        };
+        if ((right == null)||(right=="")){return true;};
+        if (!mainSvc.checkStrForDate(right)){
+            return false;
+        };        
+        
+        var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
+        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
+        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+//        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
+        if ((sd==null)|| (ed==null)){return false;};               
+        return ed>=sd;
+//        return right>=left;
     };
     
 }]);

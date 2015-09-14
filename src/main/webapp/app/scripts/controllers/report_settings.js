@@ -1,7 +1,11 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory){
+app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'mainSvc', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory, mainSvc){
+    
+    //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
     $scope.isPositionSystemChanged = false;
     $scope.active_tab_active_templates = true;
@@ -9,6 +13,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     $scope.createByTemplate_flag = false;
     $scope.archiveTemplate = {};
     $scope.activeStartDateFormat = new Date();
+    $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     $scope.currentReportType = {};  
     $scope.objects = [];   
     $scope.columns = [
@@ -126,6 +131,9 @@ console.log($scope.reportTypes);
         var table = "";
         if ($scope.createByTemplate_flag){
             object.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+            var activeStartDate = new Date(object.activeStartDate);
+console.log(curObject);        
+        $scope.activeStartDateFormatted = (object.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
             table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveTemplate.id;    
             crudGridDataFactory(table).save({}, object, successCallback, errorCallback);
             return;
@@ -138,7 +146,12 @@ console.log($scope.reportTypes);
     $scope.saveTemplate = function(){
         var result = {};
         result.reportTemplate = $scope.currentObject;
-        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+//        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+        var astDate = (new Date($scope.activeStartDateFormatted));                    
+        var UTCastdt = Date.UTC(astDate.getFullYear(), astDate.getMonth(), astDate.getDate()); 
+        result.reportTemplate.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt;
+//        result.reportTemplate.activeStartDate = $scope.activeStartDateFormat==null?null:$scope.activeStartDateFormat.getTime();
+        
         result.reportTemplate._active = true;
         result.reportColumnSettings = {};
         result.reportColumnSettings.allTsList = $scope.systems;
@@ -326,7 +339,27 @@ console.log($scope.reportTypes);
         window.open(url);
     };
     
-
-
+    
+    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+    
+                  $('#inputStartDate').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+    });
     
 }]);

@@ -585,17 +585,17 @@ console.log($location.search());
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "m_delta")){
                             if((el.m_out!=null)&&(el.m_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.m_out-el.m_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.m_in-el.m_out).toFixed(3);
                             };
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "v_delta")){
                             if((el.v_out!=null)&&(el.v_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.v_out-el.v_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.v_in-el.v_out).toFixed(3);
                             };
                         };
                         if ((el[$scope.columns[i].fieldName]==null)&&($scope.columns[i].fieldName === "p_delta")){
                             if((el.p_out!=null)&&(el.p_in!=null)){
-                                el[$scope.columns[i].fieldName] = (el.p_out-el.p_in).toFixed(3);
+                                el[$scope.columns[i].fieldName] = (el.p_in-el.p_out).toFixed(3);
                             };
                         };
                         
@@ -622,11 +622,11 @@ console.log($location.search());
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
-                $scope.summary = data;            
+                $scope.summary = data;       
                 if ($scope.summary.hasOwnProperty('diffs')){
                     $scope.intotalColumns.forEach(function(element){
                         var columnName = element.name;
-                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
+                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
                             $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
                         }else{
                             $scope.summary.diffs[columnName] = "-";
@@ -636,7 +636,7 @@ console.log($location.search());
                 if ($scope.summary.hasOwnProperty('totals')){                 
                     $scope.intotalColumns.forEach(function(element){                       
                         var columnName = element.name;
-                        if ($scope.summary.totals.hasOwnProperty(columnName) &&($scope.summary.totals[columnName]!=null)){                
+                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
                             $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
                         }else{
                             $scope.summary.totals[columnName] = "-";
@@ -686,11 +686,10 @@ console.log($location.search());
                         }
                     });
               
-                    if ($scope.summary.diffs.hasOwnProperty(columnName) &&($scope.summary.diffs[columnName]!=null)){                
-//console.log(Number($scope.summary.diffs[columnName]));                          
+                    if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                         
                         $scope.summary.diffs[columnName] = Number($scope.summary.diffs[columnName]).toFixed(3);
                     };
-                    if ($scope.summary.totals.hasOwnProperty(columnName) && ($scope.summary.totals[columnName]!=null)){
+                    if ($scope.summary.totals.hasOwnProperty(columnName) && (!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){
                         $scope.summary.totals[columnName] = Number($scope.summary.totals[columnName]).toFixed(3);
                     };
                     if (!$scope.summary.diffs.hasOwnProperty(columnName) || !$scope.summary.totals.hasOwnProperty(columnName)){

@@ -1,13 +1,20 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc){
-                     
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+    
+//console.log(navigator.userAgent);    
+        //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.selectedAll = false;
+    
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
 
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
     $scope.activeStartDateFormat = new Date();
+    $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     
     //file types
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
@@ -116,7 +123,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
-        
+        var activeStartDate = new Date(curObject.activeStartDate);
+console.log(curObject);         
+        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
         $scope.getTemplates();       
     };
     
@@ -249,7 +258,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.currentSign = object.reportPeriod.sign;
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));
+            $scope.psStartDateFormatted =(object.paramsetStartDate!=null)?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+//console.log($scope.psStartDateFormatted);            
             $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
+            $scope.psEndDateFormatted =(object.paramsetEndDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+//console.log($scope.psEndDateFormatted);
         }
     //settings for activate tab "Main options", when edit window opened.
         $scope.set_of_objects_flag=false;
@@ -283,6 +296,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.prepareObjectsList = function(){
         $scope.availableObjectGroups.forEach(function(el){el.selected = false});
+        $scope.ctrlSettings.selectedAll = false;
     };
     
     $scope.getGroupObjects = function(group){
@@ -381,6 +395,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         }; 
     };
     
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+    };
+    
     $scope.addSelectedEntities = function(){
     //console.log($scope.availableObjects);  
         if ($scope.showAvailableObjectGroups_flag){
@@ -476,13 +496,59 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //console.log('$scope.showAvailableObjects_flag = '+$scope.showAvailableObjects_flag);
 //console.log('$scope.set_of_objects_flag = '+$scope.set_of_objects_flag);        
         return !$scope.showAvailableObjects_flag && $scope.set_of_objects_flag;
-    }
+    };
     
+    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+                  $('#inputSingleDateStart').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputSingleDateEnd').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+                  $('#inputStartDate').datepicker({
+                      dateFormat: "dd.mm.yy",
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                  });
+
+    });
+        
     //checkers
         //check date interval
-    $scope.checkDateInterval = function(left, right){
-        if ((left==null)|| (right==null)){return false;};
-        return right>=left;
+    $scope.checkDateInterval = function(left, right){     
+        if (!mainSvc.checkStrForDate(left)){
+            return false;
+        };
+        if (!mainSvc.checkStrForDate(right)){
+            return false;
+        };
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){console.log("1");return false;};
+        var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
+        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
+        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+//        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
+        if ((sd==null)|| (ed==null)){return console.log("2"); false;};               
+        return ed>=sd;
     };
         //check fields
     $scope.checkRequiredFields = function(){
@@ -497,9 +563,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             //if the paramset use interval
         if ($scope.currentSign==null){
                 //check interval
-            intervalValidate_flag = $scope.checkDateInterval($scope.paramsetStartDateFormat, $scope.paramsetEndDateFormat);
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec);            
+            intervalValidate_flag = (!isNaN(startDate.getTime()))&&(!isNaN(endDate.getTime()))&&$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
-        
+//console.log(intervalValidate_flag);        
         result = !((($scope.currentObject.reportPeriodKey==null) ||   
         ($scope.currentObject.reportTemplate.id==null)))
         &&intervalValidate_flag;
@@ -541,14 +611,33 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             //start date
             //if the paramset use a date interval
         if ($scope.currentSign==null){
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
+//            {
+//                $scope.messageForUser += "- Не задано начало периода"+"\n";
+//            };
+            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            var startDate = new Date(startDateMillisec);
+            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            var endDate = new Date(endDateMillisec); 
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
             {
-                $scope.messageForUser += "- Не задано начало периода"+"\n";
+                $scope.messageForUser += "- Некорректно задано начало периода"+"\n";
             };
                         //end date
-            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
+//            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.psEndDateFormatted=="")    
+//            {
+//                $scope.messageForUser += "- Не задан конец периода"+"\n";
+//            };
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
             {
-                $scope.messageForUser += "- Не задан конец периода"+"\n";
+                $scope.messageForUser += "- Некорректно задан конец периода"+"\n";
+            };
+            
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+            {
+                $scope.messageForUser += "- Некорректно заданы границы периода"+"\n";
             };
         }
 
@@ -606,6 +695,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });
+                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+                    fileName+=".xlsx";
+                };
                 saveAs(file,fileName);
             })
             .catch(function(e){
@@ -616,25 +708,28 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.previewReport = function(type,paramset){
         var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
         window.open(url);    
-    };
-    
+    };  
     //Формируем отчет с заданными параметрами
     $scope.createReportWithParams = function(type // тип отчета
                                             , paramset //вариант отчета
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             ){
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
-        //формируем массив ИД объектов, для которых формируется отчет.
-        var objectIds = $scope.selectedObjects.map(function(element){
+        //формируем массив ИД объектов, для которых формируется отчет.          
+        var objectIds = $scope.selectedObjects.map(function(element){          
             var result = element.id;
             return result;
-        }); 
+        });      
          //set the list of the special params - устанавливаем специальные параметры отчета
         tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
         //Если вариант отчета создается за период, задаем начало и конец периода
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
-            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
-            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+//            tmpParamset.paramsetStartDate = (new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+//            tmpParamset.paramsetEndDate = (new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+            var startDate = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+            tmpParamset.paramsetStartDate = (startDate!=null)?(new Date(startDate)) : null;
+            var endDate = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+            tmpParamset.paramsetEndDate = (endDate!=null)?(new Date(endDate)) : null;
         }else{
             tmpParamset.paramsetStartDate = null;
             tmpParamset.paramsetEndDate = null;
@@ -666,11 +761,17 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);//вытаскиваем непосредственно название файла.
             var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт
+//console.log(fileName);  
+//console.log(response.headers()['content-type']);              
+//console.log(file);            
             if (previewFlag){              
                 //если нажат предпросмотр, то
                 var url = window.URL.createObjectURL(file);//формируем url на сформированный файл
                 window.open(url);//открываем сформированный файл в новой вкладке браузера
-            }else{    
+            }else{  
+                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+                    fileName+=".xlsx";
+                };
                 saveAs(file,fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
         })

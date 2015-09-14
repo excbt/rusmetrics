@@ -517,9 +517,9 @@ console.log("Objects directive.");
                         if(data[0] != null){
                             var beginDate = new Date(data[0].periodBeginDate);
                             var endDate =  new Date(data[0].periodEndDate);
-//console.log(data[0]);                                    
+console.log(data[0]);                                    
                             zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
-                            zpoint.zpointRefRangeAuto = data[0]._auto?"auto":"manual";
+                            zpoint.zpointRefRangeAuto = data[0].isAuto?"auto":"manual";
                         }
                         else {
                             zpoint.zpointRefRange = "Не задан";
@@ -537,6 +537,7 @@ console.log("Objects directive.");
                     //Получаем столбец с эталонным интервалом для заданной точки учета
                     var element = document.getElementById("zpointRefRange"+zpoint.id);
                     //Записываем эталонный интервал в таблицу
+console.log(zpoint);                    
                     switch (zpoint.zpointRefRangeAuto){
                         case "auto":element.innerHTML = '<div class="progress progress-striped noMargin">'+
                                             '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
@@ -593,7 +594,7 @@ console.log("Objects directive.");
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+                    window.location.href("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
@@ -686,13 +687,14 @@ console.log("Objects directive.");
 					.success(function(data){
 						// Проверяем, задан ли интервал
 						if(data[0] != null){
+console.log(data);                            
 							$scope.refRange = data[0];
 							$scope.refRange.cont_zpoint_id = zpointId;
 							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
 							$scope.endDate =  new Date($scope.refRange.periodEndDate);
 //							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
 							// Проверяем, был ли интервал расчитан автоматически
-							if($scope.refRange._auto == false) {
+							if($scope.refRange.isAuto == false) {
 								document.getElementById('spn_if_manual').style.display = 'block';
 								document.getElementById('spn_if_auto').style.display = 'none';
 							}
@@ -731,7 +733,7 @@ console.log("Objects directive.");
 				        $scope.endDate =  new Date($scope.refRange.periodEndDate);                                 
                         
                         $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate.toLocaleDateString()+" по "+$scope.endDate.toLocaleDateString();
-                        $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange._auto?"auto":"manual";
+                        $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange.isAuto?"auto":"manual";
                         
                         viewRefRangeInTable($scope.currentZpoint);
 					})
@@ -993,7 +995,7 @@ console.log("addMoreObjects. Run");
                 
                 function isNumeric(n) {
                   return !isNaN(parseFloat(n)) && isFinite(n);
-                }
+                };
                 
                 $scope.checkNumericValue = function(numvalue){ 
                     var result = true;
