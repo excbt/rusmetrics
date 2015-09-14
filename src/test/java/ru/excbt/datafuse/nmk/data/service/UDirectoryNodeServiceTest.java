@@ -25,7 +25,7 @@ public class UDirectoryNodeServiceTest extends JpaSupportTest {
 	@Autowired
 	private UDirectoryNodeService nodeDirectoryService;
 
-    @PersistenceUnit
+    @PersistenceUnit(unitName="nmk-p")
     private EntityManagerFactory emf;	
 	
 	@Test
