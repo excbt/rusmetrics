@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -28,7 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories("ru.excbt.datafuse.nmk.data.repository")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data" })
 @EnableJpaAuditing(auditorAwareRef = "mockAuditorAware")
-public class JpaConfigCli {
+public class JpaConfigLocal {
 
 	@Value("${dataSource.driverClassName}")
 	private String driverClassname;
@@ -48,7 +49,8 @@ public class JpaConfigCli {
 	 * @throws NamingException
 	 */
 	@Bean(destroyMethod = "close")
-	public DataSource dataSource() {
+	@Primary
+	public DataSource datafuseDataSource() {
 		checkNotNull(driverClassname);
 		checkNotNull(datasourceUrl);
 		checkNotNull(datasourceUsername);
@@ -58,8 +60,8 @@ public class JpaConfigCli {
 		source.setUrl(datasourceUrl);
 		source.setUser(datasourceUsername);
 		source.setPassword(datasourcePassword);
-		source.setMaxConnections(10);		
-		
+		source.setMaxConnections(10);
+
 		return source;
 	}
 
@@ -71,8 +73,8 @@ public class JpaConfigCli {
 	@Bean
 	public DefaultPersistenceUnitManager persistentUnitManager() {
 		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
-		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-test.xml");
-		pu.setDefaultDataSource(dataSource());
+		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence-local.xml");
+		pu.setDefaultDataSource(datafuseDataSource());
 		return pu;
 	}
 
@@ -81,10 +83,12 @@ public class JpaConfigCli {
 	 * @return
 	 * @throws NamingException
 	 */
-	@Bean
+	@Bean(name = "entityManagerFactory")
+	@Primary
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setPersistenceUnitManager(persistentUnitManager());
+		emf.setPersistenceUnitName("nmk-p");
 		return emf;
 	}
 
@@ -95,8 +99,9 @@ public class JpaConfigCli {
 	 */
 	@Bean
 	@Autowired
+	@Primary
 	public PlatformTransactionManager transactionManager(
-			EntityManagerFactory entityManagerFactory) {
+			@Value("#{entityManagerFactory}") EntityManagerFactory entityManagerFactory) {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
 		return transactionManager;

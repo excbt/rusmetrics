@@ -140,7 +140,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		logger.info(
 				"Login {}: {} ",
-				subscriberUserDetails.is_system() ? "SystemUser" : "SubscrUser",
+				subscriberUserDetails.getIsSystem() ? "SystemUser" : "SubscrUser",
 				subscriberUserDetails.getUsername());
 
 		grantedAuths.forEach((i) -> {

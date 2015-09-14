@@ -89,7 +89,7 @@ public class ReportService {
 	@Autowired
 	private SubscriberService subscriberService;
 
-	@PersistenceContext
+	@PersistenceContext(unitName="nmk-p")
 	private EntityManager em;
 
 	/**

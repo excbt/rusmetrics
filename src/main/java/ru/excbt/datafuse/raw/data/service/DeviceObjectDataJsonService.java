@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.raw.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,12 +12,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataJsonRepository;
+import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
+import ru.excbt.datafuse.raw.data.repository.DeviceObjectDataJsonRepository;
 
 @Service
-@Transactional
+@Transactional (readOnly = true)
 public class DeviceObjectDataJsonService {
 
 	@Autowired

@@ -10,7 +10,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigCli;
+import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
+import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 
 public abstract class AbstractDBToolCli {
 
@@ -19,8 +20,11 @@ public abstract class AbstractDBToolCli {
 
 	protected ApplicationContext appContext;
 
-	@PersistenceContext
+	@PersistenceContext(unitName="nmk-p")
 	protected EntityManager entityManager;
+
+	@PersistenceContext(unitName="dataraw")
+	protected EntityManager entityManagerRaw;
 
 	public void autowireBeans() {
 		AutowireCapableBeanFactory acbFactory = appContext
@@ -30,7 +34,7 @@ public abstract class AbstractDBToolCli {
 
 	public AbstractDBToolCli() {
 		appContext = new AnnotationConfigApplicationContext(
-				PropertyConfig.class, JpaConfigCli.class);
+				PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class);
 	}
 	
 	public void showAppStatus() {
