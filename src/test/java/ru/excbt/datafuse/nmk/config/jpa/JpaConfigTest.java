@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { PropertyConfig.class, JpaConfigLocal.class, //JpaRawConfigLocal.class, 
+@ContextConfiguration(classes = { PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class, 
 		LdapConfig.class })
 public class JpaConfigTest {
 
