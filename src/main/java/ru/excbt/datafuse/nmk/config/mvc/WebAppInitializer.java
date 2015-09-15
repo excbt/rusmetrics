@@ -6,7 +6,6 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfig;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfig;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.config.security.WebSecurityConfig;
 
@@ -16,7 +15,8 @@ public class WebAppInitializer extends
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		return new Class[] { SpringMvcConfig.class, JpaConfig.class,
-				JpaRawConfig.class, LdapConfig.class, WebSecurityConfig.class };
+				//JpaRawConfig.class, 
+				LdapConfig.class, WebSecurityConfig.class };
 	}
 
 	@Override

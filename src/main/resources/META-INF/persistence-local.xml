@@ -16,18 +16,18 @@
 	</persistence-unit>
 	
 	<!--  -->
-	<persistence-unit name="dataraw" transaction-type="RESOURCE_LOCAL">
+<!-- 	<persistence-unit name="dataraw" transaction-type="RESOURCE_LOCAL"> -->
 
-		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+<!-- 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider> -->
 
-		<properties>
-			<property name="hibernate.dialect" value="ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="validate" />
-			<property name="hibernate.show_sql" value="true"/>		
-			<property name="hibernate.format_sql" value="true"/>
+<!-- 		<properties> -->
+<!-- 			<property name="hibernate.dialect" value="ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect" /> -->
+<!-- 			<property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+<!-- 			<property name="hibernate.show_sql" value="true"/>		 -->
+<!-- 			<property name="hibernate.format_sql" value="true"/> -->
 <!-- 			<property name="hibernate.temp.use_jdbc_metadata_defaults" value="false"/>	 -->
-		</properties>
+<!-- 		</properties> -->
 
-	</persistence-unit>	
+<!-- 	</persistence-unit>	 -->
 	
 </persistence>

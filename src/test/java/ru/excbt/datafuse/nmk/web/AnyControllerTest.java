@@ -37,7 +37,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
@@ -54,7 +53,8 @@ import com.jayway.jsonpath.JsonPath;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigLocal.class,
-		JpaRawConfigLocal.class, LocalSecurityConfig.class, LdapConfig.class })
+		//JpaRawConfigLocal.class, 
+		LocalSecurityConfig.class, LdapConfig.class })
 @WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN",
 		"DEVICE_OBJECT_ADMIN" })
