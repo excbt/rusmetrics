@@ -601,6 +601,12 @@ console.log("monitorStart watch");
                 monitorSvc.getMonitorEventsByObject(element);
             }
         });
+        
+        //refresh qtip
+        var qtips = document.getElementsByClassName("qtip");
+        for (var index = 0; index<qtips.length; index++){
+            qtips[index].style.display = "none";
+        };
     });
     
 //    var interval;
