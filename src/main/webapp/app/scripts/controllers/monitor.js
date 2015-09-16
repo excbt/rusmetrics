@@ -1,7 +1,6 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc){
-      
-      
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc){
+         
 console.log("Monitor Controller.");      
     //object url
     var noticesUrl = "#/notices/list/";
@@ -10,6 +9,7 @@ console.log("Monitor Controller.");
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
+console.log($scope.objects);      
 //console.log("Monitor ctrl. Objects are got."); 
 //var time = new Date();
 //console.log(time);        
@@ -18,8 +18,8 @@ console.log("Monitor Controller.");
 //console.log("====================== end $scope.objects=================");            
 
     //default date interval settings
-    $rootScope.monitorStart = $cookies.fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-    $rootScope.monitorEnd =  $cookies.toDate || moment().endOf('day').format('YYYY-MM-DD');    
+    $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+    $rootScope.monitorEnd =  $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
@@ -37,14 +37,21 @@ console.log("Monitor Controller.");
     $scope.monitorSettings.objectBottomOnPage =50;
       
     $scope.monitorSettings.isCtrlEnd = false;
+      
+    $scope.monitorSettings.dateRangeSettings = mainSvc.getDateRangeOptions("monitor-ru");
+    $scope.monitorSettings.monitorDates = {
+        startDate :  $rootScope.monitorStart,
+        endDate :  $rootScope.monitorEnd
+    }; 
+console.log($scope.monitorSettings.monitorDates);      
 
 //      tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
 //                    $scope.objectsOnPage = tempArr;
     $scope.objectsOnPage = ($scope.objects.length===0)?[]:$scope.objects.slice(0, $scope.monitorSettings.objectsPerScroll);
                     $scope.objectsOnPage.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ||(element.statusColor === "YELLOW")){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }
                     });
       
     
@@ -392,6 +399,7 @@ console.log("Monitor Controller.");
                         switch (event[column.name]){
                             case "red": title = "Критическая ситуация"; break;
                             case "orange": title = "Некритическая ситуация"; break;
+                            case "yellow": title = "Уведомление"; break;
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
@@ -466,19 +474,31 @@ console.log("Monitor Controller.");
 //        $scope.getObjects(objectUrl);
     };
     
-    //Watching for the change period 
-    $scope.$watch('monitorStart', function (newDates, oldDates) {
-console.log("monitorStart watch");  
-//console.log(newDates);        
-//console.log(oldDates);   
+    //Watching for the change period  
+    $scope.$watch('monitorSettings.monitorDates', function (newDates, oldDates) {
+console.log("monitorDates watch");  
+console.log(newDates);        
+console.log(oldDates);   
         if (oldDates===newDates){
             return;
         };
         $scope.monitorSettings.loadingFlag = true;
+        
+        $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
+        $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
         monitorSvc.setMonitorSettings({
             fromDate:$rootScope.monitorStart,
             toDate:$rootScope.monitorEnd
         });
+console.log($rootScope.monitorStart);        
+console.log($rootScope.monitorEnd);         
+        $scope.monitorSettings.dateRangeSettings.startDate = moment($rootScope.monitorStart).startOf('day');
+        $scope.monitorSettings.dateRangeSettings.endDate = moment($rootScope.monitorEnd).endOf('day');
+        
+        $location.search("fromDate",$rootScope.monitorStart);
+        $location.search("toDate",$rootScope.monitorEnd);
+        //perform url address
+//        var $location
 //        monitorSvc.monitorSvcSettings.fromDate = $rootScope.monitorStart;
 //        monitorSvc.monitorSvcSettings.toDate = $rootScope.monitorEnd;
 //console.log("request");        
@@ -597,9 +617,9 @@ console.log("monitorStart watch");
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;
         $scope.objectsOnPage.forEach(function(element){
-            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
                 monitorSvc.getMonitorEventsByObject(element);
-            }
+//            }
         });
         
         //refresh qtip
@@ -639,9 +659,9 @@ console.log("monitorStart watch");
             //                        $scope.$apply();
                 var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,$scope.objects.length);
                 tempArr.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }
                 });
                 Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                 $scope.monitorSettings.objectsOnPage+=$scope.objects.length;
@@ -789,9 +809,9 @@ console.log($(imgObj));
 //console.log(tempArr);                    
         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     tempArr.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }
                     });
         if(endIndex >= ($scope.objects.length)){
             $scope.monitorSettings.objectsOnPage = $scope.objects.length;

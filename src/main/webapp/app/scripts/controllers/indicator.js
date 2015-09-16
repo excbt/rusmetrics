@@ -605,17 +605,36 @@ console.log($location.search());
         });
          
         $scope.setScoreStyles = function(){
+//console.log("Run setScoreStyles");            
             //set styles for score/integrators
             var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
             var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
             var totalThHead = document.getElementById("totals_th_head"); 
-            $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+//console.log(indicatorThDataDate);            
+//console.log(angular.isDefined(indicatorThDataDate));
+//console.log(indicatorThDataDate.clientWidth);
+//console.log(angular.isDefined(indicatorThWorkTime.clientWidth));
+//console.log(indicatorThWorkTime.clientWidth);            
+            if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
+                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+            };
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
             $scope.intotalColumns.forEach(function(element){
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                element.ngstyle =indicatorTh.clientWidth;
+                if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
+                    element.ngstyle =indicatorTh.clientWidth;
+                };
 
             });
+        };
+        
+                //when document ready - set styles for score table.
+//        $(document).ready(function() {
+//            $scope.setScoreStyles();
+//        });
+        
+        $scope.onTableLoad = function(){
+            $scope.setScoreStyles();
         };
         
         // get summary (score)
@@ -811,5 +830,6 @@ console.log($location.search());
         };
         return true;
     };
+        
                 
 }]);

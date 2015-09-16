@@ -100,6 +100,9 @@
                     <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                 </td>
             </tr>
+            <tr class="nmc-hide">
+                <td>{{onTableLoad()}}</td>
+            </tr>
         </table>
         <div class="col-md-9">
             <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
@@ -140,6 +143,9 @@
 
                 </td>
             </tr> 
+            <tr class="nmc-hide">
+                <td>{{onTableLoad()}}</td>
+            </tr>
         </table>    
     </div>    
 </div>

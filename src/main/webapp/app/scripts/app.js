@@ -48,7 +48,8 @@ console.log("Run routeProviderConfig");
       })
       .when('/notices/monitor', {
         templateUrl: 'views/monitor.html',
-        controller: 'MonitorCtrl'
+        controller: 'MonitorCtrl',
+        reloadOnSearch: false
       })
       .when('/notices/monitor_map', {
         templateUrl: 'views/monitor_map.html',
