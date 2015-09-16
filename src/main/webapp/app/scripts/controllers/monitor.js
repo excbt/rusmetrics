@@ -9,7 +9,7 @@ console.log("Monitor Controller.");
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
-console.log($scope.objects);      
+//console.log($scope.objects);      
 //console.log("Monitor ctrl. Objects are got."); 
 //var time = new Date();
 //console.log(time);        
@@ -49,9 +49,12 @@ console.log($scope.monitorSettings.monitorDates);
 //                    $scope.objectsOnPage = tempArr;
     $scope.objectsOnPage = ($scope.objects.length===0)?[]:$scope.objects.slice(0, $scope.monitorSettings.objectsPerScroll);
                     $scope.objectsOnPage.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ||(element.statusColor === "YELLOW")){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-//                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
                     });
       
     
@@ -617,9 +620,13 @@ console.log($rootScope.monitorEnd);
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;
         $scope.objectsOnPage.forEach(function(element){
-//            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
+//            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                 monitorSvc.getMonitorEventsByObject(element);
-//            }
+//            }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//            };
         });
         
         //refresh qtip
@@ -659,9 +666,14 @@ console.log($rootScope.monitorEnd);
             //                        $scope.$apply();
                 var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,$scope.objects.length);
                 tempArr.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-//                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
+                    
                 });
                 Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                 $scope.monitorSettings.objectsOnPage+=$scope.objects.length;
@@ -809,9 +821,13 @@ console.log($(imgObj));
 //console.log(tempArr);                    
         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     tempArr.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")||(element.statusColor === "YELLOW") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-//                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
                     });
         if(endIndex >= ($scope.objects.length)){
             $scope.monitorSettings.objectsOnPage = $scope.objects.length;

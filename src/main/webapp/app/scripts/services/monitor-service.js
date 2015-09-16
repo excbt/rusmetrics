@@ -185,12 +185,13 @@ console.log("MonitorSvc. Get objects");
     //                    };
     //                    return 0;
     //                });
-//console.log(tmpMessage);                
-                    if (tmpMessage==""){
-                        tmpMessage="На объекте нет нештатных ситуаций";
+//console.log(tmpMessage);     
+                    if (obj.statusColor==="YELLOW"){
+                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
+                    }else if ((obj.statusColor==="RED")||(obj.statusColor==="ORANGE")){
+                        obj.monitorEvents = tmpMessage;
+                        obj.monitorEventsForMap = data;
                     };
-                    obj.monitorEvents = tmpMessage;
-                    obj.monitorEventsForMap = data;
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
                     //Display message
