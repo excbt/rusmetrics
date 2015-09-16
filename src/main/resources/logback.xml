@@ -32,7 +32,7 @@
 	</appender>
 
 
-    <logger name="ru.excbt" level="trace"/>
+    <logger name="ru.excbt" level="info"/>
 
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core" level="info" />
@@ -43,7 +43,7 @@
 	
 	<logger name="org.hibernate.SQL" level="info" />
 	
-	<logger name="org.springframework.web" level="trace" />
+	<logger name="org.springframework.web" level="info" />
 
 	<logger name="org.springframework.security.saml" level="info" />
 
