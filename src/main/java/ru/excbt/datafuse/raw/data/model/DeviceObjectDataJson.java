@@ -12,12 +12,17 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import ru.excbt.datafuse.hibernate.types.StringJsonUserType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
 @Table(name="device_object_data_json")
+@TypeDefs( {@TypeDef( name= "StringJsonObject", typeClass = StringJsonUserType.class)})
 public class DeviceObjectDataJson implements Serializable {
 
  

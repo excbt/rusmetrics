@@ -1,21 +1,25 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
+import java.util.Properties;
+
 import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -23,37 +27,26 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {
-		"ru.excbt.datafuse.nmk.data.repository",
-		"ru.excbt.datafuse.raw.data.repository" })
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data",
-		"ru.excbt.datafuse.raw.data" })
+		"ru.excbt.datafuse.nmk.data.repository" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data"})
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfig {
 
-	@Value("${dataSource.driverClassName}")
-	private String driverClassname;
+	@Autowired
+	private Environment env;
 
-	@Value("${dataSource.url}")
-	private String datasourceUrl;
-
-	@Value("${dataSource.username}")
-	private String datasourceUsername;
-
-	@Value("${dataSource.password}")
-	private String datasourcePassword;
-
+	
 	/**
 	 * 
 	 * @return
-	 * @throws NamingException
 	 */
-	@Bean
-	@Primary
-	public DefaultPersistenceUnitManager persistentUnitManager()
-			throws NamingException {
-		DefaultPersistenceUnitManager pu = new DefaultPersistenceUnitManager();
-		pu.setPersistenceXmlLocation("classpath*:META-INF/persistence.xml");
-		return pu;
+	@Bean(name = "datasource")
+	public DataSource dataSource() {
+		final JndiDataSourceLookup dsLookup = new JndiDataSourceLookup();
+		dsLookup.setResourceRef(true);
+		DataSource dataSource = dsLookup.getDataSource(env
+				.getProperty("dataSource.jndi"));
+		return dataSource;
 	}
 
 	/**
@@ -62,13 +55,19 @@ public class JpaConfig {
 	 * @throws NamingException
 	 */
 	@Bean(name = "entityManagerFactory")
-	@Primary
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory()
-			throws NamingException {
+	public EntityManagerFactory entityManagerFactory() {
+
+		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setPersistenceUnitManager(persistentUnitManager());
+		emf.setJpaVendorAdapter(vendorAdapter);
 		emf.setPersistenceUnitName("nmk-p");
-		return emf;
+		Properties hibernateProperties = HibernateProps.readEnvProps(env, "dataSource");
+		emf.setJpaProperties(hibernateProperties);
+		emf.setDataSource(dataSource());
+		emf.setPackagesToScan("ru.excbt.datafuse.nmk.data.model");
+		emf.afterPropertiesSet();
+		return emf.getObject();
 	}
 
 	/**
@@ -77,12 +76,9 @@ public class JpaConfig {
 	 * @return
 	 */
 	@Bean
-	@Autowired
-	@Primary
-	public PlatformTransactionManager transactionManager(
-			@Value("#{entityManagerFactory}") EntityManagerFactory entityManagerFactory) {
+	public PlatformTransactionManager transactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory);
+		transactionManager.setEntityManagerFactory(entityManagerFactory());
 		return transactionManager;
 	}
 
@@ -105,17 +101,17 @@ public class JpaConfig {
 
 			@Override
 			public String getDatasourceUrl() {
-				return datasourceUrl;
+				return env.getProperty("dataSource.url");
 			}
 
 			@Override
 			public String getDatasourceUsername() {
-				return datasourceUsername;
+				return env.getProperty("dataSource.username");
 			}
 
 			@Override
 			public String getDatasourcePassword() {
-				return datasourcePassword;
+				return env.getProperty("dataSource.password");
 			}
 		};
 	}

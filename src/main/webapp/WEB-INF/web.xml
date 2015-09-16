@@ -39,6 +39,39 @@
 	    <res-auth>Container</res-auth>
 	</resource-ref>
 
+	<resource-ref>
+	    <description>DB Raw Connection</description>
+	    <res-ref-name>jdbc/datarawDBctx</res-ref-name>
+	    <res-type>javax.sql.DataSource</res-type>
+	    <res-auth>Container</res-auth>
+	</resource-ref>
+
+<!-- 
+Example Resource 
+<Resource
+   name="jdbc/nmkDBctx"
+   auth="Container"
+   type="javax.sql.DataSource"
+   factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+   initialSize="5"
+   maxActive="55"
+   maxIdle="21"
+   minIdle="13"
+   timeBetweenEvictionRunsMillis="34000"
+   minEvictableIdleTimeMillis="55000"
+   validationQuery="SELECT 1"
+   validationInterval="34"
+   testOnBorrow="true"
+   removeAbandoned="true"
+   removeAbandonedTimeout="233"
+   username="xxxx"
+   password="xxxxx"
+   driverClassName="org.postgresql.Driver"
+   url="jdbc:postgresql://192.168.84.248:5432/datafuse?useUnicode=yes&amp;characterEncoding=UTF-8"
+/>  
+
+ -->
+
 	<session-config>
     	<session-timeout>1440</session-timeout> <!-- Value in minutes: 60 minutes * 24 hours -->
 	</session-config>

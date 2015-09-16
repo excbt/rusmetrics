@@ -11,6 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
+import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 
 public abstract class AbstractDBToolCli {
 
@@ -33,7 +34,7 @@ public abstract class AbstractDBToolCli {
 
 	public AbstractDBToolCli() {
 		appContext = new AnnotationConfigApplicationContext(
-				PropertyConfig.class, JpaConfigLocal.class //,JpaRawConfigLocal.class
+				PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class
 				);
 	}
 	
