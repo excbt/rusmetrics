@@ -12,12 +12,12 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionUserRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class SubscrActionUserService implements SecuredRoles {
 
 	@Autowired
@@ -31,7 +31,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrActionUser> findAll(long subscriberId) {
 		return subscrActionUserRepository.findBySubscriberId(subscriberId);
 	}
@@ -41,7 +41,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public SubscrActionUser findOne(long id) {
 		return subscrActionUserRepository.findOne(id);
 	}
@@ -51,6 +51,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser updateOne(SubscrActionUser entity) {
 		checkNotNull(entity);
@@ -64,6 +65,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser updateOne(SubscrActionUser entity, Long[] groupIds) {
 		checkNotNull(entity);
@@ -85,6 +87,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser createOne(SubscrActionUser entity) {
 		checkNotNull(entity);
@@ -98,6 +101,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser createOne(SubscrActionUser entity, Long[] groupIds) {
 		checkNotNull(entity);
@@ -116,6 +120,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (subscrActionUserRepository.exists(id)) {
@@ -133,6 +138,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(SubscrActionUser entity) {
 		checkNotNull(entity);

@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimezoneDefRepository;
 
 @Service
-@Transactional(readOnly = true)
 public class TimezoneDefService {
 
 	@Autowired
@@ -24,6 +24,7 @@ public class TimezoneDefService {
 	 * 
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
 	public TimezoneDef getDefaultTimezoneDef() {
 
 		TimezoneDef result = defaultTimezoneDef; 

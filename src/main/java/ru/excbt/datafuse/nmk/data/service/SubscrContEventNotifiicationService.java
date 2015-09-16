@@ -34,6 +34,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
@@ -51,7 +52,6 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationReposito
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
 @Service
-@Transactional
 public class SubscrContEventNotifiicationService {
 
 	private static final Logger logger = LoggerFactory
@@ -80,6 +80,11 @@ public class SubscrContEventNotifiicationService {
 	@Autowired
 	private ContEventLevelColorRepository contEventLevelColorRepository;
 
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	private static class CounterInfo {
 		private final Long id;
 		private final Long count;
@@ -117,6 +122,11 @@ public class SubscrContEventNotifiicationService {
 
 	}
 
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	private class ContObjectCounterMap {
 		private final Map<Long, CounterInfo> notificationMap;
 
@@ -141,7 +151,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<SubscrContEventNotification> selectAll(final long subscriberId,
 			final Boolean isNew, final Pageable pageable) {
 
@@ -166,7 +176,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
 			Long subscriberId, final Date fromDate, final Date toDate,
 			final List<Long> contObjectList,
@@ -197,7 +207,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
 			Long subscriberId, final LocalDatePeriod datePeriod,
 			final List<Long> contObjectList,
@@ -227,7 +237,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<SubscrContEventNotification> selectByConditions(
 			Long subscriberId, final LocalDatePeriod datePeriod,
 			final Pageable pageable) {
@@ -244,6 +254,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param isNew
 	 * @param pageable
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void updateRevisionByConditions(Long subscriberId,
 			final LocalDatePeriod datePeriod, final List<Long> contObjectList,
 			final List<Long> contEventTypeList, final Boolean isNew,
@@ -482,7 +493,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
 	public SubscrContEventNotification findOneNotification(Long id) {
 		return subscrContEventNotificationRepository.findOne(id);
 	}
@@ -492,6 +503,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrContEventNotification updateNotificationOneIsNew(
 			Boolean isNew, Long subscrContEventNotificationId,
 			Long revisionSubscrUserId) {
@@ -518,6 +530,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param revisionSubscrUserId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	private SubscrContEventNotification updateNotificationOneIsNew(
 			SubscrContEventNotification subscrContEventNotification,
 			Boolean isNew, Long revisionSubscrUserId) {
@@ -537,6 +550,7 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @param notificationIds
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	public void updateNotificationIsNew(Boolean isNew,
 			List<Long> notificationIds, Long revisionSubscrUserId) {
 		checkNotNull(isNew);
@@ -554,7 +568,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod) {
 		checkNotNull(contObjectId);
@@ -576,7 +590,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod,
 			Boolean isNew) {
@@ -600,7 +614,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	@Deprecated
 	public long selectContEventTypeCount(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod) {
@@ -624,7 +638,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectContEventTypeCountGroup(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod) {
 
@@ -648,7 +662,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(
 			final Long subscriberId, final Long contObjectId,
 			final LocalDatePeriod datePeriod) {
@@ -699,7 +713,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
 			final Long subscriberId, final Long contObjectId,
 			final LocalDatePeriod datePeriod) {
@@ -748,7 +762,7 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(
 			final Long subscriberId, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
@@ -839,7 +853,7 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
 			final Long subscriberId, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
@@ -1040,7 +1054,7 @@ public class SubscrContEventNotifiicationService {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(
 			final Long subscriberId, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {

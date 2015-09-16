@@ -13,12 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
 @Service
-@Transactional
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventService {
 
 	private final static int DEFAULT_MAX_EVENTS = 1000;
@@ -36,7 +37,6 @@ public class ContEventService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId) {
 		return selectEventsBySubscriber(subscriberId,
 				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
@@ -47,7 +47,6 @@ public class ContEventService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId,
 			Pageable pageable) {
 		Page<ContEvent> result = contEventRepository.selectBySubscriber(
@@ -60,7 +59,6 @@ public class ContEventService {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public List<ContEvent> findEventsByContObjectId(long contObjectId) {
 		return findEventsByContObjectId(contObjectId,
 				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
@@ -71,7 +69,6 @@ public class ContEventService {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public List<ContEvent> findEventsByContObjectId(long contObjectId,
 			Pageable pageable) {
 		return contEventRepository.findByContObjectId(contObjectId, pageable);
@@ -84,7 +81,6 @@ public class ContEventService {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndDate(long subscriberId,
 			DateTime startDate, DateTime endDate) {
 		return selectBySubscriberAndDate(subscriberId, startDate, endDate,
@@ -98,7 +94,6 @@ public class ContEventService {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndDate(long subscriberId,
 			DateTime startDate, DateTime endDate, Pageable pageable) {
 		checkNotNull(startDate);
@@ -117,7 +112,6 @@ public class ContEventService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(
 			long subscriberId, DateTime startDate, DateTime endDate,
 			List<Long> contObjectIds) {
@@ -134,7 +128,6 @@ public class ContEventService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(
 			long subscriberId, DateTime startDate, DateTime endDate,
 			List<Long> contObjectIds, Pageable pageable) {
@@ -159,7 +152,6 @@ public class ContEventService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndContObjectIds(
 			long subscriberId, List<Long> contObjectIds) {
 		return selectBySubscriberAndContObjectIds(subscriberId, contObjectIds,
@@ -173,7 +165,6 @@ public class ContEventService {
 	 * @param pageRequest
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public Page<ContEvent> selectBySubscriberAndContObjectIds(
 			long subscriberId, List<Long> contObjectIds, Pageable pageable) {
 
@@ -189,6 +180,5 @@ public class ContEventService {
 				subscriberId, contObjectIds, pageable);
 
 	}
-
 
 }

@@ -17,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
@@ -29,7 +30,6 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
-@Transactional
 public class ContZPointService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -49,7 +49,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = false)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = false)
 	public ContZPoint findContZPoint(long contZPointId) {
 		return contZPointRepository.findOne(contZPointId);
 	}
@@ -59,7 +59,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPoint> findContObjectZPoints(long contObjectId) {
 		List<ContZPoint> result = contZPointRepository
 				.findByContObjectId(contObjectId);
@@ -71,7 +71,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointEx> findContObjectZPointsEx(long contObjectId) {
 		List<ContZPoint> zPoints = contZPointRepository
 				.findByContObjectId(contObjectId);
@@ -111,7 +111,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkContZPointOwnership(long contZPointId, long contObjectId) {
 		List<?> checkIds = contZPointRepository.findByIdAndContObject(
 				contZPointId, contObjectId);
@@ -123,7 +123,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectContZPointIds(long contObjectId) {
 		return contZPointRepository.selectContZPointIds(contObjectId);
 	}
@@ -133,7 +133,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointStatInfo> selectContZPointStatInfo(Long contObjectId) {
 		List<ContZPointStatInfo> resultList = new ArrayList<>();
 		List<Long> contZPointIds = contZPointRepository
@@ -171,6 +171,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPoint
 	 * @return
 	 */
+	@Transactional (value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint updateContZPoint(ContZPoint contZPoint) {
 		checkNotNull(contZPoint);
@@ -184,6 +185,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contServiceTypeKey
 	 * @return
 	 */
+	@Transactional (value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint createManualZPoint(Long contObjectId,
 			ContServiceTypeKey contServiceTypeKey, LocalDate startDate,
@@ -210,6 +212,7 @@ public class ContZPointService implements SecuredRoles {
 	 * 
 	 * @param contZPointId
 	 */
+	@Transactional (value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void deleteManualZPoint(Long contZPointId) {
 		ContZPoint contZPoint = findContZPoint(contZPointId);

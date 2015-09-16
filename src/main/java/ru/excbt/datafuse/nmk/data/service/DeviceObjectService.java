@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
@@ -21,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class DeviceObjectService implements SecuredRoles {
 
 	@Autowired
@@ -38,16 +38,27 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObject findOne(long id) {
 		return deviceObjectRepository.findOne(id);
 	}
 
+	/**
+	 * 
+	 * @param deviceObject
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObject saveOne(DeviceObject deviceObject) {
 		return deviceObjectRepository.save(deviceObject);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObject createManualDeviceObject() {
 
@@ -60,6 +71,12 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectRepository.save(deviceObject);
 	}
 
+	/**
+	 * 
+	 * @param deviceObject
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObject createManualDeviceObject(DeviceObject deviceObject) {
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
@@ -73,6 +90,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * 
 	 * @param deviceObjectId
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public void deleteManualDeviceObject(Long deviceObjectId) {
 		DeviceObject deviceObject = findOne(deviceObjectId);
@@ -90,7 +108,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsByContObjectId(
 			Long contObjectId) {
 		return deviceObjectRepository
@@ -102,7 +120,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObjectMetaVzlet selectDeviceObjectMetaVzlet(Long deviceObjectId) {
 		List<DeviceObjectMetaVzlet> vList = deviceObjectMetaVzletRepository
 				.findByDeviceObjectId(deviceObjectId);
@@ -121,6 +139,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectMetaVzlet
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectMetaVzlet updateDeviceObjectMetaVzlet(
 			DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
@@ -140,6 +159,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectMetaVzlet
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObjectMetaVzlet(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
@@ -155,7 +175,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(
 			long deviceObjectId) {
 		return deviceObjectMetaVzletRepository
