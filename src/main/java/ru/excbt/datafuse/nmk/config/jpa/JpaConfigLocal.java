@@ -23,8 +23,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect;
-
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableTransactionManagement
@@ -48,9 +46,7 @@ public class JpaConfigLocal {
 		source.setUrl(env.getProperty("dataSource.url"));
 		source.setUser(env.getProperty("dataSource.username"));
 		source.setPassword(env.getProperty("dataSource.password"));
-
 		source.setMaxConnections(10);
-
 		return source;
 	}
 
@@ -78,35 +74,16 @@ public class JpaConfigLocal {
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		
 		emf.setJpaVendorAdapter(vendorAdapter);
 		emf.setPersistenceUnitName("nmk-p");
-		emf.setJpaProperties(hibernateProperties());
+		Properties hibernateProperties = HibernateProps.readEnvProps(env, "dataSource");
+		emf.setJpaProperties(hibernateProperties);
 		emf.setDataSource(dataSource());
 		emf.setPackagesToScan("ru.excbt.datafuse.nmk.data.model");
 		emf.afterPropertiesSet();
-		
 		return emf.getObject();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	private Properties hibernateProperties() {
-		Properties properties = new Properties();
-
-		properties.put(HibernateProps.DIALECT,
-				JSONBPostgreSQLDialect.class.getName());
-		properties.put(HibernateProps.SHOW_SQL,
-				env.getProperty("dataSource.show_sql"));
-		properties.put(HibernateProps.FORMAT_SQL,
-				env.getProperty("dataSource.format_sql"));
-		properties.put(HibernateProps.HBM2DDL_AUTO,
-				env.getProperty("dataSource.hbm2ddl.auto"));
-
-		return properties;
-	}	
 	
 	/**
 	 * 

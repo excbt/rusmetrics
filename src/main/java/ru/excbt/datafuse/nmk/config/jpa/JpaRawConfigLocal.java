@@ -18,8 +18,6 @@ import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import ru.excbt.datafuse.hibernate.dialect.JSONBPostgreSQLDialect;
-
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
 @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactoryRaw", basePackages = "ru.excbt.datafuse.raw.data.repository")
@@ -42,7 +40,6 @@ public class JpaRawConfigLocal {
 		source.setUser(env.getProperty("dataSourceRaw.username"));
 		source.setPassword(env.getProperty("dataSourceRaw.password"));
 		source.setMaxConnections(10);
-
 		return source;
 	}
 
@@ -59,31 +56,15 @@ public class JpaRawConfigLocal {
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setJpaVendorAdapter(vendorAdapter);
 		emf.setPersistenceUnitName("dataraw");
-		emf.setJpaProperties(hibernateProperties());
+		Properties hibernateProperties = HibernateProps.readEnvProps(env, "dataSourceRaw");		
+		emf.setJpaProperties(hibernateProperties);
 		emf.setDataSource(dataSourceRaw());
 		emf.setPackagesToScan("ru.excbt.datafuse.raw.data.model");
 		emf.afterPropertiesSet();
 		return emf.getObject();
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	private Properties hibernateProperties() {
-		Properties properties = new Properties();
 
-		properties.put(HibernateProps.DIALECT,
-				JSONBPostgreSQLDialect.class.getName());
-		properties.put(HibernateProps.SHOW_SQL,
-				env.getProperty("dataSourceRaw.show_sql"));
-		properties.put(HibernateProps.FORMAT_SQL,
-				env.getProperty("dataSourceRaw.format_sql"));
-		properties.put(HibernateProps.HBM2DDL_AUTO,
-				env.getProperty("dataSourceRaw.hbm2ddl.auto"));
-
-		return properties;
-	}
 	/**
 	 * 
 	 * @param entityManagerFactory
