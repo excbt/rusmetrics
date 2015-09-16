@@ -1,6 +1,6 @@
 package ru.excbt.datafuse.nmk.config.jpa;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import java.util.Properties;
 
 import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
@@ -8,57 +8,38 @@ import javax.sql.DataSource;
 
 import org.postgresql.ds.PGPoolingDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 @Configuration
 @PropertySource(value = "classpath:META-INF/data-access.properties")
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository", entityManagerFactoryRef = "entityManagerFactoryRaw")
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactoryRaw", basePackages = "ru.excbt.datafuse.raw.data.repository")
 @ComponentScan(basePackages = { "ru.excbt.datafuse.raw.data" })
 public class JpaRawConfigLocal {
 
-	@Value("${dataSourceRaw.driverClassName}")
-	private String driverClassname;
-
-	@Value("${dataSourceRaw.url}")
-	private String datasourceUrl;
-
-	@Value("${dataSourceRaw.username}")
-	private String datasourceUsername;
-
-	@Value("${dataSourceRaw.password}")
-	private String datasourcePassword;
+	@Autowired
+	private Environment env;
 
 	/**
 	 * 
 	 * @return
 	 * @throws NamingException
 	 */
-	@Bean(destroyMethod = "close")
-	@Primary
+	@Bean(name = "dataSourceRaw", destroyMethod = "close")
 	public DataSource dataSourceRaw() {
-		checkNotNull(driverClassname);
-		checkNotNull(datasourceUrl);
-		checkNotNull(datasourceUsername);
-		checkNotNull(datasourcePassword);
 
 		PGPoolingDataSource source = new PGPoolingDataSource();
-		source.setUrl(datasourceUrl);
-		source.setUser(datasourceUsername);
-		source.setPassword(datasourcePassword);
+		source.setUrl(env.getProperty("dataSourceRaw.url"));
+		source.setUser(env.getProperty("dataSourceRaw.username"));
+		source.setPassword(env.getProperty("dataSourceRaw.password"));
 		source.setMaxConnections(10);
-
 		return source;
 	}
 
@@ -68,27 +49,33 @@ public class JpaRawConfigLocal {
 	 * @throws NamingException
 	 */
 	@Bean(name = "entityManagerFactoryRaw")
-	@Autowired
-	public LocalContainerEntityManagerFactoryBean entityManagerFactoryRaw(
-			DefaultPersistenceUnitManager persistentUnitManager) {
+	public EntityManagerFactory entityManagerFactoryRaw() {
+
+		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+
 		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setPersistenceUnitManager(persistentUnitManager);
+		emf.setJpaVendorAdapter(vendorAdapter);
 		emf.setPersistenceUnitName("dataraw");
-		return emf;
+		Properties hibernateProperties = HibernateProps.readEnvProps(env, "dataSourceRaw");		
+		emf.setJpaProperties(hibernateProperties);
+		emf.setDataSource(dataSourceRaw());
+		emf.setPackagesToScan("ru.excbt.datafuse.raw.data.model");
+		emf.afterPropertiesSet();
+		return emf.getObject();
 	}
+
 
 	/**
 	 * 
 	 * @param entityManagerFactory
 	 * @return
 	 */
-	@Bean
-	@Autowired
-	public PlatformTransactionManager transactionManagerRaw(
-			@Value("#{entityManagerFactoryRaw}") EntityManagerFactory entityManagerFactoryRaw) {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactoryRaw);
-		return transactionManager;
-	}
+	// @Bean(name = "transactionManagerRaw")
+	// @Autowired
+	// public PlatformTransactionManager transactionManagerRaw() {
+	// JpaTransactionManager transactionManager = new JpaTransactionManager();
+	// transactionManager.setEntityManagerFactory(entityManagerFactoryRaw());
+	// return transactionManager;
+	// }
 
 }
