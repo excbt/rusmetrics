@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', function($rootScope, $http, $interval, $cookies, $location){
+    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
 console.log("Monitor service. Run Monitor service.");        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -69,15 +69,17 @@ console.log("MonitorSvc. Get cities and objects");
                     objectsMonitorSvc = getObjectsFromCities(data);
                    
                     //sort objects by name
-                    objectsMonitorSvc.sort(function(a, b){
-                        if (a.contObject.fullName>b.contObject.fullName){
-                            return 1;
-                        };
-                        if (a.contObject.fullName<b.contObject.fullName){
-                            return -1;
-                        };
-                        return 0;
-                    }); 
+                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
+//                    objectsMonitorSvc.sort(function(a, b){
+//                        if (a.contObject.fullName>b.contObject.fullName){
+//                            return 1;
+//                        };
+//                        if (a.contObject.fullName<b.contObject.fullName){
+//                            return -1;
+//                        };
+//                        return 0;
+//                    }); 
+                
 //console.log(objectsMonitorSvc);                 
                     //get the list of the events, which set the object color
 //                    objectsMonitorSvc.forEach(function(element){

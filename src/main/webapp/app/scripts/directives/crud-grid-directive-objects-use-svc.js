@@ -42,11 +42,11 @@ console.log("Objects directive.");
 //                $scope.monitorSettings.noGreenObjectsFlag = false;
                 $scope.objectCtrlSettings.isCtrlEnd =false;
                 $scope.objectCtrlSettings.allSelected = false;
-                $scope.objectCtrlSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
                 $scope.objectCtrlSettings.objectTopOnPage =0;
-                $scope.objectCtrlSettings.objectBottomOnPage =50;
+                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
@@ -856,6 +856,7 @@ console.log("Objects directive.");
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
                 $scope.onTableLoad = function(){ 
+//console.log("Run onTableLoad");                    
                     if ($scope.objectCtrlSettings.isCtrlEnd === true){                    
                         var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
                         window.scrollTo(0, Math.round(pageHeight));
@@ -866,7 +867,7 @@ console.log("Objects directive.");
                 
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){
-console.log("addMoreObjects. Run");
+//console.log("addMoreObjects. Run");
                     if (($scope.objects.length<=0)){
                         return;
                     };
@@ -887,6 +888,11 @@ console.log("addMoreObjects. Run");
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
                     };
                 };
+                
+                $("#divWithObjectTable").scroll(function(){                    
+                    $scope.addMoreObjects();
+                    $scope.$apply();
+                });
                 
                 
                 // Проверка пользователя - системный/ не системный

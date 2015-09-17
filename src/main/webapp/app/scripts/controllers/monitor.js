@@ -30,11 +30,11 @@ console.log("Monitor Controller.");
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
     
-    $scope.monitorSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
+    $scope.monitorSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
     $scope.monitorSettings.objectsOnPage = $scope.monitorSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
     $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
     $scope.monitorSettings.objectTopOnPage =0;
-    $scope.monitorSettings.objectBottomOnPage =50;
+    $scope.monitorSettings.objectBottomOnPage =34;
       
     $scope.monitorSettings.isCtrlEnd = false;
       
@@ -43,7 +43,7 @@ console.log("Monitor Controller.");
         startDate :  $rootScope.monitorStart,
         endDate :  $rootScope.monitorEnd
     }; 
-console.log($scope.monitorSettings.monitorDates);      
+//console.log($scope.monitorSettings.monitorDates);      
 
 //      tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
 //                    $scope.objectsOnPage = tempArr;
@@ -479,9 +479,9 @@ console.log($scope.monitorSettings.monitorDates);
     
     //Watching for the change period  
     $scope.$watch('monitorSettings.monitorDates', function (newDates, oldDates) {
-console.log("monitorDates watch");  
-console.log(newDates);        
-console.log(oldDates);   
+//console.log("monitorDates watch");  
+//console.log(newDates);        
+//console.log(oldDates);   
         if (oldDates===newDates){
             return;
         };
@@ -493,8 +493,8 @@ console.log(oldDates);
             fromDate:$rootScope.monitorStart,
             toDate:$rootScope.monitorEnd
         });
-console.log($rootScope.monitorStart);        
-console.log($rootScope.monitorEnd);         
+//console.log($rootScope.monitorStart);        
+//console.log($rootScope.monitorEnd);         
         $scope.monitorSettings.dateRangeSettings.startDate = moment($rootScope.monitorStart).startOf('day');
         $scope.monitorSettings.dateRangeSettings.endDate = moment($rootScope.monitorEnd).endOf('day');
         
@@ -612,7 +612,7 @@ console.log($rootScope.monitorEnd);
         window.scrollTo(0,0);
         $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
         $scope.monitorSettings.objectTopOnPage =0;
-        $scope.monitorSettings.objectBottomOnPage =50;
+        $scope.monitorSettings.objectBottomOnPage =34;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
 //        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
@@ -835,6 +835,12 @@ console.log($(imgObj));
             $scope.monitorSettings.objectsOnPage+=$scope.monitorSettings.objectsPerScroll;
         };
     };
+      
+    $("#divWithMonitorTable").scroll(function(){
+
+        $scope.addMoreObjectsForMonitor();
+        $scope.$apply();
+    });
     
         //chart
     $scope.runChart = function(objId){

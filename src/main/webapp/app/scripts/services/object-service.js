@@ -118,6 +118,18 @@ console.log("Object Service. Run.");
                 return 0;
             }); 
         };
+                 
+        function sortObjectsByConObjectFullName(array){
+            array.sort(function(a, b){
+                if (a.contObject.fullName>b.contObject.fullName){
+                    return 1;
+                };
+                if (a.contObject.fullName<b.contObject.fullName){
+                    return -1;
+                };
+                return 0;
+            }); 
+        };
 
        var promise = getObjectsData();
 //       $interval(function(){
@@ -150,7 +162,8 @@ console.log("objectSvc:loaded");
             promise,
             putDeviceMetaData,
             setObjectSettings,
-            sortObjectsByFullName
+            sortObjectsByFullName,
+            sortObjectsByConObjectFullName
             
         };
     

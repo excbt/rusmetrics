@@ -54,10 +54,56 @@
     <h3 class="nmc-h3">Объектов нет.</h3>
 </div>
 
-<div ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50' >
-        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+<!-- Шапка для таблицы-->
+<table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
         <thead>
             <tr>
+                <th style="padding: 0; border-bottom-width: 0px;">
+                    <table class="crud-grid table table-lighter table-condensed noMargin">
+                        <thead>
+                            <tr class="nmc-child-table-header">
+                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
+                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                    <div class="btn-group" style="vertical-align: initial;">
+
+                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                        <span class="caret"></span>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
+                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
+                                      </ul>
+                                    </div>
+                                </th>
+                                <th class="nmc-td-for-button"></th>
+                                <th>Название объекта
+                                    <div class="btn-group pull-right" style="vertical-align: initial;">
+
+                                      <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
+<!--                                        <span class="caret"></span>-->
+                                      </p>
+                                      <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </th>
+            </tr>
+        </thead>
+</table>
+
+<div>
+<!--<div style="overflow: scroll;width:300px;height:100px;position:relative"> crolling table div -->
+<!--<div style="overflow: scroll;width:1000px;height:685px;position:relative" ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50' >-->
+    <div id="divWithObjectTable" style="overflow: scroll;height:685px;position:relative" ng-hide="loading">
+        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+        <thead>
+            <tr class="nmc-hide">
                 <th style="padding: 0; border-bottom-width: 0px;">
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
@@ -179,6 +225,7 @@
     </table>
 <!--        </div>-->
 </div>
+</div><!-- end of scrolling table div -->
 
 
 <!--Show Zpoint options-->
