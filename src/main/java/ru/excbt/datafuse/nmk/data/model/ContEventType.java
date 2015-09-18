@@ -61,6 +61,12 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 	@Column(name = "is_scalar_event")
 	private Boolean isScalarEvent;
 
+	@Column(name = "is_dev_mode")
+	private Boolean isDevMode;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
+	
 	public String getKeyname() {
 		return keyname;
 	}
@@ -163,6 +169,22 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public Boolean getIsDevMode() {
+		return isDevMode;
+	}
+
+	public void setIsDevMode(Boolean isDevMode) {
+		this.isDevMode = isDevMode;
+	}
+
+	public Boolean getIsDisabled() {
+		return isDisabled;
+	}
+
+	public void setIsDisabled(Boolean isDisabled) {
+		this.isDisabled = isDisabled;
 	}
 
 }
