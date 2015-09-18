@@ -84,94 +84,6 @@ console.log("Monitor Controller.");
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
             ];
     
-    //get monitor events -alter way
-    $scope.getMonitorEventsByObjectAW = function(obj){
-//console.log("getMonitorEventsByObjectAW");        
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";
-        var imgObj = "#imgObj"+obj.contObject.id;          
-//        $(imgObj).qtip({
-//            content:{
-//                text: function(event, api){
-//                    $.ajax({url: url})
-//                        .done(function(data){
-//console.log(data);                        
-//                            api.set('content.text', data)
-//                        })
-//                        .fail(function(xhr, status, error){
-//console.log(error);                        
-//                            api.set('content.text', status+'; '+error)
-//                        })
-//                    return 'Загрузка ... ';
-//                }
-//            },
-//            position:{
-//                viewport: $(window)
-//            },
-//            style:{
-//                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//            }
-//        });
-    };
-    //get monitor events
-    $scope.getMonitorEventsByObject111 = function(obj){       
-//        var obj = findObjectById(objId);    
-        //if cur object = null => exit function
-//        if (obj == null){
-//            return;
-//        };
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
-        $http.get(url)
-            .success(function(data){
-//console.log("success");
-            //if data is not array - exit
-                if (!data.hasOwnProperty('length')||(data.length == 0)){
-                    return;
-                };
-                //temp array
-                var tmpMessage = "";
-//                var tmpMessageEx = "";
-                //make the new array of the types wich formatted to display
-                data.forEach(function(element){
-                    var tmpEvent = "";
-//                    var tmpEventEx = "";
-//                    tmpType.id = element.contEventType.id;
-//                    tmpType.typeCategory = element.statusColor.toLowerCase();
-//                    tmpType.typeEventCount = element.totalCount;
-//                    tmpType.typeName = element.contEventType.name;
-                    var contEventTime = new Date(element.contEventTime);
-                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/><br/>";
-                    tmpMessage+=tmpEvent;
-                });
-//                tmpTypes.sort(function(a, b){
-//                    if (a.typeEventCount > b.typeEventCount){
-//                        return -1;
-//                    };
-//                    if (a.typeEventCount < b.typeEventCount){
-//                        return 1;
-//                    };
-//                    return 0;
-//                });
-                obj.monitorEvents = tmpMessage;
-                //Display message
-//                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
-//                imgObj.title = obj.monitorEvents;
-            
-//                var imgObj = "#imgObj"+obj.contObject.id;          
-//                $(imgObj).qtip({
-//                    content:{
-//                        text: obj.monitorEvents
-//                    },
-//                    style:{
-//                        classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//                    }
-//                });         
-//                makeEventTypesByObjectTable(obj);
-            })
-            .error(function(e){
-                console.log(e);
-            });        
-    };
-    
     function findObjectById(objId){
         var obj = null;
         $scope.objects.some(function(element){
@@ -619,6 +531,8 @@ console.log("Monitor Controller.");
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag;
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;
+//$scope.objectsOnPage = $scope.objectsOnPage.splice(0,4);
+//console.log($scope.objectsOnPage);        
         $scope.objectsOnPage.forEach(function(element){
 //            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                 monitorSvc.getMonitorEventsByObject(element);

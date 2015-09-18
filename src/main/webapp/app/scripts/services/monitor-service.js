@@ -148,6 +148,7 @@ console.log("MonitorSvc. Get objects");
             
         //get monitor events
        var getMonitorEventsByObject = function(obj){ 
+//console.log(obj);           
 //console.log("MonitorSvc. getMonitorEventsByObject");           
     //        var obj = findObjectById(objId);    
             //if cur object = null => exit function
@@ -161,6 +162,10 @@ console.log("MonitorSvc. Get objects");
 //console.log(data);                
                 //if data is not array - exit
                     if (!data.hasOwnProperty('length')||(data.length == 0)){
+                        if (obj.statusColor==="YELLOW"){
+                            obj.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
+                        };
                         return;
                     };
                     //temp array
