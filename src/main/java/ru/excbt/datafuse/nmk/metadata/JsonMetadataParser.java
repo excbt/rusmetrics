@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.metadata;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -56,13 +57,15 @@ public class JsonMetadataParser {
 
 			if (data.getPropVars() != null
 					&& !srcMetadata.getPropVars().contains(propVarStr)) {
-				logger.trace("srcProp: {} SKIPPED (by propVars)", srcMetadata.getSrcProp());
+				logger.trace("srcProp: {} SKIPPED (by propVars)",
+						srcMetadata.getSrcProp());
 				continue;
 			}
 
 			if (data.getMetaNumber() != null
 					&& !data.getMetaNumber().equals(propVar)) {
-				logger.trace("srcProp: {} SKIPPED (by metaNumber)", srcMetadata.getSrcProp());
+				logger.trace("srcProp: {} SKIPPED (by metaNumber)",
+						srcMetadata.getSrcProp());
 				continue;
 			}
 
@@ -177,9 +180,14 @@ public class JsonMetadataParser {
 		JsonNode rootNode = OBJECT_MAPPER.readTree(srcJson);
 
 		for (MetadataInfo meta : metadataInfoList) {
-			logger.trace("Process prop: {}", meta.getSrcProp());
-			if (meta.getSrcProp().contains(",") || meta.getSrcProp().contains("*")) {
-				String[] fieldPatterns = meta.getSrcProp().split(COMMA_STR);
+
+			final String srcProp = meta.getSrcProp();
+
+			logger.trace("Process prop: {}", srcProp);
+			
+			// comma separated props or field by mask
+			if (srcProp.contains(",") || srcProp.contains("*")) {
+				String[] fieldPatterns = srcProp.split(COMMA_STR);
 				BigDecimal totalResult = BigDecimal.ZERO;
 				for (String fPattern : fieldPatterns) {
 					List<JsonNode> fNodes = findByPattern(rootNode, fPattern);
@@ -203,26 +211,109 @@ public class JsonMetadataParser {
 
 				}
 				MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-						meta.getSrcProp(), meta.getDestProp(), totalResult,
+						srcProp, meta.getDestProp(), totalResult,
 						meta.getDestDbType());
 				result.add(metaFieldValue);
 
 				continue;
 			}
 
+			// / Array Property
+			if (srcProp.contains("[")) {
+				int idx = srcProp.indexOf("[");
+				String propName = srcProp.substring(0, idx);
+				String propIdxs = srcProp.substring(idx, srcProp.length());
+
+				if (propIdxs.length() % 3 != 0) {
+					logger.error("propIdxs is Invalid. srcProp:{}", srcProp);
+					continue;
+				}
+
+				int[] idxs = new int[propIdxs.length() / 3];
+				for (int i = 0; i < idxs.length; i++) {
+					String idxString = propIdxs.substring(i * 3 + 1, i * 3 + 2);
+					idxs[i] = Integer.valueOf(idxString);
+				}
+
+				JsonNode valueNode = rootNode.findValue(propName);
+				if (valueNode == null) {
+					logger.error("!!! Node with Name {} is not found !!!",
+							propName);
+				}
+				
+				checkState(idxs.length <= 2, "Only one and two dimentions array supported");
+				
+				// 1D array
+				if (valueNode.isArray() && idxs.length == 1) {
+
+					JsonNode arrayValue = findArrayElement(valueNode, idxs[0]);
+					checkNotNull(arrayValue);
+
+					MetadataFieldValue metaFieldValue = new MetadataFieldValue(
+							meta.getSrcProp(), meta.getDestProp(), arrayValue.asText(),
+							meta.getDestDbType());
+					result.add(metaFieldValue);
+					
+					continue;
+				}
+				// 2D array
+				if (valueNode.isArray() && idxs.length == 2) {
+					JsonNode arrayValue1D = findArrayElement(valueNode, idxs[0]);
+					checkNotNull(arrayValue1D);
+					checkState(arrayValue1D.isArray());
+					JsonNode arrayValue2D = findArrayElement(arrayValue1D, idxs[1]);
+					checkNotNull(arrayValue2D);
+					MetadataFieldValue metaFieldValue = new MetadataFieldValue(
+							meta.getSrcProp(), meta.getDestProp(), arrayValue2D.asText(),
+							meta.getDestDbType());
+					result.add(metaFieldValue);
+					continue;
+				}
+			} // Is array
+			
+			// Simple value
 			JsonNode valueNode = rootNode.findValue(meta.getSrcProp());
 			if (valueNode == null) {
 				logger.error("!!! Node with Name {} is not found !!!",
 						meta.getSrcProp());
 				continue;
 			}
+			
 			MetadataFieldValue metaFieldValue = new MetadataFieldValue(
 					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(),
 					meta.getDestDbType());
 			result.add(metaFieldValue);
-
 		}
 
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param parentNode
+	 * @param idx
+	 * @return
+	 */
+	private static JsonNode findArrayElement(JsonNode parentNode, int idx) {
+		
+		checkNotNull(parentNode);
+		checkArgument(parentNode.isArray());
+		checkArgument(idx >= 0);
+
+		Iterator<JsonNode> arrayElements = parentNode.elements();
+		int i = 0;
+		JsonNode result = null;
+		while (arrayElements.hasNext()) {
+			i++;
+			JsonNode arrayValueNode = arrayElements.next();
+			if (i < idx) {
+				continue;
+			}
+			if (i == idx) {
+				result = arrayValueNode;
+			}
+			break;
+		}
 		return result;
 	}
 
