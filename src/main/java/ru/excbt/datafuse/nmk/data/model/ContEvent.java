@@ -59,6 +59,9 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
+	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
+	private Long contZPointId;
+
 	@Version
 	private int version;
 
@@ -124,6 +127,14 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 
 	public void setRegistrationTimeTZ(Date registrationTimeTZ) {
 		this.registrationTimeTZ = registrationTimeTZ;
+	}
+
+	public Long getContZPointId() {
+		return contZPointId;
+	}
+
+	public void setContZPointId(Long contZPointId) {
+		this.contZPointId = contZPointId;
 	}
 
 }
