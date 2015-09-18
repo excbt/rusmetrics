@@ -32,7 +32,7 @@
 	</appender>
 
 
-    <logger name="ru.excbt" level="info"/>
+    <logger name="ru.excbt" level="trace"/>
 
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core" level="info" />
