@@ -299,14 +299,15 @@ console.log("Objects directive.");
 			    };
                 
                 $scope.selectedObject = function(objId){
-                    var curObject = null;
-                    $scope.objects.some(function(element){
-                        if (element.id === objId){
-                            curObject = angular.copy(element);
-                            return true;
-                        }
-                    });
-                    $scope.currentObject = curObject;
+//                    var curObject = null;
+//                    $scope.objects.some(function(element){
+//                        if (element.id === objId){
+//                            curObject = angular.copy(element);
+//                            return true;
+//                        }
+//                    });
+//                    $scope.currentObject = curObject;
+                    $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){
@@ -324,7 +325,7 @@ console.log("Objects directive.");
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
-                    var curObject = findObjectById(objId);//null;
+                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;
 //                    $scope.objects.some(function(element){
 //                        if (element.id === objId){
 //                            curObject = element;
@@ -615,7 +616,7 @@ console.log("Objects directive.");
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.href("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){

@@ -488,6 +488,7 @@ console.log($location.search());
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
         var tmpContObjectName = null;//indicatorSvc.getContObjectName();
+        var tmpTimeDetailType = null;
 //        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
 //            if (angular.isDefined($cookies.contZPoint)&&($cookies.contZPoint!=="null")){
 //                indicatorSvc.setZpointId($cookies.contZPoint);
@@ -531,10 +532,19 @@ console.log($location.search());
             };
         };
         
+        if (angular.isUndefined(tmpTimeDetailType)||(tmpTimeDetailType===null)){
+            if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType!=="null")){
+//                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
+                $scope.timeDetailType = pathParams.timeDetailType;
+            }else{
+                $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+            };
+        };
+        
         $scope.contZPoint = indicatorSvc.getZpointId();
         $scope.contZPointName = indicatorSvc.getZpointName() || "Не задано";
         $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";
+        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";     
         
         //clear cookies
 //console.log($cookies);        
@@ -791,8 +801,9 @@ console.log($location.search());
     });        
         
     $scope.saveIndicatorsToFile = function(exForUrl){ 
-        var contZPoint = $cookies.contZPoint;
-        var contObject = $cookies.contObject;
+        
+        var contZPoint = $scope.contZPoint || $cookies.contZPoint;
+        var contObject = $scope.contObject || $cookies.contObject;
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
         var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv"+exForUrl+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         window.open(url);

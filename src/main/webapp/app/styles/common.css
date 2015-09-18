@@ -3,11 +3,15 @@
  */
 
 /*html,body {overflow-y:hidden}*/
-
+/* ******************************* 
+ * Форматирование карт
+ *********************************
+ */
 .leaflet-popup-content {
 /*    width: auto;*/
 }
 
+/*
 .nmc-leaflet-popup-content-wrapper-compare {
     margin-left: -200px !important;
 }
@@ -15,14 +19,18 @@
 .nmc-leaflet-popup-content-wrapper-compare > .leaflet-popup-content{
     width: 500px !important;
 }
+*/
 
+/*    Переопределяем lefleat классы для всплывающего сообщения нужными значениями*/
 .leaflet-popup-content-wrapper {
-    margin-left: -200px !important;
+    margin-left: -200px !important;/*задаем отступ слева, чтобы центр попап сообщения находился над маркером*/
 }
 
 .leaflet-popup-content{
-    width: 550px !important;
+    width: 550px !important;/* Увеличиваем ширину всплывающего окна, чтобы влезло наше содержимое*/
 }
+
+
 
 body{
 /*    min-width: 1200px !important;*/
@@ -1559,6 +1567,11 @@ tr.nmc-main-table-header > th {
 /* Стиль для подсветки позитивных уведомлений*/
 .nmc-positive-notice{
     color: green;
+}
+
+/*  Стиль изменяет курсор при наведении на уведомление мыши - используется на стр. Уведомления*/
+.nmc-link-notice-detail{
+    cursor: pointer;
 }
   
 

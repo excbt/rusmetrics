@@ -208,10 +208,13 @@ console.log("initCtrl");
                          oneNotice.noticeCaption= el.contEvent.message;
                 };
             };
+            
+            oneNotice.contObjectId = el.contObjectId;
 
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
+                    break;
                 };   
             };
 
