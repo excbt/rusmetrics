@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +37,10 @@ public class ContEventTypeService {
 	public List<ContEventType> selectBaseContEventTypes() {
 		List<ContEventType> result = contEventTypeRepository
 				.selectBaseEventTypes(Boolean.TRUE);
-		return result;
+
+		return result.stream()
+				.filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode()))
+				.collect(Collectors.toList());
 	}
 
 	/**
