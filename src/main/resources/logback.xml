@@ -43,7 +43,7 @@
 	
 	<logger name="org.hibernate.SQL" level="info" />
 	
-	<logger name="org.springframework.web" level="info" />
+	<logger name="org.springframework.web" level="trace" />
 
 	<logger name="org.springframework.security.saml" level="info" />
 

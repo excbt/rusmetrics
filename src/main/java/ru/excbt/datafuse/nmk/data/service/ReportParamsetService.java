@@ -283,6 +283,8 @@ public class ReportParamsetService implements SecuredRoles {
 		rp.set_active(false);
 		rp.setActiveEndDate(new Date());
 		ReportParamset result = reportParamsetRepository.save(rp);
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
@@ -320,6 +322,8 @@ public class ReportParamsetService implements SecuredRoles {
 			updateUnitToParamset(result.getId(), contObjectIds);
 		}
 
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
@@ -533,6 +537,8 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset result = createOne(reportParamset);
 
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
