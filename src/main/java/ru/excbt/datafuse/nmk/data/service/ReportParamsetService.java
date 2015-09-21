@@ -284,7 +284,7 @@ public class ReportParamsetService implements SecuredRoles {
 		rp.setActiveEndDate(new Date());
 		ReportParamset result = reportParamsetRepository.save(rp);
 		result.getParamSpecialList().size();
-		
+
 		return result;
 	}
 
@@ -316,6 +316,11 @@ public class ReportParamsetService implements SecuredRoles {
 		rp.set_active(true);
 		rp.setActiveEndDate(null);
 
+		rp.getParamSpecialList().forEach((i) -> {
+			i.setId(null);
+			i.setReportParamset(rp);
+		});
+
 		ReportParamset result = reportParamsetRepository.save(rp);
 
 		if (contObjectIds != null) {
@@ -323,7 +328,7 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 
 		result.getParamSpecialList().size();
-		
+
 		return result;
 	}
 
@@ -390,7 +395,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamset
 	 * @param objectIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void addUnitToParamset(ReportParamset reportParamset,
 			long[] objectIds) {
 		checkNotNull(reportParamset);
@@ -538,7 +543,7 @@ public class ReportParamsetService implements SecuredRoles {
 		ReportParamset result = createOne(reportParamset);
 
 		result.getParamSpecialList().size();
-		
+
 		return result;
 	}
 
@@ -573,7 +578,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void updateUnitToParamset(final long reportParamsetId,
 			final Long[] objectIds) {
 
