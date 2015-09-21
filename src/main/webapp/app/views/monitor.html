@@ -28,11 +28,12 @@
             <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#all_objects" role="tab" data-toggle="tab" ng-click="refreshData()">Все объекты</a></li>
             <li role="presentation" class="nmc-toggle-archive"><a title="Объекты с нештатными ситуациями" class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#alert_objects" role="tab" data-toggle="tab" ng-click="getNoGreenObjects()">Объекты с НС</a></li>
         </ul>
-        <div class="col-md-2 noPadding marginTop15" ng-controller="DataRangeSettings">   
+        <div class="col-md-2 noPadding marginTop15 nmc-div-filter-date-interval">
+<!--            ng-controller="DataRangeSettings">   -->
         <div class="input-group marginRight15">
             <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
             <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
-                type="text" ng-model="monitorDates" options="queryDateOptsMonitorRu" aria-describedby="leftAddon"/>
+                type="text" ng-model="monitorSettings.monitorDates" options="monitorSettings.dateRangeSettings" aria-describedby="leftAddon"/>
         </div>    
         </div>
         <div class="pull-right col-md-offset-3 col-md-3 marginTop15">
@@ -59,8 +60,7 @@
         </div>
 -->
         <div class="tab-content">
-<!--            Активные варианты-->
-            <div role="tabpanel" class="tab-pane fade in active" id="active_paramsets">
+            <div role="tabpanel" class="tab-pane fade in active" id="active_monitor">
             </div>
         </div>
     </div>
@@ -73,7 +73,8 @@
 -->
     
     
-    <div infinite-scroll="addMoreObjectsForMonitor()" infinte-scroll-distance='50' >
+<!--    <div infinite-scroll="addMoreObjectsForMonitor()" infinte-scroll-distance='50' >-->
+    <div id="divWithMonitorTable" style="overflow: scroll;height:685px;position:relative">    
         <table  id="tableMonitor" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <tr class="" ng-repeat="object in objectsOnPage" ng-attr-id="{{'obj'+object.contObject.id}}">
             <td>
@@ -83,14 +84,14 @@
                         <img ng-attr-id="{{'imgObj'+object.contObject.id}}" title="" height="" width="" ng-src="{{'images/object-state-'+object.statusColor.toLowerCase()+'.png'}}"/>
                         
                             </td>
-                        <td class="col-md-1"><a title="Всего уведомлений" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
+                        <td class="col-xs-1 col-md-1 nmc-td-notices-counts"><a title="Всего уведомлений" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
 
                         </td>
                         <td class="nmc-td-for-buttons"><i title="Показать диаграмму уведомлений" class="btn btn-xs" ng-click="getEventTypesByObject(object.contObject.id, true)"><img height="16" width="16" src='images/roundDiagram4.png'/></i></td>
-                        <td class="col-md-3" ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
+                        <td class="col-xs-11 col-md-11" ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
                             <span ng-if="isSystemuser()">(id = {{object.contObject.id}})</span>
                         </td>
-                        <td class="col-md-8"></td>
+<!--                        <td class="col-xs-8 col-md-8"></td>-->
                     </tr>
                     <tr ng-attr-id="{{'trObjEvents'+object.contObject.id}}" class="nmc-tr-object-events">
                     </tr>

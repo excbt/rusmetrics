@@ -222,7 +222,8 @@ angular.module('portalNMC')
         });
         
         var objectsArr = $scope.currentCity.contEventNotificationStatuses;
-        objectSvc.sortObjectsByFullName(objectsArr);
+      
+        objectSvc.sortObjectsByConObjectFullName(objectsArr);        
         objectsArr.forEach(function(obj){
             if ((obj.statusColor === "RED") ||(obj.statusColor === "ORANGE") ){
                 monitorSvc.getMonitorEventsByObject(obj);

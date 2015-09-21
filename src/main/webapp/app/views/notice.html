@@ -40,7 +40,7 @@
     </div>
 </div>    
 <div class="container-fluid">
-<div class="row noPadding marginBottom10">    
+<div class="row noPadding marginBottom10 nmc-filter-row">    
 <!--<div class="col-md-12 ">-->
 <!--    <div class="col-md-12 noPadding">-->
 <!--        <label class="nmc-form-label">Фильтры:</label>-->
@@ -96,7 +96,7 @@
         <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getResultsPage(1)"></button>
     </div>
 
-    <div class="col-md-offset-1 col-md-3 noPadding">    
+    <div class="col-md-3 noPadding nmc-div-page-legend">    
  
          <div class="col-md-7 noPadding">
             <label class="nmc-form-label">Записей на странице:</label>
@@ -149,11 +149,24 @@
         <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
 <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
             <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
-                <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>
+<!--                ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}"-->
+                <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpointId}}&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpointName}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h">
+                    <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
+                </a>
+<!--                <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>-->
+<!--
+                "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+//                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                    "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
+                                    "title=\"Показания точки учёта\">"+
+                                "</i></a>"
+-->
             </td>
             <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
-                <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
+                <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">
+                    <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
+                    <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
+                </span>    
             </td>
         </tr>
     </table>

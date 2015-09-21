@@ -4,6 +4,7 @@ angular.module('portalNMC')
     var contZpointId = null;
     var contObjectName = null;
     var contZpointName = null;
+    var timeDetailType = "24h";
 
     var getContObjectId = function(){
         return contObjectId;
@@ -34,13 +35,23 @@ angular.module('portalNMC')
         contZpointName = zpName;
     };
     
+    var getTimeDetailType = function(){
+        return timeDetailType;
+    };
+    
+    var setTimeDetailType = function(tDType){
+        timeDetailType = tDType;
+    };
+    
     return {
         getContObjectId,
         getContObjectName,
+        getTimeDetailType,
         getZpointId,
         getZpointName,
         setContObjectId,
         setContObjectName,
+        setTimeDetailType,
         setZpointId,
         setZpointName        
     };
