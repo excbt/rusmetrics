@@ -11,10 +11,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataJsonRepository;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.utils.JsonCleaner;
+import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
+import ru.excbt.datafuse.raw.data.service.DeviceObjectDataJsonService;
 
 public class DBToolCli extends AbstractDBToolCli {
 
@@ -24,8 +25,11 @@ public class DBToolCli extends AbstractDBToolCli {
 	private static final PageRequest PAGE_LIMIT_1 = new PageRequest(0, 1);
 	private static final long DEVICE_OBJECT_ID = 28071562;
 
+	//@Autowired
+	//private DeviceObjectDataJsonRepository deviceObjectDataJsonRepository;
+
 	@Autowired
-	private DeviceObjectDataJsonRepository deviceObjectDataJsonRepository;
+	private DeviceObjectDataJsonService deviceObjectDataJsonService;
 
 	@Autowired
 	private ReportService dbService;
@@ -49,9 +53,9 @@ public class DBToolCli extends AbstractDBToolCli {
 	 * 
 	 */
 	private void readJson() {
-		checkNotNull(deviceObjectDataJsonRepository);
-		List<DeviceObjectDataJson> dataJsonList = deviceObjectDataJsonRepository
-				.selectByDeviceObject(DEVICE_OBJECT_ID, "24h", PAGE_LIMIT_1);
+		checkNotNull(deviceObjectDataJsonService);
+		List<DeviceObjectDataJson> dataJsonList = deviceObjectDataJsonService.selectDeviceObjectDataJson
+				(DEVICE_OBJECT_ID, TimeDetailKey.TYPE_24H, PAGE_LIMIT_1);
 
 		logger.info("Found Data: {}", dataJsonList.size());
 

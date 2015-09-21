@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -20,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 
 @Service
-@Transactional
 public class SubscriberService {
 
 	@Autowired
@@ -35,7 +35,7 @@ public class SubscriberService {
 	@Autowired
 	private ContEventRepository contEventRepository;
 
-	@PersistenceContext
+	@PersistenceContext (unitName="nmk-p")
 	private EntityManager em;
 
 	/**
@@ -43,7 +43,7 @@ public class SubscriberService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Subscriber findOne(long id) {
 		return subscriberRepository.findOne(id);
 	}
@@ -53,7 +53,7 @@ public class SubscriberService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
 		List<ContObject> result = subscriberRepository
 				.selectContObjects(subscriberId);
@@ -65,7 +65,7 @@ public class SubscriberService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
 		List<Long> result = subscriberRepository
 				.selectContObjectIds(subscriberId);
@@ -77,7 +77,7 @@ public class SubscriberService {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	@Deprecated
 	public List<ContZPoint> findContZPoints(long contObjectId) {
 		List<ContZPoint> result = contZPointRepository
@@ -90,7 +90,7 @@ public class SubscriberService {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public SubscrUser findSubscrUser(long subscrUserId) {
 		return subscrUserRepository.findOne(subscrUserId);
 	}
@@ -100,7 +100,7 @@ public class SubscriberService {
 	 * @param userName
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
 		return subscrUserRepository.findByUserNameIgnoreCase(userName);
 	}
@@ -111,7 +111,7 @@ public class SubscriberService {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkContObjectSubscription(long subscriberId,
 			long contObjectId) {
 		List<Long> resultIds = subscriberRepository.selectContObjectId(
@@ -124,6 +124,7 @@ public class SubscriberService {
 	 * @param subscriberId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
 	public Date getSubscriberCurrentTime(Long subscriberId) {
 		Object dbResult = em
 				.createNativeQuery("SELECT get_subscriber_current_time(?1);")

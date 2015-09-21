@@ -21,9 +21,9 @@ public class DeviceObjectServiceTest extends JpaSupportTest {
 	@Test
 	public void testCreatePortalDeviceObject() throws Exception {
 		DeviceObject deviceObject = deviceObjectService
-				.createPortalDeviceObject();
+				.createManualDeviceObject();
 		checkNotNull(deviceObject);
-		deviceObjectService.deleteOne(deviceObject.getId());
+		deviceObjectService.deleteManualDeviceObject(deviceObject.getId());
 	}
 
 	@Test

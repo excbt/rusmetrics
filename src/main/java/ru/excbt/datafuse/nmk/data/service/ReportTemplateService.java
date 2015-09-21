@@ -16,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -28,7 +29,6 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ReportTemplateService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -54,7 +54,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportTemplate findOne(long reportTemplateId) {
 		ReportTemplate result = reportTemplateRepository
 				.findOne(reportTemplateId);
@@ -66,6 +66,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate createOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -82,6 +83,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate updateOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -106,6 +108,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN })
 	protected ReportTemplate updateOneAny(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -120,6 +123,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -132,6 +136,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long reportTemplateId) {
 
@@ -151,6 +156,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN })
 	public void deleteOneCommon(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -163,6 +169,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN })
 	public void deleteOneCommon(long reportTemplateId) {
 
@@ -184,7 +191,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param currentDate
 	 * @return
 	 */
-	@Transactional(readOnly = false)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportTemplate> selectDefaultReportTemplates(
 			ReportTypeKey reportType, boolean isActive) {
 		return reportTemplateRepository.selectCommonTemplates(reportType,
@@ -197,7 +204,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param currentDate
 	 * @return
 	 */
-	@Transactional(readOnly = false)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportTemplate> selectSubscriberReportTemplates(
 			ReportTypeKey reportType, boolean isActive, long subscriberId) {
 
@@ -213,7 +220,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param currentDate
 	 * @return
 	 */
-	@Transactional(readOnly = false)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportTemplate> getAllReportTemplates(long subscriberId,
 			ReportTypeKey reportType, boolean isActive) {
 
@@ -235,6 +242,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkCanUpdate(Long id) {
 		return !checkIsCommon(id);
 	}
@@ -244,6 +252,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkIsCommon(Long id) {
 		List<Long> ids = reportTemplateRepository.selectCommonTemplateIds();
 		return ids.contains(id);
@@ -281,6 +290,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveReportTemplateBody(long reportTemplateId, byte[] body,
 			String filename) {
@@ -292,6 +302,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveReportTemplateBodyCompiled(long reportTemplateId,
 			byte[] body, String filename) {
@@ -304,6 +315,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate createByTemplate(long srcId,
 			ReportTemplate reportTemplate, Subscriber subscriber) {
@@ -351,6 +363,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
@@ -389,7 +402,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportTemplateBody getReportTemplateBody(long reportTemplateId) {
 		return reportTemplateBodyRepository.findOne(reportTemplateId);
 	}
@@ -399,7 +412,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTypeKey
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportTemplate> selectActiveReportTemplates(
 			ReportTypeKey reportTypeKey) {
 		return reportTemplateRepository.selectActiveTemplates(reportTypeKey,
@@ -412,6 +425,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param isActive
 	 * @param isCompiled
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public int updateCommonReportTemplateBody(ReportTypeKey reportTypeKey,
 			boolean isActive, boolean isCompiled) {
 		List<ReportTemplate> updateCadidates = reportTemplateRepository
@@ -460,6 +474,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTypeKey
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN })
 	public ReportTemplate createCommonReportTemplate(ReportTypeKey reportTypeKey) {
 
@@ -511,6 +526,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param isActive
 	 * @param isCompiled
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey,
 			long reportTemplateId, boolean isCompiled) {
 

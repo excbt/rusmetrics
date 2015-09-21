@@ -18,6 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
@@ -28,7 +29,6 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRe
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ContObjectService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -54,7 +54,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObject findOneContObject(Long id) {
 		return contObjectRepository.findOne(id);
 	}
@@ -64,7 +64,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param str
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> findContObjectsByFullName(String str) {
 		return contObjectRepository.findByFullNameLikeIgnoreCase(str);
 	}
@@ -74,7 +74,8 @@ public class ContObjectService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public ContObject updateOneContObject(ContObject entity) {
 		checkNotNull(entity);
 		checkArgument(!entity.isNew());
@@ -106,7 +107,7 @@ public class ContObjectService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectSettingModeType> selectContObjectSettingModeType() {
 		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository
 				.findAll();
@@ -117,7 +118,8 @@ public class ContObjectService implements SecuredRoles {
 	 * 
 	 * @param contObjectIds
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public List<Long> updateContObjectCurrentSettingModeType(
 			Long[] contObjectIds, String currentSettingMode, Long subscriberId) {
 		checkNotNull(contObjectIds);
@@ -155,7 +157,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectFias findContObjectFias(Long contObjectId) {
 		checkNotNull(contObjectId);
 		List<ContObjectFias> vList = contObjectFiasRepository

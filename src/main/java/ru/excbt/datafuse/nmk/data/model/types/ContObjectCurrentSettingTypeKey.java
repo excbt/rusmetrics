@@ -10,7 +10,7 @@ public enum ContObjectCurrentSettingTypeKey implements KeynameObject {
 	 * @param key
 	 * @return
 	 */
-	public static boolean isValid(String key) {
+	public static boolean isSupported(String key) {
 		return SUMMER.getKeyname().equals(key)
 				|| WINTER.getKeyname().equals(key);
 	}

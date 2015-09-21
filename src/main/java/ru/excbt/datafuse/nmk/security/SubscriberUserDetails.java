@@ -21,7 +21,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 
 	private final Long id;
 	private final Subscriber subscriber;
-	private final boolean _system;
+	private final Boolean isSystem;
 	private final int version;
 
 	/**
@@ -36,7 +36,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.id = sUser.getId();
 		this.subscriber = sUser.getSubscriber();
 		this.version = sUser.getVersion();
-		this._system = false;
+		this.isSystem = false;
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.id = sUser.getId();
 		this.subscriber = sUser.getSubscriber();
 		this.version = sUser.getVersion();
-		this._system = true;
+		this.isSystem = true;
 	}
 
 	@Override
@@ -59,9 +59,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		return id;
 	}
 
-	public boolean is_system() {
-		return _system;
-	}
+	
 
 	@Override
 	public Subscriber getSubscriber() {
@@ -79,9 +77,13 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		sb.append(super.toString()).append(": ");		
 		sb.append("id: ").append(this.id).append("; ");
 		sb.append("subscriberId: ").append(this.subscriber).append("; ");
-		sb.append("_system: ").append(this._system).append("; ");
+		sb.append("_system: ").append(this.isSystem).append("; ");
 		sb.append("version: ").append(this.version).append("; ");
 		return sb.toString();
+	}
+
+	public Boolean getIsSystem() {
+		return isSystem;
 	}
 
 }

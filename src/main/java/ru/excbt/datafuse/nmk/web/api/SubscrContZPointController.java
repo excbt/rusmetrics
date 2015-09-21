@@ -37,7 +37,7 @@ public class SubscrContZPointController extends WebApiController {
 	public ResponseEntity<?> getContObjectZPoints(
 			@PathVariable("contObjectId") long contObjectId) {
 		List<ContZPoint> zpList = contZPointService
-				.findContZPoints(contObjectId);
+				.findContObjectZPoints(contObjectId);
 		return ResponseEntity.ok(zpList);
 	}
 
@@ -50,7 +50,7 @@ public class SubscrContZPointController extends WebApiController {
 	public ResponseEntity<?> getContObjectZPointsEx(
 			@PathVariable("contObjectId") long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService
-				.findContZPointsEx(contObjectId);
+				.findContObjectZPointsEx(contObjectId);
 		return ResponseEntity.ok(zpList);
 	}
 
@@ -97,7 +97,7 @@ public class SubscrContZPointController extends WebApiController {
 				currentContZPoint) {
 			@Override
 			public void process() {
-				setResultEntity(contZPointService.saveContZPoint(entity));
+				setResultEntity(contZPointService.updateContZPoint(entity));
 			}
 		};
 

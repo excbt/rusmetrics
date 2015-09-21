@@ -19,16 +19,16 @@ import org.springframework.data.domain.Pageable;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectDataJsonService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.metadata.MetadataFieldValue;
 import ru.excbt.datafuse.nmk.metadata.MetadataInfo;
+import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
+import ru.excbt.datafuse.raw.data.service.DeviceObjectDataJsonService;
 
 public class MetadataCli extends AbstractDBToolCli {
 

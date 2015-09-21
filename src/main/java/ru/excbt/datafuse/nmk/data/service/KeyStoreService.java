@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.KeyStore;
 import ru.excbt.datafuse.nmk.data.repository.keyname.KeyStoreRepository;
 
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class KeyStoreService {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -25,6 +26,11 @@ public class KeyStoreService {
 	@Autowired
 	private KeyStoreRepository keyStoreRepository;
 
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
 	public String getKeyStoreValue(String keyname) {
 		KeyStore ks = keyStoreRepository.findOne(keyname);
 		checkNotNull(ks, "keyname " + keyname + " for keystore not found");

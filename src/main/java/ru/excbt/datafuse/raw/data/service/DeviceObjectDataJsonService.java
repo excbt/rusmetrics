@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.raw.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -12,12 +12,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataJson;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataJsonRepository;
+import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
+import ru.excbt.datafuse.raw.data.repository.DeviceObjectDataJsonRepository;
 
 @Service
-@Transactional
+@Transactional (value = TxConst.TX_RAW, readOnly = true)
 public class DeviceObjectDataJsonService {
 
 	@Autowired
@@ -29,7 +30,6 @@ public class DeviceObjectDataJsonService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public List<DeviceObjectDataJson> selectDeviceObjectDataJson(
 			long deviceObjectId, TimeDetailKey timeDetail, Pageable pageable) {
 
@@ -46,7 +46,6 @@ public class DeviceObjectDataJsonService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public List<DeviceObjectDataJson> selectDeviceObjectDataJson(
 			long deviceObjectId, TimeDetailKey timeDetail,
 			LocalDateTime fromDate, Pageable pageable) {
@@ -66,7 +65,6 @@ public class DeviceObjectDataJsonService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
 	public DeviceObjectDataJson findOne(long id) {
 		return deviceObjectDataJsonRepository.findOne(id);
 	}

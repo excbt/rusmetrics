@@ -18,6 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
@@ -33,7 +34,6 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ReportParamsetService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -77,6 +77,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamset
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset createOne(ReportParamset reportParamset,
 			Long[] contObjectIds) {
@@ -110,6 +111,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportParamset entity) {
 		checkNotNull(entity);
@@ -127,6 +129,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	protected ReportParamset updateOne(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
@@ -164,6 +167,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset,
 			Long[] contObjectIds) {
@@ -182,6 +186,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (checkCanUpdate(id)) {
@@ -199,7 +204,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> findReportParamsetList(long reportTemplateId) {
 		return reportParamsetRepository
 				.findByReportTemplateId(reportTemplateId);
@@ -209,7 +214,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> selectReportTypeParamsetList(
 			ReportTypeKey reportType, boolean isActive, long subscriberId) {
 		List<ReportParamset> commonReportParams = reportParamsetRepository
@@ -232,7 +237,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportParamset findOne(long reportParamsetId) {
 
 		ReportParamset result = reportParamsetRepository
@@ -252,6 +257,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkCanUpdate(long id) {
 		List<Long> ids = reportParamsetRepository.selectCommonParamsetIds();
 		return ids.indexOf(id) == -1;
@@ -262,6 +268,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamset moveToArchive(long reportParamsetId) {
 
 		if (!checkCanUpdate(reportParamsetId)) {
@@ -276,6 +283,8 @@ public class ReportParamsetService implements SecuredRoles {
 		rp.set_active(false);
 		rp.setActiveEndDate(new Date());
 		ReportParamset result = reportParamsetRepository.save(rp);
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
@@ -284,6 +293,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamset createByTemplate(long srcId,
 			ReportParamset reportParamset, Long[] contObjectIds,
 			Subscriber subscriber) {
@@ -312,6 +322,8 @@ public class ReportParamsetService implements SecuredRoles {
 			updateUnitToParamset(result.getId(), contObjectIds);
 		}
 
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
@@ -320,6 +332,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectParamsetContObjects(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectContObjects(reportParamsetId);
 	}
@@ -329,6 +342,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectParamsetContObjectIds(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
@@ -338,6 +352,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectParamsetAvailableContObjectUnits(
 			long reportParamsetId, long subscriberId) {
 		return reportParamsetUnitRepository.selectAvailableContObjects(
@@ -349,6 +364,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset,
 			long objectId) {
 		checkNotNull(reportParamset);
@@ -374,6 +390,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamset
 	 * @param objectIds
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	public void addUnitToParamset(ReportParamset reportParamset,
 			long[] objectIds) {
 		checkNotNull(reportParamset);
@@ -391,6 +408,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamsetUnit addUnitToParamset(long reportParamsetId,
 			Long objectId) {
 		ReportParamset rp = findOne(reportParamsetId);
@@ -402,6 +420,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteUnitFromParamset(final long reportParamsetId,
 			final long contObjectId) {
 
@@ -435,6 +454,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteUnitFromParamset(long reportParamsetId,
 			long[] contObjectIds) {
 		checkNotNull(contObjectIds);
@@ -449,6 +469,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param objectId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkReportParamsetUnitObject(long reportParamsetId,
 			long objectId) {
 		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId,
@@ -462,6 +483,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Deprecated
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void copyReportParamsetUnit222(long srcReportParamsetId,
 			long dstReportParamsetId) {
 
@@ -490,6 +512,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamset createReportParamsetMaster(long reportTemplateId,
 			String reportParamsetName, ReportPeriodKey reportPeriod,
 			ReportOutputFileType reportOutputFileType, long subscriberId) {
@@ -514,6 +537,8 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset result = createOne(reportParamset);
 
+		result.getParamSpecialList().size();
+		
 		return result;
 	}
 
@@ -523,7 +548,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param activeDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> selectReportParamset(long reportTemplateId,
 			DateTime activeDate) {
 		return reportParamsetRepository.selectReportParamset(reportTemplateId,
@@ -536,7 +561,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param activeDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> selectReportParamset(long reportTemplateId,
 			boolean isActive) {
 		return reportParamsetRepository.selectReportParamset(reportTemplateId,
@@ -548,6 +573,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	public void updateUnitToParamset(final long reportParamsetId,
 			final Long[] objectIds) {
 
@@ -572,18 +598,29 @@ public class ReportParamsetService implements SecuredRoles {
 
 	}
 
-	@Transactional(readOnly = true)
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
 
+	/**
+	 * 
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void setupRequiredPassed() {
 		setupRequiredPassed(null);
 	}
 
 	/**
 	 * 
+	 * @param reportParamsetId
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void setupRequiredPassed(Long reportParamsetId) {
 
 		Iterable<ReportParamset> allParamsets = reportParamsetId == null ? reportParamsetRepository

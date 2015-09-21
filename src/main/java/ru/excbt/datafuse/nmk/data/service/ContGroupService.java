@@ -15,6 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContGroup;
 import ru.excbt.datafuse.nmk.data.model.ContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -23,7 +24,6 @@ import ru.excbt.datafuse.nmk.data.repository.ContGroupRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ContGroupService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -40,6 +40,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContGroup createOne(ContGroup entity, Long[] contObjectIds) {
 		checkNotNull(entity);
@@ -57,6 +58,7 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ContGroup entity) {
 		checkNotNull(entity);
@@ -68,6 +70,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param ContGroup
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContGroup updateOne(ContGroup entity) {
 		checkNotNull(entity);
@@ -83,6 +86,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contGroup
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContGroup updateOne(ContGroup contGroup, Long[] contObjectIds) {
 		ContGroup result = updateOne(contGroup);
@@ -98,6 +102,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	public void updateObjectsToGroup(final long contGroupId,
 			final Long[] objectIds) {
 
@@ -125,6 +130,8 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)		
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
 	public void deleteObjectsFromGroup(final long contGroupId,
 			final long contObjectId) {
 
@@ -159,6 +166,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param objectId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)		
 	public boolean checkContGroupObject(long contGroupId, long objectId) {
 		return contGroupItemRepository.selectItemIds(contGroupId, objectId)
 				.size() > 0;
@@ -169,6 +177,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)		
 	public ContGroupItem addObjectToGroup(ContGroup contGroup, long objectId) {
 		checkNotNull(contGroup);
 		checkArgument(!contGroup.isNew());
@@ -193,6 +202,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)		
 	public ContGroupItem addObjectToGroup(long contGroupId, Long objectId) {
 		ContGroup cg = findOne(contGroupId);
 		checkNotNull(cg);
@@ -203,6 +213,7 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long contGroupId) {
 		if (contGroupRepository.exists(contGroupId)) {
@@ -223,7 +234,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contGroupId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContGroup findOne(long contGroupId) {
 		ContGroup result = contGroupRepository.findOne(contGroupId);
 		return result;
@@ -234,7 +245,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contGroupId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectContGroupObjects(long contGroupId) {
 		return contGroupItemRepository.selectContGroupObjects(contGroupId);
 	}
@@ -245,7 +256,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param SubscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectAvailableContGroupObjects(long contGroupId,
 			long subscriberId) {
 		return contGroupItemRepository.selectAvailableContGroupObjects(
@@ -257,7 +268,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param SubscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContGroup> selectSubscriberGroups(long subscriberId) {
 		return contGroupRepository.findBySubscriberId(subscriberId);
 	}

@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.SystemParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SystemParamRepository;
 
 @Service
-@Transactional
 public class SystemParamService {
 
 	private final static String PARAM_NOT_FOUND_MSG = "System Param with keyname(%s) not found";
@@ -19,7 +19,12 @@ public class SystemParamService {
 	@Autowired
 	private SystemParamRepository systemParamRepository;
 
-	@Transactional(readOnly = true)
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public String getParamValueAsString(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {
@@ -34,7 +39,7 @@ public class SystemParamService {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean getParamValueAsBoolean(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {

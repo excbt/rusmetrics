@@ -12,18 +12,23 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryParamRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class UDirectoryParamService implements SecuredRoles {
 
 	@Autowired
 	private UDirectoryParamRepository repository;
 	
-	@Transactional
+	/**
+	 * 
+	 * @param arg
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectoryParam save(UDirectoryParam arg) {
 		checkNotNull(arg);
@@ -48,13 +53,21 @@ public class UDirectoryParamService implements SecuredRoles {
 		return repository.save(recordToSave);
 	}
 
-	@Transactional
+	/**
+	 * 
+	 * @param arg
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(UDirectoryParam arg) {
 		repository.delete(arg);
 	}
 
-	@Transactional
+	/**
+	 * 
+	 * @param id
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(long id) {
 		if (!repository.exists(id)) {
@@ -63,7 +76,12 @@ public class UDirectoryParamService implements SecuredRoles {
 		repository.delete(id);
 	}
 	
-	@Transactional(readOnly = true)
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public UDirectoryParam findOne(long id) {
 		UDirectoryParam result = repository.findOne(id);
 		if (result != null) {
@@ -73,7 +91,12 @@ public class UDirectoryParamService implements SecuredRoles {
 		return result;
 	}
 	
-	@Transactional(readOnly = true)
+	/**
+	 * 
+	 * @param directoryId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<UDirectoryParam> selectDirectoryParams (long directoryId) {
 		return repository.selectDirectoryParams(directoryId);
 	}
