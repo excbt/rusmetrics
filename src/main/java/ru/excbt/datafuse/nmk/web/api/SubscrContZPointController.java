@@ -17,10 +17,11 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointController extends WebApiController {
+public class SubscrContZPointController extends SubscrApiController {
 
 	@Autowired
 	private SubscriberService subscrUserService;
@@ -81,7 +82,8 @@ public class SubscrContZPointController extends WebApiController {
 			@PathVariable("contZPointId") long contZPointId,
 			@RequestBody ContZPoint contZPoint) {
 
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService
+				.findContZPoint(contZPointId);
 
 		if (currentContZPoint == null
 				|| currentContZPoint.getContObject().getId() != contObjectId) {
@@ -114,13 +116,28 @@ public class SubscrContZPointController extends WebApiController {
 	public ResponseEntity<?> getContObjectZPoint(
 			@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId) {
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService
+				.findContZPoint(contZPointId);
 
 		if (currentContZPoint.getContObject().getId() != contObjectId) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		return ResponseEntity.ok(currentContZPoint);
+	}
+
+	
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoints() {
+
+		List<ContZPoint> contZPoints = subscrUserService
+				.selectSubscriberContZPoints(getSubscriberId());
+
+		return ResponseEntity.ok(contZPoints);
 	}
 
 }

@@ -35,7 +35,7 @@ public class SubscriberService {
 	@Autowired
 	private ContEventRepository contEventRepository;
 
-	@PersistenceContext (unitName="nmk-p")
+	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
 
 	/**
@@ -124,7 +124,7 @@ public class SubscriberService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date getSubscriberCurrentTime(Long subscriberId) {
 		Object dbResult = em
 				.createNativeQuery("SELECT get_subscriber_current_time(?1);")
@@ -133,6 +133,18 @@ public class SubscriberService {
 			return null;
 		}
 		return (Date) dbResult;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPoint> selectSubscriberContZPoints(long subscriberId) {
+		List<ContZPoint> result = subscriberRepository
+				.selectContZPoints(subscriberId);
+		return result;
 	}
 
 }

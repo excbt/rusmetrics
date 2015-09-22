@@ -48,6 +48,7 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	@JoinTable(name = "cont_device_object", //
 	joinColumns = @JoinColumn(name = "device_object_id", updatable = false, insertable = false), //
 	inverseJoinColumns = @JoinColumn(name = "cont_object_id", updatable = false, insertable = false))
+	@JsonIgnore
 	private ContObject contObject;
 
 	@Version

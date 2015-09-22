@@ -61,6 +61,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+	@JsonIgnore
 	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version
