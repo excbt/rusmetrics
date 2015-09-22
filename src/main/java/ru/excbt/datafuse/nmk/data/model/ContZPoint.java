@@ -18,15 +18,17 @@ import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "cont_zpoint")
-public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject {
+public class ContZPoint extends AbstractAuditableModel implements
+		ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -47,7 +49,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@Column(name = "cont_service_type")
 	private String contServiceTypeKeyname;
-	
+
 	@Column(name = "custom_service_name")
 	private String customServiceName;
 
@@ -86,14 +88,17 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "ex_system")
 	@JsonIgnore
 	private String exSystemKeyname;
-	
+
 	@Column(name = "ex_code")
 	@JsonIgnore
 	private String exCode;
-	
+
 	@Column(name = "ts_number")
 	private Integer tsNumber;
-	
+
+	@Column(name = "deleted")
+	private int deleted;
+
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -226,6 +231,16 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public void setTsNumber(Integer tsNumber) {
 		this.tsNumber = tsNumber;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

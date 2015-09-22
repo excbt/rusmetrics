@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
 @Service
@@ -38,9 +39,8 @@ public class ContEventTypeService {
 		List<ContEventType> result = contEventTypeRepository
 				.selectBaseEventTypes(Boolean.TRUE);
 
-		return result.stream()
-				.filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode()))
-				.collect(Collectors.toList());
+		return ObjectFilters.devModeFilter(result.stream()).collect(
+				Collectors.toList());
 	}
 
 	/**

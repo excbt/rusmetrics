@@ -66,6 +66,18 @@ public class Subscriber extends AbstractAuditableModel {
 	@Version
 	private int version;
 
+
+	@Column(name = "is_rma")
+	private Boolean isRma;
+
+	@Column(name = "rma_subscriber_id")
+	private Long rmaSubscriberId;
+
+	
+	@Column(name = "ghost_subscriber_id")
+	private Long ghostSubscriberId;
+	
+	
 	public String getInfo() {
 		return info;
 	}
@@ -144,6 +156,30 @@ public class Subscriber extends AbstractAuditableModel {
 
 	public void setSubscriberUUID(UUID subscriberUUID) {
 		this.subscriberUUID = subscriberUUID;
+	}
+
+	public Boolean getIsRma() {
+		return isRma;
+	}
+
+	public void setIsRma(Boolean isRma) {
+		this.isRma = isRma;
+	}
+
+	public Long getRmaSubscriberId() {
+		return rmaSubscriberId;
+	}
+
+	public void setRmaSubscriberId(Long rmaSubscriberId) {
+		this.rmaSubscriberId = rmaSubscriberId;
+	}
+
+	public Long getGhostSubscriberId() {
+		return ghostSubscriberId;
+	}
+
+	public void setGhostSubscriberId(Long ghostSubscriberId) {
+		this.ghostSubscriberId = ghostSubscriberId;
 	}
 
 }

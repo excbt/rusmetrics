@@ -14,10 +14,10 @@ import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { PropertyConfig.class, JpaConfigLocal.class,
 		JpaRawConfigLocal.class, LdapConfig.class })
-public class JpaConfigTest extends AbstractJpaConfigTest {
+public class ManualJpaConfigTest extends AbstractJpaConfigTest {
 
-	private final static long TEST_AUDIT_USER = 1;
-	public static final long DEV_SUBSCR_ORG_ID = 728;
+	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1
+	public static final long SUBSCR_ORG_ID = 64166467; // РМА-EXCBT
 
 	@Test
 	public void entityManagerOK() {
@@ -26,7 +26,7 @@ public class JpaConfigTest extends AbstractJpaConfigTest {
 
 	@Before
 	public void wireUpAuditor() {
-		setupAuditor(TEST_AUDIT_USER, DEV_SUBSCR_ORG_ID);
+		setupAuditor(SUBSCR_USER_ID, SUBSCR_ORG_ID);
 	}
 
 }
