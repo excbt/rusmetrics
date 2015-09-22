@@ -372,7 +372,7 @@ console.log("Objects directive.");
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
                                 zpoint.customServiceName = zPointsByObject[i].customServiceName;
-                                zpoint.zpointName = zPointsByObject[i].customServiceName || zPointsByObject[i].contServiceType.caption;
+                                zpoint.zpointName = zPointsByObject[i].contServiceType.caption || zPointsByObject[i].customServiceName;
                                 if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso!=null)){
                                     zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
                                 }else{
