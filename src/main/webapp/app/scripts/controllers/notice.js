@@ -210,6 +210,7 @@ console.log("initCtrl");
             };
             
             oneNotice.contObjectId = el.contObjectId;
+            oneNotice.zpointId = el.contEvent.contZPointId;
 
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
@@ -271,7 +272,7 @@ console.log("initCtrl");
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-console.log(loca);        
+//console.log(loca);        
         if ((angular.isDefined(loca))){
             $scope.startDate = loca.fromDate;
             $scope.endDate = loca.toDate;  
@@ -279,14 +280,14 @@ console.log(loca);
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-console.log("****************** Запрос *****************");
-console.log(url);        
-console.log($scope.startDate);
-console.log($scope.endDate);        
-console.log($scope.selectedObjects); 
-console.log($scope.selectedNoticeTypes);  
-console.log($scope.isNew);    
-console.log("88888888888888888888 the end ***********************");        
+//console.log("****************** Запрос *****************");
+//console.log(url);        
+//console.log($scope.startDate);
+//console.log($scope.endDate);        
+//console.log($scope.selectedObjects); 
+//console.log($scope.selectedNoticeTypes);  
+//console.log($scope.isNew);    
+//console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
