@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
@@ -33,5 +34,10 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 			+ "WHERE s.id = :id AND co.id = :contObjectId")
 	public List<Long> selectContObjectId(@Param("id") long subscriberId,
 			@Param("contObjectId") long contObjectId);
+
+	@Query("SELECT zp FROM ContZPoint zp WHERE zp.contObjectId IN "
+			+ " (SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co "
+			+ " WHERE s.id = :subscriberId )")
+	public List<ContZPoint> selectContZPoints(@Param("subscriberId") long subscriberId);
 
 }

@@ -77,4 +77,14 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 		testJsonUpdate(url, contZPoint);
 	}
+	
+	
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testContZPoints() throws Exception {
+		testJsonGet(apiSubscrUrl("/contObjects/zpoints"));
+	} 
 }
