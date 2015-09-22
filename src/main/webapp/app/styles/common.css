@@ -3,11 +3,15 @@
  */
 
 /*html,body {overflow-y:hidden}*/
-
+/* ******************************* 
+ * Форматирование карт
+ *********************************
+ */
 .leaflet-popup-content {
 /*    width: auto;*/
 }
 
+/*
 .nmc-leaflet-popup-content-wrapper-compare {
     margin-left: -200px !important;
 }
@@ -15,14 +19,18 @@
 .nmc-leaflet-popup-content-wrapper-compare > .leaflet-popup-content{
     width: 500px !important;
 }
+*/
 
+/*    Переопределяем lefleat классы для всплывающего сообщения нужными значениями*/
 .leaflet-popup-content-wrapper {
-    margin-left: -200px !important;
+    margin-left: -200px !important;/*задаем отступ слева, чтобы центр попап сообщения находился над маркером*/
 }
 
 .leaflet-popup-content{
-    width: 550px !important;
+    width: 550px !important;/* Увеличиваем ширину всплывающего окна, чтобы влезло наше содержимое*/
 }
+
+
 
 body{
 /*    min-width: 1200px !important;*/
@@ -39,7 +47,8 @@ body{
     color: #FFFFFF;
 /*    height: 60px;*/
     border: none;
-    min-width: 1500px;
+    min-width: 1361px;
+    position: absolute;
 }
 
 	/* Брэнд ака Марка - надпись в левом верхнем углу*/
@@ -52,8 +61,17 @@ body{
 }
 
 /*  Текст по центру шапки портала*/
+
+@media (min-width: 1600px){
+    .nmc-main-header-title {
+        padding-left: 10em;
+        color: #fff !important;
+        font: bold 190% arial;
+    }
+}
+
 .nmc-main-header-title {
-    padding-left: 10em;
+/*    padding-left: 10em;*/
     color: #fff !important;
     font: bold 190% arial;
 }
@@ -61,6 +79,7 @@ body{
 .nmc-main-header-menu{
 
 	padding-top: 5px;
+    margin-right: 0;
 	/*background-color: yellow;
 */
 }
@@ -133,7 +152,7 @@ body{
     /* Negative indent footer by it's height */
     margin: 0 auto -60px;
     /* Pad bottom by footer height */
-    padding: 0 0 60px;
+/*    padding: 0 0 60px;*/
 }
 
 .wrap > .container-fluid {
@@ -153,7 +172,7 @@ body{
 .nmc-main-workspace {
     margin-left: 10pt;
     width: 87%;
-	min-height: 900px;
+	min-height: 800px;
     border: none;
     -webkit-box-shadow: 5px 5px 5px 0px #646263;
 /*    box-shadow: none;*/
@@ -177,7 +196,7 @@ body{
 /*    padding-top: 10px;*/
     
 /*    white-space: nowrap; /* Запрещаем перенос строк */
-    overflow: auto; /*Обрезаем все, что не вмещается*/
+    overflow: hidden; /*Обрезаем все, что не вмещается*/
 }
 
 /* главная область в распахнутом состоянии - при минимизации левого меню*/
@@ -488,6 +507,10 @@ td.nmc-td-for-buttons{
     width: 1% !important;
 }
 */
+    /*  Стиль для колонки с числовой информацией по уведомлениям на странице Монитора  */
+.nmc-td-notices-counts{
+    min-width: 97px;
+}
 
     /* Таблица в основной рабочей области */
 .nmc-main-table {
@@ -668,33 +691,81 @@ tr.nmc-main-table-header > th {
 .nmc-div-filter-date-interval{
     width: 20%;
     padding: 0 10px 0 0;
+    min-width: 231px;
 }
 
     /* Стиль для дива, содержащего фильтр по объектам*/
 .nmc-div-filter-object{
     width: 11%;
     padding: 0 10px 0 0;
+    min-width: 150px;
 }
 
     /* Стиль для дива, содержащего фильтр по типам*/
 .nmc-div-filter-type{
     width: 10%;
     padding: 0 10px 0 5px;
+    min-width: 125px;
 }
 
     /* Стиль для дива, содержащего фильтр новые/ все уведомления*/
 .nmc-div-filter-kind{
     width: 10%;
+    min-width: 135px;
 }
     /* Стиль для дива, содержащего кнопку сброса всех фильтров*/
 .nmc-div-filter-remove{
     width: 10%;
+    min-width: 130px;
 }
     /*Стиль дива с кнопкой Обновить    */
 .nmc-div-refresh{
     width: 40px;
 }
- 
+
+/*
+.nmc-div-page-legend{
+    min-width: 348px;
+    float: right;
+}
+*/
+
+/* Customize legend */
+/*@media (min-width: 1390px){*/
+@media (min-width: 992px){
+  .nmc-div-page-legend{
+      min-width: 348px;
+      float: right;
+/*      background-color: red;*/
+  }
+}
+
+/*
+@media (min-width: 992px) and (max-width: 1389px){
+  .nmc-div-page-legend{
+      min-width: 348px;
+      float: right;
+      background-color: aqua;
+      position: fixed;
+      right: 0;
+      top: 200px;
+  }
+}
+*/
+
+/* Строка с фильтрами на странице Уведомления*/
+.nmc-filter-row{
+    min-width: 1160px;    
+}
+
+/*
+@media (min-width: 992px) and (max-width: 1389px){
+  .nmc-filter-row{
+      height: 51px;
+  }
+}
+*/
+
 /* ввод строки */
 .nmc-text-input-form {
     font-size: 12px;
@@ -1167,13 +1238,14 @@ tr.nmc-main-table-header > th {
 ********************************************************/
 /* Карта монитора - на странице увеодомлений*/
 .nmc-map-monitor{
-    height: 865px;
+/*    height: 865px;*/
+    height: 770px;
     width: 100%;
 }
 
 /* Карта потребления - на странице объектов*/
 .nmc-map-objects{
-    height: 865px;
+    height: 770px;
     width: 100%;
 }
 /* Настройки для попапа маркера города на карте потребления*/
@@ -1495,6 +1567,11 @@ tr.nmc-main-table-header > th {
 /* Стиль для подсветки позитивных уведомлений*/
 .nmc-positive-notice{
     color: green;
+}
+
+/*  Стиль изменяет курсор при наведении на уведомление мыши - используется на стр. Уведомления*/
+.nmc-link-notice-detail{
+    cursor: pointer;
 }
   
 

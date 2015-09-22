@@ -4,16 +4,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventTypeService {
 
 	@Autowired
@@ -35,7 +37,10 @@ public class ContEventTypeService {
 	public List<ContEventType> selectBaseContEventTypes() {
 		List<ContEventType> result = contEventTypeRepository
 				.selectBaseEventTypes(Boolean.TRUE);
-		return result;
+
+		return result.stream()
+				.filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode()))
+				.collect(Collectors.toList());
 	}
 
 	/**

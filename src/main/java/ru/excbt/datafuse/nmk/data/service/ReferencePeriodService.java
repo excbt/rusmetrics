@@ -13,12 +13,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.repository.ReferencePeriodRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ReferencePeriodService implements SecuredRoles {
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
@@ -31,7 +31,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReferencePeriod> findReferencePeriod(long subscriberId,
 			long contZPointId) {
 		return referencePeriodRepository.findBySubscriberIdAndContZPointId(
@@ -43,7 +43,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReferencePeriod> selectLastReferencePeriod(long subscriberId,
 			long contZPointId) {
 		return referencePeriodRepository.selectLastReferencePeriod(
@@ -54,7 +54,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReferencePeriod findOne(long referencePeriodId) {
 		return referencePeriodRepository.findOne(referencePeriodId);
 	}
@@ -64,6 +64,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReferencePeriod createOne(ReferencePeriod referencePeriod) {
 
 		checkNotNull(referencePeriod);
@@ -97,6 +98,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReferencePeriod updateOne(ReferencePeriod referencePeriod) {
 
 		checkNotNull(referencePeriod);
@@ -123,6 +125,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(ReferencePeriod referencePeriod) {
 
 		checkNotNull(referencePeriod);
@@ -137,6 +140,7 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @param referencePeriod
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(long referencePeriodId) {
 		if (referencePeriodRepository.exists(referencePeriodId)) {
 			referencePeriodRepository.delete(referencePeriodId);

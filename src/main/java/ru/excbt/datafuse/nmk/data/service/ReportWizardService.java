@@ -19,7 +19,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -92,6 +94,8 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportColumnSettings
 	 * @return
 	 */
+	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)		
 	public ColumnElement[] makeColumnElement(
 			ReportColumnSettings reportColumnSettings) {
 		checkNotNull(reportColumnSettings);
@@ -122,6 +126,7 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)		
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
 	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
 			ReportColumnSettings reportColumnSettings, Subscriber subscriber) {

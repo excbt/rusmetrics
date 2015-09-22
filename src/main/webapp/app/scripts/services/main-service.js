@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.service('mainSvc', function(){
+.service('mainSvc', function($cookies){
     //object map
     var objectMapSettings = {};
     objectMapSettings.zoom = null;
@@ -45,6 +45,52 @@ angular.module('portalNMC')
         return false;
     };
     
+    //date range settings
+    var dateRangeOptsRu = {
+        locale : {
+            applyClass : 'btn-green',
+            applyLabel : "Применить",
+            fromLabel : "с",
+            toLabel : "по",
+            cancelLabel : 'Отмена',
+            customRangeLabel : 'Период',
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        ranges : {
+            'Текущий день' : [ moment().startOf('day'),
+                    moment().endOf('day') ],
+            'Посл 7 дней' : [
+                    moment().subtract(6, 'days').startOf('day'),
+                    moment().endOf('day') ],
+            'Посл 30 дней' : [
+                    moment().subtract(29, 'days').startOf('day'),
+                    moment().endOf('day') ]
+        },
+        startDate : moment($cookies.fromDate) || moment().subtract(6, 'days').startOf('day'),
+        endDate : moment($cookies.toDate) || moment().endOf('day'),
+
+        format : 'DD.MM.YYYY'
+        ,separator: " по "
+    };
+    
+    var dateRangeMonitorOptsRu = dateRangeOptsRu;
+    dateRangeMonitorOptsRu.startDate = moment().subtract(6, 'days').startOf('day');
+    dateRangeMonitorOptsRu.endDate = moment().endOf('day');
+    dateRangeMonitorOptsRu.maxDate = moment().endOf('day');
+    
+    var getDateRangeOptions = function(param){
+        var result = null;
+        switch (param){
+            case "ru": result=dateRangeOptsRu;break;
+            case "monitor-ru": result=dateRangeMonitorOptsRu;break;
+        };
+        return result;
+    };
+    
     //TODO: 
     //get system user info
     
@@ -52,6 +98,7 @@ angular.module('portalNMC')
         checkStrForDate,
         getMonitorMapSettings,
         getObjectMapSettings,
+        getDateRangeOptions,
         setMonitorMapSettings,
         setObjectMapSettings,
         strDateToUTC

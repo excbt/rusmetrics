@@ -14,6 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
@@ -21,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class UDirectoryService implements SecuredRoles {
 
 	
@@ -39,7 +39,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public UDirectory findOne(final long id) {
 		if (!checkAvailableDirectory(id)) {
 			return null;
@@ -56,7 +56,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<UDirectory> findAll() {
 		return directoryRepository.selectBySubscriber(currentSubscrRoleService
 				.getSubscriberId());
@@ -66,7 +66,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * 
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectAvailableDirectoryIds() {
 		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		List<Long> directoryIds = directoryRepository
@@ -79,7 +79,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * @param directoryId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkAvailableDirectory(long directoryId) {
 		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
 		List<Long> res = directoryRepository.selectAvailableId(subscrOrgId,
@@ -92,7 +92,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectory save(final UDirectory entity) {
 		checkNotNull(entity);
@@ -134,7 +134,7 @@ public class UDirectoryService implements SecuredRoles {
 	 * 
 	 * @param directoryId
 	 */
-	@Transactional
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(final long directoryId) {
 		long subscrOrgId = currentSubscrRoleService.getSubscriberId();

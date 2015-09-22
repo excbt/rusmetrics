@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
@@ -25,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorRepository;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventMonitorService {
 
 	private static final Logger logger = LoggerFactory

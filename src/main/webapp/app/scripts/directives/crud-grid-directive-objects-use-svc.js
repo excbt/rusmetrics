@@ -42,11 +42,11 @@ console.log("Objects directive.");
 //                $scope.monitorSettings.noGreenObjectsFlag = false;
                 $scope.objectCtrlSettings.isCtrlEnd =false;
                 $scope.objectCtrlSettings.allSelected = false;
-                $scope.objectCtrlSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
+                $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
                 $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
                 $scope.objectCtrlSettings.objectTopOnPage =0;
-                $scope.objectCtrlSettings.objectBottomOnPage =50;
+                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
@@ -54,6 +54,10 @@ console.log("Objects directive.");
                 //flag on/off extended user interface
                 $scope.objectCtrlSettings.extendedInterfaceFlag = false;
                 
+                //server time zone at Hours
+                $scope.objectCtrlSettings.serverTimeZone = 3;
+                //date format for user
+                $scope.objectCtrlSettings.dateFormat = "DD.MM.YYYY";
                 
                 $scope.object = {};
                 $scope.objects = [];
@@ -295,14 +299,15 @@ console.log("Objects directive.");
 			    };
                 
                 $scope.selectedObject = function(objId){
-                    var curObject = null;
-                    $scope.objects.some(function(element){
-                        if (element.id === objId){
-                            curObject = angular.copy(element);
-                            return true;
-                        }
-                    });
-                    $scope.currentObject = curObject;
+//                    var curObject = null;
+//                    $scope.objects.some(function(element){
+//                        if (element.id === objId){
+//                            curObject = angular.copy(element);
+//                            return true;
+//                        }
+//                    });
+//                    $scope.currentObject = curObject;
+                    $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){
@@ -320,7 +325,7 @@ console.log("Objects directive.");
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
-                    var curObject = findObjectById(objId);//null;
+                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;
 //                    $scope.objects.some(function(element){
 //                        if (element.id === objId){
 //                            curObject = element;
@@ -508,6 +513,20 @@ console.log("Objects directive.");
                     $compile(trObjZp)($scope);                
                 }; 
                 
+                $scope.dateFormat = function(millisec){
+                    var result ="";
+                    var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone*3600.0*1000.0);
+                    var tmpDate = (new Date(millisec+serverTimeZoneDifferent));
+            //console.log(tmpDate);        
+            //console.log(tmpDate.getUTCFullYear());   
+            //console.log(tmpDate.getUTCMonth());
+            //console.log(tmpDate.getUTCDate());
+            //console.log(tmpDate.getUTCHours());
+            //console.log(tmpDate.getUTCMinutes());        
+                    result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
+                    return result;//
+                };
+                
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
                 function getRefRangeByObjectAndZpoint(object, zpoint){
 //                    var url = $scope.urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod'; 
@@ -515,10 +534,13 @@ console.log("Objects directive.");
                     objectSvc.getRefRangeByObjectAndZpoint(object, zpoint)
                     .success(function(data){
                         if(data[0] != null){
-                            var beginDate = new Date(data[0].periodBeginDate);
-                            var endDate =  new Date(data[0].periodEndDate);
-console.log(data[0]);                                    
-                            zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
+//                            var beginDate = new Date(data[0].periodBeginDate);
+//                            var endDate =  new Date(data[0].periodEndDate);
+                            var beginDate = $scope.dateFormat(data[0].periodBeginDate);
+                            var endDate =  $scope.dateFormat(data[0].periodEndDate);
+//console.log(data[0]);                                    
+//                            zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
+                            zpoint.zpointRefRange = "c "+beginDate+" по "+endDate;
                             zpoint.zpointRefRangeAuto = data[0].isAuto?"auto":"manual";
                         }
                         else {
@@ -537,7 +559,7 @@ console.log(data[0]);
                     //Получаем столбец с эталонным интервалом для заданной точки учета
                     var element = document.getElementById("zpointRefRange"+zpoint.id);
                     //Записываем эталонный интервал в таблицу
-console.log(zpoint);                    
+//console.log(zpoint);                    
                     switch (zpoint.zpointRefRangeAuto){
                         case "auto":element.innerHTML = '<div class="progress progress-striped noMargin">'+
                                             '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
@@ -594,7 +616,7 @@ console.log(zpoint);
 //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
 //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
                                       
-                    window.location.href("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
                 };
                 
                 $scope.setIndicatorsParams = function(objectId, zpointId){
@@ -687,11 +709,13 @@ console.log(zpoint);
 					.success(function(data){
 						// Проверяем, задан ли интервал
 						if(data[0] != null){
-console.log(data);                            
+//console.log(data);                            
 							$scope.refRange = data[0];
 							$scope.refRange.cont_zpoint_id = zpointId;
-							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
-							$scope.endDate =  new Date($scope.refRange.periodEndDate);
+//							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
+//							$scope.endDate =  new Date($scope.refRange.periodEndDate);
+                            $scope.beginDate = $scope.dateFormat($scope.refRange.periodBeginDate);
+							$scope.endDate =  $scope.dateFormat($scope.refRange.periodEndDate);
 //							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
 							// Проверяем, был ли интервал расчитан автоматически
 							if($scope.refRange.isAuto == false) {
@@ -721,18 +745,30 @@ console.log(data);
                 $scope.addRefRange = function (){
                 	var url = $scope.urlRefRange + '/' + $scope.currentObject.id + '/zpoints/' + $scope.zpointSettings.id + '/referencePeriod';
                 	$scope.refRange.id = '';
-                	$scope.refRange.periodBeginDate = $scope.beginDate.getTime();
-                	$scope.refRange.periodEndDate = $scope.endDate.getTime();
+//                	$scope.refRange.periodBeginDate = $scope.beginDate.getTime();
+//                	$scope.refRange.periodEndDate = $scope.endDate.getTime();
+                    //Приводим установленный период к UTC
+                    var startDate = (new Date(moment($scope.beginDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
+                    var UTCstdt = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()); 
+                    $scope.refRange.periodBeginDate = (!isNaN(UTCstdt)) ?(new Date(UTCstdt)).getTime() : null;
+                    
+                    var endDate = (new Date(moment($scope.endDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
+                    var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
+                    $scope.refRange.periodEndDate = (!isNaN(UTCenddt)) ?(new Date(UTCenddt)).getTime() : null;             
                 	$http.post(url, $scope.refRange)
 					.success(function(data){
 						$scope.editRefRangeOff();
 						$scope.refRange = data;
                         //прорисовываем эталонный интервал в таблице
                         var refRangeEl = document.getElementById("zpointRefRange"+$scope.currentZpoint.id);
-                        $scope.beginDate = new Date($scope.refRange.periodBeginDate);
-				        $scope.endDate =  new Date($scope.refRange.periodEndDate);                                 
+//                        $scope.beginDate = new Date($scope.refRange.periodBeginDate);
+//				        $scope.endDate =  new Date($scope.refRange.periodEndDate);                                 
+//                        
+//                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate.toLocaleDateString()+" по "+$scope.endDate.toLocaleDateString();
+                        $scope.beginDate =$scope.dateFormat($scope.refRange.periodBeginDate);
+				        $scope.endDate =  $scope.dateFormat($scope.refRange.periodEndDate);                                 
                         
-                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate.toLocaleDateString()+" по "+$scope.endDate.toLocaleDateString();
+                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate+" по "+$scope.endDate;
                         $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange.isAuto?"auto":"manual";
                         
                         viewRefRangeInTable($scope.currentZpoint);
@@ -821,6 +857,7 @@ console.log(data);
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
                 $scope.onTableLoad = function(){ 
+//console.log("Run onTableLoad");                    
                     if ($scope.objectCtrlSettings.isCtrlEnd === true){                    
                         var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
                         window.scrollTo(0, Math.round(pageHeight));
@@ -831,7 +868,7 @@ console.log(data);
                 
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){
-console.log("addMoreObjects. Run");
+//console.log("addMoreObjects. Run");
                     if (($scope.objects.length<=0)){
                         return;
                     };
@@ -852,6 +889,11 @@ console.log("addMoreObjects. Run");
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
                     };
                 };
+                
+                $("#divWithObjectTable").scroll(function(){                    
+                    $scope.addMoreObjects();
+                    $scope.$apply();
+                });
                 
                 
                 // Проверка пользователя - системный/ не системный
@@ -982,6 +1024,33 @@ console.log("addMoreObjects. Run");
                 $scope.invokeHelp = function(){
                     alert('This is SPRAVKA!!!111');
                 };
+                
+                //date picker
+                $scope.dateOptsParamsetRu ={
+                    locale : {
+                        daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+                        firstDay : 1,
+                        monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                                'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                                'Октябрь', 'Ноябрь', 'Декабрь' ]
+                    },
+                    singleDatePicker: true,
+                    format: "dd.mm.yy"
+                };
+                $(document).ready(function() {
+                    $('#inp_ref_range_start').datepicker({
+                      dateFormat: $scope.dateOptsParamsetRu.format,
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                    });
+                    $('#inp_ref_range_end').datepicker({
+                      dateFormat: $scope.dateOptsParamsetRu.format,
+                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                    });
+                });
                 
                 //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    

@@ -12,6 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
@@ -19,7 +20,6 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ContZPointSettingModeService implements SecuredRoles {
 
 	private final static boolean ZPOINT_SETTING_AUTO_INIT = true;
@@ -39,7 +39,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointSettingMode> findSettingByContZPointId(
 			long contZPointId) {
 
@@ -62,7 +62,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param settingMode
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointSettingMode> findSettingByContZPointId(
 			long contZPointId, String settingMode) {
 
@@ -84,7 +84,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param arg
 	 * @return
 	 */
-	@Transactional
+	@Transactional (value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPointSettingMode save(ContZPointSettingMode arg) {
 		checkNotNull(arg);
@@ -104,7 +104,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Transactional
+	@Transactional (value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	@Deprecated
 	private void delete(ContZPointSettingMode entity) {
@@ -116,7 +116,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Transactional
+	@Transactional (value = TxConst.TX_DEFAULT)
 	@Secured({ROLE_ZPOINT_ADMIN})
 	@Deprecated
 	private void delete(long id) {
@@ -128,7 +128,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param contZPointId
 	 */
-	@Transactional
+	@Transactional (value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void initContZPointSettingMode(long contZPointId) {
 
@@ -160,7 +160,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param contZPointSettingModeId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContZPointSettingMode findOne(long contZPointSettingModeId) {
 		return settingModeRepository.findOne(contZPointSettingModeId);
 	}

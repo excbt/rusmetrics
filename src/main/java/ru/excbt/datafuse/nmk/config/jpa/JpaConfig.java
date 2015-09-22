@@ -75,7 +75,7 @@ public class JpaConfig {
 	 * @param emf
 	 * @return
 	 */
-	@Bean
+	@Bean(name = "transactionManager")
 	public PlatformTransactionManager transactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory());

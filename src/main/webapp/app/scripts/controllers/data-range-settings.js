@@ -93,8 +93,11 @@ app
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
         
-        $location.search("fromDate",$rootScope.reportStart);
-        $location.search("toDate",$rootScope.reportEnd);
+        if ($location.path()!="/notices/monitor"){
+            $location.search("fromDate",$rootScope.reportStart);
+            $location.search("toDate",$rootScope.reportEnd);
+        };
+//console.log($location);        
 //console.log("data-range-settings");         
 //console.log($rootScope.reportStart); 
 //console.log($rootScope.reportEnd);         
@@ -221,7 +224,8 @@ app
         format : 'DD.MM.YYYY'
         ,separator: " по "
     };
-    $scope.$watch('monitorDates', function (newDates) {
+    
+    $scope.$watch('monitor123Dates', function (newDates) {
 //console.log("Date-range-settings monitorDates");        
         if ($location.path()!=="/notices/monitor"){
             return;

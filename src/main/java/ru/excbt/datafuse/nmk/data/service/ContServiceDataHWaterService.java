@@ -32,6 +32,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -46,7 +47,6 @@ import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
-@Transactional
 public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory
@@ -74,7 +74,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail) {
 		checkArgument(contZPointId > 0);
@@ -90,7 +90,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, DateTime beginDate, DateTime endDate) {
 		checkArgument(contZPointId > 0);
@@ -110,7 +110,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, LocalDateTime beginDate,
 			LocalDateTime endDate) {
@@ -131,7 +131,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, LocalDatePeriod datePeriod) {
 		checkArgument(contZPointId > 0);
@@ -151,7 +151,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, DateTime beginDate, DateTime endDate,
 			Pageable pageable) {
@@ -175,7 +175,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId,
 			TimeDetailKey timeDetail, LocalDatePeriod datePeriod,
 			Pageable pageable) {
@@ -195,7 +195,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataHWater selectLastData(long contZPointId) {
 		checkArgument(contZPointId > 0);
 		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
@@ -208,7 +208,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date selectLastDataDate(long contZPointId, Date fromDateTime) {
 		checkArgument(contZPointId > 0);
 
@@ -239,7 +239,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param fromDateTime
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date selectLastDataDate(long contZPointId) {
 		return selectLastDataDate(contZPointId, null);
 	}
@@ -249,7 +249,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date selectAnyDataDate(long contZPointId) {
 		checkArgument(contZPointId > 0);
 		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository
@@ -262,7 +262,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Boolean selectExistsAnyData(long contZPointId) {
 		checkArgument(contZPointId > 0);
 		List<Long> resultList = contServiceDataHWaterRepository
@@ -278,7 +278,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataHWaterTotals selectContZPointTotals(
 			long contZPointId, TimeDetailKey timeDetail,
 			LocalDateTime beginDate, LocalDateTime endDate) {
@@ -340,7 +340,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param localDateTime
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private ContServiceDataHWater selectLastAbsData(long contZPointId,
 			LocalDateTime localDateTime) {
 
@@ -362,7 +362,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param localDateTime
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataHWater selectLastAbsData(long contZPointId,
 			TimeDetailKey timeDetail, LocalDateTime localDateTime,
 			boolean isEndDate) {
@@ -411,7 +411,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(
 			long contZPointId, TimeDetailKey timeDetail, DateTime beginDate,
 			DateTime endDate) {
@@ -446,6 +446,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param contZPointId
 	 * @param inData
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public void insertManualLoadDataHWater(Long contZPointId,
 			List<ContServiceDataHWater> inData, File outFile) {
@@ -507,6 +508,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param outFile
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT)	
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public List<ContServiceDataHWater> deleteManualDataHWater(
 			Long contZPointId, LocalDatePeriod localDatePeriod, File outFile) {

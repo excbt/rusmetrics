@@ -1,7 +1,6 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc){
-      
-      
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc){
+         
 console.log("Monitor Controller.");      
     //object url
     var noticesUrl = "#/notices/list/";
@@ -10,6 +9,7 @@ console.log("Monitor Controller.");
     var monitorUrl = notificationsUrl+"/monitorColor";
     //objects array
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
+//console.log($scope.objects);      
 //console.log("Monitor ctrl. Objects are got."); 
 //var time = new Date();
 //console.log(time);        
@@ -18,8 +18,8 @@ console.log("Monitor Controller.");
 //console.log("====================== end $scope.objects=================");            
 
     //default date interval settings
-    $rootScope.monitorStart = $cookies.fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-    $rootScope.monitorEnd =  $cookies.toDate || moment().endOf('day').format('YYYY-MM-DD');    
+    $rootScope.monitorStart = $location.search().fromDate || monitorSvc.getMonitorSettings().fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+    $rootScope.monitorEnd =  $location.search().toDate || monitorSvc.getMonitorSettings().toDate || moment().endOf('day').format('YYYY-MM-DD');    
     
     //monitor settings
     $scope.monitorSettings = {};
@@ -30,21 +30,31 @@ console.log("Monitor Controller.");
     //flag: false - get all objectcs, true - get only  red, orange and yellow objects.
     $scope.monitorSettings.noGreenObjectsFlag = false;
     
-    $scope.monitorSettings.objectsPerScroll = 50;//the pie of the object array, which add to the page on window scrolling
+    $scope.monitorSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
     $scope.monitorSettings.objectsOnPage = $scope.monitorSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
     $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
     $scope.monitorSettings.objectTopOnPage =0;
-    $scope.monitorSettings.objectBottomOnPage =50;
+    $scope.monitorSettings.objectBottomOnPage =34;
       
     $scope.monitorSettings.isCtrlEnd = false;
+      
+    $scope.monitorSettings.dateRangeSettings = mainSvc.getDateRangeOptions("monitor-ru");
+    $scope.monitorSettings.monitorDates = {
+        startDate :  $rootScope.monitorStart,
+        endDate :  $rootScope.monitorEnd
+    }; 
+//console.log($scope.monitorSettings.monitorDates);      
 
 //      tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
 //                    $scope.objectsOnPage = tempArr;
     $scope.objectsOnPage = ($scope.objects.length===0)?[]:$scope.objects.slice(0, $scope.monitorSettings.objectsPerScroll);
                     $scope.objectsOnPage.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
                     });
       
     
@@ -73,94 +83,6 @@ console.log("Monitor Controller.");
             {"name":"typeEventCount", "header" : " ", "class":""},
             {"name":"typeName", "header" : "Типы уведомлений", "class":"col-md-10"}
             ];
-    
-    //get monitor events -alter way
-    $scope.getMonitorEventsByObjectAW = function(obj){
-//console.log("getMonitorEventsByObjectAW");        
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";
-        var imgObj = "#imgObj"+obj.contObject.id;          
-//        $(imgObj).qtip({
-//            content:{
-//                text: function(event, api){
-//                    $.ajax({url: url})
-//                        .done(function(data){
-//console.log(data);                        
-//                            api.set('content.text', data)
-//                        })
-//                        .fail(function(xhr, status, error){
-//console.log(error);                        
-//                            api.set('content.text', status+'; '+error)
-//                        })
-//                    return 'Загрузка ... ';
-//                }
-//            },
-//            position:{
-//                viewport: $(window)
-//            },
-//            style:{
-//                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//            }
-//        });
-    };
-    //get monitor events
-    $scope.getMonitorEventsByObject111 = function(obj){       
-//        var obj = findObjectById(objId);    
-        //if cur object = null => exit function
-//        if (obj == null){
-//            return;
-//        };
-        var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
-        $http.get(url)
-            .success(function(data){
-//console.log("success");
-            //if data is not array - exit
-                if (!data.hasOwnProperty('length')||(data.length == 0)){
-                    return;
-                };
-                //temp array
-                var tmpMessage = "";
-//                var tmpMessageEx = "";
-                //make the new array of the types wich formatted to display
-                data.forEach(function(element){
-                    var tmpEvent = "";
-//                    var tmpEventEx = "";
-//                    tmpType.id = element.contEventType.id;
-//                    tmpType.typeCategory = element.statusColor.toLowerCase();
-//                    tmpType.typeEventCount = element.totalCount;
-//                    tmpType.typeName = element.contEventType.name;
-                    var contEventTime = new Date(element.contEventTime);
-                    tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/><br/>";
-                    tmpMessage+=tmpEvent;
-                });
-//                tmpTypes.sort(function(a, b){
-//                    if (a.typeEventCount > b.typeEventCount){
-//                        return -1;
-//                    };
-//                    if (a.typeEventCount < b.typeEventCount){
-//                        return 1;
-//                    };
-//                    return 0;
-//                });
-                obj.monitorEvents = tmpMessage;
-                //Display message
-//                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
-//                imgObj.title = obj.monitorEvents;
-            
-//                var imgObj = "#imgObj"+obj.contObject.id;          
-//                $(imgObj).qtip({
-//                    content:{
-//                        text: obj.monitorEvents
-//                    },
-//                    style:{
-//                        classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-//                    }
-//                });         
-//                makeEventTypesByObjectTable(obj);
-            })
-            .error(function(e){
-                console.log(e);
-            });        
-    };
     
     function findObjectById(objId){
         var obj = null;
@@ -392,6 +314,7 @@ console.log("Monitor Controller.");
                         switch (event[column.name]){
                             case "red": title = "Критическая ситуация"; break;
                             case "orange": title = "Некритическая ситуация"; break;
+                            case "yellow": title = "Уведомление"; break;
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
@@ -466,19 +389,31 @@ console.log("Monitor Controller.");
 //        $scope.getObjects(objectUrl);
     };
     
-    //Watching for the change period 
-    $scope.$watch('monitorStart', function (newDates, oldDates) {
-console.log("monitorStart watch");  
+    //Watching for the change period  
+    $scope.$watch('monitorSettings.monitorDates', function (newDates, oldDates) {
+//console.log("monitorDates watch");  
 //console.log(newDates);        
 //console.log(oldDates);   
         if (oldDates===newDates){
             return;
         };
         $scope.monitorSettings.loadingFlag = true;
+        
+        $rootScope.monitorStart = moment(newDates.startDate).format('YYYY-MM-DD');
+        $rootScope.monitorEnd = moment(newDates.endDate).format('YYYY-MM-DD'); 
         monitorSvc.setMonitorSettings({
             fromDate:$rootScope.monitorStart,
             toDate:$rootScope.monitorEnd
         });
+//console.log($rootScope.monitorStart);        
+//console.log($rootScope.monitorEnd);         
+        $scope.monitorSettings.dateRangeSettings.startDate = moment($rootScope.monitorStart).startOf('day');
+        $scope.monitorSettings.dateRangeSettings.endDate = moment($rootScope.monitorEnd).endOf('day');
+        
+        $location.search("fromDate",$rootScope.monitorStart);
+        $location.search("toDate",$rootScope.monitorEnd);
+        //perform url address
+//        var $location
 //        monitorSvc.monitorSvcSettings.fromDate = $rootScope.monitorStart;
 //        monitorSvc.monitorSvcSettings.toDate = $rootScope.monitorEnd;
 //console.log("request");        
@@ -589,18 +524,30 @@ console.log("monitorStart watch");
         window.scrollTo(0,0);
         $scope.monitorSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
         $scope.monitorSettings.objectTopOnPage =0;
-        $scope.monitorSettings.objectBottomOnPage =50;
+        $scope.monitorSettings.objectBottomOnPage =34;
         var tempArr = $scope.objects.slice(0,$scope.monitorSettings.objectsPerScroll);
 //        makeObjectTable(tempArr, true);
         $scope.monitorSettings.loadingFlag = monitorSvc.getMonitorSettings().loadingFlag;//false;
         $scope.monitorSettings.noGreenObjectsFlag = monitorSvc.getMonitorSettings().noGreenObjectsFlag;
         $scope.monitorSettings.objectsOnPage=$scope.monitorSettings.objectsPerScroll;
         $scope.objectsOnPage = tempArr;
+//$scope.objectsOnPage = $scope.objectsOnPage.splice(0,4);
+//console.log($scope.objectsOnPage);        
         $scope.objectsOnPage.forEach(function(element){
-            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//            if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                 monitorSvc.getMonitorEventsByObject(element);
-            }
+//            }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//            };
         });
+        
+        //refresh qtip
+        var qtips = document.getElementsByClassName("qtip");
+        for (var index = 0; index<qtips.length; index++){
+            qtips[index].style.display = "none";
+        };
     });
     
 //    var interval;
@@ -633,9 +580,14 @@ console.log("monitorStart watch");
             //                        $scope.$apply();
                 var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,$scope.objects.length);
                 tempArr.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
+                    
                 });
                 Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                 $scope.monitorSettings.objectsOnPage+=$scope.objects.length;
@@ -783,9 +735,13 @@ console.log($(imgObj));
 //console.log(tempArr);                    
         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     tempArr.forEach(function(element){
-                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
+//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
                             monitorSvc.getMonitorEventsByObject(element);
-                        }
+//                        }else if((element.statusColor === "YELLOW")){
+//console.log(element);                
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+//                        };
                     });
         if(endIndex >= ($scope.objects.length)){
             $scope.monitorSettings.objectsOnPage = $scope.objects.length;
@@ -793,6 +749,12 @@ console.log($(imgObj));
             $scope.monitorSettings.objectsOnPage+=$scope.monitorSettings.objectsPerScroll;
         };
     };
+      
+    $("#divWithMonitorTable").scroll(function(){
+
+        $scope.addMoreObjectsForMonitor();
+        $scope.$apply();
+    });
     
         //chart
     $scope.runChart = function(objId){

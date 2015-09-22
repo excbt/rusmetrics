@@ -488,6 +488,7 @@ console.log($location.search());
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
         var tmpContObjectName = null;//indicatorSvc.getContObjectName();
+        var tmpTimeDetailType = null;
 //        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
 //            if (angular.isDefined($cookies.contZPoint)&&($cookies.contZPoint!=="null")){
 //                indicatorSvc.setZpointId($cookies.contZPoint);
@@ -531,10 +532,19 @@ console.log($location.search());
             };
         };
         
+        if (angular.isUndefined(tmpTimeDetailType)||(tmpTimeDetailType===null)){
+            if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType!=="null")){
+//                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
+                $scope.timeDetailType = pathParams.timeDetailType;
+            }else{
+                $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+            };
+        };
+        
         $scope.contZPoint = indicatorSvc.getZpointId();
         $scope.contZPointName = indicatorSvc.getZpointName() || "Не задано";
         $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";
+        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";     
         
         //clear cookies
 //console.log($cookies);        
@@ -605,17 +615,36 @@ console.log($location.search());
         });
          
         $scope.setScoreStyles = function(){
+//console.log("Run setScoreStyles");            
             //set styles for score/integrators
             var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
             var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
             var totalThHead = document.getElementById("totals_th_head"); 
-            $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+//console.log(indicatorThDataDate);            
+//console.log(angular.isDefined(indicatorThDataDate));
+//console.log(indicatorThDataDate.clientWidth);
+//console.log(angular.isDefined(indicatorThWorkTime.clientWidth));
+//console.log(indicatorThWorkTime.clientWidth);            
+            if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
+                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+            };
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
             $scope.intotalColumns.forEach(function(element){
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-                element.ngstyle =indicatorTh.clientWidth;
+                if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
+                    element.ngstyle =indicatorTh.clientWidth;
+                };
 
             });
+        };
+        
+                //when document ready - set styles for score table.
+//        $(document).ready(function() {
+//            $scope.setScoreStyles();
+//        });
+        
+        $scope.onTableLoad = function(){
+            $scope.setScoreStyles();
         };
         
         // get summary (score)
@@ -772,8 +801,9 @@ console.log($location.search());
     });        
         
     $scope.saveIndicatorsToFile = function(exForUrl){ 
-        var contZPoint = $cookies.contZPoint;
-        var contObject = $cookies.contObject;
+        
+        var contZPoint = $scope.contZPoint || $cookies.contZPoint;
+        var contObject = $scope.contObject || $cookies.contObject;
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
         var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv"+exForUrl+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
         window.open(url);
@@ -811,5 +841,6 @@ console.log($location.search());
         };
         return true;
     };
+        
                 
 }]);

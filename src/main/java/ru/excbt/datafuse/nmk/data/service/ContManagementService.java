@@ -13,6 +13,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -20,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.repository.ContManagementRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-@Transactional
 public class ContManagementService implements SecuredRoles {
 
 	@Autowired
@@ -44,9 +44,8 @@ public class ContManagementService implements SecuredRoles {
 	 * @param beginDate
 	 * @return
 	 */
-
+	@Transactional (value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	@Transactional
 	public ContManagement createManagement(long contObjectId,
 			long organizationId, final DateTime beginDate) {
 
@@ -95,7 +94,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContManagement> selectActiveManagement(long contObjectId) {
 		return contManagementRepository.selectActiveManagement(contObjectId);
 	}
@@ -106,7 +105,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContManagement> selectActiveManagement(
 			final ContObject contObject) {
 		checkNotNull(contObject);
@@ -120,7 +119,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContManagement> selectByOgranization(long organizationId) {
 		checkArgument(organizationId > 0);
 		;
@@ -132,7 +131,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(readOnly = true)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContManagement> selectContManagement(long contObjectId,
 			long organizationId) {
 		checkArgument(contObjectId > 0);

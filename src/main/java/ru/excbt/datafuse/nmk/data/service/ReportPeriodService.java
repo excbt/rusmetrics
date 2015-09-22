@@ -6,12 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 @Service
-@Transactional(readOnly = true)
 public class ReportPeriodService {
 
 	@Autowired
@@ -22,6 +22,7 @@ public class ReportPeriodService {
 	 * @param keyname
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
 	public ReportPeriod findByKeyname(String keyname) {
 		List<ReportPeriod> resultList = reportPeriodRepository
 				.findByKeynameIgnoreCase(keyname);
@@ -33,6 +34,7 @@ public class ReportPeriodService {
 	 * @param key
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportPeriod findByKeyname(ReportPeriodKey key) {
 		List<ReportPeriod> resultList = reportPeriodRepository
 				.findByKeynameIgnoreCase(key.name());

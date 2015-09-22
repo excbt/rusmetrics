@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', function($rootScope, $http, $interval, $cookies){
+    .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
 console.log("Monitor service. Run Monitor service.");        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -10,8 +10,8 @@ console.log("Monitor service. Run Monitor service.");
         var objectsMonitorSvc = [];
         var citiesMonitorSvc = [];
         //default date interval settings
-        $rootScope.monitorStart = $cookies.fromDate || moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-        $rootScope.monitorEnd = $cookies.toDate || moment().endOf('day').format('YYYY-MM-DD');    
+//        $rootScope.monitorStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+//        $rootScope.monitorEnd = moment().endOf('day').format('YYYY-MM-DD');    
 
         //monitor settings
         var monitorSvcSettings = {};
@@ -19,8 +19,8 @@ console.log("Monitor service. Run Monitor service.");
 //        monitorSvcSettings.createRoundDiagram = false;
         monitorSvcSettings.loadingFlag = true;
         monitorSvcSettings.noGreenObjectsFlag = false;
-        monitorSvcSettings.fromDate = $rootScope.monitorStart;
-        monitorSvcSettings.toDate = $rootScope.monitorEnd;
+        monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+        monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
         
         var getMonitorSettings = function(){
             return monitorSvcSettings;
@@ -67,18 +67,20 @@ console.log("MonitorSvc. Get cities and objects");
 //console.log(data);                
                     citiesMonitorSvc = data;                
                     objectsMonitorSvc = getObjectsFromCities(data);
-                
-//console.log(objectsMonitorSvc);            
+                   
                     //sort objects by name
-                    objectsMonitorSvc.sort(function(a, b){
-                        if (a.contObject.fullName>b.contObject.fullName){
-                            return 1;
-                        };
-                        if (a.contObject.fullName<b.contObject.fullName){
-                            return -1;
-                        };
-                        return 0;
-                    });  
+                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
+//                    objectsMonitorSvc.sort(function(a, b){
+//                        if (a.contObject.fullName>b.contObject.fullName){
+//                            return 1;
+//                        };
+//                        if (a.contObject.fullName<b.contObject.fullName){
+//                            return -1;
+//                        };
+//                        return 0;
+//                    }); 
+                
+//console.log(objectsMonitorSvc);                 
                     //get the list of the events, which set the object color
 //                    objectsMonitorSvc.forEach(function(element){
 //                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){
@@ -146,6 +148,7 @@ console.log("MonitorSvc. Get objects");
             
         //get monitor events
        var getMonitorEventsByObject = function(obj){ 
+//console.log(obj);           
 //console.log("MonitorSvc. getMonitorEventsByObject");           
     //        var obj = findObjectById(objId);    
             //if cur object = null => exit function
@@ -156,8 +159,13 @@ console.log("MonitorSvc. Get objects");
             $http.get(url)
                 .success(function(data){
     //console.log("success");
+//console.log(data);                
                 //if data is not array - exit
                     if (!data.hasOwnProperty('length')||(data.length == 0)){
+                        if (obj.statusColor==="YELLOW"){
+                            obj.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
+                        };
                         return;
                     };
                     //temp array
@@ -165,9 +173,14 @@ console.log("MonitorSvc. Get objects");
     //                var tmpMessageEx = "";
                     //make the new array of the types wich formatted to display
                     data.forEach(function(element){
+//console.log(element);                        
                         var tmpEvent = "";
                         var contEventTime = new Date(element.contEventTime);
-                        tmpEvent = contEventTime.toLocaleString()+", "+element.contEventType.name+"<br/><br/>";
+                        var pstyle = "";
+                        if(element.contEventLevelColorKey==="RED"){
+                            pstyle = "color: red;";
+                        };
+                        tmpEvent ="<p style='"+pstyle+"'>"+ contEventTime.toLocaleString()+", "+element.contEventType.name+"</p>";
                         tmpMessage+=tmpEvent;
                     });
     //                tmpTypes.sort(function(a, b){
@@ -179,8 +192,13 @@ console.log("MonitorSvc. Get objects");
     //                    };
     //                    return 0;
     //                });
-                    obj.monitorEvents = tmpMessage;
-                    obj.monitorEventsForMap = data;
+//console.log(tmpMessage);     
+                    if (obj.statusColor==="YELLOW"){
+                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
+                    }else if ((obj.statusColor==="RED")||(obj.statusColor==="ORANGE")){
+                        obj.monitorEvents = tmpMessage;
+                        obj.monitorEventsForMap = data;
+                    };
 //console.log(obj);                
                     $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
                     //Display message

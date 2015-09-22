@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjectsServiceTypeInfo;
@@ -32,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContObjectHWaterDeltaService {
 
 	private static final Logger logger = LoggerFactory
@@ -111,6 +112,15 @@ public class ContObjectHWaterDeltaService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param ldp
+	 * @param contServiceTypeKey
+	 * @param timeDetailKey
+	 * @param cityFiasUUID
+	 * @return
+	 */
 	public List<Object[]> selectRawContObjectHWaterDeltaAgr_ByCity(
 			Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey,

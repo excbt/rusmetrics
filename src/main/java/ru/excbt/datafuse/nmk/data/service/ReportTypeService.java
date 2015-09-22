@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
@@ -16,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ReportTypeService {
 
 	private static final Logger logger = LoggerFactory

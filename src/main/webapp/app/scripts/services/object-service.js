@@ -118,6 +118,32 @@ console.log("Object Service. Run.");
                 return 0;
             }); 
         };
+                 
+        function sortObjectsByConObjectFullName(array){
+            array.sort(function(a, b){
+                if (a.contObject.fullName>b.contObject.fullName){
+                    return 1;
+                };
+                if (a.contObject.fullName<b.contObject.fullName){
+                    return -1;
+                };
+                return 0;
+            }); 
+        };
+                 
+        function findObjectById(objId, objectArr){
+            var obj = null;
+            if (!angular.isArray(objectArr)){
+                return obj;
+            };
+            objectArr.some(function(element){
+                if (element.id === objId){
+                    obj = element;
+                    return true;
+                }
+            });        
+            return obj;
+        };
 
        var promise = getObjectsData();
 //       $interval(function(){
@@ -146,11 +172,13 @@ console.log("objectSvc:loaded");
             getRefRangeByObjectAndZpoint,
             getVzletSystemList,
             getZpointsDataByObject,
+            findObjectById,
             loading,
             promise,
             putDeviceMetaData,
             setObjectSettings,
-            sortObjectsByFullName
+            sortObjectsByFullName,
+            sortObjectsByConObjectFullName
             
         };
     

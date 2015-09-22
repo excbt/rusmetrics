@@ -3,7 +3,11 @@
 var app = angular.module('portalNMC');
 
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory){
-console.log("Load NoticeCtrl.");    
+console.log("Load NoticeCtrl.");  
+    //ctrl settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
+    $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -189,7 +193,7 @@ console.log("initCtrl");
             oneNotice.id = el.id;
             oneNotice.noticeType = el.contEvent.contEventType.caption;
             oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
-            oneNotice.noticeMessage = el.contEvent.message;                        
+            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";                        
             if (el.contEvent.contEventType.caption.length > $scope.TYPE_CAPTION_LENGTH){
                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
                 }else{
@@ -204,10 +208,14 @@ console.log("initCtrl");
                          oneNotice.noticeCaption= el.contEvent.message;
                 };
             };
+            
+            oneNotice.contObjectId = el.contObjectId;
+            oneNotice.zpointId = el.contEvent.contZPointId;
 
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
+                    break;
                 };   
             };
 
@@ -264,7 +272,7 @@ console.log("initCtrl");
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-console.log(loca);        
+//console.log(loca);        
         if ((angular.isDefined(loca))){
             $scope.startDate = loca.fromDate;
             $scope.endDate = loca.toDate;  
@@ -272,14 +280,14 @@ console.log(loca);
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-console.log("****************** Запрос *****************");
-console.log(url);        
-console.log($scope.startDate);
-console.log($scope.endDate);        
-console.log($scope.selectedObjects); 
-console.log($scope.selectedNoticeTypes);  
-console.log($scope.isNew);    
-console.log("88888888888888888888 the end ***********************");        
+//console.log("****************** Запрос *****************");
+//console.log(url);        
+//console.log($scope.startDate);
+//console.log($scope.endDate);        
+//console.log($scope.selectedObjects); 
+//console.log($scope.selectedNoticeTypes);  
+//console.log($scope.isNew);    
+//console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
@@ -292,8 +300,18 @@ console.log("88888888888888888888 the end ***********************");
                     });
     };
     
-    $scope.dateFormat = function(date){
-        return (new Date(date)).toLocaleString();
+    $scope.dateFormat = function(millisec){
+        var result ="";
+        var serverTimeZoneDifferent = Math.round($scope.ctrlSettings.serverTimeZone*3600.0*1000.0);
+        var tmpDate = (new Date(millisec+serverTimeZoneDifferent));
+//console.log(tmpDate);        
+//console.log(tmpDate.getUTCFullYear());   
+//console.log(tmpDate.getUTCMonth());
+//console.log(tmpDate.getUTCDate());
+//console.log(tmpDate.getUTCHours());
+//console.log(tmpDate.getUTCMinutes());        
+        result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate(), tmpDate.getUTCHours(), tmpDate.getUTCMinutes()]).format($scope.ctrlSettings.dateFormat);
+        return result;//
     };
 
     // Открыть окно выбора объектов
