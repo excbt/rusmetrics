@@ -172,14 +172,15 @@ body{
 .nmc-main-workspace {
     margin-left: 10pt;
     width: 87%;
-	min-height: 800px;
+	min-height: 500px;
     border: none;
     -webkit-box-shadow: 5px 5px 5px 0px #646263;
 /*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
-	height: 85%;
+    height: 88vh;
+/*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
 /*    overflow-y: auto;*/
@@ -631,7 +632,16 @@ tr.nmc-main-table-header > th {
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
- }  
+ }
+
+/*  Таблица с непрокручиваемой шапкой*/
+.nmc-table-with-fixed-header{
+    overflow: scroll;
+/*    height:685px;*/
+    height: 69vh;
+    min-height: 360px;
+    position:relative
+}
 
 
 /*********
