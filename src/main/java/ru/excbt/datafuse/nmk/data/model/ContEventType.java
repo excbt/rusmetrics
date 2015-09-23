@@ -6,6 +6,8 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +17,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @Table(name = "cont_event_type")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContEventType extends AbstractPersistableEntity<Long> {
+public class ContEventType extends AbstractPersistableEntity<Long> implements
+		DevModeObject, DisabledObject {
 
 	/**
 	 * 
@@ -66,7 +69,7 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
-	
+
 	public String getKeyname() {
 		return keyname;
 	}
@@ -171,6 +174,7 @@ public class ContEventType extends AbstractPersistableEntity<Long> {
 		this.description = description;
 	}
 
+	@Override
 	public Boolean getIsDevMode() {
 		return isDevMode;
 	}

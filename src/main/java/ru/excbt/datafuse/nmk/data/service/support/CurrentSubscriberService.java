@@ -185,4 +185,34 @@ public class CurrentSubscriberService {
 	public Long getCurrentUserId() {
 		return currentUserService.getCurrentUserId();
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isRma() {
+		Subscriber subscriber = getSubscriber();
+		if (subscriber == null) {
+			return false;
+		}
+		return Boolean.TRUE.equals(subscriber.getIsRma());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getRmaSubscriberId() {
+		Subscriber subscriber = getSubscriber();
+		return subscriber != null ? subscriber.getRmaSubscriberId() : null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getGhostSubscriberId() {
+		Subscriber subscriber = getSubscriber();
+		return subscriber != null ? subscriber.getGhostSubscriberId() : null;
+	}
 }

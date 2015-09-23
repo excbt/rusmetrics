@@ -11,14 +11,16 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "device_object")
-public class DeviceObject extends AbstractAuditableModel implements ExSystemObject {
+public class DeviceObject extends AbstractAuditableModel implements
+		ExSystemObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -53,6 +55,9 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Version
 	private int version;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -109,6 +114,15 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setExLabel(String exLabel) {
 		this.exLabel = exLabel;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

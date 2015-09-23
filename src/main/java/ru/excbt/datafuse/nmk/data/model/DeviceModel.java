@@ -6,9 +6,9 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.domain.ExLabelObject;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExLabelObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

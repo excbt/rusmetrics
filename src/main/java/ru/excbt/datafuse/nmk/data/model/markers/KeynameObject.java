@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.domain;
+package ru.excbt.datafuse.nmk.data.model.markers;
 
 public interface KeynameObject {
 

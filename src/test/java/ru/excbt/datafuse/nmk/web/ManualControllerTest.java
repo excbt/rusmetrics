@@ -21,17 +21,17 @@ import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 @WebAppConfiguration
 @ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigLocal.class,
 		JpaRawConfigLocal.class, LocalSecurityConfig.class, LdapConfig.class })
-@WithMockUser(username = "admin", password = "admin", roles = { "ADMIN",
+@WithMockUser(username = "manual-ex1", password = "12345", roles = { "ADMIN",
 		"SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN",
 		"DEVICE_OBJECT_ADMIN" })
-public class AnyControllerTest extends AbstractControllerTest {
+public class ManualControllerTest extends AbstractControllerTest {
 
-	private final static long TEST_AUDIT_USER = 1;
-	public static final long DEV_SUBSCR_ORG_ID = 728;
+	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1
+	public static final long SUBSCR_ORG_ID = 64166467; // РМА-EXCBT
 
 	@Before
 	public void setup() {
-		setupAuditor(TEST_AUDIT_USER, DEV_SUBSCR_ORG_ID);
+		setupAuditor(SUBSCR_USER_ID, SUBSCR_ORG_ID);
 
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
 				.addFilters(springSecurityFilterChain).build();

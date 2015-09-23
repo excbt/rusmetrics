@@ -3,7 +3,7 @@ package ru.excbt.datafuse.nmk.data.model.types;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 public enum TimeDetailKey implements KeynameObject {
 
