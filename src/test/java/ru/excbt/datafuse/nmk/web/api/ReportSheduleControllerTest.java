@@ -55,12 +55,12 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testGetSheduleActive() throws Exception {
-		testJsonGet("/api/reportShedule/active");
+		_testJsonGet("/api/reportShedule/active");
 	}
 
 	@Test
 	public void testGetShedule() throws Exception {
-		testJsonGet("/api/reportShedule");
+		_testJsonGet("/api/reportShedule");
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
-		testJsonGet(urlStr);
+		_testJsonGet(urlStr);
 	}
 
 	@Test
@@ -180,7 +180,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		logger.info("createdId: {}", createdId);
 
 		String urlStrDelete = "/api/reportShedule/" + String.valueOf(createdId);
-		testJsonDelete(urlStrDelete);
+		_testJsonDelete(urlStrDelete);
 	}
 
 }

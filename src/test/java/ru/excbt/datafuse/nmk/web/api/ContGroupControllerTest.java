@@ -37,12 +37,12 @@ public class ContGroupControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testContGroupObjects() throws Exception {
-		testJsonGet("/api/contGroup/0/contObject/available");
+		_testJsonGet("/api/contGroup/0/contObject/available");
 	}
 
 	@Test
 	public void testContGroup() throws Exception {
-		testJsonGet("/api/contGroup");
+		_testJsonGet("/api/contGroup");
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class ContGroupControllerTest extends AnyControllerTest {
 	 */
 
 	public void testDeleteContGroup(Long contGroupId) throws Exception {
-		testJsonDelete("/api/contGroup/" + contGroupId);
+		_testJsonDelete("/api/contGroup/" + contGroupId);
 	}
 
 }

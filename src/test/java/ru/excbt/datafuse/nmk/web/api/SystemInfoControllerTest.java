@@ -10,12 +10,12 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testFullUserInfo() throws Exception {
-		testJsonGet("/api/systemInfo/fullUserInfo");
+		_testJsonGet("/api/systemInfo/fullUserInfo");
 	}
 
 	@Test
 	public void testReadOnlyMode() throws Exception {
-		testJsonGet("/api/systemInfo/readOnlyMode");
+		_testJsonGet("/api/systemInfo/readOnlyMode");
 	}
 
 	@Test
@@ -29,7 +29,7 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 					.param("newPassword", "admin1");
 		};
 
-		testJsonPut(urlStr, requestExtraInitializer);
+		_testJsonPut(urlStr, requestExtraInitializer);
 
 		RequestExtraInitializer requestExtraInitializerBack = (builder) -> {
 			builder.contentType(MediaType.APPLICATION_JSON)
@@ -37,6 +37,6 @@ public class SystemInfoControllerTest extends AnyControllerTest {
 			.param("newPassword", "admin");
 		};
 		
-		testJsonPut(urlStr, requestExtraInitializerBack);
+		_testJsonPut(urlStr, requestExtraInitializerBack);
 	}
 }

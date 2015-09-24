@@ -86,7 +86,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGet(String url) throws Exception {
+	protected void _testJsonGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -100,7 +100,7 @@ public class AbstractControllerTest {
 							WebApiController.APPLICATION_JSON_UTF8));
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -109,7 +109,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGetNoJsonCheck(String url) throws Exception {
+	protected void _testJsonGetNoJsonCheck(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -120,7 +120,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -129,7 +129,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGetSuccessfull(String url) throws Exception {
+	protected void _testJsonGetSuccessfull(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -141,7 +141,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -150,7 +150,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testHtmlGet(String url) throws Exception {
+	protected void _testHtmlGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.TEXT_HTML);
@@ -161,7 +161,7 @@ public class AbstractControllerTest {
 					content().contentType(MediaType.TEXT_HTML));
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -171,7 +171,7 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testGet(String url,
+	protected void _testGet(String url,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -196,7 +196,7 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testGet(String url,
+	protected void _testGet(String url,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -204,7 +204,7 @@ public class AbstractControllerTest {
 					status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, tester);
+		_testGet(url, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class AbstractControllerTest {
 	 * @param urlStr
 	 * @throws Exception
 	 */
-	protected void testJsonDelete(String urlStr) throws Exception {
+	protected void _testJsonDelete(String urlStr) throws Exception {
 
 		logger.info("Testing DELETE on URL: {}", urlStr);
 
@@ -274,7 +274,7 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject,
+	protected Long _testJsonCreate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -282,7 +282,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().isCreated());
 		};
 
-		return testJsonCreate(url, sendObject, requestExtraInitializer, tester);
+		return _testJsonCreate(url, sendObject, requestExtraInitializer, tester);
 
 	}
 
@@ -295,7 +295,7 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject,
+	protected Long _testJsonCreate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -339,10 +339,10 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject)
+	protected Long _testJsonCreate(String url, Object sendObject)
 			throws Exception {
 
-		return testJsonCreate(url, sendObject, null);
+		return _testJsonCreate(url, sendObject, null);
 	}
 
 	/**
@@ -352,7 +352,7 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject,
+	protected void _testJsonUpdate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -360,7 +360,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().isOk());
 		};
 
-		testJsonUpdate(url, sendObject, requestExtraInitializer, tester);
+		_testJsonUpdate(url, sendObject, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -371,7 +371,7 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject,
+	protected void _testJsonUpdate(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -414,9 +414,9 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject)
+	protected void _testJsonUpdate(String url, Object sendObject)
 			throws Exception {
-		testJsonUpdate(url, sendObject, null);
+		_testJsonUpdate(url, sendObject, null);
 	}
 
 	/**
@@ -426,7 +426,7 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url,
+	protected void _testJsonPut(String url,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -434,7 +434,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().isOk());
 		};
 
-		testJsonPut(url, null, requestExtraInitializer, tester);
+		_testJsonPut(url, null, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -445,7 +445,7 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url, Object sendObject,
+	protected void _testJsonPut(String url, Object sendObject,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -488,8 +488,8 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url) throws Exception {
-		testJsonUpdate(url, null, null);
+	protected void _testJsonPut(String url) throws Exception {
+		_testJsonUpdate(url, null, null);
 	}
 
 	/**
@@ -498,7 +498,7 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPost(String urlStr,
+	protected void _testJsonPost(String urlStr,
 			RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
@@ -525,7 +525,7 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPost(String urlStr,
+	protected void _testJsonPost(String urlStr,
 			RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
@@ -533,7 +533,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testJsonPost(urlStr, requestExtraInitializer, tester);
+		_testJsonPost(urlStr, requestExtraInitializer, tester);
 
 	}
 

@@ -106,7 +106,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/event/%d/preview",
 				reportParamsetId);
 
-		testHtmlGet(urlStr);
+		_testHtmlGet(urlStr);
 
 	}
 
@@ -120,7 +120,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/cons_t1/%d/preview",
 				reportParamsetId);
 
-		testHtmlGet(urlStr);
+		_testHtmlGet(urlStr);
 
 	}
 
@@ -134,7 +134,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		String urlStr = String.format("/api/reportService/cons_t2/%d/preview",
 				reportParamsetId);
 
-		testHtmlGet(urlStr);
+		_testHtmlGet(urlStr);
 
 	}
 
@@ -189,7 +189,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
+		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
@@ -256,7 +256,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, modReportMakerParam.getReportParamset(),
+		_testJsonUpdate(urlStr, modReportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
@@ -296,7 +296,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
+		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
@@ -336,7 +336,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
+		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
@@ -372,7 +372,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
+		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(),
 				extraInitializer, tester);
 
 	}
