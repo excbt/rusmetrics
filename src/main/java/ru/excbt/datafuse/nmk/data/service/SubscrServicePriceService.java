@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.joda.time.LocalDate;
@@ -25,6 +27,7 @@ public class SubscrServicePriceService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePrice> selectPackPriceByDate(Long packId, LocalDate priceDate) {
+		checkNotNull(priceDate);
 		return subscrServicePriceRepository.selectPackPriceByDate(packId, priceDate.toDate());
 	}
 
@@ -46,6 +49,7 @@ public class SubscrServicePriceService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePrice> selectItemPriceByDate(Long itemId, LocalDate priceDate) {
+		checkNotNull(priceDate);
 		return subscrServicePriceRepository.selectItemPriceByDate(itemId, priceDate.toDate());
 	}
 
@@ -57,6 +61,18 @@ public class SubscrServicePriceService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePrice> selectItemPrice(Long itemId) {
 		return subscrServicePriceRepository.findByItemIdOrderByPriceBeginDateDescIdDesc(itemId);
+	}
+
+	/**
+	 * 
+	 * @param itemId
+	 * @param priceDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServicePrice> selectPriceByDate(LocalDate priceDate) {
+		checkNotNull(priceDate);
+		return subscrServicePriceRepository.selectPriceByDate(priceDate.toDate());
 	}
 
 }

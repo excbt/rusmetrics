@@ -9,6 +9,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
@@ -34,10 +36,12 @@ public class SubscrServicePrice extends AbstractAuditableModel {
 
 	@Column(name = "price_begin_date")
 	@Temporal(TemporalType.DATE)
+	@JsonIgnore
 	private Date priceBeginDate;
 
 	@Column(name = "price_end_date")
 	@Temporal(TemporalType.DATE)
+	@JsonIgnore
 	private Date priceEndDate;
 
 	public Long getPackId() {

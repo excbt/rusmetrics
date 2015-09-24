@@ -38,4 +38,15 @@ public interface SubscrServicePriceRepository extends CrudRepository<SubscrServi
 			@Param("priceDate") Date priceDate);
 
 	public List<SubscrServicePrice> findByItemId(Long itemId);
+
+	/**
+	 * 
+	 * @param packId
+	 * @param priceDate
+	 * @return
+	 */
+	@Query("SELECT p FROM SubscrServicePrice p WHERE :priceDate >= p.priceBeginDate "
+			+ " AND (p.priceEndDate IS NULL OR :priceDate <= p.priceEndDate) ORDER BY p.id DESC")
+	public List<SubscrServicePrice> selectPriceByDate(@Param("priceDate") Date priceDate);
+
 }
