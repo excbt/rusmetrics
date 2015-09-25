@@ -17,18 +17,17 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "cont_zpoint")
-public class ContZPoint extends AbstractAuditableModel implements
-		ExSystemObject, ExCodeObject, DeletableObjectId {
+public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -62,8 +61,8 @@ public class ContZPoint extends AbstractAuditableModel implements
 	private Date endDate;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"), inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	@JsonIgnore
+	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id") ,
+			inverseJoinColumns = @JoinColumn(name = "device_object_id") )
 	private List<DeviceObject> deviceObjects = new ArrayList<>();
 
 	@Version

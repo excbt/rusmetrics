@@ -6,6 +6,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class SubscServiceManageControllerTest extends AnyControllerTest {
 
+	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
+
 	/**
 	 * 
 	 * @throws Exception
@@ -31,5 +33,14 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	@Test
 	public void testPricesGet() throws Exception {
 		_testJsonGet(apiSubscrUrl("/manage/service/prices"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testManualSubscriberAccessGet() throws Exception {
+		_testJsonGet(apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID)));
 	}
 }

@@ -8,14 +8,18 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
-@Table(name = "subscr_service_access")
-public class SubscrServiceAccess extends AbstractAuditableModel {
+@Table(name = "subscr_service_subscriber_access")
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SubscrServiceSubscriberAccess extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -37,10 +41,31 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 	private Long itemId;
 
 	@Column(name = "access_start_date")
+	@Temporal(TemporalType.DATE)
 	private Date accessStartDate;
 
 	@Column(name = "access_end_date")
+	@Temporal(TemporalType.DATE)
 	private Date accessEndDate;
+
+	public static SubscrServiceSubscriberAccess newInstance() {
+		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+		return result;
+	};
+
+	public static SubscrServiceSubscriberAccess newInstance(SubscrServiceSubscriberAccess srcPackItem) {
+		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+		result.packId = srcPackItem.packId;
+		result.itemId = srcPackItem.itemId;
+		return result;
+	}
+
+	public static SubscrServiceSubscriberAccess newInstance(Long packId, Long itemId) {
+		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+		result.packId = packId;
+		result.itemId = itemId;
+		return result;
+	}
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -88,6 +113,34 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 
 	public void setAccessEndDate(Date accessEndDate) {
 		this.accessEndDate = accessEndDate;
+	}
+
+	/**
+	 * 
+	 * @param other
+	 * @return
+	 */
+	public boolean equalsPackItem(SubscrServiceSubscriberAccess other) {
+		if (other == null) {
+			return false;
+		}
+
+		if (this.getPackId() == null && other.getPackId() == null && this.getItemId() == null
+				&& other.getItemId() == null) {
+			return true;
+		}
+
+		if (this.getPackId() != null && other.getPackId() != null && this.getItemId() == null
+				&& other.getItemId() == null) {
+			return this.getPackId().equals(other.getPackId());
+		}
+
+		if (this.getPackId() != null && other.getPackId() != null && this.getItemId() != null
+				&& other.getItemId() != null) {
+			return this.getPackId().equals(other.getPackId()) && this.getItemId().equals(other.getItemId());
+		}
+
+		return false;
 	}
 
 }
