@@ -208,13 +208,16 @@ console.log("initCtrl");
 //console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
-            oneNotice.noticeType = el.contEvent.contEventType.caption;
+            var noticeCaption = el.contEvent.contEventType.caption || el.contEvent.contEventType.name;
+            oneNotice.noticeType = noticeCaption;//el.contEvent.contEventType.caption;
             oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
-            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";                        
-            if (el.contEvent.contEventType.caption.length > $scope.TYPE_CAPTION_LENGTH){
-                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-                }else{
-                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption;
+            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";  
+            if (angular.isString(noticeCaption)){
+                if (noticeCaption.length > $scope.TYPE_CAPTION_LENGTH){
+                        oneNotice.noticeTypeCaption= noticeCaption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+                    }else{
+                         oneNotice.noticeTypeCaption= noticeCaption;
+                };
             };
             if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";

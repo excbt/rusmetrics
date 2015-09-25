@@ -59,20 +59,24 @@
 			<button class="btn marginTop15 nmc-main-add-button" ng-click="addNewReportShedule('new')">Добавить рассылку</button>
 		</div><br><br>		
 		<!-- Таблица со списком рассылок -->
-   		<table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+   		<table id="table_deliveries_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
     		<tr id="tr_dlv_header" class="nmc-main-table-header">
     			<th class="col-md-1 nmc-td-for-buttons">&nbsp</th>
     			<th class="col-md-2">Название</th>
     			<th class="col-md-8">Описание</th>
     			<th class="col-md-1">&nbsp</th>
        		</tr>
-       		<tr ng-repeat = "rep_shdl in rep_shdls">
-       			<td class="nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
-       			<td>{{rep_shdl.name}}</td>
-       			<td>{{rep_shdl.description}}</td>
-       			<td class="nmc-td-for-buttons"><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
-       		</tr>
-    	</table>
+        </table>
+        <div class="nmc-delivery-settings-main-div">
+            <table id="table_deliveries" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+                <tr ng-repeat = "rep_shdl in rep_shdls">
+                    <td class="col-md-1 nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+                    <td class="col-md-2">{{rep_shdl.name}}</td>
+                    <td class="col-md-8">{{rep_shdl.description}}</td>
+                    <td class="col-md-1 nmc-td-for-buttons"><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+                </tr>
+            </table>
+        </div>    
     </div>
 </div>
 

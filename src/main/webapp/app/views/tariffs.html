@@ -31,7 +31,7 @@
     <div class="col-md-3 noPadding">
         <h2 class="noMargin nmc-h2">Тарифы</h2>
     </div>
-    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+    <div class="input-group col-md-4 filter pull-left nmc-search-form">   
         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
         <input type="text" class="form-control nmc-text-input-form" ng-model="filter">
 <!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
@@ -48,58 +48,77 @@
 <div class="btn-toolbar marginBottom10">
     <button class="btn nmc-main-add-button" ng-click="addTariff()" data-target="#main_properties" data-toggle="tab">Добавить тариф</button>
 </div>
-<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
-    <tr class="nmc-main-table-header">
-        <th class="col-md-1 nmc-td-for-buttons">
-      
-        </th>
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-md-1 nmc-td-for-buttons">
 
-        <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
-            <div>
-                {{column.header || column.name}}
-                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-            </div>
-        </th>
-        <th class="col-md-1">
-        </th>
-    </tr>
+            </th>
 
-    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
-        <td class="nmc-td-for-buttons">
-            <div class="btn-toolbar">
-                <div class="btn-group">
-                    <i title="Редактировать тариф" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
+            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
-            </div>
-        </td>
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.tariffType.tariffTypeName}} 
-        </td>
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span>
-        </td>
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.rso.organizationFullName}}
-        </td>
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.tariffOption.tariffOptionName}}
-        </td> 
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.tariffPlanValue}}
-        </td>
-        <td ng-class="{'nmc-distinguish': object._default}">
-            {{object.tariffPlanDescription}}
-        </td>
-        <td>
-            <div class="btn-toolbar">
-                <div class="btn-group">                   
-                    <i title="Удалить тариф" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
-                </div>
-            </div>
-        </td>
-    </tr>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
 </table>
 
+<div class="nmc-tariff-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-md-1 nmc-td-for-buttons">
+
+            </th>
+
+            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-buttons">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Редактировать тариф" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTariff(object)" data-target="#main_properties" data-toggle="tab"></i>
+                    </div>
+                </div>
+            </td>
+            <td ng-class="columns[0].class">
+                <span ng-class="{'nmc-distinguish': object._default}">{{object.tariffType.tariffTypeName}} </span>
+            </td>
+            <td ng-class="columns[1].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanName}} <span ng-show="isSystemuser()"> (id = {{object['id']}})</span></span>
+            </td>
+            <td ng-class="columns[2].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.rso.organizationFullName}}</span>
+            </td>
+            <td ng-class="columns[3].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffOption.tariffOptionName}}</span>
+            </td> 
+            <td ng-class="columns[4].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanValue}}</span>
+            </td>
+            <td ng-class="columns[5].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanDescription}}</span>
+            </td>
+            <td>
+                <div class="btn-toolbar">
+                    <div class="btn-group">                   
+                        <i title="Удалить тариф" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
 <!-- window: delete tariff-->
 <div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="deleteObjectLabel" tabindex="-1">

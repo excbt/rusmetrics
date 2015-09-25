@@ -46,7 +46,7 @@
 			<button class="btn nmc-main-add-button" ng-click="addItem('new', 'contact')">Добавить контакт</button>
 		</div><br><br>	
 		<!-- Таблица контактов -->
-   		<table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+   		<table id="table_contacts_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
     		<tr id="tr_cnt_header" class="nmc-main-table-header">
     			<th class="col-md-1 nmc-td-for-buttons"></th>
     			<th class="col-md-4">Имя</th>
@@ -54,18 +54,22 @@
     			<th class="col-md-3">Электронная почта</th>
     			<th class="col-md-1"></th>
     		</tr>
-    		<tr ng-repeat = "contact in contacts">
-    			<td class="col-md-1 nmc-td-for-buttons">
-    				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
-    			</td>
-    			<td class="col-md-4">{{contact.userName}}</td>
-     			<td class="col-md-3">{{contact.userPhone}}</td>
-    			<td class="col-md-3">{{contact.userEmail}}</td>
-    			<td class="col-md-1 nmc-td-for-buttons">
-    				<i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
-    			</td>
-    		</tr>
-    	</table>
+        </table>
+        <div class="nmc-contacts-main-div">
+            <table id="table_contacts" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">   
+                <tr ng-repeat = "contact in contacts">
+                    <td class="col-md-1 nmc-td-for-buttons">
+                        <i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
+                    </td>
+                    <td class="col-md-4">{{contact.userName}}</td>
+                    <td class="col-md-3">{{contact.userPhone}}</td>
+                    <td class="col-md-3">{{contact.userEmail}}</td>
+                    <td class="col-md-1 nmc-td-for-buttons">
+                        <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact" ng-click='editItem(contact, "contact")' data-toggle="modal"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
     <!-- Содержимое вкладки со списками контактов -->
     <div id="div_contact_lists" class="tab-pane">
@@ -74,22 +78,26 @@
 		<div class="btn-group">
 			<button class="btn nmc-main-add-button" ng-click="addItem('new', 'list')" >Добавить список</button>
 		</div><br><br>    
-		<table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
+		<table id="table_contact_lists_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
 			<tr id="tr_cnt_header" class="nmc-main-table-header">
 				<th class="col-md-1 nmc-td-for-buttons"></th>
     			<th class="col-md-10">Имя списка</th>
     			<th class="col-md-1"></th>
     		</tr>
-    		<tr ng-repeat = "list in lists">
-    			<td class="col-md-1 nmc-td-for-buttons">
-    				<i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
-    			</td>
-    			<td class="col-md-10">{{list.groupName}}</td>
-    			<td class="col-md-1 nmc-td-for-buttons">
-    			    <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
-    			</td>
-    		</tr>
-		</table>
+        </table>    
+        <div class="nmc-contacts-main-div">
+            <table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">    
+                <tr ng-repeat = "list in lists">
+                    <td class="col-md-1 nmc-td-for-buttons">
+                        <i title='Редактировать' class='btn btn-xs glyphicon glyphicon-edit nmc-button-in-table' data-target="#edit_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
+                    </td>
+                    <td class="col-md-10">{{list.groupName}}</td>
+                    <td class="col-md-1 nmc-td-for-buttons">
+                        <i title='Удалить' class='btn btn-xs glyphicon glyphicon-trash nmc-button-in-table' data-target="#div_delete_contact_list" ng-click='editItem(list, "list")' data-toggle="modal"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>    
     </div>
   </div>  
     <!-- Вспомогательные элементы -->
