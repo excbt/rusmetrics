@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServiceItemRepository;
 
 @Service
@@ -22,7 +23,21 @@ public class SubscrServiceItemService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServiceItem> selectServiceItemList() {
-		return subscrServiceItemRepository.findAll();
+		return selectServiceItemList(false);
+	}
+
+	/**
+	 * 
+	 * @param includeAll
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServiceItem> selectServiceItemList(boolean includeAll) {
+		List<SubscrServiceItem> result = subscrServiceItemRepository.findAll();
+		if (!includeAll) {
+			result = ObjectFilters.activeFilter(result);
+		}
+		return result;
 	}
 
 	/**

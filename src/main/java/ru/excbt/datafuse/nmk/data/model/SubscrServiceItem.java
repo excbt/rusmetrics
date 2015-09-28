@@ -13,12 +13,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 @Entity
 @Table(name = "subscr_service_item")
 @JsonInclude(Include.NON_NULL)
-public class SubscrServiceItem extends AbstractAuditableModel implements KeynameObject {
+public class SubscrServiceItem extends AbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
 	 * 
@@ -105,6 +106,7 @@ public class SubscrServiceItem extends AbstractAuditableModel implements Keyname
 		this.itemCategory = itemCategory;
 	}
 
+	@Override
 	public Boolean getIsActive() {
 		return isActive;
 	}

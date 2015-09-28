@@ -37,7 +37,7 @@ public class SubscrServiceSubscriberAccessServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testServicePacks() throws Exception {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList(true);
 		assertNotNull(result);
 	}
 
@@ -76,7 +76,7 @@ public class SubscrServiceSubscriberAccessServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testAllPack() throws Exception {
-		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList(true);
 		assertTrue(packList.size() > 0);
 		List<SubscrServiceSubscriberAccess> newAccess = packList.get(0).getServiceItems().stream()
 				.map((i) -> SubscrServiceSubscriberAccess.newInstance(packList.get(0).getId(), i.getId()))
