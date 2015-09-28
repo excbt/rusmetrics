@@ -48,7 +48,7 @@ public class SubscrServiceSubscriberAccessServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectServiceAccess() throws Exception {
 		List<SubscrServiceSubscriberAccess> subscrServiceAccessList = subscrServiceAccessService
-				.getSubscriberServiceAccess(MANUAL_SUBSCRIBER_ID, LocalDate.now());
+				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, LocalDate.now());
 		assertNotNull(subscrServiceAccessList);
 		assertTrue(subscrServiceAccessList.size() > 0);
 	}
@@ -61,7 +61,7 @@ public class SubscrServiceSubscriberAccessServiceTest extends JpaSupportTest {
 	public void testUpdateAccess() throws Exception {
 
 		List<SubscrServiceSubscriberAccess> subscrServiceAccessList = subscrServiceAccessService
-				.getSubscriberServiceAccess(MANUAL_SUBSCRIBER_ID, LocalDate.now());
+				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, LocalDate.now());
 
 		List<SubscrServiceSubscriberAccess> newAccess = new ArrayList<>();
 

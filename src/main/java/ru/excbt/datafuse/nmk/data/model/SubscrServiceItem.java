@@ -13,11 +13,12 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 @Entity
 @Table(name = "subscr_service_item")
 @JsonInclude(Include.NON_NULL)
-public class SubscrServiceItem extends AbstractAuditableModel {
+public class SubscrServiceItem extends AbstractAuditableModel implements KeynameObject {
 
 	/**
 	 * 
@@ -60,6 +61,9 @@ public class SubscrServiceItem extends AbstractAuditableModel {
 
 	@Column(name = "item_order")
 	private Integer itemOrder;
+
+	@Column(name = "keyname")
+	private String keyname;
 
 	public String getItemName() {
 		return itemName;
@@ -147,6 +151,15 @@ public class SubscrServiceItem extends AbstractAuditableModel {
 
 	public void setItemOrder(Integer itemOrder) {
 		this.itemOrder = itemOrder;
+	}
+
+	@Override
+	public String getKeyname() {
+		return keyname;
+	}
+
+	public void setKeyname(String keyname) {
+		this.keyname = keyname;
 	}
 
 }

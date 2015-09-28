@@ -15,6 +15,7 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,9 +25,10 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServiceItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServiceSubscriberAccessRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrServiceSubscriberAccessService {
+public class SubscrServiceSubscriberAccessService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceSubscriberAccessService.class);
 
@@ -49,9 +51,29 @@ public class SubscrServiceSubscriberAccessService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrServiceSubscriberAccess> getSubscriberServiceAccess(long subscriberId, LocalDate accessDate) {
+	public List<SubscrServiceSubscriberAccess> selectSubscriberServiceAccessFull(long subscriberId,
+			LocalDate accessDate) {
 		checkNotNull(accessDate);
 		return subscrServiceSubscriberAccessRepository.selectBySubscriberId(subscriberId, accessDate.toDate());
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param accessDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServiceSubscriberAccess> selectSubscriberServiceAccess(long subscriberId, LocalDate accessDate) {
+		checkNotNull(accessDate);
+
+		List<SubscrServiceSubscriberAccess> accessList = subscrServiceSubscriberAccessRepository
+				.selectBySubscriberId(subscriberId, accessDate.toDate());
+
+		List<SubscrServiceSubscriberAccess> result = accessList.stream().filter((i) -> i.getAccessEndDate() == null)
+				.collect(Collectors.toList());
+
+		return result;
 	}
 
 	/**
@@ -87,7 +109,8 @@ public class SubscrServiceSubscriberAccessService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void processAccessList(long subscriberId, LocalDate accessDate,
+	@Secured({ ROLE_SUBSCR_ADMIN })
+	public List<SubscrServiceSubscriberAccess> processAccessList(long subscriberId, LocalDate accessDate,
 			final List<SubscrServiceSubscriberAccess> accessList) {
 		checkNotNull(accessDate, "accessDate is not set");
 		List<SubscrServiceSubscriberAccess> currentAccessList = subscrServiceSubscriberAccessRepository
@@ -132,6 +155,10 @@ public class SubscrServiceSubscriberAccessService {
 		subscrServiceSubscriberAccessRepository.save(addGrants);
 		subscrServiceSubscriberAccessRepository.save(removeGrants);
 
+		List<SubscrServiceSubscriberAccess> newAccessList = subscrServiceSubscriberAccessRepository
+				.selectBySubscriberId(subscriberId, accessDate.toDate());
+
+		return newAccessList;
 	}
 
 	/**

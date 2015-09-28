@@ -25,4 +25,14 @@ public class SubscrServicePackService {
 		return subscrServicePackRepository.findAll();
 	}
 
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServicePack> findByKeyname(String keyname) {
+		return subscrServicePackRepository.findByKeyname(keyname);
+	}
+
 }
