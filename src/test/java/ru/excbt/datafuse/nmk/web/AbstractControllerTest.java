@@ -28,20 +28,19 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
+
 import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
-
 public class AbstractControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AbstractControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractControllerTest.class);
 
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -74,8 +73,7 @@ public class AbstractControllerTest {
 	 * @param subscriberId
 	 */
 	protected void setupAuditor(long userId, long subscriberId) {
-		this.auditorAware.setAuditUser(entityManager.getReference(
-				AuditUser.class, userId));
+		this.auditorAware.setAuditUser(entityManager.getReference(AuditUser.class, userId));
 
 		this.mockUserService.setMockUserId(userId);
 		this.mockSubscriberService.setMockSubscriberId(subscriberId);
@@ -86,7 +84,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGet(String url) throws Exception {
+	protected void _testJsonGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -95,12 +93,11 @@ public class AbstractControllerTest {
 		ResultActionsTester resultActionsTester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 
-			resultActions.andExpect(status().isOk()).andExpect(
-					content().contentType(
-							WebApiController.APPLICATION_JSON_UTF8));
+			resultActions.andExpect(status().isOk())
+					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -109,7 +106,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGetNoJsonCheck(String url) throws Exception {
+	protected void _testJsonGetNoJsonCheck(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -120,7 +117,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -129,7 +126,7 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonGetSuccessfull(String url) throws Exception {
+	protected void _testJsonGetSuccessfull(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.APPLICATION_JSON);
@@ -141,7 +138,7 @@ public class AbstractControllerTest {
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -150,18 +147,17 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testHtmlGet(String url) throws Exception {
+	protected void _testHtmlGet(String url) throws Exception {
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
 			builder.accept(MediaType.TEXT_HTML);
 		};
 
 		ResultActionsTester resultActionsTester = (resultActions) -> {
-			resultActions.andExpect(status().isOk()).andExpect(
-					content().contentType(MediaType.TEXT_HTML));
+			resultActions.andExpect(status().isOk()).andExpect(content().contentType(MediaType.TEXT_HTML));
 		};
 
-		testGet(url, requestExtraInitializer, resultActionsTester);
+		_testGet(url, requestExtraInitializer, resultActionsTester);
 
 	}
 
@@ -171,12 +167,10 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testGet(String url,
-			RequestExtraInitializer requestExtraInitializer,
+	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
-		MockHttpServletRequestBuilder request = get(url).with(
-				testSecurityContext());
+		MockHttpServletRequestBuilder request = get(url).with(testSecurityContext());
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);
@@ -196,15 +190,13 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testGet(String url,
-			RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected void _testGet(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
-			resultActions.andDo(MockMvcResultHandlers.print()).andExpect(
-					status().is2xxSuccessful());
+			resultActions.andDo(MockMvcResultHandlers.print()).andExpect(status().is2xxSuccessful());
 		};
 
-		testGet(url, requestExtraInitializer, tester);
+		_testGet(url, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -254,13 +246,12 @@ public class AbstractControllerTest {
 	 * @param urlStr
 	 * @throws Exception
 	 */
-	protected void testJsonDelete(String urlStr) throws Exception {
+	protected void _testJsonDelete(String urlStr) throws Exception {
 
 		logger.info("Testing DELETE on URL: {}", urlStr);
 
 		ResultActions deleteResultActions = mockMvc
-				.perform(delete(urlStr).with(testSecurityContext()).accept(
-						MediaType.APPLICATION_JSON));
+				.perform(delete(urlStr).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		deleteResultActions.andDo(MockMvcResultHandlers.print());
 		deleteResultActions.andExpect(status().is2xxSuccessful());
@@ -274,15 +265,15 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject,
-			RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected Long _testJsonCreate(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer)
+			throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().isCreated());
 		};
 
-		return testJsonCreate(url, sendObject, requestExtraInitializer, tester);
+		return _testJsonCreate(url, sendObject, requestExtraInitializer, tester);
 
 	}
 
@@ -295,8 +286,7 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject,
-			RequestExtraInitializer requestExtraInitializer,
+	protected Long _testJsonCreate(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing CREATE on URL: {}", url);
@@ -311,8 +301,7 @@ public class AbstractControllerTest {
 
 		logger.info("Request JSON: {}", jsonBody);
 
-		MockHttpServletRequestBuilder request = post(url)
-				.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+		MockHttpServletRequestBuilder request = post(url).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (requestExtraInitializer != null) {
@@ -325,8 +314,7 @@ public class AbstractControllerTest {
 			resultActionsTester.testResultActions(resultActions);
 		}
 
-		String jsonContent = resultActions.andReturn().getResponse()
-				.getContentAsString();
+		String jsonContent = resultActions.andReturn().getResponse().getContentAsString();
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		assertTrue(createdId > 0);
 		return Long.valueOf(createdId);
@@ -339,10 +327,9 @@ public class AbstractControllerTest {
 	 * @return
 	 * @throws Exception
 	 */
-	protected Long testJsonCreate(String url, Object sendObject)
-			throws Exception {
+	protected Long _testJsonCreate(String url, Object sendObject) throws Exception {
 
-		return testJsonCreate(url, sendObject, null);
+		return _testJsonCreate(url, sendObject, null);
 	}
 
 	/**
@@ -352,15 +339,15 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject,
-			RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected void _testJsonUpdate(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer)
+			throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().isOk());
 		};
 
-		testJsonUpdate(url, sendObject, requestExtraInitializer, tester);
+		_testJsonUpdate(url, sendObject, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -371,14 +358,12 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject,
-			RequestExtraInitializer requestExtraInitializer,
+	protected void _testJsonUpdate(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", url);
 
-		MockHttpServletRequestBuilder request = put(url).with(
-				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder request = put(url).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
 			String jsonBody = null;
@@ -414,9 +399,8 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonUpdate(String url, Object sendObject)
-			throws Exception {
-		testJsonUpdate(url, sendObject, null);
+	protected void _testJsonUpdate(String url, Object sendObject) throws Exception {
+		_testJsonUpdate(url, sendObject, null);
 	}
 
 	/**
@@ -426,15 +410,14 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url,
-			RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected void _testJsonPut(String url, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().isOk());
 		};
 
-		testJsonPut(url, null, requestExtraInitializer, tester);
+		_testJsonPut(url, null, requestExtraInitializer, tester);
 	}
 
 	/**
@@ -445,14 +428,12 @@ public class AbstractControllerTest {
 	 * @param resultActionsTester
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url, Object sendObject,
-			RequestExtraInitializer requestExtraInitializer,
+	protected void _testJsonPut(String url, Object sendObject, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", url);
 
-		MockHttpServletRequestBuilder request = put(url).with(
-				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder request = put(url).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
 
 		if (sendObject != null) {
 			String jsonBody = null;
@@ -488,8 +469,8 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @throws Exception
 	 */
-	protected void testJsonPut(String url) throws Exception {
-		testJsonUpdate(url, null, null);
+	protected void _testJsonPut(String url) throws Exception {
+		_testJsonUpdate(url, null, null);
 	}
 
 	/**
@@ -498,14 +479,13 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPost(String urlStr,
-			RequestExtraInitializer requestExtraInitializer,
+	protected void _testJsonPost(String urlStr, RequestExtraInitializer requestExtraInitializer,
 			ResultActionsTester resultActionsTester) throws Exception {
 
 		logger.info("Testing UPDATE on URL: {}", urlStr);
 
-		MockHttpServletRequestBuilder request = post(urlStr).with(
-				testSecurityContext()).accept(MediaType.APPLICATION_JSON);
+		MockHttpServletRequestBuilder request = post(urlStr).with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON);
 
 		if (requestExtraInitializer != null) {
 			requestExtraInitializer.doInit(request);
@@ -525,15 +505,14 @@ public class AbstractControllerTest {
 	 * @param requestExtraInitializer
 	 * @throws Exception
 	 */
-	protected void testJsonPost(String urlStr,
-			RequestExtraInitializer requestExtraInitializer) throws Exception {
+	protected void _testJsonPost(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
 
 		ResultActionsTester tester = (resultActions) -> {
 			resultActions.andDo(MockMvcResultHandlers.print());
 			resultActions.andExpect(status().is2xxSuccessful());
 		};
 
-		testJsonPost(urlStr, requestExtraInitializer, tester);
+		_testJsonPost(urlStr, requestExtraInitializer, tester);
 
 	}
 

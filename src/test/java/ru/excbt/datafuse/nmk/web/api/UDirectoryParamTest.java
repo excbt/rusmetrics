@@ -41,7 +41,7 @@ public class UDirectoryParamTest extends AnyControllerTest {
 
 	@Test
 	public void testParamsGetAll() throws Exception {
-		testJsonGet(String.format(DIRECTORY_URL_API + "/%d/param",
+		_testJsonGet(String.format(DIRECTORY_URL_API + "/%d/param",
 				TEST_DIRECTORY_ID));
 	}
 
@@ -49,7 +49,7 @@ public class UDirectoryParamTest extends AnyControllerTest {
 	public void testParamsGetOne() throws Exception {
 		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);		
-		testJsonGet(urlStr);
+		_testJsonGet(urlStr);
 	}
 
 	@Test
@@ -116,7 +116,7 @@ public class UDirectoryParamTest extends AnyControllerTest {
 		String urlStrDelete = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, createdId);
 		
-		testJsonDelete(urlStrDelete);
+		_testJsonDelete(urlStrDelete);
 	}
 	
 	

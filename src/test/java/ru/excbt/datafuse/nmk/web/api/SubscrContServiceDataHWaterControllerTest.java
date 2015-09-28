@@ -144,7 +144,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testGetAvailableFiles() throws Exception {
 		String url = apiSubscrUrl("/service/out/csv");
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		String url = apiSubscrUrl("/service/out/csv/" + filename);
 
-		testJsonGetNoJsonCheck(url);
+		_testJsonGetNoJsonCheck(url);
 	}
 
 	@Test
@@ -205,7 +205,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 					.param("dateTo", "2015-07-31");
 		};
 
-		testGet(urlStr, requestExtraInitializer);
+		_testGet(urlStr, requestExtraInitializer);
 
 	}
 
@@ -221,7 +221,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 			.param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f");
 		};
 		
-		testGet(urlStr, requestExtraInitializer);
+		_testGet(urlStr, requestExtraInitializer);
 		
 	}
 
@@ -240,7 +240,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 					.param("dateTo", "2015-07-31");
 		};
 
-		testGet(urlStr, requestExtraInitializer);
+		_testGet(urlStr, requestExtraInitializer);
 
 	}
 

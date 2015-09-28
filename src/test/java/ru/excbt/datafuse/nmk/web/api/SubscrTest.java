@@ -8,17 +8,17 @@ public class SubscrTest extends AnyControllerTest {
 
 	@Test
 	public void testSubscrContObjects() throws Exception {
-		testJsonGet ("/api/subscr/contObjects");
+		_testJsonGet ("/api/subscr/contObjects");
 	}
 
 	@Test
 	public void testSubscrContObjectZPoints() throws Exception {
-		testJsonGet ("/api/subscr/contObjects/725/zpoints");
+		_testJsonGet ("/api/subscr/contObjects/725/zpoints");
 	}
 
 	@Test
 	public void testSubscrContEvents() throws Exception {
-		testJsonGet ("/api/subscr/contObjects/725/events");
+		_testJsonGet ("/api/subscr/contObjects/725/events");
 	}
 
 }

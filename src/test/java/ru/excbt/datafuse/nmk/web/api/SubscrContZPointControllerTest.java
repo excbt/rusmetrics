@@ -32,7 +32,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx",
 				co.getId());
-		testJsonGet(url);
+		_testJsonGet(url);
 
 	}
 
@@ -41,7 +41,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 		// http://localhost:8080/nmk-p/api/subscr/contObjects/20118678/contZPointsEx
 		// Failed to load resource: the server responded with a status of 500
 		// (Internal Server Error)
-		testJsonGet("/api/subscr/contObjects/20118678/contZPointsEx ");
+		_testJsonGet("/api/subscr/contObjects/20118678/contZPointsEx ");
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 		String url = String.format(
 				"/api/subscr/contObjects/%d/contZPointsStatInfo", contObjectId);
-		testJsonGet(url);
+		_testJsonGet(url);
 
 	}
 
@@ -59,7 +59,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 		String url = apiSubscrUrl(String.format("/contObjects/%d/zpoints/%d",
 				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 		contZPoint.setIsManualLoading(true);
 
-		testJsonUpdate(url, contZPoint);
+		_testJsonUpdate(url, contZPoint);
 	}
 	
 	
@@ -85,6 +85,6 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	 */
 	@Test
 	public void testContZPoints() throws Exception {
-		testJsonGet(apiSubscrUrl("/contObjects/zpoints"));
+		_testJsonGet(apiSubscrUrl("/contObjects/zpoints"));
 	} 
 }

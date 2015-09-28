@@ -34,7 +34,7 @@ public class ReportWizardControllerTest extends AnyControllerTest {
 	
 	@Test
 	public void testCommerceReportColumnSettings() throws Exception {
-		testJsonGet("/api/reportWizard/columnSettings/commerce");
+		_testJsonGet("/api/reportWizard/columnSettings/commerce");
 	}
 	
 	
