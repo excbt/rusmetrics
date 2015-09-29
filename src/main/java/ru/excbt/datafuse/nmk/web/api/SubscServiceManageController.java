@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
-import ru.excbt.datafuse.nmk.data.model.SubscrServiceSubscriberAccess;
+import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePriceService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceSubscriberAccessService;
+import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -41,7 +41,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	private SubscrServicePriceService subscrServicePriceService;
 
 	@Autowired
-	private SubscrServiceSubscriberAccessService subscriberAccessService;
+	private SubscrServiceAccessService subscriberAccessService;
 
 	/**
 	 * 
@@ -98,9 +98,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 * @param subscriberId
 	 * @return
 	 */
-	private List<SubscrServiceSubscriberAccess> subscriberServiceAccessList(Long subscriberId) {
+	private List<SubscrServiceAccess> subscriberServiceAccessList(Long subscriberId) {
 		LocalDate accessDate = new LocalDate(subscriberService.getSubscriberCurrentTime(subscriberId));
-		List<SubscrServiceSubscriberAccess> result = subscriberAccessService.selectSubscriberServiceAccess(subscriberId,
+		List<SubscrServiceAccess> result = subscriberAccessService.selectSubscriberServiceAccess(subscriberId,
 				accessDate);
 
 		result.forEach((i) -> {
@@ -122,9 +122,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	@RequestMapping(value = "/{subscriberId}/manage/service/access", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscriberServiceAccess(@PathVariable("subscriberId") Long subscriberId,
-			@RequestBody final List<SubscrServiceSubscriberAccess> subscriberAccessList) {
+			@RequestBody final List<SubscrServiceAccess> subscriberAccessList) {
 
-		ApiAction action = new AbstractEntityApiAction<List<SubscrServiceSubscriberAccess>>() {
+		ApiAction action = new AbstractEntityApiAction<List<SubscrServiceAccess>>() {
 
 			@Override
 			public void process() {
@@ -144,9 +144,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/access", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateCurrentServiceAccess(
-			@RequestBody final List<SubscrServiceSubscriberAccess> subscriberAccessList) {
+			@RequestBody final List<SubscrServiceAccess> subscriberAccessList) {
 
-		ApiAction action = new AbstractEntityApiAction<List<SubscrServiceSubscriberAccess>>() {
+		ApiAction action = new AbstractEntityApiAction<List<SubscrServiceAccess>>() {
 
 			@Override
 			public void process() {

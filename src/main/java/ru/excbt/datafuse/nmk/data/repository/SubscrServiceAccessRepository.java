@@ -7,11 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrServiceSubscriberAccess;
+import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
+import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 
-public interface SubscrServiceSubscriberAccessRepository extends CrudRepository<SubscrServiceSubscriberAccess, Long> {
+public interface SubscrServiceAccessRepository extends CrudRepository<SubscrServiceAccess, Long> {
 
-	List<SubscrServiceSubscriberAccess> findBySubscriberIdAndPackId(Long subscriberId, Long packId);
+	List<SubscrServiceAccess> findBySubscriberIdAndPackId(Long subscriberId, Long packId);
 
 	/**
 	 * 
@@ -33,10 +34,10 @@ public interface SubscrServiceSubscriberAccessRepository extends CrudRepository<
 	 * @param packId
 	 * @return
 	 */
-	@Query(value = "SELECT sa FROM SubscrServiceSubscriberAccess sa WHERE sa.subscriberId = :subscriberId "
+	@Query(value = "SELECT sa FROM SubscrServiceAccess sa WHERE sa.subscriberId = :subscriberId "
 			+ " AND :accessDate >= accessStartDate AND (accessEndDate IS NULL OR :accessDate <= accessEndDate) "
 			+ " AND :packId = sa.packId ORDER BY packId NULLS FIRST")
-	List<SubscrServiceSubscriberAccess> selectBySubscriberIdAndPackId(@Param("subscriberId") Long subscriberId,
+	List<SubscrServiceAccess> selectBySubscriberIdAndPackId(@Param("subscriberId") Long subscriberId,
 			@Param("packId") Long packId, @Param("accessDate") Date accessDate);
 
 	/**
@@ -60,9 +61,17 @@ public interface SubscrServiceSubscriberAccessRepository extends CrudRepository<
 	 * @param accessDate
 	 * @return
 	 */
-	@Query(value = "SELECT sa FROM SubscrServiceSubscriberAccess sa WHERE sa.subscriberId = :subscriberId "
+	@Query(value = "SELECT sa FROM SubscrServiceAccess sa WHERE sa.subscriberId = :subscriberId "
 			+ " AND :accessDate >= accessStartDate AND (accessEndDate IS NULL OR :accessDate <= accessEndDate) "
 			+ " ORDER BY sa.accessStartDate DESC, sa.id DESC")
-	List<SubscrServiceSubscriberAccess> selectBySubscriberId(@Param("subscriberId") Long subscriberId,
+	List<SubscrServiceAccess> selectBySubscriberId(@Param("subscriberId") Long subscriberId,
 			@Param("accessDate") Date accessDate);
+
+	@Query("SELECT i.servicePermissions FROM SubscrServiceItem i "
+			+ " WHERE i.id IN (SELECT sa.itemId FROM SubscrServiceAccess sa "
+			+ " WHERE sa.subscriberId = :subscriberId AND "
+			+ " :accessDate >= accessStartDate AND accessEndDate IS NULL )")
+	public List<SubscrServicePermission> selectSubscriberPermissions(@Param("subscriberId") Long subscriberId,
+			@Param("accessDate") Date accessDate);
+
 }
