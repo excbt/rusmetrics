@@ -1,6 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.filters;
 
-import static org.junit.Assert.assertNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +18,7 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends DisabledObject> Stream<T> disabledFilter(Stream<T> inStream, boolean value) {
-		assertNotNull(inStream);
+		checkNotNull(inStream);
 		Boolean check = !Boolean.valueOf(value);
 		return inStream.filter((i) -> !check.equals(i.getIsDisabled()));
 	}
@@ -38,7 +38,7 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends DevModeObject> Stream<T> devModeFilter(Stream<T> inStream, boolean value) {
-		assertNotNull(inStream);
+		checkNotNull(inStream);
 		Boolean check = !Boolean.valueOf(value);
 		return inStream.filter((i) -> !check.equals(i.getIsDevMode()));
 	}
@@ -58,7 +58,7 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends DeletableObject> Stream<T> deletedFilter(Stream<T> inStream) {
-		assertNotNull(inStream);
+		checkNotNull(inStream);
 		return inStream.filter((i) -> i.getDeleted() == 0);
 	}
 
@@ -68,7 +68,7 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends ActiveObject> Stream<T> activeFilter(Stream<T> inStream) {
-		assertNotNull(inStream);
+		checkNotNull(inStream);
 		return inStream.filter((i) -> !Boolean.FALSE.equals(i.getIsActive()));
 	}
 
@@ -78,7 +78,6 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends ActiveObject> List<T> activeFilter(List<T> inList) {
-		assertNotNull(inList);
 		return inList.stream().filter((i) -> !Boolean.FALSE.equals(i.getIsActive())).collect(Collectors.toList());
 	}
 
