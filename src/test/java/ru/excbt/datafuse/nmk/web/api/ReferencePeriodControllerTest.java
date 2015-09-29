@@ -54,7 +54,7 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 
 		Long oId = getOId();
 		Long zpId = getZPointId(oId);
-		testJsonGet(String.format(
+		_testJsonGet(String.format(
 				"/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId,
 				zpId));
 	}
@@ -73,17 +73,17 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 		referencePeriod.setPeriodDescription("Testing ReferencePeriod");
 		referencePeriod.setTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname());
 
-		Long createdId = testJsonCreate(urlStr, referencePeriod);
+		Long createdId = _testJsonCreate(urlStr, referencePeriod);
 
 		// Update testing
 		referencePeriod.setId(Long.valueOf(createdId));
 
 		referencePeriod.setPeriodDescription("Testing Update");
 
-		testJsonUpdate(urlStr + "/" + createdId, referencePeriod);
+		_testJsonUpdate(urlStr + "/" + createdId, referencePeriod);
 
 		// Delete testing
-		testJsonDelete(urlStr + "/" + createdId);
+		_testJsonDelete(urlStr + "/" + createdId);
 
 	}
 }

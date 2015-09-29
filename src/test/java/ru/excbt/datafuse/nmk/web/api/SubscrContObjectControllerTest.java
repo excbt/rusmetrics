@@ -39,7 +39,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testContObjectGet() throws Exception {
-		testJsonGet("/api/subscr/contObjects");
+		_testJsonGet("/api/subscr/contObjects");
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
 				testCO.getId());
-		testJsonGetSuccessfull(url);
+		_testJsonGetSuccessfull(url);
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testSettingModeTypeGet() throws Exception {
-		testJsonGet(apiSubscrUrl("/contObjects/settingModeType"));
+		_testJsonGet(apiSubscrUrl("/contObjects/settingModeType"));
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 				builder.param("currentSettingMode", "summer");
 			}
 		};
-		testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null,
+		_testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null,
 				extraInitializer);
 
 	}

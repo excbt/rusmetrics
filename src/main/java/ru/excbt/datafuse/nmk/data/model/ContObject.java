@@ -20,9 +20,11 @@ import javax.persistence.Version;
 import org.hibernate.annotations.DynamicUpdate;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "cont_object")
 @DynamicUpdate
 public class ContObject extends AbstractAuditableModel implements
-		ExSystemObject, ExCodeObject {
+		ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
 
 	/**
 	 * 
@@ -95,9 +97,15 @@ public class ContObject extends AbstractAuditableModel implements
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
+	/*
+	 * TODO check contObjectFias
+	 */
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectFias contObjectFias;
 
+	/*
+	 * TODO check contObjectGeo
+	 */
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectGeoPos contObjectGeo;
 
@@ -108,6 +116,12 @@ public class ContObject extends AbstractAuditableModel implements
 	@Column(name = "ex_code")
 	@JsonIgnore
 	private String exCode;
+
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Column(name = "is_manual")
+	private Boolean isManual;
 
 	public String getName() {
 		return name;
@@ -261,6 +275,25 @@ public class ContObject extends AbstractAuditableModel implements
 	@Override
 	public String getExCode() {
 		return exCode;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public Boolean getIsManual() {
+		return isManual;
+	}
+
+	public void setIsManual(Boolean isManual) {
+		this.isManual = isManual;
 	}
 
 }

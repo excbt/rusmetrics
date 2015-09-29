@@ -1,6 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.types;
 
-import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 public enum ContObjectCurrentSettingTypeKey implements KeynameObject {
 	SUMMER, WINTER;

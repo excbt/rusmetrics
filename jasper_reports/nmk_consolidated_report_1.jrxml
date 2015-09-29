@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-24T18:10:29 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
+<!-- 2015-09-09T16:33:33 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consolidated_report_1" pageWidth="800" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
-	<property name="net.sf.jasperreports.print.create.bookmarks" value="true"/>
+	<property name="net.sf.jasperreports.print.create.bookmarks" value="false"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="Style1" isDefault="true" hAlign="Left" vAlign="Middle" fontName="Arial cyrillic"/>
 	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
@@ -70,16 +71,19 @@
 	<title>
 		<band height="71" splitType="Stretch">
 			<staticText>
-				<reportElement x="580" y="10" width="60" height="22" uuid="ec487425-d5b5-4485-bd89-8e3731667042"/>
+				<reportElement x="600" y="0" width="80" height="22" uuid="ec487425-d5b5-4485-bd89-8e3731667042">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
 				<textElement>
 					<font fontName="Arial cyrillic"/>
 				</textElement>
 				<text><![CDATA[Отчет №1]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="32" width="800" height="15" uuid="e40e7a83-0784-46db-8e5c-30c2da9351be">
+				<reportElement x="0" y="22" width="800" height="25" uuid="e40e7a83-0784-46db-8e5c-30c2da9351be">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial cyrillic"/>
@@ -87,7 +91,7 @@
 				<text><![CDATA[Сводная ведомость потребления тепловой энергии и горячей воды по объектам, оборудованным ОПУ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="160" y="47" width="450" height="15" uuid="024ade8b-a83f-4825-bcc5-af6c0c90eaf5">
+				<reportElement x="0" y="47" width="800" height="24" uuid="024ade8b-a83f-4825-bcc5-af6c0c90eaf5">
 					<property name="local_mesure_unitheight" value="pixel"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
@@ -97,7 +101,9 @@
 				<textFieldExpression><![CDATA["Период съема с " + new SimpleDateFormat("dd.MM.yyyy").format($P{begin_date}) + " по " + new SimpleDateFormat("dd.MM.yyyy").format($P{end_date})]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="10" width="400" height="18" uuid="4daee392-3be1-4ffc-b8c2-7a0dd9076f0a"/>
+				<reportElement x="0" y="0" width="535" height="22" uuid="4daee392-3be1-4ffc-b8c2-7a0dd9076f0a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA["Организация: " + $F{org_name}]]></textFieldExpression>
 			</textField>
@@ -944,10 +950,4 @@
 			</textField>
 		</band>
 	</detail>
-	<summary>
-		<band height="20" splitType="Stretch">
-			<property name="local_mesure_unitheight" value="pixel"/>
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-		</band>
-	</summary>
 </jasperReport>

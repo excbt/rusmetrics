@@ -59,7 +59,7 @@ public class SubscrContEventNotificationControllerTest extends
 	 */
 	@Test
 	public void testNotifiicationsAll() throws Exception {
-		testJsonGet("/api/subscr/contEvent/notifications/all");
+		_testJsonGet("/api/subscr/contEvent/notifications/all");
 	}
 
 	/**
@@ -120,10 +120,10 @@ public class SubscrContEventNotificationControllerTest extends
 			}
 		};
 
-		testJsonUpdate("/api/subscr/contEvent/notifications/revision", null,
+		_testJsonUpdate("/api/subscr/contEvent/notifications/revision", null,
 				extraInitializer);
 
-		testJsonUpdate("/api/subscr/contEvent/notifications/revision/isNew",
+		_testJsonUpdate("/api/subscr/contEvent/notifications/revision/isNew",
 				null, extraInitializer);
 
 	}
@@ -245,14 +245,14 @@ public class SubscrContEventNotificationControllerTest extends
 				.format("/api/subscr/contEvent/notifications/contObject/%d/monitorEvents",
 						contObjectId);
 
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 	@Test
 	public void testNotificationsMonitorColor() throws Exception {
 		String url = "/api/subscr/contEvent/notifications/monitorColor";
 
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 }

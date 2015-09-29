@@ -19,7 +19,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	public void testGetDeviceObjects() throws Exception {
 		String url = apiSubscrUrl(String.format(
 				"/contObjects/%d/deviceObjects", DEV_CONT_OBJECT));
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 	@Test
@@ -27,7 +27,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		String url = apiSubscrUrl(String.format(
 				"/contObjects/%d/deviceObjects/%d/metaVzlet", DEV_CONT_OBJECT,
 				DEV_DEVICE_OBJECT));
-		testJsonGetNoJsonCheck(url);
+		_testJsonGetNoJsonCheck(url);
 	}
 
 	@Test
@@ -42,21 +42,21 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 				"/contObjects/%d/deviceObjects/%d/metaVzlet", DEV_CONT_OBJECT,
 				DEV_DEVICE_OBJECT));
 
-		Long metaId = testJsonCreate(url, metaVzlet);
+		Long metaId = _testJsonCreate(url, metaVzlet);
 
 		metaVzlet.setId(metaId);
 		metaVzlet.setVzletTableDay("Day YYY");
 		metaVzlet.setVzletTableHour("Hour YYY");
 
-		testJsonUpdate(url, metaVzlet);
+		_testJsonUpdate(url, metaVzlet);
 
-		testJsonDelete(url);
+		_testJsonDelete(url);
 	}
 
 	@Test
 	public void testGetDeviceObjectsVzletSystem() throws Exception {
 		String url = apiSubscrUrl("/deviceObjects/metaVzlet/system");
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 }

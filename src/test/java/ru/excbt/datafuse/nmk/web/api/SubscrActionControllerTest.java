@@ -41,7 +41,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testGetGroup() throws Exception {
-		testJsonGet("/api/subscr/subscrAction/groups");
+		_testJsonGet("/api/subscr/subscrAction/groups");
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testGetUser() throws Exception {
-		testJsonGet("/api/subscr/subscrAction/users");
+		_testJsonGet("/api/subscr/subscrAction/users");
 	}
 
 
@@ -84,11 +84,11 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 			}
 		};
 
-		Long createdId = testJsonCreate(urlStr, user, extraInializer);
+		Long createdId = _testJsonCreate(urlStr, user, extraInializer);
 
 		assertTrue(createdId > 0);
 
-		testJsonDelete(urlStr + "/" + createdId);
+		_testJsonDelete(urlStr + "/" + createdId);
 
 	}
 
@@ -120,9 +120,9 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 			}
 		};
 		
-		Long createdId = testJsonCreate(urlStr, grp, extraInitializer);
+		Long createdId = _testJsonCreate(urlStr, grp, extraInitializer);
 		
-		testJsonDelete(urlStr + "/" + createdId);
+		_testJsonDelete(urlStr + "/" + createdId);
 	}
 
 }
