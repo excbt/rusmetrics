@@ -19,10 +19,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
-@Table(name = "subscr_service_subscriber_access")
+@Table(name = "subscr_service_access")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class SubscrServiceSubscriberAccess extends AbstractAuditableModel {
+public class SubscrServiceAccess extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -51,20 +51,20 @@ public class SubscrServiceSubscriberAccess extends AbstractAuditableModel {
 	@Temporal(TemporalType.DATE)
 	private Date accessEndDate;
 
-	public static SubscrServiceSubscriberAccess newInstance() {
-		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+	public static SubscrServiceAccess newInstance() {
+		SubscrServiceAccess result = new SubscrServiceAccess();
 		return result;
 	};
 
-	public static SubscrServiceSubscriberAccess newInstance(SubscrServiceSubscriberAccess srcPackItem) {
-		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+	public static SubscrServiceAccess newInstance(SubscrServiceAccess srcPackItem) {
+		SubscrServiceAccess result = new SubscrServiceAccess();
 		result.packId = srcPackItem.packId;
 		result.itemId = srcPackItem.itemId;
 		return result;
 	}
 
-	public static SubscrServiceSubscriberAccess newInstance(Long packId, Long itemId) {
-		SubscrServiceSubscriberAccess result = new SubscrServiceSubscriberAccess();
+	public static SubscrServiceAccess newInstance(Long packId, Long itemId) {
+		SubscrServiceAccess result = new SubscrServiceAccess();
 		result.packId = packId;
 		result.itemId = itemId;
 		return result;
@@ -123,7 +123,7 @@ public class SubscrServiceSubscriberAccess extends AbstractAuditableModel {
 	 * @param other
 	 * @return
 	 */
-	public boolean equalsPackItem(SubscrServiceSubscriberAccess other) {
+	public boolean equalsPackItem(SubscrServiceAccess other) {
 		if (other == null) {
 			return false;
 		}

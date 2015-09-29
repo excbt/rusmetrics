@@ -10,10 +10,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
-import ru.excbt.datafuse.nmk.data.model.SubscrServiceSubscriberAccess;
+import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceSubscriberAccessService;
+import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
@@ -22,7 +22,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
 
 	@Autowired
-	private SubscrServiceSubscriberAccessService subscrServiceSubscriberAccess;
+	private SubscrServiceAccessService subscrServiceSubscriberAccess;
 
 	@Autowired
 	private SubscrServiceItemService subscrServiceItemService;
@@ -90,7 +90,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 
 		Long testPackId = packs.get(0).getId();
 
-		List<SubscrServiceSubscriberAccess> accessList = subscrServiceSubscriberAccess
+		List<SubscrServiceAccess> accessList = subscrServiceSubscriberAccess
 				.selectSubscriberServiceAccess(MANUAL_SUBSCRIBER_ID, LocalDate.now());
 
 		accessList.forEach((i) -> {
@@ -100,13 +100,13 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 			i.setAccessStartDate(null);
 		});
 
-		Optional<SubscrServiceSubscriberAccess> testServiceCheck = accessList.stream()
+		Optional<SubscrServiceAccess> testServiceCheck = accessList.stream()
 				.filter((i) -> testPackId.equals(i.getPackId())).findAny();
 
 		if (testServiceCheck.isPresent()) {
 			accessList.remove(testServiceCheck.get());
 		} else {
-			SubscrServiceSubscriberAccess access = SubscrServiceSubscriberAccess.newInstance(testPackId, null);
+			SubscrServiceAccess access = SubscrServiceAccess.newInstance(testPackId, null);
 			accessList.add(access);
 		}
 
@@ -126,7 +126,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 
 		Long testPackId = packs.get(0).getId();
 
-		List<SubscrServiceSubscriberAccess> accessList = subscrServiceSubscriberAccess
+		List<SubscrServiceAccess> accessList = subscrServiceSubscriberAccess
 				.selectSubscriberServiceAccess(currentSubscriberService.getSubscriberId(), LocalDate.now());
 
 		accessList.forEach((i) -> {
@@ -136,13 +136,13 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 			i.setAccessStartDate(null);
 		});
 
-		Optional<SubscrServiceSubscriberAccess> testServiceCheck = accessList.stream()
+		Optional<SubscrServiceAccess> testServiceCheck = accessList.stream()
 				.filter((i) -> testPackId.equals(i.getPackId())).findAny();
 
 		if (testServiceCheck.isPresent()) {
 			accessList.remove(testServiceCheck.get());
 		} else {
-			SubscrServiceSubscriberAccess access = SubscrServiceSubscriberAccess.newInstance(testPackId, null);
+			SubscrServiceAccess access = SubscrServiceAccess.newInstance(testPackId, null);
 			accessList.add(access);
 		}
 

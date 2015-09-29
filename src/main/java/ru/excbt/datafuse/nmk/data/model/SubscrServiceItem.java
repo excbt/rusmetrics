@@ -1,9 +1,15 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -13,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
@@ -65,6 +72,12 @@ public class SubscrServiceItem extends AbstractAuditableModel implements Keyname
 
 	@Column(name = "keyname")
 	private String keyname;
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "subscr_service_item_permission", joinColumns = @JoinColumn(name = "subscr_service_item_id") ,
+			inverseJoinColumns = @JoinColumn(name = "subscr_service_permission") )
+	private List<SubscrServicePermission> servicePermissions = new ArrayList<>();
 
 	public String getItemName() {
 		return itemName;
@@ -162,6 +175,14 @@ public class SubscrServiceItem extends AbstractAuditableModel implements Keyname
 
 	public void setKeyname(String keyname) {
 		this.keyname = keyname;
+	}
+
+	public List<SubscrServicePermission> getServicePermissions() {
+		return servicePermissions;
+	}
+
+	public void setServicePermissions(List<SubscrServicePermission> servicePermissions) {
+		this.servicePermissions = servicePermissions;
 	}
 
 }
