@@ -621,9 +621,9 @@ console.log($location.search());
             $scope.tableDef.columns.some(function(element){    
                 var indicatorTd = document.getElementById("indicators_th_"+element.fieldName);
                 var indicatorHead = document.getElementById("indicators_head_"+element.fieldName);
-console.log("indicators_td_"+element.fieldName);                
-console.log(indicatorHead);                    
-console.log(indicatorTd);                 
+//console.log("indicators_td_"+element.fieldName);                
+//console.log(indicatorHead);                    
+//console.log(indicatorTd);                 
                 if ((angular.isDefined(indicatorTd))&&(indicatorTd!=null)&&(angular.isDefined(indicatorHead))&&(indicatorHead!=null)){
 //                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
                         var thWidth = Math.min(indicatorTd.offsetWidth, indicatorTd.clientWidth);
@@ -631,10 +631,10 @@ console.log(indicatorTd);
 //                    }else{
 //                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   
 //                    };
-console.log(thWidth);                     
-console.log(indicatorTd.offsetWidth);                     
-console.log(indicatorTd.clientWidth);                     
-console.log(indicatorHead.style.width);                    
+//console.log(thWidth);                     
+//console.log(indicatorTd.offsetWidth);                     
+//console.log(indicatorTd.clientWidth);                     
+//console.log(indicatorHead.style.width);                    
                 };
 //return true;
             });

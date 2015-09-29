@@ -1,0 +1,62 @@
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets" aria-controls="report_settings" role="tab" data-target="#report_settings" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+<!--
+<input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="testRen" options="dateOptsParamsetRu"/>
+-->
+<!--
+<input id="inputSingleDate" class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="testRen"/>        
+-->
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Услуги</h2>
+    <hr>
+</div>
+<div class="btn-toolbar marginBottom10">
+    <button class="btn nmc-main-add-button" ng-click="editServices()">Редактировать</button>
+</div>
+<!--    Непрокручиваямая шапка -->
+<!--
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-md-1 nmc-td-for-buttons">
+
+            </th>
+
+            <th ng-repeat="column in ctrlSettings.packageColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
+</table>-->
+
+<!-- Область с прокручиваемыми данными-->
+<div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+        <tbody>
+            <tr ng-repeat="pack in availablePackages">
+                <td ng-repeat="column in ctrlSettings.packageColumns">
+                </td>
+            </tr>
+        </tbody>    
+    </table>
+</div>
