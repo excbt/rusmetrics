@@ -7,7 +7,9 @@ angular.module('portalNMC')
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
-    $scope.ctrlSettings.packagesUrl = "";//????
+    $scope.ctrlSettings.servicesUrl = "../api/subscr/manage/service";
+    $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
+    $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl+ "/serviceItemList";
     
     //package columns definition
     //not used
@@ -26,11 +28,14 @@ angular.module('portalNMC')
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
             var tmp = response.data;
+            $scope.availablePackages =  tmp;
         },
                                  function(e){
             console.log(e);
         });
     };
+    
+    $scope.getPackages($scope.ctrlSettings.packagesUrl);
     
     $scope.editPackages = function(){
         

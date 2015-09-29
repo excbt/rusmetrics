@@ -54,7 +54,31 @@
     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <tbody>
             <tr ng-repeat="pack in availablePackages">
-                <td ng-repeat="column in ctrlSettings.packageColumns">
+                <td>
+                    <table>
+                        <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                            <td>
+                                <input type="checkbox"/>
+                            </td>
+                            <td>
+                                {{pack.packCapction}}
+                            </td>
+                        </tr>
+                        <tr>
+                            <table>
+                                <tbody>
+                                    <tr ng-repeat="serv in pack.serviceItems">
+                                        <td><input type="checkbox"/>
+                                        </td>
+                                        <td>
+                                            {{serv.itemCaption}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </tr>
+                    </table>
+                 
                 </td>
             </tr>
         </tbody>    
