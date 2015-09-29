@@ -45,4 +45,9 @@ angular.module('portalNMC')
         
     };
     
+    //toggle show/hide package consist
+    $scope.toggleShowGroupDetails = function(pack){
+        pack.showDetailsFlag = !pack.showDetailsFlag;
+    };
+    
 }]);

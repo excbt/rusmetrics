@@ -58,13 +58,14 @@
                     <table>
                         <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
                             <td>
-                                <input type="checkbox"/>
+                                <input disabled type="checkbox"/>
+                                <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
                             </td>
                             <td>
                                 {{pack.packCapction}}
                             </td>
                         </tr>
-                        <tr>
+                        <tr ng-show="pack.showDetailFlag">
                             <table>
                                 <tbody>
                                     <tr ng-repeat="serv in pack.serviceItems">
