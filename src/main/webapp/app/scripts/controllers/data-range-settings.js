@@ -97,7 +97,7 @@ app
             $location.search("fromDate",$rootScope.reportStart);
             $location.search("toDate",$rootScope.reportEnd);
         };
-console.log($location);        
+//console.log($location);        
 //console.log("data-range-settings");         
 //console.log($rootScope.reportStart); 
 //console.log($rootScope.reportEnd);         

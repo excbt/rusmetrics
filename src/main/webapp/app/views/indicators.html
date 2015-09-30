@@ -87,15 +87,35 @@
         <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
     </div>
     <div class="row" ng-show="data.length >0">
-        <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
+<!--        Непрокручиваемая шапка таблицы показаний-->
+        <table class="nmc-table-nowrap-data1 nmc-main-table noMargin" ng-class="tableDef.tableClass" style="margin-bottom: -20px;">
             <tr ng-class="tableDef.headerClassTR">
+                <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}">
+                    {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
+                </th>
+            </tr>
+            <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" style="opacity:0;">
+                <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
+                    {{indicator[column.fieldName]}}
+                    <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
+                </td>
+            </tr>
+        </table>
+<!--        конец Шапки-->
+    </div>
+</div>
+<div class="container-fluid nmc-indicator-table-with-fixed-header">
+    <div class="row" ng-show="data.length >0">
+        <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass" style="margin-top: -79px;">
+<!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
+            <tr class="" ng-class="tableDef.headerClassTR">
                 <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
                     {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                 </th>
 
             </tr>
             <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-                <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.dataClass || column.headerClass">
+                <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
                     {{indicator[column.fieldName]}}
                     <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                 </td>

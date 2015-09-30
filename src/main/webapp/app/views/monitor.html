@@ -74,7 +74,8 @@
     
     
 <!--    <div infinite-scroll="addMoreObjectsForMonitor()" infinte-scroll-distance='50' >-->
-    <div id="divWithMonitorTable" style="overflow: scroll;height:685px;position:relative">    
+    <div id="divWithMonitorTable" class="nmc-table-with-fixed-header">
+<!--        style="overflow: scroll;height:685px;position:relative">    -->
         <table  id="tableMonitor" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <tr class="" ng-repeat="object in objectsOnPage" ng-attr-id="{{'obj'+object.contObject.id}}">
             <td>

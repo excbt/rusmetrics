@@ -172,14 +172,15 @@ body{
 .nmc-main-workspace {
     margin-left: 10pt;
     width: 87%;
-	min-height: 800px;
+	min-height: 500px;
     border: none;
     -webkit-box-shadow: 5px 5px 5px 0px #646263;
 /*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
-	height: 85%;
+    height: 88vh;
+/*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
 /*    overflow-y: auto;*/
@@ -256,6 +257,42 @@ body{
     min-width: 800px;
 }
 
+
+    /* Разметка страницы Отчеты*/
+/* Стиль главного дива, чтобы содержимое подстраивалось под изменение размера браузера*/
+.nmc-report-main-div{
+    overflow: auto;
+    height:79vh;
+    min-height: 425px;
+}
+
+    /* Разметка страницы Настройки */
+/* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
+.nmc-tariff-main-div, .nmc-object-group-main-div{
+    overflow: auto;
+    height:61vh;
+    min-height: 290px;
+}
+
+/*  Стиль главных дивов разделов "Отчеты" и "Контакты"*/
+.nmc-report-settings-main-div{
+    overflow: auto;
+    height:61vh;
+    min-height: 290px;
+}
+
+.nmc-contacts-main-div{
+    overflow: auto;
+    height:60vh;
+    min-height: 250px;
+}
+
+/* Стиль главного дива "Рассылки"*/
+.nmc-delivery-settings-main-div{
+    overflow: auto;
+    height:52vh;
+    min-height: 250px;
+}
 
 /***********************
  * Элементы навигации 
@@ -451,6 +488,10 @@ body{
 .nmc-pages-active{
     
 }
+
+.nmc-pagination{
+    margin: 0;
+}
 /***********
  * Таблицы
  ***********/
@@ -631,7 +672,49 @@ tr.nmc-main-table-header > th {
     overflow: auto; /*Обрезаем все, что не вмещается*/
     text-overflow: ellipsis;/* Добавляем многоточие*/
     padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
- }  
+ }
+
+.nmc-table-nowrap-data1{
+    border-bottom: none;
+}
+
+.nmc-table-nowrap-data1 > tbody > tr > td{
+    white-space: nowrap; /* Запрещаем перенос строк */
+    overflow: auto; /*Обрезаем все, что не вмещается*/
+    text-overflow: ellipsis;/* Добавляем многоточие*/
+    padding: 1px; /* Устанавливаем отступ от границ ячейки = 1*/
+    border: none !important;
+ }
+
+/*  Таблица с непрокручиваемой шапкой*/
+.nmc-table-with-fixed-header{
+    overflow: scroll;
+/*    height:685px;*/
+    height: 69vh;
+    min-height: 360px;
+    position:relative
+}
+/*  */
+.nmc-indicator-table-with-fixed-header{
+    overflow: auto;
+/*    height:685px;*/
+    height: 60vh;
+    min-height: 360px;
+    position:relative
+}
+/*  */
+.nmc-notice-table-with-fixed-header{
+    overflow: auto;
+/*    height:685px;*/
+    height: 60vh;
+    min-height: 360px;
+    position:relative
+}
+
+.nmc-notice-th{
+    padding: 5px 0px 0 5px !important;
+/*    border-bottom-width: 0px;*/
+}
 
 
 /*********
@@ -1239,13 +1322,17 @@ tr.nmc-main-table-header > th {
 /* Карта монитора - на странице увеодомлений*/
 .nmc-map-monitor{
 /*    height: 865px;*/
-    height: 770px;
+/*    height: 770px;*/
+    height: 80vh;
+    min-height: 450px;
     width: 100%;
 }
 
 /* Карта потребления - на странице объектов*/
 .nmc-map-objects{
-    height: 770px;
+/*    height: 770px;*/
+    height: 80vh;
+    min-height: 450px;
     width: 100%;
 }
 /* Настройки для попапа маркера города на карте потребления*/
