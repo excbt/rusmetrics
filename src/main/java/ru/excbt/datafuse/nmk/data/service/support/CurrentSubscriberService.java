@@ -22,8 +22,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 @Service
 public class CurrentSubscriberService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CurrentSubscriberService.class);
+	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberService.class);
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -43,8 +42,7 @@ public class CurrentSubscriberService {
 	 */
 	public long getSubscriberId() {
 
-		SubscriberUserDetails userDetails = currentUserService
-				.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
@@ -63,7 +61,6 @@ public class CurrentSubscriberService {
 		checkNotNull(result, "getSubscriberId() is NULL");
 
 		return result;
-
 	}
 
 	/**
@@ -72,8 +69,7 @@ public class CurrentSubscriberService {
 	 */
 	protected long getSubscriberIdOld() {
 
-		AuditUserPrincipal userPrincipal = currentUserService
-				.getCurrentAuditUserPrincipal();
+		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
@@ -101,8 +97,7 @@ public class CurrentSubscriberService {
 	 */
 	public Subscriber getSubscriber() {
 
-		SubscriberUserDetails userDetails = currentUserService
-				.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -124,8 +119,7 @@ public class CurrentSubscriberService {
 	 */
 	protected Subscriber getSubscriberOld() {
 
-		AuditUserPrincipal userPrincipal = currentUserService
-				.getCurrentAuditUserPrincipal();
+		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -146,8 +140,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public LocalDateTime getSubscriberCurrentTime_Joda() {
-		Date pre = subscriberService
-				.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : new LocalDateTime(pre);
 	}
 
@@ -156,8 +149,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Instant getSubscriberCurrentTimeInstant_JDK() {
-		Date pre = subscriberService
-				.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : pre.toInstant();
 	}
 
@@ -174,8 +166,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<Long> getSubscriberContObjectIds() {
-		return subscriberService
-				.selectSubscriberContObjectIds(getSubscriberId());
+		return subscriberService.selectSubscriberContObjectIds(getSubscriberId());
 	}
 
 	/**

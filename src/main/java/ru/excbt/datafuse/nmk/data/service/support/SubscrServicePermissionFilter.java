@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -31,7 +34,7 @@ public class SubscrServicePermissionFilter {
 	 */
 	public <T> List<T> filterObjects(List<T> objectList) {
 		if (objectList.size() == 0) {
-			return objectList;
+			return new ArrayList<>(objectList);
 		}
 		Object obj = objectList.get(0);
 		boolean keynameSupports = obj instanceof KeynameObject;
@@ -43,7 +46,7 @@ public class SubscrServicePermissionFilter {
 			List<String> keynames = getObjectKeynamesByClass(className);
 			resultObjectList = keynameFilter(keynames, objectList);
 		} else {
-			resultObjectList = objectList;
+			resultObjectList = new ArrayList<>(objectList);
 		}
 
 		return resultObjectList;
@@ -54,11 +57,15 @@ public class SubscrServicePermissionFilter {
 	 * @param permissions
 	 * @return
 	 */
-	private List<String> objectKeynames(List<SubscrServicePermission> permissions) {
-		List<String> result = new ArrayList<>();
-		permissions.forEach((i) -> {
+	private Collection<String> objectKeynames(List<SubscrServicePermission> permissions) {
+		Set<String> result = new HashSet<>();
+		permissions.stream().sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority())).forEach((i) -> {
 			if (i.getPermissionObjectKeyname() != null) {
-				result.add(i.getPermissionObjectKeyname());
+				if (Boolean.TRUE.equals(i.getIsDeny())) {
+					result.remove(i.getPermissionObjectKeyname());
+				} else {
+					result.add(i.getPermissionObjectKeyname());
+				}
 			}
 		});
 		return result;
@@ -87,9 +94,11 @@ public class SubscrServicePermissionFilter {
 	 * @return
 	 */
 	public List<String> getObjectKeynamesByClass(String className) {
+		checkNotNull(className, "class name is null");
+		checkState(permissionList != null, "permissionList is not initialized");
 		List<SubscrServicePermission> objectPermissions = permissionList.stream()
 				.filter((i) -> className.equals(i.getPermissionObjectClass())).collect(Collectors.toList());
-		return objectKeynames(objectPermissions);
+		return new ArrayList<>(objectKeynames(objectPermissions));
 	}
 
 }
