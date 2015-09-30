@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
@@ -51,7 +52,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePacks() {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> result = currentUserService.isSystem() ? packList
+				: ObjectFilters.activeFilter(packList);
 		return responseOK(result);
 	}
 
@@ -61,7 +64,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/serviceItemList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServiceItems() {
-		List<SubscrServiceItem> result = subscrServiceItemService.selectServiceItemList();
+		List<SubscrServiceItem> itemList = subscrServiceItemService.selectServiceItemList();
+		List<SubscrServiceItem> result = currentUserService.isSystem() ? itemList
+				: ObjectFilters.activeFilter(itemList);
 		return responseOK(result);
 	}
 
