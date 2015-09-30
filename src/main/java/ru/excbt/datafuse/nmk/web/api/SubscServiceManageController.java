@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -13,14 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
-import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
+import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePriceService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -49,7 +52,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePacks() {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList();
+		List<SubscrServicePack> result = currentUserService.isSystem() ? packList
+				: ObjectFilters.activeFilter(packList);
 		return responseOK(result);
 	}
 
@@ -59,7 +64,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/serviceItemList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServiceItems() {
-		List<SubscrServiceItem> result = subscrServiceItemService.selectServiceItemList();
+		List<SubscrServiceItem> itemList = subscrServiceItemService.selectServiceItemList();
+		List<SubscrServiceItem> result = currentUserService.isSystem() ? itemList
+				: ObjectFilters.activeFilter(itemList);
 		return responseOK(result);
 	}
 
@@ -157,6 +164,31 @@ public class SubscServiceManageController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
+	public ResponseEntity<?> getCurrentServicePermissions() {
+		List<SubscrServicePermission> permissions = subscrServiceAccessService
+				.selectSubscriberPermissions(getSubscriberId(), getSubscriberLocalDate());
+		return responseOK(permissions);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/manage/service/permissions", method = RequestMethod.GET)
+	public ResponseEntity<?> getSubscriberServicePermissions(@PathVariable("subscriberId") Long subscriberId) {
+		List<SubscrServicePermission> permissions = subscrServiceAccessService.selectSubscriberPermissions(subscriberId,
+				getSubscriberLocalDate(subscriberId));
+		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
+				.collect(Collectors.toList());
+		return responseOK(result);
 	}
 
 }

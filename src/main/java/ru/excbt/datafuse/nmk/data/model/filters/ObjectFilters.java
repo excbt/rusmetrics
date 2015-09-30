@@ -69,7 +69,7 @@ public class ObjectFilters {
 	 */
 	public static <T extends ActiveObject> Stream<T> activeFilter(Stream<T> inStream) {
 		checkNotNull(inStream);
-		return inStream.filter((i) -> !Boolean.FALSE.equals(i.getIsActive()));
+		return inStream.filter((i) -> Boolean.TRUE.equals(i.getIsActive()));
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class ObjectFilters {
 	 * @return
 	 */
 	public static <T extends ActiveObject> List<T> activeFilter(List<T> inList) {
-		return inList.stream().filter((i) -> !Boolean.FALSE.equals(i.getIsActive())).collect(Collectors.toList());
+		return inList.stream().filter((i) -> Boolean.TRUE.equals(i.getIsActive())).collect(Collectors.toList());
 	}
 
 }

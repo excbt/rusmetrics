@@ -9,6 +9,8 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
@@ -20,6 +22,8 @@ import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 
 public class SubscrServiceAccessServiceTest extends JpaSupportTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessServiceTest.class);
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
 
@@ -111,8 +115,10 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 		assertTrue(permissions.size() > 0);
 		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions);
 		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
-		List<ReportType> filteredReports = filter.filterPermissions(reportTypes);
+		List<ReportType> filteredReports = filter.filterObjects(reportTypes);
+		logger.info("Size of filtered reports:{}", filteredReports.size());
 		assertNotNull(filteredReports);
+		assertTrue(filteredReports.size() == 2);
 	}
 
 }

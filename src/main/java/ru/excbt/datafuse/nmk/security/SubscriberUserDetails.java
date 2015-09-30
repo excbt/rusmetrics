@@ -23,6 +23,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 	private final Subscriber subscriber;
 	private final Boolean isSystem;
 	private final int version;
+	private final boolean skipServiceFilter;
 
 	/**
 	 * 
@@ -37,6 +38,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.subscriber = sUser.getSubscriber();
 		this.version = sUser.getVersion();
 		this.isSystem = false;
+		this.skipServiceFilter = false;
 	}
 
 	/**
@@ -52,14 +54,13 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.subscriber = sUser.getSubscriber();
 		this.version = sUser.getVersion();
 		this.isSystem = true;
+		this.skipServiceFilter = true;
 	}
 
 	@Override
 	public Long getId() {
 		return id;
 	}
-
-	
 
 	@Override
 	public Subscriber getSubscriber() {
@@ -74,7 +75,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(super.toString()).append(": ");		
+		sb.append(super.toString()).append(": ");
 		sb.append("id: ").append(this.id).append("; ");
 		sb.append("subscriberId: ").append(this.subscriber).append("; ");
 		sb.append("_system: ").append(this.isSystem).append("; ");
@@ -84,6 +85,10 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 
 	public Boolean getIsSystem() {
 		return isSystem;
+	}
+
+	public boolean getSkipServiceFilter() {
+		return skipServiceFilter;
 	}
 
 }
