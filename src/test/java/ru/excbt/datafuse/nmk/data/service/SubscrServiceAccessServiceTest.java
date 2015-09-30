@@ -47,7 +47,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testServicePacks() throws Exception {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList(true);
+		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList();
 		assertNotNull(result);
 	}
 

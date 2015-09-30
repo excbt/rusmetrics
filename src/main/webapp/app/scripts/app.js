@@ -107,9 +107,13 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/contacts.html',
         controller: 'ContactsCtrl'
       })
-    .when('/settings/object_groups', {
+      .when('/settings/object_groups', {
         templateUrl: 'views/object_groups.html',
         controller: 'ObjectGroupsCtrl'
+      })
+      .when('/settings/management_services', {
+        templateUrl: 'views/management-services.html',
+        controller: 'ManagementServicesCtrl'
       })
       .otherwise({
         redirectTo: '/'

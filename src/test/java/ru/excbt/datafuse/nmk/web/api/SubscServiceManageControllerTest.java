@@ -160,4 +160,9 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 		_testJsonGet(apiSubscrUrl(String.format("/%d/manage/service/permissions", MANUAL_SUBSCRIBER_ID)));
 	}
 
+	@Test
+	public void testCurrentSubscriberPermissionsGet() throws Exception {
+		_testJsonGet(apiSubscrUrl("/manage/service/permissions"));
+	}
+
 }

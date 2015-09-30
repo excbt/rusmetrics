@@ -53,8 +53,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePacks() {
 		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList();
-		List<SubscrServicePack> result = currentUserService.isSystem() ? packList
-				: ObjectFilters.activeFilter(packList);
+		List<SubscrServicePack> result = ObjectFilters.activeFilter(packList);
 		return responseOK(result);
 	}
 
@@ -65,8 +64,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	@RequestMapping(value = "/manage/service/serviceItemList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServiceItems() {
 		List<SubscrServiceItem> itemList = subscrServiceItemService.selectServiceItemList();
-		List<SubscrServiceItem> result = currentUserService.isSystem() ? itemList
-				: ObjectFilters.activeFilter(itemList);
+		List<SubscrServiceItem> result = ObjectFilters.activeFilter(itemList);
 		return responseOK(result);
 	}
 
@@ -174,7 +172,9 @@ public class SubscServiceManageController extends SubscrApiController {
 	public ResponseEntity<?> getCurrentServicePermissions() {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
 				.selectSubscriberPermissions(getSubscriberId(), getSubscriberLocalDate());
-		return responseOK(permissions);
+		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
+				.collect(Collectors.toList());
+		return responseOK(result);
 	}
 
 	/**

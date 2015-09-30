@@ -164,7 +164,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
         var activeStartDate = new Date(curObject.activeStartDate);
-console.log(curObject);        
+//console.log(curObject);        
         $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
         
         $scope.getTemplates();       
@@ -279,9 +279,9 @@ console.log(object);
         $scope.archiveParamset.id = object.id;
         $scope.archiveParamset.name = object.name;
         $scope.currentParamSpecialList = prepareParamSpecialList(object, $scope.currentReportType);//$scope.archiveParamset.paramSpecialList;
-console.log(object);        
-console.log($scope.archiveParamset);                
-console.log($scope.currentParamSpecialList);        
+//console.log(object);        
+//console.log($scope.archiveParamset);                
+//console.log($scope.currentParamSpecialList);        
         $scope.currentObject = angular.copy(object);
         $scope.currentObject.id = null;
         $scope.currentObject._active = true;
@@ -561,12 +561,12 @@ console.log($scope.currentParamSpecialList);
         $scope.createByTemplate_flag = false;
         $scope.getAvailableObjects(object.id);//получаем доступные объекты для заданного парамсета
         $scope.getSelectedObjects($scope.currentObject.id);
-console.log(object);        
+//console.log(object);        
         $scope.currentSign = object.reportPeriod.sign;
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));            
             $scope.psStartDateFormatted =((object.paramsetStartDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
-console.log($scope.psStartDateFormatted);   
+//console.log($scope.psStartDateFormatted);   
             
 //            $scope.paramsetStartDateFormatted ={
 //                startDate: moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]),

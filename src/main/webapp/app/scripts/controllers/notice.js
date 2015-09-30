@@ -23,12 +23,13 @@ console.log("Load NoticeCtrl.");
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
+    $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";
     //the path template of notice icon
     $scope.imgPathTmpl = "images/notice-state-";
     
     //get url params
     var loca = $location.search();
-console.log(loca);    
+//console.log(loca);    
     
     
     //messages for user
@@ -51,6 +52,8 @@ console.log(loca);
     $scope.states.tempUndefinedCriticalTypes_flag = false;
     
     $scope.allSelected = false;
+    
+    $scope.zpointList = null; //subscriber zpoint list
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
@@ -184,6 +187,20 @@ console.log("initCtrl");
 //console.log("pageChanged");        
         $scope.getResultsPage(newPage);
     };
+    
+    var findZpointById = function(zpId){
+        var result = null;
+        if ($scope.zpointList!=null){
+            $scope.zpointList.some(function(elem){
+                if (zpId === elem.id){
+                    result = elem;
+                    return true;
+                };
+            });
+        };
+        return result;
+    };
+    
     //Преобразуем полученные уведомления в формат, который будет отображаться пользователю
     var dataParse = function(arr){
         var oneNotice = {};
@@ -191,13 +208,16 @@ console.log("initCtrl");
 //console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
-            oneNotice.noticeType = el.contEvent.contEventType.caption;
+            var noticeCaption = el.contEvent.contEventType.caption || el.contEvent.contEventType.name;
+            oneNotice.noticeType = noticeCaption;//el.contEvent.contEventType.caption;
             oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
-            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";                        
-            if (el.contEvent.contEventType.caption.length > $scope.TYPE_CAPTION_LENGTH){
-                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-                }else{
-                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption;
+            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";  
+            if (angular.isString(noticeCaption)){
+                if (noticeCaption.length > $scope.TYPE_CAPTION_LENGTH){
+                        oneNotice.noticeTypeCaption= noticeCaption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+                    }else{
+                         oneNotice.noticeTypeCaption= noticeCaption;
+                };
             };
             if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";
@@ -210,6 +230,8 @@ console.log("initCtrl");
             };
             
             oneNotice.contObjectId = el.contObjectId;
+//            oneNotice.zpointId = el.contEvent.contZPointId;
+            oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);
 
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
@@ -223,32 +245,36 @@ console.log("initCtrl");
             oneNotice.imgpath = $scope.imgPathTmpl+el.contEventLevelColor.toLowerCase()+".png";
             oneNotice.imgclass = el.contEventLevelColor==="GREEN"?"":"nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
+            
             switch (el.contEvent.contServiceType)
             {
-                case "heat" : oneNotice.noticeZpoint = "Теплоснабжение"; 
+                case "heat" : //oneNotice.noticeZpoint = "Теплоснабжение"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
                     break;
-                case "hw" : oneNotice.noticeZpoint = "ГВС";
+                case "hw" : //oneNotice.noticeZpoint = "ГВС";
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
                     break;
-                case "cw" : oneNotice.noticeZpoint = "ХВС"; 
+                case "cw" : //oneNotice.noticeZpoint = "ХВС"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
                     break;
-                case "gas" : oneNotice.noticeZpoint = "Газ"; 
+                case "gas" : //oneNotice.noticeZpoint = "Газ"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
                     break;
-                case "env" : oneNotice.noticeZpoint = "Климат"; 
+                case "env" :// oneNotice.noticeZpoint = "Климат"; 
                     oneNotice.imgSTPath = "images/es.png";
                     break;
-                case "el" : oneNotice.noticeZpoint = "Элка"; 
+                case "el" : //oneNotice.noticeZpoint = "Элка"; 
                     oneNotice.imgSTPath = "images/es.png";
                     break;    
-                case null : oneNotice.noticeZpoint = ""; 
+                case null :// oneNotice.noticeZpoint = ""; 
                     oneNotice.imgSTPath = "null";
                     break;
                 default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
                     oneNotice.imgSTPath = ""+el.contServiceType+"";
-             }
+             };
+            if (oneNotice.zpoint!=null){
+                oneNotice.noticeZpoint = oneNotice.zpoint.contServiceType.caption;
+            };
 //console.log(oneNotice);            
             return oneNotice;
         });
@@ -271,7 +297,7 @@ console.log("initCtrl");
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-console.log(loca);        
+//console.log(loca);        
         if ((angular.isDefined(loca))){
             $scope.startDate = loca.fromDate;
             $scope.endDate = loca.toDate;  
@@ -279,14 +305,14 @@ console.log(loca);
             $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
-console.log("****************** Запрос *****************");
-console.log(url);        
-console.log($scope.startDate);
-console.log($scope.endDate);        
-console.log($scope.selectedObjects); 
-console.log($scope.selectedNoticeTypes);  
-console.log($scope.isNew);    
-console.log("88888888888888888888 the end ***********************");        
+//console.log("****************** Запрос *****************");
+//console.log(url);        
+//console.log($scope.startDate);
+//console.log($scope.endDate);        
+//console.log($scope.selectedObjects); 
+//console.log($scope.selectedNoticeTypes);  
+//console.log($scope.isNew);    
+//console.log("88888888888888888888 the end ***********************");        
         getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
                         var result = [];
                         $scope.data= data;
@@ -438,7 +464,11 @@ console.log("performObjectsFilter");
         objectSvc.promise.then(function(response){
             $scope.objects = response.data;
             objectSvc.sortObjectsByFullName($scope.objects);
-            $scope.$broadcast('notices:getNoticeTypes');   
+            if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
+                $scope.$broadcast('notices:getNoticeTypes');   
+            }else{
+                $scope.$broadcast('notices:getZpointList');   
+            };
 console.log("getObjects");            
 //            $scope.getResultsPage(1);
         });
@@ -485,9 +515,26 @@ console.log("$scope.noticeTypes");
             });
     };
     
+    $scope.getZpointList = function(url){
+        $http.get(url)
+        .success(function(data){
+            $scope.zpointList = data;
+console.log("geted zpoint list.");            
+//console.log(data);            
+            $scope.$broadcast('notices:getNoticeTypes');
+        })
+        .error(function(e){
+            console.log(e);
+        });
+    };
+    
     $scope.$on('notices:getNoticeTypes',function(){
         $scope.getNoticeTypes($scope.noticeTypesUrl);
 //        $scope.getResultsPage(1);
+    });
+    
+    $scope.$on('notices:getZpointList',function(){
+        $scope.getZpointList($scope.zpointListUrl);
     });
     
     //new/all filter
