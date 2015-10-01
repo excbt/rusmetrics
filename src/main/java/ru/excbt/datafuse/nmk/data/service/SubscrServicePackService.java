@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +23,8 @@ public class SubscrServicePackService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePack> selectServicePackList() {
-		List<SubscrServicePack> result = subscrServicePackRepository.findAll();
+		Sort sort = new Sort(Sort.Direction.ASC, "packNr");
+		List<SubscrServicePack> result = subscrServicePackRepository.findAll(sort);
 		return result;
 	}
 

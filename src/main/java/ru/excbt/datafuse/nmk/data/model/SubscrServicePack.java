@@ -71,36 +71,27 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 	@Column(name = "keyname")
 	private String keyname;
 
-	public String getPackName() {
-		return packName;
+	@Column(name = "is_persistent_service")
+	private Boolean isPersistentService;
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
-	public void setPackName(String packName) {
-		this.packName = packName;
+	public String getPackName() {
+		return packName;
 	}
 
 	public String getPackCaption() {
 		return packCaption;
 	}
 
-	public void setPackCaption(String packCaption) {
-		this.packCaption = packCaption;
-	}
-
 	public String getPackDescription() {
 		return packDescription;
 	}
 
-	public void setPackDescription(String packDescription) {
-		this.packDescription = packDescription;
-	}
-
 	public String getPackComment() {
 		return packComment;
-	}
-
-	public void setPackComment(String packComment) {
-		this.packComment = packComment;
 	}
 
 	@Override
@@ -108,56 +99,28 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 		return isActive;
 	}
 
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
 	public Date getActiveStartDate() {
 		return activeStartDate;
-	}
-
-	public void setActiveStartDate(Date activeStartDate) {
-		this.activeStartDate = activeStartDate;
 	}
 
 	public Date getActiveEndDate() {
 		return activeEndDate;
 	}
 
-	public void setActiveEndDate(Date activeEndDate) {
-		this.activeEndDate = activeEndDate;
-	}
-
 	public String getHelpContext() {
 		return helpContext;
-	}
-
-	public void setHelpContext(String helpContext) {
-		this.helpContext = helpContext;
-	}
-
-	public List<SubscrServiceItem> getServiceItems() {
-		return serviceItems;
-	}
-
-	public void setServiceItems(List<SubscrServiceItem> serviceItems) {
-		this.serviceItems = serviceItems;
-	}
-
-	public Integer getPackOrder() {
-		return packOrder;
-	}
-
-	public void setPackOrder(Integer packOrder) {
-		this.packOrder = packOrder;
 	}
 
 	public String getPackNr() {
 		return packNr;
 	}
 
-	public void setPackNr(String packNr) {
-		this.packNr = packNr;
+	public Integer getPackOrder() {
+		return packOrder;
+	}
+
+	public List<SubscrServiceItem> getServiceItems() {
+		return serviceItems;
 	}
 
 	@Override
@@ -165,8 +128,8 @@ public class SubscrServicePack extends AbstractAuditableModel implements Keyname
 		return keyname;
 	}
 
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
+	public Boolean getIsPersistentService() {
+		return isPersistentService;
 	}
 
 }

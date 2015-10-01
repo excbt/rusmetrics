@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
+import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServiceAccessRepository;
@@ -121,6 +122,12 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
 				accessDate.toDate());
 
+		final List<SubscrServiceAccess> extraAccessList = new ArrayList<>(accessList);
+
+		List<SubscrServicePack> persistentServicePack = subscrServicePackRepository.findByIsPersistentService(true);
+
+		extraAccessList.addAll(newSubscrServicePackAccessList(persistentServicePack));
+
 		List<SubscrServiceAccess> removeGrants = new ArrayList<>();
 		List<SubscrServiceAccess> addGrants = new ArrayList<>();
 
@@ -130,16 +137,17 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		}
 
 		currentAccessList.stream().filter((i) -> i.getAccessEndDate() == null).forEach((c) -> {
-			Optional<SubscrServiceAccess> check1 = accessList.stream().filter((i) -> i.equalsPackItem(c)).findAny();
+			Optional<SubscrServiceAccess> check1 = extraAccessList.stream().filter((i) -> i.equalsPackItem(c))
+					.findAny();
 			if (!check1.isPresent()) {
 				removeGrants.add(c);
 			}
 		});
 
-		accessList.forEach((n) -> {
+		extraAccessList.forEach((n) -> {
 			Optional<SubscrServiceAccess> check2 = currentAccessList.stream()
 					.filter((i) -> i.getAccessEndDate() == null).filter((i) -> i.equalsPackItem(n)).findAny();
-			logger.info("check2:{}", check2.isPresent());
+			logger.debug("check2:{}", check2.isPresent());
 			if (!check2.isPresent() && n.getPackId() != null) {
 				addGrants.add(n);
 			}
@@ -243,6 +251,33 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberId, accessDate);
 		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions);
 		return filter.filterObjects(objectList);
+	}
+
+	/**
+	 * 
+	 * @param subscrServicePackList
+	 * @return
+	 */
+	private List<SubscrServiceAccess> newSubscrServicePackAccessList(List<SubscrServicePack> subscrServicePackList) {
+		final List<SubscrServiceAccess> persistentAccessList = new ArrayList<>();
+
+		subscrServicePackList.forEach((p) -> {
+
+			{
+				SubscrServiceAccess packAccess = new SubscrServiceAccess();
+				packAccess.setPackId(p.getId());
+				persistentAccessList.add(packAccess);
+			}
+			p.getServiceItems().forEach((i) -> {
+				SubscrServiceAccess itemAccess = new SubscrServiceAccess();
+				itemAccess.setPackId(p.getId());
+				itemAccess.setItemId(i.getId());
+				persistentAccessList.add(itemAccess);
+
+			});
+
+		});
+		return persistentAccessList;
 	}
 
 }
