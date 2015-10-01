@@ -9,11 +9,11 @@ import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
+import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
+import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
@@ -149,6 +149,20 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 		String url = apiSubscrUrl("/manage/service/access");
 		_testJsonUpdate(url, accessList, null);
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testManualSubscriberPermissionsGet() throws Exception {
+		_testJsonGet(apiSubscrUrl(String.format("/%d/manage/service/permissions", MANUAL_SUBSCRIBER_ID)));
+	}
+
+	@Test
+	public void testCurrentSubscriberPermissionsGet() throws Exception {
+		_testJsonGet(apiSubscrUrl("/manage/service/permissions"));
 	}
 
 }

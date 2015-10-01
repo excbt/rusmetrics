@@ -1,10 +1,13 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -29,29 +32,21 @@ public class SubscrServicePermissionFilter {
 	 * @param objectList
 	 * @return
 	 */
-	public <T> List<T> filterPermissions(List<T> objectList) {
+	public <T> List<T> filterObjects(List<T> objectList) {
 		if (objectList.size() == 0) {
-			return objectList;
+			return new ArrayList<>(objectList);
 		}
 		Object obj = objectList.get(0);
 		boolean keynameSupports = obj instanceof KeynameObject;
 
-		String className = obj.getClass().getSimpleName();
-		logger.debug("Class Name: {}. keynameSupports:{}", className, keynameSupports);
-
-		List<SubscrServicePermission> actualPermissions = permissionList.stream()
-				.filter((i) -> className.equals(i.getPermissionObjectClass())).collect(Collectors.toList());
-
-		logger.debug("Count Permissions for {} is {} ", className, actualPermissions.size());
-
 		List<T> resultObjectList = null;
 
 		if (keynameSupports) {
-
-			HashSet<String> keynames = permissionObjectKeynames(actualPermissions);
-			// resultObjectList =
+			String className = obj.getClass().getSimpleName();
+			List<String> keynames = getObjectKeynamesByClass(className);
+			resultObjectList = keynameFilter(keynames, objectList);
 		} else {
-			resultObjectList = objectList;
+			resultObjectList = new ArrayList<>(objectList);
 		}
 
 		return resultObjectList;
@@ -62,11 +57,15 @@ public class SubscrServicePermissionFilter {
 	 * @param permissions
 	 * @return
 	 */
-	private HashSet<String> permissionObjectKeynames(List<SubscrServicePermission> permissions) {
-		HashSet<String> result = new HashSet<>();
-		permissions.forEach((i) -> {
+	private Collection<String> objectKeynames(List<SubscrServicePermission> permissions) {
+		Set<String> result = new HashSet<>();
+		permissions.stream().sorted((a, b) -> Integer.compare(a.getPriority(), b.getPriority())).forEach((i) -> {
 			if (i.getPermissionObjectKeyname() != null) {
-				result.add(i.getPermissionObjectKeyname());
+				if (Boolean.TRUE.equals(i.getIsDeny())) {
+					result.remove(i.getPermissionObjectKeyname());
+				} else {
+					result.add(i.getPermissionObjectKeyname());
+				}
 			}
 		});
 		return result;
@@ -78,15 +77,28 @@ public class SubscrServicePermissionFilter {
 	 * @param keynames
 	 * @return
 	 */
-	private <T> List<T> keynameFilter(HashSet<String> keynames, List<T> objectList) {
+	private <T> List<T> keynameFilter(Collection<String> keynames, List<T> objectList) {
 		return objectList.stream().filter((i) -> {
-			if (keynames instanceof KeynameObject) {
+			if (i instanceof KeynameObject) {
 				KeynameObject keynameObj = (KeynameObject) i;
 				return keynames.contains(keynameObj.getKeyname());
 			}
 			return false;
 		}).collect(Collectors.toList());
 
+	}
+
+	/**
+	 * 
+	 * @param className
+	 * @return
+	 */
+	public List<String> getObjectKeynamesByClass(String className) {
+		checkNotNull(className, "class name is null");
+		checkState(permissionList != null, "permissionList is not initialized");
+		List<SubscrServicePermission> objectPermissions = permissionList.stream()
+				.filter((i) -> className.equals(i.getPermissionObjectClass())).collect(Collectors.toList());
+		return new ArrayList<>(objectKeynames(objectPermissions));
 	}
 
 }

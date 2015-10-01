@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,35 +10,25 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/reportSettings")
-public class ReportSettingsController extends WebApiController {
+public class ReportSettingsController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportSettingsController.class);
-
-	@Autowired
-	private ReportTemplateService reportTemplateService;
-
-	// @Autowired
-	// private ReportTypeRepository reportTypeRepository;
+	private static final Logger logger = LoggerFactory.getLogger(ReportSettingsController.class);
 
 	@Autowired
 	private ReportTypeService reportTypeService;
 
 	@Autowired
 	private ReportPeriodRepository reportPeriodRepository;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
 	private ReportSheduleTypeRepository reportSheduleTypeRepository;
@@ -53,8 +45,12 @@ public class ReportSettingsController extends WebApiController {
 	 */
 	@RequestMapping(value = "/reportType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportType() {
-		return ResponseEntity.ok(reportTypeService
-				.findAllReportTypes(currentUserService.isSystem()));
+
+		List<ReportType> resultReports = reportTypeService.findAllReportTypes(currentUserService.isSystem());
+
+		resultReports = filterObjectAccess(resultReports);
+
+		return ResponseEntity.ok(resultReports);
 	}
 
 	/**
