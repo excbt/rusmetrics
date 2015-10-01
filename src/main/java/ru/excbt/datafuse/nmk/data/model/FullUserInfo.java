@@ -48,8 +48,8 @@ public class FullUserInfo implements Serializable {
 
 	@Column(name = "user_uuid")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
-	private UUID userUUID;	
-	
+	private UUID userUUID;
+
 	public FullUserInfo() {
 
 	}
