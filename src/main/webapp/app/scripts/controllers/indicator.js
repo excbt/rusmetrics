@@ -716,7 +716,7 @@ console.log($location.search());
                     textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
-                    var targetDOM = "#total"+columnName;
+                    var targetDOM = "#total"+columnName;                 
                     $(elDOM).qtip({
                         suppress: false,
                         content:{

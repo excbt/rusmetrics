@@ -518,6 +518,13 @@ tr.nmc-tr-odd>td{
     min-width: 35px;
     width: 2%;
 }
+
+/* Стиль для колонки, в которой есть кнопка и чексбокс*/
+.nmc-td-for-button-checkbox{
+    min-width: 45px;
+    width: 3%;
+}
+
 .nmc-td-for-buttons{
     min-width: 65px;
     width: 4%;
@@ -690,7 +697,7 @@ tr.nmc-main-table-header > th {
 .nmc-table-with-fixed-header{
     overflow: scroll;
 /*    height:685px;*/
-    height: 69vh;
+    height: 68vh;
     min-height: 360px;
     position:relative
 }
@@ -1660,7 +1667,11 @@ tr.nmc-main-table-header > th {
 .nmc-link-notice-detail{
     cursor: pointer;
 }
-  
+
+/* Стиль оформления записи пакета услуг*/
+.nmc-service-package-caption{
+    cursor: help;
+}
 
 /*------------------------------------------*/
 .span2, .span1 {

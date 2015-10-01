@@ -51,7 +51,7 @@ angular.module('portalNMC')
                      });
                 });
             });
-console.log($scope.availablePackages);            
+//console.log($scope.availablePackages);            
         },
                                  function(e){
             console.log(e);
@@ -76,6 +76,31 @@ console.log($scope.availablePackages);
         });
     };
     
+    //set popup with defined params
+    var setQtip = function(elem, text){
+        $(elem).qtip({
+            suppress: false,
+            content:{
+                text: text,
+                button : true
+            },
+            show:{
+                event: 'click'
+            },
+            style:{
+                classes: 'qtip-nmc-indicator-tooltip',
+                width: 1000
+            },
+            hide: {
+                event: 'unfocus'
+            },
+            position:{
+                my: 'top left',
+                at: 'bottom left'
+            }
+        });
+    };
+    
     //get account services list
     $scope.getSelectedPackages = function(url){
         var targetUrl = url;
@@ -92,6 +117,17 @@ console.log($scope.availablePackages);
                         };  
                     });
                 });
+            });
+            //add popup for packages and services
+            $scope.availablePackages.forEach(function(pack){
+                var elDOM = "#package"+pack.id;
+//    console.log($(elDOM));
+                setQtip(elDOM, pack.packDescription);
+                pack.serviceItems.forEach(function(serv){
+                    var servDOM = "#service"+serv.id;
+                    setQtip(servDOM, serv.itemDescription);
+                });
+
             });
         },
                                  function(e){
@@ -184,6 +220,28 @@ console.log($scope.availablePackages);
     $scope.editPackages = function(){
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         $('#editServiceListModal').modal();
+    };
+    
+    $scope.packClick = function(pack){
+//                    var elDOM = "#package"+pack.id;
+//console.log($(elDOM));                
+//            $(elDOM).qtip({
+//                suppress: false,
+//                content:{
+//                    text: pack.packDescription,
+//                    button : true
+//                },
+//                show:{
+//                    event: 'click'
+//                },
+//                style:{
+//                    classes: 'qtip-nmc-indicator-tooltip',
+//                    width: 1000
+//                },
+//                hide: {
+//                    event: 'unfocus'
+//                }
+//            });
     };
     
 }]);
