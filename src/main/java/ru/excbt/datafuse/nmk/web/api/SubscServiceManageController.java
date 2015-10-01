@@ -173,7 +173,7 @@ public class SubscServiceManageController extends SubscrApiController {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
 				.selectSubscriberPermissions(getSubscriberId(), getSubscriberLocalDate());
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
-				.collect(Collectors.toList());
+				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
 		return responseOK(result);
 	}
 
@@ -187,7 +187,7 @@ public class SubscServiceManageController extends SubscrApiController {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService.selectSubscriberPermissions(subscriberId,
 				getSubscriberLocalDate(subscriberId));
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
-				.collect(Collectors.toList());
+				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
 		return responseOK(result);
 	}
 
