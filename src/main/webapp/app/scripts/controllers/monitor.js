@@ -38,6 +38,8 @@ console.log("Monitor Controller.");
       
     $scope.monitorSettings.isCtrlEnd = false;
       
+    $scope.monitorSettings.ctxId = "monitor_page";
+      
     $scope.monitorSettings.dateRangeSettings = mainSvc.getDateRangeOptions("monitor-ru");
     $scope.monitorSettings.monitorDates = {
         startDate :  $rootScope.monitorStart,
@@ -755,6 +757,30 @@ console.log($(imgObj));
         $scope.addMoreObjectsForMonitor();
         $scope.$apply();
     });
+         
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+        if (ctxFlag == false){
+            window.location.assign('#/notices/list');
+        };
+    };
+    setVisibles($scope.monitorSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.monitorSettings.ctxId);
+    });    
     
         //chart
     $scope.runChart = function(objId){

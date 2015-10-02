@@ -10,12 +10,14 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$window', '$location', 'monitorSvc', function ($scope, $rootScope, $window, $location, monitorSvc) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$window', '$location', 'monitorSvc', 'mainSvc', function ($scope, $rootScope, $window, $location, monitorSvc, mainSvc) {
 console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};  
       //show on/off menu title
     $scope.mainCtrlSettings.showFullMenuFlag = true;  
+    $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag(); 
+    $scope.mainCtrlSettings.ctxId = "nmc_main";
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
@@ -104,7 +106,34 @@ console.log(window.location);
     });
 
     initMenu();
-//      $scope.setDefaultMenuState();   
+//      $scope.setDefaultMenuState();
+//    $rootScope.$on('servicePermissions:loaded', function(event, args){
+//        $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag(); 
+//    });
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+//        if (ctxFlag == false){
+//            window.location.assign('#/');
+//        };
+    };
+    setVisibles($scope.mainCtrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.mainCtrlSettings.ctxId);
+    });  
+      
   }]);
 
 

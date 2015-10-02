@@ -7,7 +7,10 @@
     </ul>
 </div> 
 -->
-<div crud-grid-objects-use-svc table="'../api/subscr/contObjects'"
+<div id="object_list_view_page_access_denided" ng-class="{'nmc-show':!ctrlSettings.pageAccess, 'nmc-hide':ctrlSettings.pageAccess}">
+    Нет доступа
+</div>
+<div id="object_list_view_page" ng-class="{'nmc-show':ctrlSettings.pageAccess, 'nmc-hide':!ctrlSettings.pageAccess}" crud-grid-objects-use-svc table="'../api/subscr/contObjects'"
 	columns='[
 
 	          {"name":"fullName", "header" : "Название", "class":"col-md-10"}

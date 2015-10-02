@@ -7,6 +7,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     $scope.ctrlSettings.selectedAll = false;
     
+    $scope.ctrlSettings.ctxId = "paramset_page";
+    
     $scope.set_of_objects_flag = false; //флаг: истина - открыта вкладка с объектами
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
@@ -883,6 +885,30 @@ console.log(totalGroupObjects);
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
+    });
+    
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+//        if (ctxFlag == false){
+//            window.location.assign('#/');
+//        };
+    };
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.ctrlSettings.ctxId);
     });
 
     
