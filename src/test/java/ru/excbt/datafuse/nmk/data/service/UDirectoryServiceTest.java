@@ -13,26 +13,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class UDirectoryServiceTest extends JpaSupportTest {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryServiceTest.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(UDirectoryServiceTest.class);
+
 	@Autowired
 	private UDirectoryService directoryService;
-	
+
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
+
 	/**
 	 * 
 	 */
 	@Test
 	public void testAvailableDirectoriesIds() {
-		List<Long> ids = directoryService.selectAvailableDirectoryIds();
+		List<Long> ids = directoryService.selectAvailableDirectoryIds(currentSubscriberService.getSubscriberId());
 		assertTrue(ids.size() > 0);
 		logger.info("Available directoryIds {}", ids);
 		for (long id : ids) {
-			assertTrue(directoryService.checkAvailableDirectory(id));
+			assertTrue(directoryService.checkAvailableDirectory(currentSubscriberService.getSubscriberId(), id));
 		}
 	}
 
@@ -43,22 +45,20 @@ public class UDirectoryServiceTest extends JpaSupportTest {
 	public void testCreateSaveDelete() {
 		UDirectoryNode nd = UDirectoryNode.newInstance("Auto Test Node " + System.currentTimeMillis());
 		nd.setNodeCaption("Needed to be deleted");
-		
+
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child1"));
 		nd.getChildNodes().add(UDirectoryNode.newInstance("child2"));
-		
+
 		UDirectory d = new UDirectory();
 		d.setDirectoryName(nd.getNodeName());
 		d.setDirectoryNode(nd);
-		
-		
-		UDirectory savedD = directoryService.save(d);
-		
+
+		UDirectory savedD = directoryService.save(currentSubscriberService.getSubscriberId(), d);
+
 		checkNotNull(savedD.getId());
-		
-		directoryService.delete(savedD.getId());
-		
+
+		directoryService.delete(currentSubscriberService.getSubscriberId(), savedD.getId());
+
 	}
-		
-	
+
 }

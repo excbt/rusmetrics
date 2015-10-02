@@ -29,45 +29,44 @@ public class TariffPlanServiceTest extends JpaSupportTest {
 	@Ignore
 	public void testInitDefaultTarifPlan() {
 		// tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
-		tariffPlanService.initDefaultTariffPlan(TEST_RSO_ID);
+		tariffPlanService.initDefaultTariffPlan(currentSubscriberService.getSubscriberId(), TEST_RSO_ID);
 	}
 
 	@Test
-	//@Ignore
+	// @Ignore
 	public void testUpdateTarifPlan() {
 
-		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList();
+		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList(currentSubscriberService.getSubscriberId());
 
 		assertTrue(tpList.size() > 0);
 
 		TariffPlan tp = tpList.get(0);
 
-		List<ContObject> contObjects = tariffPlanService
-				.selectTariffPlanAvailableContObjects(tp.getId(),
-						currentSubscriberService.getSubscriberId());
+		List<ContObject> contObjects = tariffPlanService.selectTariffPlanAvailableContObjects(tp.getId(),
+				currentSubscriberService.getSubscriberId());
 
 		if (contObjects.size() == 0) {
 			return;
 		}
-		
+
 		assertTrue(contObjects.size() > 0);
 
 		tp.getContObjects().add(contObjects.get(0));
 
-		TariffPlan result = tariffPlanService.updateOne(tp);
+		TariffPlan result = tariffPlanService.updateOne(currentSubscriberService.getSubscriberId(), tp);
 		assertNotNull(result);
 		// tariffPlanService.deleteDefaultTariffPlan(TEST_RSO_ID );
 		// tariffPlanService.initDefaultTariffPlan(TEST_RSO_ID);
 	}
 
-	@Test (expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testUpdateTarifPlanIllgal() {
 
-		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList();
+		List<TariffPlan> tpList = tariffPlanService.selectTariffPlanList(currentSubscriberService.getSubscriberId());
 		assertTrue(tpList.size() > 0);
 		TariffPlan tp = tpList.get(0);
 		tp.setEndDate(DateTime.now().minusYears(10).toDate());
-		tariffPlanService.updateOne(tp);
+		tariffPlanService.updateOne(currentSubscriberService.getSubscriberId(), tp);
 	}
 
 }

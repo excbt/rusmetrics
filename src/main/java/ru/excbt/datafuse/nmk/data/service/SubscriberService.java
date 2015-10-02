@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,13 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOne(long id) {
-		return subscriberRepository.findOne(id);
+	public Subscriber selectSubscriber(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		if (result == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
+
+		return result;
 	}
 
 	/**

@@ -95,7 +95,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		checkArgument(entity.getPackId() != null, "packId is not set");
 		checkNotNull(accessDate, "accessDate is not set");
 
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		entity.setSubscriber(subscriber);
 
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository
@@ -131,7 +131,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		List<SubscrServiceAccess> removeGrants = new ArrayList<>();
 		List<SubscrServiceAccess> addGrants = new ArrayList<>();
 
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		if (subscriber == null) {
 			throw new PersistenceException(String.format("subscriber (id=%d) is not found", subscriberId));
 		}

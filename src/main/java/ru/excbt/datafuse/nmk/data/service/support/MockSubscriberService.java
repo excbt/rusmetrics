@@ -13,11 +13,10 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 @Service
 public class MockSubscriberService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(MockSubscriberService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MockSubscriberService.class);
 
-	public static final long DEV_SUBSCR_ORG_ID = 728;	
-	
+	public static final long DEV_SUBSCR_ORG_ID = 728;
+
 	private Long mockSubscriberId = DEV_SUBSCR_ORG_ID;
 
 	@Autowired
@@ -44,11 +43,10 @@ public class MockSubscriberService {
 	 * @return
 	 */
 	public Subscriber getMockSubscriber() {
-		checkState(mockSubscriberId != null,
-				"Mock Subscriber Service is Disabled");
+		checkState(mockSubscriberId != null, "Mock Subscriber Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
-		return subscriberService.findOne(mockSubscriberId);
+		return subscriberService.selectSubscriber(mockSubscriberId);
 
 	}
 }

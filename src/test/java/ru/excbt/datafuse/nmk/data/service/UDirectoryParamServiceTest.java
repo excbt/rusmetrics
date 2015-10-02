@@ -13,14 +13,14 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
+import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class UDirectoryParamServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryParamServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(UDirectoryParamServiceTest.class);
 
 	private final static long TEST_DIRECTORY_ID = 19748782;
-	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;	
+	public final static long TEST_DIRECTORY_PARAM_ID = 19748790;
 
 	@Autowired
 	private UDirectoryParamService directoryParamService;
@@ -28,15 +28,17 @@ public class UDirectoryParamServiceTest extends JpaSupportTest {
 	@Autowired
 	private UDirectoryService directoryService;
 
+	@Autowired
+	private CurrentSubscriberService currentSubscriberService;
 
 	@Test
 	public void testSaveDelete() {
 		logger.info("TEST_DIRECTORY_ID = {}", TEST_DIRECTORY_ID);
-		
-		UDirectory n = directoryService.findOne(TEST_DIRECTORY_ID);
+
+		UDirectory n = directoryService.findOne(currentSubscriberService.getSubscriberId(), TEST_DIRECTORY_ID);
 
 		assertNotNull(n);
-		
+
 		UDirectoryParam p = new UDirectoryParam();
 		p.setParamType(ParamType.STRING.name());
 		p.setParamName("Name1");
@@ -46,14 +48,13 @@ public class UDirectoryParamServiceTest extends JpaSupportTest {
 		directoryParamService.delete(savedP);
 
 	}
-	
+
 	@Test
 	public void testSelectParams() {
 		List<?> lst = directoryParamService.selectDirectoryParams(TEST_DIRECTORY_ID);
 		assertNotNull(lst);
 	}
-	
-	
+
 	@Test
 	public void testUpdate() {
 		UDirectoryParam param = directoryParamService.findOne(TEST_DIRECTORY_PARAM_ID);

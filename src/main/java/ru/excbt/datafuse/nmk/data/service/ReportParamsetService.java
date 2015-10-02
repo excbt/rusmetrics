@@ -36,8 +36,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class ReportParamsetService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetService.class);
 
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
@@ -79,23 +78,18 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset createOne(ReportParamset reportParamset,
-			Long[] contObjectIds) {
+	public ReportParamset createOne(ReportParamset reportParamset, Long[] contObjectIds) {
 
 		checkNotNull(reportParamset);
 
-		for (ReportParamsetParamSpecial param : reportParamset
-				.getParamSpecialList()) {
+		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
 		}
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
-		boolean requiredPassed = reportMakerParamService
-				.isAllCommonRequiredParamsExists(reportMakerParam)
-				&& reportMakerParamService
-						.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean requiredPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam)
+				&& reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
@@ -118,8 +112,7 @@ public class ReportParamsetService implements SecuredRoles {
 		if (checkCanUpdate(entity.getId())) {
 			reportParamsetRepository.delete(entity);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't delete ReportParamset(id=%d)", entity.getId()));
+			throw new PersistenceException(String.format("Can't delete ReportParamset(id=%d)", entity.getId()));
 		}
 
 	}
@@ -135,18 +128,14 @@ public class ReportParamsetService implements SecuredRoles {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
 
-		for (ReportParamsetParamSpecial param : reportParamset
-				.getParamSpecialList()) {
+		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
 		}
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamset);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset);
 
-		boolean requiredPassed = reportMakerParamService
-				.isAllCommonRequiredParamsExists(reportMakerParam)
-				&& reportMakerParamService
-						.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean requiredPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam)
+				&& reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
@@ -154,9 +143,8 @@ public class ReportParamsetService implements SecuredRoles {
 		if (checkCanUpdate(reportParamset.getId())) {
 			result = reportParamsetRepository.save(reportParamset);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't update common Report Paramset (id=%d)",
-					reportParamset.getId()));
+			throw new PersistenceException(
+					String.format("Can't update common Report Paramset (id=%d)", reportParamset.getId()));
 		}
 
 		return result;
@@ -169,8 +157,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportParamset updateOne(ReportParamset reportParamset,
-			Long[] contObjectIds) {
+	public ReportParamset updateOne(ReportParamset reportParamset, Long[] contObjectIds) {
 
 		checkNotNull(reportParamset);
 
@@ -194,8 +181,7 @@ public class ReportParamsetService implements SecuredRoles {
 			reportSheduleService.deleteByReportParamset(id);
 			reportParamsetRepository.delete(id);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't delete ReportParamset(id=%d)", id));
+			throw new PersistenceException(String.format("Can't delete ReportParamset(id=%d)", id));
 		}
 
 	}
@@ -206,8 +192,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> findReportParamsetList(long reportTemplateId) {
-		return reportParamsetRepository
-				.findByReportTemplateId(reportTemplateId);
+		return reportParamsetRepository.findByReportTemplateId(reportTemplateId);
 	}
 
 	/**
@@ -215,13 +200,12 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportParamset> selectReportTypeParamsetList(
-			ReportTypeKey reportType, boolean isActive, long subscriberId) {
-		List<ReportParamset> commonReportParams = reportParamsetRepository
-				.selectCommonReportParamset(reportType, isActive);
+	public List<ReportParamset> selectReportTypeParamsetList(ReportTypeKey reportType, boolean isActive,
+			long subscriberId) {
+		List<ReportParamset> commonReportParams = reportParamsetRepository.selectCommonReportParamset(reportType,
+				isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
-				.selectSubscriberReportParamset(reportType, isActive,
-						subscriberId);
+				.selectSubscriberReportParamset(reportType, isActive, subscriberId);
 
 		List<ReportParamset> result = new ArrayList<>();
 		result.addAll(commonReportParams);
@@ -240,8 +224,7 @@ public class ReportParamsetService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportParamset findOne(long reportParamsetId) {
 
-		ReportParamset result = reportParamsetRepository
-				.findOne(reportParamsetId);
+		ReportParamset result = reportParamsetRepository.findOne(reportParamsetId);
 
 		// result.getReportTemplate().getId();
 		// result.getSubscriber().getId();
@@ -277,8 +260,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 		ReportParamset rp = reportParamsetRepository.findOne(reportParamsetId);
 		if (rp == null) {
-			throw new PersistenceException(String.format(
-					"ReportParamset (id=%d) not found", reportParamsetId));
+			throw new PersistenceException(String.format("ReportParamset (id=%d) not found", reportParamsetId));
 		}
 		rp.set_active(false);
 		rp.setActiveEndDate(new Date());
@@ -294,8 +276,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ReportParamset createByTemplate(long srcId,
-			ReportParamset reportParamset, Long[] contObjectIds,
+	public ReportParamset createByTemplate(long srcId, ReportParamset reportParamset, Long[] contObjectIds,
 			Subscriber subscriber) {
 
 		checkNotNull(reportParamset);
@@ -358,10 +339,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectParamsetAvailableContObjectUnits(
-			long reportParamsetId, long subscriberId) {
-		return reportParamsetUnitRepository.selectAvailableContObjects(
-				reportParamsetId, subscriberId);
+	public List<ContObject> selectParamsetAvailableContObjectUnits(long reportParamsetId, long subscriberId) {
+		return reportParamsetUnitRepository.selectAvailableContObjects(reportParamsetId, subscriberId);
 	}
 
 	/**
@@ -370,16 +349,14 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset,
-			long objectId) {
+	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset, long objectId) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
 
 		if (checkReportParamsetUnitObject(reportParamset.getId(), objectId)) {
-			throw new PersistenceException(
-					String.format(
-							"ReportParamsetUnit error. A pair of ReportParamset (id=%d) and Object (id=%d) is alredy exists",
-							reportParamset.getId(), objectId));
+			throw new PersistenceException(String.format(
+					"ReportParamsetUnit error. A pair of ReportParamset (id=%d) and Object (id=%d) is alredy exists",
+					reportParamset.getId(), objectId));
 		}
 
 		ReportParamsetUnit u = new ReportParamsetUnit();
@@ -396,8 +373,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param objectIds
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void addUnitToParamset(ReportParamset reportParamset,
-			long[] objectIds) {
+	public void addUnitToParamset(ReportParamset reportParamset, long[] objectIds) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());
 
@@ -414,8 +390,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ReportParamsetUnit addUnitToParamset(long reportParamsetId,
-			Long objectId) {
+	public ReportParamsetUnit addUnitToParamset(long reportParamsetId, Long objectId) {
 		ReportParamset rp = findOne(reportParamsetId);
 		checkNotNull(rp);
 		return addUnitToParamset(rp, objectId);
@@ -426,29 +401,23 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param reportParamsetUnitId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteUnitFromParamset(final long reportParamsetId,
-			final long contObjectId) {
+	public void deleteUnitFromParamset(final long reportParamsetId, final long contObjectId) {
 
-		List<Long> ids = reportParamsetUnitRepository.selectUnitIds(
-				reportParamsetId, contObjectId);
+		List<Long> ids = reportParamsetUnitRepository.selectUnitIds(reportParamsetId, contObjectId);
 
 		if (ids.size() > 1) {
-			logger.trace(
-					"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})",
+			logger.trace("Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})",
 					reportParamsetId, contObjectId);
-			throw new PersistenceException(
-					String.format(
-							"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId=%d, contObjectId=%d)",
-							reportParamsetId, contObjectId));
+			throw new PersistenceException(String.format(
+					"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId=%d, contObjectId=%d)",
+					reportParamsetId, contObjectId));
 		}
 		if (ids.size() == 0) {
-			logger.trace(
-					"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})",
+			logger.trace("Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})",
 					reportParamsetId, contObjectId);
-			throw new PersistenceException(
-					String.format(
-							"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId=%d, contObjectId=%d)",
-							reportParamsetId, contObjectId));
+			throw new PersistenceException(String.format(
+					"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId=%d, contObjectId=%d)",
+					reportParamsetId, contObjectId));
 		}
 
 		reportParamsetUnitRepository.delete(ids.get(0));
@@ -460,8 +429,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @param contObjectIds
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteUnitFromParamset(long reportParamsetId,
-			long[] contObjectIds) {
+	public void deleteUnitFromParamset(long reportParamsetId, long[] contObjectIds) {
 		checkNotNull(contObjectIds);
 		for (long id : contObjectIds) {
 			deleteUnitFromParamset(reportParamsetId, id);
@@ -475,10 +443,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkReportParamsetUnitObject(long reportParamsetId,
-			long objectId) {
-		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId,
-				objectId).size() > 0;
+	public boolean checkReportParamsetUnitObject(long reportParamsetId, long objectId) {
+		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId, objectId).size() > 0;
 	}
 
 	/**
@@ -489,24 +455,18 @@ public class ReportParamsetService implements SecuredRoles {
 	 */
 	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void copyReportParamsetUnit222(long srcReportParamsetId,
-			long dstReportParamsetId) {
+	public void copyReportParamsetUnit222(long srcReportParamsetId, long dstReportParamsetId) {
 
-		List<?> checkList = reportParamsetUnitRepository
-				.selectUnitIds(dstReportParamsetId);
+		List<?> checkList = reportParamsetUnitRepository.selectUnitIds(dstReportParamsetId);
 		if (checkList.size() > 0) {
 			throw new PersistenceException(
-					String.format(
-							"ReportParamsetUnit of ReportParamset(id=%d) already exists",
-							dstReportParamsetId));
+					String.format("ReportParamsetUnit of ReportParamset(id=%d) already exists", dstReportParamsetId));
 		}
 
-		ReportParamset dstReportParamset = reportParamsetRepository
-				.findOne(dstReportParamsetId);
+		ReportParamset dstReportParamset = reportParamsetRepository.findOne(dstReportParamsetId);
 		checkNotNull(dstReportParamset);
 
-		List<Long> idsToCopy = reportParamsetUnitRepository
-				.selectUnitIds(srcReportParamsetId);
+		List<Long> idsToCopy = reportParamsetUnitRepository.selectUnitIds(srcReportParamsetId);
 		for (Long id : idsToCopy) {
 			addUnitToParamset(dstReportParamset, id);
 		}
@@ -518,18 +478,14 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ReportParamset createReportParamsetMaster(long reportTemplateId,
-			String reportParamsetName, ReportPeriodKey reportPeriod,
-			ReportOutputFileType reportOutputFileType, long subscriberId) {
+	public ReportParamset createReportParamsetMaster(long reportTemplateId, String reportParamsetName,
+			ReportPeriodKey reportPeriod, ReportOutputFileType reportOutputFileType, long subscriberId) {
 
-		ReportTemplate reportTemplate = reportTemplateService
-				.findOne(reportTemplateId);
-		checkNotNull(reportTemplate, String.format(
-				"ReportTemplate (id=%d) not found", reportTemplateId));
+		ReportTemplate reportTemplate = reportTemplateService.findOne(reportTemplateId);
+		checkNotNull(reportTemplate, String.format("ReportTemplate (id=%d) not found", reportTemplateId));
 
-		Subscriber subscriber = subscriberService.findOne(subscriberId);
-		checkNotNull(subscriber,
-				String.format("Subscriber (id=%d) not found", subscriberId));
+		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
+		checkNotNull(subscriber, String.format("Subscriber (id=%d) not found", subscriberId));
 
 		ReportParamset reportParamset = new ReportParamset();
 		reportParamset.setSubscriber(subscriber);
@@ -554,10 +510,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportParamset> selectReportParamset(long reportTemplateId,
-			DateTime activeDate) {
-		return reportParamsetRepository.selectReportParamset(reportTemplateId,
-				activeDate.toDate());
+	public List<ReportParamset> selectReportParamset(long reportTemplateId, DateTime activeDate) {
+		return reportParamsetRepository.selectReportParamset(reportTemplateId, activeDate.toDate());
 	}
 
 	/**
@@ -567,10 +521,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportParamset> selectReportParamset(long reportTemplateId,
-			boolean isActive) {
-		return reportParamsetRepository.selectReportParamset(reportTemplateId,
-				isActive);
+	public List<ReportParamset> selectReportParamset(long reportTemplateId, boolean isActive) {
+		return reportParamsetRepository.selectReportParamset(reportTemplateId, isActive);
 	}
 
 	/**
@@ -579,15 +531,13 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateUnitToParamset(final long reportParamsetId,
-			final Long[] objectIds) {
+	public void updateUnitToParamset(final long reportParamsetId, final Long[] objectIds) {
 
 		checkNotNull(objectIds);
 
 		List<Long> newObjectIdList = Arrays.asList(objectIds);
 
-		List<Long> currentIds = reportParamsetUnitRepository
-				.selectObjectIds(reportParamsetId);
+		List<Long> currentIds = reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 		for (Long currentId : currentIds) {
 			if (!newObjectIdList.contains(currentId)) {
 				logger.trace("removing objectId:{}", currentId);
@@ -628,9 +578,8 @@ public class ReportParamsetService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void setupRequiredPassed(Long reportParamsetId) {
 
-		Iterable<ReportParamset> allParamsets = reportParamsetId == null ? reportParamsetRepository
-				.findAll() : Arrays.asList(reportParamsetRepository
-				.findOne(reportParamsetId));
+		Iterable<ReportParamset> allParamsets = reportParamsetId == null ? reportParamsetRepository.findAll()
+				: Arrays.asList(reportParamsetRepository.findOne(reportParamsetId));
 
 		int totalCounter = 0;
 		int passedCounter = 0;
@@ -642,17 +591,13 @@ public class ReportParamsetService implements SecuredRoles {
 				continue;
 			}
 
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(rp);
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(rp);
 
-			boolean commonPassed = reportMakerParamService
-					.isAllCommonRequiredParamsExists(reportMakerParam);
+			boolean commonPassed = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam);
 
-			boolean specialPassed = reportMakerParamService
-					.isAllSpecialRequiredParamsExists(reportMakerParam);
+			boolean specialPassed = reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
 
-			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed,
-					specialPassed);
+			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
 
 			boolean requiredPassed = commonPassed && specialPassed;
 
@@ -660,10 +605,8 @@ public class ReportParamsetService implements SecuredRoles {
 				passedCounter++;
 			}
 
-			logger.info(
-					"ReportParamset id:{} reportType:{} ... requiredPass: {}",
-					rp.getId(), rp.getReportTemplate().getReportTypeKey(),
-					requiredPassed);
+			logger.info("ReportParamset id:{} reportType:{} ... requiredPass: {}", rp.getId(),
+					rp.getReportTemplate().getReportTypeKey(), requiredPassed);
 
 			rp.setAllRequiredParamsPassed(requiredPassed);
 			reportParamsetRepository.save(rp);
@@ -671,8 +614,7 @@ public class ReportParamsetService implements SecuredRoles {
 			totalCounter++;
 		}
 
-		logger.info("Total Paramset processed {}. Passed {}", totalCounter,
-				passedCounter);
+		logger.info("Total Paramset processed {}. Passed {}", totalCounter, passedCounter);
 
 	}
 
