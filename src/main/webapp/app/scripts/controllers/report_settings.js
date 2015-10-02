@@ -6,6 +6,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.ctxId = "report_template";
     
     $scope.isPositionSystemChanged = false;
     $scope.active_tab_active_templates = true;
@@ -360,6 +361,30 @@ console.log(curObject);
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
+    });
+    
+        //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+//        if (ctxFlag == false){
+//            window.location.assign('#/');
+//        };
+    };
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.ctrlSettings.ctxId);
     });
     
 }]);

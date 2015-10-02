@@ -1,6 +1,9 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
+    
+    $scope.ctrlSettings ={};
+    $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -716,7 +719,7 @@ console.log($location.search());
                     textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
-                    var targetDOM = "#total"+columnName;
+                    var targetDOM = "#total"+columnName;                 
                     $(elDOM).qtip({
                         suppress: false,
                         content:{
@@ -868,5 +871,34 @@ console.log($location.search());
         return true;
     };
         
+        //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+//console.log(elDOM);            
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+//        if (ctxFlag == false){
+//            window.location.assign('#/');
+//        };
+    };
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.ctrlSettings.ctxId);
+    });
+        
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    }, 500);    
                 
 }]);

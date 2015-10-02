@@ -17,8 +17,8 @@ angular.module('portalNMC')
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
                 
 console.log("Objects directive.");
 //var timeDirStart = (new Date()).getTime();
@@ -58,6 +58,30 @@ console.log("Objects directive.");
                 $scope.objectCtrlSettings.serverTimeZone = 3;
                 //date format for user
                 $scope.objectCtrlSettings.dateFormat = "DD.MM.YYYY";
+                
+                //service permission settings
+                $scope.objectCtrlSettings.mapAccess = false;
+                $scope.objectCtrlSettings.mapCtxId = "object_map_2nd_menu_item";
+
+//                $scope.objectCtrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
+//                $scope.objectCtrlSettings.mapAccess = mainSvc.checkContext($scope.objectCtrlSettings.mapCtxId);
+                
+                var setVisibles = function(){
+                    var tmp = mainSvc.getContextIds();
+                    tmp.forEach(function(element){
+                        var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+                        if (angular.isUndefined(elDOM)||(elDOM==null)){
+                            return;
+                        };                        
+                        $('#'+element.permissionTagId).removeClass('nmc-hide');
+                    });
+                };
+                setVisibles();
+                //listen change of service list
+                $rootScope.$on('servicePermissions:loaded', function(){
+                    setVisibles();
+                });
+                
                 
                 $scope.object = {};
                 $scope.objects = [];

@@ -13,6 +13,8 @@ angular.module('portalNMC')
     $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl+ "/servicePriceList";
     $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
     
+    $scope.ctrlSettings.currency = "y.e."; 
+    
     //var initialization
         //available service packages
     $scope.availablePackages = null;
@@ -51,7 +53,7 @@ angular.module('portalNMC')
                      });
                 });
             });
-console.log($scope.availablePackages);            
+//console.log($scope.availablePackages);            
         },
                                  function(e){
             console.log(e);
@@ -63,6 +65,7 @@ console.log($scope.availablePackages);
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
             var tmp = response.data;
+//console.log(tmp)            
             $scope.availablePackages = tmp;// [tmp, angular.copy(tmp)];
 //            for (var i=1; i<3; i++){
 //                var tmp1 = angular.copy(tmp);
@@ -76,11 +79,36 @@ console.log($scope.availablePackages);
         });
     };
     
+    //set popup with defined params
+    var setQtip = function(elem, text){
+        $(elem).qtip({
+            suppress: false,
+            content:{
+                text: text,
+                button : true
+            },
+            show:{
+                event: 'click'
+            },
+            style:{
+                classes: 'qtip-nmc-indicator-tooltip',
+                width: 1000
+            },
+            hide: {
+                event: 'unfocus'
+            },
+            position:{
+                my: 'top left',
+                at: 'bottom left'
+            }
+        });
+    };
+    
     //get account services list
     $scope.getSelectedPackages = function(url){
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
-            var tmp = response.data;
+            var tmp = response.data;            
             tmp.forEach(function(elem){
                 $scope.availablePackages.forEach(function(pack){
                     if ((pack.id === elem.packId)&&(!elem.hasOwnProperty("itemId"))){
@@ -92,6 +120,17 @@ console.log($scope.availablePackages);
                         };  
                     });
                 });
+            });
+            //add popup for packages and services
+            $scope.availablePackages.forEach(function(pack){
+                var elDOM = "#package"+pack.id;
+//    console.log($(elDOM));
+                setQtip(elDOM, pack.packDescription);
+                pack.serviceItems.forEach(function(serv){
+                    var servDOM = "#service"+serv.id;
+                    setQtip(servDOM, serv.itemDescription);
+                });
+
             });
         },
                                  function(e){
@@ -117,26 +156,68 @@ console.log($scope.availablePackages);
     
     //another way
     //control change list, when user click service list
-    $scope.serviceClick = function(pack, serv){
+    var serviceSetFlag = function(serv){
         if (serv.selected === true){
-            serv.added = true;
+            serv.changedFlag +=1; 
         }else{
             //remove service from change list
-        };
-        
+            serv.changedFlag -=1;
+        };       
     };
-    
-    $scope.packageClick = function(pack){
-        pack;
+    //listener on service check box click
+    $scope.serviceClick = function(pack, serv){
+        serviceSetFlag(serv);
+        var tmpPackFlag = false;
+        pack.serviceItems.some(function(serv){
+            if (serv.selected!=true){
+                tmpPackFlag = true;
+                return true;
+            };
+        });
+        if (tmpPackFlag === false){pack.selected = true;};
     };
-    
     
     //save changes
     $scope.checkPackages = function(){
         //Получить лист изменений
             //сравнить два списка : 
-        $scope.availablePackages;
-        $scope.serviceListEdition;
+//        $scope.availablePackages;
+        
+        $scope.serviceAddedList = [];
+        $scope.serviceRemovedList = [];
+//console.log($scope.serviceListEdition);
+        //get added services
+        $scope.serviceListEdition.forEach(function(pack){
+            var tmpPack = angular.copy(pack);
+            var addPackFlag = false;
+            tmpPack.serviceItems = [];
+//            $scope.serviceAddedList.push(tmpPack);
+            pack.serviceItems.forEach(function(serv){
+                if (serv.changedFlag == 1){
+                    var tmpServ = angular.copy(serv);
+                    tmpPack.serviceItems.push(tmpServ);
+                    addPackFlag = true;
+                };
+            });
+            if (addPackFlag == true){$scope.serviceAddedList.push(tmpPack);};
+        });
+//console.log($scope.serviceAddedList);  
+        //get removed services
+        $scope.serviceListEdition.forEach(function(pack){
+            var tmpPack = angular.copy(pack);
+            var addPackFlag = false;
+            tmpPack.serviceItems = [];
+//            $scope.serviceAddedList.push(tmpPack);
+            pack.serviceItems.forEach(function(serv){
+                if (serv.changedFlag == -1){
+                    var tmpServ = angular.copy(serv);
+                    tmpPack.serviceItems.push(tmpServ);
+                    addPackFlag = true;
+                };
+            });
+            if (addPackFlag == true){$scope.serviceRemovedList.push(tmpPack);};
+        });
+//console.log($scope.serviceRemovedList); 
         //Вывести изменения на экран
         $('#confirmSavingModal').modal();
         //Запросить подтверждение сохранения изменений
@@ -180,10 +261,61 @@ console.log($scope.availablePackages);
         pack.showDetailsFlag = !pack.showDetailsFlag;
     };
     
+    var initChangdFlags = function(plist){
+//        plist.changeFlag = 0;
+        plist.forEach(function(pack){
+            pack.changedFlag = 0;
+            pack.serviceItems.forEach(function(serv){
+                serv.changedFlag = 0;
+            });
+        });
+        
+    };
+    
     //Edit button onClick listener
     $scope.editPackages = function(){
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
+        initChangdFlags($scope.serviceListEdition);
         $('#editServiceListModal').modal();
+    };
+    
+    //listener on edit service modal window show
+    $('#editServiceListModal').on('show.bs.modal',function(e){
+        window.setTimeout(function(){
+                //add popup for editable packages and services
+            $scope.serviceListEdition.forEach(function(pack){
+                var elDOM = "#editpackage"+pack.id;
+//console.log($(elDOM));
+                setQtip(elDOM, pack.packDescription);
+                pack.serviceItems.forEach(function(serv){
+                    var servDOM = "#editservice"+serv.id;
+                    setQtip(servDOM, serv.itemDescription);
+                });
+
+            });
+        }, 500);
+    });
+    
+    //listener on package checkbox click
+    $scope.packClick = function(pack){
+        if (pack.selected === true){
+            pack.changedFlag +=1; 
+        }else{
+            //remove service from change list
+            pack.changedFlag -=1;
+        };
+        if (pack.selected == true){
+            if (angular.isArray(pack.serviceItems)){
+                pack.serviceItems.forEach(function(serv){
+//console.log(serv);                    
+                    if (serv.selected !== true){
+                        serv.selected = true;
+                        serviceSetFlag(serv);
+                    };
+                    
+                });
+            };
+        };
     };
     
 }]);

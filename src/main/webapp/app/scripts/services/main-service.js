@@ -1,5 +1,28 @@
+//Service decides common tasks for all portal
+
 angular.module('portalNMC')
-.service('mainSvc', function($cookies){
+.service('mainSvc', function($cookies, $http, $rootScope){
+    //set services settings
+    var mainSvcSettings = {};
+    mainSvcSettings.subscrUrl = "../api/subscr";
+    mainSvcSettings.servicePermissionUrl = mainSvcSettings.subscrUrl+"/manage/service/permissions";
+    mainSvcSettings.loadingServicePermissionFlag = false;
+//    mainSvcSettings.loadedServicePermission = null;
+    
+    var contextIds = [];
+    
+    var getContextIds = function(){
+        return contextIds;
+    };
+    
+    var getLoadingServicePermissionFlag = function(){
+        return mainSvcSettings.loadingServicePermissionFlag;
+    };
+    
+    var getLoadedServicePermission = function(){
+        return mainSvcSettings.loadedServicePermission;
+    };
+    
     //object map
     var objectMapSettings = {};
     objectMapSettings.zoom = null;
@@ -36,7 +59,7 @@ angular.module('portalNMC')
         var result = (!isNaN(stDate.getTime()))?Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate()):null;
         return result;
     };
-    
+        
     var checkStrForDate = function(strWithDate){
         //check date for format: DD/MM/YYYY
         if (/(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d/.test(strWithDate)){
@@ -94,11 +117,45 @@ angular.module('portalNMC')
     //TODO: 
     //get system user info
     
+    //get user permission
+    var getUserServicesPermissions = function(){
+        mainSvcSettings.loadingServicePermissionFlag = true;
+        var targetUrl = mainSvcSettings.servicePermissionUrl;    
+        mainSvcSettings.loadedServicePermission = $http.get(targetUrl)
+        .then(function(response){
+            var tmp = response.data;
+            contextIds = tmp;
+console.log(tmp);            
+            mainSvcSettings.loadingServicePermissionFlag = false;
+            $rootScope.$broadcast('servicePermissions:loaded');
+        },
+              function(e){
+            console.log(e);
+            mainSvcSettings.loadingServicePermissionFlag = false;
+        });
+    };
+    
+    var checkContext = function(ctxId){       
+        var result = false;       
+        contextIds.some(function(curCtx){           
+            if (curCtx.permissionTagId.localeCompare(ctxId) == 0){               
+                result = true;
+                return true;
+            };
+        });
+        return result;
+    };
+    
     return {
+        checkContext,
         checkStrForDate,
+        getContextIds,
+        getLoadingServicePermissionFlag,
+        getLoadedServicePermission,
         getMonitorMapSettings,
         getObjectMapSettings,
         getDateRangeOptions,
+        getUserServicesPermissions,
         setMonitorMapSettings,
         setObjectMapSettings,
         strDateToUTC

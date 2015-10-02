@@ -8,7 +8,7 @@
     </ul>
 </div> 
 -->
-
+<div id="zpoint_indicator_page">
 <div class="col-md-10 noPadding nmc-main-workspace-header"><h2 class="noMargin nmc-h2">Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;</h2></div>
 <div class="col-md-2">
     <div class="pull-right">
@@ -20,7 +20,7 @@
             <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
         </div>  
         <div class="btn-group">
-            <i title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt" ng-click="saveIndicatorsToFile('')"></i>
+            <i id="indicator_download_button" title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt nmc-hide" ng-click="saveIndicatorsToFile('')"></i>
         </div>    
     </div>
 </div>  
@@ -292,4 +292,5 @@
 				</div>		
 		</div>
 	</div>
+</div>
 </div>

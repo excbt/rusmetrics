@@ -2,12 +2,14 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc){
 console.log("Load NoticeCtrl.");  
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
     $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
+    
+    $scope.ctrlSettings.ctxId = "notice_page";
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -519,7 +521,7 @@ console.log("$scope.noticeTypes");
         $http.get(url)
         .success(function(data){
             $scope.zpointList = data;
-console.log("geted zpoint list.");            
+//console.log("geted zpoint list.");            
 //console.log(data);            
             $scope.$broadcast('notices:getNoticeTypes');
         })
@@ -734,6 +736,39 @@ console.log("Clear Type filters.");
 
 //        $scope.getResultsPage(1);
     };
+    
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+//console.log(elDOM) ;                       
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            }; 
+//console.log("noHide") ;             
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+        if (ctxFlag == false){
+            window.location.assign('#/');
+        };
+    };
+console.log("1");    
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+console.log("2");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    });
+    
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    }, 500);
     
     
     //chart
