@@ -602,6 +602,11 @@ console.warn(elem);
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
         setVisibles($scope.mapSettings.ctxId);
-    });    
+    });   
+    
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.mapSettings.ctxId);
+    }, 500);  
     
 });
