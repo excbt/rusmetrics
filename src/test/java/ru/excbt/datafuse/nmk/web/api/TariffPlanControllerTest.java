@@ -32,8 +32,7 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class TariffPlanControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(TariffPlanControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(TariffPlanControllerTest.class);
 
 	@Autowired
 	private TariffPlanService tariffPlanService;
@@ -71,7 +70,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 	public void testUpdate() throws Exception {
 
 		List<TariffPlan> tariffPlanList = tariffPlanService
-				.selectTariffPlanList();
+				.selectTariffPlanList(currentSubscriberService.getSubscriberId());
 		if (tariffPlanList.size() == 0) {
 			logger.warn("Skip Tarif Plan List");
 			// return;
@@ -80,22 +79,20 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		TariffPlan testRec = tariffPlanList.get(0);
 		if (testRec.getTariffPlanValue() != null) {
-			testRec.setTariffPlanValue(testRec.getTariffPlanValue().add(
-					BigDecimal.valueOf(0.1)));
+			testRec.setTariffPlanValue(testRec.getTariffPlanValue().add(BigDecimal.valueOf(0.1)));
 		} else {
 			testRec.setTariffPlanValue(BigDecimal.valueOf(0.1));
 		}
 		String urlStr = "/api/subscr/tariff/" + testRec.getId();
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(testRec);
 
-		List<ContObject> tariffContObjects = tariffPlanService
-				.selectTariffPlanContObjects(
-						testRec.getId(), currentSubscriberService.getSubscriberId());
-		
+		List<ContObject> tariffContObjects = tariffPlanService.selectTariffPlanContObjects(testRec.getId(),
+				currentSubscriberService.getSubscriberId());
+
 		for (ContObject co : tariffContObjects) {
 			logger.info("ContObject (id={}). FullAddress: {}", co.getId(), co.getFullAddress());
 		}
-		
+
 		long[] contObjects = new long[tariffContObjects.size()];
 		int idx = 0;
 		for (ContObject co : tariffContObjects) {
@@ -104,14 +101,10 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		ResultActions resultActionsAll;
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON)
-					.param("rsoOrganizationId",
-							testRec.getRso().getId().toString())
-					.param("tariffTypeId",
-							testRec.getTariffType().getId().toString())
-					.param("contObjectIds", arrayToString(contObjects))
-					.content(jsonBody).with(testSecurityContext())
+			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
+					.param("rsoOrganizationId", testRec.getRso().getId().toString())
+					.param("tariffTypeId", testRec.getTariffType().getId().toString())
+					.param("contObjectIds", arrayToString(contObjects)).content(jsonBody).with(testSecurityContext())
 					.accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
@@ -136,32 +129,26 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(tariffPlan);
 
 		Iterable<Organization> orgList = subscriberRepository
-				.selectRsoOrganizations(currentSubscriberService
-						.getSubscriberId());
+				.selectRsoOrganizations(currentSubscriberService.getSubscriberId());
 
 		assertTrue(orgList.iterator().hasNext());
 		Organization org = orgList.iterator().next();
 
-		List<TariffType> tariffTypeList = tariffTypeRepository
-				.findByContServiceType("cw");
+		List<TariffType> tariffTypeList = tariffTypeRepository.findByContServiceType("cw");
 
 		assertTrue(tariffTypeList.size() > 0);
 		TariffType tt = tariffTypeList.get(0);
 
-		List<ContObject> tariffContObjects = tariffPlanService
-				.selectTariffPlanAvailableContObjects(0,
-						currentSubscriberService.getSubscriberId());
+		List<ContObject> tariffContObjects = tariffPlanService.selectTariffPlanAvailableContObjects(0,
+				currentSubscriberService.getSubscriberId());
 
 		assertTrue(tariffContObjects.size() > 0);
 		long[] contObjectIds = new long[1];
 		contObjectIds[0] = tariffContObjects.get(0).getId();
 
-		ResultActions resultAction = mockMvc.perform(post(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("rsoOrganizationId", org.getId().toString())
-				.param("tariffTypeId", tt.getId().toString())
-				.param("contObjectIds", arrayToString(contObjectIds))
-				.content(jsonBody).with(testSecurityContext())
+		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
+				.param("rsoOrganizationId", org.getId().toString()).param("tariffTypeId", tt.getId().toString())
+				.param("contObjectIds", arrayToString(contObjectIds)).content(jsonBody).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());

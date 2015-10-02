@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,13 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOne(long id) {
-		return subscriberRepository.findOne(id);
+	public Subscriber selectSubscriber(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		if (result == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
+
+		return result;
 	}
 
 	/**
@@ -55,8 +61,7 @@ public class SubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository
-				.selectContObjects(subscriberId);
+		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
 		return result;
 	}
 
@@ -67,9 +72,19 @@ public class SubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
-		List<Long> result = subscriberRepository
-				.selectContObjectIds(subscriberId);
+		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public int selectSubscriberContObjectCount(long subscriberId) {
+		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
+		return result.size();
 	}
 
 	/**
@@ -80,8 +95,7 @@ public class SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	@Deprecated
 	public List<ContZPoint> findContZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository
-				.findByContObjectId(contObjectId);
+		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
 		return result;
 	}
 
@@ -112,10 +126,8 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkContObjectSubscription(long subscriberId,
-			long contObjectId) {
-		List<Long> resultIds = subscriberRepository.selectContObjectId(
-				subscriberId, contObjectId);
+	public boolean checkContObjectSubscription(long subscriberId, long contObjectId) {
+		List<Long> resultIds = subscriberRepository.selectContObjectId(subscriberId, contObjectId);
 		return resultIds.size() > 0;
 	}
 
@@ -126,9 +138,8 @@ public class SubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date getSubscriberCurrentTime(Long subscriberId) {
-		Object dbResult = em
-				.createNativeQuery("SELECT get_subscriber_current_time(?1);")
-				.setParameter(1, subscriberId).getSingleResult();
+		Object dbResult = em.createNativeQuery("SELECT get_subscriber_current_time(?1);").setParameter(1, subscriberId)
+				.getSingleResult();
 		if (dbResult == null) {
 			return null;
 		}
@@ -142,8 +153,7 @@ public class SubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPoint> selectSubscriberContZPoints(long subscriberId) {
-		List<ContZPoint> result = subscriberRepository
-				.selectContZPoints(subscriberId);
+		List<ContZPoint> result = subscriberRepository.selectContZPoints(subscriberId);
 		return result;
 	}
 

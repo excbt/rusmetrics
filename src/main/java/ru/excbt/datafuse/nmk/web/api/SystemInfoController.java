@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/systemInfo")
-public class SystemInfoController extends WebApiController {
+public class SystemInfoController extends SubscrApiController {
 
 	/**
 	 * 
@@ -58,9 +58,6 @@ public class SystemInfoController extends WebApiController {
 	}
 
 	@Autowired
-	private CurrentUserService currentUserService;
-
-	@Autowired
 	private LdapService ldapService;
 
 	/**
@@ -89,13 +86,10 @@ public class SystemInfoController extends WebApiController {
 			return responseOK(new ReadOnlyMode(true));
 		}
 
-		Optional<String> adminRole = userDetails
-				.getAuthorities()
-				.stream()
+		Optional<String> adminRole = userDetails.getAuthorities().stream()
 				.filter((i) -> SecuredRoles.ROLE_ADMIN.equals(i.getAuthority())
-						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i
-								.getAuthority())).map((i) -> i.getAuthority())
-				.findFirst();
+						|| SecuredRoles.ROLE_SUBSCR_ADMIN.equals(i.getAuthority()))
+				.map((i) -> i.getAuthority()).findFirst();
 
 		return responseOK(new ReadOnlyMode(!adminRole.isPresent()));
 	}
@@ -112,8 +106,7 @@ public class SystemInfoController extends WebApiController {
 			responseOK(new SamlAuthMode(false));
 		}
 
-		return responseOK(new SamlAuthMode(
-				auth.getCredentials() instanceof SAMLCredential));
+		return responseOK(new SamlAuthMode(auth.getCredentials() instanceof SAMLCredential));
 	}
 
 	/**
@@ -127,10 +120,8 @@ public class SystemInfoController extends WebApiController {
 			@RequestParam(value = "oldPassword", required = true) final String oldPassword,
 			@RequestParam(value = "newPassword", required = true) final String newPassword) {
 
-		if (oldPassword == null || newPassword == null
-				|| oldPassword.equals(newPassword)) {
-			return responseBadRequest(ApiResult
-					.validationError("request params is not valid"));
+		if (oldPassword == null || newPassword == null || oldPassword.equals(newPassword)) {
+			return responseBadRequest(ApiResult.validationError("request params is not valid"));
 		}
 
 		FullUserInfo fullUserInfo = currentUserService.getFullUserInfo();
@@ -140,12 +131,12 @@ public class SystemInfoController extends WebApiController {
 
 		String username = fullUserInfo.getUserName();
 
-		boolean changeResult = ldapService.changePassword(username,
-				oldPassword, newPassword);
+		boolean changeResult = ldapService.changePassword(username, oldPassword, newPassword);
 		if (changeResult) {
 			return responseOK(ApiResult.ok("Password successfully changed"));
 		}
 
 		return responseBadRequest();
 	}
+
 }

@@ -110,7 +110,7 @@ public class CurrentSubscriberService {
 			return mockSubscriberService.getMockSubscriber();
 		}
 
-		return subscriberService.findOne(subscriberId);
+		return subscriberService.selectSubscriber(subscriberId);
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class CurrentSubscriberService {
 			return mockSubscriberService.getMockSubscriber();
 		}
 
-		return subscriberService.findOne(subscriberId);
+		return subscriberService.selectSubscriber(subscriberId);
 	}
 
 	/**
