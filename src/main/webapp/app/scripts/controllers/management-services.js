@@ -218,6 +218,12 @@ angular.module('portalNMC')
             if (addPackFlag == true){$scope.serviceRemovedList.push(tmpPack);};
         });
 //console.log($scope.serviceRemovedList); 
+        
+        //generation confirm code
+        $scope.confirmCode = null;
+        $scope.firstNum = Math.round(Math.random()*100);
+        $scope.secondNum = Math.round(Math.random()*100);
+        $scope.sumNums = $scope.firstNum + $scope.secondNum;
         //Вывести изменения на экран
         $('#confirmSavingModal').modal();
         //Запросить подтверждение сохранения изменений
@@ -304,18 +310,18 @@ angular.module('portalNMC')
             //remove service from change list
             pack.changedFlag -=1;
         };
-        if (pack.selected == true){
+//        if (pack.selected == true){
             if (angular.isArray(pack.serviceItems)){
                 pack.serviceItems.forEach(function(serv){
 //console.log(serv);                    
-                    if (serv.selected !== true){
-                        serv.selected = true;
+                    if (serv.selected !== pack.selected){
+                        serv.selected = pack.selected;
                         serviceSetFlag(serv);
                     };
                     
                 });
             };
-        };
+//        };
     };
     
 }]);

@@ -278,13 +278,13 @@
                     <p> <label class="text-primary nmc-form-label">Здесь будет перечень добавляемых/удаляемых услуг</label>
                     </p>
 -->
-                    <div id="divWithObjectTable" class="" ng-hide="loading">
+                    <div id="divWithObjectTable" class="" ng-hide="loading" style="overflow-x: auto;">
                         <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Добавлены услуги:</label></div>
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="pack in serviceAddedList">
                                     <td>
-                                        <table class="nmc-table-nowrap-data">
+                                        <table class="">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                                                 <td class="nmc-td-for-button-checkbox">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
@@ -342,7 +342,7 @@
                             <tbody>
                                 <tr ng-repeat="pack in serviceRemovedList">
                                     <td>
-                                        <table class="nmc-table-nowrap-data">
+                                        <table class="">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                                                 <td class="nmc-td-for-button-checkbox">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
@@ -397,11 +397,14 @@
                         </table>
                         
                     </div>
+                    <div>
+                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                    </div>
                 </div>  
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
+            <input ng-disabled = "confirmCode!=sumNums" type="submit" class="btn btn-primary btn-xs nmc-save-button"
 					ng-click="savePackages()"
 					value="Сохранить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
