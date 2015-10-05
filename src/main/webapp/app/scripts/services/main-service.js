@@ -125,7 +125,7 @@ angular.module('portalNMC')
         .then(function(response){
             var tmp = response.data;
             contextIds = tmp;
-console.log(tmp);            
+//console.log(tmp);            
             mainSvcSettings.loadingServicePermissionFlag = false;
             $rootScope.$broadcast('servicePermissions:loaded');
         },

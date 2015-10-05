@@ -609,6 +609,11 @@ tr.nmc-main-table-header > th {
     background-color: #FFFFFF;/* цвет фона для нечетной строки родительской таблицы*/
 /*    background-color: #f5f5f5;*/
 }
+
+/*  Ячейка таблицы, в которой содержится дочерняя таблица - используется для задания отступа от надписи родительской таблицы*/
+.nmc-td-for-child-table{
+    padding-top: 2px !important;
+}
  
     /* Вложенная таблица */
 .nmc-child-table {
@@ -1607,7 +1612,14 @@ tr.nmc-main-table-header > th {
     padding-bottom: 0;
     padding-top: 0;
     padding-right: 0;
-    padding-left: 15px;
+    padding-left: 15px !important;
+}
+
+.onlyPaddingLeft5 {
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 5px !important;
 }
 
 .paddingRight10{
