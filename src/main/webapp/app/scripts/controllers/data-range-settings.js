@@ -92,8 +92,8 @@ app
     $scope.$watch('navPlayerDates', function (newDates) {
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
-        
-        if ($location.path()!="/notices/monitor"){
+//!Attention. Эта штуковина может чудить - она меняет url строку.
+        if (($location.path()!="/notices/monitor")&&($location.path()!="/objects/indicators")){
             $location.search("fromDate",$rootScope.reportStart);
             $location.search("toDate",$rootScope.reportEnd);
         };
@@ -105,9 +105,16 @@ app
     
                         
     // Настройки для страницы с показаниями
-    $scope.indicatorDates = {
-        startDate : moment().subtract(6, 'days').startOf('day'),
-        endDate :  moment().endOf('day')
+    if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
+        $scope.indicatorDates = {
+            startDate : $location.search().fromDate,
+            endDate :  $location.search().toDate
+        };
+    }else{
+        $scope.indicatorDates = {
+            startDate : moment().subtract(6, 'days').startOf('day'),
+            endDate :  moment().endOf('day')
+        };
     };
 //console.log($scope.indicatorDates.startDate);
 //console.log($scope.indicatorDates.endDate); 

@@ -126,6 +126,7 @@ console.log("Run routeProviderConfig");
       .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
         controller: 'IndicatorsCtrl',
+        reloadOnSearch: false,
         resolve:{
             permissions: ['mainSvc', function(mainSvc){
                 return mainSvc.getLoadedServicePermission();

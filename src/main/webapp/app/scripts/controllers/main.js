@@ -97,6 +97,7 @@ console.log("setDefaultMenuState");
               $scope.menuMassive[k] = false;
           };        
          $scope.menuMassive.object_menu_item=true;
+console.log(window.location.href);        
 console.log(window.location);        
     };
       

@@ -387,7 +387,7 @@ console.log("Objects directive.");
                                 tmp = data;
                             };
                             var zPointsByObject = tmp;
-console.log(tmp);                            
+//console.log(tmp);                            
                             var zpoints = [];
                             for(var i=0;i<zPointsByObject.length;i++){
                                 var zpoint = {};
