@@ -67,6 +67,16 @@ public class ObjectFilters {
 	 * @param inStream
 	 * @return
 	 */
+	public static <T extends DeletableObject> List<T> deletedFilter(List<T> inList) {
+		checkNotNull(inList);
+		return inList.stream().filter((i) -> i.getDeleted() == 0).collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @param inStream
+	 * @return
+	 */
 	public static <T extends ActiveObject> Stream<T> activeFilter(Stream<T> inStream) {
 		checkNotNull(inStream);
 		return inStream.filter((i) -> Boolean.TRUE.equals(i.getIsActive()));
