@@ -1696,7 +1696,7 @@ input[type="checkbox"] {
     margin-right: 5px;
     
 }
-
+/* Класс разворачивает glyphicon иконку на 180 градусов*/
 .gly-rotate-180 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: rotate(180deg);
@@ -1704,4 +1704,26 @@ input[type="checkbox"] {
   -ms-transform: rotate(180deg);
   -o-transform: rotate(180deg);
   transform: rotate(180deg);
+}
+
+/* Рисование "открытого замка"*/
+.nmc-unlock {
+margin-top: 0.8em;
+border-radius: 0.3em;
+box-shadow: inset 0.9em 0.8em 0 0 #2C2C2C,inset -0.9em 0.8em 0 0 #2C2C2C,inset 0em -0.4em 0 0 #2C2C2C;
+font-size: 6px;
+width: 2em;
+height: 1.8em;
+position: relative;
+}
+.nmc-unlock::before {
+left: 1.4em;
+border-radius: 1em 1em 0 0;
+top: -0.8em;
+position: absolute;
+width: 0.8em;
+content: "";
+height: 0.8em;
+border: 0.3em solid #2C2C2C;
+border-bottom: none;
 }

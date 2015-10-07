@@ -7,11 +7,15 @@ angular.module('portalNMC')
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
-    $scope.ctrlSettings.servicesUrl = "../api/subscr/manage/service";
+    $scope.ctrlSettings.subscrUrl = "../api/subscr";
+    $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl+"/manage/service";
     $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
     $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl+ "/serviceItemList";
     $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl+ "/servicePriceList";
     $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
+    $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl+ "/info/subscriberContObjectCount";
+    
+    $scope.ctrlSettings.subscriberContObjectCount = null;
     
     $scope.ctrlSettings.currency = "y.e."; 
     
@@ -23,16 +27,28 @@ angular.module('portalNMC')
     
     //package columns definition
     //not used
-    $scope.ctrlSettings.packageColumns = [
-        {"name":"name", "header" : "Название", "class":"col-md-4"}
-        ,{"name":"description", "header" : "Описание", "class":"col-md-5"}
-        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
-    ];
+//    $scope.ctrlSettings.packageColumns = [
+//        {"name":"name", "header" : "Название", "class":"col-md-4"}
+//        ,{"name":"description", "header" : "Описание", "class":"col-md-5"}
+//        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
+//    ];
     //The packages, wich selected by the subscriber
     $scope.packages =[];
     //The packages, which available for the subscriber
     $scope.availablePackages = [];
     
+    //get subscriber contObject count
+    $scope.getSubscriberContObjectCount = function(url){
+        var targetUrl = url;
+        $http.get(targetUrl)
+        .then(function(response){
+            $scope.ctrlSettings.subscriberContObjectCount = response.data;
+        },
+              function(e){
+            console.log(e);
+        });
+    };
+    $scope.getSubscriberContObjectCount($scope.ctrlSettings.subscriberContObjectCountUrl);
     //get price list
     $scope.getPriceList = function(url){
         var targetUrl = url;
