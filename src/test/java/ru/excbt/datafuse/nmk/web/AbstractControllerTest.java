@@ -292,14 +292,22 @@ public class AbstractControllerTest {
 		logger.info("Testing CREATE on URL: {}", url);
 
 		String jsonBody = null;
+		String jsonBodyPretty = null;
 		try {
-			jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+			if (!(sendObject instanceof String)) {
+				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+				jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
+			} else {
+				jsonBody = (String) sendObject;
+				jsonBodyPretty = (String) sendObject;
+			}
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 			fail();
 		}
 
 		logger.info("Request JSON: {}", jsonBody);
+		logger.info("Request Pretty JSON: {}", jsonBodyPretty);
 
 		MockHttpServletRequestBuilder request = post(url).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON);
@@ -367,8 +375,15 @@ public class AbstractControllerTest {
 
 		if (sendObject != null) {
 			String jsonBody = null;
+			String jsonBodyPretty = null;
 			try {
-				jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+				if (!(sendObject instanceof String)) {
+					jsonBody = OBJECT_MAPPER.writeValueAsString(sendObject);
+					jsonBodyPretty = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(sendObject);
+				} else {
+					jsonBody = (String) sendObject;
+					jsonBodyPretty = (String) sendObject;
+				}
 			} catch (JsonProcessingException e) {
 				logger.error("Can't create json: {}", e);
 				e.printStackTrace();
@@ -376,6 +391,7 @@ public class AbstractControllerTest {
 			}
 
 			logger.info("Request JSON: {}", jsonBody);
+			logger.info("Request Pretty JSON: {}", jsonBodyPretty);
 
 			request.contentType(MediaType.APPLICATION_JSON).content(jsonBody);
 
