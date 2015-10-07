@@ -6,6 +6,9 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -20,6 +23,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "device_object_id", insertable = false, updatable = false)
+	@JsonIgnore
 	private DeviceObject deviceObject;
 
 	@Column(name = "device_object_id")
@@ -37,6 +41,10 @@ public class DeviceObjectDataSource extends AbstractAuditableModel {
 
 	@Column(name = "subscr_data_source_addr")
 	private String subscrDataSourceAddr;
+
+	@Version
+	@Column(name = "version")
+	private int version;
 
 	public DeviceObject getDeviceObject() {
 		return deviceObject;
@@ -100,6 +108,14 @@ public class DeviceObjectDataSource extends AbstractAuditableModel {
 		}
 		return this.subscrDataSourceId.equals(other.subscrDataSourceId)
 				&& this.subscrDataSourceId.equals(other.subscrDataSourceId);
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }

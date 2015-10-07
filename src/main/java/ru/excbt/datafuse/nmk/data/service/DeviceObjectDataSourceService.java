@@ -55,7 +55,9 @@ public class DeviceObjectDataSourceService {
 				.sorted((a, b) -> b.getId().compareTo(a.getId())).findFirst();
 
 		if (activeDataSources.isPresent() && Boolean.TRUE.equals(deviceObjectDataSource.getIsActive())) {
-			return activeDataSources.get();
+			DeviceObjectDataSource currentRec = activeDataSources.get();
+			currentRec.setSubscrDataSourceAddr(deviceObjectDataSource.getSubscrDataSourceAddr());
+			return deviceObjectDataSourceRepository.save(currentRec);
 		}
 
 		if (Boolean.FALSE.equals(deviceObjectDataSource.getIsActive())) {
