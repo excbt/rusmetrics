@@ -42,11 +42,11 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 	@Column(name = "caption")
 	private String caption;
 
-	@Column(name = "data_source_type")
+	@Column(name = "data_source_type", insertable = false, updatable = false)
 	private String dataSourceTypeKey;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "data_source_type", insertable = false, updatable = false)
+	@JoinColumn(name = "data_source_type")
 	private DataSourceType dataSourceType;
 
 	@Column(name = "data_source_name")
@@ -71,6 +71,16 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 	@Column(name = "deleted")
 	@JsonIgnore
 	private int deleted;
+
+	@Column(name = "db_name")
+	private String dbName;
+
+	@Column(name = "db_user")
+	private String dbUser;
+
+	@Column(name = "db_password")
+	@JsonIgnore
+	private String dbPassword;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -176,6 +186,30 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
+	public String getDbUser() {
+		return dbUser;
+	}
+
+	public void setDbUser(String dbUser) {
+		this.dbUser = dbUser;
+	}
+
+	public String getDbPassword() {
+		return dbPassword;
+	}
+
+	public void setDbPassword(String dbPassword) {
+		this.dbPassword = dbPassword;
 	}
 
 }

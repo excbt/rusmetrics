@@ -45,6 +45,7 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 		deviceObjectDataSource.setDeviceObjectId(deviceObject.getId());
 		deviceObjectDataSource.setSubscrDataSourceId(subscrDataSource.getId());
 		deviceObjectDataSource.setIsActive(true);
+		deviceObjectDataSource.setSubscrDataSourceAddr("Addr+" + System.currentTimeMillis());
 
 		deviceObjectDataSource = deviceObjectDataSourceService.saveDeviceDataSource(deviceObjectDataSource);
 		checkNotNull(deviceObjectDataSource);

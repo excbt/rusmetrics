@@ -39,6 +39,11 @@ public class SubscrApiController extends WebApiController {
 		if (contObjectId == null) {
 			return false;
 		}
+
+		if (currentUserService.isSystem()) {
+			return true;
+		}
+
 		List<Long> contObjectIds = subscriberService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		return contObjectIds.contains(contObjectId);

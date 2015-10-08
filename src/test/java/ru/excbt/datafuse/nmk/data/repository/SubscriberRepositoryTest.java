@@ -15,14 +15,11 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
 public class SubscriberRepositoryTest extends JpaSupportTest {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscriberRepositoryTest.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(SubscriberRepositoryTest.class);
+
 	@Autowired
 	private SubscriberRepository subscrOrgRepository;
 
-	
 	@Test
 	public void testSubscrRole() {
 		Subscriber sr = subscrOrgRepository.findOne(728L);
@@ -30,11 +27,11 @@ public class SubscriberRepositoryTest extends JpaSupportTest {
 		logger.debug("subscrRole ID {}", sr.getId());
 		assertNotNull(sr.getOrganization());
 		logger.debug("subscrRole Organizatoin ID {}", sr.getOrganization().getId());
-		
-		
-		List<Subscriber> soList = subscrOrgRepository.selectByOrganizationId(726);
+
+		List<Subscriber> soList = subscrOrgRepository.selectByOrganizationId(Long.valueOf(726));
 		checkArgument(soList.size() > 0);
-		logger.debug("subscrRole List Organizatoin FullName {}", soList.get(0).getOrganization().getOrganizationFullName());
+		logger.debug("subscrRole List Organizatoin FullName {}",
+				soList.get(0).getOrganization().getOrganizationFullName());
 	}
 
 }

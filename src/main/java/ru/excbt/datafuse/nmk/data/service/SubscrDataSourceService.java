@@ -16,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -24,6 +26,24 @@ public class SubscrDataSourceService implements SecuredRoles {
 
 	@Autowired
 	private SubscrDataSourceRepository subscrDataSourceRepository;
+
+	@Autowired
+	private DataSourceTypeRepository dataSourceTypeRepository;
+
+	/**
+	 * 
+	 * @param subscrDataSource
+	 */
+	private void initSubscrDataSourceType(SubscrDataSource subscrDataSource) {
+		checkNotNull(subscrDataSource);
+		checkNotNull(subscrDataSource.getDataSourceTypeKey());
+		DataSourceType dataSourceType = dataSourceTypeRepository.findOne(subscrDataSource.getDataSourceTypeKey());
+		if (dataSourceType == null) {
+			throw new PersistenceException(
+					String.format("DataSourceType (id=%s) is not found", subscrDataSource.getDataSourceTypeKey()));
+		}
+		subscrDataSource.setDataSourceType(dataSourceType);
+	}
 
 	/**
 	 * 
@@ -37,6 +57,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 		checkArgument(subscrDataSource.isNew());
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
 		checkNotNull(subscrDataSource.getSubscriberId());
+
+		initSubscrDataSourceType(subscrDataSource);
+
 		return subscrDataSourceRepository.save(subscrDataSource);
 	}
 
@@ -52,6 +75,8 @@ public class SubscrDataSourceService implements SecuredRoles {
 		checkArgument(!subscrDataSource.isNew());
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
 		checkNotNull(subscrDataSource.getSubscriberId());
+
+		initSubscrDataSourceType(subscrDataSource);
 
 		return subscrDataSourceRepository.save(subscrDataSource);
 	}

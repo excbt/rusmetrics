@@ -1,11 +1,14 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
@@ -17,6 +20,21 @@ public class DeviceModelService {
 
 	@Autowired
 	private DeviceModelRepository deviceModelRepository;
+
+	////////////
+	public static final Comparator<DeviceModel> COMPARE_BY_NAME = (a, b) -> {
+		if (a == b) {
+			return 0;
+		}
+		if (a == null || a.getModelName() == null) {
+			return -1;
+		}
+		if (b == null || b.getModelName() == null) {
+			return 1;
+		}
+
+		return a.getModelName().compareTo(b.getModelName());
+	};
 
 	/**
 	 * 
@@ -54,8 +72,7 @@ public class DeviceModelService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceModel> findDeviceModelsByExSystem(String exSystem) {
 
-		List<DeviceModel> result = deviceModelRepository
-				.findByExSystem(exSystem);
+		List<DeviceModel> result = deviceModelRepository.findByExSystem(exSystem);
 
 		return result;
 	}
@@ -67,11 +84,9 @@ public class DeviceModelService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceModel findPortalDeviceModel() {
 
-		List<DeviceModel> pre = findDeviceModelsByExSystem(ExSystemKey.PORTAL
-				.getKeyname());
+		List<DeviceModel> pre = findDeviceModelsByExSystem(ExSystemKey.PORTAL.getKeyname());
 
-		Optional<DeviceModel> result = pre.stream()
-				.sorted((m1, m2) -> Long.compare(m1.getId(), m2.getId()))
+		Optional<DeviceModel> result = pre.stream().sorted((m1, m2) -> Long.compare(m1.getId(), m2.getId()))
 				.findFirst();
 
 		return result.isPresent() ? result.get() : null;
@@ -85,6 +100,15 @@ public class DeviceModelService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceModel findOne(Long id) {
 		return deviceModelRepository.findOne(id);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceModel> findAll() {
+		return Lists.newArrayList(deviceModelRepository.findAll());
 	}
 
 }

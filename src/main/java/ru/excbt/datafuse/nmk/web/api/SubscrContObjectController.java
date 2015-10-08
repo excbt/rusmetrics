@@ -33,8 +33,7 @@ public class SubscrContObjectController extends SubscrApiController {
 
 	// private final static int TEST_SUBSCRIBER_ID = 728;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectController.class);
 
 	@Autowired
 	private ContObjectService contObjectService;
@@ -46,21 +45,19 @@ public class SubscrContObjectController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectsList() {
 		List<ContObject> resultList = subscriberService
-				.selectSubscriberContObjects(currentSubscriberService
-						.getSubscriberId());
+				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok().body(resultList);
 	}
 
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObject(
-			@PathVariable("contObjectId") Long contObjectId) {
+	public ResponseEntity<?> getContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
 		}
 
-		ContObject result = contObjectService.findOneContObject(contObjectId);
+		ContObject result = contObjectService.findOne(contObjectId);
 		return ResponseEntity.ok().body(result);
 	}
 
@@ -69,16 +66,15 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/fias", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectFias(
-			@PathVariable("contObjectId") Long contObjectId) {
+	@RequestMapping(value = "/contObjects/{contObjectId}/fias", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectFias(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return responseForbidden();
 		}
 
-		ContObjectFias result = contObjectService
-				.findContObjectFias(contObjectId);
+		ContObjectFias result = contObjectService.findContObjectFias(contObjectId);
 
 		if (result == null) {
 			return responseNoContent();
@@ -94,8 +90,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContObject(
-			@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody ContObject contObject) {
 
 		checkNotNull(contObjectId);
@@ -125,11 +120,11 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectSettingModeType() {
 
-		List<ContObjectSettingModeType> resultList = contObjectService
-				.selectContObjectSettingModeType();
+		List<ContObjectSettingModeType> resultList = contObjectService.selectContObjectSettingModeType();
 		return ResponseEntity.ok().body(resultList);
 	}
 
@@ -138,20 +133,19 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObjectSettingModeType(
 			@RequestParam(value = "contObjectIds", required = true) final Long[] contObjectIds,
 			@RequestParam(value = "currentSettingMode", required = true) final String currentSettingMode) {
 
 		checkArgument(contObjectIds.length > 0);
 		checkNotNull(currentSettingMode);
-		checkArgument(ContObjectCurrentSettingTypeKey
-				.isSupported(currentSettingMode));
+		checkArgument(ContObjectCurrentSettingTypeKey.isSupported(currentSettingMode));
 
 		List<Long> contObjectIdList = Arrays.asList(contObjectIds);
 
-		Optional<Long> checkAccess = contObjectIdList.stream()
-				.filter((i) -> !canAccessContObject(i)).findAny();
+		Optional<Long> checkAccess = contObjectIdList.stream().filter((i) -> !canAccessContObject(i)).findAny();
 
 		if (checkAccess.isPresent()) {
 			return responseForbidden();
@@ -162,10 +156,8 @@ public class SubscrContObjectController extends SubscrApiController {
 			@Override
 			public void process() {
 
-				List<Long> result = contObjectService
-						.updateContObjectCurrentSettingModeType(contObjectIds,
-								currentSettingMode,
-								currentSubscriberService.getSubscriberId());
+				List<Long> result = contObjectService.updateContObjectCurrentSettingModeType(contObjectIds,
+						currentSettingMode, currentSubscriberService.getSubscriberId());
 
 				setResultEntity(result);
 			}

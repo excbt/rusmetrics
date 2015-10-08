@@ -44,38 +44,33 @@ public class ContManagementService implements SecuredRoles {
 	 * @param beginDate
 	 * @return
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ContManagement createManagement(long contObjectId,
-			long organizationId, final DateTime beginDate) {
+	public ContManagement createManagement(long contObjectId, long organizationId, final DateTime beginDate) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(organizationId > 0);
 		checkNotNull(beginDate);
 
-		List<ContManagement> checkExists = contManagementRepository
-				.selectAllManagement(contObjectId);
+		List<ContManagement> checkExists = contManagementRepository.selectAllManagement(contObjectId);
 
 		for (ContManagement cm : checkExists) {
 			if (beginDate.toDate().equals(cm.getBeginDate())) {
-				throw new PersistenceException(
-						String.format(
-								"ContManagement with contObject(id=%d) and "
-										+ "organization(id=%d) on beginDate(%s) already exists",
-								contObjectId, organizationId, beginDate));
+				throw new PersistenceException(String.format(
+						"ContManagement with contObject(id=%d) and "
+								+ "organization(id=%d) on beginDate(%s) already exists",
+						contObjectId, organizationId, beginDate));
 			}
 		}
 
-		ContObject co = contObjectService.findOneContObject(contObjectId);
+		ContObject co = contObjectService.findOne(contObjectId);
 		if (co == null) {
-			throw new PersistenceException(String.format(
-					"ContObject(id=%d) not found", contObjectId));
+			throw new PersistenceException(String.format("ContObject(id=%d) not found", contObjectId));
 		}
 
 		Organization org = organizationService.findOne(organizationId);
 		if (org == null) {
-			throw new PersistenceException(String.format(
-					"Organiztion(id=%d) not found", organizationId));
+			throw new PersistenceException(String.format("Organiztion(id=%d) not found", organizationId));
 		}
 
 		ContManagement newRecord = new ContManagement();
@@ -106,12 +101,10 @@ public class ContManagementService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContManagement> selectActiveManagement(
-			final ContObject contObject) {
+	public List<ContManagement> selectActiveManagement(final ContObject contObject) {
 		checkNotNull(contObject);
 		checkNotNull(contObject.getId());
-		return contManagementRepository.selectActiveManagement(contObject
-				.getId());
+		return contManagementRepository.selectActiveManagement(contObject.getId());
 	}
 
 	/**
@@ -132,12 +125,10 @@ public class ContManagementService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContManagement> selectContManagement(long contObjectId,
-			long organizationId) {
+	public List<ContManagement> selectContManagement(long contObjectId, long organizationId) {
 		checkArgument(contObjectId > 0);
 		checkArgument(organizationId > 0);
-		return contManagementRepository.selectContMagement(contObjectId,
-				organizationId);
+		return contManagementRepository.selectContMagement(contObjectId, organizationId);
 	}
 
 }
