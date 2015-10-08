@@ -57,6 +57,15 @@ public class ObjectFilters {
 	 * @param inStream
 	 * @return
 	 */
+	public static <T extends DevModeObject> List<T> devModeFilter(List<T> inStream) {
+		return devModeFilter(inStream.stream(), false).collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @param inStream
+	 * @return
+	 */
 	public static <T extends DeletableObject> Stream<T> deletedFilter(Stream<T> inStream) {
 		checkNotNull(inStream);
 		return inStream.filter((i) -> i.getDeleted() == 0);

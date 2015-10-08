@@ -10,17 +10,16 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "device_object")
-public class DeviceObject extends AbstractAuditableModel implements
-		ExSystemObject, DeletableObjectId {
+public class DeviceObject extends AbstractAuditableModel implements ExSystemObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -28,8 +27,11 @@ public class DeviceObject extends AbstractAuditableModel implements
 	private static final long serialVersionUID = -199459403017867220L;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "device_model_id")
+	@JoinColumn(name = "device_model_id", insertable = false, updatable = false)
 	private DeviceModel deviceModel;
+
+	@Column(name = "device_model_id")
+	private Long deviceModelId;
 
 	@Column(name = "device_object_number")
 	private String number;
@@ -48,8 +50,8 @@ public class DeviceObject extends AbstractAuditableModel implements
 
 	@ManyToOne
 	@JoinTable(name = "cont_device_object", //
-	joinColumns = @JoinColumn(name = "device_object_id", updatable = false, insertable = false), //
-	inverseJoinColumns = @JoinColumn(name = "cont_object_id", updatable = false, insertable = false))
+			joinColumns = @JoinColumn(name = "device_object_id", updatable = false, insertable = false) , //
+			inverseJoinColumns = @JoinColumn(name = "cont_object_id", updatable = false, insertable = false) )
 	@JsonIgnore
 	private ContObject contObject;
 
@@ -91,10 +93,6 @@ public class DeviceObject extends AbstractAuditableModel implements
 		this.version = version;
 	}
 
-	public ContObject getContObject() {
-		return contObject;
-	}
-
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
 	}
@@ -121,8 +119,25 @@ public class DeviceObject extends AbstractAuditableModel implements
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Long getDeviceModelId() {
+		return deviceModelId;
+	}
+
+	public void setDeviceModelId(Long deviceModelId) {
+		this.deviceModelId = deviceModelId;
+	}
+
+	public ContObject getContObject() {
+		return contObject;
+	}
+
+	public void setContObject(ContObject contObject) {
+		this.contObject = contObject;
 	}
 
 }
