@@ -11,10 +11,11 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 
 @Entity
 @Table(name = "device_object_data_source")
-public class DeviceObjectDataSource extends AbstractAuditableModel {
+public class DeviceObjectDataSource extends AbstractAuditableModel implements ActiveObject {
 
 	/**
 	 * 
@@ -32,7 +33,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel {
 	@Column(name = "is_active")
 	private Boolean isActive;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "subscr_data_source_id", insertable = false, updatable = false)
 	private SubscrDataSource subscrDataSource;
 
@@ -54,6 +55,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel {
 		this.deviceObject = deviceObject;
 	}
 
+	@Override
 	public Boolean getIsActive() {
 		return isActive;
 	}

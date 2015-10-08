@@ -32,9 +32,8 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 @Service
 public class ContZPointService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContZPointService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(ContZPointService.class);
+
 	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
 
 	@Autowired
@@ -49,9 +48,13 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = false)
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContZPoint findContZPoint(long contZPointId) {
-		return contZPointRepository.findOne(contZPointId);
+		ContZPoint result = contZPointRepository.findOne(contZPointId);
+		result.getDeviceObjects().forEach(j -> {
+			j.loadLazyProps();
+		});
+		return result;
 	}
 
 	/**
@@ -61,8 +64,14 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPoint> findContObjectZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository
-				.findByContObjectId(contObjectId);
+		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
+
+		result.forEach(i -> {
+			i.getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+		});
+
 		return result;
 	}
 
@@ -73,8 +82,7 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointEx> findContObjectZPointsEx(long contObjectId) {
-		List<ContZPoint> zPoints = contZPointRepository
-				.findByContObjectId(contObjectId);
+		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
 
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -84,23 +92,26 @@ public class ContZPointService implements SecuredRoles {
 			if (CONT_ZPOINT_EX_OPTIMIZE) {
 
 				Boolean existsData = null;
-				existsData = contServiceDataHWaterService
-						.selectExistsAnyData(zp.getId());
+				existsData = contServiceDataHWaterService.selectExistsAnyData(zp.getId());
 				result.add(new ContZPointEx(zp, existsData));
 
 			} else {
 
-				Date zPointLastDate = contServiceDataHWaterService
-						.selectLastDataDate(zp.getId(), minCheck.getObject());
+				Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
 
-				Date startDay = zPointLastDate == null ? null : JodaTimeUtils
-						.startOfDay(zPointLastDate).toDate();
+				Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
 
 				minCheck.check(startDay);
 				result.add(new ContZPointEx(zp, zPointLastDate));
 			}
 
 		}
+
+		result.forEach(i -> {
+			i.getObject().getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+		});
 
 		return result;
 	}
@@ -113,8 +124,7 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean checkContZPointOwnership(long contZPointId, long contObjectId) {
-		List<?> checkIds = contZPointRepository.findByIdAndContObject(
-				contZPointId, contObjectId);
+		List<?> checkIds = contZPointRepository.findByIdAndContObject(contZPointId, contObjectId);
 		return checkIds.size() > 0;
 	}
 
@@ -136,19 +146,16 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointStatInfo> selectContZPointStatInfo(Long contObjectId) {
 		List<ContZPointStatInfo> resultList = new ArrayList<>();
-		List<Long> contZPointIds = contZPointRepository
-				.selectContZPointIds(contObjectId);
+		List<Long> contZPointIds = contZPointRepository.selectContZPointIds(contObjectId);
 
 		// Date fromDateTime = null;
 
 		MinCheck<Date> minCheck = new MinCheck<>();
 
 		for (Long id : contZPointIds) {
-			Date zPointLastDate = contServiceDataHWaterService
-					.selectLastDataDate(id, minCheck.getObject());
+			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(id, minCheck.getObject());
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils
-					.startOfDay(zPointLastDate).toDate();
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
 
 			minCheck.check(startDay);
 
@@ -171,12 +178,16 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPoint
 	 * @return
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint updateContZPoint(ContZPoint contZPoint) {
 		checkNotNull(contZPoint);
 		checkArgument(!contZPoint.isNew());
-		return contZPointRepository.save(contZPoint);
+		ContZPoint result = contZPointRepository.save(contZPoint);
+		result.getDeviceObjects().forEach(j -> {
+			j.loadLazyProps();
+		});
+		return result;
 	}
 
 	/**
@@ -185,10 +196,9 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contServiceTypeKey
 	 * @return
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
-	public ContZPoint createManualZPoint(Long contObjectId,
-			ContServiceTypeKey contServiceTypeKey, LocalDate startDate,
+	public ContZPoint createManualZPoint(Long contObjectId, ContServiceTypeKey contServiceTypeKey, LocalDate startDate,
 			Integer tsNumber, Boolean isDoublePipe, DeviceObject deviceObject) {
 		checkNotNull(contObjectId);
 		checkNotNull(contServiceTypeKey);
@@ -207,21 +217,18 @@ public class ContZPointService implements SecuredRoles {
 		return contZPointRepository.save(result);
 	}
 
-	
 	/**
 	 * 
 	 * @param contZPointId
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void deleteManualZPoint(Long contZPointId) {
 		ContZPoint contZPoint = findContZPoint(contZPointId);
 		checkNotNull(contZPoint);
 		if (ExSystemKey.MANUAL.isNotEquals(contZPoint.getExSystemKeyname())) {
-			throw new PersistenceException(
-					String.format(
-							"Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
-							contZPointId, contZPoint.getExSystemKeyname()));
+			throw new PersistenceException(String.format("Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
+					contZPointId, contZPoint.getExSystemKeyname()));
 		}
 		contZPointRepository.delete(contZPoint);
 	}

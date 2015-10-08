@@ -31,8 +31,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class ContObjectService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContObjectService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContObjectService.class);
 
 	@Autowired
 	private ContObjectRepository contObjectRepository;
@@ -55,8 +54,8 @@ public class ContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObject findOneContObject(Long id) {
-		return contObjectRepository.findOne(id);
+	public ContObject findOne(Long contObjectId) {
+		return contObjectRepository.findOne(contObjectId);
 	}
 
 	/**
@@ -74,7 +73,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public ContObject updateOneContObject(ContObject entity) {
 		checkNotNull(entity);
@@ -82,8 +81,7 @@ public class ContObjectService implements SecuredRoles {
 
 		ContObject currentEntity = contObjectRepository.findOne(entity.getId());
 		if (currentEntity == null) {
-			throw new PersistenceException(String.format(
-					"ContObject (ID=%d) not found", entity.getId()));
+			throw new PersistenceException(String.format("ContObject (ID=%d) not found", entity.getId()));
 		}
 		currentEntity.setVersion(entity.getVersion());
 		currentEntity.setName(entity.getName());
@@ -109,8 +107,7 @@ public class ContObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectSettingModeType> selectContObjectSettingModeType() {
-		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository
-				.findAll();
+		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository.findAll();
 		return resultList;
 	}
 
@@ -118,10 +115,10 @@ public class ContObjectService implements SecuredRoles {
 	 * 
 	 * @param contObjectIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public List<Long> updateContObjectCurrentSettingModeType(
-			Long[] contObjectIds, String currentSettingMode, Long subscriberId) {
+	public List<Long> updateContObjectCurrentSettingModeType(Long[] contObjectIds, String currentSettingMode,
+			Long subscriberId) {
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length > 0);
 		checkNotNull(subscriberId);
@@ -131,11 +128,9 @@ public class ContObjectService implements SecuredRoles {
 
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
-		List<ContObject> contObjects = subscriberService
-				.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = subscriberService.selectSubscriberContObjects(subscriberId);
 
-		List<ContObject> updateCandidate = contObjects.stream()
-				.filter((i) -> updateCandidateIds.contains(i.getId()))
+		List<ContObject> updateCandidate = contObjects.stream().filter((i) -> updateCandidateIds.contains(i.getId()))
 				.collect(Collectors.toList());
 
 		for (ContObject co : updateCandidate) {
@@ -151,7 +146,6 @@ public class ContObjectService implements SecuredRoles {
 		return updatedIds;
 	}
 
-
 	/**
 	 * 
 	 * @param contObjectId
@@ -160,8 +154,7 @@ public class ContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectFias findContObjectFias(Long contObjectId) {
 		checkNotNull(contObjectId);
-		List<ContObjectFias> vList = contObjectFiasRepository
-				.findByContObjectId(contObjectId);
+		List<ContObjectFias> vList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		return vList.isEmpty() ? null : vList.get(0);
 	}
 

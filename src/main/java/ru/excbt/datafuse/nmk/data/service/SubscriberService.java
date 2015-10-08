@@ -154,6 +154,11 @@ public class SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPoint> selectSubscriberContZPoints(long subscriberId) {
 		List<ContZPoint> result = subscriberRepository.selectContZPoints(subscriberId);
+		result.forEach(i -> {
+			i.getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+		});
 		return result;
 	}
 

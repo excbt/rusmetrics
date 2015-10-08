@@ -259,6 +259,29 @@ public class AbstractControllerTest {
 
 	/**
 	 * 
+	 * @param urlStr
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void _testJsonDelete(String urlStr, RequestExtraInitializer requestExtraInitializer) throws Exception {
+
+		logger.info("Testing DELETE on URL: {}", urlStr);
+
+		MockHttpServletRequestBuilder request = delete(urlStr).with(testSecurityContext())
+				.accept(MediaType.APPLICATION_JSON);
+
+		if (requestExtraInitializer != null) {
+			requestExtraInitializer.doInit(request);
+		}
+
+		ResultActions deleteResultActions = mockMvc.perform(request);
+
+		deleteResultActions.andDo(MockMvcResultHandlers.print());
+		deleteResultActions.andExpect(status().is2xxSuccessful());
+	}
+
+	/**
+	 * 
 	 * @param sendObject
 	 * @param url
 	 * @param requestExtraInitializer
