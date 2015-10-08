@@ -114,8 +114,25 @@ angular.module('portalNMC')
         return result;
     };
     
-    //TODO: 
-    //get system user info
+    //get user info
+    var userInfoUrl = "../api/systemInfo/fullUserInfo";
+    $http.get(userInfoUrl)
+            .success(function(data, satus, headers, config){
+                $rootScope.userInfo = data;
+//        console.log($rootScope.userInfo);        
+            })
+            .error(function(e){
+                console.log(e);
+    });
+        //check user: system? - true/false
+    var isSystemuser = function(){
+        var result = false;
+        var userInfo = $rootScope.userInfo;
+        if (angular.isDefined(userInfo)){
+            result = userInfo._system;
+        };
+        return result;
+    };
     
     //get user permission
     var getUserServicesPermissions = function(){
@@ -145,9 +162,52 @@ angular.module('portalNMC')
         });
         return result;
     };
+    ////////////////////////////////////////////////////////
+    
+    //checkers
+    var checkEmptyNullValue = function(numvalue){                    
+        var result = false;
+        if ((numvalue === "") || (numvalue==null)){
+            result = true;
+            return result;
+        }
+        return result;
+    };
+
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    };
+    
+    var checkNumericValue = function(numvalue){ 
+        var result = true;
+        if (checkEmptyNullValue(numvalue)){
+            return result;
+        }
+        if (!isNumeric(numvalue)){
+            result = false;
+            return result;
+        };
+        return result;
+    };
+    
+    var checkPositiveNumberValue = function(numvalue){                    
+        var result = true;
+        result = checkNumericValue(numvalue)
+        if (!result){
+            //if numvalue is not number -> return false
+            return result;
+        };
+        result = parseInt(numvalue)>=0?true:false;
+        return result;
+    };
+    
+    ///////////////// end checkers
+    
     
     return {
         checkContext,
+        checkNumericValue,
+        checkPositiveNumberValue,
         checkStrForDate,
         getContextIds,
         getLoadingServicePermissionFlag,
@@ -156,6 +216,7 @@ angular.module('portalNMC')
         getObjectMapSettings,
         getDateRangeOptions,
         getUserServicesPermissions,
+        isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,
         strDateToUTC

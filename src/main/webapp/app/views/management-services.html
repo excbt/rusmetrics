@@ -312,7 +312,7 @@
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-            <input ng-disabled = "confirmCode!=sumNums" type="submit" class="btn btn-primary btn-xs nmc-save-button"
+            <input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-primary btn-xs nmc-save-button"
 					ng-click="savePackages()"
 					value="Сохранить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"

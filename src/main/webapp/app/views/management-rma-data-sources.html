@@ -1,0 +1,253 @@
+<div  ng-show="loading" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="data_sources_2nd_menu_item" role="presentation" class="active"><a id="datasourcesTab" class="nmc-main-tab-button" href="" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
+        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a>           </li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="datasourcesTab">
+      </div>
+    </div>
+</div>
+
+<div class="btn-toolbar marginBottom10">
+    <button class="btn nmc-main-add-button" ng-click="addDatasource()">Добавить источник данных</button>
+</div>
+
+<div class="nmc-data-sources-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-md-1 nmc-td-for-buttons">
+
+            </th>
+
+            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="dataSource in data.dataSources | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-button">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Редактировать источник данных" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editDatasource(dataSource)"></i>
+                    </div>
+                </div>
+            </td>
+            <td ng-class="col-md-10">
+                <div><span ng-class=""><b>{{dataSource.dataSourceName || "Без названия"}}</b><span class="marginLeft15"><b>Тип:</b>{{dataSource.dataSourceType.caption}}</span><span ng-show="isSystemuser()"> (id = {{dataSource['id']}})</span></span>
+                </div>
+                <div class="marginLeft15">
+                    <span><small><b>IP:</b> {{dataSource.dataSourceIp}}</small></span>
+                    <span><small><b>Port:</b> {{dataSource.dataSourcePort}}</small></span>
+                </div>
+            </td>
+<!--
+            <td ng-class="columns[1].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> </span>
+            </td>
+-->
+<!--
+            <td ng-class="columns[2].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.rso.organizationFullName}}</span>
+            </td>
+            <td ng-class="columns[3].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffOption.tariffOptionName}}</span>
+            </td> 
+            <td ng-class="columns[4].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanValue}}</span>
+            </td>
+            <td ng-class="columns[5].class">
+                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanDescription}}</span>
+            </td>
+-->
+            <td>
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-right">                   
+                        <i title="Удалить источник данных" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(dataSource)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!--Show data source options-->
+<div id="showDatasourceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showDatasourceLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showDatasourceLabel" class="nmc-h3">
+				Источник данных
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputMode">Тип</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.dataSourceTypeKey" ng-options="dtype.keyname as dtype.caption for dtype in data.dataSourcesTypes">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentObject.dataSourceName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Описание</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="data.currentObject.dataSourceDescription"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="data.currentObject.dataSourceComment"></textarea>
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
+                                <td class="col-sm-3"><label for="inputAddress">База данных</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputDB" placeholder="" ng-model="data.currentObject.dataSourceDB">
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
+                                <td class="col-sm-3"><label for="inputCC">Логин</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourceLogin">
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
+                                <td class="col-sm-3"><label for="inputMode">Пароль</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourcePassword">
+                                </td>
+                            </tr>       
+                            <tr>
+                                <td class="col-sm-3"><label for="inputThv">IP адрес</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9">
+<!--                                    <div id="divInputIp" class="form-group noMarginBottom" ng-class="{'has-error':!ctrlSettings.inputIpComplete}">-->
+                                    <div id="divInputIp" class="form-group noMarginBottom">
+                                        <input class="form-control nmc-text-input-form" type="text" id="inputIP" placeholder="" ng-model="data.currentObject.dataSourceIp"/> 
+                                    </div>
+                                </td>                               
+                            </tr>                           
+                            <tr>
+                                <td class="col-sm-3"><label for="inputSquare">Порт</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.dataSourcePort)}">
+                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputPort" placeholder="" ng-model="data.currentObject.dataSourcePort">
+                                    </div>        
+                                </td>
+                            </tr>
+<!--
+                            <tr>
+                                <td class="col-sm-3"><label for="inputCode">Test field</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="data.currentObject.code">
+                                </td>
+                            </tr>
+-->
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveDatasource(data.currentObject)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete tariff-->
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.currentObject.dataSourceName || data.currentObject.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(data.currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>

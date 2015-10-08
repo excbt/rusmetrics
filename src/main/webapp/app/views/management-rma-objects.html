@@ -1,0 +1,47 @@
+<div  ng-show="loading" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="objects_edit_2nd_menu_item" role="presentation" class="active"><a id="objectsTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
+        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a>  
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="monitor">
+      </div>
+    </div>
+</div>    
+
+<div class="container-fluid" ng-hide="loading">
+ 
+<div class="row nmc-main-workspace-header">
+    <div class="col-md-3 noPadding">
+        <h2 class="noMargin nmc-h2">Объекты учета
+        </h2>    
+    </div>
+    <div class="col-md-7"></div>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+        <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+<!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
+    </div>
+<!--    <div class="col-md-3"></div>-->
+    <div class="col-md-offset-2 col-md-2">
+            <label class="nmc-form-label">Всего:</label>
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+            <span id="timeOutput"></span>
+    </div>
+</div>
+<div class="row ">
+    <div class="col-md-12 noPadding nmc-main-workspace-header">
+        <hr>
+    </div>
+</div>    
+</div> 

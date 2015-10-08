@@ -1,7 +1,7 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
-.controller('ManagementServicesCtrl', ['$scope', '$http', function($scope, $http){
+.controller('ManagementServicesCtrl', ['$scope', '$http', 'mainSvc', function($scope, $http, mainSvc){
     console.log("ManagementServicesCtrl run.");
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -321,6 +321,11 @@ angular.module('portalNMC')
                 });
             };
 //        };
+    };
+    
+    //check user
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
     };
     
 }]);

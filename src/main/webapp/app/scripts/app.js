@@ -161,6 +161,22 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-services.html',
         controller: 'ManagementServicesCtrl'
       })
+      .when('/management/objects', {
+        templateUrl: 'views/management-rma-objects.html',
+        controller: 'MngmtObjectsCtrl'
+      })
+      .when('/management/clients', {
+        templateUrl: 'views/management-rma-clients.html',
+        controller: 'MngmtClientsCtrl'
+      })
+      .when('/management/datasources', {
+        templateUrl: 'views/management-rma-data-sources.html',
+        controller: 'MngmtDatasourcesCtrl'
+      })
+      .when('/management/devices', {
+        templateUrl: 'views/management-rma-devices.html',
+        controller: 'MngmtDevicesCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

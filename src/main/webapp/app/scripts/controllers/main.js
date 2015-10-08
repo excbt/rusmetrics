@@ -48,6 +48,7 @@ console.log(loca);
         $scope.menuMassive.report_menu_item= (loca==="/reports" ? true:false);
         $scope.menuMassive.notice_menu_item = (loca.indexOf("/notices/")!=-1 ? true:false);
         $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/")!=-1 ? true:false);
+        $scope.menuMassive.admin_menu_item = (loca.indexOf("/management/")!=-1 ? true:false);
         var menuFlag = false;
         //check menu flags
         for (var k in $scope.menuMassive){
@@ -78,7 +79,7 @@ console.log(loca);
           window.location.assign("#/settings/tariffs/");
         };
         if ($scope.menuMassive.admin_menu_item){
-          window.location.assign("/");
+          window.location.assign("#/management/objects/");
         };        
     };
       
