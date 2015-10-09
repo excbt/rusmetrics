@@ -8,12 +8,14 @@ console.log("Object Service. Run.");
         var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
-        var crudTableName = '../api/subscr/contObjects';
-        var urlRefRange = '../api/subscr/contObjects/';
+        var urlSubscr = '../api/subscr';
+        var crudTableName = urlSubscr+'/contObjects';
+        var urlRefRange = urlSubscr+'/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
+        var urlDeviceModels = urlSubscr+urlDeviceObjects+'/deviceModels';
         var urlDeviceMetaData = '/metaVzlet';
-        var urlDeviceMetaDataSystemList = '../api/subscr/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
-        var urlCitiesData = "../api/subscr/service/hwater/contObjects/serviceTypeInfo";                
+        var urlDeviceMetaDataSystemList = urlSubscr+'/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
+        var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';                
         
         var objectSvcSettings = {};
         var getObjectSettings = function(){
@@ -33,7 +35,12 @@ console.log("Object Service. Run.");
         
         var getLoadingStatus = function(){
             return loading;
-        };         
+        };
+                 
+        //universal function
+        var getData = function(url){
+            return $http.get(url);
+        };
                 //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
         var getRefRangeByObjectAndZpoint = function(object, zpoint){
             var url = urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod';                  
@@ -49,6 +56,14 @@ console.log("Object Service. Run.");
         
         var getDevicesByObject = function(obj){
             var url = crudTableName+"/"+obj.id+urlDeviceObjects;
+            return $http.get(url);
+        };
+        var getAllDevices = function(){
+            var url = crudTableName+urlDeviceObjects;
+            return $http.get(url);
+        };
+        var getDeviceModels = function(){
+            var url = urlDeviceModels;
             return $http.get(url);
         };
                  
@@ -160,8 +175,10 @@ console.log("objectSvc:loaded");
         });
                     
         return {
+            getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
+            getDeviceModels,
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,

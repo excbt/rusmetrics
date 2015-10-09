@@ -83,8 +83,9 @@ console.log('Run data sources management controller.');
             notificationFactory.errorInfo("Ошибка","Не корректно задан порт прибора");
             checkDsourceFlag = false;
         };
-        if (!$("#inputIP").inputmask("isComplete")){
-            notificationFactory.errorInfo("Ошибка","Не заполнен ip адрес прибора");
+//        if (!$("#inputIP").inputmask("isComplete")){
+        if (angular.isUndefined(dsource.dataSourceIp)|| (dsource.dataSourceIp=== null)||(dsource.dataSourceIp==="")){
+            notificationFactory.errorInfo("Ошибка","Не заполнен ip \ hostname прибора");
             checkDsourceFlag = false;
         };
         if (checkDsourceFlag === false){
@@ -118,15 +119,8 @@ console.log('Run data sources management controller.');
     
     //set input mask
     //for IP
-//    var inputIp = document.getElementById("inputIP");
-//console.log(inputIp);    
-//    var im = new Inputmask("999.999.999");
-//    im.mask(inputIp);
-    $(document).ready(function(){
-        $("#inputIP").inputmask({alias: "ip"});
-    });
-    
 //    $(document).ready(function(){
-//        $(":input").inputmask();
+//        $("#inputIP").inputmask({alias: "ip"});
 //    });
+
 }]);
