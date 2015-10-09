@@ -40,6 +40,12 @@ public class DataSourceType extends AbstractKeynameEntity {
 	@Column(name = "type_order")
 	private Integer typeOrder;
 
+	@Column(name = "is_db_table_enable")
+	private Boolean isDbTableEnable;
+
+	@Column(name = "is_db_table_pair")
+	private Boolean isDbTablePair;
+
 	public String getCaption() {
 		return caption;
 	}
@@ -66,6 +72,14 @@ public class DataSourceType extends AbstractKeynameEntity {
 
 	public Integer getTypeOrder() {
 		return typeOrder;
+	}
+
+	public Boolean getIsDbTableEnable() {
+		return isDbTableEnable;
+	}
+
+	public Boolean getIsDbTablePair() {
+		return isDbTablePair;
 	}
 
 }

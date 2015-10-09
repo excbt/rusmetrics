@@ -37,13 +37,13 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 		DeviceObject deviceObject = deviceObjectService.findOne(TEST_DEVICE_OBJECT_ID);
 		assertNotNull(deviceObject);
 		SubscrDataSource subscrDataSource = subscrDataSourceService
-				.selectByKeyname(currentSubscriberService.getSubscriberId(), "DEVICE_OPTION");// DEVICE_DEFAULT
+				.selectByKeyname(currentSubscriberService.getSubscriberId(), "DEVICE_DEFAULT");// DEVICE_DEFAULT
 																								// DEVICE_OPTION
 		assertNotNull(subscrDataSource);
 
 		DeviceObjectDataSource deviceObjectDataSource = new DeviceObjectDataSource();
-		deviceObjectDataSource.setDeviceObjectId(deviceObject.getId());
-		deviceObjectDataSource.setSubscrDataSourceId(subscrDataSource.getId());
+		deviceObjectDataSource.setDeviceObject(deviceObject);
+		deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
 		deviceObjectDataSource.setIsActive(true);
 		deviceObjectDataSource.setSubscrDataSourceAddr("Addr+" + System.currentTimeMillis());
 

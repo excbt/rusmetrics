@@ -66,7 +66,7 @@ public class DeviceObjectService implements SecuredRoles {
 		DeviceModel deviceModel = deviceModelService.findPortalDeviceModel();
 		checkNotNull(deviceModel, "DeviceModel of Portal is not found");
 
-		deviceObject.setDeviceModelId(deviceModel.getId());
+		deviceObject.setDeviceModel(deviceModel);
 		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		return deviceObjectRepository.save(deviceObject);
 	}
@@ -235,14 +235,7 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObject saveOne(DeviceObject deviceObject) {
-		// Checking
-		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
-		// Set manual flag
-		deviceObject.setIsManual(true);
-		DeviceObject result = deviceObjectRepository.save(deviceObject);
-		result.loadLazyProps();
-		return result;
+		return saveOne(deviceObject, null);
 	}
 
 	/**
@@ -256,19 +249,24 @@ public class DeviceObjectService implements SecuredRoles {
 	public DeviceObject saveOne(DeviceObject deviceObject, DeviceObjectDataSource deviceObjectDataSource) {
 		// Checking
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
+		checkNotNull(deviceObject.getDeviceModel(), "Device Model is NULL");
 		if (deviceObjectDataSource != null) {
 			checkArgument(deviceObjectDataSource.isNew());
-			checkNotNull(deviceObjectDataSource.getSubscrDataSourceId());
+			checkNotNull(deviceObjectDataSource.getSubscrDataSource());
 		}
 		// Set manual flag
 		deviceObject.setIsManual(true);
-		DeviceObject result = deviceObjectRepository.save(deviceObject);
+
+		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {
-			deviceObjectDataSource.setDeviceObjectId(result.getId());
-			deviceObjectDataSourceService.saveDeviceDataSource(deviceObjectDataSource);
+			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
+			deviceObjectDataSource.setDeviceObjectId(savedDeviceObject.getId());
+			DeviceObjectDataSource resultDataSource = deviceObjectDataSourceService
+					.saveDeviceDataSource(deviceObjectDataSource);
+			savedDeviceObject.getDeviceObjectDataSources().add(resultDataSource);
 		}
-		result.loadLazyProps();
+
+		DeviceObject result = findOne(savedDeviceObject.getId());
 		return result;
 	}
 

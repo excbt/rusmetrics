@@ -24,12 +24,14 @@ import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -43,6 +45,12 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 public class SubscrDeviceObjectController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectController.class);
+
+	private class DataSourceTableHolder {
+		String dataSourceTable;
+		String dataSourceTable1h;
+		String dataSourceTable24h;
+	}
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -58,6 +66,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private SubscrDataSourceService subscrDataSourceService;
 
 	/**
 	 * 
@@ -243,7 +254,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceModelsGet() {
+	public ResponseEntity<?> getDeviceModels() {
 		List<DeviceModel> deviceModels = deviceModelService.findAll();
 		deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
 		if (!currentUserService.isSystem()) {
@@ -291,10 +302,13 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectByContObjectUpdate(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> updateDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
 			@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
+			@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
+			@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
+			@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
 			@RequestBody DeviceObject deviceObject) {
 
 		checkNotNull(deviceObject);
@@ -307,16 +321,20 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		}
 
 		ContObject contObject = contObjectService.findOne(contObjectId);
-
-		deviceObject.setDeviceModel(null);
 		deviceObject.setContObject(contObject);
+		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+		deviceObject.setDeviceModel(deviceModel);
 
-		final DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
+		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
 				: new DeviceObjectDataSource();
 
 		if (deviceObjectDataSource != null) {
-			deviceObjectDataSource.setSubscrDataSourceId(subscrDataSourceId);
+			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(subscrDataSourceId);
+			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
 			deviceObjectDataSource.setSubscrDataSourceAddr(subscrDataSourceAddr);
+			deviceObjectDataSource.setDataSourceTable(dataSourceTable);
+			deviceObjectDataSource.setDataSourceTable1h(dataSourceTable1h);
+			deviceObjectDataSource.setDataSourceTable24h(dataSourceTable24h);
 			deviceObjectDataSource.setIsActive(true);
 		}
 
@@ -341,47 +359,22 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectByContObjectCreate(@PathVariable("contObjectId") Long contObjectId,
+	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
 			@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
+			@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
+			@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
+			@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
-		checkNotNull(deviceObject);
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId());
+		DataSourceTableHolder tableHolder = new DataSourceTableHolder();
+		tableHolder.dataSourceTable = dataSourceTable;
+		tableHolder.dataSourceTable1h = dataSourceTable1h;
+		tableHolder.dataSourceTable24h = dataSourceTable24h;
 
-		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
-		}
+		return createDeviceObjectInternal(contObjectId, subscrDataSourceId, subscrDataSourceAddr, tableHolder,
+				deviceObject, request);
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
-
-		deviceObject.setDeviceModel(null);
-		deviceObject.setContObject(contObject);
-
-		final DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
-				: new DeviceObjectDataSource();
-
-		if (deviceObjectDataSource != null) {
-			deviceObjectDataSource.setSubscrDataSourceId(subscrDataSourceId);
-			deviceObjectDataSource.setSubscrDataSourceAddr(subscrDataSourceAddr);
-			deviceObjectDataSource.setIsActive(true);
-		}
-
-		ApiActionLocation action = new AbstractEntityApiActionLocation<DeviceObject, Long>(deviceObject, request) {
-			@Override
-			public void process() {
-				DeviceObject result = deviceObjectService.saveOne(entity, deviceObjectDataSource);
-				setResultEntity(result);
-			}
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getId();
-			}
-		};
-
-		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 	/**
@@ -393,12 +386,37 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectCreate(
+	public ResponseEntity<?> createDeviceObject(
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
 			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
 			@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
+			@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
+			@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
+			@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
+
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
+		DataSourceTableHolder tableHolder = new DataSourceTableHolder();
+		tableHolder.dataSourceTable = dataSourceTable;
+		tableHolder.dataSourceTable1h = dataSourceTable1h;
+		tableHolder.dataSourceTable24h = dataSourceTable24h;
+
+		return createDeviceObjectInternal(contObjectId, subscrDataSourceId, subscrDataSourceAddr, tableHolder,
+				deviceObject, request);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param subscrDataSourceId
+	 * @param subscrDataSourceAddr
+	 * @param deviceObject
+	 * @param request
+	 * @return
+	 */
+	private ResponseEntity<?> createDeviceObjectInternal(Long contObjectId, Long subscrDataSourceId,
+			String subscrDataSourceAddr, DataSourceTableHolder tableHolder, DeviceObject deviceObject,
+			HttpServletRequest request) {
 		checkNotNull(deviceObject);
 		checkArgument(deviceObject.isNew());
 		checkNotNull(deviceObject.getDeviceModelId());
@@ -408,16 +426,20 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		}
 
 		ContObject contObject = contObjectService.findOne(contObjectId);
-
-		deviceObject.setDeviceModel(null);
 		deviceObject.setContObject(contObject);
+		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
+		deviceObject.setDeviceModel(deviceModel);
 
-		final DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
+		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
 				: new DeviceObjectDataSource();
 
 		if (deviceObjectDataSource != null) {
-			deviceObjectDataSource.setSubscrDataSourceId(subscrDataSourceId);
+			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(subscrDataSourceId);
+			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
 			deviceObjectDataSource.setSubscrDataSourceAddr(subscrDataSourceAddr);
+			deviceObjectDataSource.setDataSourceTable(tableHolder.dataSourceTable);
+			deviceObjectDataSource.setDataSourceTable1h(tableHolder.dataSourceTable1h);
+			deviceObjectDataSource.setDataSourceTable24h(tableHolder.dataSourceTable24h);
 			deviceObjectDataSource.setIsActive(true);
 		}
 
@@ -474,7 +496,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deviceObjectsGet() {
+	public ResponseEntity<?> getDeviceObjects() {
 		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsBySubscriber(getSubscriberId());
 		return responseOK(deviceObjects);
 	}

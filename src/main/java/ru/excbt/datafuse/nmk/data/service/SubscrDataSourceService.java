@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
@@ -30,11 +31,14 @@ public class SubscrDataSourceService implements SecuredRoles {
 	@Autowired
 	private DataSourceTypeRepository dataSourceTypeRepository;
 
+	@Autowired
+	private SubscriberService subscriberService;
+
 	/**
 	 * 
 	 * @param subscrDataSource
 	 */
-	private void initSubscrDataSourceType(SubscrDataSource subscrDataSource) {
+	private void initSubscrDataSource(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
 		DataSourceType dataSourceType = dataSourceTypeRepository.findOne(subscrDataSource.getDataSourceTypeKey());
@@ -43,6 +47,13 @@ public class SubscrDataSourceService implements SecuredRoles {
 					String.format("DataSourceType (id=%s) is not found", subscrDataSource.getDataSourceTypeKey()));
 		}
 		subscrDataSource.setDataSourceType(dataSourceType);
+		checkNotNull(subscrDataSource.getSubscriberId());
+		Subscriber subscriber = subscriberService.findOne(subscrDataSource.getSubscriberId());
+		if (subscriber == null) {
+			throw new PersistenceException(
+					String.format("Subscriber (id=%s) is not found", subscrDataSource.getSubscriberId()));
+		}
+		subscrDataSource.setSubscriber(subscriber);
 	}
 
 	/**
@@ -58,7 +69,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
 		checkNotNull(subscrDataSource.getSubscriberId());
 
-		initSubscrDataSourceType(subscrDataSource);
+		initSubscrDataSource(subscrDataSource);
 
 		return subscrDataSourceRepository.save(subscrDataSource);
 	}
@@ -76,7 +87,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
 		checkNotNull(subscrDataSource.getSubscriberId());
 
-		initSubscrDataSourceType(subscrDataSource);
+		initSubscrDataSource(subscrDataSource);
 
 		return subscrDataSourceRepository.save(subscrDataSource);
 	}
