@@ -98,6 +98,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "is_manual")
+	private Boolean isManual;
+
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -240,6 +243,18 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Boolean getIsManual() {
+		return isManual;
+	}
+
+	public void setIsManual(Boolean isManual) {
+		this.isManual = isManual;
+	}
+
+	public void setExCode(String exCode) {
+		this.exCode = exCode;
 	}
 
 }

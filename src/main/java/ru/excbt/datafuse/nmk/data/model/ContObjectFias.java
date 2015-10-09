@@ -10,11 +10,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name = "cont_object_fias")
@@ -27,11 +27,11 @@ public class ContObjectFias extends AbstractAuditableModel {
 	private static final long serialVersionUID = 4834456607858555535L;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 
-	@Column(name = "cont_object_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
 	@Column(name = "fias_uuid")
