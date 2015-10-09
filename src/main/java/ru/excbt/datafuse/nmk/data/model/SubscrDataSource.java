@@ -29,11 +29,11 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 	private static final long serialVersionUID = -200221160904201276L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id", insertable = false, updatable = false)
+	@JoinColumn(name = "subscriber_id")
 	@JsonIgnore
 	private Subscriber subscriber;
 
-	@Column(name = "subscriber_id")
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
 	private Long subscriberId;
 
 	@Column(name = "keyname")

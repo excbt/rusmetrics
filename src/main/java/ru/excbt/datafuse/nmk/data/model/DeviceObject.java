@@ -60,10 +60,10 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "device_model_id", insertable = false, updatable = false)
+	@JoinColumn(name = "device_model_id", nullable = false)
 	private DeviceModel deviceModel;
 
-	@Column(name = "device_model_id", nullable = false)
+	@Column(name = "device_model_id", insertable = false, updatable = false)
 	private Long deviceModelId;
 
 	@Column(name = "device_object_number")

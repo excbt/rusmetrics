@@ -60,6 +60,21 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Subscriber findOne(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		if (result == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
 		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
 		return result;

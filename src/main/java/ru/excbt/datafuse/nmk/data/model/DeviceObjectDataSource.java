@@ -23,21 +23,21 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	private static final long serialVersionUID = -9218504365025332432L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "device_object_id")
 	@JsonIgnore
 	private DeviceObject deviceObject;
 
-	@Column(name = "device_object_id")
+	@Column(name = "device_object_id", insertable = false, updatable = false)
 	private Long deviceObjectId;
 
 	@Column(name = "is_active")
 	private Boolean isActive;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscr_data_source_id", insertable = false, updatable = false)
+	@JoinColumn(name = "subscr_data_source_id")
 	private SubscrDataSource subscrDataSource;
 
-	@Column(name = "subscr_data_source_id")
+	@Column(name = "subscr_data_source_id", insertable = false, updatable = false)
 	private Long subscrDataSourceId;
 
 	@Column(name = "subscr_data_source_addr")
@@ -46,6 +46,15 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	@Version
 	@Column(name = "version")
 	private int version;
+
+	@Column(name = "data_source_table")
+	private String dataSourceTable;
+
+	@Column(name = "data_source_table_1h")
+	private String dataSourceTable1h;
+
+	@Column(name = "data_source_table_24h")
+	private String dataSourceTable24h;
 
 	public DeviceObject getDeviceObject() {
 		return deviceObject;
@@ -101,7 +110,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	 * @param other
 	 * @return
 	 */
-	public boolean deviceDataSourceEquals(DeviceObjectDataSource other) {
+	protected boolean deviceDataSourceEquals(DeviceObjectDataSource other) {
 		if (other == null) {
 			return false;
 		}
@@ -118,6 +127,30 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public String getDataSourceTable() {
+		return dataSourceTable;
+	}
+
+	public void setDataSourceTable(String dataSourceTable) {
+		this.dataSourceTable = dataSourceTable;
+	}
+
+	public String getDataSourceTable1h() {
+		return dataSourceTable1h;
+	}
+
+	public void setDataSourceTable1h(String dataSourceTable1h) {
+		this.dataSourceTable1h = dataSourceTable1h;
+	}
+
+	public String getDataSourceTable24h() {
+		return dataSourceTable24h;
+	}
+
+	public void setDataSourceTable24h(String dataSourceTable24h) {
+		this.dataSourceTable24h = dataSourceTable24h;
 	}
 
 }

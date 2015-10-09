@@ -46,21 +46,32 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectDataSource saveDeviceDataSource(DeviceObjectDataSource deviceObjectDataSource) {
+		// Check parameters
 		checkNotNull(deviceObjectDataSource);
-		checkArgument(deviceObjectDataSource.getDeviceObjectId() != null);
-		checkArgument(deviceObjectDataSource.getSubscrDataSourceId() != null);
+		checkNotNull(deviceObjectDataSource.getDeviceObject(), "DeviceObject is null");
+		checkNotNull(deviceObjectDataSource.getSubscrDataSource(), "SubscrDataSource is null");
+		checkArgument(!deviceObjectDataSource.getDeviceObject().isNew());
 
+		// Additional init
+		deviceObjectDataSource.setSubscrDataSourceId(deviceObjectDataSource.getSubscrDataSource().getId());
+
+		// Check current Active data source
 		List<DeviceObjectDataSource> currentActiveList = selectActiveDeviceDataSource(
-				deviceObjectDataSource.getDeviceObjectId());
+				deviceObjectDataSource.getDeviceObject().getId());
 
-		Optional<DeviceObjectDataSource> activeDataSources = currentActiveList.stream()
-				.filter(i -> i.getSubscrDataSourceId().equals(deviceObjectDataSource.getSubscrDataSourceId()))
+		Optional<DeviceObjectDataSource> checkActiveDataSource = currentActiveList.stream()
+				.filter(i -> i.getSubscrDataSource().getId()
+						.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
 				.sorted((a, b) -> b.getId().compareTo(a.getId())).findFirst();
 
-		if (activeDataSources.isPresent() && Boolean.TRUE.equals(deviceObjectDataSource.getIsActive())) {
-			DeviceObjectDataSource currentRec = activeDataSources.get();
-			currentRec.setSubscrDataSourceAddr(deviceObjectDataSource.getSubscrDataSourceAddr());
-			return deviceObjectDataSourceRepository.save(currentRec);
+		// Verify if current DataSource is active
+		if (checkActiveDataSource.isPresent() && Boolean.TRUE.equals(deviceObjectDataSource.getIsActive())) {
+			DeviceObjectDataSource activeDataSource = checkActiveDataSource.get();
+			activeDataSource.setSubscrDataSourceAddr(deviceObjectDataSource.getSubscrDataSourceAddr());
+			activeDataSource.setDataSourceTable(deviceObjectDataSource.getDataSourceTable());
+			activeDataSource.setDataSourceTable1h(deviceObjectDataSource.getDataSourceTable1h());
+			activeDataSource.setDataSourceTable24h(deviceObjectDataSource.getDataSourceTable24h());
+			return deviceObjectDataSourceRepository.save(activeDataSource);
 		}
 
 		if (Boolean.FALSE.equals(deviceObjectDataSource.getIsActive())) {
@@ -69,13 +80,11 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 
 		// Make other DataSources inactive
 		if (Boolean.TRUE.equals(deviceObjectDataSource.getIsActive()) && !currentActiveList.isEmpty()) {
-
 			currentActiveList.stream().filter(i -> !i.getId().equals(deviceObjectDataSource.getId()))
 					.forEach(i -> i.setIsActive(null));
-
 			deviceObjectDataSourceRepository.save(currentActiveList);
 		}
-
+		/////
 		return deviceObjectDataSourceRepository.save(deviceObjectDataSource);
 	}
 

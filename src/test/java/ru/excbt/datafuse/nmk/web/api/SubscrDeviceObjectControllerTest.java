@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -10,6 +12,8 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectControllerTest.class);
 
 	private final static Long DEV_CONT_OBJECT = 733L;
 	private final static Long DEV_DEVICE_OBJECT = 54209288L;
@@ -26,6 +30,10 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonGet(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectMetaDataVzletGet() throws Exception {
 		String url = apiSubscrUrl(
@@ -33,6 +41,10 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonGetNoJsonCheck(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectMetaVzletCRUD() throws Exception {
 		deviceObjectService.deleteDeviceObjectMetaVzlet(DEV_DEVICE_OBJECT);
@@ -55,34 +67,58 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonDelete(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectsVzletSystemGet() throws Exception {
 		String url = apiSubscrUrl("/deviceObjects/metaVzlet/system");
 		_testJsonGet(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjects725Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", 725));
 		_testJsonGet(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjects725_737Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", 725, 737));
 		_testJsonGet(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceModelsGet() throws Exception {
 		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels"));
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testAllDeviceObjectsGet() throws Exception {
 		_testJsonGet(apiSubscrUrl("/contObjects/deviceObjects"));
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectUpdate() throws Exception {
 		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
@@ -93,10 +129,17 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		RequestExtraInitializer paramInit = (builder) -> {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
+			builder.param("dataSourceTable", "Table:" + System.currentTimeMillis());
+			builder.param("dataSourceTable1h", "Table 1H:" + System.currentTimeMillis());
+			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
 		};
 		_testJsonUpdate(url, deviceObject, paramInit);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectCreateDelete() throws Exception {
 
@@ -104,12 +147,25 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		deviceObject.setId(null);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
+
+		deviceObject.setDeviceModel(null);
+		deviceObject.getDeviceObjectDataSources().clear();
+
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
 		RequestExtraInitializer paramInit = (builder) -> {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
 		};
 		Long deviceObjectId = _testJsonCreate(url, deviceObject, paramInit);
+
+		logger.info("TESTING GET");
+
+		String getUrl = apiSubscrUrl(
+				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
+
+		_testJsonGet(getUrl);
+
+		logger.info("TESTING DELETE");
 
 		String deleteUrl = apiSubscrUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
@@ -120,6 +176,10 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testDeviceObjectAllCreateDelete() throws Exception {
 
