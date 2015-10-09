@@ -62,7 +62,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public SubscrDataSource createOne(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
 		checkArgument(subscrDataSource.isNew());
@@ -80,7 +80,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public SubscrDataSource updateOne(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
 		checkArgument(!subscrDataSource.isNew());
@@ -97,7 +97,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param dataSourceId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOne(Long dataSourceId) {
 		SubscrDataSource dataSource = subscrDataSourceRepository.findOne(dataSourceId);
 		if (dataSource == null) {

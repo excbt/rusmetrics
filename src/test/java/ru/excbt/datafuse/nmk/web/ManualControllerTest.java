@@ -19,11 +19,11 @@ import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
-@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigLocal.class,
-		JpaRawConfigLocal.class, LocalSecurityConfig.class, LdapConfig.class })
-@WithMockUser(username = "manual-ex1", password = "12345", roles = { "ADMIN",
-		"SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN",
-		"DEVICE_OBJECT_ADMIN" })
+@ContextConfiguration(classes = { SpringMvcConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class,
+		LocalSecurityConfig.class, LdapConfig.class })
+@WithMockUser(username = "manual-ex1", password = "12345",
+		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
+				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
 public class ManualControllerTest extends AbstractControllerTest {
 
 	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1
@@ -33,8 +33,7 @@ public class ManualControllerTest extends AbstractControllerTest {
 	public void setup() {
 		setupAuditor(SUBSCR_USER_ID, SUBSCR_ORG_ID);
 
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
-				.addFilters(springSecurityFilterChain).build();
+		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilters(springSecurityFilterChain).build();
 	}
 
 	@Test

@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+// TODO Rename to /api/rma
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrDataSourceController extends SubscrApiController {
