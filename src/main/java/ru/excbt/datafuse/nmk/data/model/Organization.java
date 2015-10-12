@@ -7,37 +7,41 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
-
 @Entity
-@Table(name="organization")
-public class Organization extends AbstractAuditableModel{
-	
-	
+@Table(name = "organization")
+public class Organization extends AbstractAuditableModel {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2192600082628553203L;
 
-	@Column(name="organization_name")
+	@Column(name = "organization_name")
 	private String organizationName;
-	
-	@Column(name="organization_full_name")
+
+	@Column(name = "organization_full_name")
 	private String organizationFullName;
-	
-	@Column(name="organization_full_address")
+
+	@Column(name = "organization_full_address")
 	private String organizationFullAddress;
-	
-	@Column(name="ex_code")
+
+	@Column(name = "ex_code")
 	private String exCode;
-	
-	@Column(name="ex_system")
+
+	@Column(name = "ex_system")
 	private String exSystem;
-	
+
 	@Version
 	private int version;
 
+	@Column(name = "flag_rso")
+	private Boolean flagRso;
 
+	@Column(name = "flag_management")
+	private Boolean flagManagement;
+
+	@Column(name = "flag_rma")
+	private Boolean flagRma;
 
 	public String getExCode() {
 		return exCode;
@@ -85,5 +89,29 @@ public class Organization extends AbstractAuditableModel{
 
 	public void setOrganizationFullAddress(String organizationFullAddress) {
 		this.organizationFullAddress = organizationFullAddress;
+	}
+
+	public Boolean getFlagRso() {
+		return flagRso;
+	}
+
+	public void setFlagRso(Boolean flagRso) {
+		this.flagRso = flagRso;
+	}
+
+	public Boolean getFlagManagement() {
+		return flagManagement;
+	}
+
+	public void setFlagManagement(Boolean flagManagement) {
+		this.flagManagement = flagManagement;
+	}
+
+	public Boolean getFlagRma() {
+		return flagRma;
+	}
+
+	public void setFlagRma(Boolean flagRma) {
+		this.flagRma = flagRma;
 	}
 }

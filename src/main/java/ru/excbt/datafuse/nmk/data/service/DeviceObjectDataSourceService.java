@@ -44,7 +44,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectDataSource saveDeviceDataSource(DeviceObjectDataSource deviceObjectDataSource) {
 		// Check parameters
 		checkNotNull(deviceObjectDataSource);
@@ -94,7 +94,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void makeDeviceDataSourceInactive(Long deviceObjectId) {
 		List<DeviceObjectDataSource> deviceObjectDataSources = selectActiveDeviceDataSource(deviceObjectId);
 		deviceObjectDataSources.forEach(i -> i.setIsActive(null));

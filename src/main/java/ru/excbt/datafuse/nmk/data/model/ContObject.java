@@ -19,6 +19,8 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
@@ -26,13 +28,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "cont_object")
 @DynamicUpdate
-public class ContObject extends AbstractAuditableModel implements
-		ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
+public class ContObject extends AbstractAuditableModel
+		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
 
 	/**
 	 * 
@@ -96,6 +96,9 @@ public class ContObject extends AbstractAuditableModel implements
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
+
+	@Column(name = "timezone_def", insertable = false, updatable = false)
+	private String timezoneDefKeyname;
 
 	/*
 	 * TODO check contObjectFias
@@ -294,6 +297,14 @@ public class ContObject extends AbstractAuditableModel implements
 
 	public void setIsManual(Boolean isManual) {
 		this.isManual = isManual;
+	}
+
+	public String getTimezoneDefKeyname() {
+		return timezoneDefKeyname;
+	}
+
+	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
+		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
 
 }

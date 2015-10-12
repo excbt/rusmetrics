@@ -24,7 +24,6 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -41,9 +40,6 @@ public class ContObjectService implements SecuredRoles {
 
 	@Autowired
 	private SubscriberService subscriberService;
-
-	@Autowired
-	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
 	private ContObjectFiasRepository contObjectFiasRepository;
@@ -75,7 +71,7 @@ public class ContObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public ContObject updateOneContObject(ContObject entity) {
+	public ContObject updateOne(ContObject entity) {
 		checkNotNull(entity);
 		checkArgument(!entity.isNew());
 
@@ -99,6 +95,21 @@ public class ContObjectService implements SecuredRoles {
 		ContObject resultEntity = contObjectRepository.save(currentEntity);
 
 		return resultEntity;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public ContObject createOne(ContObject entity) {
+
+		checkNotNull(entity);
+		checkArgument(entity.isNew());
+
+		throw new UnsupportedOperationException();
 	}
 
 	/**

@@ -23,11 +23,11 @@ public class ContObjectGeoPos implements Serializable {
 	private static final long serialVersionUID = -7360034990378154122L;
 
 	@Id
-	@Column(name = "cont_object_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 

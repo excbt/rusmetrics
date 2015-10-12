@@ -59,7 +59,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObject createManualDeviceObject() {
 
 		DeviceObject deviceObject = new DeviceObject();
@@ -77,7 +77,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObject createManualDeviceObject(DeviceObject deviceObject) {
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
 		checkArgument(deviceObject.isNew());
@@ -91,7 +91,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteManualDeviceObject(Long deviceObjectId) {
 		DeviceObject deviceObject = findOne(deviceObjectId);
 		if (ExSystemKey.MANUAL.isNotEquals(deviceObject.getExSystemKeyname())) {
@@ -140,7 +140,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectMetaVzlet updateDeviceObjectMetaVzlet(DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
 		checkNotNull(deviceObjectMetaVzlet);
 		if (deviceObjectMetaVzlet.getExcludeNulls() == null) {
@@ -159,7 +159,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObjectMetaVzlet(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 
@@ -185,7 +185,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Deprecated
 	public DeviceObject createOne(DeviceObject deviceObject) {
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
@@ -201,7 +201,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Deprecated
 	public DeviceObject updateOne(DeviceObject deviceObject) {
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
@@ -233,7 +233,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObject saveOne(DeviceObject deviceObject) {
 		return saveOne(deviceObject, null);
 	}
@@ -245,7 +245,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObject saveOne(DeviceObject deviceObject, DeviceObjectDataSource deviceObjectDataSource) {
 		// Checking
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
@@ -275,7 +275,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOne(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
@@ -291,7 +291,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN })
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOnePermanent(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
