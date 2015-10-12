@@ -15,9 +15,13 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
@@ -27,6 +31,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 @Entity
 @Table(name = "cont_zpoint")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**
@@ -35,18 +41,18 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private static final long serialVersionUID = 1L;
 
 	@OneToOne()
-	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 
-	@Column(name = "cont_object_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
 	@OneToOne
-	@JoinColumn(name = "cont_service_type", updatable = false, insertable = false)
+	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
 
-	@Column(name = "cont_service_type")
+	@Column(name = "cont_service_type", updatable = false, insertable = false)
 	private String contServiceTypeKeyname;
 
 	@Column(name = "custom_service_name")
@@ -100,6 +106,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
+
+	@Transient
+	private Long deviceObjectId;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -255,6 +264,21 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public void setExCode(String exCode) {
 		this.exCode = exCode;
+	}
+
+	public Long getDeviceObjectId() {
+		if (deviceObjectId == null) {
+			deviceObjectId = getActiveDeviceObjectId();
+		}
+		return deviceObjectId;
+	}
+
+	public void setDeviceObjectId(Long deviceObjectId) {
+		this.deviceObjectId = deviceObjectId;
+	}
+
+	private Long getActiveDeviceObjectId() {
+		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0).getId() : null;
 	}
 
 }
