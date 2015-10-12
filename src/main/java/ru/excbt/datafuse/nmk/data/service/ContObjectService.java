@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -43,6 +45,9 @@ public class ContObjectService implements SecuredRoles {
 
 	@Autowired
 	private ContObjectFiasRepository contObjectFiasRepository;
+
+	@Autowired
+	private TimezoneDefService timezoneDefService;
 
 	/**
 	 * 
@@ -66,50 +71,80 @@ public class ContObjectService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param entity
+	 * @param contObject
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public ContObject updateOne(ContObject entity) {
-		checkNotNull(entity);
-		checkArgument(!entity.isNew());
+	public ContObject updateOne(ContObject contObject) {
+		checkNotNull(contObject);
+		checkArgument(!contObject.isNew());
 
-		ContObject currentEntity = contObjectRepository.findOne(entity.getId());
-		if (currentEntity == null) {
-			throw new PersistenceException(String.format("ContObject (ID=%d) not found", entity.getId()));
+		ContObject currentObject = contObjectRepository.findOne(contObject.getId());
+		if (currentObject == null) {
+			throw new PersistenceException(String.format("ContObject (ID=%d) not found", contObject.getId()));
 		}
-		currentEntity.setVersion(entity.getVersion());
-		currentEntity.setName(entity.getName());
-		currentEntity.setFullName(entity.getFullName());
-		currentEntity.setFullAddress(entity.getFullAddress());
-		currentEntity.setNumber(entity.getNumber());
-		currentEntity.setDescription(entity.getDescription());
-		currentEntity.setCurrentSettingMode(entity.getCurrentSettingMode());
-		currentEntity.setComment(entity.getComment());
-		currentEntity.setOwner(entity.getOwner());
-		currentEntity.setOwnerContacts(entity.getOwnerContacts());
-		currentEntity.setCwTemp(entity.getCwTemp());
-		currentEntity.setHeatArea(entity.getHeatArea());
+		currentObject.setVersion(contObject.getVersion());
+		currentObject.setName(contObject.getName());
+		currentObject.setFullName(contObject.getFullName());
+		currentObject.setFullAddress(contObject.getFullAddress());
+		currentObject.setNumber(contObject.getNumber());
+		currentObject.setDescription(contObject.getDescription());
+		currentObject.setCurrentSettingMode(contObject.getCurrentSettingMode());
+		currentObject.setComment(contObject.getComment());
+		currentObject.setOwner(contObject.getOwner());
+		currentObject.setOwnerContacts(contObject.getOwnerContacts());
+		currentObject.setCwTemp(contObject.getCwTemp());
+		currentObject.setHeatArea(contObject.getHeatArea());
 
-		ContObject resultEntity = contObjectRepository.save(currentEntity);
+		ContObject resultEntity = contObjectRepository.save(currentObject);
 
 		return resultEntity;
 	}
 
 	/**
 	 * 
-	 * @param entity
+	 * @param contObject
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public ContObject createOne(ContObject entity) {
+	public ContObject createOne(ContObject contObject, Long subscriberId) {
 
-		checkNotNull(entity);
-		checkArgument(entity.isNew());
+		checkNotNull(contObject);
+		checkArgument(contObject.isNew());
+		checkArgument(contObject.getTimezoneDefKeyname() != null);
+
+		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		if (subscriber == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(contObject.getTimezoneDefKeyname());
+		contObject.setTimezoneDef(timezoneDef);
 
 		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deleteOne(Long contObjectId) {
+		checkNotNull(contObjectId);
+
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		if (contObject == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+
+		contObject.setDeleted(1);
+		contObject.setIsManual(true);
+
+		contObjectRepository.save(contObject);
 	}
 
 	/**
