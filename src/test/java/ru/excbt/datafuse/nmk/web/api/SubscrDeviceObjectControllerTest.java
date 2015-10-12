@@ -5,11 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 
@@ -106,101 +104,4 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels"));
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testAllDeviceObjectsGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contObjects/deviceObjects"));
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testDeviceObjectUpdate() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
-		deviceObject.setContObject(null);
-		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
-		String url = apiSubscrUrl(
-				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
-		RequestExtraInitializer paramInit = (builder) -> {
-			builder.param("subscrDataSourceId", String.valueOf(65523603));
-			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
-			builder.param("dataSourceTable", "Table:" + System.currentTimeMillis());
-			builder.param("dataSourceTable1h", "Table 1H:" + System.currentTimeMillis());
-			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
-		};
-		_testJsonUpdate(url, deviceObject, paramInit);
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testDeviceObjectCreateDelete() throws Exception {
-
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
-		deviceObject.setId(null);
-		deviceObject.setContObject(null);
-		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
-
-		deviceObject.setDeviceModel(null);
-		deviceObject.getDeviceObjectDataSources().clear();
-
-		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
-		RequestExtraInitializer paramInit = (builder) -> {
-			builder.param("subscrDataSourceId", String.valueOf(65523603));
-			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
-		};
-		Long deviceObjectId = _testJsonCreate(url, deviceObject, paramInit);
-
-		logger.info("TESTING GET");
-
-		String getUrl = apiSubscrUrl(
-				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
-
-		_testJsonGet(getUrl);
-
-		logger.info("TESTING DELETE");
-
-		String deleteUrl = apiSubscrUrl(
-				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
-		RequestExtraInitializer paramDel = (builder) -> {
-			builder.param("isPermanent", "true");
-		};
-		_testJsonDelete(deleteUrl, paramDel);
-
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testDeviceObjectAllCreateDelete() throws Exception {
-
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
-		deviceObject.setId(null);
-		deviceObject.setContObject(null);
-		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
-		String url = apiSubscrUrl(String.format("/contObjects/deviceObjects"));
-		RequestExtraInitializer paramInit = (builder) -> {
-			builder.param("contObjectId", String.valueOf(DEV_RMA_CONT_OBJECT_ID));
-			builder.param("subscrDataSourceId", String.valueOf(65523603));
-			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
-		};
-		Long deviceObjectId = _testJsonCreate(url, deviceObject, paramInit);
-
-		String deleteUrl = apiSubscrUrl(
-				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
-		RequestExtraInitializer paramDel = (builder) -> {
-			builder.param("isPermanent", "true");
-		};
-		_testJsonDelete(deleteUrl, paramDel);
-
-	}
 }

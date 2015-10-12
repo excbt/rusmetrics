@@ -565,4 +565,14 @@ public class AbstractControllerTest {
 		return "/api/subscr" + url;
 	}
 
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
+	protected String apiRmaUrl(String url) {
+		checkNotNull(url);
+		return "/api/rma" + url;
+	}
+
 }

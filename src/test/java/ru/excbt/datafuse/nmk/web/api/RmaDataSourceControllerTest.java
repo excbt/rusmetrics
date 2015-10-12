@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.ManualControllerTest;
 
-public class SubscrDataSourceControllerTest extends ManualControllerTest {
+public class RmaDataSourceControllerTest extends ManualControllerTest {
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -25,7 +25,7 @@ public class SubscrDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourcesGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/dataSources"));
+		_testJsonGet(apiRmaUrl("/dataSources"));
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class SubscrDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourceTypesGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/dataSourceTypes"));
+		_testJsonGet(apiRmaUrl("/dataSourceTypes"));
 	}
 
 	/**
@@ -45,13 +45,13 @@ public class SubscrDataSourceControllerTest extends ManualControllerTest {
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
-		Long dataSourceId = _testJsonCreate(apiSubscrUrl("/dataSources"), dataSource);
+		Long dataSourceId = _testJsonCreate(apiRmaUrl("/dataSources"), dataSource);
 		assertNotNull(dataSourceId);
 
 		dataSource = subscrDataSourceService.findOne(dataSourceId);
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
-		_testJsonUpdate(apiSubscrUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
-		_testJsonDelete(apiSubscrUrl("/dataSources/" + dataSourceId.toString()));
+		_testJsonUpdate(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
+		_testJsonDelete(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
 	}
 
 }

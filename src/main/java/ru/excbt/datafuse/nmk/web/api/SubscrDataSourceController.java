@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +29,8 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 // TODO Rename to /api/rma
-@Controller
-@RequestMapping(value = "/api/subscr")
+//@Controller
+//@RequestMapping(value = "/api/subscr")
 public class SubscrDataSourceController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDataSourceController.class);

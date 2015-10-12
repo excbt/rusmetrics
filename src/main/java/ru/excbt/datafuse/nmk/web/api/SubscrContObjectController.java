@@ -36,20 +36,25 @@ public class SubscrContObjectController extends SubscrApiController {
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectController.class);
 
 	@Autowired
-	private ContObjectService contObjectService;
+	protected ContObjectService contObjectService;
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectsList() {
+	public ResponseEntity<?> getContObjects() {
 		List<ContObject> resultList = subscriberService
 				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok().body(resultList);
 	}
 
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObject(@PathVariable("contObjectId") Long contObjectId) {
 
@@ -107,7 +112,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		ApiAction action = new AbstractEntityApiAction<ContObject>(contObject) {
 			@Override
 			public void process() {
-				setResultEntity(contObjectService.updateOneContObject(entity));
+				setResultEntity(contObjectService.updateOne(entity));
 
 			}
 		};

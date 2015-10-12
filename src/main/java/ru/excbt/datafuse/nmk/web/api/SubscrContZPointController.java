@@ -14,7 +14,6 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -24,21 +23,17 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 public class SubscrContZPointController extends SubscrApiController {
 
 	@Autowired
-	private SubscriberService subscrUserService;
-
-	@Autowired
-	private ContZPointService contZPointService;
+	protected ContZPointService contZPointService;
 
 	/**
 	 * 
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPoints(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPoint> zpList = contZPointService
-				.findContObjectZPoints(contObjectId);
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") long contObjectId) {
+		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
 		return ResponseEntity.ok(zpList);
 	}
 
@@ -47,11 +42,10 @@ public class SubscrContZPointController extends SubscrApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsEx", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPointsEx(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPointEx> zpList = contZPointService
-				.findContObjectZPointsEx(contObjectId);
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsEx", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") long contObjectId) {
+		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
 		return ResponseEntity.ok(zpList);
 	}
 
@@ -60,11 +54,10 @@ public class SubscrContZPointController extends SubscrApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPointStatInfo(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPointStatInfo> resultList = contZPointService
-				.selectContZPointStatInfo(contObjectId);
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") long contObjectId) {
+		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -76,27 +69,22 @@ public class SubscrContZPointController extends SubscrApiController {
 	 * @param settingMode
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateZPoint(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId,
-			@RequestBody ContZPoint contZPoint) {
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId, @RequestBody ContZPoint contZPoint) {
 
-		ContZPoint currentContZPoint = contZPointService
-				.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
 
-		if (currentContZPoint == null
-				|| currentContZPoint.getContObject().getId() != contObjectId) {
+		if (currentContZPoint == null || currentContZPoint.getContObject().getId() != contObjectId) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		currentContZPoint.setCustomServiceName(contZPoint
-				.getCustomServiceName());
+		currentContZPoint.setCustomServiceName(contZPoint.getCustomServiceName());
 
 		currentContZPoint.setIsManualLoading(contZPoint.getIsManualLoading());
 
-		ApiAction action = new AbstractEntityApiAction<ContZPoint>(
-				currentContZPoint) {
+		ApiAction action = new AbstractEntityApiAction<ContZPoint>(currentContZPoint) {
 			@Override
 			public void process() {
 				setResultEntity(contZPointService.updateContZPoint(entity));
@@ -112,12 +100,11 @@ public class SubscrContZPointController extends SubscrApiController {
 	 * @param contZPointId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPoint(
-			@PathVariable("contObjectId") long contObjectId,
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoint(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId) {
-		ContZPoint currentContZPoint = contZPointService
-				.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
 
 		if (currentContZPoint.getContObject().getId() != contObjectId) {
 			return ResponseEntity.badRequest().build();
@@ -126,7 +113,6 @@ public class SubscrContZPointController extends SubscrApiController {
 		return ResponseEntity.ok(currentContZPoint);
 	}
 
-	
 	/**
 	 * 
 	 * @return
@@ -134,8 +120,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints() {
 
-		List<ContZPoint> contZPoints = subscrUserService
-				.selectSubscriberContZPoints(getSubscriberId());
+		List<ContZPoint> contZPoints = subscriberService.selectSubscriberContZPoints(getSubscriberId());
 
 		return ResponseEntity.ok(contZPoints);
 	}
