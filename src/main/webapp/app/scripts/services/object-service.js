@@ -1,14 +1,13 @@
 'use strict';
 angular.module('portalNMC')
-    .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
-             function(crudGridDataFactory, $http, $cookies, $interval, $rootScope)
-//             function()
-             {
+.service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
+             function(crudGridDataFactory, $http, $cookies, $interval, $rootScope){
 console.log("Object Service. Run.");                 
         var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
         var urlSubscr = '../api/subscr';
+        var urlDatasources = urlSubscr+'/dataSources';
         var crudTableName = urlSubscr+'/contObjects';
         var urlRefRange = urlSubscr+'/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
@@ -31,7 +30,14 @@ console.log("Object Service. Run.");
         
         var getObjectsUrl = function(){
             return crudTableName;
-        };         
+        };
+        var getSubscrUrl = function(){
+            return urlSubscr;
+        };
+        
+        var getDatasourcesUrl = function(){
+            return urlDatasources;
+        };
         
         var getLoadingStatus = function(){
             return loading;
@@ -178,6 +184,7 @@ console.log("objectSvc:loaded");
             getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
+            getDatasourcesUrl,
             getDeviceModels,
             getObjectConsumingData,
             getObjectSettings,
@@ -187,6 +194,7 @@ console.log("objectSvc:loaded");
             getLoadingStatus,
             getObjectsUrl,
             getRefRangeByObjectAndZpoint,
+            getSubscrUrl,
             getVzletSystemList,
             getZpointsDataByObject,
             findObjectById,

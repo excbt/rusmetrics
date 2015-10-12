@@ -80,12 +80,12 @@ console.log('Run data sources management controller.');
     $scope.saveDatasource = function(dsource){ 
         var checkDsourceFlag = true;
         if (!$scope.checkPositiveNumberValue(dsource.dataSourcePort)){
-            notificationFactory.errorInfo("Ошибка","Не корректно задан порт прибора");
+            notificationFactory.errorInfo("Ошибка","Не корректно задан порт источника данных");
             checkDsourceFlag = false;
         };
 //        if (!$("#inputIP").inputmask("isComplete")){
         if (angular.isUndefined(dsource.dataSourceIp)|| (dsource.dataSourceIp=== null)||(dsource.dataSourceIp==="")){
-            notificationFactory.errorInfo("Ошибка","Не заполнен ip \ hostname прибора");
+            notificationFactory.errorInfo("Ошибка","Не заполнен ip \ hostname источника данных");
             checkDsourceFlag = false;
         };
         if (checkDsourceFlag === false){

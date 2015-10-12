@@ -108,7 +108,7 @@
             <td class="col-md-3">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить прибор" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(dataSource)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                        <i title="Удалить прибор" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(device)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -145,57 +145,43 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><label for="inputDescription" >Источник данных</label>
-                                </td>
-                                <td class="nmc-text-align-left"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as model.modelName for model in data.deviceModels">
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
-                                <td class="nmc-text-align-left"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as model.modelName for model in data.deviceModels">
+                                <td class="nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.contObjectId==null}">
+                                        <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects">
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Источник данных</label>
+                                </td>
+                                <td class="nmc-text-align-left"><select class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
                                     </select>
                                 </td>
                             </tr>
-                            <tr>
-                                <td class="col-sm-3"><label for="inputThv">IP \ Hostname</label>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td><label for="inputDescription" >Адрес прибора</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9">
-<!--                                    <div id="divInputIp" class="form-group noMarginBottom" ng-class="{'has-error':!ctrlSettings.inputIpComplete}">-->
-                                    <div id="divInputIp" class="form-group noMarginBottom">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputIP" placeholder="" ng-model="data.currentObject.dataSourceIp"/> 
-                                    </div>
-                                </td>                               
-                            </tr>                           
-                            <tr>
-                                <td class="col-sm-3"><label for="inputSquare">Порт</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPositiveNumberValue(data.currentObject.dataSourcePort)}">
-                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputPort" placeholder="" ng-model="data.currentObject.dataSourcePort">
-                                    </div>        
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="data.currentObject.subscrDataSourceAddr"/>
                                 </td>
                             </tr>
-                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
-                                <td class="col-sm-3"><label for="inputAddress">База данных</label>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
+                                <td><label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputDB" placeholder="" ng-model="data.currentObject.dataSourceDB">
-                                </td>
-                            </tr>
-                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
-                                <td class="col-sm-3"><label for="inputCC">Логин</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourceLogin">
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="data.currentObject.dataSourceTable1h"/>
                                 </td>
                             </tr>
-                            <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
-                                <td class="col-sm-3"><label for="inputMode">Пароль</label>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
+                                <td><label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourcePassword">
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h"/>
                                 </td>
-                            </tr>       
-
+                            </tr>
                         </table>
                     </div>    
                 </div>  
@@ -207,7 +193,7 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="saveDatasource(data.currentObject)"
+								ng-click="saveDevice(data.currentObject)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
