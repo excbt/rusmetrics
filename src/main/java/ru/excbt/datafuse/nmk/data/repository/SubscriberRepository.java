@@ -43,7 +43,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Query("SELECT co FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :subscriberId")
+	@Query("SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId")
 	public List<ContObject> selectContObjects(@Param("subscriberId") Long subscriberId);
 
 	/**
@@ -51,7 +51,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Query("SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :subscriberId")
+	@Query("SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId")
 	public List<Long> selectContObjectIds(@Param("subscriberId") Long subscriberId);
 
 	/**
@@ -60,8 +60,8 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Query("SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co "
-			+ "WHERE s.id = :subscriberId AND co.id = :contObjectId")
+	@Query("SELECT sco.contObjectId FROM SubscrContObject sco "
+			+ " WHERE sco.subscriberId = :subscriberId AND sco.contObjectId = :contObjectId")
 	public List<Long> selectContObjectId(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectId") long contObjectId);
 
@@ -71,7 +71,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @return
 	 */
 	@Query("SELECT zp FROM ContZPoint zp WHERE zp.contObjectId IN "
-			+ " (SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co " + " WHERE s.id = :subscriberId )")
+			+ " (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId )")
 	public List<ContZPoint> selectContZPoints(@Param("subscriberId") Long subscriberId);
 
 	/**
@@ -80,7 +80,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @return
 	 */
 	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject dco "
-			+ " WHERE dco.id IN (SELECT co.id FROM Subscriber s INNER JOIN s.contObjects co WHERE s.id = :subscriberId)")
+			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)")
 	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 }

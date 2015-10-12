@@ -42,13 +42,15 @@ public class Subscriber extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name = "subscriber_id") ,
-			inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
-	@JsonIgnore
-	private Collection<ContObject> contObjects;
+	// @OneToMany(fetch = FetchType.LAZY)
+	// @JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name =
+	// "subscriber_id") ,
+	// inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
+	// @JsonIgnore
+	// private Collection<ContObject> contObjects;
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriber")
+	@JsonIgnore
 	private List<SubscrContObject> subscrContObjects = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY)
@@ -107,13 +109,13 @@ public class Subscriber extends AbstractAuditableModel {
 		this.organization = organization;
 	}
 
-	public Collection<ContObject> getContObjects() {
-		return contObjects;
-	}
-
-	public void setContObjects(final Collection<ContObject> contObjects) {
-		this.contObjects = contObjects;
-	}
+	// public Collection<ContObject> getContObjects() {
+	// return contObjects;
+	// }
+	//
+	// public void setContObjects(final Collection<ContObject> contObjects) {
+	// this.contObjects = contObjects;
+	// }
 
 	public Collection<UDirectory> getDirectories() {
 		return directories;
