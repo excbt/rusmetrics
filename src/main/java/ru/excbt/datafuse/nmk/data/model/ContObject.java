@@ -307,4 +307,12 @@ public class ContObject extends AbstractAuditableModel
 		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
 
+	public void setExSystemKeyname(String exSystemKeyname) {
+		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	public void setExCode(String exCode) {
+		this.exCode = exCode;
+	}
+
 }

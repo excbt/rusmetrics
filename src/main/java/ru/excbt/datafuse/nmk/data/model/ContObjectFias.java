@@ -10,16 +10,19 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import org.hibernate.annotations.Type;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "cont_object_fias")
 @JsonInclude(Include.NON_NULL)
-public class ContObjectFias extends AbstractAuditableModel {
+public class ContObjectFias extends AbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -58,8 +61,18 @@ public class ContObjectFias extends AbstractAuditableModel {
 	@Column(name = "short_address_3")
 	private String shortAddress3;
 
+	@Column(name = "geo_json")
+	@Type(type = "StringJsonObject")
+	private String geoJson;
+
 	@Version
 	private int version;
+
+	@Column(name = "is_geo_refresh")
+	private Boolean isGeoRefresh;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -103,6 +116,36 @@ public class ContObjectFias extends AbstractAuditableModel {
 
 	public int getVersion() {
 		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public String getGeoJson() {
+		return geoJson;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	public void setContObject(ContObject contObject) {
+		this.contObject = contObject;
+	}
+
+	public Boolean getIsGeoRefresh() {
+		return isGeoRefresh;
+	}
+
+	public void setIsGeoRefresh(Boolean isGeoRefresh) {
+		this.isGeoRefresh = isGeoRefresh;
 	}
 
 }

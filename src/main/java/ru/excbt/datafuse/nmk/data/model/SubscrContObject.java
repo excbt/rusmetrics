@@ -10,14 +10,16 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(name = "subscr_cont_object")
-public class SubscrContObject extends AbstractAuditableModel {
+public class SubscrContObject extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -47,6 +49,13 @@ public class SubscrContObject extends AbstractAuditableModel {
 	@Column(name = "subscr_end_date")
 	@Temporal(TemporalType.DATE)
 	private Date subscrEndDate;
+
+	@Version
+	@Column(name = "version")
+	private int version;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -94,6 +103,24 @@ public class SubscrContObject extends AbstractAuditableModel {
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

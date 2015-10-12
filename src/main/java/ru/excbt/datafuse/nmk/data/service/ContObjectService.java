@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
@@ -48,6 +49,9 @@ public class ContObjectService implements SecuredRoles {
 
 	@Autowired
 	private TimezoneDefService timezoneDefService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -99,6 +103,16 @@ public class ContObjectService implements SecuredRoles {
 
 		ContObject resultEntity = contObjectRepository.save(currentObject);
 
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(currentObject.getId());
+		if (contObjectFiasList.size() == 0) {
+			contObjectFiasList.add(createConfObjectFias(currentObject));
+		} else {
+			contObjectFiasList.forEach(i -> {
+				i.setIsGeoRefresh(true);
+			});
+		}
+		contObjectFiasRepository.save(contObjectFiasList);
+
 		return resultEntity;
 	}
 
@@ -122,8 +136,23 @@ public class ContObjectService implements SecuredRoles {
 
 		TimezoneDef timezoneDef = timezoneDefService.findOne(contObject.getTimezoneDefKeyname());
 		contObject.setTimezoneDef(timezoneDef);
+		contObject.setIsManual(true);
+		// contObject.set
 
-		throw new UnsupportedOperationException();
+		ContObject resultContObject = contObjectRepository.save(contObject);
+		SubscrContObject subscrContObject = new SubscrContObject();
+		Date beginDate = subscriberService.getSubscriberCurrentTime(subscriberId);
+		subscrContObject.setContObject(resultContObject);
+		subscrContObject.setSubscriber(subscriber);
+		subscrContObject.setSubscrBeginDate(beginDate);
+		// subscrContObjectService.
+		subscrContObjectService.saveOne(subscrContObject);
+
+		// Inserting ContObjectFias
+		ContObjectFias contObjectFias = createConfObjectFias(resultContObject);
+		contObjectFiasRepository.save(contObjectFias);
+
+		return resultContObject;
 	}
 
 	/**
@@ -144,7 +173,40 @@ public class ContObjectService implements SecuredRoles {
 		contObject.setDeleted(1);
 		contObject.setIsManual(true);
 
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.findByContObjectId(contObjectId);
+		subscrContObjectService.deleteOne(subscrContObjects);
+
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
+		contObjectFiasList.forEach(i -> {
+			i.setDeleted(1);
+		});
+		contObjectFiasRepository.save(contObjectFiasList);
+
 		contObjectRepository.save(contObject);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deleteOnePermanent(Long contObjectId) {
+		checkNotNull(contObjectId);
+
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		if (contObject == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.findByContObjectId(contObjectId);
+		subscrContObjectService.deleteOnePermanent(subscrContObjects);
+
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
+		contObjectFiasRepository.delete(contObjectFiasList);
+
+		contObjectRepository.delete(contObject);
 	}
 
 	/**
@@ -202,6 +264,17 @@ public class ContObjectService implements SecuredRoles {
 		checkNotNull(contObjectId);
 		List<ContObjectFias> vList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		return vList.isEmpty() ? null : vList.get(0);
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 */
+	private ContObjectFias createConfObjectFias(ContObject contObject) {
+		ContObjectFias contObjectFias = new ContObjectFias();
+		contObjectFias.setContObject(contObject);
+		contObjectFias.setIsGeoRefresh(true);
+		return contObjectFias;
 	}
 
 }
