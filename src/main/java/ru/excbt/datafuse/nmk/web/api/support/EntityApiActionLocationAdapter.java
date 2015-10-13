@@ -6,13 +6,12 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Deprecated
-public abstract class AbstractEntityApiActionLocation<T, K> extends AbstractEntityApiAction<T>
+public abstract class EntityApiActionLocationAdapter<T, K> extends EntityApiActionAdapter<T>
 		implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
-	public AbstractEntityApiActionLocation(T entity, HttpServletRequest request) {
+	public EntityApiActionLocationAdapter(T entity, HttpServletRequest request) {
 		super(entity);
 		this.request = request;
 	}

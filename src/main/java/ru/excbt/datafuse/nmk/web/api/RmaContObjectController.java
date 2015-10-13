@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
 // TODO make RMA actions
 @Controller
@@ -40,11 +40,11 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ContObject, Long>(contObject, request) {
+		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
-			public void process() {
-				setResultEntity(contObjectService.createOne(entity, getSubscriberId()));
+			public ContObject processAndReturnResult() {
+				return contObjectService.createOne(entity, getSubscriberId());
 			}
 
 			@Override

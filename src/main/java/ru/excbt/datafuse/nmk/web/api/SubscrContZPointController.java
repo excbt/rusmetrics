@@ -18,7 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -84,7 +84,7 @@ public class SubscrContZPointController extends SubscrApiController {
 		checkNotNull(contZPointId);
 		checkNotNull(contZPoint);
 
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
 
 		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
 			return ResponseEntity.badRequest().build();
@@ -94,10 +94,10 @@ public class SubscrContZPointController extends SubscrApiController {
 
 		currentContZPoint.setIsManualLoading(contZPoint.getIsManualLoading());
 
-		ApiAction action = new AbstractEntityApiAction<ContZPoint>(currentContZPoint) {
+		ApiAction action = new EntityApiActionAdapter<ContZPoint>(currentContZPoint) {
 			@Override
-			public void process() {
-				setResultEntity(contZPointService.updateContZPoint(entity));
+			public ContZPoint processAndReturnResult() {
+				return contZPointService.updateContZPoint(entity);
 			}
 		};
 
@@ -118,7 +118,7 @@ public class SubscrContZPointController extends SubscrApiController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
 
 		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
 			return ResponseEntity.badRequest().build();

@@ -5,11 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 @Entity
 @Table(name = "organization")
-public class Organization extends AbstractAuditableModel {
+@JsonInclude(Include.NON_NULL)
+public class Organization extends AbstractAuditableModel implements KeynameObject {
 
 	/**
 	 * 
@@ -42,6 +47,9 @@ public class Organization extends AbstractAuditableModel {
 
 	@Column(name = "flag_rma")
 	private Boolean flagRma;
+
+	@Column(name = "keyname")
+	private String keyname;
 
 	public String getExCode() {
 		return exCode;
@@ -113,5 +121,14 @@ public class Organization extends AbstractAuditableModel {
 
 	public void setFlagRma(Boolean flagRma) {
 		this.flagRma = flagRma;
+	}
+
+	@Override
+	public String getKeyname() {
+		return keyname;
+	}
+
+	public void setKeyname(String keyname) {
+		this.keyname = keyname;
 	}
 }

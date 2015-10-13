@@ -132,7 +132,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void initContZPointSettingMode(long contZPointId) {
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
 			throw new PersistenceException(String.format(

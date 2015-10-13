@@ -78,6 +78,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@JoinColumn(name = "rso_organization_id")
 	private Organization rso;
 
+	@Column(name = "rso_organization_id", updatable = false, insertable = false)
+	private Long rsoId;
+
 	@Column(name = "checkout_time")
 	private String checkoutTime;
 
@@ -106,6 +109,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
+
+	@Column(name = "cont_zpoint_comment")
+	private String contZPointComment;
 
 	@Transient
 	private Long activeDeviceObjectId;
@@ -280,6 +286,22 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@JsonIgnore
 	public DeviceObject getActiveDeviceObject() {
 		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
+	}
+
+	public Long getRsoId() {
+		return rsoId;
+	}
+
+	public void setRsoId(Long rsoId) {
+		this.rsoId = rsoId;
+	}
+
+	public String getContZPointComment() {
+		return contZPointComment;
+	}
+
+	public void setContZPointComment(String contZPointComment) {
+		this.contZPointComment = contZPointComment;
 	}
 
 }

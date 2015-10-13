@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
@@ -54,6 +55,9 @@ public class ContZPointService implements SecuredRoles {
 	@Autowired
 	private ContServiceTypeRepository contServiceTypeRepository;
 
+	@Autowired
+	private OrganizationService organizationService;
+
 	/**
 	 * /**
 	 * 
@@ -61,7 +65,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContZPoint findContZPoint(long contZPointId) {
+	public ContZPoint findOne(long contZPointId) {
 		ContZPoint result = contZPointRepository.findOne(contZPointId);
 		result.getDeviceObjects().forEach(j -> {
 			j.loadLazyProps();
@@ -216,16 +220,14 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contServiceTypeKey);
 		checkNotNull(startDate);
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
-		if (contObject == null) {
-			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
-		}
-
 		ContServiceType contServiceType = contServiceTypeRepository.findOne(contServiceTypeKey.getKeyname());
 		checkNotNull(contServiceType);
 
 		ContZPoint result = new ContZPoint();
-		result.setContObject(contObject);
+
+		result.setContObjectId(contObjectId);
+		initContObject(result);
+
 		result.setContServiceType(contServiceType);
 		result.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		result.setIsManualLoading(true);
@@ -245,7 +247,7 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void deleteManualZPoint(Long contZPointId) {
-		ContZPoint contZPoint = findContZPoint(contZPointId);
+		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
 		if (ExSystemKey.MANUAL.isNotEquals(contZPoint.getExSystemKeyname())) {
 			throw new PersistenceException(String.format("Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
@@ -272,25 +274,13 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint.getStartDate());
 		checkNotNull(contZPoint.getContServiceTypeKeyname());
 		checkNotNull(contZPoint.getActiveDeviceObjectId());
+		checkNotNull(contZPoint.getRsoId());
 
-		ContObject contObject = contObjectService.findOne(contObjectId);
-		if (contObject == null) {
-			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
-		}
-
-		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.getActiveDeviceObjectId());
-
-		if (deviceObject == null) {
-			throw new PersistenceException(
-					String.format("DeviceObject(id=%d) is not found", contZPoint.getActiveDeviceObjectId()));
-		}
-
-		ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contServiceType);
-
-		contZPoint.setContObject(contObject);
-		contZPoint.getDeviceObjects().add(deviceObject);
-		contZPoint.setContServiceType(contServiceType);
+		contZPoint.setContObjectId(contObjectId);
+		initContObject(contZPoint);
+		initDeviceObject(contZPoint);
+		initContServiceType(contZPoint);
+		initRso(contZPoint);
 		contZPoint.setIsManual(true);
 
 		return contZPointRepository.save(contZPoint);
@@ -303,7 +293,7 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOne(Long contZPointId) {
-		ContZPoint contZPoint = findContZPoint(contZPointId);
+		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
 		contZPoint.setDeleted(1);
 		contZPointRepository.save(contZPoint);
@@ -316,9 +306,90 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOnePermanent(Long contZPointId) {
-		ContZPoint contZPoint = findContZPoint(contZPointId);
+		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
 		contZPointRepository.delete(contZPoint);
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+	public ContZPoint updateOne(ContZPoint contZPoint) {
+		checkNotNull(contZPoint);
+		checkNotNull(contZPoint.getContObjectId());
+		checkNotNull(contZPoint.getStartDate());
+		checkNotNull(contZPoint.getContServiceTypeKeyname());
+		checkNotNull(contZPoint.getActiveDeviceObjectId());
+		checkNotNull(contZPoint.getRsoId());
+
+		initContObject(contZPoint);
+		initDeviceObject(contZPoint);
+		initContServiceType(contZPoint);
+		initRso(contZPoint);
+
+		contZPoint.setIsManual(true);
+
+		return contZPointRepository.save(contZPoint);
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 */
+	private void initContObject(ContZPoint contZPoint) {
+		ContObject contObject = contObjectService.findOne(contZPoint.getContObjectId());
+		if (contObject == null) {
+			throw new PersistenceException(
+					String.format("ContObject(id=%d) is not found", contZPoint.getContObjectId()));
+		}
+		contZPoint.setContObject(contObject);
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 */
+	private void initDeviceObject(ContZPoint contZPoint) {
+		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.getActiveDeviceObjectId());
+
+		if (deviceObject == null) {
+			throw new PersistenceException(
+					String.format("DeviceObject(id=%d) is not found", contZPoint.getActiveDeviceObjectId()));
+		}
+		contZPoint.getDeviceObjects().clear();
+		contZPoint.getDeviceObjects().add(deviceObject);
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 */
+	private void initContServiceType(ContZPoint contZPoint) {
+		ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPoint.getContServiceTypeKeyname());
+		checkNotNull(contServiceType);
+		contZPoint.setContServiceType(contServiceType);
+	}
+
+	/**
+	 * 
+	 * @param contZPoint
+	 */
+	private void initRso(ContZPoint contZPoint) {
+		Organization organization = organizationService.findOne(contZPoint.getRsoId());
+		if (organization == null) {
+			throw new PersistenceException(
+					String.format("RSO organization (id=%d) is not found", contZPoint.getRsoId()));
+		}
+
+		if (!Boolean.TRUE.equals(organization.getFlagRso())) {
+			throw new PersistenceException(String.format("Organization (id=%d) is not RSO", contZPoint.getRsoId()));
+		}
+
+		contZPoint.setRso(organization);
 	}
 
 }
