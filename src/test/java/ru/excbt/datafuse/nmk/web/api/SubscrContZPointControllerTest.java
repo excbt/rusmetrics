@@ -69,7 +69,7 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
 
 		ContZPoint contZPoint = contZPointService
-				.findContZPoint(MANUAL_HW_CONT_ZPOINT_ID);
+				.findOne(MANUAL_HW_CONT_ZPOINT_ID);
 		contZPoint.setCustomServiceName("Сервис__"
 				+ RandomStringUtils.randomNumeric(5));
 

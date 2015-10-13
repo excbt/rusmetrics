@@ -8,8 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 
-public interface ContEventMonitorRepository extends
-		JpaRepository<ContEventMonitor, Long> {
+public interface ContEventMonitorRepository extends JpaRepository<ContEventMonitor, Long> {
 
 	/**
 	 * 
@@ -18,21 +17,16 @@ public interface ContEventMonitorRepository extends
 	 */
 	public List<ContEventMonitor> findByContObjectId(Long contObjectId);
 
-	@Query("SELECT m FROM ContEventMonitor m "
-			+ "WHERE m.contObjectId = :contObjectId "
-			+ " ORDER BY m.contEventTime ")
-	public List<ContEventMonitor> selectByContObjectId(
-			@Param("contObjectId") Long contObjectId);
+	@Query("SELECT m FROM ContEventMonitor m " + "WHERE m.contObjectId = :contObjectId " + " ORDER BY m.contEventTime ")
+	public List<ContEventMonitor> selectByContObjectId(@Param("contObjectId") Long contObjectId);
 
 	/**
 	 * 
 	 * @param contObjectId
 	 * @return
 	 */
-	@Query("SELECT m FROM ContEventMonitor m "
-			+ "WHERE m.contObjectId IN (:contObjectIds)")
-	public List<ContEventMonitor> selectByContObjectIds(
-			@Param("contObjectIds") List<Long> contObjectIds);
+	@Query("SELECT m FROM ContEventMonitor m " + "WHERE m.contObjectId IN (:contObjectIds)")
+	public List<ContEventMonitor> selectByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
 	 * 
@@ -40,10 +34,8 @@ public interface ContEventMonitorRepository extends
 	 * @return
 	 */
 	@Query("SELECT m FROM ContEventMonitor m " + "WHERE m.contObjectId IN ( "
-			+ "SELECT co.id FROM Subscriber s LEFT JOIN s.contObjects co "
-			+ " WHERE s.id = :subscriberId)")
-	public List<ContEventMonitor> selectBySubscriberId(
-			@Param("subscriberId") Long subscriberId);
+			+ "SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)")
+	public List<ContEventMonitor> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 * 
@@ -52,11 +44,8 @@ public interface ContEventMonitorRepository extends
 	 */
 	@Query(value = "SELECT CAST(f.city_fias_uuid as TEXT) city_fias_uuid, COUNT(cet.cont_event_id) cont_object_count "
 			+ "FROM cont_event_monitor cet, cont_object_fias f, subscr_cont_object sco "
-			+ "WHERE cet.cont_object_id = f.cont_object_id "
-			+ "AND cet.cont_object_id = sco.cont_object_id "
-			+ "AND sco.subscriber_id = :subscriberId "
-			+ "GROUP BY city_fias_uuid ", nativeQuery = true)
-	public List<Object[]> selectCityContObjectMonitorEventCount(
-			@Param("subscriberId") Long subscriberId);
+			+ "WHERE cet.cont_object_id = f.cont_object_id " + "AND cet.cont_object_id = sco.cont_object_id "
+			+ "AND sco.subscriber_id = :subscriberId " + "GROUP BY city_fias_uuid ", nativeQuery = true)
+	public List<Object[]> selectCityContObjectMonitorEventCount(@Param("subscriberId") Long subscriberId);
 
 }

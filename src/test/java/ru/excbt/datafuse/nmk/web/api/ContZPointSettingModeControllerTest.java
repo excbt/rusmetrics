@@ -56,7 +56,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 			}
 			
 			long contZPointId = settingMode.getContZPoint().getId();
-			long contObjectId = contZPointService.findContZPoint(contZPointId)
+			long contObjectId = contZPointService.findOne(contZPointId)
 					.getContObject().getId();
 
 			urlStr = String.format(URL_TEMPLATE, contObjectId, contZPointId,

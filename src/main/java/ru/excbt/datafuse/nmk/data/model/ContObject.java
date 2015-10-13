@@ -15,11 +15,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
@@ -31,6 +35,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 @Entity
 @Table(name = "cont_object")
 @DynamicUpdate
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class ContObject extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
 
@@ -125,6 +131,9 @@ public class ContObject extends AbstractAuditableModel
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
+
+	@Transient
+	private Boolean _haveSubscr;
 
 	public String getName() {
 		return name;
@@ -305,6 +314,22 @@ public class ContObject extends AbstractAuditableModel
 
 	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
 		this.timezoneDefKeyname = timezoneDefKeyname;
+	}
+
+	public void setExSystemKeyname(String exSystemKeyname) {
+		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	public void setExCode(String exCode) {
+		this.exCode = exCode;
+	}
+
+	public Boolean get_haveSubscr() {
+		return _haveSubscr;
+	}
+
+	public void set_haveSubscr(Boolean _haveSubscr) {
+		this._haveSubscr = _haveSubscr;
 	}
 
 }

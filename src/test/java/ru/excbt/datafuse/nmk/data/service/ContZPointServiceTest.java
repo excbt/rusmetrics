@@ -19,8 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 
 public class ContZPointServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContZPointServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContZPointServiceTest.class);
 
 	private final static long MANUAL_CONT_OBJECT_ID = 60695605;
 
@@ -39,8 +38,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testCreateManualZPoint() throws Exception {
-		ContZPoint contZPoint = contZPointService.createManualZPoint(
-				MANUAL_CONT_OBJECT_ID, ContServiceTypeKey.HEAT,
+		ContZPoint contZPoint = contZPointService.createManualZPoint(MANUAL_CONT_OBJECT_ID, ContServiceTypeKey.HEAT,
 				LocalDate.now(), 1, null, null);
 		assertNotNull(contZPoint);
 		logger.info("Created ZPoint:{}", contZPoint.getId());
@@ -54,8 +52,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	 * @param tsNumber
 	 * @throws Exception
 	 */
-	private DeviceObject addCustomZPoint(Long contObjectId,
-			ContServiceTypeKey contServiceTypeKey, int tsNumber,
+	private DeviceObject addCustomZPoint(Long contObjectId, ContServiceTypeKey contServiceTypeKey, int tsNumber,
 			Boolean isDoublePipe, Long deviceModelId, String deviceNumber) throws Exception {
 
 		DeviceModel deviceModel = deviceModelService.findOne(deviceModelId);
@@ -67,8 +64,7 @@ public class ContZPointServiceTest extends JpaSupportTest {
 
 		checkNotNull(deviceObject.getId());
 
-		addCustomZPoint(contObjectId, contServiceTypeKey, tsNumber,
-				isDoublePipe, deviceObject);
+		addCustomZPoint(contObjectId, contServiceTypeKey, tsNumber, isDoublePipe, deviceObject);
 
 		return deviceObject;
 	}
@@ -81,15 +77,13 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	 * @param deviceObject
 	 * @throws Exception
 	 */
-	private void addCustomZPoint(Long contObjectId,
-			ContServiceTypeKey contServiceTypeKey, int tsNumber,
+	private void addCustomZPoint(Long contObjectId, ContServiceTypeKey contServiceTypeKey, int tsNumber,
 			Boolean isDoublePipe, DeviceObject deviceObject) throws Exception {
 
-		LocalDate localDate = LocalDate.parse("2015-01-01",
-				LocalDatePeriodParser.DATE_FORMATTER);
+		LocalDate localDate = LocalDate.parse("2015-01-01", LocalDatePeriodParser.DATE_FORMATTER);
 
-		contZPointService.createManualZPoint(contObjectId, contServiceTypeKey,
-				localDate, tsNumber, isDoublePipe, deviceObject);
+		contZPointService.createManualZPoint(contObjectId, contServiceTypeKey, localDate, tsNumber, isDoublePipe,
+				deviceObject);
 	}
 
 	/**
@@ -103,11 +97,17 @@ public class ContZPointServiceTest extends JpaSupportTest {
 		Long deviceModelId = Long.valueOf(29779958);
 		String deviceNumber = "00219936";
 
-		DeviceObject deviceObject = addCustomZPoint(contObjectId,
-				ContServiceTypeKey.HEAT, 1, null, deviceModelId, deviceNumber);
-		
-//		addCustomZPoint(contObjectId,
-//				ContServiceTypeKey.HW, 2, true, deviceObject);		
+		DeviceObject deviceObject = addCustomZPoint(contObjectId, ContServiceTypeKey.HEAT, 1, null, deviceModelId,
+				deviceNumber);
+
+		// addCustomZPoint(contObjectId,
+		// ContServiceTypeKey.HW, 2, true, deviceObject);
+	}
+
+	@Test
+	@Ignore
+	public void testDelTemp() throws Exception {
+		contZPointService.deleteOnePermanent(66183371L);
 	}
 
 }

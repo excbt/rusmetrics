@@ -1,12 +1,15 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +41,9 @@ public class SubscriberService {
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -77,6 +83,23 @@ public class SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
 		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectRmaSubscriberContObjects(long subscriberId) {
+		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
+		List<Long> subscrContObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
+		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+		result.forEach(i -> {
+			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+			i.set_haveSubscr(haveSubscr);
+		});
 		return result;
 	}
 
@@ -159,6 +182,17 @@ public class SubscriberService {
 			return null;
 		}
 		return (Date) dbResult;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public LocalDate getSubscriberCurrentDateJoda(Long subscriberId) {
+		Date currentDate = getSubscriberCurrentTime(subscriberId);
+		return new LocalDate(currentDate);
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -13,10 +15,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "subscriber")
@@ -40,18 +42,26 @@ public class Subscriber extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
+	// @OneToMany(fetch = FetchType.LAZY)
+	// @JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name =
+	// "subscriber_id") ,
+	// inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
+	// @JsonIgnore
+	// private Collection<ContObject> contObjects;
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriber")
 	@JsonIgnore
-	private Collection<ContObject> contObjects;
+	private List<SubscrContObject> subscrContObjects = new ArrayList<>();
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "directory_id"))
+	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id") ,
+			inverseJoinColumns = @JoinColumn(name = "directory_id") )
 	@JsonIgnore
 	private Collection<UDirectory> directories;
 
 	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "organization_id"))
+	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id") ,
+			inverseJoinColumns = @JoinColumn(name = "organization_id") )
 	@JsonIgnore
 	private Collection<Organization> rsoOrganizations;
 
@@ -66,18 +76,15 @@ public class Subscriber extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-
 	@Column(name = "is_rma")
 	private Boolean isRma;
 
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
 
-	
 	@Column(name = "ghost_subscriber_id")
 	private Long ghostSubscriberId;
-	
-	
+
 	public String getInfo() {
 		return info;
 	}
@@ -102,13 +109,13 @@ public class Subscriber extends AbstractAuditableModel {
 		this.organization = organization;
 	}
 
-	public Collection<ContObject> getContObjects() {
-		return contObjects;
-	}
-
-	public void setContObjects(final Collection<ContObject> contObjects) {
-		this.contObjects = contObjects;
-	}
+	// public Collection<ContObject> getContObjects() {
+	// return contObjects;
+	// }
+	//
+	// public void setContObjects(final Collection<ContObject> contObjects) {
+	// this.contObjects = contObjects;
+	// }
 
 	public Collection<UDirectory> getDirectories() {
 		return directories;
@@ -180,6 +187,14 @@ public class Subscriber extends AbstractAuditableModel {
 
 	public void setGhostSubscriberId(Long ghostSubscriberId) {
 		this.ghostSubscriberId = ghostSubscriberId;
+	}
+
+	public List<SubscrContObject> getSubscrContObjects() {
+		return subscrContObjects;
+	}
+
+	public void setSubscrContObjects(List<SubscrContObject> subscrContObjects) {
+		this.subscrContObjects = subscrContObjects;
 	}
 
 }

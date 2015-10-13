@@ -24,32 +24,49 @@ public class TimezoneDefService {
 	 * 
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public TimezoneDef getDefaultTimezoneDef() {
 
-		TimezoneDef result = defaultTimezoneDef; 
-		
+		TimezoneDef result = defaultTimezoneDef;
+
 		if (result != null) {
 			return result;
 		}
 
 		synchronized (TimezoneDefService.class) {
 			result = defaultTimezoneDef;
-			
+
 			if (result == null) {
-				
-				List<TimezoneDef> vList = timezoneDefRepository
-						.findByIsDefault(true);
+
+				List<TimezoneDef> vList = timezoneDefRepository.findByIsDefault(true);
 				checkState(vList.size() == 1);
 				result = vList.get(0);
-				
-				checkState(result.getCononicalId() != null,
-						"TimezoneDef canonical ID is null");
+
+				checkState(result.getCononicalId() != null, "TimezoneDef canonical ID is null");
 				defaultTimezoneDef = result;
 			}
 		}
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<TimezoneDef> findAll() {
+		return timezoneDefRepository.findAll();
+	}
+
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public TimezoneDef findOne(String keyname) {
+		return timezoneDefRepository.findOne(keyname);
 	}
 
 }

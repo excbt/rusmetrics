@@ -144,7 +144,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -230,7 +230,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 									fromDateStr, toDateStr));
 		}
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -294,7 +294,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
 			return ResponseEntity.badRequest().body(
@@ -416,7 +416,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(beginDateS);
 		checkNotNull(endDateS);
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -588,7 +588,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 							.validationError("Data of 1h is not supported for uploading"));
 		}
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
 			return ResponseEntity
@@ -734,7 +734,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 							.validationError("Data of 1h is not supported for uploading"));
 		}
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
 			return ResponseEntity
