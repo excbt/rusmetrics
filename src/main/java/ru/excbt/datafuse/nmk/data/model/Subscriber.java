@@ -16,12 +16,17 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 
 @Entity
 @Table(name = "subscriber")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class Subscriber extends AbstractAuditableModel {
 
 	/**
@@ -42,6 +47,9 @@ public class Subscriber extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
+	@Column(name = "organization_id", updatable = false, insertable = false)
+	private Long organiazationId;
+
 	// @OneToMany(fetch = FetchType.LAZY)
 	// @JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name =
 	// "subscriber_id") ,
@@ -59,11 +67,12 @@ public class Subscriber extends AbstractAuditableModel {
 	@JsonIgnore
 	private Collection<UDirectory> directories;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id") ,
-			inverseJoinColumns = @JoinColumn(name = "organization_id") )
-	@JsonIgnore
-	private Collection<Organization> rsoOrganizations;
+	// @OneToMany(fetch = FetchType.LAZY)
+	// @JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name =
+	// "subscriber_id") ,
+	// inverseJoinColumns = @JoinColumn(name = "organization_id") )
+	// @JsonIgnore
+	// private Collection<Organization> rsoOrganizations;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
@@ -133,13 +142,14 @@ public class Subscriber extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public Collection<Organization> getRsoOrganizations() {
-		return rsoOrganizations;
-	}
-
-	public void setRsoOrganizations(Collection<Organization> rsoOrganizations) {
-		this.rsoOrganizations = rsoOrganizations;
-	}
+	// public Collection<Organization> getRsoOrganizations() {
+	// return rsoOrganizations;
+	// }
+	//
+	// public void setRsoOrganizations(Collection<Organization>
+	// rsoOrganizations) {
+	// this.rsoOrganizations = rsoOrganizations;
+	// }
 
 	public String getSubscriberName() {
 		return subscriberName;
