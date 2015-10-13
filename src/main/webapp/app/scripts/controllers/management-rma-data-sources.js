@@ -36,9 +36,7 @@ console.log('Run data sources management controller.');
         $http.get(targetUrl)
         .then(function(response){
             var tmp = response.data;      
-//            tmp.forEach(function(dsource){
-//                dsource.caption = dsource.dataSourceName
-//            });
+//console.log(tmp);
             $scope.data.dataSources = tmp;
         },
               function(e){

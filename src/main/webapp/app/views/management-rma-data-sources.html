@@ -217,19 +217,19 @@
                             <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
                                 <td class="col-sm-3"><label for="inputAddress">База данных</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputDB" placeholder="" ng-model="data.currentObject.dataSourceDB">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputDB" placeholder="" ng-model="data.currentObject.dbName">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
                                 <td class="col-sm-3"><label for="inputCC">Логин</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourceLogin">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dbUser">
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.dataSourceTypeKey!='DEVICE'">
                                 <td class="col-sm-3"><label for="inputMode">Пароль</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dataSourcePassword">
+                                <td class="nmc-text-align-left col-sm-9"><input class="form-control nmc-text-input-form" type="text" ng-model="data.currentObject.dbPassword">
                                 </td>
                             </tr>       
 

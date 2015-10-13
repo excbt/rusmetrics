@@ -93,6 +93,9 @@ console.log('Run devices management controller.');
     };
     
     $scope.deviceDatasourceChange = function(){
+        $scope.data.currentObject.dataSourceTable1h = null;
+        $scope.data.currentObject.dataSourceTable24h = null;
+        $scope.data.currentObject.subscrDataSourceAddr = null;
         var curDataSource = null;
         $scope.data.dataSources.some(function(source){
             if (source.id === $scope.data.currentObject.subscrDataSourceId){
@@ -134,26 +137,39 @@ console.log('Run devices management controller.');
         //send to server
         var paramString = "";
         if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
-                paramString = paramString+"&subscrDataSourceAddr="+device.subscrDataSourceAddr;
+                paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
         };
         if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-            paramString = paramString+"&dataSourceTable="+device.dataSourceTable;
+            if (paramString!=""){
+                paramString+="&";
+            };
+            paramString = paramString+"dataSourceTable="+device.dataSourceTable;
         };
         if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
-            paramString = paramString+"&dataSourceTable1h="+device.dataSourceTable1h;
+            if (paramString!=""){
+                paramString+="&";
+            };
+            paramString = paramString+"dataSourceTable1h="+device.dataSourceTable1h;
         };
         if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
-            paramString = paramString+"&dataSourceTable24h="+device.dataSourceTable24h;
+            if (paramString!=""){
+                paramString+="&";
+            };
+            paramString = paramString+"dataSourceTable24h="+device.dataSourceTable24h;
         };
         var targetUrl = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
         if (angular.isDefined(device.id)&&(device.id !=null)){
             targetUrl = targetUrl+"/"+device.id;
-            targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
-            targetUrl= targetUrl +paramString;
+        };
+        //add url params
+        targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
+        if (paramString!=""){
+            paramString="&"+paramString;
+        };
+        targetUrl= targetUrl +paramString;
+        if (angular.isDefined(device.id)&&(device.id !=null)){
             $http.put(targetUrl, device).then(successCallback,errorCallback);
-
         }else{
-            targetUrl = targetUrl + paramString;
             $http.post(targetUrl, device).then(successCallback,errorCallback);
         };
     };
