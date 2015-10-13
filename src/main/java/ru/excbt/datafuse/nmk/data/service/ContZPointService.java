@@ -271,18 +271,18 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint);
 		checkNotNull(contZPoint.getStartDate());
 		checkNotNull(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contZPoint.getDeviceObjectId());
+		checkNotNull(contZPoint.getActiveDeviceObjectId());
 
 		ContObject contObject = contObjectService.findOne(contObjectId);
 		if (contObject == null) {
 			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.getDeviceObjectId());
+		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.getActiveDeviceObjectId());
 
 		if (deviceObject == null) {
 			throw new PersistenceException(
-					String.format("DeviceObject(id=%d) is not found", contZPoint.getDeviceObjectId()));
+					String.format("DeviceObject(id=%d) is not found", contZPoint.getActiveDeviceObjectId()));
 		}
 
 		ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPoint.getContServiceTypeKeyname());

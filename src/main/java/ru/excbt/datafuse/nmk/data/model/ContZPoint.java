@@ -108,7 +108,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private Boolean isManual;
 
 	@Transient
-	private Long deviceObjectId;
+	private Long activeDeviceObjectId;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -266,19 +266,20 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 		this.exCode = exCode;
 	}
 
-	public Long getDeviceObjectId() {
-		if (deviceObjectId == null) {
-			deviceObjectId = getActiveDeviceObjectId();
+	public Long getActiveDeviceObjectId() {
+		if (activeDeviceObjectId == null) {
+			activeDeviceObjectId = getActiveDeviceObject() != null ? getActiveDeviceObject().getId() : null;
 		}
-		return deviceObjectId;
+		return activeDeviceObjectId;
 	}
 
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
+	public void setActiveDeviceObjectId(Long deviceObjectId) {
+		this.activeDeviceObjectId = deviceObjectId;
 	}
 
-	private Long getActiveDeviceObjectId() {
-		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0).getId() : null;
+	@JsonIgnore
+	public DeviceObject getActiveDeviceObject() {
+		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
 	}
 
 }

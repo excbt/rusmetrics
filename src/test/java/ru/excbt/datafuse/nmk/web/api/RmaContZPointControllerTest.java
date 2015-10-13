@@ -19,7 +19,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	public void testZPointCRUD() throws Exception {
 
 		ContZPoint contZPoint = new ContZPoint();
-		contZPoint.setDeviceObjectId(65836845L);
+		contZPoint.setActiveDeviceObjectId(65836845L);
 		contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.getKeyname());
 		contZPoint.setStartDate(new Date());
 
