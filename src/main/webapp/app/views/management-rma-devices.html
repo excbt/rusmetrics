@@ -147,6 +147,16 @@
                             <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
+<!--
+                                <td>
+                                      <ui-select ng-model="contObject.selected" theme="bootstrap" style="min-width: 300px;">
+                                        <ui-select-match placeholder="Объект учета">{{$select.selected.fullName}}</ui-select-match>
+                                        <ui-select-choices repeat="contObject in data.objects | propsFilter: {fullName: $select.search}">
+                                          <div ng-bind-html="contObject.fullName | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                      </ui-select>
+                                </td>
+-->
                                 <td class="nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.contObjectId==null}">
                                         <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects">
@@ -157,8 +167,11 @@
                             <tr>
                                 <td><label for="inputDescription" >Источник данных</label>
                                 </td>
-                                <td class="nmc-text-align-left"><select class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
-                                    </select>
+                                <td class="nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.subscrDataSourceId==null}">
+                                        <select class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
+                                        </select>
+                                    </div>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">

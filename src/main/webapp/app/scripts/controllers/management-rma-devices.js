@@ -16,8 +16,21 @@ console.log('Run devices management controller.');
     $scope.getDevices = function(){
         objectSvc.getAllDevices().then(
             function(response){
-                $scope.data.devices = response.data;
-console.log(response.data);                
+                var tmp = response.data;
+                tmp.forEach(function(elem){
+                    if (angular.isDefined(elem.contObjectInfo)&&(elem.contObjectInfo!=null)){
+                        elem.contObjectId = elem.contObjectInfo.contObjectId;
+                    };
+                    if (angular.isDefined(elem.activeDataSource)&&(elem.activeDataSource!=null)){
+                        elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
+                        elem.curDatasource = elem.activeDataSource.subscrDataSource;
+                        elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
+                        elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
+                        elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
+                    };
+                });
+                $scope.data.devices = tmp;
+//console.log(tmp);                
             },
             function(error){
                 notificationFactory.errorInfo(error.statusText,error.description);
@@ -110,10 +123,14 @@ console.log(response.data);
             notificationFactory.errorInfo("Ошибка","Не задан объект учета");
             checkDsourceFlag = false;
         };
+        if (device.subscrDataSourceId==null){
+            notificationFactory.errorInfo("Ошибка","Не задан источник данных");
+            checkDsourceFlag = false;
+        };
         if (checkDsourceFlag === false){
             return;
         };
-console.log(device);        
+//console.log(device);        
         //send to server
         var paramString = "";
         if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
@@ -128,42 +145,22 @@ console.log(device);
         if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
             paramString = paramString+"&dataSourceTable24h="+device.dataSourceTable24h;
         };
-        var targetUrl = objectSvc.getObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
+        var targetUrl = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
         if (angular.isDefined(device.id)&&(device.id !=null)){
             targetUrl = targetUrl+"/"+device.id;
             targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
             targetUrl= targetUrl +paramString;
             $http.put(targetUrl, device).then(successCallback,errorCallback);
-//            $http({
-//                method: 'PUT',
-//                params: {subscrDataSourceId: device.subscrDataSourceId,
-//                         subscrDataSourceAddr: device.subscrDataSourceAddr,
-//                         dataSourceTable: device.dataSourceTable,
-//                         dataSourceTable1h: device.dataSourceTable1h,
-//                         dataSourceTable24h: device.dataSourceTable24h
-//                        },
-//                data: device
-//            }).then(successCallback,errorCallback);
+
         }else{
-//            targetUrl = targetUrl+"/deviceObjects/";
             targetUrl = targetUrl + paramString;
             $http.post(targetUrl, device).then(successCallback,errorCallback);
-//            $http({
-//                method: 'POST',
-//                params: {subscrDataSourceId: device.subscrDataSourceId,
-//                         subscrDataSourceAddr: device.subscrDataSourceAddr,
-//                         dataSourceTable: device.dataSourceTable,
-//                         dataSourceTable1h: device.dataSourceTable1h,
-//                         dataSourceTable24h: device.dataSourceTable24h
-//                        },
-//                data: device
-//            }).then(successCallback,errorCallback);
         };
     };
     
     $scope.deleteObject = function(device){
-console.log(device);        
-        var targetUrl = objectSvc.getObjectsUrl();
+//console.log(device);        
+        var targetUrl = objectSvc.getRmaObjectsUrl();
         targetUrl = targetUrl+"/"+device.contObjectInfo.contObjectId+"/deviceObjects/"+device.id;
         $http.delete(targetUrl).then(successCallback,errorCallback);
     };

@@ -7,11 +7,13 @@ console.log("Object Service. Run.");
         }];
         var loading = true;
         var urlSubscr = '../api/subscr';
-        var urlDatasources = urlSubscr+'/dataSources';
+        var urlRma = '../api/rma';
+        var urlDatasources = urlRma+'/dataSources';
         var crudTableName = urlSubscr+'/contObjects';
+        var urlRmaContObjects = urlRma+'/contObjects';                 
         var urlRefRange = urlSubscr+'/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
-        var urlDeviceModels = urlSubscr+urlDeviceObjects+'/deviceModels';
+        var urlDeviceModels = urlRma+urlDeviceObjects+'/deviceModels';
         var urlDeviceMetaData = '/metaVzlet';
         var urlDeviceMetaDataSystemList = urlSubscr+'/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
         var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';                
@@ -31,8 +33,15 @@ console.log("Object Service. Run.");
         var getObjectsUrl = function(){
             return crudTableName;
         };
+                 
+        var getRmaObjectsUrl = function(){
+            return urlRmaContObjects;
+        };
         var getSubscrUrl = function(){
             return urlSubscr;
+        };
+        var getRmaUrl = function(){
+            return urlRma;
         };
         
         var getDatasourcesUrl = function(){
@@ -65,7 +74,7 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
         var getAllDevices = function(){
-            var url = crudTableName+urlDeviceObjects;
+            var url = urlRmaContObjects+urlDeviceObjects;
             return $http.get(url);
         };
         var getDeviceModels = function(){
@@ -108,6 +117,9 @@ console.log("Object Service. Run.");
         //get objects
         var getObjectsData = function () {
            return $http.get(crudTableName);
+        };
+        var getRmaObjectsData = function () {
+           return $http.get(getRmaObjectsUrl());
         };
          
                  //Get data for the setting period for the city by objectId
@@ -167,6 +179,7 @@ console.log("Object Service. Run.");
         };
 
        var promise = getObjectsData();
+       var rmaPromise = getRmaObjectsData();
 //       $interval(function(){
 //           var time = (new Date()).toLocaleString();
 //           document.getElementById('timeOutput').innerHTML="Время: "+time;
@@ -193,6 +206,8 @@ console.log("objectSvc:loaded");
             getDeviceMetaDataSystemList,
             getLoadingStatus,
             getObjectsUrl,
+            getRmaObjectsData,
+            getRmaObjectsUrl,
             getRefRangeByObjectAndZpoint,
             getSubscrUrl,
             getVzletSystemList,
@@ -201,6 +216,7 @@ console.log("objectSvc:loaded");
             loading,
             promise,
             putDeviceMetaData,
+            rmaPromise,
             setObjectSettings,
             sortObjectsByFullName,
             sortObjectsByConObjectFullName

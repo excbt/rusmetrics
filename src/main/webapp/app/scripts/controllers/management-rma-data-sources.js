@@ -4,7 +4,7 @@ angular.module('portalNMC')
 console.log('Run data sources management controller.');
     //ctrl variables
     $scope.ctrlSettings = {};
-    $scope.ctrlSettings.subscrUrl = "../api/subscr";
+    $scope.ctrlSettings.subscrUrl = "../api/rma";
     $scope.ctrlSettings.datasourcesUrl = $scope.ctrlSettings.subscrUrl+"/dataSources";
     $scope.ctrlSettings.datasourceTypesUrl = $scope.ctrlSettings.subscrUrl+"/dataSourceTypes";
 //    $scope.ctrlSettings.inputIpComplete = false;
