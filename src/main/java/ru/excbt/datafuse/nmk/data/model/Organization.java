@@ -9,12 +9,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 @Entity
 @Table(name = "organization")
 @JsonInclude(Include.NON_NULL)
-public class Organization extends AbstractAuditableModel implements KeynameObject {
+public class Organization extends AbstractAuditableModel implements KeynameObject, DevModeObject {
 
 	/**
 	 * 
@@ -50,6 +51,9 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	@Column(name = "keyname")
 	private String keyname;
+
+	@Column(name = "is_dev_mode")
+	private Boolean isDevMode;
 
 	public String getExCode() {
 		return exCode;
@@ -130,5 +134,14 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	public void setKeyname(String keyname) {
 		this.keyname = keyname;
+	}
+
+	@Override
+	public Boolean getIsDevMode() {
+		return isDevMode;
+	}
+
+	public void setIsDevMode(Boolean isDevMode) {
+		this.isDevMode = isDevMode;
 	}
 }
