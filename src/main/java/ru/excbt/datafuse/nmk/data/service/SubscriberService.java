@@ -11,6 +11,7 @@ import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +24,10 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscriberService {
+public class SubscriberService implements SecuredRoles {
 
 	@Autowired
 	private SubscriberRepository subscriberRepository;
@@ -218,6 +220,42 @@ public class SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Subscriber> selectRmaSubscribers(Long rmaSubscriberId) {
 		return subscriberRepository.findByRmaSubscriberId(rmaSubscriberId);
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
+	public Subscriber createRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
+	public Subscriber updateRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
+	public Subscriber deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
+		throw new UnsupportedOperationException();
 	}
 
 }

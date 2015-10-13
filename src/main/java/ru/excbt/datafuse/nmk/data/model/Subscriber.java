@@ -16,12 +16,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "subscriber")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class Subscriber extends AbstractAuditableModel {
+public class Subscriber extends AbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -63,6 +64,9 @@ public class Subscriber extends AbstractAuditableModel {
 
 	@Column(name = "ghost_subscriber_id")
 	private Long ghostSubscriberId;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getInfo() {
 		return info;
@@ -150,6 +154,16 @@ public class Subscriber extends AbstractAuditableModel {
 
 	public void setOrganiazationId(Long organiazationId) {
 		this.organiazationId = organiazationId;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }
