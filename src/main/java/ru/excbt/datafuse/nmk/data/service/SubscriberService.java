@@ -211,4 +211,13 @@ public class SubscriberService {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Subscriber> selectRmaSubscribers(Long rmaSubscriberId) {
+		return subscriberRepository.findByRmaSubscriberId(rmaSubscriberId);
+	}
+
 }

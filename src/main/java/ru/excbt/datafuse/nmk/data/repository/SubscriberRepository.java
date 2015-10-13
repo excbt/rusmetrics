@@ -83,4 +83,6 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)")
 	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
+	public List<Subscriber> findByRmaSubscriberId(Long subscriberId);
+
 }

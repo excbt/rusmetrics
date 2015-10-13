@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -32,6 +33,7 @@ public class SubscrRso extends AbstractAuditableModel {
 	@Column(name = "organization_id", insertable = false, updatable = false)
 	private Long organizationId;
 
+	@Version
 	@Column(name = "version")
 	private int version;
 

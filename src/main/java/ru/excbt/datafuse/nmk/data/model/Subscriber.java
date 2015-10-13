@@ -1,21 +1,15 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -50,35 +44,11 @@ public class Subscriber extends AbstractAuditableModel {
 	@Column(name = "organization_id", updatable = false, insertable = false)
 	private Long organiazationId;
 
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name =
-	// "subscriber_id") ,
-	// inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
-	// @JsonIgnore
-	// private Collection<ContObject> contObjects;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriber")
-	@JsonIgnore
-	private List<SubscrContObject> subscrContObjects = new ArrayList<>();
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id") ,
-			inverseJoinColumns = @JoinColumn(name = "directory_id") )
-	@JsonIgnore
-	private Collection<UDirectory> directories;
-
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name =
-	// "subscriber_id") ,
-	// inverseJoinColumns = @JoinColumn(name = "organization_id") )
-	// @JsonIgnore
-	// private Collection<Organization> rsoOrganizations;
-
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
-	@Column(name = "subscriber_uuid")
+	@Column(name = "subscriber_uuid", insertable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID subscriberUUID;
 
@@ -118,22 +88,6 @@ public class Subscriber extends AbstractAuditableModel {
 		this.organization = organization;
 	}
 
-	// public Collection<ContObject> getContObjects() {
-	// return contObjects;
-	// }
-	//
-	// public void setContObjects(final Collection<ContObject> contObjects) {
-	// this.contObjects = contObjects;
-	// }
-
-	public Collection<UDirectory> getDirectories() {
-		return directories;
-	}
-
-	public void setDirectories(Collection<UDirectory> directories) {
-		this.directories = directories;
-	}
-
 	public int getVersion() {
 		return version;
 	}
@@ -141,15 +95,6 @@ public class Subscriber extends AbstractAuditableModel {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-
-	// public Collection<Organization> getRsoOrganizations() {
-	// return rsoOrganizations;
-	// }
-	//
-	// public void setRsoOrganizations(Collection<Organization>
-	// rsoOrganizations) {
-	// this.rsoOrganizations = rsoOrganizations;
-	// }
 
 	public String getSubscriberName() {
 		return subscriberName;
@@ -199,12 +144,12 @@ public class Subscriber extends AbstractAuditableModel {
 		this.ghostSubscriberId = ghostSubscriberId;
 	}
 
-	public List<SubscrContObject> getSubscrContObjects() {
-		return subscrContObjects;
+	public Long getOrganiazationId() {
+		return organiazationId;
 	}
 
-	public void setSubscrContObjects(List<SubscrContObject> subscrContObjects) {
-		this.subscrContObjects = subscrContObjects;
+	public void setOrganiazationId(Long organiazationId) {
+		this.organiazationId = organiazationId;
 	}
 
 }
