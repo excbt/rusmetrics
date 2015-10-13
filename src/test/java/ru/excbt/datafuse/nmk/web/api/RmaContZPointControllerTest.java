@@ -31,7 +31,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	public void testZPointCRUD() throws Exception {
 
 		ContZPoint contZPoint = new ContZPoint();
-		contZPoint.setActiveDeviceObjectId(65836845L);
+		contZPoint.set_activeDeviceObjectId(65836845L);
 		contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.getKeyname());
 		contZPoint.setStartDate(new Date());
 
@@ -45,7 +45,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 
 		contZPoint = contZPointService.findOne(contZPointId);
 		contZPoint.getDeviceObjects().clear();
-		contZPoint.setActiveDeviceObjectId(65836845L);
+		contZPoint.set_activeDeviceObjectId(65836845L);
 		contZPoint.setContZPointComment("Modified by TEST");
 		contZPoint.setRsoId(randomRsoOrganizationId());
 		_testJsonUpdate(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),

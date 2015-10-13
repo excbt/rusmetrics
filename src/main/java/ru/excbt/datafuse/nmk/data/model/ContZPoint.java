@@ -114,7 +114,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private String contZPointComment;
 
 	@Transient
-	private Long activeDeviceObjectId;
+	private Long _activeDeviceObjectId;
 
 	public ContObject getContObject() {
 		return contObject;
@@ -272,19 +272,8 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 		this.exCode = exCode;
 	}
 
-	public Long getActiveDeviceObjectId() {
-		if (activeDeviceObjectId == null) {
-			activeDeviceObjectId = getActiveDeviceObject() != null ? getActiveDeviceObject().getId() : null;
-		}
-		return activeDeviceObjectId;
-	}
-
-	public void setActiveDeviceObjectId(Long deviceObjectId) {
-		this.activeDeviceObjectId = deviceObjectId;
-	}
-
 	@JsonIgnore
-	public DeviceObject getActiveDeviceObject() {
+	public DeviceObject get_activeDeviceObject() {
 		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
 	}
 
@@ -302,6 +291,17 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public void setContZPointComment(String contZPointComment) {
 		this.contZPointComment = contZPointComment;
+	}
+
+	public Long get_activeDeviceObjectId() {
+		if (_activeDeviceObjectId == null) {
+			_activeDeviceObjectId = get_activeDeviceObject() != null ? get_activeDeviceObject().getId() : null;
+		}
+		return _activeDeviceObjectId;
+	}
+
+	public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
+		this._activeDeviceObjectId = _activeDeviceObjectId;
 	}
 
 }

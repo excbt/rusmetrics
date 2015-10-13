@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import java.util.Date;
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -83,6 +84,17 @@ public class SubscrContObjectService {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrContObject saveOne(SubscrContObject subscrContObject) {
 		return subscrContObjectRepository.save(subscrContObject);
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
+		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
+		return subscrContObjectRepository.selectRmaSubscrContObjectIds(currentDate.toDate());
 	}
 
 }

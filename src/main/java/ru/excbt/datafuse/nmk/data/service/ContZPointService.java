@@ -273,7 +273,7 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint);
 		checkNotNull(contZPoint.getStartDate());
 		checkNotNull(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contZPoint.getActiveDeviceObjectId());
+		checkNotNull(contZPoint.get_activeDeviceObjectId());
 		checkNotNull(contZPoint.getRsoId());
 
 		contZPoint.setContObjectId(contObjectId);
@@ -323,7 +323,7 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint.getContObjectId());
 		checkNotNull(contZPoint.getStartDate());
 		checkNotNull(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contZPoint.getActiveDeviceObjectId());
+		checkNotNull(contZPoint.get_activeDeviceObjectId());
 		checkNotNull(contZPoint.getRsoId());
 
 		initContObject(contZPoint);
@@ -354,11 +354,11 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initDeviceObject(ContZPoint contZPoint) {
-		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.getActiveDeviceObjectId());
+		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.get_activeDeviceObjectId());
 
 		if (deviceObject == null) {
 			throw new PersistenceException(
-					String.format("DeviceObject(id=%d) is not found", contZPoint.getActiveDeviceObjectId()));
+					String.format("DeviceObject(id=%d) is not found", contZPoint.get_activeDeviceObjectId()));
 		}
 		contZPoint.getDeviceObjects().clear();
 		contZPoint.getDeviceObjects().add(deviceObject);

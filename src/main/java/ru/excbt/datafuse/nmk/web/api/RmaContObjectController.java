@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -82,6 +84,19 @@ public class RmaContObjectController extends SubscrContObjectController {
 		};
 
 		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Override
+	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjects() {
+		List<ContObject> resultList = subscriberService
+				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		return ResponseEntity.ok().body(resultList);
 	}
 
 }
