@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -49,6 +50,7 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
+	@JsonIgnore
 	@Column(name = "subscriber_uuid", insertable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID subscriberUUID;

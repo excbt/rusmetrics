@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
@@ -47,7 +48,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		List<ContObject> resultList = subscriberService
 				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
-		return ResponseEntity.ok().body(resultList);
+		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
@@ -63,7 +64,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		}
 
 		ContObject result = contObjectService.findOne(contObjectId);
-		return ResponseEntity.ok().body(result);
+		return responseOK(result);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		}
 
 		if (contObject.isNew()) {
-			return ResponseEntity.badRequest().build();
+			return responseBadRequest();
 		}
 
 		ApiAction action = new AbstractEntityApiAction<ContObject>(contObject) {
@@ -130,7 +131,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	public ResponseEntity<?> getContObjectSettingModeType() {
 
 		List<ContObjectSettingModeType> resultList = contObjectService.selectContObjectSettingModeType();
-		return ResponseEntity.ok().body(resultList);
+		return responseOK(resultList);
 	}
 
 	/**

@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
@@ -35,7 +35,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	private SecuritySubscriberService subscriberService;
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SecuritySubscrUserService subscrUserService;
 
 	@Autowired
 	private SystemUserService systemUserService;

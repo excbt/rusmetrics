@@ -68,7 +68,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
 
-		return ResponseEntity.ok(deviceObjects);
+		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
 	/**
