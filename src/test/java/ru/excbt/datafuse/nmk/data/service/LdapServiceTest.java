@@ -15,8 +15,7 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class LdapServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(LdapServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(LdapServiceTest.class);
 
 	@Autowired
 	private LdapService ldapService;
@@ -29,12 +28,10 @@ public class LdapServiceTest extends JpaSupportTest {
 		assertNotNull(ldapService);
 		assertNotNull(ldapConfig);
 
-		boolean authResult = ldapService
-				.doAuthentificate("test_admin", "admin");
+		boolean authResult = ldapService.doAuthentificate("test_admin", "admin");
 		assertTrue(authResult);
 
-		boolean badAuthResult = ldapService.doAuthentificate("test_admin",
-				"bad_password");
+		boolean badAuthResult = ldapService.doAuthentificate("test_admin", "bad_password");
 		assertFalse(badAuthResult);
 
 		String dn = ldapService.getDnForUser("test_admin");
@@ -45,8 +42,7 @@ public class LdapServiceTest extends JpaSupportTest {
 		authResult = ldapService.doAuthentificate("test_admin", "admin1");
 		assertTrue(authResult);
 
-		badAuthResult = ldapService.doAuthentificate("test_admin",
-				"bad_password");
+		badAuthResult = ldapService.doAuthentificate("test_admin", "bad_password");
 		assertFalse(badAuthResult);
 
 		ldapService.changePassword("test_admin", "admin");
@@ -55,35 +51,34 @@ public class LdapServiceTest extends JpaSupportTest {
 		assertTrue(authResult);
 
 	}
-	
+
 	@Test
 	public void testChangeEmail() throws Exception {
-		ldapService.updateEMail("west-snab");
-		ldapService.updateEMail("vsegingeo");
-		ldapService.updateEMail("okryabrskaya_45");
-		ldapService.updateEMail("zhek");
-		ldapService.updateEMail("kompribor");
-		ldapService.updateEMail("aspek");
-		ldapService.updateEMail("okeania");
-		ldapService.updateEMail("ooo_kts");
-		ldapService.updateEMail("turion");
-		ldapService.updateEMail("votkinsk");
-		ldapService.updateEMail("chekh");
+		ldapService.updateEMail("RMA-Izhevsk", "west-snab");
+		ldapService.updateEMail("RMA-Izhevsk", "vsegingeo");
+		ldapService.updateEMail("RMA-Izhevsk", "okryabrskaya_45");
+		ldapService.updateEMail("RMA-Izhevsk", "zhek");
+		ldapService.updateEMail("RMA-Izhevsk", "kompribor");
+		ldapService.updateEMail("RMA-Izhevsk", "aspek");
+		ldapService.updateEMail("RMA-Izhevsk", "okeania");
+		ldapService.updateEMail("RMA-Izhevsk", "ooo_kts");
+		ldapService.updateEMail("RMA-Izhevsk", "turion");
+		ldapService.updateEMail("RMA-Izhevsk", "votkinsk");
+		ldapService.updateEMail("RMA-Izhevsk", "chekh");
 
-		
-//		String psw = "psw_12345";
-//		
-//		ldapService.changePassword("west-snab",psw);
-//		ldapService.changePassword("vsegingeo",psw);
-//		ldapService.changePassword("okryabrskaya_45",psw);
-//		ldapService.changePassword("zhek",psw);
-//		ldapService.changePassword("kompribor",psw);
-//		ldapService.changePassword("aspek",psw);
-//		ldapService.changePassword("okeania",psw);
-//		ldapService.changePassword("ooo_kts",psw);
-//		ldapService.changePassword("turion",psw);
-//		ldapService.changePassword("votkinsk",psw);
-//		ldapService.changePassword("chekh",psw);
-	}	
-	
+		// String psw = "psw_12345";
+		//
+		// ldapService.changePassword("west-snab",psw);
+		// ldapService.changePassword("vsegingeo",psw);
+		// ldapService.changePassword("okryabrskaya_45",psw);
+		// ldapService.changePassword("zhek",psw);
+		// ldapService.changePassword("kompribor",psw);
+		// ldapService.changePassword("aspek",psw);
+		// ldapService.changePassword("okeania",psw);
+		// ldapService.changePassword("ooo_kts",psw);
+		// ldapService.changePassword("turion",psw);
+		// ldapService.changePassword("votkinsk",psw);
+		// ldapService.changePassword("chekh",psw);
+	}
+
 }

@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.ldap.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import javax.naming.InvalidNameException;
@@ -30,8 +32,7 @@ public class LdapService {
 
 	public static final String BASE_DN = "dc=nmk,dc=ru";
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(LdapService.class);
+	private static final Logger logger = LoggerFactory.getLogger(LdapService.class);
 
 	@Autowired
 	private LdapTemplate ldapTemplate;
@@ -46,8 +47,7 @@ public class LdapService {
 	 * @param newPassword
 	 * @return
 	 */
-	public boolean changePassword(String username, String oldPassword,
-			String newPassword) {
+	public boolean changePassword(String username, String oldPassword, String newPassword) {
 
 		boolean oldPasswordCheck = doAuthentificate(username, oldPassword);
 
@@ -70,16 +70,13 @@ public class LdapService {
 
 		ldapTemplate.executeReadOnly(new ContextExecutor<Object>() {
 			@Override
-			public Object executeWithContext(DirContext ctx)
-					throws NamingException {
+			public Object executeWithContext(DirContext ctx) throws NamingException {
 				if (!(ctx instanceof LdapContext)) {
 					throw new IllegalArgumentException(
-							"Extended operations require LDAPv3 - "
-									+ "Context must be of type LdapContext");
+							"Extended operations require LDAPv3 - " + "Context must be of type LdapContext");
 				}
 				LdapContext ldapContext = (LdapContext) ctx;
-				ExtendedRequest er = new ModifyPasswordRequest(dnString,
-						newPassword);
+				ExtendedRequest er = new ModifyPasswordRequest(dnString, newPassword);
 				return ldapContext.extendedOperation(er);
 			}
 		});
@@ -113,8 +110,8 @@ public class LdapService {
 	public String getDnForUser(String uid) {
 
 		Filter f = new EqualsFilter("uid", uid);
-		List<Object> result = ldapTemplate.search(LdapUtils.emptyLdapName(),
-				f.toString(), new AbstractContextMapper<Object>() {
+		List<Object> result = ldapTemplate.search(LdapUtils.emptyLdapName(), f.toString(),
+				new AbstractContextMapper<Object>() {
 					@Override
 					protected Object doMapFromContext(DirContextOperations ctx) {
 						return ctx.getNameInNamespace();
@@ -122,8 +119,7 @@ public class LdapService {
 				});
 
 		if (result.size() != 1) {
-			throw new RuntimeException(
-					"User not found or not unique. userName " + uid);
+			throw new RuntimeException("User not found or not unique. userName " + uid);
 		}
 
 		return (String) result.get(0);
@@ -136,14 +132,13 @@ public class LdapService {
 	 * @return
 	 * @throws InvalidNameException
 	 */
-	public void updateEMail(String username, String email)
-			throws InvalidNameException {
-		Name dn = buildDn(username);
+	public void updateEMail(String rmaOu, String username, String email) throws InvalidNameException {
+		Name dn = buildDn(rmaOu, username);
 
 		LdapName ldapName = new LdapName(getDnForUser(username));
-		logger.info("username dn__:{}", getDnForUser(username));
-		logger.info("username dn_2:{}", dn.toString());
-		logger.info("username dn_3:{}", ldapName.toString());
+		logger.trace("username dn__:{}", getDnForUser(username));
+		logger.trace("username dn_2:{}", dn.toString());
+		logger.trace("username dn_3:{}", ldapName.toString());
 
 		DirContextOperations context = ldapTemplate.lookupContext(dn);
 		context.setAttributeValue("mail", email);
@@ -156,8 +151,8 @@ public class LdapService {
 	 * @param username
 	 * @throws InvalidNameException
 	 */
-	public void updateEMail(String username) throws InvalidNameException {
-		updateEMail(username, username + "@rusmetrics.ru");
+	public void updateEMail(String rmaOu, String username) throws InvalidNameException {
+		updateEMail(rmaOu, username, username + "@rusmetrics.ru");
 	}
 
 	/**
@@ -165,10 +160,16 @@ public class LdapService {
 	 * @param username
 	 * @return
 	 */
-	protected Name buildDn(String username) {
+	protected Name buildDn2(String username) {
+		checkNotNull(username);
+		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", "RMA-Izhevsk").add("uid", username).build();
 
-		return LdapNameBuilder.newInstance().add("ou", "people")
-				.add("ou", "RMA-Izhevsk").add("uid", username).build();
+	}
+
+	protected Name buildDn(String rmaOu, String username) {
+		checkNotNull(username);
+		checkNotNull(rmaOu);
+		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", rmaOu).add("uid", username).build();
 
 	}
 
