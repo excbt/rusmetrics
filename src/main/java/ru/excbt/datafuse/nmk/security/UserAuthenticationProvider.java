@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
@@ -29,11 +29,10 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	private static final boolean USE_LDAP_PASSWORD = true;
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UserAuthenticationProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SecuritySubscriberService subscriberService;
 
 	@Autowired
 	private SubscrUserService subscrUserService;
@@ -51,15 +50,13 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	 * 
 	 */
 	@Override
-	public Authentication authenticate(Authentication authentication)
-			throws AuthenticationException {
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
 		logger.info("UserAuthenticationProvider.authenticate");
 
 		String username = authentication.getName();
 		String password = authentication.getCredentials().toString();
-		List<SubscrUser> subscrUsers = subscriberService
-				.findUserByUsername(username);
+		List<SubscrUser> subscrUsers = subscriberService.findUserByUsername(username);
 
 		if (subscrUsers.size() > 1) {
 			return null;
@@ -77,19 +74,16 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser
-				.getId());
+		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser.getId());
 
 		for (SubscrRole sr : roles) {
 			String roleName = sr.getRoleName();
 			grantedAuths.add(new SimpleGrantedAuthority(roleName));
 		}
 
-		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
-				sUser, password, grantedAuths);
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, password, grantedAuths);
 
-		return buildAuthenticationToken(subscriberUserDetails, password,
-				grantedAuths);
+		return buildAuthenticationToken(subscriberUserDetails, password, grantedAuths);
 	}
 
 	/**
@@ -120,11 +114,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		List<GrantedAuthority> grantedAuths = AdminUtils.makeAdminAuths();
 
-		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
-				sUser, password, grantedAuths);
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, password, grantedAuths);
 
-		return buildAuthenticationToken(subscriberUserDetails, password,
-				grantedAuths);
+		return buildAuthenticationToken(subscriberUserDetails, password, grantedAuths);
 	}
 
 	/**
@@ -134,22 +126,17 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	 * @param grantedAuths
 	 * @return
 	 */
-	private UsernamePasswordAuthenticationToken buildAuthenticationToken(
-			SubscriberUserDetails subscriberUserDetails, Object password,
-			Collection<? extends GrantedAuthority> grantedAuths) {
+	private UsernamePasswordAuthenticationToken buildAuthenticationToken(SubscriberUserDetails subscriberUserDetails,
+			Object password, Collection<? extends GrantedAuthority> grantedAuths) {
 
-		logger.info(
-				"Login {}: {} ",
-				subscriberUserDetails.getIsSystem() ? "SystemUser" : "SubscrUser",
+		logger.info("Login {}: {} ", subscriberUserDetails.getIsSystem() ? "SystemUser" : "SubscrUser",
 				subscriberUserDetails.getUsername());
 
 		grantedAuths.forEach((i) -> {
-			logger.debug("User {} Granted Authority:",
-					subscriberUserDetails.getUsername(), i.getAuthority());
+			logger.debug("User {} Granted Authority:", subscriberUserDetails.getUsername(), i.getAuthority());
 		});
 
-		return new UsernamePasswordAuthenticationToken(subscriberUserDetails,
-				password, grantedAuths);
+		return new UsernamePasswordAuthenticationToken(subscriberUserDetails, password, grantedAuths);
 
 	}
 
@@ -160,16 +147,14 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	 * @param actualPassword
 	 * @return
 	 */
-	private boolean doAuthenticate(String username, String password,
-			String actualPassword) {
+	private boolean doAuthenticate(String username, String password, String actualPassword) {
 
 		if (USE_LDAP_PASSWORD) {
 			if (ldapService.doAuthentificate(username, password)) {
 				return true;
 			}
 		} else {
-			if (passwordService.passwordEncoder().matches(password,
-					actualPassword)) {
+			if (passwordService.passwordEncoder().matches(password, actualPassword)) {
 				return true;
 			}
 		}

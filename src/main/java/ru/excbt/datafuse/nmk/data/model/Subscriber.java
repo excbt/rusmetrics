@@ -43,7 +43,7 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	private Organization organization;
 
 	@Column(name = "organization_id", updatable = false, insertable = false)
-	private Long organiazationId;
+	private Long organizationId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
@@ -148,14 +148,6 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 		this.ghostSubscriberId = ghostSubscriberId;
 	}
 
-	public Long getOrganiazationId() {
-		return organiazationId;
-	}
-
-	public void setOrganiazationId(Long organiazationId) {
-		this.organiazationId = organiazationId;
-	}
-
 	@Override
 	public int getDeleted() {
 		return deleted;
@@ -164,6 +156,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
 	}
 
 }

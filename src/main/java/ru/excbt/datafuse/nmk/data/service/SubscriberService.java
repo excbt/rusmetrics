@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -20,14 +23,14 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscriberService implements SecuredRoles {
+public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private SubscriberRepository subscriberRepository;
@@ -37,9 +40,6 @@ public class SubscriberService implements SecuredRoles {
 
 	@Autowired
 	private ContZPointRepository contZPointRepository;
-
-	@Autowired
-	private ContEventRepository contEventRepository;
 
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
@@ -229,9 +229,17 @@ public class SubscriberService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
 	public Subscriber createRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
-		throw new UnsupportedOperationException();
+		checkNotNull(subscriber);
+		checkNotNull(rmaSubscriberId);
+		checkArgument(subscriber.isNew());
+		subscriber.setRmaSubscriberId(rmaSubscriberId);
+		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+
+		return subscriberRepository.save(subscriber);
 	}
 
 	/**
@@ -241,9 +249,15 @@ public class SubscriberService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
 	public Subscriber updateRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
-		throw new UnsupportedOperationException();
+		checkNotNull(subscriber);
+		checkNotNull(rmaSubscriberId);
+		checkArgument(!subscriber.isNew());
+		subscriber.setRmaSubscriberId(rmaSubscriberId);
+		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+		return subscriberRepository.save(subscriber);
 	}
 
 	/**
@@ -253,9 +267,34 @@ public class SubscriberService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN })
-	public Subscriber deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
-		throw new UnsupportedOperationException();
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+
+		Subscriber subscriber = findOne(subscriberId);
+		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
+		}
+		subscriberRepository.save(softDelete(subscriber));
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param rmaSubscriberId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public void deleteRmaSubscriberPermanent(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+
+		Subscriber subscriber = findOne(subscriberId);
+		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
+		}
+		subscriberRepository.delete(subscriber);
 	}
 
 }

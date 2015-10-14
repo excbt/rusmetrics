@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
@@ -76,7 +77,7 @@ public class RmaSubscriberController extends SubscriberController {
 	public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
 
 		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganiazationId());
+		checkNotNull(rSubscriber.getOrganizationId());
 
 		ApiActionLocation action = new EntityApiActionLocationAdapter<Subscriber, Long>(rSubscriber, request) {
 
@@ -101,14 +102,14 @@ public class RmaSubscriberController extends SubscriberController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.POST,
+	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestBody Subscriber rSubscriber) {
 
 		checkNotNull(rSubscriberId);
 		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganiazationId());
+		checkNotNull(rSubscriber.getOrganizationId());
 
 		ApiAction action = new EntityApiActionAdapter<Subscriber>(rSubscriber) {
 
@@ -126,9 +127,10 @@ public class RmaSubscriberController extends SubscriberController {
 	 * @param rSubscriberId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.POST,
+	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.DELETE,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
+	public ResponseEntity<?> deleteSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
+			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
 		checkNotNull(rSubscriberId);
 
@@ -136,7 +138,11 @@ public class RmaSubscriberController extends SubscriberController {
 
 			@Override
 			public void process() {
-				subscriberService.deleteRmaSubscriber(rSubscriberId, getSubscriberId());
+				if (Boolean.TRUE.equals(isPermanent)) {
+					subscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getSubscriberId());
+				} else {
+					subscriberService.deleteRmaSubscriber(rSubscriberId, getSubscriberId());
+				}
 
 			}
 

@@ -30,11 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
-public class ContZPointService implements SecuredRoles {
+public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointService.class);
 
@@ -295,8 +296,7 @@ public class ContZPointService implements SecuredRoles {
 	public void deleteOne(Long contZPointId) {
 		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
-		contZPoint.setDeleted(1);
-		contZPointRepository.save(contZPoint);
+		contZPointRepository.save(softDelete(contZPoint));
 	}
 
 	/**

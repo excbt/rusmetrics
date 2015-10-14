@@ -19,16 +19,15 @@ public class AdminUtils {
 	public static List<GrantedAuthority> makeAdminAuths() {
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_SUBSCR_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_SUBSCR_USER));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_ZPOINT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(
-				SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_USER));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ZPOINT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN));
+		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_ZPOINT_ADMIN));
 		return grantedAuths;
 	}
 }
