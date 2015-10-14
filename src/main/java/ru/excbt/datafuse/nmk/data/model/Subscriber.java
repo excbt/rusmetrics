@@ -70,6 +70,9 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "rma_ldap_ou")
+	private String rmaLdapOu;
+
 	public String getInfo() {
 		return info;
 	}
@@ -166,6 +169,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setOrganizationId(Long organizationId) {
 		this.organizationId = organizationId;
+	}
+
+	public String getRmaLdapOu() {
+		return rmaLdapOu;
+	}
+
+	public void setRmaLdapOu(String rmaLdapOu) {
+		this.rmaLdapOu = rmaLdapOu;
 	}
 
 }
