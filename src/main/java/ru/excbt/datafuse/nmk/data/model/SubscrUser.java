@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -56,7 +57,7 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@OneToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id") ,
 			inverseJoinColumns = @JoinColumn(name = "subscr_role_id") )
-	private Collection<SubscrRole> subscrRoles;
+	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
@@ -67,13 +68,16 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	private Long subscriberId;
 
 	@JsonIgnore
-	@Column(name = "user_uuid", insertable = false)
+	@Column(name = "user_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userUUID;
 
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Column(name = "user_comment")
+	private String userComment;
 
 	public String getUserName() {
 		return userName;
@@ -107,11 +111,11 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 		this.password = password;
 	}
 
-	public Collection<SubscrRole> getSubscrRoles() {
+	public List<SubscrRole> getSubscrRoles() {
 		return subscrRoles;
 	}
 
-	public void setSubscrRoles(Collection<SubscrRole> subscrRoles) {
+	public void setSubscrRoles(List<SubscrRole> subscrRoles) {
 		this.subscrRoles = subscrRoles;
 	}
 
@@ -157,6 +161,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
+	}
+
+	public String getUserComment() {
+		return userComment;
+	}
+
+	public void setUserComment(String userComment) {
+		this.userComment = userComment;
 	}
 
 }

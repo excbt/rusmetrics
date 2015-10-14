@@ -570,9 +570,69 @@ public class AbstractControllerTest {
 	 * @param url
 	 * @return
 	 */
+	protected String apiSubscrUrl(String url, Long id) {
+		checkNotNull(url);
+		checkNotNull(id);
+		return stringBuilderUtil("/api/subscr", url, "/", id.toString());
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param id
+	 * @return
+	 */
+	protected String apiSubscrUrl(String url, Integer id) {
+		checkNotNull(url);
+		checkNotNull(id);
+		return stringBuilderUtil("/api/subscr", url, "/", id.toString());
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @return
+	 */
 	protected String apiRmaUrl(String url) {
 		checkNotNull(url);
 		return "/api/rma" + url;
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param id
+	 * @return
+	 */
+	protected String apiRmaUrl(String url, Long id) {
+		checkNotNull(url);
+		checkNotNull(id);
+		return stringBuilderUtil("/api/rma", url, "/", id.toString());
+	}
+
+	/**
+	 * 
+	 * @param url
+	 * @param id
+	 * @return
+	 */
+	protected String apiRmaUrl(String url, Integer id) {
+		checkNotNull(url);
+		checkNotNull(id);
+		return stringBuilderUtil("/api/rma", url, "/", id.toString());
+	}
+
+	/**
+	 * 
+	 * @param strings
+	 * @return
+	 */
+	private String stringBuilderUtil(String... strings) {
+		StringBuilder sb = new StringBuilder();
+		for (String s : strings) {
+			sb.append(s);
+		}
+		return sb.toString();
 	}
 
 }

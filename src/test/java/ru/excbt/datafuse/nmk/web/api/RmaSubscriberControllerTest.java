@@ -28,7 +28,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testGetSubscriber() throws Exception {
-		_testJsonGet(apiRmaUrl("/subscribers/64166467"));
+		_testJsonGet(apiRmaUrl("/subscribers", 64166467));
 	}
 
 	/**
@@ -44,12 +44,12 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 
 		subscriber = subscriberService.findOne(subscriberId);
 		subscriber.setComment("Updated By REST");
-		_testJsonUpdate(apiRmaUrl("/subscribers/" + subscriberId), subscriber);
+		_testJsonUpdate(apiRmaUrl("/subscribers/", subscriberId), subscriber);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
 
-		_testJsonDelete(apiRmaUrl("/subscribers/" + subscriberId), param);
+		_testJsonDelete(apiRmaUrl("/subscribers/", subscriberId), param);
 	}
 }

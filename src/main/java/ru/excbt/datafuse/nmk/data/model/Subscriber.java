@@ -51,7 +51,7 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	private TimezoneDef timezoneDef;
 
 	@JsonIgnore
-	@Column(name = "subscriber_uuid", insertable = false)
+	@Column(name = "subscriber_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID subscriberUUID;
 
