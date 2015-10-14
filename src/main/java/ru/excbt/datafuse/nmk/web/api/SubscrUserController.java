@@ -158,7 +158,7 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param subscrUser
 	 * @return
 	 */
-	private ResponseEntity<?> updateSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isAdmin,
+	protected ResponseEntity<?> updateSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isAdmin,
 			SubscrUser subscrUser) {
 
 		checkNotNull(rSubscriberId);
@@ -167,6 +167,10 @@ public class SubscrUserController extends SubscrApiController {
 		checkNotNull(subscrUser.getSubscriberId());
 
 		if (!subscrUser.getSubscriberId().equals(rSubscriberId)) {
+			return responseBadRequest();
+		}
+
+		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
 			return responseBadRequest();
 		}
 
@@ -196,13 +200,12 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param isPermanent
 	 * @return
 	 */
-	private ResponseEntity<?> deleteSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isPermanent) {
+	protected ResponseEntity<?> deleteSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isPermanent) {
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUserId);
 
 		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
-		if (subscrUser == null || subscrUser.getSubscriberId() == null
-				|| !subscrUser.getSubscriberId().equals(rSubscriberId)) {
+		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
 			return responseBadRequest();
 		}
 
@@ -220,6 +223,17 @@ public class SubscrUserController extends SubscrApiController {
 		};
 
 		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
+	 * @param rSubscriberId
+	 * @param subscrUser
+	 * @return
+	 */
+	private boolean checkSubscrUserOwnerFail(Long rSubscriberId, SubscrUser subscrUser) {
+		return subscrUser == null || subscrUser.getSubscriberId() == null
+				|| !subscrUser.getSubscriberId().equals(rSubscriberId);
 	}
 
 }
