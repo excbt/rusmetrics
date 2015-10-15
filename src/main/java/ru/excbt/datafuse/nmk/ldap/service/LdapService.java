@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.ContextExecutor;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AbstractContextMapper;
@@ -60,6 +61,17 @@ public class LdapService {
 
 	/**
 	 * 
+	 * @param user
+	 * @param oldPassword
+	 * @param newPassword
+	 * @return
+	 */
+	public boolean changePassword(LdapUserAccount user, String oldPassword, String newPassword) {
+		return changePassword(user.getUserName(), oldPassword, newPassword);
+	}
+
+	/**
+	 * 
 	 * @param username
 	 * @param newPassword
 	 * @return
@@ -82,6 +94,16 @@ public class LdapService {
 		});
 
 		return true;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param newPassword
+	 * @return
+	 */
+	public boolean changePassword(LdapUserAccount user, String newPassword) {
+		return changePassword(user.getUserName(), newPassword);
 	}
 
 	/**
@@ -157,20 +179,46 @@ public class LdapService {
 
 	/**
 	 * 
+	 * @param rmaOu
 	 * @param username
 	 * @return
 	 */
-	protected Name buildDn2(String username) {
-		checkNotNull(username);
-		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", "RMA-Izhevsk").add("uid", username).build();
-
-	}
-
 	protected Name buildDn(String rmaOu, String username) {
 		checkNotNull(username);
 		checkNotNull(rmaOu);
 		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", rmaOu).add("uid", username).build();
 
+	}
+
+	protected Name buildDn(LdapUserAccount user) {
+		checkNotNull(user.getUserName());
+		checkNotNull(user.getOu());
+		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", user.getOu()).add("uid", user.getUserName())
+				.build();
+
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public LdapUserAccount createUser(LdapUserAccount user) {
+		checkNotNull(user);
+		Name dn = buildDn(user);
+		DirContextAdapter context = new DirContextAdapter(dn);
+
+		context.setAttributeValues("objectclass", LdapUserAccount.OBJECT_CLASS);
+		context.setAttributeValue("cn", user.getUserName());
+		context.setAttributeValue("uid", user.getUserName());
+		context.setAttributeValue("givenName", user.getFirstName());
+		context.setAttributeValue("sn", user.getSecondName());
+		context.setAttributeValue("homeDirectory", user.getHomeDirectory());
+		context.setAttributeValue("mail", user.getMail());
+		context.setAttributeValue("uidNumber", user.getUidNumber());
+		context.setAttributeValue("gidNumber", user.getGidNumber());
+		ldapTemplate.bind(context);
+		return user;
 	}
 
 }

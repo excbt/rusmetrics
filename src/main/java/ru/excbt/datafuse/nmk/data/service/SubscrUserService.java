@@ -7,6 +7,9 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -18,16 +21,23 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
+import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 public class SubscrUserService extends AbstractService implements SecuredRoles {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrUserService.class);
 
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private LdapService ldapService;
 
 	/**
 	 * 
@@ -70,7 +80,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser createOne(SubscrUser subscrUser) {
+	public SubscrUser createOne(SubscrUser subscrUser, String password) {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
@@ -80,7 +90,21 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
-		return subscrUserRepository.save(subscrUser);
+		SubscrUser result = subscrUserRepository.save(subscrUser);
+
+		LdapUserAccount user = ldapAccount(result, result.getSubscriberId());
+
+		try {
+			ldapService.createUser(user);
+			ldapService.changePassword(user, password);
+		} catch (Exception e) {
+			logger.error("LDAP Service Error Message: {}", e.getMessage());
+			logger.error("LDAP Service Exception: {}", e);
+			logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
+			throw new PersistenceException(String.format("Can't process user(%s) to LDAP service", user.getUserName()));
+		}
+
+		return result;
 	}
 
 	/**
@@ -90,7 +114,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser updateOne(SubscrUser subscrUser) {
+	public SubscrUser updateOne(SubscrUser subscrUser, String[] passwords) {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
@@ -100,7 +124,28 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
-		return subscrUserRepository.save(subscrUser);
+		SubscrUser result = subscrUserRepository.save(subscrUser);
+
+		if (passwords != null && passwords.length != 0) {
+
+			if (passwords.length != 2) {
+				throw new PersistenceException(
+						String.format("Password for user(%s) is not set", subscrUser.getUserName()));
+			}
+			LdapUserAccount user = ldapAccount(result, result.getSubscriberId());
+
+			try {
+				ldapService.changePassword(user, passwords[0], passwords[1]);
+			} catch (Exception e) {
+				logger.error("LDAP Service Error Message: {}", e.getMessage());
+				logger.error("LDAP Service Exception: {}", e);
+				logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
+				throw new PersistenceException(
+						String.format("Can't process user(%s) to LDAP service", user.getUserName()));
+			}
+		}
+
+		return result;
 	}
 
 	/**
@@ -133,6 +178,21 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
 		}
 		subscrUserRepository.delete(subscrUser);
+	}
+
+	/**
+	 * 
+	 * @param subscrUser
+	 * @return
+	 */
+	private LdapUserAccount ldapAccount(SubscrUser subscrUser, Long subscriberId) {
+
+		String ou = subscriberService.getRmaLdapOu(subscriberId);
+
+		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(),
+				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, ou, subscrUser.getUserEMail());
+		return user;
+
 	}
 
 }

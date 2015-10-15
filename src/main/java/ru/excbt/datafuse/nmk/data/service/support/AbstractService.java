@@ -2,6 +2,9 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -12,6 +15,9 @@ public abstract class AbstractService {
 
 	@Autowired
 	protected OrganizationService organizationService;
+
+	@PersistenceContext(unitName = "nmk-p")
+	protected EntityManager em;
 
 	/**
 	 * 

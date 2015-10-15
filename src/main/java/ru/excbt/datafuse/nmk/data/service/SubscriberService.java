@@ -297,4 +297,31 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		subscriberRepository.delete(subscriber);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public String getRmaLdapOu(Long subscriberId) {
+		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+		if (subscriber == null) {
+			return null;
+		}
+		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+			return subscriber.getRmaLdapOu();
+		}
+
+		if (subscriber.getRmaLdapOu() != null) {
+			return subscriber.getRmaLdapOu();
+		}
+
+		if (subscriber.getRmaSubscriberId() == null) {
+			return null;
+		}
+
+		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
+		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+	}
+
 }

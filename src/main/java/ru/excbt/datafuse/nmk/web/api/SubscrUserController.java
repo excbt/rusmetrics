@@ -79,10 +79,10 @@ public class SubscrUserController extends SubscrApiController {
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.POST)
 	public ResponseEntity<?> createCurrentSubscrUsers(
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
-			@RequestParam(value = "password", required = false) String password, @RequestBody SubscrUser subscrUser,
-			HttpServletRequest request) {
+			@RequestParam(value = "newPassword", required = false) String newPassword,
+			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(getSubscriberId(), isAdmin, subscrUser, password, request);
+		return createSubscrUserInternal(getSubscriberId(), isAdmin, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -94,9 +94,14 @@ public class SubscrUserController extends SubscrApiController {
 	@RequestMapping(value = "/subscrUsers/{subscrUserId}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
-			@RequestParam(value = "password", required = false) String password, @RequestBody SubscrUser subscrUser) {
+			@RequestParam(value = "oldPassword", required = false) String oldPassword,
+			@RequestParam(value = "newPassword", required = false) String newPassword,
+			@RequestBody SubscrUser subscrUser) {
 
-		return updateSubscrUserInternal(getSubscriberId(), subscrUserId, isAdmin, subscrUser, password);
+		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
+				: null;
+
+		return updateSubscrUserInternal(getSubscriberId(), subscrUserId, isAdmin, subscrUser, passwords);
 	}
 
 	/**
@@ -144,7 +149,7 @@ public class SubscrUserController extends SubscrApiController {
 
 			@Override
 			public SubscrUser processAndReturnResult() {
-				return subscrUserService.createOne(entity);
+				return subscrUserService.createOne(entity, password);
 			}
 		};
 
@@ -160,7 +165,7 @@ public class SubscrUserController extends SubscrApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> updateSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isAdmin,
-			SubscrUser subscrUser, String password) {
+			SubscrUser subscrUser, String[] passwords) {
 
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUserId);
@@ -187,7 +192,7 @@ public class SubscrUserController extends SubscrApiController {
 
 			@Override
 			public SubscrUser processAndReturnResult() {
-				return subscrUserService.updateOne(entity);
+				return subscrUserService.updateOne(entity, passwords);
 			}
 		};
 

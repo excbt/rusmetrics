@@ -23,10 +23,14 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 	@Test
 	public void testSubscrUserCRUD() throws Exception {
 		SubscrUser subscrUser = new SubscrUser();
-		subscrUser.setUserName("usr_" + System.currentTimeMillis());
+		String username = "usr_" + System.currentTimeMillis();
+		subscrUser.setUserName(username);
+		subscrUser.setFirstName("user_" + username + "_FN");
+		subscrUser.setLastName("user_" + username + "_LN");
 
 		RequestExtraInitializer paramAdmin = (builder) -> {
 			builder.param("isAdmin", "true");
+			builder.param("newPassword", "secret");
 		};
 
 		Long subscrUserId = _testJsonCreate(apiSubscrUrl("/subscrUsers"), subscrUser, paramAdmin);
@@ -34,7 +38,14 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 		assertNotNull(subscrUser);
 
 		subscrUser.setUserComment("Modified By REST");
-		_testJsonUpdate(apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser);
+
+		RequestExtraInitializer paramUpd = (builder) -> {
+			builder.param("isAdmin", "false");
+			builder.param("oldPassword", "secret");
+			builder.param("newPassword", "secret2");
+		};
+
+		_testJsonUpdate(apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser, paramUpd);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");

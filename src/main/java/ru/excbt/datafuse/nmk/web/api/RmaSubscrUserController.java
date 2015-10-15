@@ -57,10 +57,10 @@ public class RmaSubscrUserController extends SubscrUserController {
 	@RequestMapping(value = "/{rSubscriberId}/subscrUsers", method = RequestMethod.POST)
 	public ResponseEntity<?> createSubscrUser(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
-			@RequestParam(value = "password", required = false) String password, @RequestBody SubscrUser subscrUser,
-			HttpServletRequest request) {
+			@RequestParam(value = "newPassword", required = false) String newPassword,
+			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(rSubscriberId, isAdmin, subscrUser, password, request);
+		return createSubscrUserInternal(rSubscriberId, isAdmin, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -73,9 +73,14 @@ public class RmaSubscrUserController extends SubscrUserController {
 	public ResponseEntity<?> updateSubscrUser(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
-			@RequestParam(value = "password", required = false) String password, @RequestBody SubscrUser subscrUser) {
+			@RequestParam(value = "oldPassword", required = false) String oldPassword,
+			@RequestParam(value = "newPassword", required = false) String newPassword,
+			@RequestBody SubscrUser subscrUser) {
 
-		return updateSubscrUserInternal(rSubscriberId, subscrUserId, isAdmin, subscrUser, password);
+		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
+				: null;
+
+		return updateSubscrUserInternal(rSubscriberId, subscrUserId, isAdmin, subscrUser, passwords);
 	}
 
 	/**

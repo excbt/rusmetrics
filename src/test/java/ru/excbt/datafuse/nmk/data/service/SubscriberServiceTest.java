@@ -1,11 +1,14 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
@@ -19,6 +22,8 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 
 	private final static String ARGON_19 = "test-argon19";
 	private final static String SIMPLE_PASSWORD = "12345";
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscriberServiceTest.class);
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -46,6 +51,15 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 
 		// subscrOrgs.get(0)
 
+	}
+
+	@Test
+	public void testRmaOu() throws Exception {
+		Long id = currentSubscriberService.getSubscriberId();
+		logger.info("Check Ldap OU for: {}", id);
+		String ldapOu = subscriberService.getRmaLdapOu(id);
+		assertNotNull(ldapOu);
+		logger.info("Rma LDAP ou={}", ldapOu);
 	}
 
 }

@@ -79,6 +79,9 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "user_comment")
 	private String userComment;
 
+	@Column(name = "user_email")
+	private String userEMail;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -169,6 +172,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setUserComment(String userComment) {
 		this.userComment = userComment;
+	}
+
+	public String getUserEMail() {
+		return userEMail;
+	}
+
+	public void setUserEMail(String userEMail) {
+		this.userEMail = userEMail;
 	}
 
 }

@@ -1,9 +1,10 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.ldap.service;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
-import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
 public class LdapServiceTest extends JpaSupportTest {
 
@@ -53,6 +53,7 @@ public class LdapServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+	@Ignore
 	public void testChangeEmail() throws Exception {
 		ldapService.updateEMail("RMA-Izhevsk", "west-snab");
 		ldapService.updateEMail("RMA-Izhevsk", "vsegingeo");
@@ -79,6 +80,14 @@ public class LdapServiceTest extends JpaSupportTest {
 		// ldapService.changePassword("turion",psw);
 		// ldapService.changePassword("votkinsk",psw);
 		// ldapService.changePassword("chekh",psw);
+	}
+
+	@Test
+	public void testCreateUser() throws Exception {
+		String username = "usr_" + System.currentTimeMillis();
+		LdapUserAccount user = new LdapUserAccount(1L, username, new String[] { "user_firstName", "user_secondName" },
+				"EXCBT-NMK", username + "@rusmetrics.ru");
+		ldapService.createUser(user);
 	}
 
 }
