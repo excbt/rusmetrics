@@ -59,6 +59,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private OrganizationService organizationService;
 
+	@Autowired
+	private ContZPointSettingModeService contZPointSettingModeService;
+
 	/**
 	 * /**
 	 * 
@@ -284,7 +287,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		initRso(contZPoint);
 		contZPoint.setIsManual(true);
 
-		return contZPointRepository.save(contZPoint);
+		ContZPoint result = contZPointRepository.save(contZPoint);
+		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+		return result;
 	}
 
 	/**
@@ -306,8 +311,10 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOnePermanent(Long contZPointId) {
+		checkNotNull(contZPointId);
 		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
+		contZPointSettingModeService.deleteByContZPoint(contZPointId);
 		contZPointRepository.delete(contZPoint);
 	}
 
@@ -333,7 +340,10 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 		contZPoint.setIsManual(true);
 
-		return contZPointRepository.save(contZPoint);
+		ContZPoint result = contZPointRepository.save(contZPoint);
+		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+
+		return result;
 	}
 
 	/**
