@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
 @Service
@@ -32,7 +32,7 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 	private SecuritySubscriberService subscriberService;
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SecuritySubscrUserService subscrUserService;
 
 	@Autowired
 	private SystemUserService systemUserService;
