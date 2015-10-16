@@ -104,6 +104,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "ts_number")
 	private Integer tsNumber;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 

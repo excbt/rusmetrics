@@ -95,6 +95,7 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 

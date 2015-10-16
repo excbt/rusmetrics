@@ -126,6 +126,7 @@ public class ContObject extends AbstractAuditableModel
 	@JsonIgnore
 	private String exCode;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 

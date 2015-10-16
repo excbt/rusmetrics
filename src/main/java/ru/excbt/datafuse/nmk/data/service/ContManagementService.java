@@ -58,7 +58,7 @@ public class ContManagementService implements SecuredRoles {
 			if (beginDate.toDate().equals(cm.getBeginDate())) {
 				throw new PersistenceException(String.format(
 						"ContManagement with contObject(id=%d) and "
-								+ "organization(id=%d) on beginDate(%s) already exists",
+								+ "organization(id=%d) on manageBeginDate(%s) already exists",
 						contObjectId, organizationId, beginDate));
 			}
 		}

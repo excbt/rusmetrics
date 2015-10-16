@@ -37,6 +37,15 @@ public class OrganizationService {
 
 	/**
 	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Organization> selectCmOrganizations() {
+		return organizationRepository.selectCmOrganizations();
+	}
+
+	/**
+	 * 
 	 * @param keyname
 	 * @return
 	 */
