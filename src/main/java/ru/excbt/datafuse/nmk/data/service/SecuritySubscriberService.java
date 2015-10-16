@@ -23,7 +23,12 @@ public class SecuritySubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
-		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+
+		List<SubscrUser> result = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		result.forEach(i -> {
+			i.getSubscriber();
+		});
+		return result;
 	}
 
 }
