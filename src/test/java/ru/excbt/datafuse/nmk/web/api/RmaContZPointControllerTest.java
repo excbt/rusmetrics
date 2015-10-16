@@ -44,10 +44,16 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		_testJsonGet(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 
 		contZPoint = contZPointService.findOne(contZPointId);
+
+		Long activeDeviceObjectId = contZPoint.get_activeDeviceObjectId();
 		contZPoint.getDeviceObjects().clear();
-		contZPoint.set_activeDeviceObjectId(65836845L);
 		contZPoint.setContZPointComment("Modified by TEST");
 		contZPoint.setRsoId(randomRsoOrganizationId());
+		contZPoint.setContObject(null);
+		contZPoint.setContServiceType(null);
+		contZPoint.setRso(null);
+		contZPoint.setDeviceObjects(null);
+		contZPoint.set_activeDeviceObjectId(activeDeviceObjectId);
 		_testJsonUpdate(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
 				contZPoint);
 
