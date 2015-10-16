@@ -135,6 +135,7 @@ console.log('Run devices management controller.');
         };
 //console.log(device);        
         //send to server
+            //create param string
         var paramString = "";
         if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
                 paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
@@ -161,7 +162,7 @@ console.log('Run devices management controller.');
         if (angular.isDefined(device.id)&&(device.id !=null)){
             targetUrl = targetUrl+"/"+device.id;
         };
-        //add url params
+            //add url params
         targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
         if (paramString!=""){
             paramString="&"+paramString;

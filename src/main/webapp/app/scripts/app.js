@@ -164,7 +164,15 @@ console.log("Run routeProviderConfig");
       })
       .when('/management/objects', {
         templateUrl: 'views/management-rma-objects.html',
-        controller: 'MngmtObjectsCtrl'
+        controller: 'MngmtObjectsCtrl',
+        resolve:{
+            rsoOrgs:['objectSvc', function(objectSvc){
+                return objectSvc.getRsoOrganizations()
+            }],
+            servTypes:['objectSvc', function(objectSvc){
+                return objectSvc.getServiceTypes()
+            }]
+        }
       })
       .when('/management/clients', {
         templateUrl: 'views/management-rma-clients.html',

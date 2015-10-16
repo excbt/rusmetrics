@@ -396,7 +396,8 @@ console.log("Objects directive.");
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
                                 zpoint.customServiceName = zPointsByObject[i].customServiceName;
-                                zpoint.zpointName = zPointsByObject[i].contServiceType.caption || zPointsByObject[i].customServiceName;
+//                                zpoint.zpointName = zPointsByObject[i].contServiceType.caption || zPointsByObject[i].customServiceName;
+                                zpoint.zpointName = zPointsByObject[i].customServiceName;
                                 if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso!=null)){
                                     zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
                                 }else{
@@ -479,7 +480,7 @@ console.log("Objects directive.");
                                     "title=\"Свойства точки учёта\">"+
                                 "</i>"+
                                 "<i class=\"btn btn-xs nmc-button-in-table\""+
-                                    "ng-click=\"getZpointSettings("+object.id+","+zpoint.id+")\""+
+                                    "ng-click=\"getZpointSettingsExpl("+object.id+","+zpoint.id+")\""+
                                     "data-target=\"#showZpointExplParameters\""+
                                     "data-toggle=\"modal\""+
                                     "data-placement=\"bottom\""+
@@ -522,7 +523,7 @@ console.log("Objects directive.");
                                     };                                   
                                     trHTML += "<td>";
                                     trHTML += "<img height=12 width=12 src=\""+imgPath+"\"> <span class='paddingLeft5'></span>";
-                                    trHTML += zpoint[column.name]+"<span ng-show=\"isSystemuser()\">(id = "+zpoint.id+")</span></td>"; 
+                                    trHTML += (zpoint[column.name] || "Не задано")+"<span ng-show=\"isSystemuser()\">(id = "+zpoint.id+")</span></td>"; 
                                     break;
                                 case "zpointLastDataDate" : trHTML +="<td>{{"+zpoint[column.name]+" | date: 'dd.MM.yyyy HH:mm'}}</td>"; break;   
                                 case "zpointRefRange": trHTML += "<td id=\"zpointRefRange"+zpoint.id+"\"></td>"; break;
@@ -685,20 +686,44 @@ console.log("Objects directive.");
                     zps.checkoutDay = object.checkoutDay;
                     zps.winter = {};
                     zps.summer = {};
+                    $scope.zpointSettings = zps;
+                    // Готовим редактор эталонного периода
+                    $scope.prepareRefRange();
                     //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
-                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+object.id+"/settingMode";
+//                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+object.id+"/settingMode";
+//                    crudGridDataFactory(table).query(function (data) {
+//                        for(var i = 0; i<data.length;i++){
+//                                                    
+//                            if(data[i].settingMode == "winter"){
+//                                zps.winter = data[i];
+//                            }else if(data[i].settingMode == "summer"){
+//                                zps.summer=data[i];
+//                            }
+//                        };                 
+//                        $scope.zpointSettings = zps;
+//                        // Готовим редактор эталонного периода
+//                        $scope.prepareRefRange();
+//                    });
+                };
+                $scope.getZpointSettingsExpl = function(objId, zpointId){
+                    $scope.getZpointSettings(objId, zpointId);
+                    var winterSet = {};
+                    var summerSet = {};
+                                        //http://localhost:8080/nmk-p/api/subscr/contObjects/18811505/zpoints/18811559/settingMode
+                    var table = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
                     crudGridDataFactory(table).query(function (data) {
                         for(var i = 0; i<data.length;i++){
                                                     
                             if(data[i].settingMode == "winter"){
-                                zps.winter = data[i];
+                                winterSet = data[i];
                             }else if(data[i].settingMode == "summer"){
-                                zps.summer=data[i];
+                                summerSet=data[i];
                             }
                         };                 
-                        $scope.zpointSettings = zps;
+                        $scope.zpointSettings.winter = winterSet;
+                        $scope.zpointSettings.summer = summerSet;
                         // Готовим редактор эталонного периода
-                        $scope.prepareRefRange();
+//                        $scope.prepareRefRange();
                     });
                 };
                 

@@ -159,7 +159,8 @@
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 
                                 <!--                                Администрирование-->
-                                <a id="management_main_menu_item" class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system, 'nmc-main-menu-item-active': menuMassive.admin_menu_item}"
+<!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
+                                <a id="management_main_menu_item" class="list-group-item noMarginBottom nmc-main-menu-item" ng-class="{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item}"
 
                                    href="#/management/objects/" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon" title="Управление"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
                                     <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->

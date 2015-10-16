@@ -6,8 +6,9 @@ console.log("Object Service. Run.");
         var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
-        var urlSubscr = '../api/subscr';
-        var urlRma = '../api/rma';
+        var urlApi ='../api';
+        var urlSubscr = urlApi+'/subscr';
+        var urlRma = urlApi+'/rma';
         var urlDatasources = urlRma+'/dataSources';
         var crudTableName = urlSubscr+'/contObjects';
         var urlRmaContObjects = urlRma+'/contObjects';                 
@@ -16,7 +17,11 @@ console.log("Object Service. Run.");
         var urlDeviceModels = urlRma+urlDeviceObjects+'/deviceModels';
         var urlDeviceMetaData = '/metaVzlet';
         var urlDeviceMetaDataSystemList = urlSubscr+'/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
-        var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';                
+        var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';  
+        var urlTimezones = urlApi+'/timezoneDef/all';
+        var urlRsoOrganizations = urlRmaContObjects+'/rsoOrganizations';
+        var urlServiceTypes = 'resource/serviceTypes.json';
+        
         
         var objectSvcSettings = {};
         var getObjectSettings = function(){
@@ -50,6 +55,15 @@ console.log("Object Service. Run.");
         
         var getLoadingStatus = function(){
             return loading;
+        };
+        
+        var getRsoOrganizations = function(){
+            var url = urlRsoOrganizations;
+            return $http.get(url);
+        };
+        var getServiceTypes = function(){
+            var url = urlServiceTypes;
+            return $http.get(url);
         };
                  
         //universal function
@@ -91,6 +105,11 @@ console.log("Object Service. Run.");
             var result = $http.put(url, device.metaData);
 //console.log(result);            
             return result;
+        };
+                 
+        //get time zones
+        var getTimezones = function(){
+            return getData(urlTimezones);
         };
                  
         var getDeviceMetaDataSystemList = function(){                     
@@ -192,6 +211,49 @@ console.log("objectSvc:loaded");
 //            loading = false;
 //            $rootScope.$broadcast('objectSvc:loaded');
         });
+                 
+        var sendDeviceToServer = function(device){
+            //send to server
+                //create param string
+            var paramString = "";
+            if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
+                    paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
+            };
+            if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
+                if (paramString!=""){
+                    paramString+="&";
+                };
+                paramString = paramString+"dataSourceTable="+device.dataSourceTable;
+            };
+            if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
+                if (paramString!=""){
+                    paramString+="&";
+                };
+                paramString = paramString+"dataSourceTable1h="+device.dataSourceTable1h;
+            };
+            if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
+                if (paramString!=""){
+                    paramString+="&";
+                };
+                paramString = paramString+"dataSourceTable24h="+device.dataSourceTable24h;
+            };
+            var targetUrl = getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
+            if (angular.isDefined(device.id)&&(device.id !=null)){
+                targetUrl = targetUrl+"/"+device.id;
+            };
+                //add url params
+            targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
+            if (paramString!=""){
+                paramString="&"+paramString;
+            };
+            targetUrl= targetUrl +paramString;
+            if (angular.isDefined(device.id)&&(device.id !=null)){
+                return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
+            }else{
+                return $http.post(targetUrl, device);//.then(successCallback,errorCallback);
+            };
+            return null;
+        };
                     
         return {
             getAllDevices,
@@ -209,7 +271,10 @@ console.log("objectSvc:loaded");
             getRmaObjectsData,
             getRmaObjectsUrl,
             getRefRangeByObjectAndZpoint,
+            getRsoOrganizations,
+            getServiceTypes,
             getSubscrUrl,
+            getTimezones,
             getVzletSystemList,
             getZpointsDataByObject,
             findObjectById,
@@ -217,6 +282,7 @@ console.log("objectSvc:loaded");
             promise,
             putDeviceMetaData,
             rmaPromise,
+            sendDeviceToServer,
             setObjectSettings,
             sortObjectsByFullName,
             sortObjectsByConObjectFullName
