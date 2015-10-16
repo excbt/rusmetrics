@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -128,8 +129,10 @@ public class RmaContZPointController extends SubscrContZPointController {
 	 */
 	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
 	public ResponseEntity<?> getRsoOrganizations() {
-		List<Organization> rsoOrganizations = organizationService.selectRsoOrganizations();
-		return responseOK(rsoOrganizations);
+		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations();
+		List<Organization> resultList = currentUserService.isSystem() ? rsOrganizations
+				: ObjectFilters.devModeFilter(rsOrganizations);
+		return responseOK(resultList);
 	}
 
 }

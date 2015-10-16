@@ -28,8 +28,7 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class SubscrContObjectControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContObjectControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -43,11 +42,15 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testCmOrganizatoinsGet() throws Exception {
+		_testJsonGet("/api/subscr/contObjects/cmOrganizations");
+	}
+
+	@Test
 	public void testContObjectFiasGet() throws Exception {
 		ContObject testCO = findFirstContObject();
 
-		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"),
-				testCO.getId());
+		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"), testCO.getId());
 		_testJsonGetSuccessfull(url);
 	}
 
@@ -56,18 +59,15 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 		ContObject testCO = findFirstContObject();
 		logger.info("Found ContObject (id={})", testCO.getId());
-		testCO.setComment("Updated by REST test at "
-				+ DateTime.now().toString());
+		testCO.setComment("Updated by REST test at " + DateTime.now().toString());
 
 		String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(testCO);
 
 		ResultActions resultActionsAll;
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON).content(jsonBody)
-					.with(testSecurityContext())
-					.accept(MediaType.APPLICATION_JSON));
+			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON).content(jsonBody)
+					.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
 
@@ -87,8 +87,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testSettingModeUpdate() throws Exception {
 
-		List<ContObject> contObjects = currentSubscriberService
-				.getSubscriberContObjects();
+		List<ContObject> contObjects = currentSubscriberService.getSubscriberContObjects();
 
 		assertNotNull(contObjects);
 		assertTrue(contObjects.size() > 0);
@@ -103,8 +102,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 				builder.param("currentSettingMode", "summer");
 			}
 		};
-		_testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null,
-				extraInitializer);
+		_testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
 
 	}
 
@@ -114,8 +112,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	 */
 	private ContObject findFirstContObject() {
 		List<ContObject> subscriberContObject = subscriberService
-				.selectSubscriberContObjects(currentSubscriberService
-						.getSubscriberId());
+				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
 		assertTrue(subscriberContObject.size() > 0);
 

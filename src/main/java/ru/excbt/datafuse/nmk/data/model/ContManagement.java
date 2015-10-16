@@ -13,10 +13,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(name = "cont_management")
@@ -35,20 +35,20 @@ public class ContManagement extends AbstractAuditableModel {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date agreementDate;
 
-	@Column(name = "begin_date")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "cm_begin_date")
+	@Temporal(TemporalType.DATE)
 	private Date beginDate;
 
-	@Column(name = "end_date")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "cm_end_date")
+	@Temporal(TemporalType.DATE)
 	private Date endDate;
 
-	@ManyToOne (fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 
-	@OneToOne (fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 

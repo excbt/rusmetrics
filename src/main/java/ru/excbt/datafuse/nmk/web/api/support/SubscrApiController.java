@@ -104,4 +104,12 @@ public class SubscrApiController extends WebApiController {
 		return resultObjects;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	protected boolean isSystemUser() {
+		return currentUserService.isSystem();
+	}
+
 }

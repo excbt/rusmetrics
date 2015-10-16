@@ -1,28 +1,29 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "subscriber")
-public class Subscriber extends AbstractAuditableModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class Subscriber extends AbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -42,34 +43,15 @@ public class Subscriber extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
-	// @OneToMany(fetch = FetchType.LAZY)
-	// @JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name =
-	// "subscriber_id") ,
-	// inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
-	// @JsonIgnore
-	// private Collection<ContObject> contObjects;
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "subscriber")
-	@JsonIgnore
-	private List<SubscrContObject> subscrContObjects = new ArrayList<>();
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id") ,
-			inverseJoinColumns = @JoinColumn(name = "directory_id") )
-	@JsonIgnore
-	private Collection<UDirectory> directories;
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id") ,
-			inverseJoinColumns = @JoinColumn(name = "organization_id") )
-	@JsonIgnore
-	private Collection<Organization> rsoOrganizations;
+	@Column(name = "organization_id", updatable = false, insertable = false)
+	private Long organizationId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
-	@Column(name = "subscriber_uuid")
+	@JsonIgnore
+	@Column(name = "subscriber_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID subscriberUUID;
 
@@ -84,6 +66,12 @@ public class Subscriber extends AbstractAuditableModel {
 
 	@Column(name = "ghost_subscriber_id")
 	private Long ghostSubscriberId;
+
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Column(name = "rma_ldap_ou")
+	private String rmaLdapOu;
 
 	public String getInfo() {
 		return info;
@@ -109,36 +97,12 @@ public class Subscriber extends AbstractAuditableModel {
 		this.organization = organization;
 	}
 
-	// public Collection<ContObject> getContObjects() {
-	// return contObjects;
-	// }
-	//
-	// public void setContObjects(final Collection<ContObject> contObjects) {
-	// this.contObjects = contObjects;
-	// }
-
-	public Collection<UDirectory> getDirectories() {
-		return directories;
-	}
-
-	public void setDirectories(Collection<UDirectory> directories) {
-		this.directories = directories;
-	}
-
 	public int getVersion() {
 		return version;
 	}
 
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public Collection<Organization> getRsoOrganizations() {
-		return rsoOrganizations;
-	}
-
-	public void setRsoOrganizations(Collection<Organization> rsoOrganizations) {
-		this.rsoOrganizations = rsoOrganizations;
 	}
 
 	public String getSubscriberName() {
@@ -189,12 +153,30 @@ public class Subscriber extends AbstractAuditableModel {
 		this.ghostSubscriberId = ghostSubscriberId;
 	}
 
-	public List<SubscrContObject> getSubscrContObjects() {
-		return subscrContObjects;
+	@Override
+	public int getDeleted() {
+		return deleted;
 	}
 
-	public void setSubscrContObjects(List<SubscrContObject> subscrContObjects) {
-		this.subscrContObjects = subscrContObjects;
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
+	}
+
+	public String getRmaLdapOu() {
+		return rmaLdapOu;
+	}
+
+	public void setRmaLdapOu(String rmaLdapOu) {
+		this.rmaLdapOu = rmaLdapOu;
 	}
 
 }

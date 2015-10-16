@@ -30,11 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 @Service
-public class ContZPointService implements SecuredRoles {
+public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointService.class);
 
@@ -57,6 +58,9 @@ public class ContZPointService implements SecuredRoles {
 
 	@Autowired
 	private OrganizationService organizationService;
+
+	@Autowired
+	private ContZPointSettingModeService contZPointSettingModeService;
 
 	/**
 	 * /**
@@ -283,7 +287,9 @@ public class ContZPointService implements SecuredRoles {
 		initRso(contZPoint);
 		contZPoint.setIsManual(true);
 
-		return contZPointRepository.save(contZPoint);
+		ContZPoint result = contZPointRepository.save(contZPoint);
+		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+		return result;
 	}
 
 	/**
@@ -295,8 +301,7 @@ public class ContZPointService implements SecuredRoles {
 	public void deleteOne(Long contZPointId) {
 		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
-		contZPoint.setDeleted(1);
-		contZPointRepository.save(contZPoint);
+		contZPointRepository.save(softDelete(contZPoint));
 	}
 
 	/**
@@ -306,8 +311,10 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOnePermanent(Long contZPointId) {
+		checkNotNull(contZPointId);
 		ContZPoint contZPoint = findOne(contZPointId);
 		checkNotNull(contZPoint);
+		contZPointSettingModeService.deleteByContZPoint(contZPointId);
 		contZPointRepository.delete(contZPoint);
 	}
 
@@ -333,7 +340,10 @@ public class ContZPointService implements SecuredRoles {
 
 		contZPoint.setIsManual(true);
 
-		return contZPointRepository.save(contZPoint);
+		ContZPoint result = contZPointRepository.save(contZPoint);
+		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+
+		return result;
 	}
 
 	/**

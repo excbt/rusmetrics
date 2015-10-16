@@ -6,12 +6,15 @@ import static com.google.common.base.Preconditions.checkState;
 import java.util.Date;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 public class LocalDatePeriod {
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
+	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_TEMPLATE);
 
 	public static class Builder {
 
@@ -32,8 +35,18 @@ public class LocalDatePeriod {
 			return this;
 		}
 
+		public Builder dateFrom(String s) {
+			this.dateTimeFrom = LocalDateTime.parse(s, DATE_FORMATTER);
+			return this;
+		}
+
 		public Builder dateTo(LocalDateTime d) {
 			this.dateTimeTo = d;
+			return this;
+		}
+
+		public Builder dateTo(String s) {
+			this.dateTimeTo = LocalDateTime.parse(s, DATE_FORMATTER);
 			return this;
 		}
 
@@ -62,8 +75,7 @@ public class LocalDatePeriod {
 
 	private static LocalDateTime endOfDay(LocalDateTime dateTime) {
 		checkNotNull(dateTime);
-		LocalDateTime endOfDay = dateTime.withHourOfDay(23)
-				.withMinuteOfHour(59).withSecondOfMinute(59)
+		LocalDateTime endOfDay = dateTime.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
 				.withMillisOfSecond(999);
 		return endOfDay;
 	}
@@ -75,22 +87,19 @@ public class LocalDatePeriod {
 	}
 
 	public static LocalDatePeriod lastWeek() {
-		LocalDatePeriod result = builder()
-				.dateFrom(startOfDay(LocalDateTime.now().minusWeeks(1)))
+		LocalDatePeriod result = builder().dateFrom(startOfDay(LocalDateTime.now().minusWeeks(1)))
 				.dateTo(endOfDay(LocalDateTime.now())).build();
 		return result;
 	}
 
 	public static LocalDatePeriod lastMonth() {
-		LocalDatePeriod result = builder()
-				.dateFrom(startOfDay(LocalDateTime.now().minusMonths(1)))
+		LocalDatePeriod result = builder().dateFrom(startOfDay(LocalDateTime.now().minusMonths(1)))
 				.dateTo(endOfDay(LocalDateTime.now())).build();
 		return result;
 	}
 
 	public static LocalDatePeriod lastYear() {
-		LocalDatePeriod result = builder()
-				.dateFrom(startOfDay(LocalDateTime.now().minusYears(1)))
+		LocalDatePeriod result = builder().dateFrom(startOfDay(LocalDateTime.now().minusYears(1)))
 				.dateTo(endOfDay(LocalDateTime.now())).build();
 		return result;
 	}
@@ -123,8 +132,7 @@ public class LocalDatePeriod {
 		if (dateTimeFrom == null || dateTimeTo == null) {
 			return false;
 		}
-		return dateTimeFrom.isBefore(dateTimeTo)
-				|| dateTimeFrom.isEqual(dateTimeTo);
+		return dateTimeFrom.isBefore(dateTimeTo) || dateTimeFrom.isEqual(dateTimeTo);
 	}
 
 	public boolean isValid() {
@@ -157,8 +165,7 @@ public class LocalDatePeriod {
 
 	@Override
 	public String toString() {
-		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo="
-				+ dateTimeTo + "]";
+		return "DatePeriod [dateTimeFrom=" + dateTimeFrom + ", dateTimeTo=" + dateTimeTo + "]";
 	}
 
 	public String getDateFromStr() {

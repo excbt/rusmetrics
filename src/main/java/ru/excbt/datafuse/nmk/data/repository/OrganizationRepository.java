@@ -15,5 +15,8 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	@Query("SELECT o FROM Organization o WHERE o.flagRma = true")
 	public List<Organization> selectRmaOrganizations();
 
+	@Query("SELECT o FROM Organization o WHERE o.flagCm = true")
+	public List<Organization> selectCmOrganizations();
+
 	public List<Organization> findByKeyname(String keyname);
 }

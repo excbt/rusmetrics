@@ -35,8 +35,8 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Query("SELECT org FROM Subscriber s INNER JOIN s.rsoOrganizations org WHERE s.id = :subscriberId")
-	public Iterable<Organization> selectRsoOrganizations(@Param("subscriberId") Long subscriberId);
+	@Query("SELECT r.organization FROM SubscrRso r WHERE r.subscriberId = :subscriberId")
+	public List<Organization> selectRsoOrganizations(@Param("subscriberId") Long subscriberId);
 
 	/**
 	 * 
@@ -82,5 +82,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject dco "
 			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)")
 	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
+
+	public List<Subscriber> findByRmaSubscriberId(Long subscriberId);
 
 }

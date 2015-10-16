@@ -5,16 +5,21 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 @Entity
 @Table(name = "organization")
 @JsonInclude(Include.NON_NULL)
-public class Organization extends AbstractAuditableModel implements KeynameObject {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Organization extends AbstractAuditableModel implements KeynameObject, DevModeObject, DeletableObject {
 
 	/**
 	 * 
@@ -42,14 +47,21 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "flag_rso")
 	private Boolean flagRso;
 
-	@Column(name = "flag_management")
-	private Boolean flagManagement;
+	@Column(name = "flag_cm")
+	private Boolean flagCm;
 
 	@Column(name = "flag_rma")
 	private Boolean flagRma;
 
 	@Column(name = "keyname")
 	private String keyname;
+
+	@Column(name = "is_dev_mode")
+	private Boolean isDevMode;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getExCode() {
 		return exCode;
@@ -107,14 +119,6 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 		this.flagRso = flagRso;
 	}
 
-	public Boolean getFlagManagement() {
-		return flagManagement;
-	}
-
-	public void setFlagManagement(Boolean flagManagement) {
-		this.flagManagement = flagManagement;
-	}
-
 	public Boolean getFlagRma() {
 		return flagRma;
 	}
@@ -130,5 +134,32 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	public void setKeyname(String keyname) {
 		this.keyname = keyname;
+	}
+
+	@Override
+	public Boolean getIsDevMode() {
+		return isDevMode;
+	}
+
+	public void setIsDevMode(Boolean isDevMode) {
+		this.isDevMode = isDevMode;
+	}
+
+	public Boolean getFlagCm() {
+		return flagCm;
+	}
+
+	public void setFlagCm(Boolean flagCm) {
+		this.flagCm = flagCm;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 }

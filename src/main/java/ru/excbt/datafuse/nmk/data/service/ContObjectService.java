@@ -28,10 +28,11 @@ import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContObjectService implements SecuredRoles {
+public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObjectService.class);
 
@@ -170,15 +171,15 @@ public class ContObjectService implements SecuredRoles {
 			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
 		}
 
-		contObject.setDeleted(1);
 		contObject.setIsManual(true);
+		softDelete(contObject);
 
 		List<SubscrContObject> subscrContObjects = subscrContObjectService.findByContObjectId(contObjectId);
 		subscrContObjectService.deleteOne(subscrContObjects);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
-			i.setDeleted(1);
+			softDelete(i);
 		});
 		contObjectFiasRepository.save(contObjectFiasList);
 
