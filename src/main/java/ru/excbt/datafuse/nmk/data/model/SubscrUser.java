@@ -60,7 +60,7 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "subscriber_id")
 	private Subscriber subscriber;
 
