@@ -138,7 +138,7 @@ console.log('Run Object management controller.');
                     objectSvc.getTimezones()
                     .then(function(response){
                         $scope.data.timezones = response.data;
-console.log($scope.data.timezones);                        
+//console.log($scope.data.timezones);                        
                     });
                 };
                 getTimezones();
@@ -232,7 +232,7 @@ console.log($scope.data.timezones);
                 };
                 
                 var successCallbackOnZpointUpdate = function(e){
-console.log(e);              
+//console.log(e);              
                     //e.data содержит данные измененной/созданной точки учета
 //                    их теперь нужно 
 //                    размапить
@@ -344,7 +344,9 @@ console.log(e);
                 };
                 
                 var successDeleteZpointCallback = function(e){
+                    $('#deleteZpointModal').modal('hide');
                     deleteObjectFromArray($scope.currentZpoint.id, $scope.currentObject.zpoints);
+                    makeZpointTable($scope.currentObject);
                     successCallback(e, null);
                 };
 
@@ -409,7 +411,7 @@ console.log(e);
                 
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedObject(objId);
-console.log($scope.currentObject);                     
+//console.log($scope.currentObject);                     
                     var curZpoint = null;
                     if (angular.isDefined($scope.currentObject.zpoints)&&angular.isArray($scope.currentObject.zpoints)){
                         $scope.currentObject.zpoints.some(function(element){
@@ -981,7 +983,7 @@ console.log($scope.currentObject);
                 
                 //Save new Zpoint | Update the common zpoint setiing - for example, Name
                 $scope.updateZpointCommonSettings = function(){
-console.log($scope.zpointSettings);  
+//console.log($scope.zpointSettings);  
                     var url = objectSvc.getRmaObjectsUrl()+"/"+$scope.currentObject.id+"/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id)&&($scope.zpointSettings.id!=null)){
                         url = url+"/"+$scope.zpointSettings.id;
