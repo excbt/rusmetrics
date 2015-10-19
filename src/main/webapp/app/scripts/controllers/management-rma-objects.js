@@ -473,13 +473,7 @@ console.log('Run Object management controller.');
                 };
                 
                 $scope.toggleShowGroupDetails = function(objId){//switch option: current goup details
-                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;
-//                    $scope.objects.some(function(element){
-//                        if (element.id === objId){
-//                            curObject = element;
-//                            return true;
-//                        }
-//                    });                  
+                    var curObject = objectSvc.findObjectById(objId, $scope.objects);//null;                
                     //if cur object = null => exit function
                     if (curObject == null){
                         return;
@@ -516,49 +510,6 @@ console.log('Run Object management controller.');
                             var zpoints = [];
                             for(var i=0;i<zPointsByObject.length;i++){
                                 var zpoint = mapZpointProp(zPointsByObject[i]);
-//console.log(zPointsByObject[i]);                                
-//                                zpoint.id = zPointsByObject[i].id;
-//                                zpoint.version = zPointsByObject[i].version;
-//                                zpoint.contObjectId = zPointsByObject[i].contObjectId;
-//                                zpoint.startDate = zPointsByObject[i].startDate;
-//                                zpoint._activeDeviceObjectId = zPointsByObject[i]._activeDeviceObjectId;
-//                                zpoint.rsoId = zPointsByObject[i].rsoId;
-//                                zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
-//                                zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
-//                                zpoint.customServiceName = zPointsByObject[i].customServiceName;
-//                                zpoint.contServiceTypeKeyname = zPointsByObject[i].contServiceTypeKeyname;
-//                                zpoint.zpointName = zPointsByObject[i].contServiceType.caption || zPointsByObject[i].customServiceName;
-//                                zpoint.zpointName = zPointsByObject[i].customServiceName;
-//                                if ((typeof zPointsByObject[i].rso != 'undefined') && (zPointsByObject[i].rso!=null)){
-//                                    zpoint.zpointRSO = zPointsByObject[i].rso.organizationFullName || zPointsByObject[i].rso.organizationName;
-//                                    zpoint.rsoId = zPointsByObject[i].rsoId;
-//                                }else{
-//                                    zpoint.zpointRSO = "Не задано"
-//                                };
-//                                zpoint.checkoutTime = zPointsByObject[i].checkoutTime;
-//                                zpoint.checkoutDay = zPointsByObject[i].checkoutDay;
-//                                if((typeof zPointsByObject[i].doublePipe == 'undefined')){
-//                                    zpoint.piped = false;
-//                                    
-//
-//                                }else {
-//                                    zpoint.piped = true;
-//                                    zpoint.doublePipe = (zPointsByObject[i].doublePipe===null)?false:zPointsByObject[i].doublePipe;
-//                                    zpoint.singlePipe = !zpoint.doublePipe;
-//                                };
-//console.log(zpoint);
-//                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length>0)){                                
-//                                    if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
-//                                        zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-//                                    }else{
-//                                        zpoint.zpointModel = "Не задано";
-//                                    };
-//                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
-//                                };
-//                                zpoint._activeDeviceObjectId = zPointsByObject[i]._activeDeviceObjectId;
-//                                zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;   
-                                // Получаем эталонный интервал для точки учета
-//                                getRefRangeByObjectAndZpoint(curObject, zpoint);
                                 zpoints[i] = zpoint;                  
                             }
                             curObject.zpoints = zpoints;
@@ -685,66 +636,16 @@ console.log('Run Object management controller.');
                     var result ="";
                     var serverTimeZoneDifferent = Math.round($scope.objectCtrlSettings.serverTimeZone*3600.0*1000.0);
                     var tmpDate = (new Date(millisec+serverTimeZoneDifferent));
-            //console.log(tmpDate);        
-            //console.log(tmpDate.getUTCFullYear());   
-            //console.log(tmpDate.getUTCMonth());
-            //console.log(tmpDate.getUTCDate());
-            //console.log(tmpDate.getUTCHours());
-            //console.log(tmpDate.getUTCMinutes());        
+//console.log(tmpDate);        
+//console.log(tmpDate.getUTCFullYear());   
+//console.log(tmpDate.getUTCMonth());
+//console.log(tmpDate.getUTCDate());
+//console.log(tmpDate.getUTCHours());
+//console.log(tmpDate.getUTCMinutes());        
                     result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(),tmpDate.getUTCMonth(), tmpDate.getUTCDate()]).format($scope.objectCtrlSettings.dateFormat);
                     return result;//
                 };
-                
-                //Функция для получения эталонного интервала для конкретной точки учета конкретного объекта
-                function getRefRangeByObjectAndZpoint(object, zpoint){
-//                    var url = $scope.urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod'; 
-//console.log(url);                    
-                    objectSvc.getRefRangeByObjectAndZpoint(object, zpoint)
-                    .success(function(data){
-                        if(data[0] != null){
-//                            var beginDate = new Date(data[0].periodBeginDate);
-//                            var endDate =  new Date(data[0].periodEndDate);
-                            var beginDate = $scope.dateFormat(data[0].periodBeginDate);
-                            var endDate =  $scope.dateFormat(data[0].periodEndDate);
-//console.log(data[0]);                                    
-//                            zpoint.zpointRefRange = "c "+beginDate.toLocaleDateString()+" по "+endDate.toLocaleDateString();
-                            zpoint.zpointRefRange = "c "+beginDate+" по "+endDate;
-                            zpoint.zpointRefRangeAuto = data[0].isAuto?"auto":"manual";
-                        }
-                        else {
-                            zpoint.zpointRefRange = "Не задан";
-                            zpoint.zpointRefRangeAuto = "notSet";
-                        }
-//                        viewRefRangeInTable(zpoint);
-                    })
-                    .error(function(e){
-                        console.log(e);
-                    });
-                };
-                
-                // Прорисовываем эталонный интервал в таблице
-                function viewRefRangeInTable(zpoint){
-                    //Получаем столбец с эталонным интервалом для заданной точки учета
-                    var element = document.getElementById("zpointRefRange"+zpoint.id);
-                    //Записываем эталонный интервал в таблицу
-//console.log(zpoint);                    
-                    switch (zpoint.zpointRefRangeAuto){
-                        case "auto":element.innerHTML = '<div class="progress progress-striped noMargin">'+
-                                            '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
-                                            '</strong></div>'+
-                                        '</div>';
-                                    break;
-                        case "manual":element.innerHTML = '<div class="progress progress-striped noMargin">'+
-                                            '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"><strong>'+zpoint.zpointRefRange+
-                                            '</strong></div>'+
-                                        '</div>';
-                                    break;
-                        default : element.innerHTML = ''+zpoint.zpointRefRange+'';
-                    }
-                    $compile(element)($scope);
-                    
-                };
-                
+
                 //for page "Objects"
                 
                 //Фильтр "Только непросмотренные"
@@ -769,39 +670,7 @@ console.log('Run Object management controller.');
                         $('#showDirectoryStructModal').modal();
                     }
                 };
-
-                // Показания точек учета
-                $scope.getIndicators = function(objectId, zpointId){  
-                    $scope.setIndicatorsParams(objectId, zpointId);
-//                    $scope.selectedZpoint(objectId, zpointId);
-//                    $cookies.contZPoint = $scope.currentZpoint.id;
-//                    $cookies.contObject=$scope.currentObject.id;
-//                    $cookies.contZPointName = $scope.currentZpoint.zpointName;
-//                    $cookies.contObjectName=$scope.currentObject.fullName;
-//                    $cookies.timeDetailType="24h";
-//                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
-//console.log($scope.currentZpoint);                    
-//                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-//                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
-                                      
-                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
-                };
-                
-                $scope.setIndicatorsParams = function(objectId, zpointId){
-                    $scope.selectedZpoint(objectId, zpointId);
-                    $cookies.contZPoint = $scope.currentZpoint.id;
-                    $cookies.contObject=$scope.currentObject.id;
-                    $cookies.contZPointName = $scope.currentZpoint.zpointName;
-                    $cookies.contObjectName=$scope.currentObject.fullName;
-                    $cookies.timeDetailType="24h";
-                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
-//console.log($scope.currentZpoint);                    
-                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
-                                      
-//                    window.location.assign("#/objects/indicators/");
-                };
-                
+        
                 //Свойства точки учета
                 $scope.zpointSettings = {};
                 $scope.addZpoint = function(object){
@@ -863,111 +732,9 @@ console.log('Run Object management controller.');
                         };                 
                         $scope.zpointSettings.winter = winterSet;
                         $scope.zpointSettings.summer = summerSet;
-                        // Готовим редактор эталонного периода
-//                        $scope.prepareRefRange();
                     });
                 };
-                
-                // Подготовка редактора эталонного интервала
-                $scope.prepareRefRange = function () {
-               		getRefRange($scope.currentObject.id, $scope.zpointSettings.id);
-               		$scope.editRefRangeOff();
-                };
-                
-                // Активация формы редактирования эталонного интервала
-                $scope.editRefRangeOn = function () {
-                    $scope.toggleFlag = true; //переключаем видимость кнопок Изменить/сохранить
-					document.getElementById('i_ref_range_save').style.display = 'block';
-					document.getElementById('i_ref_range_add').style.display = 'none';
-					document.getElementById('inp_ref_range_start').disabled = false;
-					document.getElementById('inp_ref_range_end').disabled = false;
-                }
-                
-                // Деактивация формы редактирования эталонного интервала
-                $scope.editRefRangeOff = function () {
-                    $scope.toggleFlag = false; //переключаем видимость кнопок Изменить/сохранить
-					document.getElementById('i_ref_range_save').style.display = 'none';
-					document.getElementById('i_ref_range_add').style.display = 'block';
-					document.getElementById('inp_ref_range_start').disabled = true;
-					document.getElementById('inp_ref_range_end').disabled = true;
-                }
-                
-                // Запрос с сервера данных об эталонном интервале
-                var getRefRange = function (objectId, zpointId) {
-                	var url = $scope.urlRefRange + '/' + objectId + '/zpoints/' + zpointId + '/referencePeriod'; 
-                	$http.get(url)
-					.success(function(data){
-						// Проверяем, задан ли интервал
-						if(data[0] != null){
-//console.log(data);                            
-							$scope.refRange = data[0];
-							$scope.refRange.cont_zpoint_id = zpointId;
-//							$scope.beginDate = new Date($scope.refRange.periodBeginDate);
-//							$scope.endDate =  new Date($scope.refRange.periodEndDate);
-                            $scope.beginDate = $scope.dateFormat($scope.refRange.periodBeginDate);
-							$scope.endDate =  $scope.dateFormat($scope.refRange.periodEndDate);
-//							console.log($scope.beginDate, document.getElementById('inp_ref_range_start').value);
-							// Проверяем, был ли интервал расчитан автоматически
-							if($scope.refRange.isAuto == false) {
-								document.getElementById('spn_if_manual').style.display = 'block';
-								document.getElementById('spn_if_auto').style.display = 'none';
-							}
-							else {
-								document.getElementById('spn_if_manual').style.display = 'none';
-								document.getElementById('spn_if_auto').style.display = 'block';								
-							}
-						}
-						else {
-							$scope.refRange = {};
-							$scope.refRange.cont_zpoint_id = zpointId;
-							$scope.beginDate = '';
-							$scope.endDate = '';
-							document.getElementById('spn_if_manual').style.display = 'none';
-							document.getElementById('spn_if_auto').style.display = 'none';
-						}
-					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
-                };
-                
-                // Отправка на сервер данных об эталонном интервале
-                $scope.addRefRange = function (){
-                	var url = $scope.urlRefRange + '/' + $scope.currentObject.id + '/zpoints/' + $scope.zpointSettings.id + '/referencePeriod';
-                	$scope.refRange.id = '';
-//                	$scope.refRange.periodBeginDate = $scope.beginDate.getTime();
-//                	$scope.refRange.periodEndDate = $scope.endDate.getTime();
-                    //Приводим установленный период к UTC
-                    var startDate = (new Date(moment($scope.beginDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
-                    var UTCstdt = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()); 
-                    $scope.refRange.periodBeginDate = (!isNaN(UTCstdt)) ?(new Date(UTCstdt)).getTime() : null;
-                    
-                    var endDate = (new Date(moment($scope.endDate, $scope.objectCtrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
-                    var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
-                    $scope.refRange.periodEndDate = (!isNaN(UTCenddt)) ?(new Date(UTCenddt)).getTime() : null;             
-                	$http.post(url, $scope.refRange)
-					.success(function(data){
-						$scope.editRefRangeOff();
-						$scope.refRange = data;
-                        //прорисовываем эталонный интервал в таблице
-                        var refRangeEl = document.getElementById("zpointRefRange"+$scope.currentZpoint.id);
-//                        $scope.beginDate = new Date($scope.refRange.periodBeginDate);
-//				        $scope.endDate =  new Date($scope.refRange.periodEndDate);                                 
-//                        
-//                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate.toLocaleDateString()+" по "+$scope.endDate.toLocaleDateString();
-                        $scope.beginDate =$scope.dateFormat($scope.refRange.periodBeginDate);
-				        $scope.endDate =  $scope.dateFormat($scope.refRange.periodEndDate);                                 
-                        
-                        $scope.currentZpoint.zpointRefRange = "c "+$scope.beginDate+" по "+$scope.endDate;
-                        $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange.isAuto?"auto":"manual";
-                        
-//                        viewRefRangeInTable($scope.currentZpoint);
-					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
-                };
-                
+            
                 var successZpointSummerCallback = function (e) {
                     notificationFactory.success();
                     var tableWinter = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";

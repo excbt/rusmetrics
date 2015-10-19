@@ -14,7 +14,120 @@
     </ul>
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="datasourcesTab">
+      <div role="tabpanel" class="tab-pane fade in active" id="clientsTab">
       </div>
     </div>
 </div>  
+<div class="btn-toolbar marginBottom10">
+    <button class="btn nmc-main-add-button" ng-click="addClient()">Добавить абонента</button>
+</div>
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-md-1 nmc-td-for-button">
+
+            </th>
+
+            <th class="col-md-4" ng-click="setOrderBy(column.name)">
+                <div>
+                    Наименование
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+<!--
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Тип
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    IP \ Hostname
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Порт
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+-->
+            <th class="col-md-1">
+            </th>
+        </tr>
+</table>
+
+<div class="nmc-data-sources-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-md-1 nmc-td-for-button">
+
+            </th>
+
+            <th class="col-md-4" ng-click="setOrderBy(column.name)">
+                <div>
+                    Название
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+<!--
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Тип
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    IP \ Hostname
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Порт
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+-->
+            <th class="col-md-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="client in data.clients | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-button">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Редактировать источник данных" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editClient(client)"></i>
+                    </div>
+                </div>
+            </td>
+            <td class="col-md-4">
+                <div><span ng-class="">{{client.clientName || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{client['id']}})</span></span>
+                </div>
+            </td>
+<!--
+            <td class="col-md-2">
+                <div><span ng-class="">{{dataSource.dataSourceType.caption}}</span>
+                </div>
+            </td>
+            <td class="col-md-2">
+                    <span>{{dataSource.dataSourceIp}}</span>
+            </td>
+            <td class="col-md-2">
+                    <span>{{dataSource.dataSourcePort}}</span>
+            </td>
+-->
+
+            <td class="col-md-1">
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-right">                   
+                        <i title="Удалить источник данных" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(client)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
