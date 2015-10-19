@@ -13,7 +13,7 @@ public interface ContManagementRepository extends
 
 	@Query("SELECT cm FROM ContManagement cm INNER JOIN cm.organization o INNER JOIN cm.contObject co "
 			+ "WHERE co.id = :contObjectId")
-	public List<ContManagement> selectAllManagement(
+	public List<ContManagement> selectByContObject(
 			@Param("contObjectId") long contObjectId);
 
 	@Query("SELECT cm FROM ContManagement cm INNER JOIN cm.organization o INNER JOIN cm.contObject co "

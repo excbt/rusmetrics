@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
@@ -35,7 +36,9 @@ public class RmaContObjectController extends SubscrContObjectController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createContObject(@RequestBody ContObject contObject, HttpServletRequest request) {
+	public ResponseEntity<?> createContObject(
+			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
+			@RequestBody ContObject contObject, HttpServletRequest request) {
 
 		checkNotNull(contObject);
 
@@ -47,7 +50,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createOne(entity, getSubscriberId());
+				return contObjectService.createOne(entity, getSubscriberId(), cmOrganizationId);
 			}
 
 			@Override

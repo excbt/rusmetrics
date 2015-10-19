@@ -52,6 +52,9 @@ public class ContManagement extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
+	@Column(name = "organization_id", insertable = false, updatable = false)
+	private Long organizationId;
+
 	@Column(name = "reports_path")
 	private String reportsPath;
 
@@ -120,6 +123,14 @@ public class ContManagement extends AbstractAuditableModel {
 
 	public void setVersion(int version) {
 		this.version = version;
+	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
 	}
 
 }

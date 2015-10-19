@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -39,6 +42,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 @JsonInclude(Include.NON_NULL)
 public class ContObject extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
+
+	private static final Logger logger = LoggerFactory.getLogger(ContObject.class);
 
 	/**
 	 * 
@@ -96,6 +101,7 @@ public class ContObject extends AbstractAuditableModel
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private List<ContManagement> contManagements = new ArrayList<>();
 
@@ -331,6 +337,28 @@ public class ContObject extends AbstractAuditableModel
 
 	public void set_haveSubscr(Boolean _haveSubscr) {
 		this._haveSubscr = _haveSubscr;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ContManagement get_activeContManagement() {
+		ContManagement result = null;
+		if (contManagements != null && contManagements.size() > 0) {
+
+			List<ContManagement> actimeCM = contManagements.stream().filter(i -> i.getEndDate() == null)
+					.sorted((a, b) -> Long.compare(b.getId(), a.getId())).collect(Collectors.toList());
+
+			if (actimeCM.size() > 1) {
+				logger.error("ContObject (id=%d) has more than one active ContManagement", getId());
+			}
+
+			if (!actimeCM.isEmpty()) {
+				result = actimeCM.get(0);
+			}
+		}
+		return result;
 	}
 
 }
