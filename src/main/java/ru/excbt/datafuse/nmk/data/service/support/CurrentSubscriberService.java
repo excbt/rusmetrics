@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
@@ -35,6 +36,9 @@ public class CurrentSubscriberService {
 
 	@Autowired
 	private MockSubscriberService mockSubscriberService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -158,7 +162,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<ContObject> getSubscriberContObjects() {
-		return subscriberService.selectSubscriberContObjects(getSubscriberId());
+		return subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
 	}
 
 	/**
@@ -166,7 +170,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<Long> getSubscriberContObjectIds() {
-		return subscriberService.selectSubscriberContObjectIds(getSubscriberId());
+		return subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 	}
 
 	/**

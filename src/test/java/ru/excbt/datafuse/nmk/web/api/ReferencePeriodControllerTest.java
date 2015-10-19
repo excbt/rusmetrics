@@ -13,14 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 public class ReferencePeriodControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReferencePeriodControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReferencePeriodControllerTest.class);
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -29,12 +28,11 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 	private ContZPointService contZPointService;
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SubscrContObjectService subscrContObjectService;
 
 	private Long getOId() {
-		List<Long> vList = subscriberService
-				.selectSubscriberContObjectIds(currentSubscriberService
-						.getSubscriberId());
+		List<Long> vList = subscrContObjectService
+				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		assertTrue(vList.size() > 0);
 		return vList.get(0);
 	}
@@ -54,18 +52,14 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 
 		Long oId = getOId();
 		Long zpId = getZPointId(oId);
-		_testJsonGet(String.format(
-				"/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId,
-				zpId));
+		_testJsonGet(String.format("/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId, zpId));
 	}
 
 	@Test
 	public void testCreateUpdateDelete() throws Exception {
 		Long oId = getOId();
 		Long zpId = getZPointId(oId);
-		String urlStr = String.format(
-				"/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId,
-				zpId);
+		String urlStr = String.format("/api/subscr/contObjects/%d/zpoints/%d/referencePeriod", oId, zpId);
 
 		// Create testing
 		ReferencePeriod referencePeriod = new ReferencePeriod();

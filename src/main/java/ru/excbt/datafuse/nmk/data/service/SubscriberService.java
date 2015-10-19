@@ -4,9 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -82,50 +79,44 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
-		return result;
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectSubscriberContObjects(long subscriberId) {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// return result;
+	// }
 
 	/**
 	 * 
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
-		List<Long> subscrContObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		result.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
-		return result;
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectRmaSubscriberContObjects(long subscriberId)
+	// {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// List<Long> subscrContObjectIds =
+	// subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
+	// Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+	// result.forEach(i -> {
+	// boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+	// i.set_haveSubscr(haveSubscr);
+	// });
+	// return result;
+	// }
 
 	/**
 	 * 
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
-		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public int selectSubscriberContObjectCount(long subscriberId) {
-		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
-		return result.size();
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<Long> selectSubscriberContObjectIds(long subscriberId) {
+	// List<Long> result =
+	// subscriberRepository.selectContObjectIds(subscriberId);
+	// return result;
+	// }
 
 	/**
 	 * 
@@ -162,18 +153,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	/**
 	 * 
 	 * @param subscriberId
-	 * @param contObjectId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkContObjectSubscription(long subscriberId, long contObjectId) {
-		List<Long> resultIds = subscriberRepository.selectContObjectId(subscriberId, contObjectId);
-		return resultIds.size() > 0;
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -195,22 +174,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	public LocalDate getSubscriberCurrentDateJoda(Long subscriberId) {
 		Date currentDate = getSubscriberCurrentTime(subscriberId);
 		return new LocalDate(currentDate);
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPoint> selectSubscriberContZPoints(long subscriberId) {
-		List<ContZPoint> result = subscriberRepository.selectContZPoints(subscriberId);
-		result.forEach(i -> {
-			i.getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
-		});
-		return result;
 	}
 
 	/**

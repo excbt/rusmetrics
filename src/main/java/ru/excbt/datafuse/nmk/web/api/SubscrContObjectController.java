@@ -50,7 +50,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjects() {
-		List<ContObject> resultList = subscriberService
+		List<ContObject> resultList = subscrContObjectService
 				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));

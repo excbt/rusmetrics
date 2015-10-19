@@ -21,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -40,7 +39,7 @@ public class DeviceObjectService implements SecuredRoles {
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
 	@Autowired
-	private SubscriberRepository subscriberRepository;
+	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
 	private DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
@@ -313,7 +312,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
-		List<DeviceObject> result = subscriberRepository.selectDeviceObjects(subscriberId);
+		List<DeviceObject> result = subscrContObjectService.selectDeviceObjects(subscriberId);
 		result.forEach(i -> {
 			i.loadLazyProps();
 		});

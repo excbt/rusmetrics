@@ -12,20 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.DatePeriod;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContEventNotificationRepositoryTest.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationRepositoryTest.class);
+
 	@Autowired
 	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -41,15 +43,12 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	@Test
 	public void testSelectContObjectsNotificationsCountList() throws Exception {
 
-		List<Long> vList = subscriberService
-				.selectSubscriberContObjectIds(currentSubscriberService
-						.getSubscriberId());
+		List<Long> vList = subscrContObjectService
+				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
-		List<?> resultList = subscrContEventNotificationRepository
-				.selectNotificatoinsCountList(
-						currentSubscriberService.getSubscriberId(), vList,
-						dp.getDateFrom(), dp.getDateTo());
+		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(
+				currentSubscriberService.getSubscriberId(), vList, dp.getDateFrom(), dp.getDateTo());
 
 		assertNotNull(resultList);
 		assertTrue(!resultList.isEmpty());
@@ -60,16 +59,13 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testSelectContObjectsNotificationsNewCountList()
-			throws Exception {
+	public void testSelectContObjectsNotificationsNewCountList() throws Exception {
 
-		List<Long> vList = subscriberService
-				.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
-		List<?> resultList = subscrContEventNotificationRepository
-				.selectNotificatoinsCountList(subscriberId(), vList,
-						dp.getDateFrom(), dp.getDateTo(), Boolean.TRUE);
+		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId(), vList,
+				dp.getDateFrom(), dp.getDateTo(), Boolean.TRUE);
 
 		assertNotNull(resultList);
 		assertTrue(!resultList.isEmpty());
@@ -77,41 +73,39 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectContObjectsContTypes() throws Exception {
-		List<Long> vList = subscriberService
-				.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
 		List<Object[]> resultList = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroup(subscriberId(), vList,
-						dp.getDateFrom(), dp.getDateTo());
+				.selectNotificationEventTypeCountGroup(subscriberId(), vList, dp.getDateFrom(), dp.getDateTo());
 
 		assertNotNull(resultList);
 		assertTrue(!resultList.isEmpty());
-		
+
 		for (Object[] oo : resultList) {
-			logger.info("oo[0]:{} {}, oo[1]:{} {}", oo[0], oo[0].getClass().getName(), oo[1], oo[1].getClass().getName());
-		
+			logger.info("oo[0]:{} {}, oo[1]:{} {}", oo[0], oo[0].getClass().getName(), oo[1],
+					oo[1].getClass().getName());
+
 		}
 
 	}
 
 	@Test
 	public void testSelectContObjectsContTypesCollapse() throws Exception {
-		List<Long> vList = subscriberService
-				.selectSubscriberContObjectIds(subscriberId());
+		List<Long> vList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
-		
+
 		List<Object[]> resultList = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroupCollapse(subscriberId(), vList,
-						dp.getDateFrom(), dp.getDateTo());
-		
+				.selectNotificationEventTypeCountGroupCollapse(subscriberId(), vList, dp.getDateFrom(), dp.getDateTo());
+
 		assertNotNull(resultList);
 		assertTrue(!resultList.isEmpty());
-		
+
 		for (Object[] oo : resultList) {
-			logger.info("oo[0]:{} (__{}__), oo[1]:{} (__{}__)", oo[0], oo[0].getClass().getSimpleName(), oo[1], oo[1].getClass().getSimpleName());
-			
+			logger.info("oo[0]:{} (__{}__), oo[1]:{} (__{}__)", oo[0], oo[0].getClass().getSimpleName(), oo[1],
+					oo[1].getClass().getSimpleName());
+
 		}
-		
+
 	}
 }

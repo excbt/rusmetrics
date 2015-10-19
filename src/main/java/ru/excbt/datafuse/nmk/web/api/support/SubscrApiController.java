@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -30,6 +31,9 @@ public class SubscrApiController extends WebApiController {
 	@Autowired
 	protected CurrentUserService currentUserService;
 
+	@Autowired
+	protected SubscrContObjectService subscrContObjectService;
+
 	/**
 	 * 
 	 * @param contObjectId
@@ -44,7 +48,7 @@ public class SubscrApiController extends WebApiController {
 			return true;
 		}
 
-		List<Long> contObjectIds = subscriberService
+		List<Long> contObjectIds = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		return contObjectIds.contains(contObjectId);
 	}

@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class AnyControllerSubscriberTest extends AnyControllerTest {
@@ -17,11 +17,10 @@ public class AnyControllerSubscriberTest extends AnyControllerTest {
 	private CurrentSubscriberService cs;
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SubscrContObjectService subscrContObjectService;
 
 	protected List<ContObject> selectSubscriberContObjects() {
-		return subscriberService.selectSubscriberContObjects(cs
-				.getSubscriberId());
+		return subscrContObjectService.selectSubscriberContObjects(cs.getSubscriberId());
 	}
 
 	protected ContObject getFirstContObject() {

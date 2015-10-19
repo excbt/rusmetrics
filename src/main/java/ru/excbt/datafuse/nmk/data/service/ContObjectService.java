@@ -260,7 +260,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
-		List<ContObject> contObjects = subscriberService.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
 		List<ContObject> updateCandidate = contObjects.stream().filter((i) -> updateCandidateIds.contains(i.getId()))
 				.collect(Collectors.toList());
