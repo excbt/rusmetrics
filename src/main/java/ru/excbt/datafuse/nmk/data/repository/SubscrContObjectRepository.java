@@ -22,4 +22,5 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId IS NOT NULL) "
 			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL ")
 	public List<Long> selectRmaSubscrContObjectIds(@Param("subscrDate") Date subscrDate);
+
 }

@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
@@ -54,6 +56,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
+	@Autowired
+	private ContManagementService contManagementService;
+
 	/**
 	 * 
 	 * @param id
@@ -81,32 +86,32 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public ContObject updateOne(ContObject contObject) {
+	public ContObject updateOne(ContObject contObject, Long cmOrganizationId) {
 		checkNotNull(contObject);
 		checkArgument(!contObject.isNew());
 
-		ContObject currentObject = contObjectRepository.findOne(contObject.getId());
-		if (currentObject == null) {
+		ContObject currContObject = contObjectRepository.findOne(contObject.getId());
+		if (currContObject == null) {
 			throw new PersistenceException(String.format("ContObject (ID=%d) not found", contObject.getId()));
 		}
-		currentObject.setVersion(contObject.getVersion());
-		currentObject.setName(contObject.getName());
-		currentObject.setFullName(contObject.getFullName());
-		currentObject.setFullAddress(contObject.getFullAddress());
-		currentObject.setNumber(contObject.getNumber());
-		currentObject.setDescription(contObject.getDescription());
-		currentObject.setCurrentSettingMode(contObject.getCurrentSettingMode());
-		currentObject.setComment(contObject.getComment());
-		currentObject.setOwner(contObject.getOwner());
-		currentObject.setOwnerContacts(contObject.getOwnerContacts());
-		currentObject.setCwTemp(contObject.getCwTemp());
-		currentObject.setHeatArea(contObject.getHeatArea());
+		currContObject.setVersion(contObject.getVersion());
+		currContObject.setName(contObject.getName());
+		currContObject.setFullName(contObject.getFullName());
+		currContObject.setFullAddress(contObject.getFullAddress());
+		currContObject.setNumber(contObject.getNumber());
+		currContObject.setDescription(contObject.getDescription());
+		currContObject.setCurrentSettingMode(contObject.getCurrentSettingMode());
+		currContObject.setComment(contObject.getComment());
+		currContObject.setOwner(contObject.getOwner());
+		currContObject.setOwnerContacts(contObject.getOwnerContacts());
+		currContObject.setCwTemp(contObject.getCwTemp());
+		currContObject.setHeatArea(contObject.getHeatArea());
 
-		ContObject resultEntity = contObjectRepository.save(currentObject);
+		ContObject resultContObject = contObjectRepository.save(currContObject);
 
-		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(currentObject.getId());
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(currContObject.getId());
 		if (contObjectFiasList.size() == 0) {
-			contObjectFiasList.add(createConfObjectFias(currentObject));
+			contObjectFiasList.add(createConfObjectFias(currContObject));
 		} else {
 			contObjectFiasList.forEach(i -> {
 				i.setIsGeoRefresh(true);
@@ -114,7 +119,15 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		}
 		contObjectFiasRepository.save(contObjectFiasList);
 
-		return resultEntity;
+		ContManagement cm = currContObject.get_activeContManagement();
+		if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			currContObject.getContManagements().clear();
+			currContObject.getContManagements().add(newCm);
+		}
+
+		return resultContObject;
 	}
 
 	/**
@@ -124,7 +137,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public ContObject createOne(ContObject contObject, Long subscriberId) {
+	public ContObject createOne(ContObject contObject, Long subscriberId, Long cmOrganizationId) {
 
 		checkNotNull(contObject);
 		checkArgument(contObject.isNew());
@@ -153,6 +166,13 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		ContObjectFias contObjectFias = createConfObjectFias(resultContObject);
 		contObjectFiasRepository.save(contObjectFias);
 
+		if (cmOrganizationId != null) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			resultContObject.getContManagements().clear();
+			resultContObject.getContManagements().add(newCm);
+		}
+
 		return resultContObject;
 	}
 
@@ -174,7 +194,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsManual(true);
 		softDelete(contObject);
 
-		List<SubscrContObject> subscrContObjects = subscrContObjectService.findByContObjectId(contObjectId);
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
 		subscrContObjectService.deleteOne(subscrContObjects);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
@@ -201,8 +221,11 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
 		}
 
-		List<SubscrContObject> subscrContObjects = subscrContObjectService.findByContObjectId(contObjectId);
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
 		subscrContObjectService.deleteOnePermanent(subscrContObjects);
+
+		List<ContManagement> contManagements = contManagementService.selectByContObject(contObjectId);
+		contManagementService.deletePermanent(contManagements);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasRepository.delete(contObjectFiasList);
