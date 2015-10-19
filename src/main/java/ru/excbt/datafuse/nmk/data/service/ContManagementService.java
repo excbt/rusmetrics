@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -33,8 +33,8 @@ public class ContManagementService implements SecuredRoles {
 	private OrganizationService organizationService;
 
 	@Transactional(readOnly = true)
-	public List<ContManagement> selectAllManagement(long contObjectId) {
-		return contManagementRepository.selectAllManagement(contObjectId);
+	public List<ContManagement> selectByContObject(long contObjectId) {
+		return contManagementRepository.selectByContObject(contObjectId);
 	}
 
 	/**
@@ -46,22 +46,20 @@ public class ContManagementService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ContManagement createManagement(long contObjectId, long organizationId, final DateTime beginDate) {
+	public ContManagement createManagement(Long contObjectId, Long organizationId, LocalDate beginDate) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(organizationId > 0);
 		checkNotNull(beginDate);
 
-		List<ContManagement> checkExists = contManagementRepository.selectAllManagement(contObjectId);
+		List<ContManagement> checkExists = contManagementRepository.selectByContObject(contObjectId);
 
-		for (ContManagement cm : checkExists) {
-			if (beginDate.toDate().equals(cm.getBeginDate())) {
-				throw new PersistenceException(String.format(
-						"ContManagement with contObject(id=%d) and "
-								+ "organization(id=%d) on manageBeginDate(%s) already exists",
-						contObjectId, organizationId, beginDate));
+		checkExists.forEach(i -> {
+			if (i.getEndDate() == null) {
+				i.setEndDate(beginDate.toDate());
+				contManagementRepository.save(i);
 			}
-		}
+		});
 
 		ContObject co = contObjectService.findOne(contObjectId);
 		if (co == null) {
@@ -75,6 +73,37 @@ public class ContManagementService implements SecuredRoles {
 
 		ContManagement newRecord = new ContManagement();
 		newRecord.setContObject(co);
+		newRecord.setOrganization(org);
+		newRecord.setBeginDate(beginDate.toDate());
+
+		ContManagement result = contManagementRepository.save(newRecord);
+
+		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public ContManagement createManagement(ContObject contObject, Long organizationId, LocalDate beginDate) {
+
+		checkNotNull(contObject);
+		checkNotNull(organizationId);
+		checkNotNull(beginDate);
+
+		Organization org = organizationService.findOne(organizationId);
+		if (org == null) {
+			throw new PersistenceException(String.format("Organiztion(id=%d) not found", organizationId));
+		}
+
+		List<ContManagement> checkExists = contManagementRepository.selectByContObject(contObject.getId());
+
+		checkExists.forEach(i -> {
+			if (i.getEndDate() == null) {
+				i.setEndDate(beginDate.toDate());
+				contManagementRepository.save(i);
+			}
+		});
+		ContManagement newRecord = new ContManagement();
+		newRecord.setContObject(contObject);
 		newRecord.setOrganization(org);
 		newRecord.setBeginDate(beginDate.toDate());
 
@@ -129,6 +158,17 @@ public class ContManagementService implements SecuredRoles {
 		checkArgument(contObjectId > 0);
 		checkArgument(organizationId > 0);
 		return contManagementRepository.selectContMagement(contObjectId, organizationId);
+	}
+
+	/**
+	 * 
+	 * @param contManagements
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deletePermanent(List<ContManagement> contManagements) {
+		checkNotNull(contManagements);
+		contManagementRepository.delete(contManagements);
 	}
 
 }

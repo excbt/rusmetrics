@@ -119,9 +119,7 @@ public class JsonMetadataParser {
 		}
 
 		if (SUM_FUNCION.equals(propFunc)) {
-			if (!arg2.equals(BigDecimal.ZERO)) {
-				result = arg2.add(arg1);
-			}
+			result = arg1.add(arg2);
 		}
 		return result;
 	}
@@ -141,16 +139,25 @@ public class JsonMetadataParser {
 
 		BigDecimal result = BigDecimal.ZERO;
 
+		StringBuilder sumArgs = new StringBuilder();
+
 		for (JsonNode node : nodes) {
 			if (node.isNumber() || node.isBigDecimal() || node.isBigInteger() || node.isInt() || node.isDouble()) {
 				BigDecimal val = node.decimalValue();
 				result = processFunction(propFunc, result, val);
+				sumArgs.append(val);
+				sumArgs.append(',');
 			} else {
 				logger.warn("Node: {} is not NUMBER", node.asText());
 			}
 
 		}
-		logger.trace("Function result: {}", result);
+		if (sumArgs.length() > 0) {
+			sumArgs.deleteCharAt(sumArgs.length() - 1);
+		}
+
+		logger.trace("Function {} arguments: {}", propFunc, sumArgs.toString());
+		logger.trace("Function {} result: {}", propFunc, result);
 		return result;
 	}
 

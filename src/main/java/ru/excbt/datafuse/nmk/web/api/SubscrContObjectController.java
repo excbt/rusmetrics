@@ -102,6 +102,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
+			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
 			@RequestBody ContObject contObject) {
 
 		checkNotNull(contObjectId);
@@ -118,7 +119,7 @@ public class SubscrContObjectController extends SubscrApiController {
 		ApiAction action = new AbstractEntityApiAction<ContObject>(contObject) {
 			@Override
 			public void process() {
-				setResultEntity(contObjectService.updateOne(entity));
+				setResultEntity(contObjectService.updateOne(entity, cmOrganizationId));
 
 			}
 		};

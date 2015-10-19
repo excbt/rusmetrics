@@ -296,7 +296,8 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public Long get_activeDeviceObjectId() {
 		if (_activeDeviceObjectId == null) {
-			_activeDeviceObjectId = get_activeDeviceObject() != null ? get_activeDeviceObject().getId() : null;
+			DeviceObject d = get_activeDeviceObject();
+			_activeDeviceObjectId = d != null ? d.getId() : null;
 		}
 		return _activeDeviceObjectId;
 	}

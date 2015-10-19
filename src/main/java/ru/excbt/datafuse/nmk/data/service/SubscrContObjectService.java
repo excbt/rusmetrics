@@ -2,18 +2,24 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 
 @Service
 public class SubscrContObjectService {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
 
 	@Autowired
 	private SubscrContObjectRepository subscrContObjectRepository;
@@ -72,8 +78,23 @@ public class SubscrContObjectService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrContObject> findByContObjectId(Long contObjectId) {
+	public List<SubscrContObject> selectByContObjectId(Long contObjectId) {
 		return subscrContObjectRepository.findByContObjectId(contObjectId);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Subscriber selectRmaByContObjectId(Long contObjectId) {
+		List<SubscrContObject> subscrContObjects = subscrContObjectRepository.findByContObjectId(contObjectId);
+		List<SubscrContObject> rmaList = subscrContObjects.stream()
+				.filter(i -> Boolean.TRUE.equals(i.getSubscriber().getIsRma())).collect(Collectors.toList());
+		if (rmaList.size() > 1) {
+			logger.error("ContObject (id={}) has more than one RMA", contObjectId);
+		}
+		return rmaList.isEmpty() ? null : rmaList.get(0).getSubscriber();
 	}
 
 	/**

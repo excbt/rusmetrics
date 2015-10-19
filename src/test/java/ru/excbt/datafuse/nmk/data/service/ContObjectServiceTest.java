@@ -44,7 +44,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 		contObject.setComment("Created by Test");
 		contObject.setTimezoneDefKeyname("MSK");
 		contObject.setName("Cont Object TEST");
-		ContObject result = contObjectService.createOne(contObject, currentSubscriberService.getSubscriberId());
+		ContObject result = contObjectService.createOne(contObject, currentSubscriberService.getSubscriberId(), null);
 		assertNotNull(result);
 		contObjectService.deleteOne(result.getId());
 	}
