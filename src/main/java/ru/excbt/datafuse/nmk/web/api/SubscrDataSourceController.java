@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
@@ -48,7 +49,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSources() {
 		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getSubscriberId());
-		return responseOK(result);
+		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 	/**

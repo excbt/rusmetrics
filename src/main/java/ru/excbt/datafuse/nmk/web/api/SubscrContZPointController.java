@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -40,7 +41,7 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
-		return ResponseEntity.ok(zpList);
+		return ResponseEntity.ok(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
-		return ResponseEntity.ok(zpList);
+		return ResponseEntity.ok(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
