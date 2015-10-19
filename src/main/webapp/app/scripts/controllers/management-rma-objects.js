@@ -126,6 +126,14 @@ console.log('Run Object management controller.');
                 };
                 getRsoOrganizations();
                 
+                var getCmOrganizations = function(){
+                    objectSvc.getCmOrganizations()
+                    .then(function(response){
+                        $scope.data.cmOrganizations = response.data;
+                    });
+                };
+                getCmOrganizations();
+                
                 var getServiceTypes = function(){
                     objectSvc.getServiceTypes()
                     .then(function(response){
@@ -326,6 +334,11 @@ console.log('Run Object management controller.');
                     $('#showObjOptionModal').modal('hide');
                 };
                 
+                var successCallbackUpdateObject = function(e){     
+                    $scope.currentObject._activeContManagement = e._activeContManagement;
+                    successCallback(e, null);
+                };
+                
                 var successDeviceCallback = function(e){
                     $scope.getDevices($scope.currentObject, true);
                     $('#deleteDeviceModal').modal('hide');
@@ -364,7 +377,10 @@ console.log('Run Object management controller.');
                     console.log(e);
                 };
 
-                $scope.addObject = function (url, obj) {
+                $scope.addObject = function (url, obj) {                    
+                    if (angular.isDefined(obj.contManagementId)&& (obj.contManagementId!=null)){
+                        url+="/?cmOrganizationId="+obj.contManagementId;                       
+                    };
                     crudGridDataFactory(url).save(obj, successPostCallback, errorCallback);
                 };
 
@@ -382,7 +398,15 @@ console.log('Run Object management controller.');
                 };
                                 
                 $scope.updateObject = function (url, object) {
-                    crudGridDataFactory(url).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
+                    var params = { id: object[$scope.extraProps.idColumnName]};
+                    if (angular.isDefined(object.contManagementId)&& (object.contManagementId!=null)){
+                        var cmOrganizationId = object.contManagementId;
+                        params = { 
+                            id: object[$scope.extraProps.idColumnName],
+                            cmOrganizationId: cmOrganizationId
+                        };                        
+                    };
+                    crudGridDataFactory(url).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
 
                 $scope.setOrderBy = function (field) {
@@ -391,7 +415,7 @@ console.log('Run Object management controller.');
                 };
                 
                 $scope.sendObjectToServer = function(obj){
-                    var url = objectSvc.getRmaObjectsUrl();
+                    var url = objectSvc.getRmaObjectsUrl();                    
                     if (angular.isDefined(obj.id)&&(obj.id!=null)){
                         $scope.updateObject(url, obj);
                     }else{
@@ -407,6 +431,10 @@ console.log('Run Object management controller.');
                 
                 $scope.selectedObject = function(objId){
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+//console.log($scope.currentObject);                    
+                    if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
+                            $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
+                    };
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){

@@ -925,7 +925,9 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject.contManagements[0].organization.organizationName">
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
+                                    <select class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                 </td>
                             </tr>
                             <tr>

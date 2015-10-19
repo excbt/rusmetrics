@@ -86,6 +86,7 @@ console.log("Objects directive.");
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
+                $scope.data = {};
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -98,9 +99,18 @@ console.log("Objects directive.");
                     return obj;
                 };
                 
+                var getCmOrganizations = function(){
+                    objectSvc.getCmOrganizations()
+                    .then(function(response){
+                        $scope.data.cmOrganizations = response.data;
+                    });
+                };
+                getCmOrganizations();
+                
 //console.log(objectSvc.promise);                 
                 objectSvc.promise.then(function(response){
                     var tempArr = response.data;
+//console.log(tempArr);                    
                     tempArr.forEach(function(element){
                         element.imgsrc='images/object-mode-'+element.currentSettingMode+'.png';
 //                        $scope.cont_zpoint_setting_mode_check
@@ -109,6 +119,9 @@ console.log("Objects directive.");
                             
                         }else if(element.currentSettingMode===$scope.cont_zpoint_setting_mode_check[1].keyname){
                             element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
+                        };
+                        if (angular.isDefined(element._activeContManagement)&&(element._activeContManagement!=null)){
+                            element.contManagementId = element._activeContManagement.organizationId;
                         };
                     });
                     $scope.objects = response.data;
@@ -262,6 +275,11 @@ console.log("Objects directive.");
                         el.selected = false
                     });
                 };
+                
+                var successCallbackUpdateObject = function(e){     
+                    $scope.currentObject._activeContManagement = e._activeContManagement;
+                    successCallback(e, null);
+                };
 
                 var successCallback = function (e, cb) {
                     notificationFactory.success();
@@ -309,7 +327,15 @@ console.log("Objects directive.");
                 };
                                 
                 $scope.updateObject = function (object) {
-                    crudGridDataFactory($scope.crudTableName).update({ id: object[$scope.extraProps.idColumnName] }, object, successCallback, errorCallback);
+                    var params = { id: object[$scope.extraProps.idColumnName]};
+                    if (angular.isDefined(object.contManagementId)&& (object.contManagementId!=null)){
+                        var cmOrganizationId = object.contManagementId;
+                        params = { 
+                            id: object[$scope.extraProps.idColumnName],
+                            cmOrganizationId: cmOrganizationId
+                        };                        
+                    };
+                    crudGridDataFactory($scope.crudTableName).update( params, object, successCallbackUpdateObject, errorCallback);
                 };
 
                 $scope.setOrderBy = function (field) {
@@ -332,6 +358,7 @@ console.log("Objects directive.");
 //                    });
 //                    $scope.currentObject = curObject;
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+//console.log($scope.currentObject);                    
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){

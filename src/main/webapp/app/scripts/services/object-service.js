@@ -20,6 +20,7 @@ console.log("Object Service. Run.");
         var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';  
         var urlTimezones = urlApi+'/timezoneDef/all';
         var urlRsoOrganizations = urlRmaContObjects+'/rsoOrganizations';
+        var urlCmOrganizations = urlRmaContObjects+'/cmOrganizations';
         var urlServiceTypes = 'resource/serviceTypes.json';
         
         
@@ -61,6 +62,11 @@ console.log("Object Service. Run.");
             var url = urlRsoOrganizations;
             return $http.get(url);
         };
+        var getCmOrganizations = function(){
+            var url = urlCmOrganizations;
+            return $http.get(url);
+        };
+                 
         var getServiceTypes = function(){
             var url = urlServiceTypes;
             return $http.get(url);
@@ -259,6 +265,7 @@ console.log("objectSvc:loaded");
             getAllDevices,
             getCityConsumingData,
             getCitiesConsumingData,
+            getCmOrganizations,
             getDatasourcesUrl,
             getDeviceModels,
             getObjectConsumingData,
