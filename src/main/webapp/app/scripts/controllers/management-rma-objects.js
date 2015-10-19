@@ -258,29 +258,25 @@ console.log(e);
                                 repaintZpointTableFlag = true;
                             };
                             var objectIndex = -1;
-                            $scope.objects.some(function(elem, ind){
-                                if($scope.currentObject.id === elem.id){
-                                    objectIndex = ind;
-                                };
-                            });
+                            objectIndex = findObjectIndexInArray($scope.currentObject.id,$scope.objects);
                             if (objectIndex>-1){
                                 //update zpoint data in arrays
                                 $scope.objects[objectIndex].zpoints[curIndex] = mappedZpoint;
                                 $scope.objectsOnPage[objectIndex].zpoints[curIndex] = mappedZpoint;
-//                                $scope.objects[objectIndex].zpoints[curIndex].customServiceName = $scope.zpointSettings.customServiceName;
-//                                $scope.objectsOnPage[objectIndex].zpoints[curIndex].zpointName = $scope.zpointSettings.customServiceName;
-//                                $scope.objects[objectIndex].zpoints[curIndex].isManualLoading = $scope.zpointSettings.isManualLoading;
-//                                $scope.objectsOnPage[objectIndex].zpoints[curIndex].isManualLoading = $scope.zpointSettings.isManualLoading;
                             };
                             //remake zpoint table
                             if(($scope.objectsOnPage[objectIndex].showGroupDetails === true)){
                                 makeZpointTable($scope.objectsOnPage[objectIndex]);
                             };
-//                        };
                     }else{
-                        $scope.currentObject.zpoints.push(mappedZpoint);
-                        if ($scope.currentObject.showGroupDetails === true){
-                            makeZpointTable($scope.currentObject);
+                        var objectIndex = -1;
+                        objectIndex = findObjectIndexInArray($scope.currentObject.id,$scope.objects);                     
+                        if (objectIndex>-1){
+                            //update zpoint data in arrays
+                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);
+                            if ($scope.objectsOnPage[objectIndex].showGroupDetails === true){
+                                makeZpointTable($scope.objectsOnPage[objectIndex]);
+                            };                             
                         };
                     };
                     $scope.zpointSettings = {};
@@ -413,7 +409,7 @@ console.log(e);
                 
                 $scope.selectedZpoint = function(objId, zpointId){
                     $scope.selectedObject(objId);
-//console.log($scope.currentObject);                     
+console.log($scope.currentObject);                     
                     var curZpoint = null;
                     if (angular.isDefined($scope.currentObject.zpoints)&&angular.isArray($scope.currentObject.zpoints)){
                         $scope.currentObject.zpoints.some(function(element){
