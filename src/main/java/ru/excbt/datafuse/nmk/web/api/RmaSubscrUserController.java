@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 
 @Controller
 @RequestMapping("/api/rma")
@@ -45,7 +46,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 		}
 
 		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(rSubscriberId);
-		return responseOK(subscrUsers);
+		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
 	/**

@@ -42,8 +42,10 @@ public class RmaSubscriberController extends SubscriberController {
 		}
 
 		List<Subscriber> subscriberList = subscriberService.selectRmaSubscribers(getSubscriberId());
-		List<Subscriber> resultList = currentUserService.isSystem() ? subscriberList
-				: ObjectFilters.deletedFilter(subscriberList);
+		// List<Subscriber> resultList = currentUserService.isSystem() ?
+		// subscriberList
+		// : ObjectFilters.deletedFilter(subscriberList);
+		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
 		return responseOK(resultList);
 	}
 

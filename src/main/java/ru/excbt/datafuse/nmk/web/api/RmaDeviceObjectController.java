@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
@@ -247,7 +248,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects() {
 		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsBySubscriber(getSubscriberId());
-		return responseOK(deviceObjects);
+		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 
 }

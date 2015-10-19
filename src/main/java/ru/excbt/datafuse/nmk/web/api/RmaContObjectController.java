@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -96,7 +97,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 		List<ContObject> resultList = subscriberService
 				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
-		return ResponseEntity.ok().body(resultList);
+		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
 	}
 
 }
