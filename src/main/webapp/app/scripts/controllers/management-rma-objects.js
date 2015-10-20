@@ -88,7 +88,7 @@ console.log('Run Object management controller.');
                 };
                 
 //console.log(objectSvc.promise);                 
-                objectSvc.rmaPromise.then(function(response){
+                objectSvc.getRmaPromise().then(function(response){
                     var tempArr = response.data;
 //console.log(tempArr);                    
 //                    tempArr.forEach(function(element){
@@ -334,7 +334,8 @@ console.log('Run Object management controller.');
                     $('#showObjOptionModal').modal('hide');
                 };
                 
-                var successCallbackUpdateObject = function(e){     
+                var successCallbackUpdateObject = function(e){ 
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                     successCallback(e, null);
                 };
@@ -419,7 +420,7 @@ console.log('Run Object management controller.');
                     if (angular.isDefined(obj.id)&&(obj.id!=null)){
                         $scope.updateObject(url, obj);
                     }else{
-                        obj.timezoneDefKeyname = "MSK";
+//                        obj.timezoneDefKeyname = "MSK";
                         $scope.addObject(url,obj);
                     };
                 };

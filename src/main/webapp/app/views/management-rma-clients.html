@@ -27,33 +27,10 @@
             <th class="col-md-1 nmc-td-for-button">
 
             </th>
-
-            <th class="col-md-4" ng-click="setOrderBy(column.name)">
-                <div>
-                    Наименование
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+                {{column.caption}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>
-<!--
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Тип
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    IP \ Hostname
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Порт
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
--->
             <th class="col-md-1">
             </th>
         </tr>
@@ -65,33 +42,10 @@
             <th class="col-md-1 nmc-td-for-button">
 
             </th>
-
-            <th class="col-md-4" ng-click="setOrderBy(column.name)">
-                <div>
-                    Название
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+                {{column.caption}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>
-<!--
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Тип
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    IP \ Hostname
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Порт
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
--->
             <th class="col-md-1">
             </th>
         </tr>
@@ -100,34 +54,159 @@
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i title="Редактировать источник данных" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editClient(client)"></i>
+                        <i title="Редактировать абонента" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(client)" data-target="#showClientOptionModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
-            <td class="col-md-4">
-                <div><span ng-class="">{{client.subscriberName || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{client['id']}})</span></span>
+            <td ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+                <div ng-switch on="column.name">
+                    <span ng-switch-when="subscriberName" ng-class="">{{client[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{client['id']}})</span></span>
+                    <span ng-switch-default >
+                        {{client[column.name]}}
+                    </span>
                 </div>
             </td>
-<!--
-            <td class="col-md-2">
-                <div><span ng-class="">{{dataSource.dataSourceType.caption}}</span>
-                </div>
-            </td>
-            <td class="col-md-2">
-                    <span>{{dataSource.dataSourceIp}}</span>
-            </td>
-            <td class="col-md-2">
-                    <span>{{dataSource.dataSourcePort}}</span>
-            </td>
--->
 
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить источник данных" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(client)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                        <i title="Удалить абонента" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(client)" data-target="#deleteClientModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
         </tr>
     </table>
+</div>
+
+<!--Show client options-->
+<div id="showClientOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showClientOptionLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showClientOptionLabel" class="nmc-h3">
+				Абонент
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentClient.subscriberName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Информация</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Информация" ng-model="data.currentClient.info"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="data.currentClient.comment"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputCC">Организация</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <input disabled class="form-control nmc-text-input-form" type="text" ng-model="data.currentClient._activeContManagement.organization.organizationName">-->
+                                    <select class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="data.currentClient.organizationId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.organizations">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="data.currentClient.timezoneDef" ng-options="timezone.keyname as timezone.caption for timezone in data.timezones">
+                                    </select>
+                                </td>
+                            </tr> 
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="sendClientToServer(data.currentClient)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentClient')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete client-->
+<div id="deleteClientModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteClientLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteClientLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.currentClient.subscriberName || data.currentClient.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+<!--                            -->
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(data.currentClient);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentClient');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
 </div>

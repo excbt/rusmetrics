@@ -141,7 +141,8 @@ console.log("Object Service. Run.");
         
         //get objects
         var getObjectsData = function () {
-           return $http.get(crudTableName);
+console.log("Get data from server");            
+           return $http.get(crudTableName);//.then(function(res){console.log(res)});
         };
         var getRmaObjectsData = function () {
            return $http.get(getRmaObjectsUrl());
@@ -203,8 +204,23 @@ console.log("Object Service. Run.");
             return obj;
         };
 
-       var promise = getObjectsData();
-       var rmaPromise = getRmaObjectsData();
+       var promise = null;//getObjectsData();
+       var rmaPromise = null;//getRmaObjectsData();
+       var loadData = function(){
+         promise = getObjectsData();
+         rmaPromise = getRmaObjectsData();
+       };
+       loadData();
+                 
+       $rootScope.$on('objectSvc:requestReloadData', function(){        
+           loadData();
+       });
+        var getPromise = function(){
+            return promise;
+        };
+        var getRmaPromise = function(){
+            return rmaPromise;
+        };
 //       $interval(function(){
 //           var time = (new Date()).toLocaleString();
 //           document.getElementById('timeOutput').innerHTML="Время: "+time;
@@ -212,11 +228,11 @@ console.log("Object Service. Run.");
 //       },10000);
                  
                  //if data loaded
-        promise.then(function(response){
-console.log("objectSvc:loaded");            
+//        promise.then(function(response){
+//console.log("objectSvc:loaded");            
 //            loading = false;
 //            $rootScope.$broadcast('objectSvc:loaded');
-        });
+//        });
                  
         var sendDeviceToServer = function(device){
             //send to server
@@ -275,8 +291,10 @@ console.log("objectSvc:loaded");
             getDeviceMetaDataSystemList,
             getLoadingStatus,
             getObjectsUrl,
+            getPromise,
             getRmaObjectsData,
             getRmaObjectsUrl,
+            getRmaPromise,
             getRefRangeByObjectAndZpoint,
             getRsoOrganizations,
             getServiceTypes,

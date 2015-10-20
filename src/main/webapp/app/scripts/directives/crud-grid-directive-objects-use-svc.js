@@ -108,7 +108,7 @@ console.log("Objects directive.");
                 getCmOrganizations();
                 
 //console.log(objectSvc.promise);                 
-                objectSvc.promise.then(function(response){
+                objectSvc.getPromise().then(function(response){                   
                     var tempArr = response.data;
 //console.log(tempArr);                    
                     tempArr.forEach(function(element){
@@ -277,6 +277,7 @@ console.log("Objects directive.");
                 };
                 
                 var successCallbackUpdateObject = function(e){     
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.currentObject._activeContManagement = e._activeContManagement;
                     successCallback(e, null);
                 };
