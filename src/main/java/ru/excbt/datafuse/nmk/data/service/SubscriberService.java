@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -147,7 +148,13 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
-		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
+		result.forEach(i -> {
+			i.getSubscriber();
+		});
+
+		return result;
 	}
 
 	/**
