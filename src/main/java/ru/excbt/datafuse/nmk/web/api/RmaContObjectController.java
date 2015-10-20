@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
 // TODO make RMA actions
@@ -46,11 +48,13 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return ResponseEntity.badRequest().build();
 		}
 
+		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+
 		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createOne(entity, getSubscriberId(), cmOrganizationId);
+				return contObjectService.createOne(entity, getSubscriberId(), rmaBeginDate, cmOrganizationId);
 			}
 
 			@Override
@@ -79,11 +83,13 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return responseForbidden();
 		}
 
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+
 		ApiAction action = new AbstractApiAction() {
 
 			@Override
 			public void process() {
-				contObjectService.deleteOne(contObjectId);
+				contObjectService.deleteOne(contObjectId, subscrEndDate);
 			}
 		};
 
@@ -96,7 +102,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects() {
+	public ResponseEntity<?> getRmaContObjects() {
 		List<ContObject> resultList = subscrContObjectService
 				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
@@ -107,14 +113,54 @@ public class RmaContObjectController extends SubscrContObjectController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
+	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+
+		checkNotNull(subscriberId);
+
+		List<ContObject> resultList = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+
+		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
 				getSubscriberId());
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
+			@RequestBody List<Long> contObjectIds) {
+
+		checkNotNull(subscriberId);
+		checkNotNull(contObjectIds);
+
+		LocalDate subscrBeginDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
+
+		ApiAction action = new EntityApiActionAdapter<List<ContObject>>() {
+
+			@Override
+			public List<ContObject> processAndReturnResult() {
+				return subscrContObjectService.updateSubscrContObjects(subscriberId, contObjectIds, subscrBeginDate);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }

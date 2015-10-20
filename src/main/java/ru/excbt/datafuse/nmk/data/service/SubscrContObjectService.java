@@ -2,16 +2,20 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.persistence.PersistenceException;
+
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +26,10 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrContObjectService {
+public class SubscrContObjectService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
 
@@ -34,12 +39,17 @@ public class SubscrContObjectService {
 	@Autowired
 	private SubscriberService subscriberService;
 
+	@Autowired
+	private ContObjectService contObjectService;
+
 	/**
 	 * 
 	 * @param objects
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteOne(List<SubscrContObject> objects) {
+	public void deleteOne2(List<SubscrContObject> objects) {
+		checkNotNull(objects);
 
 		objects.forEach(i -> {
 			i.setDeleted(1);
@@ -54,12 +64,42 @@ public class SubscrContObjectService {
 
 	/**
 	 * 
+	 * @param objects
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteOne(List<SubscrContObject> objects, LocalDate subscrEndDate) {
+		checkNotNull(objects);
+		checkNotNull(subscrEndDate);
+		Date endDate = subscrEndDate.toDate();
+
+		List<SubscrContObject> updateCandidate = new ArrayList<>();
+		List<SubscrContObject> deleteCandidate = new ArrayList<>();
+
+		objects.forEach(i -> {
+			if (i.getSubscrBeginDate().equals(endDate)) {
+				deleteCandidate.add(i);
+			} else if (i.getSubscrEndDate() == null) {
+				i.setSubscrEndDate(endDate);
+				updateCandidate.add(i);
+			}
+		});
+		subscrContObjectRepository.delete(deleteCandidate);
+		subscrContObjectRepository.save(updateCandidate);
+	}
+
+	/**
+	 * 
 	 * @param subscrContObject
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void deleteOne(SubscrContObject subscrContObject) {
-		subscrContObject.setDeleted(1);
-		subscrContObjectRepository.save(subscrContObject);
+	public void deleteOne(SubscrContObject subscrContObject, LocalDate subscrEndDate) {
+		checkNotNull(subscrContObject);
+		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
+			subscrContObjectRepository.delete(subscrContObject);
+		} else {
+			subscrContObject.setSubscrEndDate(subscrEndDate.toDate());
+			subscrContObjectRepository.save(subscrContObject);
+		}
 	}
 
 	/**
@@ -110,6 +150,7 @@ public class SubscrContObjectService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public SubscrContObject saveOne(SubscrContObject subscrContObject) {
 		return subscrContObjectRepository.save(subscrContObject);
 	}
@@ -232,6 +273,110 @@ public class SubscrContObjectService {
 		checkNotNull(subscriberId);
 		checkNotNull(rmaSubscriberId);
 		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId);
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public SubscrContObject createOne(ContObject contObject, Subscriber subscriber, LocalDate subscrBeginDate) {
+		checkNotNull(contObject);
+		checkNotNull(subscriber);
+		checkNotNull(subscrBeginDate);
+
+		SubscrContObject subscrContObject = new SubscrContObject();
+		subscrContObject.setContObject(contObject);
+		subscrContObject.setSubscriber(subscriber);
+		subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
+		return subscrContObjectRepository.save(subscrContObject);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param subscriber
+	 * @param subscrBeginDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public SubscrContObject createOne(Long contObjectId, Subscriber subscriber, LocalDate subscrBeginDate) {
+		checkNotNull(contObjectId);
+		checkNotNull(subscriber);
+		checkNotNull(subscrBeginDate);
+
+		ContObject contObject = contObjectService.findOne(contObjectId);
+
+		SubscrContObject subscrContObject = new SubscrContObject();
+		subscrContObject.setContObject(contObject);
+		subscrContObject.setSubscriber(subscriber);
+		subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
+		return subscrContObjectRepository.save(subscrContObject);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param contObjectIds
+	 * @param subscrBeginDate
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public List<ContObject> updateSubscrContObjects(Long subscriberId, List<Long> contObjectIds,
+			LocalDate subscrBeginDate) {
+
+		LocalDate subscrCurrentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
+		Subscriber subscriber = subscriberService.findOne(subscriberId);
+
+		if (subscrCurrentDate.isBefore(subscrBeginDate)) {
+			throw new PersistenceException(
+					String.format("Subscriber (id=%d) Subscr Current Date is before subscrBeginDate ", subscriberId));
+		}
+
+		List<Long> currentContObjectsIds = selectSubscriberContObjectIds(subscriberId);
+
+		List<Long> addContObjectIds = new ArrayList<>();
+		List<Long> delContObjectIds = new ArrayList<>();
+
+		currentContObjectsIds.forEach(i -> {
+			if (!contObjectIds.contains(i)) {
+				delContObjectIds.add(i);
+			}
+		});
+
+		contObjectIds.forEach(i -> {
+			if (!currentContObjectsIds.contains(i)) {
+				addContObjectIds.add(i);
+			}
+		});
+
+		List<SubscrContObject> delSubscrContObjects = new ArrayList<>();
+		delContObjectIds.forEach(i -> {
+			List<SubscrContObject> delCandidate = subscrContObjectRepository.selectActualSubscrContObjects(subscriberId,
+					i);
+			if (delCandidate.size() > 0) {
+				delSubscrContObjects.addAll(delCandidate);
+			}
+		});
+
+		deleteOne(delSubscrContObjects, subscrCurrentDate);
+
+		addContObjectIds.forEach(i -> {
+			createOne(i, subscriber, subscrBeginDate);
+		});
+
+		List<ContObject> resultContObjects = selectSubscriberContObjects(subscriberId);
+		resultContObjects.forEach(i -> {
+			i.getId();
+		});
+
+		return resultContObjects;
 	}
 
 }

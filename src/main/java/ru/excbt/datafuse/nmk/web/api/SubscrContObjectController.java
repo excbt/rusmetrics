@@ -49,7 +49,7 @@ public class SubscrContObjectController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects() {
+	public ResponseEntity<?> getRmaContObjects() {
 		List<ContObject> resultList = subscrContObjectService
 				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 

@@ -66,7 +66,11 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObject findOne(Long contObjectId) {
-		return contObjectRepository.findOne(contObjectId);
+		ContObject result = contObjectRepository.findOne(contObjectId);
+		if (result == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+		return result;
 	}
 
 	/**
@@ -137,7 +141,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public ContObject createOne(ContObject contObject, Long subscriberId, Long cmOrganizationId) {
+	public ContObject createOne(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
+			Long cmOrganizationId) {
 
 		checkNotNull(contObject);
 		checkArgument(contObject.isNew());
@@ -151,16 +156,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		TimezoneDef timezoneDef = timezoneDefService.findOne(contObject.getTimezoneDefKeyname());
 		contObject.setTimezoneDef(timezoneDef);
 		contObject.setIsManual(true);
-		// contObject.set
 
 		ContObject resultContObject = contObjectRepository.save(contObject);
-		SubscrContObject subscrContObject = new SubscrContObject();
-		Date beginDate = subscriberService.getSubscriberCurrentTime(subscriberId);
-		subscrContObject.setContObject(resultContObject);
-		subscrContObject.setSubscriber(subscriber);
-		subscrContObject.setSubscrBeginDate(beginDate);
-		// subscrContObjectService.
-		subscrContObjectService.saveOne(subscrContObject);
+
+		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
 
 		// Inserting ContObjectFias
 		ContObjectFias contObjectFias = createConfObjectFias(resultContObject);
@@ -183,7 +182,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteOne(Long contObjectId) {
+	public void deleteOne(Long contObjectId, LocalDate subscrEndDate) {
 		checkNotNull(contObjectId);
 
 		ContObject contObject = contObjectRepository.findOne(contObjectId);
@@ -195,7 +194,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		softDelete(contObject);
 
 		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
-		subscrContObjectService.deleteOne(subscrContObjects);
+		subscrContObjectService.deleteOne(subscrContObjects, subscrEndDate);
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {

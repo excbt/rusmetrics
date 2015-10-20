@@ -61,16 +61,20 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 	@Column(name = "short_address_3")
 	private String shortAddress3;
 
+	@JsonIgnore
 	@Column(name = "geo_json")
 	@Type(type = "StringJsonObject")
 	private String geoJson;
 
+	@JsonIgnore
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@Column(name = "is_geo_refresh")
 	private Boolean isGeoRefresh;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 

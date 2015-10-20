@@ -12,9 +12,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "v_cont_object_geo_pos_xy")
+@JsonInclude(Include.NON_NULL)
 public class ContObjectGeoPos implements Serializable {
 
 	/**

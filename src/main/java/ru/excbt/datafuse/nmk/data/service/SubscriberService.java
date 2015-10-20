@@ -71,7 +71,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		if (result == null) {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
-
 		return result;
 	}
 
