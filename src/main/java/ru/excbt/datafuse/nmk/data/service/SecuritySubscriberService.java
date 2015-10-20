@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +25,12 @@ public class SecuritySubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
 
-		List<SubscrUser> result = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
 		result.forEach(i -> {
 			i.getSubscriber();
 		});
+
 		return result;
 	}
 
