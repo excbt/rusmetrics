@@ -221,4 +221,17 @@ public class SubscrContObjectService {
 		checkNotNull(subscriberId);
 		return subscrContObjectRepository.selectDeviceObjects(subscriberId);
 	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContObject> selectAvailableContObjects(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+		return subscrContObjectRepository.selectAvailableContObjects(subscriberId, rmaSubscriberId);
+	}
+
 }

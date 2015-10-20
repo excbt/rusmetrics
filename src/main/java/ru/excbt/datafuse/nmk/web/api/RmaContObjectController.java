@@ -103,4 +103,18 @@ public class RmaContObjectController extends SubscrContObjectController {
 		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+
+		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
+				getSubscriberId());
+
+		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
 }

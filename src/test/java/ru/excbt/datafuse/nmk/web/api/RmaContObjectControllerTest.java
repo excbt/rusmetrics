@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaContObjectControllerTest extends AnyControllerTest {
+public class RmaContObjectControllerTest extends RmaControllerTest {
 
 	@Autowired
 	private ContObjectService contObjectService;
@@ -33,6 +33,11 @@ public class RmaContObjectControllerTest extends AnyControllerTest {
 		_testJsonUpdate(apiRmaUrl("/contObjects/" + contObjectId), contObject);
 
 		_testJsonDelete(apiRmaUrl("/contObjects/" + contObjectId));
+	}
+
+	@Test
+	public void testAvailableContObjects() throws Exception {
+		_testJsonGet(apiRmaUrl("/64166467/availableContObjects"));
 	}
 
 }
