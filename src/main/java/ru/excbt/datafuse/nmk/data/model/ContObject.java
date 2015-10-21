@@ -113,20 +113,13 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "timezone_def", insertable = false, updatable = false)
 	private String timezoneDefKeyname;
 
-	/*
-	 * TODO check contObjectFias
-	 */
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectFias contObjectFias;
 
-	/*
-	 * TODO check contObjectGeo
-	 */
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectGeoPos contObjectGeo;
 
 	@Column(name = "ex_system")
-	@JsonIgnore
 	private String exSystemKeyname;
 
 	@Column(name = "ex_code")
