@@ -402,4 +402,13 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		contZPoint.setRso(organization);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public List<ContServiceType> selectContServiceTypes() {
+		List<ContServiceType> serviceTypes = contServiceTypeRepository.selectAll();
+		return serviceTypes;
+	}
+
 }

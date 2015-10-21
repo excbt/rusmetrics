@@ -223,4 +223,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	@Test
+	public void testKupavna() throws Exception {
+		_testJsonGet(apiSubscrUrl(
+				"/20118666/service/1h/20118715/paged?beginDate=2015-09-22&endDate=2015-10-21&page=0&size=50"));
+	}
+
 }
