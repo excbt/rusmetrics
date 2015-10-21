@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -33,6 +35,8 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 public class SubscrUserController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
+
+	private final UsernameValidator usernameValidator = new UsernameValidator();
 
 	@Autowired
 	protected SubscrUserService subscrUserService;
@@ -131,6 +135,20 @@ public class SubscrUserController extends SubscrApiController {
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUser);
 
+		if (!usernameValidator.validate(subscrUser.getUserName())) {
+			return responseBadRequest(ApiResult.validationError(
+					"Username %s is not valid. " + "Min length is 3, max length is 20. Allowed characters: {a-z0-9_-]}",
+					subscrUser.getUserName()));
+		}
+
+		if (subscrUser.getFirstName() == null || subscrUser.getFirstName().length() == 0) {
+			return responseBadRequest(ApiResult.validationError("firstName is not valid"));
+		}
+
+		if (subscrUser.getLastName() == null || subscrUser.getLastName().length() == 0) {
+			return responseBadRequest(ApiResult.validationError("lastName is not valid"));
+		}
+
 		subscrUser.setSubscriberId(rSubscriberId);
 		subscrUser.getSubscrRoles().clear();
 
@@ -178,6 +196,14 @@ public class SubscrUserController extends SubscrApiController {
 
 		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
 			return responseBadRequest();
+		}
+
+		if (subscrUser.getFirstName() == null || subscrUser.getFirstName().length() == 0) {
+			return responseBadRequest(ApiResult.validationError("firstName is not valid"));
+		}
+
+		if (subscrUser.getLastName() == null || subscrUser.getLastName().length() == 0) {
+			return responseBadRequest(ApiResult.validationError("lastName is not valid"));
 		}
 
 		subscrUser.getSubscrRoles().clear();
