@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
@@ -43,7 +44,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	private EntityManager em;
 
 	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	private TimezoneDefService timezoneDefService;
 
 	/**
 	 * 
@@ -208,6 +209,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
 
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
+
 		return subscriberRepository.save(subscriber);
 	}
 
@@ -225,6 +229,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		checkArgument(!subscriber.isNew());
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
 
 		return subscriberRepository.save(subscriber);
 	}

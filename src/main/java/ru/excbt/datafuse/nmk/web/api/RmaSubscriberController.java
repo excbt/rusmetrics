@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -29,6 +32,9 @@ import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 public class RmaSubscriberController extends SubscriberController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberController.class);
+
+	@Autowired
+	private OrganizationService organizationService;
 
 	/**
 	 * 
@@ -150,6 +156,16 @@ public class RmaSubscriberController extends SubscriberController {
 
 		};
 		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOrganizations() {
+		List<Organization> organizations = organizationService.selectOrganizations();
+		return responseOK(organizations);
 	}
 
 }

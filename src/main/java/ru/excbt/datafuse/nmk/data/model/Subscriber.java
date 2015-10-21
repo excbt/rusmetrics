@@ -50,6 +50,9 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
+	@Column(name = "timezone_def", insertable = false, updatable = false)
+	private String timezoneDefKeyname;
+
 	@JsonIgnore
 	@Column(name = "subscriber_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
@@ -58,19 +61,21 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@Version
 	private int version;
 
-	@Column(name = "is_rma")
+	@Column(name = "is_rma", insertable = false, updatable = false)
 	private Boolean isRma;
 
-	@Column(name = "rma_subscriber_id")
+	@Column(name = "rma_subscriber_id", updatable = false)
 	private Long rmaSubscriberId;
 
-	@Column(name = "ghost_subscriber_id")
+	@Column(name = "ghost_subscriber_id", insertable = false, updatable = false)
 	private Long ghostSubscriberId;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
-	@Column(name = "rma_ldap_ou")
+	@JsonIgnore
+	@Column(name = "rma_ldap_ou", insertable = false, updatable = false)
 	private String rmaLdapOu;
 
 	public String getInfo() {
@@ -177,6 +182,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 
 	public void setRmaLdapOu(String rmaLdapOu) {
 		this.rmaLdapOu = rmaLdapOu;
+	}
+
+	public String getTimezoneDefKeyname() {
+		return timezoneDefKeyname;
+	}
+
+	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
+		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
 
 }

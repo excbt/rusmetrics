@@ -187,8 +187,17 @@ public class SubscrContObjectController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getCmOrganizations() {
 		List<Organization> organizations = organizationService.selectCmOrganizations();
-		List<Organization> resultList = ObjectFilters.deletedFilter(organizations);
-		return responseOK(resultList);
+		return responseOK(organizations);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/organizations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getOrganizations() {
+		List<Organization> organizations = organizationService.selectOrganizations();
+		return responseOK(organizations);
 	}
 
 }

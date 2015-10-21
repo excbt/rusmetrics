@@ -44,6 +44,11 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testOrganizatoinsGet() throws Exception {
+		_testJsonGet("/api/subscr/contObjects/organizations");
+	}
+
+	@Test
 	public void testContObjectFiasGet() throws Exception {
 		ContObject testCO = findFirstContObject();
 
