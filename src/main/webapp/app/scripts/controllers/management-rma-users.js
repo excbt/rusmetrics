@@ -47,8 +47,16 @@ console.log('Run user management controller.');
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+clientId+$scope.ctrlSettings.userUrlSuffix;
         $http.get(targetUrl)
         .then(function(response){
+            response.data.forEach(function(elem){
+                elem.subscrRoles.some(function(role){
+                    if (role.roleName == "ROLE_SUBSCR_ADMIN"){
+                        elem.isAdmin = true;
+                        return true;
+                    };
+                });
+            });
             $scope.data.users = response.data;
-console.log($scope.data.users);            
+//console.log($scope.data.users);            
         },
              function(e){
             console.log(e);
@@ -96,6 +104,8 @@ console.log($scope.data.users);
     
     $scope.addUser =  function(){
         $scope.data.currentUser = {};
+        $scope.data.currentUser.id=null;
+        $scope.data.currentUser.isAdmin = false;
         $('#showUserOptionModal').modal();
     };
     
@@ -123,8 +133,11 @@ console.log($scope.data.users);
         };
     };
     
-    $scope.addObject = function (url, obj) {  
-        url+="/?isAdmin="+obj.isAdmin+"&newPassword="+obj.password;
+    $scope.addObject = function (url, obj) {
+        url+="/?isAdmin="+obj.isAdmin;//+"&newPassword="+obj.password;
+        if (angular.isDefined(obj.password)&&(obj.password!=null)&&(obj.password !="")){
+            url+= "&newPassword="+obj.password;
+        };
         crudGridDataFactory(url).save(obj, successCallback, errorCallback);
     };
 
@@ -155,10 +168,14 @@ console.log($scope.data.users);
         getUsers($scope.data.currentClient.id);
     };
     
-    //chekers
+    //checkers
     $scope.checkPassword = function(){
         var result = false;
+//        if ($scope.data.currentUser.id==null){
+//            result = (($scope.data.currentUser.password));
+//        };
         result = !($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm);
+        
         return result;
     };
     

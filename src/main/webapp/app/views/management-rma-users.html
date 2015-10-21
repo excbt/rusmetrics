@@ -111,19 +111,19 @@
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td class="col-sm-3"><label for="inputUserName">Логин</label>
+                                <td class="col-sm-3"><label for="inputUserName">Логин</label><span style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName">
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputFirstName">Имя</label>
+                                <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputLastName">Фамилия</label>
+                                <td class="col-sm-3"><label for="inputLastName">Фамилия</label><span style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputLastName" placeholder="Фамилия"  ng-model="data.currentUser.lastName">
                                 </td>
@@ -135,7 +135,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputEMail">E-mail</label>
+                                <td class="col-sm-3"><label for="inputEMail">E-mail</label><span style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.userEMail">
                                 </td>
@@ -159,7 +159,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputEmail">Пароль</label>
+                                <td class="col-sm-3"><label for="inputEmail">Пароль</label><span ng-if="data.currentUser.id==null" style="color:red;">*</span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                      <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
@@ -174,6 +174,11 @@
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
                                         <input class="form-control nmc-text-input-form" type="password" id="inputPasswordConfirm" placeholder="Повтор пароля"  ng-model="data.currentUser.passwordConfirm">
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    Поля отмеченные <span style="color:red;">*</span> обязательны для заполнения!
                                 </td>
                             </tr>
                         </table>
