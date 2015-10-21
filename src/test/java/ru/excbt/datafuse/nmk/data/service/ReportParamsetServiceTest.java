@@ -22,8 +22,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportParamsetServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetServiceTest.class);
 
 	private static final long TEMPLATE_PARAMSET_ID = 28344056;
 
@@ -42,15 +41,16 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
+
 	@Test
 	public void testSelectReportParamset() {
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(ReportTypeKey.COMMERCE_REPORT,
-						true, currentSubscriberService.getSubscriberId());
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(
+				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 		assertTrue(reportParamsetList.size() > 0);
 		for (ReportParamset rp : reportParamsetList) {
-			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate()
-					.getReportTypeKey().name());
+			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportTypeKey().name());
 		}
 	}
 
@@ -61,8 +61,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		rp.setActiveStartDate(new Date());
 		// rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
 		rp.setReportPeriodKey(ReportPeriodKey.TODAY);
-		ReportParamset result = reportParamsetService.createByTemplate(
-				TEMPLATE_PARAMSET_ID, rp, null,
+		ReportParamset result = reportParamsetService.createByTemplate(TEMPLATE_PARAMSET_ID, rp, null,
 				currentSubscriberService.getSubscriber());
 		assertNotNull(result);
 
@@ -76,35 +75,29 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	 * @param reportParamset
 	 */
 	private void testAddUnitToParamset(ReportParamset reportParamset) {
-		List<ContObject> contObjects = subscriberService
-				.selectSubscriberContObjects(currentSubscriberService
-						.getSubscriberId());
+		List<ContObject> contObjects = subscrContObjectService
+				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 		assertTrue(contObjects.size() > 0);
 
 		ContObject co = contObjects.get(0);
-		ReportParamsetUnit unit = reportParamsetService.addUnitToParamset(
-				reportParamset, co.getId());
+		ReportParamsetUnit unit = reportParamsetService.addUnitToParamset(reportParamset, co.getId());
 
-		List<ContObject> listCO = reportParamsetService
-				.selectParamsetContObjects(reportParamset.getId());
+		List<ContObject> listCO = reportParamsetService.selectParamsetContObjects(reportParamset.getId());
 		assertTrue(listCO.size() > 0);
 
-		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(),
-				co.getId());
+		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(), co.getId());
 
 		if (contObjects.size() > 1) {
 			co = contObjects.get(1);
-			unit = reportParamsetService.addUnitToParamset(reportParamset,
-					co.getId());
+			unit = reportParamsetService.addUnitToParamset(reportParamset, co.getId());
 		}
 
 	}
 
 	@Test
 	public void testParamsetAvailableContObjectUnits() {
-		List<ReportTemplate> reportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true, currentSubscriberService.getSubscriberId());
+		List<ReportTemplate> reportTemplates = reportTemplateService.selectSubscriberReportTemplates(
+				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 		assertTrue(reportTemplates.size() > 0);
 		ReportTemplate rt = reportTemplates.get(0);
 
@@ -114,9 +107,8 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		// .findReportParamsetList(rt.getId());
 		// assertTrue(rpList.size() > 0);
 
-		List<ContObject> contObjects = reportParamsetService
-				.selectParamsetAvailableContObjectUnits(-1,
-						currentSubscriberService.getSubscriberId());
+		List<ContObject> contObjects = reportParamsetService.selectParamsetAvailableContObjectUnits(-1,
+				currentSubscriberService.getSubscriberId());
 
 		assertTrue(contObjects.size() > 0);
 		logger.info("Found {} Available ContObjects", contObjects.size());
@@ -127,8 +119,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 
 		Long[] objectIds = { 1L, 2L, 3L, 4L, 55L };
 
-		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID,
-				objectIds);
+		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID, objectIds);
 
 	}
 }

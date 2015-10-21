@@ -35,9 +35,11 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "organization_full_address")
 	private String organizationFullAddress;
 
+	@JsonIgnore
 	@Column(name = "ex_code")
 	private String exCode;
 
+	@JsonIgnore
 	@Column(name = "ex_system")
 	private String exSystem;
 

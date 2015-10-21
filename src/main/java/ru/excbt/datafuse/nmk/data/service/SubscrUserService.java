@@ -84,6 +84,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
+		checkNotNull(subscrUser.getFirstName());
+		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
 
@@ -118,8 +120,20 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
+		checkNotNull(subscrUser.getFirstName());
+		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
+
+		SubscrUser currentUser = subscrUserRepository.findOne(subscrUser.getId());
+		if (currentUser == null) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUser.getId()));
+		}
+
+		if (!currentUser.getUserName().equals(subscrUser.getUserName())) {
+			throw new PersistenceException(
+					String.format("Changing username is not allowed. SubscrUser (id=%d)", subscrUser.getId()));
+		}
 
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);

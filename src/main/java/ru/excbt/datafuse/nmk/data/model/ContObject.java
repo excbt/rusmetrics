@@ -89,6 +89,7 @@ public class ContObject extends AbstractAuditableModel
 	@Column(name = "cont_object_description")
 	private String description;
 
+	@JsonIgnore
 	@Column(name = "cont_object_comment")
 	private String comment;
 

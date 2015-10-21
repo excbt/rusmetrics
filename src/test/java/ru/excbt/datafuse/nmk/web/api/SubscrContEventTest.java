@@ -22,57 +22,48 @@ public class SubscrContEventTest extends AnyControllerTest {
 	}
 
 	@Test
+	@Ignore
 	public void testSubscrContObjectEventsFilter() throws Exception {
 
-		ResultActions resultActionsAll = mockMvc.perform(get(
-				"/api/subscr/contObjects/eventsFilter").with(
-				testSecurityContext()).accept(MediaType.APPLICATION_JSON));
+		ResultActions resultActionsAll = mockMvc.perform(get("/api/subscr/contObjects/eventsFilter")
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		resultActionsAll.andExpect(status().isOk())
+				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 	}
 
 	@Test
 	public void testSubscrContObjectEventsFilterDate() throws Exception {
 
-		ResultActions resultActionsAll = mockMvc.perform(get(
-				"/api/subscr/contObjects/eventsFilter")
-				.param("startDate", "2015-04-01")
-				.param("endDate", "2015-05-01").with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+		ResultActions resultActionsAll = mockMvc
+				.perform(get("/api/subscr/contObjects/eventsFilter").param("startDate", "2015-04-01")
+						.param("endDate", "2015-05-01").with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		resultActionsAll.andExpect(status().isOk())
+				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 	}
 
 	@Test
-	public void testSubscrContObjectEventsFilterDateContObjects()
-			throws Exception {
+	public void testSubscrContObjectEventsFilterDateContObjects() throws Exception {
 
-		ResultActions resultActionsAll = mockMvc
-				.perform(get("/api/subscr/contObjects/eventsFilter")
-						.param("startDate", "2015-04-01")
-						.param("endDate", "2015-05-01")
-						.param("contObjectIds", "20118671")
-						.with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
+		ResultActions resultActionsAll = mockMvc.perform(get("/api/subscr/contObjects/eventsFilter")
+				.param("startDate", "2015-04-01").param("endDate", "2015-05-01").param("contObjectIds", "20118671")
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
-		resultActionsAll.andExpect(status().isOk()).andExpect(
-				content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		resultActionsAll.andExpect(status().isOk())
+				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
 	}
-
 
 	@Test
 	@Ignore
 	public void testSubscrContObjectEventsPaged() throws Exception {
-		_testJsonGet ("/api/subscr/contObjects/eventsFilterPaged?page=0&size=20");
+		_testJsonGet("/api/subscr/contObjects/eventsFilterPaged?page=0&size=20");
 	}
-	
-	
+
 }

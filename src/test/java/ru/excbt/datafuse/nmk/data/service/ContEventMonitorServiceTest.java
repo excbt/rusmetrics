@@ -20,14 +20,13 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class ContEventMonitorServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContEventMonitorServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorServiceTest.class);
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -35,41 +34,31 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 	@Test
 	public void testMonitor() throws Exception {
 
-		List<ContObject> vList = subscriberService
-				.selectSubscriberContObjects(currentSubscriberService
-						.getSubscriberId());
+		List<ContObject> vList = subscrContObjectService
+				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
 
 		for (ContObject co : vList) {
-			List<ContEventMonitor> monitorList = contEventMonitorService
-					.findByContObject(co.getId());
+			List<ContEventMonitor> monitorList = contEventMonitorService.findByContObject(co.getId());
 
 			if (monitorList.size() > 0) {
-				logger.info("(ContObjectId:{}) Found {} monitorEvents",
-						co.getId(), monitorList.size());
-				monitorList.forEach((m) -> logger.info(
-						"Keyname:{}. eventColor: {}. eventTime:{}", m
-								.getContEventType().getKeyname(), m
-								.getContEventLevelColor().getKeyname(), m
-								.getContEventTime()));
+				logger.info("(ContObjectId:{}) Found {} monitorEvents", co.getId(), monitorList.size());
+				monitorList.forEach((m) -> logger.info("Keyname:{}. eventColor: {}. eventTime:{}",
+						m.getContEventType().getKeyname(), m.getContEventLevelColor().getKeyname(),
+						m.getContEventTime()));
 			} else {
 				continue;
 			}
 
-			ContEventLevelColorKey colorKey = contEventMonitorService
-					.getColorKeyByContObject(co.getId());
+			ContEventLevelColorKey colorKey = contEventMonitorService.getColorKeyByContObject(co.getId());
 			assertNotNull(colorKey);
-			logger.info(
-					"(ContObjectId:{}) findContEventMonitorColor colorKey:{}",
-					co.getId(), colorKey.getKeyname());
+			logger.info("(ContObjectId:{}) findContEventMonitorColor colorKey:{}", co.getId(), colorKey.getKeyname());
 		}
 	}
 
 	@Test
 	public void testCityContObjectStatus() throws Exception {
-		Map<UUID,Long> result = 
-		contEventMonitorService
-				.selectCityContObjectMonitorEventCount(currentSubscriberService
-						.getSubscriberId());
+		Map<UUID, Long> result = contEventMonitorService
+				.selectCityContObjectMonitorEventCount(currentSubscriberService.getSubscriberId());
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 	}

@@ -28,8 +28,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContEventNotificationServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationServiceTest.class);
 
 	@Autowired
 	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
@@ -49,10 +48,13 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	@Autowired
 	private CurrentUserService currentUserService;
 
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
+
 	@Test
 	public void testFindAll() {
-		Page<?> result = subscrContEventNotifiicationService.selectAll(
-				currentSubscriberService.getSubscriberId(), true, null);
+		Page<?> result = subscrContEventNotifiicationService.selectAll(currentSubscriberService.getSubscriberId(), true,
+				null);
 		assertNotNull(result);
 	}
 
@@ -65,18 +67,15 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
 				SubscrContEventNotifiicationService.AVAILABLE_SORT_FIELDS[0]);
 
-		List<Long> contObjectList = subscriberService
-				.selectSubscriberContObjectIds(currentSubscriberService
-						.getSubscriberId());
+		List<Long> contObjectList = subscrContObjectService
+				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 
-		List<Long> contEventTypeIdList = contEventTypeService
-				.selectBaseContEventTypes().stream().map(cet -> cet.getId())
-				.collect(Collectors.toList());
+		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
+				.map(cet -> cet.getId()).collect(Collectors.toList());
 
-		Page<?> result = subscrContEventNotifiicationService
-				.selectByConditions(currentSubscriberService.getSubscriberId(),
-						fromDate, toDate, contObjectList, contEventTypeIdList,
-						null, request);
+		Page<?> result = subscrContEventNotifiicationService.selectByConditions(
+				currentSubscriberService.getSubscriberId(), fromDate, toDate, contObjectList, contEventTypeIdList, null,
+				request);
 
 		assertNotNull(result);
 	}
@@ -88,34 +87,29 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 				SubscrContEventNotifiicationService.AVAILABLE_SORT_FIELDS[0]);
 
 		Page<SubscrContEventNotification> canidate = subscrContEventNotifiicationService
-				.selectAll(currentSubscriberService.getSubscriberId(), true,
-						request);
+				.selectAll(currentSubscriberService.getSubscriberId(), true, request);
 
 		assertNotNull(canidate);
 		List<SubscrContEventNotification> lst = canidate.getContent();
 		assertTrue(lst.size() == 1);
 
-		List<Long> updateIds = lst.stream().map(v -> v.getId())
-				.collect(Collectors.toList());
+		List<Long> updateIds = lst.stream().map(v -> v.getId()).collect(Collectors.toList());
 
 		logger.info("Current User Id:{}", currentUserService.getCurrentUserId());
 
-		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.FALSE,
-				updateIds, currentUserService.getCurrentUserId());
+		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.FALSE, updateIds,
+				currentUserService.getCurrentUserId());
 
-		SubscrContEventNotification result = subscrContEventNotifiicationService
-				.findOneNotification(updateIds.get(0));
+		SubscrContEventNotification result = subscrContEventNotifiicationService.findOneNotification(updateIds.get(0));
 
-		logger.info("Update Result. id:{} isNew:{}", result.getId(),
-				result.getIsNew());
+		logger.info("Update Result. id:{} isNew:{}", result.getId(), result.getIsNew());
 
 		assertTrue(Boolean.FALSE.equals(result.getIsNew()));
 
-		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.TRUE,
-				updateIds, currentUserService.getCurrentUserId());
+		subscrContEventNotifiicationService.updateNotificationIsNew(Boolean.TRUE, updateIds,
+				currentUserService.getCurrentUserId());
 
-		logger.info("Update Result. id:{} isNew:{}", result.getId(),
-				result.getIsNew());
+		logger.info("Update Result. id:{} isNew:{}", result.getId(), result.getIsNew());
 
 		result = subscrContEventNotifiicationService.findOneNotification(updateIds.get(0));
 
@@ -130,8 +124,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
 
 		List<?> list = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatus(
-						currentSubscriberService.getSubscriberId(), dp);
+				.selectMonitorContEventNotificationStatus(currentSubscriberService.getSubscriberId(), dp);
 
 		assertNotNull(list);
 		assertTrue(list.size() > 0);
@@ -141,39 +134,35 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	public void selectContEventTypeMonitorStatusTest() throws Exception {
 
 		long contObjectId = 20118695;
-		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01",
-				"2015-06-30");
+		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
 
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatus(
-						currentSubscriberService.getSubscriberId(),
-						contObjectId, dpp.getLocalDatePeriod());
+				.selectMonitorContEventTypeStatus(currentSubscriberService.getSubscriberId(), contObjectId,
+						dpp.getLocalDatePeriod());
 
 		assertNotNull(checkList);
 		assertFalse(checkList.isEmpty());
 
-		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i
-				.getContEventType().getKeyname(), i.getTotalCount()));
+		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i.getContEventType().getKeyname(),
+				i.getTotalCount()));
 
 	}
 
 	@Test
 	public void selectContEventTypeMonitorStatusCollapseTest() throws Exception {
-		
+
 		long contObjectId = 20118695;
-		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01",
-				"2015-06-30");
-		
+		LocalDatePeriodParser dpp = LocalDatePeriodParser.parse("2015-06-01", "2015-06-30");
+
 		List<MonitorContEventTypeStatus> checkList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatusCollapse(
-						currentSubscriberService.getSubscriberId(),
-						contObjectId, dpp.getLocalDatePeriod());
-		
+				.selectMonitorContEventTypeStatusCollapse(currentSubscriberService.getSubscriberId(), contObjectId,
+						dpp.getLocalDatePeriod());
+
 		assertNotNull(checkList);
 		assertFalse(checkList.isEmpty());
-		
-		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i
-				.getContEventType().getKeyname(), i.getTotalCount()));
-		
+
+		checkList.forEach((i) -> logger.info("ContEventType: {}. count:{}", i.getContEventType().getKeyname(),
+				i.getTotalCount()));
+
 	}
 }

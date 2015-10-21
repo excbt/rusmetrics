@@ -4,9 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,10 +18,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
@@ -45,7 +44,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	private EntityManager em;
 
 	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	private TimezoneDefService timezoneDefService;
 
 	/**
 	 * 
@@ -73,7 +72,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		if (result == null) {
 			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
 		}
-
 		return result;
 	}
 
@@ -82,50 +80,44 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
-		return result;
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectSubscriberContObjects(long subscriberId) {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// return result;
+	// }
 
 	/**
 	 * 
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectRmaSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository.selectContObjects(subscriberId);
-		List<Long> subscrContObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
-		Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
-		result.forEach(i -> {
-			boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
-			i.set_haveSubscr(haveSubscr);
-		});
-		return result;
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectRmaSubscriberContObjects(long subscriberId)
+	// {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// List<Long> subscrContObjectIds =
+	// subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
+	// Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+	// result.forEach(i -> {
+	// boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+	// i.set_haveSubscr(haveSubscr);
+	// });
+	// return result;
+	// }
 
 	/**
 	 * 
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
-		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public int selectSubscriberContObjectCount(long subscriberId) {
-		List<Long> result = subscriberRepository.selectContObjectIds(subscriberId);
-		return result.size();
-	}
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<Long> selectSubscriberContObjectIds(long subscriberId) {
+	// List<Long> result =
+	// subscriberRepository.selectContObjectIds(subscriberId);
+	// return result;
+	// }
 
 	/**
 	 * 
@@ -156,19 +148,13 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
-		return subscrUserRepository.findByUserNameIgnoreCase(userName);
-	}
+		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
+		result.forEach(i -> {
+			i.getSubscriber();
+		});
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param contObjectId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkContObjectSubscription(long subscriberId, long contObjectId) {
-		List<Long> resultIds = subscriberRepository.selectContObjectId(subscriberId, contObjectId);
-		return resultIds.size() > 0;
+		return result;
 	}
 
 	/**
@@ -199,22 +185,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPoint> selectSubscriberContZPoints(long subscriberId) {
-		List<ContZPoint> result = subscriberRepository.selectContZPoints(subscriberId);
-		result.forEach(i -> {
-			i.getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
-		});
-		return result;
-	}
-
-	/**
-	 * 
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -239,6 +209,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
 
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
+
 		return subscriberRepository.save(subscriber);
 	}
 
@@ -256,6 +229,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		checkArgument(!subscriber.isNew());
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
 
 		return subscriberRepository.save(subscriber);
 	}

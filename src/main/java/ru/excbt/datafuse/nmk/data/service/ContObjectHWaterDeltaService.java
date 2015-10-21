@@ -45,7 +45,7 @@ public class ContObjectHWaterDeltaService {
 	private ContObjectService contObjectService;
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -258,7 +258,7 @@ public class ContObjectHWaterDeltaService {
 		List<ContObject> contObjects = new ArrayList<>();
 
 		if (contObjectId == null) {
-			contObjects.addAll(subscriberService.selectSubscriberContObjects(subscriberId));
+			contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 		} else {
 			ContObject contObject = contObjectService.findOne(contObjectId);
 
@@ -297,7 +297,7 @@ public class ContObjectHWaterDeltaService {
 
 		List<ContObject> contObjects = new ArrayList<>();
 
-		contObjects.addAll(subscriberService.selectSubscriberContObjects(subscriberId));
+		contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
 
 		List<ContObject> cityContObjects = contObjects.stream().filter(
 				(i) -> i.getContObjectFias() != null && cityFiasUUID.equals(i.getContObjectFias().getCityFiasUUID()))

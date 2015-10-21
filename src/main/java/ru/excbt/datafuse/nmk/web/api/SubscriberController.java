@@ -18,7 +18,7 @@ public class SubscriberController extends SubscrApiController {
 	@RequestMapping(value = "/info/subscriberContObjectCount", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberContObjectCount() {
-		int cnt = subscriberService.selectSubscriberContObjectCount(getSubscriberId());
+		int cnt = subscrContObjectService.selectSubscriberContObjectCount(getSubscriberId());
 		return ResponseEntity.ok(cnt);
 	}
 

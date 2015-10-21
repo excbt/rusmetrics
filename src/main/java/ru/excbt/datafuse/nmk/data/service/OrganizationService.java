@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 
 @Service
@@ -32,7 +34,10 @@ public class OrganizationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Organization> selectRsoOrganizations() {
-		return organizationRepository.selectRsoOrganizations();
+		List<Organization> organizations = organizationRepository.selectRsoOrganizations();
+		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		return result;
 	}
 
 	/**
@@ -41,7 +46,22 @@ public class OrganizationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Organization> selectCmOrganizations() {
-		return organizationRepository.selectCmOrganizations();
+		List<Organization> organizations = organizationRepository.selectCmOrganizations();
+		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Organization> selectOrganizations() {
+		List<Organization> organizations = organizationRepository.selectOrganizations();
+		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		return result;
 	}
 
 	/**

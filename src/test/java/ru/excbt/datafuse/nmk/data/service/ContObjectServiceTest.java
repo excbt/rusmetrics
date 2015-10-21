@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,9 +45,10 @@ public class ContObjectServiceTest extends JpaSupportTest {
 		contObject.setComment("Created by Test");
 		contObject.setTimezoneDefKeyname("MSK");
 		contObject.setName("Cont Object TEST");
-		ContObject result = contObjectService.createOne(contObject, currentSubscriberService.getSubscriberId(), null);
+		ContObject result = contObjectService.createOne(contObject, currentSubscriberService.getSubscriberId(),
+				LocalDate.now(), null);
 		assertNotNull(result);
-		contObjectService.deleteOne(result.getId());
+		contObjectService.deleteOne(result.getId(), LocalDate.now());
 	}
 
 	@Test
