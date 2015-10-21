@@ -9,8 +9,9 @@ console.log('Run Client management controller.');
     //controller settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.rmaUrl = "../api/rma";
-    $scope.ctrlSettings.orgUrl = "../api/rma/contObjects/cmOrganizations";
     $scope.ctrlSettings.clientsUrl = "../api/rma/subscribers";
+    $scope.ctrlSettings.orgUrl = $scope.ctrlSettings.clientsUrl+"/organizations";
+    
     $scope.ctrlSettings.availableObjectsSuffix = "/availableContObjects";
     $scope.ctrlSettings.subscrObjectsSuffix = "/subscrContObjects";
 
@@ -54,6 +55,7 @@ console.log('Run Client management controller.');
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         $http.get(targetUrl)
         .then(function(response){
+//console.log(response.data);            
             response.data.forEach(function(el){
                 el.organizationName = el.organization.organizationFullName;
             });
@@ -130,17 +132,18 @@ console.log('Run Client management controller.');
     };
     
     $scope.sendClientToServer = function(obj){
-        obj.organizationId = 726;
-        obj.timezoneDef = null;
+//        obj.organizationId = 726;
+//        obj.timezoneDef = null;
+//console.log(obj);        
         var url = $scope.ctrlSettings.clientsUrl;                    
         if (angular.isDefined(obj.id)&&(obj.id!=null)){
             $scope.updateObject(url, obj);
         }else{
-            $scope.addObject(url,obj);
+            $scope.saveNewClient(url,obj);
         };
     };
     
-    $scope.addObject = function (url, obj) {                    
+    $scope.saveNewClient = function (url, obj) {       
         crudGridDataFactory(url).save(obj, successCallback, errorCallback);
     };
 
@@ -149,7 +152,8 @@ console.log('Run Client management controller.');
         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
     };
 
-    $scope.updateObject = function (url, object) {
+    $scope.updateObject = function (url, object) { 
+//        object.organization = null;
         var params = { id: object[$scope.extraProps.idColumnName]};
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
     };

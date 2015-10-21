@@ -21,7 +21,7 @@ console.log("Object Service. Run.");
         var urlTimezones = urlApi+'/timezoneDef/all';
         var urlRsoOrganizations = urlRmaContObjects+'/rsoOrganizations';
         var urlCmOrganizations = urlRmaContObjects+'/cmOrganizations';
-        var urlServiceTypes = 'resource/serviceTypes.json';
+        var urlServiceTypes = urlRmaContObjects+'/contServiceTypes';//'resource/serviceTypes.json';
         
         
         var objectSvcSettings = {};
