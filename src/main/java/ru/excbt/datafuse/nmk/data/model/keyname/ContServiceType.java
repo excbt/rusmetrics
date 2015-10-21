@@ -5,13 +5,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
-
 @Entity
-@Table(name="cont_service_type")
+@Table(name = "cont_service_type")
+@JsonInclude(Include.NON_NULL)
 public class ContServiceType extends AbstractKeynameEntity {
-	
 
 	/**
 	 * 
@@ -20,19 +23,24 @@ public class ContServiceType extends AbstractKeynameEntity {
 
 	@Column(name = "caption")
 	private String caption;
-	
+
 	@Column(name = "cont_service_type_name")
 	private String name;
-	
+
 	@Column(name = "cont_service_type_comment")
 	private String comment;
-	
+
+	@JsonIgnore
 	@Column(name = "ex_code")
 	private String exCode;
-	
+
+	@JsonIgnore
 	@Version
-	private int version;	
-	
+	private int version;
+
+	@JsonIgnore
+	@Column(name = "service_order")
+	private Integer serviceOrder;
 
 	public String getName() {
 		return name;
@@ -73,7 +81,13 @@ public class ContServiceType extends AbstractKeynameEntity {
 	public void setCaption(String caption) {
 		this.caption = caption;
 	}
-	
-	
-	
+
+	public Integer getServiceOrder() {
+		return serviceOrder;
+	}
+
+	public void setServiceOrder(Integer serviceOrder) {
+		this.serviceOrder = serviceOrder;
+	}
+
 }

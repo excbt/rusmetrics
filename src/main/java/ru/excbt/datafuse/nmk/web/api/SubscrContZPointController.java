@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
@@ -41,7 +42,7 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
-		return ResponseEntity.ok(ObjectFilters.deletedFilter(zpList));
+		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -53,7 +54,7 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
-		return ResponseEntity.ok(ObjectFilters.deletedFilter(zpList));
+		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -65,7 +66,7 @@ public class SubscrContZPointController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
-		return ResponseEntity.ok(resultList);
+		return responseOK(resultList);
 	}
 
 	/**
@@ -122,10 +123,10 @@ public class SubscrContZPointController extends SubscrApiController {
 		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
 
 		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
-			return ResponseEntity.badRequest().build();
+			return responseBadRequest();
 		}
 
-		return ResponseEntity.ok(currentContZPoint);
+		return responseOK(currentContZPoint);
 	}
 
 	/**
@@ -137,7 +138,19 @@ public class SubscrContZPointController extends SubscrApiController {
 
 		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getSubscriberId());
 
-		return ResponseEntity.ok(contZPoints);
+		return responseOK(contZPoints);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContServieTypes() {
+		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
+
+		return responseOK(contServiceTypes);
 	}
 
 }
