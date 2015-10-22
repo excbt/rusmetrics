@@ -106,6 +106,10 @@ console.log("Object Service. Run.");
             var url = crudTableName+"/"+obj.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
             return $http.get(url);
         };
+        var getRmaDeviceMetaData = function(objId, device){                     
+            var url = urlRmaContObjects+"/"+objId+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
+            return $http.get(url);
+        };
         var putDeviceMetaData = function(device){                     
             var url = crudTableName+"/"+device.contObject.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
             var result = $http.put(url, device.metaData);
@@ -292,6 +296,7 @@ console.log("Get data from server");
             getLoadingStatus,
             getObjectsUrl,
             getPromise,
+            getRmaDeviceMetaData,
             getRmaObjectsData,
             getRmaObjectsUrl,
             getRmaPromise,

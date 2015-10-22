@@ -30,7 +30,7 @@ console.log('Run devices management controller.');
                     };
                 });
                 $scope.data.devices = tmp;
-//console.log(tmp);                
+console.log(tmp);                
             },
             function(error){
                 notificationFactory.errorInfo(error.statusText,error.description);
@@ -181,5 +181,83 @@ console.log('Run devices management controller.');
         targetUrl = targetUrl+"/"+device.contObjectInfo.contObjectId+"/deviceObjects/"+device.id;
         $http.delete(targetUrl).then(successCallback,errorCallback);
     };
+    
+    // device metadata
+        //check device: data source vzlet or not?
+    $scope.vzletDevice = function(device){
+        var result = false;
+        if(angular.isDefined(device.activeDataSource)&&(device.activeDataSource != null)){
+            if(angular.isDefined(device.activeDataSource.subscrDataSource)&&(device.activeDataSource.subscrDataSource!=null)){
+                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey=="VZLET"){
+                    result = true;
+                };
+            };
+        };
+        return result;
+    };
+    
+    //get device meta data and show it
+    $scope.getDeviceMetaData = function(device){
+        
+        objectSvc.getRmaDeviceMetaData(device.contObjectInfo.contObjectId, device).then(
+            function(response){                           
+                device.metaData = response.data; 
+                $scope.currentDevice =  device;                           
+                $('#metaDataEditorModal').modal();
+            },
+            function(error){
+                notificationFactory.errorInfo(error.statusText,error.description);
+            }
+        );
+    };
+
+    $scope.updateDeviceMetaData = function(device){
+console.log(device);    
+        var method = "";
+        if(angular.isDefined(device.metaData.id)&&(device.metaData.id!==null)){
+            method = "PUT";
+        }else{
+            method = "POST";
+        };
+//        var url = "../api/subscr/contObjects/"+device.contObject.id+"/deviceObjects/"+device.id+"/metaVzlet";
+        var url = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects/"+device.id+"/metaVzlet";
+        $http({
+            url: url,
+            method: method,
+            data: device.metaData
+        })
+//                    $http.put(url, device.metaData)
+            .then(
+//                    objectSvc.putDeviceMetaData(device).then(
+            function(response){
+                $scope.currentDevice =  {};
+                $('#metaDataEditorModal').modal('hide');
+            },
+            function(error){
+                console.log(error);                            
+                notificationFactory.errorInfo(error.statusText,error.description);
+            }
+        );
+    };
+    
+     //get the list of the systems for meta data editor
+    $scope.getVzletSystemList = function(){
+        var tmpSystemList = objectSvc.getVzletSystemList();
+        if (tmpSystemList.length===0){
+            objectSvc.getDeviceMetaDataSystemList()
+                .then(
+                function(response){
+                    $scope.data.vzletSystemList = response.data;                           
+                },
+                function(e){
+                    notificationFactory.errorInfo(e.statusText,e.description);
+                }
+            );
+        }else{
+            $scope.data.vzletSystemList =tmpSystemList;
+        };
+console.log($scope.data.vzletSystemList);        
+    };
+    $scope.getVzletSystemList();
     
 }]);
