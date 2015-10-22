@@ -88,6 +88,7 @@ public class LdapServiceTest extends JpaSupportTest {
 		LdapUserAccount user = new LdapUserAccount(1L, username, new String[] { "user_firstName", "user_secondName" },
 				"EXCBT-NMK", username + "@rusmetrics.ru");
 		ldapService.createUser(user);
+		ldapService.blockLdapUser(user);
 	}
 
 }

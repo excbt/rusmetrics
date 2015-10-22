@@ -52,9 +52,14 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 		SubscriberUserDetails subscriberUserDetails = checkSubscrUser(username);
 
 		if (subscriberUserDetails == null) {
-			logger.error("subscriberUserDetails : INVALID");
+			throw new UsernameNotFoundException(
+					String.format("subscriberUserDetails : username %s is not found", username));
 		} else {
 			logger.debug("subscriberUserDetails : {}", subscriberUserDetails.toString());
+		}
+
+		if (subscriberUserDetails.isBlocked()) {
+			throw new UsernameNotFoundException(String.format("Username %s is BLOCKED", username));
 		}
 
 		return subscriberUserDetails;

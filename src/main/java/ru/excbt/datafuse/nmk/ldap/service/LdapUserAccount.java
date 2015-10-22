@@ -6,7 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public final class LdapUserAccount {
 
 	public final static String[] OBJECT_CLASS = new String[] { "top", "person", "organizationalPerson", "inetOrgPerson",
-			"posixAccount" };
+			"posixAccount", "inetuser" };
 
 	private final static String DEFAULT_EMAIL_DOMAIN = "@rusmetrics.ru";
 	private final static String HOME_DIR = "/home/";

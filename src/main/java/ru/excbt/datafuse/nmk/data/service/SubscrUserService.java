@@ -30,6 +30,10 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserService.class);
 
+	private interface LdapAction {
+		void doAction(LdapUserAccount user);
+	}
+
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
 
@@ -88,23 +92,21 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
+		checkArgument(subscrUser.getDeleted() == 0);
 
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
+		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
+
 		SubscrUser result = subscrUserRepository.save(subscrUser);
 
-		LdapUserAccount user = ldapAccount(result, result.getSubscriberId());
+		LdapAction action = (u) -> {
+			ldapService.createUser(u);
+			ldapService.changePassword(u, password);
+		};
 
-		try {
-			ldapService.createUser(user);
-			ldapService.changePassword(user, password);
-		} catch (Exception e) {
-			logger.error("LDAP Service Error Message: {}", e.getMessage());
-			logger.error("LDAP Service Exception: {}", e);
-			logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
-			throw new PersistenceException(String.format("Can't process user(%s) to LDAP service", user.getUserName()));
-		}
+		processLdapAction(result, action);
 
 		return result;
 	}
@@ -135,6 +137,10 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 					String.format("Changing username is not allowed. SubscrUser (id=%d)", subscrUser.getId()));
 		}
 
+		if (currentUser.getDeleted() == 1) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
+		}
+
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
 
@@ -146,17 +152,26 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 				throw new PersistenceException(
 						String.format("Password for user(%s) is not set", subscrUser.getUserName()));
 			}
-			LdapUserAccount user = ldapAccount(result, result.getSubscriberId());
 
-			try {
-				ldapService.changePassword(user, passwords[0], passwords[1]);
-			} catch (Exception e) {
-				logger.error("LDAP Service Error Message: {}", e.getMessage());
-				logger.error("LDAP Service Exception: {}", e);
-				logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
-				throw new PersistenceException(
-						String.format("Can't process user(%s) to LDAP service", user.getUserName()));
-			}
+			LdapAction action = (u) -> {
+				ldapService.changePassword(u, passwords[0], passwords[1]);
+			};
+
+			processLdapAction(result, action);
+		}
+
+		if (Boolean.TRUE.equals(subscrUser.getIsBlocked())) {
+			LdapAction action = (u) -> {
+				ldapService.blockLdapUser(u);
+			};
+			processLdapAction(result, action);
+		}
+
+		if (Boolean.FALSE.equals(subscrUser.getIsBlocked())) {
+			LdapAction action = (u) -> {
+				ldapService.unblockLdapUser(u);
+			};
+			processLdapAction(result, action);
 		}
 
 		return result;
@@ -207,6 +222,22 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 				new String[] { subscrUser.getFirstName(), subscrUser.getLastName() }, ou, subscrUser.getUserEMail());
 		return user;
 
+	}
+
+	/**
+	 * 
+	 * @param action
+	 */
+	private void processLdapAction(SubscrUser subscrUser, LdapAction action) {
+		LdapUserAccount user = ldapAccount(subscrUser, subscrUser.getSubscriberId());
+		try {
+			action.doAction(user);
+		} catch (Exception e) {
+			logger.error("LDAP Service Error Message: {}", e.getMessage());
+			logger.error("LDAP Service Exception: {}", e);
+			logger.error("LDAP Service Exception Stacktrace: {}", ExceptionUtils.getFullStackTrace(e));
+			throw new PersistenceException(String.format("Can't process LDAP action for user: %s", user.getUserName()));
+		}
 	}
 
 }

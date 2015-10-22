@@ -206,6 +206,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		checkArgument(subscriber.isNew());
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+		checkArgument(subscriber.getDeleted() == 0);
 
 		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
 
@@ -230,8 +231,16 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 
+		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+
 		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
+
+		Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
+		if (checkSubscriber == null || checkSubscriber.getDeleted() == 1) {
+			throw new PersistenceException(
+					String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
+		}
 
 		return subscriberRepository.save(subscriber);
 	}
