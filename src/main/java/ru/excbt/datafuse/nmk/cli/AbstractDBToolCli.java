@@ -12,6 +12,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.excbt.datafuse.nmk.config.PropertyConfig;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
 import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
+import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 
 public abstract class AbstractDBToolCli {
 
@@ -20,11 +21,11 @@ public abstract class AbstractDBToolCli {
 
 	protected ApplicationContext appContext;
 
-	@PersistenceContext(unitName="nmk-p")
+	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager entityManager;
 
-	//@PersistenceContext(unitName="dataraw")
-	//protected EntityManager entityManagerRaw;
+	// @PersistenceContext(unitName="dataraw")
+	// protected EntityManager entityManagerRaw;
 
 	public void autowireBeans() {
 		AutowireCapableBeanFactory acbFactory = appContext
@@ -34,14 +35,14 @@ public abstract class AbstractDBToolCli {
 
 	public AbstractDBToolCli() {
 		appContext = new AnnotationConfigApplicationContext(
-				PropertyConfig.class, JpaConfigLocal.class, JpaRawConfigLocal.class
-				);
+				PropertyConfig.class, JpaConfigLocal.class, LdapConfig.class,
+				JpaRawConfigLocal.class);
 	}
-	
+
 	public void showAppStatus() {
 		logger.info("Application Started");
 		logger.info("Status: {}",
 				entityManager != null ? "entityManager inititalized"
-						: "entityManager NOT inititalized");		
+						: "entityManager NOT inititalized");
 	}
 }
