@@ -344,7 +344,9 @@ public class ReportMakerParamService {
 
 		Map<String, Object> result = new HashMap<String, Object>();
 
-		ReportTypeKey reportTypeKey = reportMakerParam.getReportParamset().getReportTemplate().getReportTypeKey();
+		String keyname = reportMakerParam.getReportParamset().getReportTemplate().getReportTypeKeyname();
+
+		ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(keyname);
 
 		checkNotNull(reportTypeKey);
 

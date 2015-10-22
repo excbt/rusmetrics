@@ -50,7 +50,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 		assertTrue(reportParamsetList.size() > 0);
 		for (ReportParamset rp : reportParamsetList) {
-			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportTypeKey().name());
+			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportTypeKeyname());
 		}
 	}
 

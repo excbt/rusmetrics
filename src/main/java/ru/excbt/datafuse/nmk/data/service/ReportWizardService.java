@@ -12,8 +12,6 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import net.sf.jasperreports.engine.JRException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.sf.jasperreports.engine.JRException;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -37,10 +36,8 @@ import ru.excbt.nmk.reports.ReportConvert;
 @Service
 public class ReportWizardService implements SecuredRoles {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportWizardService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(ReportWizardService.class);
+
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
@@ -85,8 +82,7 @@ public class ReportWizardService implements SecuredRoles {
 	 * @return
 	 */
 	private ColumnElement columnElementFactoiry(ReportColumn src) {
-		return new ColumnElement(src.getSystemNumber(), src.getColumnNumber(),
-				src.getColumnHeader());
+		return new ColumnElement(src.getSystemNumber(), src.getColumnNumber(), src.getColumnHeader());
 	}
 
 	/**
@@ -94,10 +90,9 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportColumnSettings
 	 * @return
 	 */
-	
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)		
-	public ColumnElement[] makeColumnElement(
-			ReportColumnSettings reportColumnSettings) {
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ColumnElement[] makeColumnElement(ReportColumnSettings reportColumnSettings) {
 		checkNotNull(reportColumnSettings);
 		checkNotNull(reportColumnSettings.getAllTsList());
 		checkNotNull(reportColumnSettings.getTs1List());
@@ -126,10 +121,10 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)		
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
-	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate,
-			ReportColumnSettings reportColumnSettings, Subscriber subscriber) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate, ReportColumnSettings reportColumnSettings,
+			Subscriber subscriber) {
 
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
@@ -149,19 +144,17 @@ public class ReportWizardService implements SecuredRoles {
 		}
 
 		reportTemplate.setSubscriber(subscriber);
-		reportTemplate.setReportTypeKey(ReportTypeKey.COMMERCE_REPORT);
+		reportTemplate.setReportTypeKeyname(ReportTypeKey.COMMERCE_REPORT.getKeyname());
 
 		ReportMasterTemplateBody masterBody = reportMasterTemplateBodyService
 				.selectReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT);
 
 		if (masterBody == null) {
-			throw new PersistenceException(String.format(
-					"ReportMasterTemplate for %s not found",
-					ReportTypeKey.COMMERCE_REPORT.name()));
+			throw new PersistenceException(
+					String.format("ReportMasterTemplate for %s not found", ReportTypeKey.COMMERCE_REPORT.name()));
 		}
 
-		checkState(masterBody.getBody() != null
-				&& masterBody.getBody().length > 0);
+		checkState(masterBody.getBody() != null && masterBody.getBody().length > 0);
 
 		boolean showIntegrators = reportTemplate.getIntegratorIncluded() == null ? false
 				: reportTemplate.getIntegratorIncluded();
@@ -171,8 +164,7 @@ public class ReportWizardService implements SecuredRoles {
 		try {
 			logger.trace("Starting prepare data for ReportConvert");
 			ColumnElement[] elements = makeColumnElement(reportColumnSettings);
-			ByteArrayInputStream is = new ByteArrayInputStream(
-					masterBody.getBody());
+			ByteArrayInputStream is = new ByteArrayInputStream(masterBody.getBody());
 			ByteArrayOutputStream os = new ByteArrayOutputStream();
 			logger.trace("Starting convertJRXmlReport");
 			ReportConvert.convertJRXmlReport(is, elements, showIntegrators, os);
@@ -180,19 +172,16 @@ public class ReportWizardService implements SecuredRoles {
 			logger.trace("Complete convertJRXmlReport");
 		} catch (IOException | JRException e) {
 			logger.error("ERROR During covert JRXmlReport: {}", e);
-			
-			throw new PersistenceException(String.format(
-					"Can't parse ReportMasterTemplateBody (id=%d)",
-					masterBody.getId()));
+
+			throw new PersistenceException(
+					String.format("Can't parse ReportMasterTemplateBody (id=%d)", masterBody.getId()));
 		}
 
 		checkNotNull(resultBodyCompiled);
 
-		ReportTemplate resultEntity = reportTemplateRepository
-				.save(reportTemplate);
+		ReportTemplate resultEntity = reportTemplateRepository.save(reportTemplate);
 
-		reportTemplateService.saveReportTemplateBodyCompiled(
-				resultEntity.getId(), resultBodyCompiled,
+		reportTemplateService.saveReportTemplateBodyCompiled(resultEntity.getId(), resultBodyCompiled,
 				masterBody.getBodyFilename());
 
 		return resultEntity;

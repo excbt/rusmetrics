@@ -22,8 +22,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportMakerParam {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportMakerParam.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportMakerParam.class);
 
 	public final static ReportOutputFileType DEFAULT_OUTPUT_FILE_TYPE = ReportOutputFileType.PDF;
 	private final static String EXT_ZIP = ".zip";
@@ -39,8 +38,7 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
-	public ReportMakerParam(ReportParamset reportParamset,
-			Long[] contObjectIds, boolean previewMode) {
+	public ReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds, boolean previewMode) {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIds);
@@ -64,8 +62,7 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIdList
 	 */
-	public ReportMakerParam(ReportParamset reportParamset,
-			List<Long> contObjectIdList, boolean previewMode) {
+	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList, boolean previewMode) {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIdList);
@@ -80,8 +77,7 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIdList
 	 */
-	public ReportMakerParam(ReportParamset reportParamset,
-			List<Long> contObjectIdList) {
+	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList) {
 		this(reportParamset, contObjectIdList, false);
 	}
 
@@ -128,9 +124,8 @@ public class ReportMakerParam {
 
 		return reportParamset.getSubscriber() != null
 				// && !reportParamset.isNew()
-				&& reportParamset.getReportPeriodKey() != null
-				&& reportParamset.getReportTemplate() != null
-				&& reportParamset.getReportTemplate().getReportTypeKey() != null;
+				&& reportParamset.getReportPeriodKey() != null && reportParamset.getReportTemplate() != null
+				&& reportParamset.getReportTemplate().getReportTypeKeyname() != null;
 	}
 
 	/**
@@ -138,8 +133,7 @@ public class ReportMakerParam {
 	 * @return
 	 */
 	public boolean isSubscriberValid() {
-		return reportParamset.getSubscriber() != null
-				&& reportParamset.getSubscriberId() != null;
+		return reportParamset.getSubscriber() != null && reportParamset.getSubscriberId() != null;
 	}
 
 	/**
@@ -153,10 +147,8 @@ public class ReportMakerParam {
 		}
 
 		return Boolean.TRUE.equals(reportParamset.getOutputFileZipped())
-				|| (getContObjectList().size() > 1 && Boolean.TRUE
-						.equals(reportParamset.getReportTemplate()
-								.getReportType().getReportMetaParamCommon()
-								.getManyContObjectsZipOnly()));
+				|| (getContObjectList().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
+						.getReportType().getReportMetaParamCommon().getManyContObjectsZipOnly()));
 	}
 
 	/**
@@ -207,9 +199,8 @@ public class ReportMakerParam {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 
-		result = Boolean.TRUE.equals(getParamserReportTemplate()
-				.getReportType().getReportMetaParamCommon()
-				.getIsSpecialIdParam());
+		result = Boolean.TRUE
+				.equals(getParamserReportTemplate().getReportType().getReportMetaParamCommon().getIsSpecialIdParam());
 
 		return result;
 	}
@@ -232,8 +223,7 @@ public class ReportMakerParam {
 				return ((BigDecimal) idParam).longValue();
 			}
 
-			throw new IllegalStateException(
-					"Special idParam is not of type String or BigDecimal");
+			throw new IllegalStateException("Special idParam is not of type String or BigDecimal");
 		}
 
 		return reportParamset.getSubscriberId();
@@ -257,9 +247,8 @@ public class ReportMakerParam {
 	private Object getReportSpecialParamValue(String keyname) {
 		logger.debug("getReportSpecialParamValue with keyname:{}", keyname);
 		checkNotNull(keyname);
-		Optional<ReportMetaParamSpecial> optMetaParam = getParamserReportTemplate()
-				.getReportType().getReportMetaParamSpecialList().stream()
-				.filter((i) -> i.getParamSpecialKeyname().equals(keyname))
+		Optional<ReportMetaParamSpecial> optMetaParam = getParamserReportTemplate().getReportType()
+				.getReportMetaParamSpecialList().stream().filter((i) -> i.getParamSpecialKeyname().equals(keyname))
 				.findFirst();
 
 		if (!optMetaParam.isPresent()) {
@@ -269,10 +258,8 @@ public class ReportMakerParam {
 
 		Long paramId = optMetaParam.get().getId();
 
-		Optional<ReportParamsetParamSpecial> optParamsetParam = getReportParamset()
-				.getParamSpecialList().stream()
-				.filter((i) -> i.getReportMetaParamSpecialId().equals(paramId))
-				.findFirst();
+		Optional<ReportParamsetParamSpecial> optParamsetParam = getReportParamset().getParamSpecialList().stream()
+				.filter((i) -> i.getReportMetaParamSpecialId().equals(paramId)).findFirst();
 
 		if (!optParamsetParam.isPresent()) {
 			logger.error("Optional ReportParamsetParamSpecial is not found");
@@ -284,20 +271,17 @@ public class ReportMakerParam {
 		}
 
 		if (!optParamsetParam.get().isOneValueAssigned()) {
-			throw new IllegalStateException("Too many values for SpecialParam:"
-					+ keyname);
+			throw new IllegalStateException("Too many values for SpecialParam:" + keyname);
 		}
 
-		Map<String, Object> paramValues = optParamsetParam.get()
-				.getValuesAsMap();
+		Map<String, Object> paramValues = optParamsetParam.get().getValuesAsMap();
 
 		Object[] preResult = paramValues.values().toArray();
 		if (preResult.length == 1) {
 			return preResult[0];
 		}
 
-		throw new UnsupportedOperationException(
-				"Many Values get is not supported");
+		throw new UnsupportedOperationException("Many Values get is not supported");
 
 	}
 
@@ -307,7 +291,8 @@ public class ReportMakerParam {
 	 */
 	public ReportTypeKey getReportTypeKey() {
 		ReportTemplate rt = getParamserReportTemplate();
-		return rt != null ? rt.getReportTypeKey() : null;
+		String key = rt.getReportTypeKeyname();
+		return rt != null ? ReportTypeKey.valueOf(key) : null;
 	}
-	
+
 }

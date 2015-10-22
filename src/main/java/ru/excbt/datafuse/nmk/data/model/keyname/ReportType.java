@@ -14,10 +14,12 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
+import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 
 @Entity
 @Table(name = "report_type")
-public class ReportType extends AbstractKeynameEntity {
+public class ReportType extends AbstractKeynameEntity implements DevModeObject, ActiveObject {
 
 	/**
 	 * 
@@ -42,6 +44,9 @@ public class ReportType extends AbstractKeynameEntity {
 	@Column(name = "report_type_enabled")
 	private boolean _enabled;
 
+	@Column(name = "is_active")
+	private Boolean isActive;
+
 	@Column(name = "is_dev_mode")
 	private Boolean isDevMode;
 
@@ -56,6 +61,9 @@ public class ReportType extends AbstractKeynameEntity {
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
 	private Collection<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
+
+	@Column(name = "report_type_order")
+	private Integer reportTypeOrder;
 
 	public String getCaption() {
 		return caption;
@@ -81,6 +89,7 @@ public class ReportType extends AbstractKeynameEntity {
 		return _enabled;
 	}
 
+	@Override
 	public Boolean getIsDevMode() {
 		return isDevMode;
 	}
@@ -100,6 +109,14 @@ public class ReportType extends AbstractKeynameEntity {
 	public Collection<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
 		return reportMetaParamSpecialList;
 	}
-	
-	
+
+	public Integer getReportTypeOrder() {
+		return reportTypeOrder;
+	}
+
+	@Override
+	public Boolean getIsActive() {
+		return isActive;
+	}
+
 }

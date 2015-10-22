@@ -337,9 +337,11 @@ public class ReportParamsetController extends SubscrApiController {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 		}
 
-		URI location = URI.create("/api/reportParamset"
-				+ ReportConstants.getReportTypeURL(resultEntity.getReportTemplate().getReportTypeKey()) + "/"
-				+ +resultEntity.getId());
+		String keyname = resultEntity.getReportTemplate().getReportTypeKeyname();
+		ReportTypeKey reportType = ReportTypeKey.valueOf(keyname);
+
+		URI location = URI.create(
+				"/api/reportParamset" + ReportConstants.getReportTypeURL(reportType) + "/" + +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
