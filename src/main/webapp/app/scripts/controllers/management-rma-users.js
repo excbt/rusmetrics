@@ -125,6 +125,9 @@ console.log('Run user management controller.');
     $scope.sendUserToServer = function(obj){
 //        obj.organizationId = 726;
 //        obj.timezoneDef = null;"64166467"
+        if ($scope.checkForm(obj) == false){
+            return false;
+        };
         var url = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentClient.id+$scope.ctrlSettings.userUrlSuffix;                    
         if (angular.isDefined(obj.id)&&(obj.id!=null)){
             $scope.updateObject(url, obj);
@@ -169,14 +172,44 @@ console.log('Run user management controller.');
     };
     
     //checkers
+    //$scope.checkString  
+    $scope.emptyString = function(str){
+        return mainSvc.checkUndefinedEmptyNullValue(str);
+    };
+    
     $scope.checkPassword = function(){
         var result = false;
-//        if ($scope.data.currentUser.id==null){
-//            result = (($scope.data.currentUser.password));
-//        };
-        result = !($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm);
+        result = !((($scope.data.currentUser.id==null)&&($scope.emptyString($scope.data.currentUser.password)))
+            || ($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm))
+        ;
         
         return result;
     };
+    
+    $scope.checkForm = function(obj){
+        var result = true;
+        if ($scope.emptyString(obj.lastName)){
+            notificationFactory.errorInfo("Ошибка", "Не задана фамилия пользователя!");
+            result = false;
+        };
+        if ($scope.emptyString(obj.firstName)){
+            notificationFactory.errorInfo("Ошибка", "Не задано имя пользователя!");
+            result = false;
+        };
+        if ($scope.emptyString(obj.userName)){
+            notificationFactory.errorInfo("Ошибка", "Не задан логин пользователя!");
+            result = false;
+        };
+        if ((!$scope.checkPassword())){
+            notificationFactory.errorInfo("Ошибка", "Не корректно задан пароль!");
+            result = false;
+        };
+        return result;
+    };
+    
+    //set mask for login input
+    $(document).ready(function(){
+        $('#inputUserName').inputmask({mask: "a*{1,20}", greedy: false});
+    });
     
 }]);

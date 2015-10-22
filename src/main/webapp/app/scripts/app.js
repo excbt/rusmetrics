@@ -158,6 +158,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/object_groups.html',
         controller: 'ObjectGroupsCtrl'
       })
+      .when('/settings/users', {
+        templateUrl: 'views/settings-users.html',
+        controller: 'SettingsUsersCtrl'
+      })
       .when('/settings/management_services', {
         templateUrl: 'views/management-services.html',
         controller: 'ManagementServicesCtrl'

@@ -173,6 +173,15 @@ angular.module('portalNMC')
         }
         return result;
     };
+    
+    var checkUndefinedEmptyNullValue = function(numvalue){                    
+        var result = false;
+        if ((angular.isUndefined(numvalue)) || (numvalue === "") || (numvalue==null)){
+            result = true;
+            return result;
+        }
+        return result;
+    };
 
     function isNumeric(n) {
       return !isNaN(parseFloat(n)) && isFinite(n);
@@ -209,6 +218,7 @@ angular.module('portalNMC')
         checkNumericValue,
         checkPositiveNumberValue,
         checkStrForDate,
+        checkUndefinedEmptyNullValue,
         getContextIds,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,

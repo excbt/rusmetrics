@@ -1,21 +1,22 @@
 <div  ng-show="loading" class="nmc-loading">
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
-<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+<!-- Вкладки рабочей области-->
+<div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
-<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
-        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
-        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
 
     </ul>
 
     <div class="tab-content">
-      <div role="tabpanel" class="tab-pane fade in active" id="clientsTab">
+      <div role="tabpanel" class="tab-pane fade in active" id="users">
       </div>
     </div>
 </div>
@@ -23,8 +24,7 @@
     <div class="row nmc-main-workspace-header">
         <div class="col-md-2 noPadding marginBottom10">
             <div class="btn-toolbar">
-                <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button> 
-<!--                <input type="text" id="inputTest"/>-->
+                <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
             </div>
         </div>    
         <div class="col-md-4 marginBottom10 nmc-search-form">
@@ -114,28 +114,19 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputUserName">Логин</label><span style="color:red;">*</span>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
-                                    </div>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputFirstName">Имя</label><span style="color:red;">*</span>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.firstName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
-                                    </div>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputLastName">Фамилия</label><span style="color:red;">*</span>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.lastName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputLastName" placeholder="Фамилия"  ng-model="data.currentUser.lastName">
-                                    </div>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputLastName" placeholder="Фамилия"  ng-model="data.currentUser.lastName">
                                 </td>
                             </tr>
                             <tr>
