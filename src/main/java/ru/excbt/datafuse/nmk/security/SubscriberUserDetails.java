@@ -24,6 +24,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 	private final Boolean isSystem;
 	private final int version;
 	private final boolean skipServiceFilter;
+	private final boolean isBlocked;
 
 	/**
 	 * 
@@ -39,6 +40,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.version = sUser.getVersion();
 		this.isSystem = false;
 		this.skipServiceFilter = false;
+		this.isBlocked = Boolean.TRUE.equals(sUser.getIsBlocked());
 	}
 
 	/**
@@ -55,6 +57,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.version = sUser.getVersion();
 		this.isSystem = true;
 		this.skipServiceFilter = true;
+		this.isBlocked = false;
 	}
 
 	@Override
@@ -89,6 +92,10 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 
 	public boolean getSkipServiceFilter() {
 		return skipServiceFilter;
+	}
+
+	public boolean isBlocked() {
+		return isBlocked;
 	}
 
 }

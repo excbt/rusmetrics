@@ -88,9 +88,12 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		checkNotNull(subscrUser.getLastName());
 		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
+		checkArgument(subscrUser.getDeleted() == 0);
 
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());
 		subscrUser.setSubscriber(subscriber);
+
+		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
 
 		SubscrUser result = subscrUserRepository.save(subscrUser);
 
@@ -133,6 +136,10 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		if (!currentUser.getUserName().equals(subscrUser.getUserName())) {
 			throw new PersistenceException(
 					String.format("Changing username is not allowed. SubscrUser (id=%d)", subscrUser.getId()));
+		}
+
+		if (currentUser.getDeleted() == 1) {
+			throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
 		}
 
 		Subscriber subscriber = subscriberService.findOne(subscrUser.getSubscriberId());

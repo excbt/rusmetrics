@@ -38,7 +38,7 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	 * 
 	 */
 
-	@Column(name = "user_name")
+	@Column(name = "user_name", updatable = false)
 	private String userName;
 
 	@Column(name = "first_name")
@@ -81,6 +81,9 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	@Column(name = "user_email")
 	private String userEMail;
+
+	@Column(name = "is_blocked")
+	private Boolean isBlocked;
 
 	public String getUserName() {
 		return userName;
@@ -180,6 +183,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setUserEMail(String userEMail) {
 		this.userEMail = userEMail;
+	}
+
+	public Boolean getIsBlocked() {
+		return isBlocked;
+	}
+
+	public void setIsBlocked(Boolean isBlocked) {
+		this.isBlocked = isBlocked;
 	}
 
 }
