@@ -12,7 +12,8 @@ public enum ReportTypeKey {
 	CONSUMPTION_REPORT("consumption"), //
 	CONSUMPTION_HISTORY_REPORT("consumption_history"), //
 	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
-	LOG_JOURNAL_REPORT("log_journal");
+	LOG_JOURNAL_REPORT("log_journal"), PARTNER_SERVICE_REPORT("partner_service"), ABONENT_SERVICE_REPORT(
+			"abonent_service");
 
 	private final String urlName;
 	private final String defaultFileName;

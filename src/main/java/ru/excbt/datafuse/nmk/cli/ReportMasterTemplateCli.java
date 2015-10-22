@@ -94,7 +94,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 * 
 	 * @throws IOException
 	 */
-	private void loadAllReportMasterTemplates(boolean isCompiled) throws IOException {
+	private void loadAllReportMasterTemplates(boolean isCompiled)
+			throws IOException {
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
 				ReportConstants.Files.COMM_FILE_COMPILED, isCompiled);
 
@@ -114,13 +115,21 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.Files.CONSUMPTION_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
-				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED, isCompiled);
+				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED,
+				isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT,
-				ReportConstants.Files.CONSUMPTION_ETALON_FILE_COMPILED, isCompiled);
+				ReportConstants.Files.CONSUMPTION_ETALON_FILE_COMPILED,
+				isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.LOG_JOURNAL_REPORT,
 				ReportConstants.Files.LOG_JOURNAL_FILE_COMPILED, isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.ABONENT_SERVICE_REPORT,
+				ReportConstants.Files.ABONENT_SERVICE_FILE_COMPILED, isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT,
+				ReportConstants.Files.PARTNER_SERVICE_FILE_COMPILED, isCompiled);
 	}
 
 	/**
@@ -136,6 +145,8 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.ABONENT_SERVICE_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT);
 
 	}
 
