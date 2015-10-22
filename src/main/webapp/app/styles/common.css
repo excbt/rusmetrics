@@ -1674,6 +1674,11 @@ tr.nmc-main-table-header > th {
     font-weight: lighter;
 }
 
+    /* Выделить заблокированный/недоступный элемент*/
+.nmc-italic {
+    font-style: italic;
+}
+
 /* Стиль для подсветки позитивных уведомлений*/
 .nmc-positive-notice{
     color: green;

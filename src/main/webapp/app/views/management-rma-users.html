@@ -78,8 +78,8 @@
             </td>
             <td ng-repeat="column in ctrlSettings.userColumns" ng-class="column.class">
                 <div ng-switch on="column.name">
-                    <span ng-switch-when="subscriberName" ng-class="">{{user[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{user['id']}})</span></span>
-                    <span ng-switch-default >
+                    <span ng-switch-when="subscriberName" ng-class="{'nmc-distinguish':user.isAdmin, 'nmc-italic':user.isBlocked}">{{user[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{user['id']}})</span></span>
+                    <span ng-switch-default ng-class="{'nmc-distinguish':user.isAdmin, 'nmc-italic':user.isBlocked}">
                         {{user[column.name]}}
                     </span>
                 </div>
@@ -145,7 +145,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputEMail">E-mail</label><span style="color:red;">*</span>
+                                <td class="col-sm-3"><label for="inputEMail">E-mail</label>
+<!--                                    <span style="color:red;">*</span>-->
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.userEMail">
                                 </td>
@@ -184,6 +185,11 @@
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
                                         <input class="form-control nmc-text-input-form" type="password" id="inputPasswordConfirm" placeholder="Повтор пароля"  ng-model="data.currentUser.passwordConfirm">
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-12">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isBlocked">Заблокирован
                                 </td>
                             </tr>
                             <tr>
