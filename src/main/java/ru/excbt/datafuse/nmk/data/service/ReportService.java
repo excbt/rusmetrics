@@ -422,6 +422,14 @@ public class ReportService {
 			result = ReportType.RPT_LOG_JOURNAL;
 			break;
 		}
+		case PARTNER_SERVICE_REPORT: {
+			result = ReportType.RPT_PARTNER_SERVICE;
+			break;
+		}
+		case ABONENT_SERVICE_REPORT: {
+			result = ReportType.RPT_ABONENT_SERVICE;
+			break;
+		}
 		default: {
 			break;
 		}
