@@ -10,7 +10,6 @@ import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
 import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.LdapContext;
-import javax.naming.ldap.LdapName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,12 @@ public class LdapService {
 	public static final String BASE_DN = "dc=nmk,dc=ru";
 
 	private static final Logger logger = LoggerFactory.getLogger(LdapService.class);
+
+	private class LdapProps {
+		private final static String INET_USER_STATUS = "InetUserStatus";
+		private final static String INET_USER_STATUS_ACTIVE = "Active";
+		private final static String INET_USER_STATUS_INACTIVE = "Inactive";
+	}
 
 	@Autowired
 	private LdapTemplate ldapTemplate;
@@ -157,11 +162,10 @@ public class LdapService {
 	public void updateEMail(String rmaOu, String username, String email) throws InvalidNameException {
 		Name dn = buildDn(rmaOu, username);
 
-		LdapName ldapName = new LdapName(getDnForUser(username));
-		logger.trace("username dn__:{}", getDnForUser(username));
-		logger.trace("username dn_2:{}", dn.toString());
-		logger.trace("username dn_3:{}", ldapName.toString());
-
+		// LdapName ldapName = new LdapName(getDnForUser(username));
+		// logger.trace("username dn__:{}", getDnForUser(username));
+		// logger.trace("username dn_2:{}", dn.toString());
+		// logger.trace("username dn_3:{}", ldapName.toString());
 		DirContextOperations context = ldapTemplate.lookupContext(dn);
 		context.setAttributeValue("mail", email);
 		ldapTemplate.modifyAttributes(context);
@@ -219,6 +223,31 @@ public class LdapService {
 		context.setAttributeValue("gidNumber", user.getGidNumber());
 		ldapTemplate.bind(context);
 		return user;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 */
+	public void blockLdapUser(LdapUserAccount user) {
+		Name dn = buildDn(user);
+
+		DirContextOperations context = ldapTemplate.lookupContext(dn);
+		context.setAttributeValues("objectclass", LdapUserAccount.OBJECT_CLASS);
+		context.setAttributeValue(LdapProps.INET_USER_STATUS, LdapProps.INET_USER_STATUS_INACTIVE);
+		ldapTemplate.modifyAttributes(context);
+	}
+
+	/**
+	 * 
+	 * @param user
+	 */
+	public void unblockLdapUser(LdapUserAccount user) {
+		Name dn = buildDn(user);
+		DirContextOperations context = ldapTemplate.lookupContext(dn);
+		context.setAttributeValues("objectclass", LdapUserAccount.OBJECT_CLASS);
+		context.setAttributeValue(LdapProps.INET_USER_STATUS, LdapProps.INET_USER_STATUS_ACTIVE);
+		ldapTemplate.modifyAttributes(context);
 	}
 
 }

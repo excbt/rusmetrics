@@ -68,6 +68,11 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		SubscrUser sUser = subscrUsers.get(0);
 
+		if (Boolean.TRUE.equals(sUser.getIsBlocked())) {
+			logger.warn("User {} is blocked", username);
+			return null;
+		}
+
 		if (!doAuthenticate(username, password, sUser.getPassword())) {
 			return null;
 		}
