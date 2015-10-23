@@ -75,4 +75,14 @@ public class ReportConstants {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param rtk
+	 * @return
+	 */
+	public static String getReportTypeURL(String rtk) {
+		ReportTypeKey key = ReportTypeKey.valueOf(rtk);
+		return getReportTypeURL(key);
+	}
+
 }

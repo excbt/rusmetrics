@@ -147,7 +147,6 @@ public class DeviceObjectService implements SecuredRoles {
 		}
 		if (deviceObjectMetaVzlet.getMetaPropsOnly() == null) {
 			deviceObjectMetaVzlet.setMetaPropsOnly(false);
-			;
 		}
 		return deviceObjectMetaVzletRepository.save(deviceObjectMetaVzlet);
 	}
@@ -263,9 +262,16 @@ public class DeviceObjectService implements SecuredRoles {
 			DeviceObjectDataSource resultDataSource = deviceObjectDataSourceService
 					.saveDeviceDataSource(deviceObjectDataSource);
 			savedDeviceObject.getDeviceObjectDataSources().add(resultDataSource);
+
+			if (ExSystemKey.VZLET.getKeyname()
+					.equals(resultDataSource.getSubscrDataSource().getDataSourceType().getKeyname())) {
+
+			}
+
 		}
 
 		DeviceObject result = findOne(savedDeviceObject.getId());
+
 		return result;
 	}
 

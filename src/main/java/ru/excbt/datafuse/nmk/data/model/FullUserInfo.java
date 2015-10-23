@@ -104,4 +104,14 @@ public class FullUserInfo implements Serializable {
 		return userUUID;
 	}
 
+	public Boolean getIsRma() {
+		if (this._system) {
+			return true;
+		}
+		if (this.subscriber == null) {
+			return null;
+		}
+		return subscriber.getIsRma();
+	}
+
 }

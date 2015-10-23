@@ -4,8 +4,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -17,18 +15,16 @@ import javax.persistence.Version;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
-@Entity 
+@Entity
 @Table(name = "report_template")
-@SQLDelete(sql="UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause="deleted <> 1")
+@SQLDelete(sql = "UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportTemplate extends AbstractAuditableModel {
 
@@ -42,9 +38,8 @@ public class ReportTemplate extends AbstractAuditableModel {
 	@JsonIgnore
 	private Subscriber subscriber;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKey reportTypeKey;
+	private String reportTypeKeyname;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "report_type", insertable = false, updatable = false)
@@ -78,7 +73,7 @@ public class ReportTemplate extends AbstractAuditableModel {
 
 	@Column(name = "is_integrator_included")
 	private Boolean integratorIncluded;
-	
+
 	@Version
 	private int version;
 
@@ -154,14 +149,6 @@ public class ReportTemplate extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public ReportTypeKey getReportTypeKey() {
-		return reportTypeKey;
-	}
-
-	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
-		this.reportTypeKey = reportTypeKey;
-	}
-
 	public Long getSrcReportTemplateId() {
 		return srcReportTemplateId;
 	}
@@ -189,5 +176,13 @@ public class ReportTemplate extends AbstractAuditableModel {
 	public void setIntegratorIncluded(Boolean integratorIncluded) {
 		this.integratorIncluded = integratorIncluded;
 	}
-	
+
+	public String getReportTypeKeyname() {
+		return reportTypeKeyname;
+	}
+
+	public void setReportTypeKeyname(String reportTypeKeyname) {
+		this.reportTypeKeyname = reportTypeKeyname;
+	}
+
 }

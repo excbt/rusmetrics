@@ -135,6 +135,10 @@ public class SubscrUserController extends SubscrApiController {
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUser);
 
+		if (subscrUser.getUserName() != null) {
+			subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
+		}
+
 		if (!usernameValidator.validate(subscrUser.getUserName())) {
 			return responseBadRequest(ApiResult.validationError(
 					"Username %s is not valid. " + "Min length is 3, max length is 20. Allowed characters: {a-z0-9_-]}",

@@ -2,22 +2,19 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 @Entity
 @Table(name = "report_meta_param_special")
@@ -29,9 +26,8 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 4449509566250004761L;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKey reportTypeKey;
+	private String reportTypeKeyname;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_type", insertable = false, updatable = false)
@@ -65,10 +61,6 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
-
-	public ReportTypeKey getReportTypeKey() {
-		return reportTypeKey;
-	}
 
 	public ReportType getReportType() {
 		return reportType;
@@ -108,6 +100,10 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 
 	public Boolean getIsDisabled() {
 		return isDisabled;
+	}
+
+	public String getReportTypeKeyname() {
+		return reportTypeKeyname;
 	}
 
 }

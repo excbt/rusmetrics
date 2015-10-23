@@ -115,6 +115,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 		assertTrue(permissions.size() > 0);
 		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions);
 		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
+		assertTrue(reportTypes.size() > 0);
 		List<ReportType> filteredReports = filter.filterObjects(reportTypes);
 		logger.info("Size of filtered reports:{}", filteredReports.size());
 		assertNotNull(filteredReports);

@@ -4,15 +4,12 @@ import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 @Entity
 @Table(name = "report_master_template_body")
@@ -29,9 +26,8 @@ public class ReportMasterTemplateBody extends AbstractAuditableModel {
 	 */
 
 	@Column(name = "report_type")
-	@Enumerated(EnumType.STRING)
-	private ReportTypeKey reportTypeKey;
-	
+	private String reportTypeKeyname;
+
 	@Column(name = "body")
 	private byte[] body;
 
@@ -43,21 +39,19 @@ public class ReportMasterTemplateBody extends AbstractAuditableModel {
 
 	@Column(name = "body_compiled_filename")
 	private String bodyCompiledFilename;
-	
+
 	@Version
 	private int version;
-	
+
 	public byte[] getBody() {
-		return body == null ? null : Arrays.copyOf(
-				body, body.length);
+		return body == null ? null : Arrays.copyOf(body, body.length);
 	}
 
 	public void setBody(byte[] reportTemplateBody) {
 		if (reportTemplateBody == null) {
 			this.body = null;
 		} else {
-			this.body = Arrays.copyOf(reportTemplateBody,
-					reportTemplateBody.length);
+			this.body = Arrays.copyOf(reportTemplateBody, reportTemplateBody.length);
 		}
 
 	}
@@ -71,17 +65,14 @@ public class ReportMasterTemplateBody extends AbstractAuditableModel {
 	}
 
 	public byte[] getBodyCompiled() {
-		return bodyCompiled == null ? null : Arrays.copyOf(
-				bodyCompiled, bodyCompiled.length);
+		return bodyCompiled == null ? null : Arrays.copyOf(bodyCompiled, bodyCompiled.length);
 	}
 
 	public void setBodyCompiled(byte[] bodyCompiled) {
 		if (bodyCompiled == null) {
 			this.bodyCompiled = null;
 		} else {
-			this.bodyCompiled = Arrays.copyOf(
-					bodyCompiled,
-					bodyCompiled.length);
+			this.bodyCompiled = Arrays.copyOf(bodyCompiled, bodyCompiled.length);
 		}
 	}
 
@@ -97,16 +88,16 @@ public class ReportMasterTemplateBody extends AbstractAuditableModel {
 		return bodyCompiledFilename;
 	}
 
-	public void setBodyCompiledFilename(
-			String bodyCompiledFilename) {
+	public void setBodyCompiledFilename(String bodyCompiledFilename) {
 		this.bodyCompiledFilename = bodyCompiledFilename;
 	}
 
-	public ReportTypeKey getReportTypeKey() {
-		return reportTypeKey;
+	public String getReportTypeKeyname() {
+		return reportTypeKeyname;
 	}
 
-	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
-		this.reportTypeKey = reportTypeKey;
+	public void setReportTypeKeyname(String reportTypeKeyname) {
+		this.reportTypeKeyname = reportTypeKeyname;
 	}
+
 }

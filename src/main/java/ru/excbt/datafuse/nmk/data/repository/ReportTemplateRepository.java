@@ -7,10 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
-public interface ReportTemplateRepository extends
-		CrudRepository<ReportTemplate, Long> {
+public interface ReportTemplateRepository extends CrudRepository<ReportTemplate, Long> {
 
 	/**
 	 * 
@@ -18,11 +16,9 @@ public interface ReportTemplateRepository extends
 	 * @param currentDate
 	 * @return
 	 */
-	@Query("SELECT rt FROM ReportTemplate rt "
-			+ "WHERE rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
-			+ "ORDER BY rt.activeStartDate, rt.name")
-	public List<ReportTemplate> selectActiveTemplates(
-			@Param("reportType") ReportTypeKey reportTypeKey,
+	@Query("SELECT rt FROM ReportTemplate rt " + "WHERE rt.reportTypeKeyname = :reportTypeKeyname AND "
+			+ "rt._active = :isActive " + "ORDER BY rt.activeStartDate, rt.name")
+	public List<ReportTemplate> selectActiveTemplates(@Param("reportTypeKeyname") String reportTypeKeyname,
 			@Param("isActive") boolean isActive);
 
 	/**
@@ -32,10 +28,9 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber IS NULL AND "
-			+ "rt.reportTypeKey = :reportType AND " + "rt._active = :isActive "
+			+ "rt.reportTypeKeyname = :reportTypeKeyname AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
-	public List<ReportTemplate> selectCommonTemplates(
-			@Param("reportType") ReportTypeKey reportTypeKey,
+	public List<ReportTemplate> selectCommonTemplates(@Param("reportTypeKeyname") String reportTypeKeyname,
 			@Param("isActive") boolean isActive);
 
 	/**
@@ -46,13 +41,10 @@ public interface ReportTemplateRepository extends
 	 * @return
 	 */
 	@Query("SELECT rt FROM ReportTemplate rt WHERE rt.subscriber.id = :subscriberId AND "
-			+ "rt.reportTypeKey = :reportType AND "
-			+ "rt._active = :isActive "
+			+ "rt.reportTypeKeyname = :reportTypeKeyname AND " + "rt._active = :isActive "
 			+ "ORDER BY rt.activeStartDate, rt.name")
-	public List<ReportTemplate> selectSubscriberTemplates(
-			@Param("reportType") ReportTypeKey reportType,
-			@Param("isActive") boolean isActive,
-			@Param("subscriberId") long subscriberId);
+	public List<ReportTemplate> selectSubscriberTemplates(@Param("reportTypeKeyname") String reportTypeKeyname,
+			@Param("isActive") boolean isActive, @Param("subscriberId") long subscriberId);
 
 	/**
 	 * 
