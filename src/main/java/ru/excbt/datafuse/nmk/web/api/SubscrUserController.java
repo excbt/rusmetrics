@@ -155,6 +155,7 @@ public class SubscrUserController extends SubscrApiController {
 
 		subscrUser.setSubscriberId(rSubscriberId);
 		subscrUser.getSubscrRoles().clear();
+		subscrUser.setIsAdmin(isAdmin);
 
 		if (isAdmin) {
 			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
@@ -211,6 +212,7 @@ public class SubscrUserController extends SubscrApiController {
 		}
 
 		subscrUser.getSubscrRoles().clear();
+		subscrUser.setIsAdmin(isAdmin);
 
 		if (isAdmin) {
 			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
