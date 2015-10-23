@@ -481,7 +481,7 @@ public class ReportServiceController extends WebApiController {
 		checkNotNull(reportParamset.getId());
 		checkArgument(reportParamset.getId().equals(reportParamsetId));
 		checkNotNull(reportParamset.getReportTemplate());
-		checkNotNull(reportParamset.getReportTemplate().getReportTypeKey());
+		checkNotNull(reportParamset.getReportTemplate().getReportTypeKeyname());
 
 		if (contObjectIds == null) {
 			logger.warn("Attention: contObjectIds is null");
@@ -491,7 +491,8 @@ public class ReportServiceController extends WebApiController {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
-		ReportTypeKey reportTypeKey = reportParamset.getReportTemplate().getReportTypeKey();
+		String reportKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
+		ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(reportKeyname);
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 

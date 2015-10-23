@@ -202,10 +202,10 @@ public class ReportParamsetService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> selectReportTypeParamsetList(ReportTypeKey reportType, boolean isActive,
 			long subscriberId) {
-		List<ReportParamset> commonReportParams = reportParamsetRepository.selectCommonReportParamset(reportType,
-				isActive);
+		List<ReportParamset> commonReportParams = reportParamsetRepository
+				.selectCommonReportParamset(reportType.getKeyname(), isActive);
 		List<ReportParamset> subscriberReportParams = reportParamsetRepository
-				.selectSubscriberReportParamset(reportType, isActive, subscriberId);
+				.selectSubscriberReportParamset(reportType.getKeyname(), isActive, subscriberId);
 
 		List<ReportParamset> result = new ArrayList<>();
 		result.addAll(commonReportParams);
@@ -606,7 +606,7 @@ public class ReportParamsetService implements SecuredRoles {
 			}
 
 			logger.info("ReportParamset id:{} reportType:{} ... requiredPass: {}", rp.getId(),
-					rp.getReportTemplate().getReportTypeKey(), requiredPassed);
+					rp.getReportTemplate().getReportTypeKeyname(), requiredPassed);
 
 			rp.setAllRequiredParamsPassed(requiredPassed);
 			reportParamsetRepository.save(rp);
