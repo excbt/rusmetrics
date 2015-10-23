@@ -26,10 +26,10 @@ import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -135,17 +135,17 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<DeviceObjectMetaVzlet, Long>(
+		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObjectMetaVzlet, Long>(
 				deviceObjectMetaVzlet, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(deviceObjectService.updateDeviceObjectMetaVzlet(entity));
-			}
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public DeviceObjectMetaVzlet processAndReturnResult() {
+				return deviceObjectService.updateDeviceObjectMetaVzlet(entity);
 			}
 
 		};
@@ -179,12 +179,11 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
 
-		ApiAction action = new AbstractEntityApiAction<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
+		ApiAction action = new EntityApiActionAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
 
 			@Override
-			public void process() {
-				setResultEntity(deviceObjectService.updateDeviceObjectMetaVzlet(entity));
-
+			public DeviceObjectMetaVzlet processAndReturnResult() {
+				return deviceObjectService.updateDeviceObjectMetaVzlet(entity);
 			}
 		};
 
