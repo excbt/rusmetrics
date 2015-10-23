@@ -209,7 +209,18 @@ console.log('Run user management controller.');
     
     //set mask for login input
     $(document).ready(function(){
-        $('#inputUserName').inputmask({mask: "a*{1,20}", greedy: false});
+        $('#inputUserName').inputmask(
+            {mask: "a[*{1,20}]", 
+             greedy: false,
+             definitions:{
+                 '*':{
+                     validator: "[0-9a-z!_-]",
+                    cardinality: 1,
+                    casing: "lower"
+                 }
+             }
+            }
+        );
     });
     
 }]);
