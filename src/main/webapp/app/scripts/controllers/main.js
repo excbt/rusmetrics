@@ -136,6 +136,11 @@ console.log(window.location);
         setVisibles($scope.mainCtrlSettings.ctxId);
     });  
       
+      //check user
+    $scope.isRma = function(){
+        return mainSvc.isRma();
+    };  
+      
   }]);
 
 

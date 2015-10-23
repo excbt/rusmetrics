@@ -150,10 +150,12 @@ console.log('Run user management controller.');
     };
 
     $scope.updateObject = function (url, object) {
-        var params = { id: object[$scope.extraProps.idColumnName],
-                     isAdmin: object.isAdmin};
-        if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){
-            params.newPassword = object.password;
+        var params = { id: object[$scope.extraProps.idColumnName]}
+        if (angular.isDefined(object.isAdmin)&&(object.isAdmin!=null)){
+                     params.isAdmin = object.isAdmin;
+        };
+        if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){           
+            params.newPassword = object.password;           
         };
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
     };

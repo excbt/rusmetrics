@@ -1,6 +1,4 @@
-<div  ng-show="loading" class="nmc-loading">
-    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
-</div>
+
 <div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
 
   <!-- Навигационная полоса -->
@@ -19,7 +17,10 @@
       </div>
     </div>
 </div>
-
+<div  ng-show="ctrlSettings.loading" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+<div ng-show="!ctrlSettings.loading">
 <div class="btn-toolbar marginBottom10">
     <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
 </div>
@@ -125,7 +126,7 @@
         </tr>
     </table>
 </div>
-
+</div>
 <!--Show device options-->
 <div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showDeviceLabel" tabindex="-1">

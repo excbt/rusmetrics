@@ -5,6 +5,7 @@ console.log('Run devices management controller.');
     //settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
+    $scope.ctrlSettings.loading = true;
     //data
     $scope.data = {};
     $scope.data.dataSources = [];
@@ -30,7 +31,8 @@ console.log('Run devices management controller.');
                     };
                 });
                 $scope.data.devices = tmp;
-console.log(tmp);                
+                $scope.ctrlSettings.loading = false;
+//console.log(tmp);                
             },
             function(error){
                 notificationFactory.errorInfo(error.statusText,error.description);
@@ -212,7 +214,7 @@ console.log(tmp);
     };
 
     $scope.updateDeviceMetaData = function(device){
-console.log(device);    
+//console.log(device);    
         var method = "";
         if(angular.isDefined(device.metaData.id)&&(device.metaData.id!==null)){
             method = "PUT";
@@ -256,7 +258,7 @@ console.log(device);
         }else{
             $scope.data.vzletSystemList =tmpSystemList;
         };
-console.log($scope.data.vzletSystemList);        
+//console.log($scope.data.vzletSystemList);        
     };
     $scope.getVzletSystemList();
     

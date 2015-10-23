@@ -1,7 +1,7 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
-.controller('ManagementServicesCtrl', ['$scope', '$http', 'mainSvc', function($scope, $http, mainSvc){
+.controller('ManagementServicesCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
     console.log("ManagementServicesCtrl run.");
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -257,6 +257,7 @@ angular.module('portalNMC')
                 location.reload();
         },
              function(e){
+                notificationFactory.errorInfo(e.statusText,e.data.description);
                 console.log(e);
         });
     };

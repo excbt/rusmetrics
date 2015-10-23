@@ -185,9 +185,9 @@
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
                             <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
                             <div class="btn-group">
-                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">
+<!--                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">-->
 <!--                                <span class="caret"></span>-->
-                              </i>
+<!--                              </i>-->
                               <ul class="dropdown-menu">
                                   <li ng-repeat="device in object.devices">
                                       <a href="" ng-click="getDeviceMetaData(object,device)">прибор Модель:{{device.deviceModel.modelName}} <span ng-if="device.number!=null">- №: </span> {{device.number}}</a>

@@ -149,7 +149,6 @@
 <!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
                                 <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
                                 <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>
-                                <li><a href="" ng-click="">{{messages.setClient}}</a></li>  
                                 <li role="separator" class="divider"></li>
                                 <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                               </ul>
@@ -165,7 +164,7 @@
                             
                         </td>
 
-                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                        <td ng-click="toggleShowGroupDetails(object.id)"><span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
                         </td>
                         <td>
                             <div class="btn-toolbar">

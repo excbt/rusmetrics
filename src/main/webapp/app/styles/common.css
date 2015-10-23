@@ -532,7 +532,7 @@ tr.nmc-tr-odd>td{
 
 .nmc-td-for-buttons-in-object-page{
     padding-left: 5px;
-    min-width: 120px;
+    min-width: 85px;
     width: 4%;
     border-right: 1px solid #969696;
 }

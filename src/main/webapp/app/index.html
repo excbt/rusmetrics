@@ -91,7 +91,8 @@
                     </li>
 -->
                     <li class="dropdown">
-                        <a class="dropdown-toggle " ng-controller="UserinfoCtrl" data-toggle="dropdown" href="" ><span><span
+<!--                        ng-controller="UserinfoCtrl"-->
+                        <a class="dropdown-toggle "  data-toggle="dropdown" href="" ><span><span
                                 class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
                             </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
                         <ul class="dropdown-menu">
@@ -160,7 +161,7 @@
                                 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
-                                <a id="management_main_menu_item" class="list-group-item noMarginBottom nmc-main-menu-item" ng-class="{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item}"
+                                <a id="management_main_menu_item" class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide" ng-class="{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item, 'nmc-hide':!isRma(),'nmc-show':isRma()}"
 
                                    href="#/management/objects/" data-toggle="offcanvas" ng-click="clickMenu('admin_menu_item');showAdminSettings=true"> <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon" title="Управление"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
                                     <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->
