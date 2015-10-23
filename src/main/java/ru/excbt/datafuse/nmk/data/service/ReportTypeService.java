@@ -82,7 +82,7 @@ public class ReportTypeService {
 		List<ReportType> preResult = reportTypeRepository.findAll();
 
 		List<ReportType> result = preResult.stream().filter((i) -> !Boolean.TRUE.equals(i.getIsDevMode()) || devMode)
-				.filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE).sorted(COMP_REPORT_TYPE_ORDER)
+				.filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE).sorted(COMP_REPORT_TYPE_ORDER)
 				.collect(Collectors.toList());
 
 		return result;

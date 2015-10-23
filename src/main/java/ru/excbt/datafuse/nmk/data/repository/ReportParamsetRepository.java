@@ -34,7 +34,7 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt "
 			+ "WHERE rp.subscriber is null AND rt.reportTypeKeyname = :reportTypeKeyname AND "
 			+ "rp._active = :isActive " + "ORDER BY rp.activeStartDate, rp.name")
-	public List<ReportParamset> selectCommonReportParamset(@Param("reportType") String reportTypeKeyname,
+	public List<ReportParamset> selectCommonReportParamset(@Param("reportTypeKeyname") String reportTypeKeyname,
 			@Param("isActive") boolean isActive);
 
 	/**

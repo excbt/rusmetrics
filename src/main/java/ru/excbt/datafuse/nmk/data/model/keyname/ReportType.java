@@ -14,12 +14,12 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
-import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_type")
-public class ReportType extends AbstractKeynameEntity implements DevModeObject, ActiveObject {
+public class ReportType extends AbstractKeynameEntity implements DevModeObject, DisabledObject {
 
 	/**
 	 * 
@@ -44,9 +44,6 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Column(name = "report_type_enabled")
 	private boolean _enabled;
 
-	@Column(name = "is_active")
-	private Boolean isActive;
-
 	@Column(name = "is_dev_mode")
 	private Boolean isDevMode;
 
@@ -64,6 +61,9 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 
 	@Column(name = "report_type_order")
 	private Integer reportTypeOrder;
+
+	@Column(name = "is_disabled")
+	private Boolean isDisabled;
 
 	public String getCaption() {
 		return caption;
@@ -115,8 +115,8 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	}
 
 	@Override
-	public Boolean getIsActive() {
-		return isActive;
+	public Boolean getIsDisabled() {
+		return isDisabled;
 	}
 
 }
