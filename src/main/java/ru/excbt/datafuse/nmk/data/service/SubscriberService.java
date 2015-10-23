@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,9 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private TimezoneDefService timezoneDefService;
+
+	@Autowired
+	private SubscrServiceAccessService subscrServiceAccessService;
 
 	/**
 	 * 
@@ -213,7 +217,13 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
 
-		return subscriberRepository.save(subscriber);
+		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+
+		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+
+		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+		return resultSubscriber;
 	}
 
 	/**
@@ -279,6 +289,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}
+		subscrServiceAccessService.deleteSubscriberAccess(rmaSubscriberId);
 		subscriberRepository.delete(subscriber);
 	}
 
