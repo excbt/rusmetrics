@@ -240,4 +240,14 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		}
 	}
 
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrUser> findByUsername(String userName) {
+		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+	}
+
 }

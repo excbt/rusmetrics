@@ -36,7 +36,7 @@ public class SubscrUserController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
 
-	private final UsernameValidator usernameValidator = new UsernameValidator();
+	protected final UsernameValidator usernameValidator = new UsernameValidator();
 
 	@Autowired
 	protected SubscrUserService subscrUserService;

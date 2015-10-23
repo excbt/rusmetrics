@@ -51,4 +51,17 @@ public class RmaSubscrUserControllerTest extends RmaControllerTest {
 		_testJsonDelete(apiRmaUrl(RMA_RSUBSCRIBER_URL, subscrUserId), param);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCheckUsername() throws Exception {
+
+		RequestExtraInitializer param = (builder) -> {
+			builder.param("username", "admin");
+		};
+
+		_testGet(apiRmaUrl("/subscrUsers/checkExists"), param);
+	}
 }
