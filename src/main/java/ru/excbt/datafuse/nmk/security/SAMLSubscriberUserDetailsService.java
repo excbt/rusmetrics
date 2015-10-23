@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
 @Service
@@ -36,6 +37,9 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 
 	@Autowired
 	private SystemUserService systemUserService;
+
+	@Autowired
+	private SubscrUserLoginLogService subscrUserLoginLogService;
 
 	@Override
 	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
@@ -61,6 +65,8 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 		if (subscriberUserDetails.isBlocked()) {
 			throw new UsernameNotFoundException(String.format("Username %s is BLOCKED", username));
 		}
+
+		subscrUserLoginLogService.registerLogin(subscriberUserDetails.getId(), subscriberUserDetails.getUsername());
 
 		return subscriberUserDetails;
 	}

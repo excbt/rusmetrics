@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
@@ -45,6 +46,9 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 	@Autowired
 	private LdapService ldapService;
+
+	@Autowired
+	private SubscrUserLoginLogService subscrUserLoginLogService;
 
 	/**
 	 * 
@@ -88,6 +92,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, password, grantedAuths);
 
+		subscrUserLoginLogService.registerLogin(subscriberUserDetails.getId(), subscriberUserDetails.getUsername());
+
 		return buildAuthenticationToken(subscriberUserDetails, password, grantedAuths);
 	}
 
@@ -120,6 +126,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 		List<GrantedAuthority> grantedAuths = AdminUtils.makeAdminAuths();
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, password, grantedAuths);
+
+		subscrUserLoginLogService.registerLogin(subscriberUserDetails.getId(), subscriberUserDetails.getUsername());
 
 		return buildAuthenticationToken(subscriberUserDetails, password, grantedAuths);
 	}
