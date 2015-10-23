@@ -89,7 +89,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public boolean processAccess(long subscriberId, LocalDate accessDate, SubscrServiceAccess entity) {
+	public boolean processAccess(Long subscriberId, LocalDate accessDate, SubscrServiceAccess entity) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
 		checkArgument(entity.getPackId() != null, "packId is not set");
@@ -116,7 +116,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_ADMIN })
-	public List<SubscrServiceAccess> processAccessList(long subscriberId, LocalDate accessDate,
+	public List<SubscrServiceAccess> processAccessList(Long subscriberId, LocalDate accessDate,
 			final List<SubscrServiceAccess> accessList) {
 		checkNotNull(accessDate, "accessDate is not set");
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
@@ -222,6 +222,13 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(long entityId) {
 		subscrServiceAccessRepository.delete(entityId);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public void deleteSubscriberAccess(Long subscriberId) {
+		List<SubscrServiceAccess> accessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId);
+		subscrServiceAccessRepository.delete(accessList);
 	}
 
 	/**

@@ -26,6 +26,24 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserController.class);
 
+	public class UsernameCheck {
+		private final boolean userValid;
+		private final boolean userExists;
+
+		private UsernameCheck(String username, boolean userExists) {
+			this.userExists = userExists;
+			this.userValid = usernameValidator.validate(username);
+		}
+
+		public boolean isUserValid() {
+			return userValid;
+		}
+
+		public boolean isUserExists() {
+			return userExists;
+		}
+	}
+
 	/**
 	 * 
 	 * @param rSubscriberId
@@ -97,6 +115,21 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 		return deleteSubscrUserInternal(rSubscriberId, subscrUserId, isPermanent);
 
+	}
+
+	/**
+	 * 
+	 * @param rSubscriberId
+	 * @return
+	 */
+	@RequestMapping(value = "/subscrUsers/checkExists", method = RequestMethod.GET)
+	public ResponseEntity<?> getSubscrUsersCheck(@RequestParam("username") String username) {
+		checkNotNull(username);
+
+		List<SubscrUser> subscrUsers = subscrUserService.findByUsername(username);
+		UsernameCheck validator = new UsernameCheck(username, !subscrUsers.isEmpty());
+
+		return responseOK(validator);
 	}
 
 }

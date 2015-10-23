@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -50,6 +51,10 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 	@Column(name = "access_end_date")
 	@Temporal(TemporalType.DATE)
 	private Date accessEndDate;
+
+	@Version
+	@Column(name = "version")
+	private int version;
 
 	public static SubscrServiceAccess newInstance() {
 		SubscrServiceAccess result = new SubscrServiceAccess();
@@ -144,6 +149,14 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 		}
 
 		return false;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }

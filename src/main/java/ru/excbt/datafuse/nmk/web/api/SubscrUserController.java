@@ -36,7 +36,7 @@ public class SubscrUserController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
 
-	private final UsernameValidator usernameValidator = new UsernameValidator();
+	protected final UsernameValidator usernameValidator = new UsernameValidator();
 
 	@Autowired
 	protected SubscrUserService subscrUserService;
@@ -155,6 +155,7 @@ public class SubscrUserController extends SubscrApiController {
 
 		subscrUser.setSubscriberId(rSubscriberId);
 		subscrUser.getSubscrRoles().clear();
+		subscrUser.setIsAdmin(isAdmin);
 
 		if (isAdmin) {
 			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
@@ -211,6 +212,7 @@ public class SubscrUserController extends SubscrApiController {
 		}
 
 		subscrUser.getSubscrRoles().clear();
+		subscrUser.setIsAdmin(isAdmin);
 
 		if (isAdmin) {
 			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());

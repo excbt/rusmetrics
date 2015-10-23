@@ -85,6 +85,10 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "is_blocked")
 	private Boolean isBlocked;
 
+	@JsonIgnore
+	@Column(name = "is_admin")
+	private Boolean isAdmin;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -191,6 +195,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setIsBlocked(Boolean isBlocked) {
 		this.isBlocked = isBlocked;
+	}
+
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 
 }

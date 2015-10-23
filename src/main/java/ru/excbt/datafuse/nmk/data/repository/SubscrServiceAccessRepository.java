@@ -67,6 +67,10 @@ public interface SubscrServiceAccessRepository extends CrudRepository<SubscrServ
 	List<SubscrServiceAccess> selectBySubscriberId(@Param("subscriberId") Long subscriberId,
 			@Param("accessDate") Date accessDate);
 
+	@Query(value = "SELECT sa FROM SubscrServiceAccess sa WHERE sa.subscriberId = :subscriberId "
+			+ " ORDER BY sa.accessStartDate DESC, sa.id DESC")
+	List<SubscrServiceAccess> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
+
 	@Query("SELECT DISTINCT i.servicePermissions FROM SubscrServiceItem i "
 			+ " WHERE i.id IN (SELECT sa.itemId FROM SubscrServiceAccess sa "
 			+ " WHERE sa.subscriberId = :subscriberId AND "
