@@ -287,4 +287,22 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		return persistentAccessList;
 	}
 
+	/**
+	 * 
+	 * @param packId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrServiceAccess> getPackSubscrServiceAccess(Long packId) {
+		SubscrServicePack subscrServicePack = subscrServicePackRepository.findOne(packId);
+		if (subscrServicePack == null) {
+			throw new PersistenceException(String.format("Service Pack (id=%d) is not found", packId));
+		}
+
+		List<SubscrServicePack> subscrServicePackList = new ArrayList<>();
+		subscrServicePackList.add(subscrServicePack);
+		List<SubscrServiceAccess> serviceAccess = newSubscrServicePackAccessList(subscrServicePackList);
+		return serviceAccess;
+	}
+
 }
