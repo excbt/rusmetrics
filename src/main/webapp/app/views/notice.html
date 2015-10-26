@@ -7,14 +7,14 @@
     </ul>
 </div>  
 -->
-
+<div id="notice_page" class="nmc-hide">
 <div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
-        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+        <li id="monitor_2nd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
+        <li id="notice_2nd_menu_item" role="presentation" class="active nmc-hide"><a class="nmc-main-tab-button" href="" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
+        <li id="monitor_map_2nd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
 
     </ul>
 
@@ -121,15 +121,16 @@
 </div>
 
 <div >
-    <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
+<!--    Непрокручиваемая шапка-->
+    <table class="nmc-table-nowrap-data nmc-main-table noMargin" ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
-            <th class="nmc-td-for-buttons">
+            <th class="nmc-td-for-buttons nmc-notice-th">
                     <span class="paddingTop3">
                         <input title="Выделить/снять выделение со всех уведомлений на странице" type="checkbox" class="nmc-chekbox-form" ng-model="allSelected" ng-click="performAllNoticesOnPage()"/>
                     </span>    
                     <div class="btn-group">
 
-                      <button title="Действия над уведомлениями" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <button title="Действия над уведомлениями" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px; margin-bottom: 6px;">
                         <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu">
@@ -142,36 +143,57 @@
                       </ul>
                     </div>  
             </th>
-            <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
+            <th class="nmc-notice-th" ng-repeat="column in tableDef.columns" ng-class="column.headerClass">
                 {{column.header}}
             </th>       
         </tr>
-        <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
-<!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
-            <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
-<!--                ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}"-->
-                <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpointId}}&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h">
-                    <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
-                </a>
-<!--                <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>-->
 <!--
-                "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
-//                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
-                                    "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
-                                    "title=\"Показания точки учёта\">"+
-                                "</i></a>"
+        <tr ng-repeat="notice in [notices[0]] | filter: noticefilter | itemsPerPage: noticesPerPage" style="opacity: 0;">
+                <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
+                    <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.id}}&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h">
+                        <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
+                    </a>
+                    </td>
+                <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                    <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">
+                        <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
+                        <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
+                    </span>    
+                </td>
+            </tr>
 -->
-            </td>
-            <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
-                <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">
-                    <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
-                    <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
-                </span>    
-            </td>
-        </tr>
     </table>
+<!--    конец шапки-->
+    
+    <div class="nmc-notice-table-with-fixed-header">
+        <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
+            <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
+    <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
+                <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
+    <!--                ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}"-->
+                    <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.id}}&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h">
+                        <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
+                    </a>
+    <!--                <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>-->
+    <!--
+                    "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+    //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
+                                        "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
+                                        "title=\"Показания точки учёта\">"+
+                                    "</i></a>"
+    -->
+                </td>
+                <td ng-repeat="column in tableDef.columns" ng-class="column.dataClass || column.headerClass">
+                    <span class="nmc-link-notice-detail" href="" ng-click="showNoticeDetail(notice)">
+                        <span ng-if="column.fieldName==='noticeZpoint'"><img width="12" height="12" ng-src="{{notice.imgSTPath}}"></span>
+                        <span ng-class="{'nmc-distinguish':notice.isNew, 'nmc-undistinguish':!notice.isNew, 'nmc-positive-notice':!notice.isBaseEvent}">{{notice[column.fieldName]}}</span>
+                    </span>    
+                </td>
+            </tr>
+        </table>
+    </div>
     <div class="col-md-9">
-        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+        <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/public/bower_components/angular-utils-pagination/nmcDirPagination.tpl.html"></dir-pagination-controls>
     </div>
     <div class="col-md-3 noPadding">
              <div class="input-group nmc-search-form">
@@ -433,3 +455,4 @@
 		</span>
 	</div>
 </div>
+</div>    

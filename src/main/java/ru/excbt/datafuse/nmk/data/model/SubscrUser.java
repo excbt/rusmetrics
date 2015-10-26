@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -13,16 +14,20 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import org.hibernate.annotations.Where;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
-
 @Entity
-@Table(name="subscr_user")
-@Where(clause="id > 0 and deleted = 0")
-public class SubscrUser extends AbstractAuditableModel implements SubscriberUser {
+@Table(name = "subscr_user")
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class SubscrUser extends AbstractAuditableModel implements SubscriberUser, DeletableObject {
 
 	/**
 	 * 
@@ -33,36 +38,57 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	 * 
 	 */
 
-	
-	@Column(name = "user_name")
+	@Column(name = "user_name", updatable = false)
 	private String userName;
-	
+
 	@Column(name = "first_name")
 	private String firstName;
-	
+
 	@Column(name = "last_name")
 	private String lastName;
-	
+
 	@Column(name = "password")
+	@JsonIgnore
 	private String password;
-	
+
 	@Version
 	private int version;
 
-	@OneToMany (fetch = FetchType.EAGER)
-    @JoinTable(name="subscr_user_role",
-    joinColumns=@JoinColumn(name="subscr_user_id"),
-    inverseJoinColumns=@JoinColumn(name="subscr_role_id"))
-	private Collection<SubscrRole> subscrRoles;	
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id") ,
+			inverseJoinColumns = @JoinColumn(name = "subscr_role_id") )
+	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
-	@OneToOne (fetch = FetchType.EAGER)
-	@JoinColumn(name="subscriber_id")
-	private Subscriber subscriber; 
-	
-	@Column(name = "user_uuid")
+	@JsonIgnore
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subscriber_id")
+	private Subscriber subscriber;
+
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
+
+	@JsonIgnore
+	@Column(name = "user_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID userUUID;
-	
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Column(name = "user_comment")
+	private String userComment;
+
+	@Column(name = "user_email")
+	private String userEMail;
+
+	@Column(name = "is_blocked")
+	private Boolean isBlocked;
+
+	@JsonIgnore
+	@Column(name = "is_admin")
+	private Boolean isAdmin;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -95,12 +121,11 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 		this.password = password;
 	}
 
-
-	public Collection<SubscrRole> getSubscrRoles() {
+	public List<SubscrRole> getSubscrRoles() {
 		return subscrRoles;
 	}
 
-	public void setSubscrRoles(Collection<SubscrRole> subscrRoles) {
+	public void setSubscrRoles(List<SubscrRole> subscrRoles) {
 		this.subscrRoles = subscrRoles;
 	}
 
@@ -129,5 +154,55 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 		this.userUUID = userUUID;
 	}
 
-	
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
+	public String getUserComment() {
+		return userComment;
+	}
+
+	public void setUserComment(String userComment) {
+		this.userComment = userComment;
+	}
+
+	public String getUserEMail() {
+		return userEMail;
+	}
+
+	public void setUserEMail(String userEMail) {
+		this.userEMail = userEMail;
+	}
+
+	public Boolean getIsBlocked() {
+		return isBlocked;
+	}
+
+	public void setIsBlocked(Boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+	public Boolean getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(Boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+
 }

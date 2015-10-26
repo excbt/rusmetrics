@@ -1,26 +1,29 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "subscriber")
-public class Subscriber extends AbstractAuditableModel {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class Subscriber extends AbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -40,31 +43,40 @@ public class Subscriber extends AbstractAuditableModel {
 	@JoinColumn(name = "organization_id")
 	private Organization organization;
 
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_cont_object", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
-	@JsonIgnore
-	private Collection<ContObject> contObjects;
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "directory_id"))
-	@JsonIgnore
-	private Collection<UDirectory> directories;
-
-	@OneToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "subscr_rso", joinColumns = @JoinColumn(name = "subscriber_id"), inverseJoinColumns = @JoinColumn(name = "organization_id"))
-	@JsonIgnore
-	private Collection<Organization> rsoOrganizations;
+	@Column(name = "organization_id", updatable = false, insertable = false)
+	private Long organizationId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
 
-	@Column(name = "subscriber_uuid")
+	@Column(name = "timezone_def", insertable = false, updatable = false)
+	private String timezoneDefKeyname;
+
+	@JsonIgnore
+	@Column(name = "subscriber_uuid", insertable = false, updatable = false)
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID subscriberUUID;
 
 	@Version
 	private int version;
+
+	@Column(name = "is_rma", insertable = false, updatable = false)
+	private Boolean isRma;
+
+	@Column(name = "rma_subscriber_id", updatable = false)
+	private Long rmaSubscriberId;
+
+	@Column(name = "ghost_subscriber_id", insertable = false, updatable = false)
+	private Long ghostSubscriberId;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
+
+	@JsonIgnore
+	@Column(name = "rma_ldap_ou", insertable = false, updatable = false)
+	private String rmaLdapOu;
 
 	public String getInfo() {
 		return info;
@@ -90,36 +102,12 @@ public class Subscriber extends AbstractAuditableModel {
 		this.organization = organization;
 	}
 
-	public Collection<ContObject> getContObjects() {
-		return contObjects;
-	}
-
-	public void setContObjects(final Collection<ContObject> contObjects) {
-		this.contObjects = contObjects;
-	}
-
-	public Collection<UDirectory> getDirectories() {
-		return directories;
-	}
-
-	public void setDirectories(Collection<UDirectory> directories) {
-		this.directories = directories;
-	}
-
 	public int getVersion() {
 		return version;
 	}
 
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public Collection<Organization> getRsoOrganizations() {
-		return rsoOrganizations;
-	}
-
-	public void setRsoOrganizations(Collection<Organization> rsoOrganizations) {
-		this.rsoOrganizations = rsoOrganizations;
 	}
 
 	public String getSubscriberName() {
@@ -144,6 +132,64 @@ public class Subscriber extends AbstractAuditableModel {
 
 	public void setSubscriberUUID(UUID subscriberUUID) {
 		this.subscriberUUID = subscriberUUID;
+	}
+
+	public Boolean getIsRma() {
+		return isRma;
+	}
+
+	public void setIsRma(Boolean isRma) {
+		this.isRma = isRma;
+	}
+
+	public Long getRmaSubscriberId() {
+		return rmaSubscriberId;
+	}
+
+	public void setRmaSubscriberId(Long rmaSubscriberId) {
+		this.rmaSubscriberId = rmaSubscriberId;
+	}
+
+	public Long getGhostSubscriberId() {
+		return ghostSubscriberId;
+	}
+
+	public void setGhostSubscriberId(Long ghostSubscriberId) {
+		this.ghostSubscriberId = ghostSubscriberId;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	public Long getOrganizationId() {
+		return organizationId;
+	}
+
+	public void setOrganizationId(Long organizationId) {
+		this.organizationId = organizationId;
+	}
+
+	public String getRmaLdapOu() {
+		return rmaLdapOu;
+	}
+
+	public void setRmaLdapOu(String rmaLdapOu) {
+		this.rmaLdapOu = rmaLdapOu;
+	}
+
+	public String getTimezoneDefKeyname() {
+		return timezoneDefKeyname;
+	}
+
+	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
+		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
 
 }

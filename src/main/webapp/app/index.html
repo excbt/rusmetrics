@@ -61,7 +61,13 @@
         </div>
 -->
     <!-- Add your site or application content here -->
+<!--
+<div ng-class="{'nmc-hide':!mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':mainCtrlSettings.loadingServicePermissionFlag}">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+-->
 <div id="wrap" class="wrap" ng-controller="MainCtrl">
+<!--    ng-class="{'nmc-hide':mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':!mainCtrlSettings.loadingServicePermissionFlag}">-->
 <!--    Навигационная строка в верху страницы-->
     <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
 <!--        style="background-color: white;"-->
@@ -132,22 +138,22 @@
                             <div id="sidebar-entries" class="list-group">
    
                                 <!-- Объекты, редактирование -->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
+                                <a id="object_main_menu_item" class="list-group-item nmc-main-menu-item nmc-hide" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
 
                                     href="#/" data-toggle="offcanvas" ng-click="clickMenu('object_menu_item');showAdminSettings=false;"><i class="glyphicon glyphicon-list nmc-main-menu-item-icon" title="Объекты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span></a>
                                 
                                 <!-- Отчеты -->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
+                                <a id="report_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
 
                                    href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
                                 
                                  <!-- Notices -->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
+                                <a id="notice_main_menu_item" class="list-group-item nmc-main-menu-item nmc-hide" ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
 
                                    href="#/notices/monitor/" data-toggle="offcanvas" ng-click="clickMenu('notice_menu_item')"><i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span></a>                            
                                 
 <!--                                Настройки-->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
+                                <a id="setting_main_menu_item" class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
 
                                    href="#/settings/tariffs/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 
@@ -302,6 +308,7 @@
       <script src="scripts/controllers/monitor.js"></script>
       <script src="scripts/controllers/monitor_map.js"></script>
       <script src="scripts/controllers/objects_map.js"></script>
+      <script src="scripts/controllers/management-services.js"></script>
 <!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->

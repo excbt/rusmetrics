@@ -3,20 +3,15 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URI;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,13 +26,13 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryController extends WebApiController {
+public class UDirectoryController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryController.class);
+	private static final Logger logger = LoggerFactory.getLogger(UDirectoryController.class);
 
 	@Autowired
 	private UDirectoryService directoryService;
@@ -51,9 +46,8 @@ public class UDirectoryController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> listDirectoryNodes(
-			@PathVariable("id") long directoryId) {
-		UDirectory dir = directoryService.findOne(directoryId);
+	public ResponseEntity<?> listDirectoryNodes(@PathVariable("id") long directoryId) {
+		UDirectory dir = directoryService.findOne(getSubscriberId(), directoryId);
 		checkNotNull(dir);
 
 		UDirectoryNode result = dir.getDirectoryNode();
@@ -68,9 +62,9 @@ public class UDirectoryController extends WebApiController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
-		if (directoryService.checkAvailableDirectory(directoryId)) {
+		if (directoryService.checkAvailableDirectory(getSubscriberId(), directoryId)) {
 
-			UDirectory result = directoryService.findOne(directoryId);
+			UDirectory result = directoryService.findOne(getSubscriberId(), directoryId);
 			checkNotNull(result);
 
 			return ResponseEntity.ok(result);
@@ -85,7 +79,7 @@ public class UDirectoryController extends WebApiController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
-		List<UDirectory> result = directoryService.findAll();
+		List<UDirectory> result = directoryService.findAll(getSubscriberId());
 		checkNotNull(result);
 		return ResponseEntity.ok(result);
 	}
@@ -97,8 +91,7 @@ public class UDirectoryController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long id,
-			@RequestBody UDirectory uDirectory) {
+	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long id, @RequestBody UDirectory uDirectory) {
 
 		checkNotNull(uDirectory);
 		checkNotNull(uDirectory.getId());
@@ -108,7 +101,7 @@ public class UDirectoryController extends WebApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryService.save(entity));
+				setResultEntity(directoryService.save(getSubscriberId(), entity));
 			}
 		};
 
@@ -123,18 +116,16 @@ public class UDirectoryController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createOne(@RequestBody UDirectory uDirectory,
-			HttpServletRequest request) {
+	public ResponseEntity<?> createOne(@RequestBody UDirectory uDirectory, HttpServletRequest request) {
 
 		checkNotNull(uDirectory);
 		checkArgument(uDirectory.getId() == null);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectory, Long>(
-				uDirectory, request) {
+		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectory, Long>(uDirectory, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryService.save(entity));
+				setResultEntity(directoryService.save(getSubscriberId(), entity));
 			}
 
 			@Override
@@ -153,14 +144,13 @@ public class UDirectoryController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne(
-			@PathVariable("directoryId") final long directoryId) {
+	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") final long directoryId) {
 
 		ApiAction action = new AbstractApiAction() {
 
 			@Override
 			public void process() {
-				directoryService.delete(directoryId);
+				directoryService.delete(getSubscriberId(), directoryId);
 
 			}
 		};

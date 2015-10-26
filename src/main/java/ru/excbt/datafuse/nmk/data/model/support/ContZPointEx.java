@@ -4,9 +4,12 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class ContZPointEx extends ExtraInfo<ContZPoint> {
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+
+public class ContZPointEx extends ExtraInfo<ContZPoint> implements DeletableObject {
 
 	/**
 	 * 
@@ -48,8 +51,7 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 
 	public ContZPointEx(ContZPoint srcObject, Date lastDataDate) {
 		super(srcObject);
-		this.lastDataDate = lastDataDate != null ? new DateTime(lastDataDate)
-				: null;
+		this.lastDataDate = lastDataDate != null ? new DateTime(lastDataDate) : null;
 		this.dataExists = lastDataDate != null;
 	}
 
@@ -72,6 +74,17 @@ public class ContZPointEx extends ExtraInfo<ContZPoint> {
 
 	public void setDataExists(Boolean dataExists) {
 		this.dataExists = dataExists;
+	}
+
+	@JsonIgnore
+	@Override
+	public int getDeleted() {
+		return getObject() == null ? 0 : getObject().getDeleted();
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		throw new UnsupportedOperationException();
 	}
 
 }

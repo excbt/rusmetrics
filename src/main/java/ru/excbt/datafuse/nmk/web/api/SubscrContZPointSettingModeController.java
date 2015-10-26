@@ -89,7 +89,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 		checkNotNull(settingMode);
 		checkNotNull(settingMode.getId());
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint.getContObject().getId().longValue() != contObjectId) {
 			return ResponseEntity

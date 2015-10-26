@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -13,12 +11,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
-import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
 @Entity
 @Table(name = "report_meta_param_common")
@@ -36,9 +33,8 @@ public class ReportMetaParamCommon implements Serializable {
 	@JsonIgnore
 	private ReportType reportType;
 
-	@Enumerated(EnumType.STRING)
 	@Column(name = "report_type")
-	private ReportTypeKey reportTypeKey;
+	private String reportTypeKeyname;
 
 	@Column(name = "one_date_required")
 	private Boolean oneDateRequired;
@@ -63,17 +59,9 @@ public class ReportMetaParamCommon implements Serializable {
 
 	@Column(name = "is_special_id_param")
 	private Boolean isSpecialIdParam;
-	
+
 	@Version
 	private int version;
-
-	public ReportTypeKey getReportTypeKey() {
-		return reportTypeKey;
-	}
-
-	public void setReportTypeKey(ReportTypeKey reportTypeKey) {
-		this.reportTypeKey = reportTypeKey;
-	}
 
 	public Boolean getOneDateRequired() {
 		return oneDateRequired;
@@ -139,34 +127,44 @@ public class ReportMetaParamCommon implements Serializable {
 		this.reportType = reportType;
 	}
 
+	public Boolean getNoContObjectsRequired() {
+		return noContObjectsRequired;
+	}
+
+	public void setNoContObjectsRequired(Boolean noContObjectsRequired) {
+		this.noContObjectsRequired = noContObjectsRequired;
+	}
+
+	public Boolean getIsSpecialIdParam() {
+		return isSpecialIdParam;
+	}
+
+	public void setIsSpecialIdParam(Boolean isSpecialIdParam) {
+		this.isSpecialIdParam = isSpecialIdParam;
+	}
+
+	public String getReportTypeKeyname() {
+		return reportTypeKeyname;
+	}
+
+	public void setReportTypeKeyname(String reportTypeKeyname) {
+		this.reportTypeKeyname = reportTypeKeyname;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((endDateRequired == null) ? 0 : endDateRequired.hashCode());
-		result = prime
-				* result
-				+ ((manyContObjectsRequired == null) ? 0
-						: manyContObjectsRequired.hashCode());
-		result = prime
-				* result
-				+ ((manyContObjectsZipOnly == null) ? 0
-						: manyContObjectsZipOnly.hashCode());
-		result = prime
-				* result
-				+ ((oneContObjectRequired == null) ? 0 : oneContObjectRequired
-						.hashCode());
-		result = prime * result
-				+ ((oneDateRequired == null) ? 0 : oneDateRequired.hashCode());
-		result = prime * result
-				+ ((reportType == null) ? 0 : reportType.hashCode());
-		result = prime * result
-				+ ((reportTypeKey == null) ? 0 : reportTypeKey.hashCode());
-		result = prime
-				* result
-				+ ((startDateRequired == null) ? 0 : startDateRequired
-						.hashCode());
+		result = prime * result + ((endDateRequired == null) ? 0 : endDateRequired.hashCode());
+		result = prime * result + ((isSpecialIdParam == null) ? 0 : isSpecialIdParam.hashCode());
+		result = prime * result + ((manyContObjectsRequired == null) ? 0 : manyContObjectsRequired.hashCode());
+		result = prime * result + ((manyContObjectsZipOnly == null) ? 0 : manyContObjectsZipOnly.hashCode());
+		result = prime * result + ((noContObjectsRequired == null) ? 0 : noContObjectsRequired.hashCode());
+		result = prime * result + ((oneContObjectRequired == null) ? 0 : oneContObjectRequired.hashCode());
+		result = prime * result + ((oneDateRequired == null) ? 0 : oneDateRequired.hashCode());
+		result = prime * result + ((reportType == null) ? 0 : reportType.hashCode());
+		result = prime * result + ((reportTypeKeyname == null) ? 0 : reportTypeKeyname.hashCode());
+		result = prime * result + ((startDateRequired == null) ? 0 : startDateRequired.hashCode());
 		result = prime * result + version;
 		return result;
 	}
@@ -185,16 +183,25 @@ public class ReportMetaParamCommon implements Serializable {
 				return false;
 		} else if (!endDateRequired.equals(other.endDateRequired))
 			return false;
+		if (isSpecialIdParam == null) {
+			if (other.isSpecialIdParam != null)
+				return false;
+		} else if (!isSpecialIdParam.equals(other.isSpecialIdParam))
+			return false;
 		if (manyContObjectsRequired == null) {
 			if (other.manyContObjectsRequired != null)
 				return false;
-		} else if (!manyContObjectsRequired
-				.equals(other.manyContObjectsRequired))
+		} else if (!manyContObjectsRequired.equals(other.manyContObjectsRequired))
 			return false;
 		if (manyContObjectsZipOnly == null) {
 			if (other.manyContObjectsZipOnly != null)
 				return false;
 		} else if (!manyContObjectsZipOnly.equals(other.manyContObjectsZipOnly))
+			return false;
+		if (noContObjectsRequired == null) {
+			if (other.noContObjectsRequired != null)
+				return false;
+		} else if (!noContObjectsRequired.equals(other.noContObjectsRequired))
 			return false;
 		if (oneContObjectRequired == null) {
 			if (other.oneContObjectRequired != null)
@@ -211,7 +218,10 @@ public class ReportMetaParamCommon implements Serializable {
 				return false;
 		} else if (!reportType.equals(other.reportType))
 			return false;
-		if (reportTypeKey != other.reportTypeKey)
+		if (reportTypeKeyname == null) {
+			if (other.reportTypeKeyname != null)
+				return false;
+		} else if (!reportTypeKeyname.equals(other.reportTypeKeyname))
 			return false;
 		if (startDateRequired == null) {
 			if (other.startDateRequired != null)
@@ -222,23 +232,5 @@ public class ReportMetaParamCommon implements Serializable {
 			return false;
 		return true;
 	}
-
-	public Boolean getNoContObjectsRequired() {
-		return noContObjectsRequired;
-	}
-
-	public void setNoContObjectsRequired(Boolean noContObjectsRequired) {
-		this.noContObjectsRequired = noContObjectsRequired;
-	}
-
-	public Boolean getIsSpecialIdParam() {
-		return isSpecialIdParam;
-	}
-
-	public void setIsSpecialIdParam(Boolean isSpecialIdParam) {
-		this.isSpecialIdParam = isSpecialIdParam;
-	}
-
-
 
 }

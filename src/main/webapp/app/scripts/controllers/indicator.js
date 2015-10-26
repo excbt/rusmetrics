@@ -1,6 +1,9 @@
 
 angular.module('portalNMC')
-    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc){
+    .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
+    
+    $scope.ctrlSettings ={};
+    $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -617,6 +620,28 @@ console.log($location.search());
         $scope.setScoreStyles = function(){
 //console.log("Run setScoreStyles");            
             //set styles for score/integrators
+//            $scope.tableDef.columns.forEach(function(element){
+            $scope.tableDef.columns.some(function(element){    
+                var indicatorTd = document.getElementById("indicators_th_"+element.fieldName);
+                var indicatorHead = document.getElementById("indicators_head_"+element.fieldName);
+//console.log("indicators_td_"+element.fieldName);                
+//console.log(indicatorHead);                    
+//console.log(indicatorTd);                 
+                if ((angular.isDefined(indicatorTd))&&(indicatorTd!=null)&&(angular.isDefined(indicatorHead))&&(indicatorHead!=null)){
+//                    if (indicatorTd.offsetWidth>indicatorHead.offsetWidth){
+                        var thWidth = Math.min(indicatorTd.offsetWidth, indicatorTd.clientWidth);
+                        indicatorHead.style.width =thWidth;//indicatorTd.offsetWidth+"px";                   
+//                    }else{
+//                        indicatorTd.style.width =indicatorHead.offsetWidth+"px";                   
+//                    };
+//console.log(thWidth);                     
+//console.log(indicatorTd.offsetWidth);                     
+//console.log(indicatorTd.clientWidth);                     
+//console.log(indicatorHead.style.width);                    
+                };
+//return true;
+            });
+            
             var indicatorThDataDate = document.getElementById("indicators_th_dataDate");
             var indicatorThWorkTime = document.getElementById("indicators_th_workTime");
             var totalThHead = document.getElementById("totals_th_head"); 
@@ -626,15 +651,19 @@ console.log($location.search());
 //console.log(angular.isDefined(indicatorThWorkTime.clientWidth));
 //console.log(indicatorThWorkTime.clientWidth);            
             if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
-                $scope.totals_th_head_style = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth+4;
+                $scope.totals_th_head_style = indicatorThDataDate.offsetWidth+indicatorThWorkTime.offsetWidth+4;
             };
+            
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
-            $scope.intotalColumns.forEach(function(element){
+//            $scope.intotalColumns.forEach(function(element){
+            $scope.intotalColumns.some(function(element){    
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
+//                var indicatorHead = document.getElementById("indicators_head_"+element.name);
                 if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
-                    element.ngstyle =indicatorTh.clientWidth;
+                    element.ngstyle =indicatorTh.offsetWidth;
+//console.log(element);                    
                 };
-
+//return true;
             });
         };
         
@@ -690,7 +719,7 @@ console.log($location.search());
                     textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
-                    var targetDOM = "#total"+columnName;
+                    var targetDOM = "#total"+columnName;                 
                     $(elDOM).qtip({
                         suppress: false,
                         content:{
@@ -842,5 +871,34 @@ console.log($location.search());
         return true;
     };
         
+        //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+//console.log(elDOM);            
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+//        if (ctxFlag == false){
+//            window.location.assign('#/');
+//        };
+    };
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.ctrlSettings.ctxId);
+    });
+        
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    }, 500);    
                 
 }]);

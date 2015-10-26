@@ -18,21 +18,18 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 public class UDirectoryService implements SecuredRoles {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(UDirectoryService.class);
+
 	@Autowired
 	private UDirectoryRepository directoryRepository;
 
 	@Autowired
-	private CurrentSubscriberService currentSubscrRoleService;
+	private SubscriberService subscriberService;
 
 	/**
 	 * 
@@ -40,13 +37,13 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public UDirectory findOne(final long id) {
-		if (!checkAvailableDirectory(id)) {
+	public UDirectory findOne(long subscriberId, final long uDirectoryId) {
+		if (!checkAvailableDirectory(subscriberId, uDirectoryId)) {
 			return null;
 		}
-		UDirectory result = directoryRepository.findOne(id);
+		UDirectory result = directoryRepository.findOne(uDirectoryId);
 		if (result == null) {
-			logger.debug("UDirectory (id={}) not found", id);
+			logger.debug("UDirectory (id={}) not found", uDirectoryId);
 			return null;
 		}
 		return result;
@@ -57,9 +54,8 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<UDirectory> findAll() {
-		return directoryRepository.selectBySubscriber(currentSubscrRoleService
-				.getSubscriberId());
+	public List<UDirectory> findAll(long subscriberId) {
+		return directoryRepository.selectBySubscriber(subscriberId);
 	}
 
 	/**
@@ -67,10 +63,8 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectAvailableDirectoryIds() {
-		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
-		List<Long> directoryIds = directoryRepository
-				.selectDirectoryIds(subscrOrgId);
+	public List<Long> selectAvailableDirectoryIds(long subscriberId) {
+		List<Long> directoryIds = directoryRepository.selectDirectoryIds(subscriberId);
 		return Collections.unmodifiableList(directoryIds);
 	}
 
@@ -80,10 +74,8 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkAvailableDirectory(long directoryId) {
-		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
-		List<Long> res = directoryRepository.selectAvailableId(subscrOrgId,
-				directoryId);
+	public boolean checkAvailableDirectory(long subscriberId, long directoryId) {
+		List<Long> res = directoryRepository.selectAvailableId(subscriberId, directoryId);
 		return !res.isEmpty();
 	}
 
@@ -93,14 +85,13 @@ public class UDirectoryService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public UDirectory save(final UDirectory entity) {
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public UDirectory save(long subscriberId, final UDirectory entity) {
 		checkNotNull(entity);
-		Subscriber currentSubscriber = currentSubscrRoleService.getSubscriber();
+		Subscriber currentSubscriber = subscriberService.selectSubscriber(subscriberId);
 		checkNotNull(currentSubscriber, "Empty current SubscrOrg");
-		
+
 		long subscrOrgId = currentSubscriber.getId();
-		
 
 		UDirectory recordToSave = null;
 		if (entity.isNew()) {
@@ -108,15 +99,15 @@ public class UDirectoryService implements SecuredRoles {
 		} else {
 
 			final long directoryId = entity.getId();
-			
-			if (!checkAvailableDirectory(directoryId)) {
-				throw new PersistenceException("SubscrOrgId: " + subscrOrgId
-						+ ". Directory with ID: " + directoryId + " is not found");
-			}			
+
+			if (!checkAvailableDirectory(subscriberId, directoryId)) {
+				throw new PersistenceException(
+						"SubscrOrgId: " + subscrOrgId + ". Directory with ID: " + directoryId + " is not found");
+			}
 			recordToSave = directoryRepository.findOne(directoryId);
 			if (recordToSave == null) {
-				throw new PersistenceException("SubscrOrgId: " + subscrOrgId
-						+ ". Directory with ID: " + directoryId + " is not found");
+				throw new PersistenceException(
+						"SubscrOrgId: " + subscrOrgId + ". Directory with ID: " + directoryId + " is not found");
 			}
 		}
 
@@ -129,23 +120,21 @@ public class UDirectoryService implements SecuredRoles {
 		return savedRecord;
 	}
 
-	
 	/**
 	 * 
 	 * @param directoryId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void delete(final long directoryId) {
-		long subscrOrgId = currentSubscrRoleService.getSubscriberId();
-		
-		if (!checkAvailableDirectory(directoryId)) {
-			throw new PersistenceException("SubscrOrgId: " + subscrOrgId
-					+ ". Directory with ID: " + directoryId + " is not found");
-		}		
-		
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public void delete(long subscriberId, final long directoryId) {
+
+		if (!checkAvailableDirectory(subscriberId, directoryId)) {
+			throw new PersistenceException(
+					"SubscriberId: " + subscriberId + ". Directory with ID: " + directoryId + " is not found");
+		}
+
 		directoryRepository.delete(directoryId);
-		
+
 	}
-	
+
 }

@@ -6,8 +6,9 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
-        <li role="presentation" ><a class="nmc-main-tab-button" href="#/objects/map/" aria-controls="objects_map" role="tab" data-target="#objects_map" data-toggle="tab">Карта</a></li>
+        <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="object_map_2nd_menu_item" role="presentation" class="nmc-hide" ><a class="nmc-main-tab-button" href="#/objects/map/" aria-controls="objects_map" role="tab" data-target="#objects_map" data-toggle="tab">Карта</a></li>
 
     </ul>
 
@@ -100,7 +101,7 @@
 <div>
 <!--<div style="overflow: scroll;width:300px;height:100px;position:relative"> crolling table div -->
 <!--<div style="overflow: scroll;width:1000px;height:685px;position:relative" ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50' >-->
-    <div id="divWithObjectTable" style="overflow: scroll;height:685px;position:relative" ng-hide="loading">
+    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
             <tr class="nmc-hide">

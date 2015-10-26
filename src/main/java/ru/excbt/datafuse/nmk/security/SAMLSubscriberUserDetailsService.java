@@ -17,51 +17,56 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
 @Service
 public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SAMLSubscriberUserDetailsService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SAMLSubscriberUserDetailsService.class);
 
 	public static final String DUMMY_PASSWORD = "DUMMY_PASSWORD";
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private SecuritySubscriberService subscriberService;
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SecuritySubscrUserService subscrUserService;
 
 	@Autowired
 	private SystemUserService systemUserService;
 
+	@Autowired
+	private SubscrUserLoginLogService subscrUserLoginLogService;
+
 	@Override
-	public Object loadUserBySAML(SAMLCredential credential)
-			throws UsernameNotFoundException {
+	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
 
 		String attrUID = credential.getAttributeAsString("uid");
 		String attrUserId = credential.getAttributeAsString("userId");
 
 		logger.info("attr {}: {}", "uid", attrUID == null ? "NULL" : attrUID);
 		logger.info("attr {}: {}", "attrUserId", attrUserId == null ? "NULL" : attrUserId);
-		
-		
-		String username = attrUID;
-		logger.debug("Starting processing SubscriberUserDetails for {}",
-				username);
 
+		String username = attrUID;
+		logger.debug("Starting processing SubscriberUserDetails for {}", username);
 
 		SubscriberUserDetails subscriberUserDetails = checkSubscrUser(username);
 
 		if (subscriberUserDetails == null) {
-			logger.error("subscriberUserDetails : INVALID");
+			throw new UsernameNotFoundException(
+					String.format("subscriberUserDetails : username %s is not found", username));
 		} else {
-			logger.debug("subscriberUserDetails : {}",
-					subscriberUserDetails.toString());
+			logger.debug("subscriberUserDetails : {}", subscriberUserDetails.toString());
 		}
+
+		if (subscriberUserDetails.isBlocked()) {
+			throw new UsernameNotFoundException(String.format("Username %s is BLOCKED", username));
+		}
+
+		subscrUserLoginLogService.registerLogin(subscriberUserDetails.getId(), subscriberUserDetails.getUsername());
 
 		return subscriberUserDetails;
 	}
@@ -79,8 +84,7 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 		}
 		Collection<GrantedAuthority> gas = AdminUtils.makeAdminAuths();
 
-		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
-				sUser, DUMMY_PASSWORD, gas);
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, DUMMY_PASSWORD, gas);
 		return subscriberUserDetails;
 	}
 
@@ -91,8 +95,7 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 	 */
 	private SubscriberUserDetails checkSubscrUser(String username) {
 
-		List<SubscrUser> subscrUsers = subscriberService
-				.findUserByUsername(username);
+		List<SubscrUser> subscrUsers = subscriberService.findUserByUsername(username);
 
 		if (subscrUsers.size() > 1) {
 			return null;
@@ -106,16 +109,14 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 
 		List<GrantedAuthority> grantedAuths = new ArrayList<>();
 
-		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser
-				.getId());
+		List<SubscrRole> roles = subscrUserService.selectSubscrRoles(sUser.getId());
 
 		for (SubscrRole sr : roles) {
 			String roleName = sr.getRoleName();
 			grantedAuths.add(new SimpleGrantedAuthority(roleName));
 		}
 
-		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(
-				sUser, DUMMY_PASSWORD, grantedAuths);
+		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, DUMMY_PASSWORD, grantedAuths);
 
 		return subscriberUserDetails;
 	}

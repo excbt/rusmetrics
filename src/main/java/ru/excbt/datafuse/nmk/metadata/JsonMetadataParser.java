@@ -22,8 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JsonMetadataParser {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(JsonMetadataParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(JsonMetadataParser.class);
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -32,8 +31,7 @@ public class JsonMetadataParser {
 	private final static String COMMA_STR = ",";
 	private final static String DEGIT_REGEXP = "(\\\\d)+";
 	private final static String SUM_FUNCION = "SUM(*)";
-	private final static List<String> SUPPORTED_FUNC = Arrays
-			.asList(SUM_FUNCION);
+	private final static List<String> SUPPORTED_FUNC = Arrays.asList(SUM_FUNCION);
 
 	/**
 	 * 
@@ -41,8 +39,7 @@ public class JsonMetadataParser {
 	 * @param propVar
 	 * @return
 	 */
-	public static List<MetadataInfo> processPropsVars(
-			List<? extends MetadataInfo> metadataInfoList, int propVar) {
+	public static List<MetadataInfo> processPropsVars(List<? extends MetadataInfo> metadataInfoList, int propVar) {
 		checkNotNull(metadataInfoList);
 
 		final String propVarStr = String.valueOf(propVar);
@@ -55,17 +52,13 @@ public class JsonMetadataParser {
 
 			Matcher m = META_VAR.matcher(srcMetadata.getSrcProp());
 
-			if (data.getPropVars() != null
-					&& !srcMetadata.getPropVars().contains(propVarStr)) {
-				logger.trace("srcProp: {} SKIPPED (by propVars)",
-						srcMetadata.getSrcProp());
+			if (data.getPropVars() != null && !srcMetadata.getPropVars().contains(propVarStr)) {
+				logger.trace("srcProp: {} SKIPPED (by propVars)", srcMetadata.getSrcProp());
 				continue;
 			}
 
-			if (data.getMetaNumber() != null
-					&& !data.getMetaNumber().equals(propVar)) {
-				logger.trace("srcProp: {} SKIPPED (by metaNumber)",
-						srcMetadata.getSrcProp());
+			if (data.getMetaNumber() != null && !data.getMetaNumber().equals(propVar)) {
+				logger.trace("srcProp: {} SKIPPED (by metaNumber)", srcMetadata.getSrcProp());
 				continue;
 			}
 
@@ -75,8 +68,7 @@ public class JsonMetadataParser {
 				srcPropComplete = data.getSrcProp();
 			}
 
-			logger.trace("srcProp: {}. srcPropComplete: {}", data.getSrcProp(),
-					srcPropComplete);
+			logger.trace("srcProp: {}. srcPropComplete: {}", data.getSrcProp(), srcPropComplete);
 
 			data.setSrcProp(srcPropComplete);
 			result.add(data);
@@ -91,8 +83,7 @@ public class JsonMetadataParser {
 	 * @param strPattern
 	 * @return
 	 */
-	private static List<JsonNode> findByPattern(JsonNode parentNode,
-			String strPattern) {
+	private static List<JsonNode> findByPattern(JsonNode parentNode, String strPattern) {
 		checkNotNull(parentNode);
 
 		String regexpPattern = strPattern.replaceAll("\\*", DEGIT_REGEXP);
@@ -116,8 +107,7 @@ public class JsonMetadataParser {
 		return result;
 	}
 
-	private static BigDecimal processFunction(String propFunc, BigDecimal arg1,
-			BigDecimal arg2) {
+	private static BigDecimal processFunction(String propFunc, BigDecimal arg1, BigDecimal arg2) {
 		checkNotNull(propFunc);
 		checkNotNull(arg1);
 		checkNotNull(arg2);
@@ -125,14 +115,11 @@ public class JsonMetadataParser {
 		BigDecimal result = BigDecimal.ZERO;
 
 		if (!SUPPORTED_FUNC.contains(propFunc)) {
-			throw new IllegalArgumentException("propFunc " + propFunc
-					+ " is not supported");
+			throw new IllegalArgumentException("propFunc " + propFunc + " is not supported");
 		}
 
 		if (SUM_FUNCION.equals(propFunc)) {
-			if (!arg2.equals(BigDecimal.ZERO)) {
-				result = arg2.add(arg1);
-			}
+			result = arg1.add(arg2);
 		}
 		return result;
 	}
@@ -143,8 +130,7 @@ public class JsonMetadataParser {
 	 * @param nodes
 	 * @return
 	 */
-	private static BigDecimal processNodePropFunction(String propFunc,
-			List<JsonNode> nodes) {
+	private static BigDecimal processNodePropFunction(String propFunc, List<JsonNode> nodes) {
 		checkNotNull(propFunc);
 		checkNotNull(nodes);
 		checkArgument(!nodes.isEmpty());
@@ -153,14 +139,25 @@ public class JsonMetadataParser {
 
 		BigDecimal result = BigDecimal.ZERO;
 
+		StringBuilder sumArgs = new StringBuilder();
+
 		for (JsonNode node : nodes) {
-			if (node.isBigDecimal()) {
+			if (node.isNumber() || node.isBigDecimal() || node.isBigInteger() || node.isInt() || node.isDouble()) {
 				BigDecimal val = node.decimalValue();
 				result = processFunction(propFunc, result, val);
+				sumArgs.append(val);
+				sumArgs.append(',');
+			} else {
+				logger.warn("Node: {} is not NUMBER", node.asText());
 			}
 
 		}
-		logger.trace("Function result: {}", result);
+		if (sumArgs.length() > 0) {
+			sumArgs.deleteCharAt(sumArgs.length() - 1);
+		}
+
+		logger.trace("Function {} arguments: {}", propFunc, sumArgs.toString());
+		logger.trace("Function {} result: {}", propFunc, result);
 		return result;
 	}
 
@@ -171,8 +168,7 @@ public class JsonMetadataParser {
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
-	public static List<MetadataFieldValue> processJsonFieldValues(
-			String srcJson, List<MetadataInfo> metadataInfoList)
+	public static List<MetadataFieldValue> processJsonFieldValues(String srcJson, List<MetadataInfo> metadataInfoList)
 			throws JsonProcessingException, IOException {
 
 		List<MetadataFieldValue> result = new ArrayList<>();
@@ -184,7 +180,7 @@ public class JsonMetadataParser {
 			final String srcProp = meta.getSrcProp();
 
 			logger.trace("Process prop: {}", srcProp);
-			
+
 			// comma separated props or field by mask
 			if (srcProp.contains(",") || srcProp.contains("*")) {
 				String[] fieldPatterns = srcProp.split(COMMA_STR);
@@ -197,21 +193,17 @@ public class JsonMetadataParser {
 					}
 
 					if (fNodes.size() > 0 && meta.getPropFunc() != null) {
-						BigDecimal patternSum = processNodePropFunction(
-								meta.getPropFunc(), fNodes);
+						BigDecimal patternSum = processNodePropFunction(meta.getPropFunc(), fNodes);
 
-						totalResult = processFunction(meta.getPropFunc(),
-								totalResult, patternSum);
+						totalResult = processFunction(meta.getPropFunc(), totalResult, patternSum);
 
 					} else {
-						logger.warn(
-								"Can't process any field by pattern {} and function {}",
-								fPattern, meta.getPropFunc());
+						logger.warn("Can't process any field by pattern {} and function {}", fPattern,
+								meta.getPropFunc());
 					}
 
 				}
-				MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-						srcProp, meta.getDestProp(), totalResult,
+				MetadataFieldValue metaFieldValue = new MetadataFieldValue(srcProp, meta.getDestProp(), totalResult,
 						meta.getDestDbType());
 				result.add(metaFieldValue);
 
@@ -237,23 +229,21 @@ public class JsonMetadataParser {
 
 				JsonNode valueNode = rootNode.findValue(propName);
 				if (valueNode == null) {
-					logger.error("!!! Node with Name {} is not found !!!",
-							propName);
+					logger.error("!!! Node with Name {} is not found !!!", propName);
 				}
-				
+
 				checkState(idxs.length <= 2, "Only one and two dimentions array supported");
-				
+
 				// 1D array
 				if (valueNode.isArray() && idxs.length == 1) {
 
 					JsonNode arrayValue = findArrayElement(valueNode, idxs[0]);
 					checkNotNull(arrayValue);
 
-					MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-							meta.getSrcProp(), meta.getDestProp(), arrayValue.asText(),
-							meta.getDestDbType());
+					MetadataFieldValue metaFieldValue = new MetadataFieldValue(meta.getSrcProp(), meta.getDestProp(),
+							arrayValue.asText(), meta.getDestDbType());
 					result.add(metaFieldValue);
-					
+
 					continue;
 				}
 				// 2D array
@@ -263,25 +253,22 @@ public class JsonMetadataParser {
 					checkState(arrayValue1D.isArray());
 					JsonNode arrayValue2D = findArrayElement(arrayValue1D, idxs[1]);
 					checkNotNull(arrayValue2D);
-					MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-							meta.getSrcProp(), meta.getDestProp(), arrayValue2D.asText(),
-							meta.getDestDbType());
+					MetadataFieldValue metaFieldValue = new MetadataFieldValue(meta.getSrcProp(), meta.getDestProp(),
+							arrayValue2D.asText(), meta.getDestDbType());
 					result.add(metaFieldValue);
 					continue;
 				}
 			} // Is array
-			
+
 			// Simple value
 			JsonNode valueNode = rootNode.findValue(meta.getSrcProp());
 			if (valueNode == null) {
-				logger.error("!!! Node with Name {} is not found !!!",
-						meta.getSrcProp());
+				logger.error("!!! Node with Name {} is not found !!!", meta.getSrcProp());
 				continue;
 			}
-			
-			MetadataFieldValue metaFieldValue = new MetadataFieldValue(
-					meta.getSrcProp(), meta.getDestProp(), valueNode.asText(),
-					meta.getDestDbType());
+
+			MetadataFieldValue metaFieldValue = new MetadataFieldValue(meta.getSrcProp(), meta.getDestProp(),
+					valueNode.asText(), meta.getDestDbType());
 			result.add(metaFieldValue);
 		}
 
@@ -295,7 +282,7 @@ public class JsonMetadataParser {
 	 * @return
 	 */
 	private static JsonNode findArrayElement(JsonNode parentNode, int idx) {
-		
+
 		checkNotNull(parentNode);
 		checkArgument(parentNode.isArray());
 		checkArgument(idx >= 0);

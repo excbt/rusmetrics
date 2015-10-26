@@ -31,8 +31,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class ReportTemplateService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportTemplateService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateService.class);
 
 	@Autowired
 	private ReportTemplateRepository reportTemplateRepository;
@@ -56,8 +55,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportTemplate findOne(long reportTemplateId) {
-		ReportTemplate result = reportTemplateRepository
-				.findOne(reportTemplateId);
+		ReportTemplate result = reportTemplateRepository.findOne(reportTemplateId);
 		return result;
 	}
 
@@ -95,9 +93,8 @@ public class ReportTemplateService implements SecuredRoles {
 		if (checkCanUpdate(reportTemplate.getId())) {
 			result = reportTemplateRepository.save(reportTemplate);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't update common template (id=%d)",
-					reportTemplate.getId()));
+			throw new PersistenceException(
+					String.format("Can't update common template (id=%d)", reportTemplate.getId()));
 		}
 
 		return result;
@@ -108,7 +105,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN })
 	protected ReportTemplate updateOneAny(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -123,7 +120,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -136,7 +133,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long reportTemplateId) {
 
@@ -146,8 +143,7 @@ public class ReportTemplateService implements SecuredRoles {
 			}
 			reportTemplateRepository.delete(reportTemplateId);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't delete report template (id=%d)", reportTemplateId));
+			throw new PersistenceException(String.format("Can't delete report template (id=%d)", reportTemplateId));
 		}
 
 	}
@@ -156,7 +152,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN })
 	public void deleteOneCommon(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
@@ -169,7 +165,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * 
 	 * @param reportTemplate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN })
 	public void deleteOneCommon(long reportTemplateId) {
 
@@ -179,8 +175,7 @@ public class ReportTemplateService implements SecuredRoles {
 			}
 			reportTemplateRepository.delete(reportTemplateId);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't delete report template (id=%d)", reportTemplateId));
+			throw new PersistenceException(String.format("Can't delete report template (id=%d)", reportTemplateId));
 		}
 
 	}
@@ -192,10 +187,8 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportTemplate> selectDefaultReportTemplates(
-			ReportTypeKey reportType, boolean isActive) {
-		return reportTemplateRepository.selectCommonTemplates(reportType,
-				isActive);
+	public List<ReportTemplate> selectDefaultReportTemplates(ReportTypeKey reportType, boolean isActive) {
+		return reportTemplateRepository.selectCommonTemplates(reportType.getKeyname(), isActive);
 	}
 
 	/**
@@ -205,11 +198,11 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportTemplate> selectSubscriberReportTemplates(
-			ReportTypeKey reportType, boolean isActive, long subscriberId) {
+	public List<ReportTemplate> selectSubscriberReportTemplates(ReportTypeKey reportType, boolean isActive,
+			long subscriberId) {
 
-		List<ReportTemplate> result = reportTemplateRepository
-				.selectSubscriberTemplates(reportType, isActive, subscriberId);
+		List<ReportTemplate> result = reportTemplateRepository.selectSubscriberTemplates(reportType.getKeyname(),
+				isActive, subscriberId);
 
 		return result;
 	}
@@ -221,15 +214,12 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportTemplate> getAllReportTemplates(long subscriberId,
-			ReportTypeKey reportType, boolean isActive) {
+	public List<ReportTemplate> getAllReportTemplates(long subscriberId, ReportTypeKey reportType, boolean isActive) {
 
 		List<ReportTemplate> result = new ArrayList<>();
-		List<ReportTemplate> commonTemplates = selectDefaultReportTemplates(
-				reportType, isActive);
+		List<ReportTemplate> commonTemplates = selectDefaultReportTemplates(reportType, isActive);
 
-		List<ReportTemplate> subscriberTemplates = selectSubscriberReportTemplates(
-				reportType, isActive, subscriberId);
+		List<ReportTemplate> subscriberTemplates = selectSubscriberReportTemplates(reportType, isActive, subscriberId);
 
 		result.addAll(commonTemplates);
 		result.addAll(subscriberTemplates);
@@ -265,10 +255,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param filename
 	 * @param isCompiled
 	 */
-	private void saveReportTemplateBodyInternal(long reportTemplateId,
-			byte[] body, String filename, boolean isCompiled) {
-		ReportTemplateBody rtb = reportTemplateBodyRepository
-				.findOne(reportTemplateId);
+	private void saveReportTemplateBodyInternal(long reportTemplateId, byte[] body, String filename,
+			boolean isCompiled) {
+		ReportTemplateBody rtb = reportTemplateBodyRepository.findOne(reportTemplateId);
 		if (rtb == null) {
 			rtb = new ReportTemplateBody();
 			rtb.setReportTemplateId(reportTemplateId);
@@ -290,10 +279,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void saveReportTemplateBody(long reportTemplateId, byte[] body,
-			String filename) {
+	public void saveReportTemplateBody(long reportTemplateId, byte[] body, String filename) {
 		saveReportTemplateBodyInternal(reportTemplateId, body, filename, false);
 	}
 
@@ -302,10 +290,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @param reportTemplateBody
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void saveReportTemplateBodyCompiled(long reportTemplateId,
-			byte[] body, String filename) {
+	public void saveReportTemplateBodyCompiled(long reportTemplateId, byte[] body, String filename) {
 
 		saveReportTemplateBodyInternal(reportTemplateId, body, filename, true);
 	}
@@ -315,10 +302,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param srcReportTemplateId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public ReportTemplate createByTemplate(long srcId,
-			ReportTemplate reportTemplate, Subscriber subscriber) {
+	public ReportTemplate createByTemplate(long srcId, ReportTemplate reportTemplate, Subscriber subscriber) {
 
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
@@ -326,16 +312,13 @@ public class ReportTemplateService implements SecuredRoles {
 		checkNotNull(subscriber);
 		checkArgument(!subscriber.isNew());
 
-		ReportTemplate srcReportTemplate = reportTemplateRepository
-				.findOne(srcId);
-		checkNotNull(srcReportTemplate, "Report Template not found. id="
-				+ srcId);
+		ReportTemplate srcReportTemplate = reportTemplateRepository.findOne(srcId);
+		checkNotNull(srcReportTemplate, "Report Template not found. id=" + srcId);
 
-		reportTemplate.setReportTypeKey(srcReportTemplate.getReportTypeKey());
+		reportTemplate.setReportTypeKeyname(srcReportTemplate.getReportTypeKeyname());
 		reportTemplate.setSubscriber(subscriber);
 		reportTemplate.setSrcReportTemplateId(srcId);
-		reportTemplate.setIntegratorIncluded(srcReportTemplate
-				.getIntegratorIncluded());
+		reportTemplate.setIntegratorIncluded(srcReportTemplate.getIntegratorIncluded());
 		reportTemplate.set_default(false);
 		reportTemplate.set_active(true);
 		reportTemplate.setActiveEndDate(null);
@@ -343,8 +326,7 @@ public class ReportTemplateService implements SecuredRoles {
 
 		ReportTemplate result = reportTemplateRepository.save(reportTemplate);
 
-		ReportTemplateBody srcBody = getReportTemplateBody(srcReportTemplate
-				.getId());
+		ReportTemplateBody srcBody = getReportTemplateBody(srcReportTemplate.getId());
 		if (srcBody != null) {
 			ReportTemplateBody newBody = new ReportTemplateBody();
 			newBody.setReportTemplateId(result.getId());
@@ -363,18 +345,16 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
 		if (!checkCanUpdate(reportTemplateId)) {
-			throw new PersistenceException(String.format(
-					"ReportTemplate with (id=%d) is not updatable",
-					reportTemplateId));
+			throw new PersistenceException(
+					String.format("ReportTemplate with (id=%d) is not updatable", reportTemplateId));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportParamset(reportTemplateId, true);
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportParamset(reportTemplateId, true);
 
 		if (reportParamsetList.size() > 0) {
 			return null;
@@ -382,13 +362,11 @@ public class ReportTemplateService implements SecuredRoles {
 
 		ReportTemplate rt = reportTemplateRepository.findOne(reportTemplateId);
 		if (rt == null) {
-			throw new PersistenceException(String.format(
-					"ReportTemplate (id=%d) not found", reportTemplateId));
+			throw new PersistenceException(String.format("ReportTemplate (id=%d) not found", reportTemplateId));
 		}
 		if (!rt.is_active()) {
-			throw new PersistenceException(String.format(
-					"ReportTemplate (id=%d) is alredy archived",
-					reportTemplateId));
+			throw new PersistenceException(
+					String.format("ReportTemplate (id=%d) is alredy archived", reportTemplateId));
 		}
 		rt.set_active(false);
 		rt.setActiveEndDate(new Date());
@@ -413,10 +391,8 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportTemplate> selectActiveReportTemplates(
-			ReportTypeKey reportTypeKey) {
-		return reportTemplateRepository.selectActiveTemplates(reportTypeKey,
-				true);
+	public List<ReportTemplate> selectActiveReportTemplates(ReportTypeKey reportTypeKey) {
+		return reportTemplateRepository.selectActiveTemplates(reportTypeKey.getKeyname(), true);
 	}
 
 	/**
@@ -426,10 +402,9 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param isCompiled
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public int updateCommonReportTemplateBody(ReportTypeKey reportTypeKey,
-			boolean isActive, boolean isCompiled) {
+	public int updateCommonReportTemplateBody(ReportTypeKey reportTypeKey, boolean isActive, boolean isCompiled) {
 		List<ReportTemplate> updateCadidates = reportTemplateRepository
-				.selectCommonTemplates(reportTypeKey, isActive);
+				.selectCommonTemplates(reportTypeKey.getKeyname(), isActive);
 
 		if (updateCadidates.size() == 0) {
 			return 0;
@@ -446,8 +421,7 @@ public class ReportTemplateService implements SecuredRoles {
 		String srcBodyFilename;
 		if (isCompiled) {
 			srcBody = reportMasterTemplateBody.getBodyCompiled();
-			srcBodyFilename = reportMasterTemplateBody
-					.getBodyCompiledFilename();
+			srcBodyFilename = reportMasterTemplateBody.getBodyCompiledFilename();
 		} else {
 			srcBody = reportMasterTemplateBody.getBody();
 			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
@@ -461,8 +435,7 @@ public class ReportTemplateService implements SecuredRoles {
 		for (ReportTemplate rt : updateCadidates) {
 			logger.info("Updating ReportTemplate:{}", rt.getId());
 
-			saveReportTemplateBodyInternal(rt.getId(), srcBody,
-					srcBodyFilename, isCompiled);
+			saveReportTemplateBodyInternal(rt.getId(), srcBody, srcBodyFilename, isCompiled);
 			resultIdx++;
 		}
 
@@ -474,7 +447,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTypeKey
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN })
 	public ReportTemplate createCommonReportTemplate(ReportTypeKey reportTypeKey) {
 
@@ -484,16 +457,14 @@ public class ReportTemplateService implements SecuredRoles {
 				.selectReportMasterTemplate(reportTypeKey);
 
 		if (masterTemplateBody == null) {
-			throw new PersistenceException(String.format(
-					"ReportMasterTemplateBody for report %s not found",
-					reportTypeKey.name()));
+			throw new PersistenceException(
+					String.format("ReportMasterTemplateBody for report %s not found", reportTypeKey.name()));
 		}
 
 		ReportTemplate reportTemplate = new ReportTemplate();
 
-		reportTemplate.setReportTypeKey(reportTypeKey);
-		ReportType reportType = reportTypeService.findByKeyname(reportTypeKey
-				.name());
+		reportTemplate.setReportTypeKeyname(reportTypeKey.getKeyname());
+		ReportType reportType = reportTypeService.findByKeyname(reportTypeKey.name());
 		if (reportType.getName() != null) {
 			reportTemplate.setName(reportType.getName() + " (ОБЩИЙ)");
 		} else {
@@ -508,12 +479,9 @@ public class ReportTemplateService implements SecuredRoles {
 		ReportTemplateBody reportTemplateBody = new ReportTemplateBody();
 		reportTemplateBody.setReportTemplateId(result.getId());
 		reportTemplateBody.setBody(masterTemplateBody.getBody());
-		reportTemplateBody
-				.setBodyCompiled(masterTemplateBody.getBodyCompiled());
-		reportTemplateBody
-				.setBodyFilename(masterTemplateBody.getBodyFilename());
-		reportTemplateBody.setBodyCompiledFilename(masterTemplateBody
-				.getBodyCompiledFilename());
+		reportTemplateBody.setBodyCompiled(masterTemplateBody.getBodyCompiled());
+		reportTemplateBody.setBodyFilename(masterTemplateBody.getBodyFilename());
+		reportTemplateBody.setBodyCompiledFilename(masterTemplateBody.getBodyCompiledFilename());
 
 		reportTemplateBodyRepository.save(reportTemplateBody);
 
@@ -526,12 +494,10 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param isActive
 	 * @param isCompiled
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey,
-			long reportTemplateId, boolean isCompiled) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey, long reportTemplateId, boolean isCompiled) {
 
-		ReportTemplate reportTemplate = reportTemplateRepository
-				.findOne(reportTemplateId);
+		ReportTemplate reportTemplate = reportTemplateRepository.findOne(reportTemplateId);
 		checkNotNull(reportTemplate);
 
 		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
@@ -541,8 +507,7 @@ public class ReportTemplateService implements SecuredRoles {
 		String srcBodyFilename;
 		if (isCompiled) {
 			srcBody = reportMasterTemplateBody.getBodyCompiled();
-			srcBodyFilename = reportMasterTemplateBody
-					.getBodyCompiledFilename();
+			srcBodyFilename = reportMasterTemplateBody.getBodyCompiledFilename();
 		} else {
 			srcBody = reportMasterTemplateBody.getBody();
 			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
@@ -554,8 +519,7 @@ public class ReportTemplateService implements SecuredRoles {
 
 		logger.info("Updating ReportTemplate:{}", reportTemplate);
 
-		saveReportTemplateBodyInternal(reportTemplate.getId(), srcBody,
-				srcBodyFilename, isCompiled);
+		saveReportTemplateBodyInternal(reportTemplate.getId(), srcBody, srcBodyFilename, isCompiled);
 
 	}
 

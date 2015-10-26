@@ -1,7 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -11,34 +15,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointController extends WebApiController {
+public class SubscrContZPointController extends SubscrApiController {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointController.class);
 
 	@Autowired
-	private SubscriberService subscrUserService;
-
-	@Autowired
-	private ContZPointService contZPointService;
+	protected ContZPointService contZPointService;
 
 	/**
 	 * 
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPoints(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPoint> zpList = contZPointService
-				.findContObjectZPoints(contObjectId);
-		return ResponseEntity.ok(zpList);
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
+		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
+		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -46,12 +50,11 @@ public class SubscrContZPointController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsEx", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPointsEx(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPointEx> zpList = contZPointService
-				.findContObjectZPointsEx(contObjectId);
-		return ResponseEntity.ok(zpList);
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsEx", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointsEx(@PathVariable("contObjectId") Long contObjectId) {
+		List<ContZPointEx> zpList = contZPointService.findContObjectZPointsEx(contObjectId);
+		return responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
 	/**
@@ -59,12 +62,11 @@ public class SubscrContZPointController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPointStatInfo(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContZPointStatInfo> resultList = contZPointService
-				.selectContZPointStatInfo(contObjectId);
-		return ResponseEntity.ok(resultList);
+	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
+		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
+		return responseOK(resultList);
 	}
 
 	/**
@@ -75,29 +77,29 @@ public class SubscrContZPointController extends WebApiController {
 	 * @param settingMode
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateZPoint(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId,
-			@RequestBody ContZPoint contZPoint) {
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPoint contZPoint) {
 
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+		checkNotNull(contZPoint);
 
-		if (currentContZPoint == null
-				|| currentContZPoint.getContObject().getId() != contObjectId) {
+		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
+
+		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		currentContZPoint.setCustomServiceName(contZPoint
-				.getCustomServiceName());
+		currentContZPoint.setCustomServiceName(contZPoint.getCustomServiceName());
 
 		currentContZPoint.setIsManualLoading(contZPoint.getIsManualLoading());
 
-		ApiAction action = new AbstractEntityApiAction<ContZPoint>(
-				currentContZPoint) {
+		ApiAction action = new EntityApiActionAdapter<ContZPoint>(currentContZPoint) {
 			@Override
-			public void process() {
-				setResultEntity(contZPointService.updateContZPoint(entity));
+			public ContZPoint processAndReturnResult() {
+				return contZPointService.updateContZPoint(entity);
 			}
 		};
 
@@ -110,17 +112,45 @@ public class SubscrContZPointController extends WebApiController {
 	 * @param contZPointId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectZPoint(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId) {
-		ContZPoint currentContZPoint = contZPointService.findContZPoint(contZPointId);
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoint(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("contZPointId") Long contZPointId) {
 
-		if (currentContZPoint.getContObject().getId() != contObjectId) {
-			return ResponseEntity.badRequest().build();
+		checkNotNull(contObjectId);
+		checkNotNull(contZPointId);
+
+		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
+
+		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
+			return responseBadRequest();
 		}
 
-		return ResponseEntity.ok(currentContZPoint);
+		return responseOK(currentContZPoint);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContZPoints() {
+
+		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getSubscriberId());
+
+		return responseOK(contZPoints);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContServieTypes() {
+		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
+
+		return responseOK(contServiceTypes);
 	}
 
 }

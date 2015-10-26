@@ -1,27 +1,36 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscriberService {
+public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private SubscriberRepository subscriberRepository;
@@ -32,11 +41,14 @@ public class SubscriberService {
 	@Autowired
 	private ContZPointRepository contZPointRepository;
 
-	@Autowired
-	private ContEventRepository contEventRepository;
-
-	@PersistenceContext (unitName="nmk-p")
+	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
+
+	@Autowired
+	private TimezoneDefService timezoneDefService;
+
+	@Autowired
+	private SubscrServiceAccessService subscrServiceAccessService;
 
 	/**
 	 * 
@@ -44,19 +56,12 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOne(long id) {
-		return subscriberRepository.findOne(id);
-	}
+	public Subscriber selectSubscriber(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		if (result == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectSubscriberContObjects(long subscriberId) {
-		List<ContObject> result = subscriberRepository
-				.selectContObjects(subscriberId);
 		return result;
 	}
 
@@ -66,11 +71,57 @@ public class SubscriberService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectSubscriberContObjectIds(long subscriberId) {
-		List<Long> result = subscriberRepository
-				.selectContObjectIds(subscriberId);
+	public Subscriber findOne(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		if (result == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
 		return result;
 	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectSubscriberContObjects(long subscriberId) {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// return result;
+	// }
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<ContObject> selectRmaSubscriberContObjects(long subscriberId)
+	// {
+	// List<ContObject> result =
+	// subscriberRepository.selectContObjects(subscriberId);
+	// List<Long> subscrContObjectIds =
+	// subscrContObjectService.selectRmaSubscrContObjectIds(subscriberId);
+	// Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
+	// result.forEach(i -> {
+	// boolean haveSubscr = subscrContObjectIdMap.contains(i.getId());
+	// i.set_haveSubscr(haveSubscr);
+	// });
+	// return result;
+	// }
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<Long> selectSubscriberContObjectIds(long subscriberId) {
+	// List<Long> result =
+	// subscriberRepository.selectContObjectIds(subscriberId);
+	// return result;
+	// }
 
 	/**
 	 * 
@@ -80,8 +131,7 @@ public class SubscriberService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	@Deprecated
 	public List<ContZPoint> findContZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository
-				.findByContObjectId(contObjectId);
+		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
 		return result;
 	}
 
@@ -102,37 +152,172 @@ public class SubscriberService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrUser> findUserByUsername(String userName) {
-		return subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
+		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
+		result.forEach(i -> {
+			i.getSubscriber();
+		});
+
+		return result;
 	}
 
 	/**
 	 * 
 	 * @param subscriberId
-	 * @param contObjectId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkContObjectSubscription(long subscriberId,
-			long contObjectId) {
-		List<Long> resultIds = subscriberRepository.selectContObjectId(
-				subscriberId, contObjectId);
-		return resultIds.size() > 0;
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
 	public Date getSubscriberCurrentTime(Long subscriberId) {
-		Object dbResult = em
-				.createNativeQuery("SELECT get_subscriber_current_time(?1);")
-				.setParameter(1, subscriberId).getSingleResult();
+		Object dbResult = em.createNativeQuery("SELECT get_subscriber_current_time(?1);").setParameter(1, subscriberId)
+				.getSingleResult();
 		if (dbResult == null) {
 			return null;
 		}
 		return (Date) dbResult;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public LocalDate getSubscriberCurrentDateJoda(Long subscriberId) {
+		Date currentDate = getSubscriberCurrentTime(subscriberId);
+		return new LocalDate(currentDate);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Subscriber> selectRmaSubscribers(Long rmaSubscriberId) {
+		return subscriberRepository.findByRmaSubscriberId(rmaSubscriberId);
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public Subscriber createRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+		checkNotNull(subscriber);
+		checkNotNull(rmaSubscriberId);
+		checkArgument(subscriber.isNew());
+		subscriber.setRmaSubscriberId(rmaSubscriberId);
+		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+		checkArgument(subscriber.getDeleted() == 0);
+
+		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
+
+		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+
+		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+
+		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+		return resultSubscriber;
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public Subscriber updateRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+		checkNotNull(subscriber);
+		checkNotNull(rmaSubscriberId);
+		checkArgument(!subscriber.isNew());
+		subscriber.setRmaSubscriberId(rmaSubscriberId);
+		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
+		subscriber.setTimezoneDef(timezoneDef);
+
+		Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
+		if (checkSubscriber == null || checkSubscriber.getDeleted() == 1) {
+			throw new PersistenceException(
+					String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
+		}
+
+		return subscriberRepository.save(subscriber);
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+
+		Subscriber subscriber = findOne(subscriberId);
+		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
+		}
+		subscriberRepository.save(softDelete(subscriber));
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param rmaSubscriberId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public void deleteRmaSubscriberPermanent(Long subscriberId, Long rmaSubscriberId) {
+		checkNotNull(subscriberId);
+		checkNotNull(rmaSubscriberId);
+
+		Subscriber subscriber = findOne(subscriberId);
+		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
+		}
+		subscrServiceAccessService.deleteSubscriberAccess(rmaSubscriberId);
+		subscriberRepository.delete(subscriber);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public String getRmaLdapOu(Long subscriberId) {
+		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+		if (subscriber == null) {
+			return null;
+		}
+		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+			return subscriber.getRmaLdapOu();
+		}
+
+		if (subscriber.getRmaLdapOu() != null) {
+			return subscriber.getRmaLdapOu();
+		}
+
+		if (subscriber.getRmaSubscriberId() == null) {
+			return null;
+		}
+
+		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
+		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
 	}
 
 }

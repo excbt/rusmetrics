@@ -12,9 +12,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 @Entity
 @Table(name = "v_cont_object_geo_pos_xy")
+@JsonInclude(Include.NON_NULL)
 public class ContObjectGeoPos implements Serializable {
 
 	/**
@@ -23,11 +26,11 @@ public class ContObjectGeoPos implements Serializable {
 	private static final long serialVersionUID = -7360034990378154122L;
 
 	@Id
-	@Column(name = "cont_object_id")
+	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
 

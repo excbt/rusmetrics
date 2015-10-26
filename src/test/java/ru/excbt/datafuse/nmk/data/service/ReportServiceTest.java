@@ -24,8 +24,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportServiceTest.class);
 
 	private final static long EVENT_TEST_PARAMSET_ID = 28820616;
 	private final static long COMMERCE_TEST_PARAMSET_ID = 28618264;
@@ -51,98 +50,78 @@ public class ReportServiceTest extends JpaSupportTest {
 	@Test
 	public void testMakeEventReport() throws IOException {
 
-		try (FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeEventReport.zip");) {
+		try (FileOutputStream fos = new FileOutputStream("./out/testMakeEventReport.zip");) {
 
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(EVENT_TEST_PARAMSET_ID);
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(EVENT_TEST_PARAMSET_ID);
 
-			reportService.makeReportByParamset(reportMakerParam,
-					LocalDateTime.now(), fos);
+			reportService.makeReportByParamset(reportMakerParam, LocalDateTime.now(), fos);
 		}
 	}
 
 	@Test
 	public void testMakeComerceReport() throws IOException {
 
-		try (FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeCommerceReport.zip");) {
+		try (FileOutputStream fos = new FileOutputStream("./out/testMakeCommerceReport.zip");) {
 
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(COMMERCE_TEST_PARAMSET_ID);
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(COMMERCE_TEST_PARAMSET_ID);
 
-			reportService.makeReportByParamset(reportMakerParam,
-					LocalDateTime.now(), fos);
+			reportService.makeReportByParamset(reportMakerParam, LocalDateTime.now(), fos);
 		}
 	}
 
 	@Test
 	public void testMakeConsT1Report() throws IOException {
 
-		try (FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeConsT1Report.pdf");) {
+		try (FileOutputStream fos = new FileOutputStream("./out/testMakeConsT1Report.pdf");) {
 
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(CONS_T1_TEST_PARAMSET_ID);
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(CONS_T1_TEST_PARAMSET_ID);
 
-			reportService.makeReportByParamset(reportMakerParam,
-					LocalDateTime.now(), fos);
+			reportService.makeReportByParamset(reportMakerParam, LocalDateTime.now(), fos);
 		}
 	}
 
 	@Test
 	public void testMakeConsT2Report() throws IOException {
 
-		try (FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeConsT2Report.pdf");) {
+		try (FileOutputStream fos = new FileOutputStream("./out/testMakeConsT2Report.pdf");) {
 
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(CONS_T2_TEST_PARAMSET_ID);
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(CONS_T2_TEST_PARAMSET_ID);
 
-			reportService.makeReportByParamset(reportMakerParam,
-					LocalDateTime.now(), fos);
+			reportService.makeReportByParamset(reportMakerParam, LocalDateTime.now(), fos);
 		}
 	}
 
 	@Test
 	public void testMakeConsumptionReport() throws IOException {
-		
-		try (FileOutputStream fos = new FileOutputStream(
-				"./out/testMakeConsupmtionReport.pdf");) {
-			
-			ReportMakerParam reportMakerParam = reportMakerParamService
-					.newReportMakerParam(CONSUMPTION_PARAMSET_ID);
-			
-			reportService.makeReportByParamset(reportMakerParam,
-					LocalDateTime.now(), fos);
+
+		try (FileOutputStream fos = new FileOutputStream("./out/testMakeConsupmtionReport.pdf");) {
+
+			ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(CONSUMPTION_PARAMSET_ID);
+
+			reportService.makeReportByParamset(reportMakerParam, LocalDateTime.now(), fos);
 		}
 	}
 
 	@Test
 	public void testReportEventsBody() throws IOException {
-		testReportBody(EVENT_TEST_PARAMSET_ID,
-				"jasper_reports/nmk_event_report.jasper",
-				ReportTypeKey.EVENT_REPORT);
+		testReportBody(EVENT_TEST_PARAMSET_ID, "jasper_reports/nmk_event_report.jasper", ReportTypeKey.EVENT_REPORT);
 	}
 
 	@Test
 	public void testReportCommerceBody() throws IOException {
-		testReportBody(COMMERCE_TEST_PARAMSET_ID,
-				"jasper_reports/nmk_com_report.jasper",
+		testReportBody(COMMERCE_TEST_PARAMSET_ID, "jasper_reports/nmk_com_report.jasper",
 				ReportTypeKey.COMMERCE_REPORT);
 	}
 
 	@Test
 	public void testReportConsT1Body() throws IOException {
-		testReportBody(CONS_T1_TEST_PARAMSET_ID,
-				"jasper_reports/nmk_consolidated_report_1.jasper",
+		testReportBody(CONS_T1_TEST_PARAMSET_ID, "jasper_reports/nmk_consolidated_report_1.jasper",
 				ReportTypeKey.CONS_T1_REPORT);
 	}
 
 	@Test
 	public void testReportConsT2Body() throws IOException {
-		testReportBody(CONS_T2_TEST_PARAMSET_ID,
-				"jasper_reports/nmk_consolidated_report_2.jasper",
+		testReportBody(CONS_T2_TEST_PARAMSET_ID, "jasper_reports/nmk_consolidated_report_2.jasper",
 				ReportTypeKey.CONS_T2_REPORT);
 	}
 
@@ -152,20 +131,17 @@ public class ReportServiceTest extends JpaSupportTest {
 	 * @param filename
 	 * @throws IOException
 	 */
-	private void testReportBody(long reportParamsetId, String filename,
-			ReportTypeKey reportTypeKey) throws IOException {
-		ReportParamset paramset = reportParamsetService
-				.findOne(reportParamsetId);
+	private void testReportBody(long reportParamsetId, String filename, ReportTypeKey reportTypeKey)
+			throws IOException {
+		ReportParamset paramset = reportParamsetService.findOne(reportParamsetId);
 		assertNotNull(paramset);
 
 		logger.info("ReportParamset : {}", reportParamsetId);
 		logger.info("ReportTemplate : {}", paramset.getReportTemplate().getId());
 
-		assertEquals(reportTypeKey, paramset.getReportTemplate()
-				.getReportTypeKey());
+		assertEquals(reportTypeKey.getKeyname(), paramset.getReportTemplate().getReportTypeKeyname());
 
-		ReportTemplateBody rtBody = reportTemplateService
-				.getReportTemplateBody(paramset.getReportTemplate().getId());
+		ReportTemplateBody rtBody = reportTemplateService.getReportTemplateBody(paramset.getReportTemplate().getId());
 
 		assertNotNull(rtBody);
 

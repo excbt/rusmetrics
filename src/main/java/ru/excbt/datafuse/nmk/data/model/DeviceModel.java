@@ -5,17 +5,23 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.domain.ExLabelObject;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExLabelObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 @Entity
 @Table(name = "device_model")
-public class DeviceModel extends AbstractAuditableModel implements
-		ExSystemObject, ExCodeObject, ExLabelObject {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class DeviceModel extends AbstractAuditableModel
+		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject {
 
 	/**
 	 * 
@@ -46,6 +52,9 @@ public class DeviceModel extends AbstractAuditableModel implements
 
 	@Version
 	private int version;
+
+	@Column(name = "is_dev_mode")
+	private Boolean isDevMode;
 
 	public String getModelName() {
 		return modelName;
@@ -112,6 +121,15 @@ public class DeviceModel extends AbstractAuditableModel implements
 
 	public void setExSystemKeyname(String exSystemKeyname) {
 		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	@Override
+	public Boolean getIsDevMode() {
+		return isDevMode;
+	}
+
+	public void setIsDevMode(Boolean isDevMode) {
+		this.isDevMode = isDevMode;
 	}
 
 }

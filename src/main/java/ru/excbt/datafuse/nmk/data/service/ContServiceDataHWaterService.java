@@ -455,7 +455,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(inData);
 		checkArgument(inData.size() > 0);
 
-		ContZPoint zpoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
 		checkNotNull(zpoint, String.format(
 				"ContZPoint with id:%d is not found", contZPointId));
@@ -517,7 +517,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 		checkNotNull(localDatePeriod);
 
-		ContZPoint zpoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
 		checkNotNull(zpoint, String.format(
 				"ContZPoint with id:%d is not found", contZPointId));

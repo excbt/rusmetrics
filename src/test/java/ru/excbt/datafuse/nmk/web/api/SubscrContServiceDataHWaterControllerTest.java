@@ -32,15 +32,12 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
-public class SubscrContServiceDataHWaterControllerTest extends
-		AnyControllerTest {
+public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContServiceDataHWaterControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterControllerTest.class);
 
 	public final static String API_SERVICE_URL = "/api/subscr";
-	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL
-			+ "/%d/service/24h/%d";
+	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL + "/%d/service/24h/%d";
 	public final static long CONT_OBJECT_ID = 18811504;
 	public final static long CONT_ZPOINT_ID = 18811557;
 	public final static long CONT_OBJECT2_ID = 18811519;
@@ -68,13 +65,10 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testHWater24h() throws Exception {
 
-		String urlStr = String.format(API_SERVICE_URL_TEMPLATE, CONT_OBJECT_ID,
-				CONT_ZPOINT_ID);
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE, CONT_OBJECT_ID, CONT_ZPOINT_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2013-10-01")
-				.param("endDate", "2013-10-31").with(testSecurityContext()));
+		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", "2013-10-01").param("endDate", "2013-10-31").with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 	}
@@ -82,13 +76,11 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testHWater24hPaged() throws Exception {
 
-		String urlStr = String.format(API_SERVICE_URL_TEMPLATE
-				+ "/paged?page=0&size=100", CONT_OBJECT_ID, CONT_ZPOINT_ID);
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/paged?page=0&size=100", CONT_OBJECT_ID,
+				CONT_ZPOINT_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2013-10-01")
-				.param("endDate", "2013-10-31").with(testSecurityContext()));
+		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", "2013-10-01").param("endDate", "2013-10-31").with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 	}
@@ -96,13 +88,10 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testHWaterSummary() throws Exception {
 
-		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary",
-				CONT_OBJECT2_ID, CONT_ZPOINT2_ID);
+		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary", CONT_OBJECT2_ID, CONT_ZPOINT2_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2015-05-19")
-				.param("endDate", "2015-05-25").with(testSecurityContext()));
+		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
+				.param("beginDate", "2015-05-19").param("endDate", "2015-05-25").with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 	}
@@ -111,9 +100,11 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	public void testManualLoadData() throws Exception {
 
 		// Prepare File
-		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
-		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(
-				SRC_HW_CONT_ZPOINT_ID, TimeDetailKey.TYPE_24H, dp);
+		// LocalDatePeriod dp = LocalDatePeriod.lastWeek();
+		LocalDatePeriod dp = LocalDatePeriod.builder().dateFrom("2014-04-01").dateTo("2014-04-30").build()
+				.buildEndOfDay();
+		List<ContServiceDataHWater> dataHWater = service.selectByContZPoint(SRC_HW_CONT_ZPOINT_ID,
+				TimeDetailKey.TYPE_24H, dp);
 
 		byte[] fileBytes = HWatersCsvService.writeHWaterDataToCsv(dataHWater);
 
@@ -122,20 +113,17 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		// Processing POST
 
-		MockMultipartFile firstFile = new MockMultipartFile("file",
-				srcFilename, "text/plain", fileBytes);
+		MockMultipartFile firstFile = new MockMultipartFile("file", srcFilename, "text/plain", fileBytes);
 
-		String url = apiSubscrUrl(String.format(
-				"/contObjects/%d/contZPoints/%d/service/24h/csv",
-				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+		String url = apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+				MANUAL_HW_CONT_ZPOINT_ID));
 
-		ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders
-				.fileUpload(url).file(firstFile).with(testSecurityContext()));
+		ResultActions resultActions = mockMvc
+				.perform(MockMvcRequestBuilders.fileUpload(url).file(firstFile).with(testSecurityContext()));
 
 		resultActions.andDo(MockMvcResultHandlers.print());
 		resultActions.andExpect(status().is2xxSuccessful());
-		String resultContent = resultActions.andReturn().getResponse()
-				.getContentAsString();
+		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
 
 		logger.info("Uploaded FileInfoMD5:{}", resultContent);
 
@@ -144,7 +132,7 @@ public class SubscrContServiceDataHWaterControllerTest extends
 	@Test
 	public void testGetAvailableFiles() throws Exception {
 		String url = apiSubscrUrl("/service/out/csv");
-		testJsonGet(url);
+		_testJsonGet(url);
 	}
 
 	/**
@@ -161,14 +149,14 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		String filename = files.get(0).getName();
 
-		File f = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService,
-				currentSubscriberService.getSubscriberId(), filename);
+		File f = HWatersCsvFileUtils.getOutCsvFile(webAppPropsService, currentSubscriberService.getSubscriberId(),
+				filename);
 
 		assertNotNull(f);
 
 		String url = apiSubscrUrl("/service/out/csv/" + filename);
 
-		testJsonGetNoJsonCheck(url);
+		_testJsonGetNoJsonCheck(url);
 	}
 
 	@Test
@@ -176,18 +164,14 @@ public class SubscrContServiceDataHWaterControllerTest extends
 
 		LocalDatePeriod datePeriod = LocalDatePeriod.lastWeek();
 
-		String url = apiSubscrUrl(String.format(
-				"/contObjects/%d/contZPoints/%d/service/24h/csv",
-				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+		String url = apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
+				MANUAL_HW_CONT_ZPOINT_ID));
 
-		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(),
-				datePeriod.getDateToStr());
+		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(), datePeriod.getDateToStr());
 
-		ResultActions resultAction = mockMvc.perform(delete(url)
-				.contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", datePeriod.getDateFromStr())
-				.param("endDate", datePeriod.getDateToStr())
-				.with(testSecurityContext()));
+		ResultActions resultAction = mockMvc.perform(
+				delete(url).contentType(MediaType.APPLICATION_JSON).param("beginDate", datePeriod.getDateFromStr())
+						.param("endDate", datePeriod.getDateToStr()).with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 		resultAction.andExpect(status().is2xxSuccessful());
@@ -200,29 +184,26 @@ public class SubscrContServiceDataHWaterControllerTest extends
 		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-			builder.contentType(MediaType.APPLICATION_JSON)
-					.param("dateFrom", "2015-07-01")
-					.param("dateTo", "2015-07-31");
+			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
+					"2015-07-31");
 		};
 
-		testGet(urlStr, requestExtraInitializer);
+		_testGet(urlStr, requestExtraInitializer);
 
 	}
 
 	@Test
 	public void testOneCityContObjectServiceTypeInfo() throws Exception {
-		
+
 		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/city");
-		
+
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-			builder.contentType(MediaType.APPLICATION_JSON)
-			.param("dateFrom", "2015-07-01")
-			.param("dateTo", "2015-07-31")
-			.param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f");
+			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01")
+					.param("dateTo", "2015-07-31").param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f");
 		};
-		
-		testGet(urlStr, requestExtraInitializer);
-		
+
+		_testGet(urlStr, requestExtraInitializer);
+
 	}
 
 	@Test
@@ -231,17 +212,21 @@ public class SubscrContServiceDataHWaterControllerTest extends
 		List<Long> ids = currentSubscriberService.getSubscriberContObjectIds();
 		assertTrue(ids.size() > 0);
 
-		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/"
-				+ ids.get(0));
+		String urlStr = apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));
 
 		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-			builder.contentType(MediaType.APPLICATION_JSON)
-					.param("dateFrom", "2015-07-01")
-					.param("dateTo", "2015-07-31");
+			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
+					"2015-07-31");
 		};
 
-		testGet(urlStr, requestExtraInitializer);
+		_testGet(urlStr, requestExtraInitializer);
 
+	}
+
+	@Test
+	public void testKupavna() throws Exception {
+		_testJsonGet(apiSubscrUrl(
+				"/20118666/service/1h/20118715/paged?beginDate=2015-09-22&endDate=2015-10-21&page=0&size=50"));
 	}
 
 }

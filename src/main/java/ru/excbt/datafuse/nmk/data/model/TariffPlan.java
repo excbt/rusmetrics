@@ -1,4 +1,4 @@
- package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -19,15 +19,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "tariff_plan")
-public class TariffPlan extends AbstractAuditableModel  {
+public class TariffPlan extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -42,38 +42,39 @@ public class TariffPlan extends AbstractAuditableModel  {
 	@JoinColumn(name = "subscriber_id")
 	private Subscriber subscriber;
 
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
 
 	@OneToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "tariff_plan_cont_object", 
-			joinColumns = @JoinColumn(name = "tariff_plan_id"), 
-			inverseJoinColumns = @JoinColumn(name = "cont_object_id"))
+	@JoinTable(name = "tariff_plan_cont_object", joinColumns = @JoinColumn(name = "tariff_plan_id") ,
+			inverseJoinColumns = @JoinColumn(name = "cont_object_id") )
 	@JsonIgnore
 	private List<ContObject> contObjects = new ArrayList<>();
-	
-	@Column (name = "tariff_plan_name")
+
+	@Column(name = "tariff_plan_name")
 	private String tariffPlanName;
-	
-	@Column (name = "tariff_plan_description")	
+
+	@Column(name = "tariff_plan_description")
 	private String tariffPlanDescription;
-	
-	@Column (name = "tariff_plan_comment")
+
+	@Column(name = "tariff_plan_comment")
 	private String tariffPlanComment;
 
 	@ManyToOne
 	@JoinColumn(name = "tariff_type_id")
 	private TariffType tariffType;
-	
-	@ManyToOne (fetch = FetchType.EAGER)
+
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "tariff_option", insertable = false, updatable = false)
 	private TariffOption tariffOption;
-	
-	@Enumerated(EnumType.STRING)	
-	@Column(name="tariff_option")
+
+	@Enumerated(EnumType.STRING)
+	@Column(name = "tariff_option")
 	private TariffOptionKey tariffOptionKey;
-	
+
 	@Column(name = "tariff_plan_value")
 	private BigDecimal tariffPlanValue;
-	
+
 	@Column(name = "start_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;
@@ -84,10 +85,10 @@ public class TariffPlan extends AbstractAuditableModel  {
 
 	@Column(name = "is_default")
 	private boolean _default;
-	
+
 	@Version
 	private int version;
-	
+
 	public Organization getRso() {
 		return rso;
 	}
@@ -104,13 +105,13 @@ public class TariffPlan extends AbstractAuditableModel  {
 		this.subscriber = subscriber;
 	}
 
-//	public ContObject getContObject() {
-//		return contObject;
-//	}
+	// public ContObject getContObject() {
+	// return contObject;
+	// }
 
-//	public void setContObject(ContObject contObject) {
-//		this.contObject = contObject;
-//	}
+	// public void setContObject(ContObject contObject) {
+	// this.contObject = contObject;
+	// }
 
 	public String getTariffPlanName() {
 		return tariffPlanName;
@@ -207,5 +208,13 @@ public class TariffPlan extends AbstractAuditableModel  {
 	public void set_default(boolean _default) {
 		this._default = _default;
 	}
-	
+
+	public Long getSubscriberId() {
+		return subscriberId;
+	}
+
+	public void setSubscriberId(Long subscriberId) {
+		this.subscriberId = subscriberId;
+	}
+
 }

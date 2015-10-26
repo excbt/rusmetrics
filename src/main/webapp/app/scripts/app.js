@@ -32,28 +32,58 @@ console.log("Run routeProviderConfig");
     $routeProvider
       .when('/', {
         templateUrl: 'views/objects_edit.html',
-        controller: 'ObjectsCtrl'
+        controller: 'ObjectsCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/objects/list', {
         templateUrl: 'views/objects_edit.html',
-        controller: 'ObjectsCtrl'
+        controller: 'ObjectsCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/objects/map', {
         templateUrl: 'views/objects_map.html',
-        controller: 'ObjectsMapCtrl'
+        controller: 'ObjectsMapCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/notices/list', {
         templateUrl: 'views/notice.html',
-        controller: 'NoticeCtrl'
+        controller: 'NoticeCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/notices/monitor', {
         templateUrl: 'views/monitor.html',
         controller: 'MonitorCtrl',
-        reloadOnSearch: false
+        reloadOnSearch: false,
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/notices/monitor_map', {
         templateUrl: 'views/monitor_map.html',
-        controller: 'MonitorMapCtrl'
+        controller: 'MonitorMapCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/private', {
         templateUrl: 'views/private_office.html',
@@ -61,15 +91,25 @@ console.log("Run routeProviderConfig");
       })
       .when('/objects_edit', {
         templateUrl: 'views/objects_edit.html',
-        controller: 'ObjectsCtrl'
+        controller: 'ObjectsCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/private/objects_list', {
         templateUrl: 'views/objects_list.html',
         controller: 'ObjectsCtrl'
       })
-      .when('/objects/indicators', {
+      .when('/objects123/indicators', {
         templateUrl: 'views/indicators.html',
-        controller: 'MainCtrl'
+        controller: 'MainCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/private/directories', {
         templateUrl: 'views/directories.html',
@@ -85,7 +125,12 @@ console.log("Run routeProviderConfig");
       })
       .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
-        controller: 'IndicatorsCtrl'
+        controller: 'IndicatorsCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
       })
       .when('/settings/tariffs', {
         templateUrl: 'views/tariffs.html',
@@ -107,9 +152,13 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/contacts.html',
         controller: 'ContactsCtrl'
       })
-    .when('/settings/object_groups', {
+      .when('/settings/object_groups', {
         templateUrl: 'views/object_groups.html',
         controller: 'ObjectGroupsCtrl'
+      })
+      .when('/settings/management_services', {
+        templateUrl: 'views/management-services.html',
+        controller: 'ManagementServicesCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -132,8 +181,9 @@ app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, Idl
 //  Idle.watch();
 //}]);
 
-app.run(['objectSvc', 'monitorSvc', function(objectSvc, monitorSvc){
-console.log("Run object and monitor services.");  
+app.run(['objectSvc', 'monitorSvc', 'mainSvc', function(objectSvc, monitorSvc, mainSvc){
+console.log("Run main, object and monitor services.");  
+    var mainSvcInit = mainSvc.getUserServicesPermissions();
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
     var objectSvcInit = objectSvc.promise;
 }]);

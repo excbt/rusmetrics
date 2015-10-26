@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.types;
 
-import ru.excbt.datafuse.nmk.data.domain.KeynameObject;
-import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
+import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 
 public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
 	GREEN(100), YELLOW(80), ORANGE(50), RED(0);

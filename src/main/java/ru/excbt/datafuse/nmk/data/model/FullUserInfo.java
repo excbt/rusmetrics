@@ -36,7 +36,7 @@ public class FullUserInfo implements Serializable {
 	@Version
 	private int version;
 
-	@Column(name = "is_system")
+	@Column(name = "is_system", insertable = false, updatable = false)
 	private boolean _system;
 
 	@Column(name = "subscriber_id")
@@ -48,8 +48,14 @@ public class FullUserInfo implements Serializable {
 
 	@Column(name = "user_uuid")
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
-	private UUID userUUID;	
-	
+	private UUID userUUID;
+
+	@Column(name = "is_system")
+	private Boolean isSystem;
+
+	@Column(name = "is_admin")
+	private Boolean isAdmin;
+
 	public FullUserInfo() {
 
 	}
@@ -62,6 +68,8 @@ public class FullUserInfo implements Serializable {
 			this.lastName = src.lastName;
 			this.version = src.version;
 			this._system = src._system;
+			this.isSystem = src.isSystem;
+			this.isAdmin = src.isAdmin;
 			this.subscriberId = src.subscriberId;
 			this.subscriber = src.subscriber;
 			this.userUUID = src.userUUID;
@@ -102,6 +110,24 @@ public class FullUserInfo implements Serializable {
 
 	public UUID getUserUUID() {
 		return userUUID;
+	}
+
+	public Boolean getIsRma() {
+		if (this._system) {
+			return true;
+		}
+		if (this.subscriber == null) {
+			return null;
+		}
+		return subscriber.getIsRma();
+	}
+
+	public Boolean getIsSystem() {
+		return isSystem;
+	}
+
+	public Boolean getIsAdmin() {
+		return isAdmin;
 	}
 
 }

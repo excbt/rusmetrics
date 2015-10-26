@@ -31,8 +31,7 @@ import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 
 public class ReportTemplateServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportTemplateServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateServiceTest.class);
 
 	private static final long TEST_REPORT_TEMPLATE_ID = 28181422;
 
@@ -57,7 +56,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
 		rt.set_active(true);
-		rt.setReportTypeKey(ReportTypeKey.COMMERCE_REPORT);
+		rt.setReportTypeKeyname(ReportTypeKey.COMMERCE_REPORT.getKeyname());
 		rt.setName("Коммерческий отчет");
 		rt.setDescription("Тест " + System.currentTimeMillis());
 		rt.setSubscriber(currentSubscriberService.getSubscriber());
@@ -68,8 +67,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testDefaultCommerceReport() {
 		List<ReportTemplate> resultList = reportTemplateService
-				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true);
+				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT, true);
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -77,9 +75,8 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testSubscriberReports() {
-		List<ReportTemplate> resultList = reportTemplateService
-				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true, currentSubscriberService.getSubscriberId());
+		List<ReportTemplate> resultList = reportTemplateService.selectSubscriberReportTemplates(
+				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -88,13 +85,11 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Test
 	@Ignore
 	public void testReportTemplateLoad() throws IOException {
-		File fileJrxml = ResourceHelper
-				.findResource("jasper/nmk_com_report_agr.jrxml");
+		File fileJrxml = ResourceHelper.findResource("jasper/nmk_com_report_agr.jrxml");
 
 		assertTrue(fileJrxml.exists());
 
-		logger.info("Resource Path: {}. {}", fileJrxml.exists(),
-				fileJrxml.getAbsolutePath());
+		logger.info("Resource Path: {}. {}", fileJrxml.exists(), fileJrxml.getAbsolutePath());
 
 		byte[] fileBytes = null;
 		InputStream is = new FileInputStream(fileJrxml);
@@ -104,8 +99,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			is.close();
 		}
 		checkNotNull(fileBytes);
-		reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID,
-				fileBytes, fileJrxml.getName());
+		reportTemplateService.saveReportTemplateBody(TEST_REPORT_TEMPLATE_ID, fileBytes, fileJrxml.getName());
 	}
 
 	@Test
@@ -114,8 +108,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 		assertTrue(fileJasper.exists());
 
-		logger.info("Resource Path: {}. {}", fileJasper.exists(),
-				fileJasper.getAbsolutePath());
+		logger.info("Resource Path: {}. {}", fileJasper.exists(), fileJasper.getAbsolutePath());
 
 		byte[] fileBytes = null;
 		InputStream is = new FileInputStream(fileJasper);
@@ -125,8 +118,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			is.close();
 		}
 		checkNotNull(fileBytes);
-		reportTemplateService.saveReportTemplateBodyCompiled(
-				TEST_REPORT_TEMPLATE_ID, fileBytes, fileJasper.getName());
+		reportTemplateService.saveReportTemplateBodyCompiled(TEST_REPORT_TEMPLATE_ID, fileBytes, fileJasper.getName());
 	}
 
 	@Test
@@ -134,20 +126,17 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		ReportTemplate rt = new ReportTemplate();
 		rt.setName("Создан по шаблону");
 		rt.setActiveStartDate(new Date());
-		ReportTemplate resultRT = reportTemplateService.createByTemplate(
-				TEST_REPORT_TEMPLATE_ID, rt,
+		ReportTemplate resultRT = reportTemplateService.createByTemplate(TEST_REPORT_TEMPLATE_ID, rt,
 				currentSubscriberService.getSubscriber());
 		assertNotNull(resultRT);
-		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT
-				.getId());
+		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT.getId());
 		assertFalse(archiveRT.is_active());
 		// reportTemplateService.deleteOne(archiveRT);
 	}
 
 	@Test
 	public void testReportTemplateLoadShedule() throws IOException {
-		File fileJasper = ResourceHelper
-				.findResource("jasper/nmk_com_report.jasper");
+		File fileJasper = ResourceHelper.findResource("jasper/nmk_com_report.jasper");
 		assertNotNull(fileJasper);
 		assertTrue(fileJasper.exists());
 		byte[] fileBytes = null;
@@ -162,12 +151,10 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 				.selectReportShedule(currentSubscriberService.getSubscriberId());
 
 		for (ReportShedule rs : reportSheduleList) {
-			logger.info("Shedule Id: {}, Report Id: {}", rs.getId(), rs
-					.getReportTemplate().getId());
+			logger.info("Shedule Id: {}, Report Id: {}", rs.getId(), rs.getReportTemplate().getId());
 
-			reportTemplateService.saveReportTemplateBodyCompiled(rs
-					.getReportTemplate().getId(), fileBytes, fileJasper
-					.getName());
+			reportTemplateService.saveReportTemplateBodyCompiled(rs.getReportTemplate().getId(), fileBytes,
+					fileJasper.getName());
 
 		}
 
@@ -179,8 +166,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testReportTemplateLoadActiveBody() throws IOException {
-		File fileJasper = ResourceHelper
-				.findResource("jasper/nmk_com_report.jasper");
+		File fileJasper = ResourceHelper.findResource("jasper/nmk_com_report.jasper");
 		assertNotNull(fileJasper);
 		assertTrue(fileJasper.exists());
 		byte[] fileBytes = null;
@@ -191,14 +177,12 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 			is.close();
 		}
 
-		List<ReportTemplate> list = reportTemplateService
-				.selectActiveReportTemplates(ReportTypeKey.COMMERCE_REPORT);
+		List<ReportTemplate> list = reportTemplateService.selectActiveReportTemplates(ReportTypeKey.COMMERCE_REPORT);
 
 		for (ReportTemplate rt : list) {
 			logger.info("Report Id: {}", rt.getId());
 
-			reportTemplateService.saveReportTemplateBodyCompiled(rt.getId(),
-					fileBytes, fileJasper.getName());
+			reportTemplateService.saveReportTemplateBodyCompiled(rt.getId(), fileBytes, fileJasper.getName());
 
 		}
 
@@ -209,8 +193,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testLoadedReportTemplateBody() {
-		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository
-				.findOne(TEST_REPORT_TEMPLATE_ID);
+		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository.findOne(TEST_REPORT_TEMPLATE_ID);
 		assertNotNull(reportTemplateBody);
 		byte[] fileBody = reportTemplateBody.getBody();
 		assertNotNull(fileBody);
@@ -223,80 +206,64 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Test
 	public void updateCommonEventReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.EVENT_REPORT, true, true);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.EVENT_REPORT, true, true);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.EVENT_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
 		}
 	}
 
 	@Test
 	public void updateCommonConsT1ReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.CONS_T1_REPORT, true, true);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.CONS_T1_REPORT, true, true);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.CONS_T1_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
 		}
 	}
 
 	@Test
 	public void updateCommonConsT2ReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.CONS_T2_REPORT, true, true);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.CONS_T2_REPORT, true, true);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.CONS_T2_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.CONS_T2_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.CONS_T2_REPORT);
 		}
 
 	}
 
 	@Test
 	public void updateCommonCommerceReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.COMMERCE_REPORT, true, true);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.COMMERCE_REPORT, true, true);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.COMMERCE_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
 		}
 	}
 
 	@Test
 	public void updateCommonMetrologicalReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.METROLOGICAL_REPORT, ReportConstants.IS_ACTIVE,
-				ReportConstants.IS_COMPILED);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.METROLOGICAL_REPORT,
+				ReportConstants.IS_ACTIVE, ReportConstants.IS_COMPILED);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.METROLOGICAL_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
 		}
 	}
 
 	@Test
 	public void createDeleteCommonEventReportTemplateTest() {
-		ReportTemplate result = reportTemplateService
-				.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
+		ReportTemplate result = reportTemplateService.createCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
 		assertNotNull(result);
 
 		reportTemplateService.deleteOneCommon(result);
@@ -305,37 +272,30 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 
 	@Test
 	public void updateCommerce263() {
-		reportTemplateService.updateTemplateBodyFromMaster(
-				ReportTypeKey.COMMERCE_REPORT, 28618263, true);
+		reportTemplateService.updateTemplateBodyFromMaster(ReportTypeKey.COMMERCE_REPORT, 28618263, true);
 	}
 
 	@Test
 	public void updateCommonConsumptionReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.CONSUMPTION_REPORT, ReportConstants.IS_ACTIVE,
-				ReportConstants.IS_COMPILED);
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.CONSUMPTION_REPORT,
+				ReportConstants.IS_ACTIVE, ReportConstants.IS_COMPILED);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.CONSUMPTION_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
 		}
 	}
 
 	@Test
 	public void updateCommonConsumptionHistoryReportTemplateTest() {
-		int result = reportTemplateService.updateCommonReportTemplateBody(
-				ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
+		int result = reportTemplateService.updateCommonReportTemplateBody(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
 				ReportConstants.IS_ACTIVE, ReportConstants.IS_COMPILED);
 
 		if (result == 0) {
-			logger.info(
-					"Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
+			logger.info("Common ReportTemplate for ReportTypeKey: {} IS NOT FOUND. Create new one",
 					ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
-			reportTemplateService
-					.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
+			reportTemplateService.createCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
 		}
 	}
 

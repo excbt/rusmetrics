@@ -16,14 +16,14 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 @Service
 public class CurrentSubscriberService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CurrentSubscriberService.class);
+	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberService.class);
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -37,14 +37,16 @@ public class CurrentSubscriberService {
 	@Autowired
 	private MockSubscriberService mockSubscriberService;
 
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
+
 	/**
 	 * 
 	 * @return
 	 */
 	public long getSubscriberId() {
 
-		SubscriberUserDetails userDetails = currentUserService
-				.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
@@ -63,7 +65,6 @@ public class CurrentSubscriberService {
 		checkNotNull(result, "getSubscriberId() is NULL");
 
 		return result;
-
 	}
 
 	/**
@@ -72,8 +73,7 @@ public class CurrentSubscriberService {
 	 */
 	protected long getSubscriberIdOld() {
 
-		AuditUserPrincipal userPrincipal = currentUserService
-				.getCurrentAuditUserPrincipal();
+		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
@@ -101,8 +101,7 @@ public class CurrentSubscriberService {
 	 */
 	public Subscriber getSubscriber() {
 
-		SubscriberUserDetails userDetails = currentUserService
-				.getCurrentUserDetails();
+		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
 
 		if (userDetails == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -115,7 +114,7 @@ public class CurrentSubscriberService {
 			return mockSubscriberService.getMockSubscriber();
 		}
 
-		return subscriberService.findOne(subscriberId);
+		return subscriberService.selectSubscriber(subscriberId);
 	}
 
 	/**
@@ -124,8 +123,7 @@ public class CurrentSubscriberService {
 	 */
 	protected Subscriber getSubscriberOld() {
 
-		AuditUserPrincipal userPrincipal = currentUserService
-				.getCurrentAuditUserPrincipal();
+		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
 
 		if (userPrincipal == null) {
 			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
@@ -138,7 +136,7 @@ public class CurrentSubscriberService {
 			return mockSubscriberService.getMockSubscriber();
 		}
 
-		return subscriberService.findOne(subscriberId);
+		return subscriberService.selectSubscriber(subscriberId);
 	}
 
 	/**
@@ -146,8 +144,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public LocalDateTime getSubscriberCurrentTime_Joda() {
-		Date pre = subscriberService
-				.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : new LocalDateTime(pre);
 	}
 
@@ -156,8 +153,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Instant getSubscriberCurrentTimeInstant_JDK() {
-		Date pre = subscriberService
-				.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : pre.toInstant();
 	}
 
@@ -166,7 +162,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<ContObject> getSubscriberContObjects() {
-		return subscriberService.selectSubscriberContObjects(getSubscriberId());
+		return subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
 	}
 
 	/**
@@ -174,8 +170,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public List<Long> getSubscriberContObjectIds() {
-		return subscriberService
-				.selectSubscriberContObjectIds(getSubscriberId());
+		return subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
 	}
 
 	/**
@@ -184,5 +179,35 @@ public class CurrentSubscriberService {
 	 */
 	public Long getCurrentUserId() {
 		return currentUserService.getCurrentUserId();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean isRma() {
+		Subscriber subscriber = getSubscriber();
+		if (subscriber == null) {
+			return false;
+		}
+		return Boolean.TRUE.equals(subscriber.getIsRma());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getRmaSubscriberId() {
+		Subscriber subscriber = getSubscriber();
+		return subscriber != null ? subscriber.getRmaSubscriberId() : null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Long getGhostSubscriberId() {
+		Subscriber subscriber = getSubscriber();
+		return subscriber != null ? subscriber.getGhostSubscriberId() : null;
 	}
 }

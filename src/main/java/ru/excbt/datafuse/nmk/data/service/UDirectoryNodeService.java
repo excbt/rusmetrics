@@ -22,31 +22,29 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class UDirectoryNodeService implements SecuredRoles {
 
-	
-	private static final Logger logger = LoggerFactory
-			.getLogger(UDirectoryNodeService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(UDirectoryNodeService.class);
+
 	@Autowired
 	private UDirectoryNodeRepository directoryNodeRepository;
-	
+
 	@Autowired
 	private UDirectoryService directoryService;
 
-//	@Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
-//	public UDirectoryNode save(final UDirectoryNode nodeDir) {
-//		checkNotNull(nodeDir);
-//		UDirectoryNode result = directoryNodeRepository.save(nodeDir); 
-//		loadLazyChildNodes(result);
-//		return result; 
-//	}
+	// @Secured({ ROLE_ADMIN, SUBSCR_ROLE_ADMIN })
+	// public UDirectoryNode save(final UDirectoryNode nodeDir) {
+	// checkNotNull(nodeDir);
+	// UDirectoryNode result = directoryNodeRepository.save(nodeDir);
+	// loadLazyChildNodes(result);
+	// return result;
+	// }
 
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectoryNode save(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 		UDirectoryNode result = directoryNodeRepository.save(nodeDir);
 		loadLazyChildNodes(result);
-		return result; 
+		return result;
 	}
 
 	/**
@@ -55,29 +53,29 @@ public class UDirectoryNodeService implements SecuredRoles {
 	 * @param directoryId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public UDirectoryNode saveWithDictionary(final UDirectoryNode nodeDir, final long directoryId) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public UDirectoryNode saveWithDictionary(long subscriberId, final UDirectoryNode nodeDir, final long directoryId) {
 		checkNotNull(nodeDir);
 		checkArgument(directoryId > 0);
-		
-		UDirectory directory = directoryService.findOne(directoryId);
-		
+
+		UDirectory directory = directoryService.findOne(subscriberId, directoryId);
+
 		if (directory == null) {
 			logger.warn("UDirectory (id={}) is not found", directoryId);
 			throw new PersistenceException();
 		}
-		
+
 		UDirectoryNode result = directoryNodeRepository.save(nodeDir);
 		loadLazyChildNodes(result);
-		
+
 		directory.setDirectoryNode(result);
-		
-		return result; 
+
+		return result;
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, propagation = Propagation.REQUIRED)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveWithChildren(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 
@@ -99,14 +97,13 @@ public class UDirectoryNodeService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public UDirectoryNode getRootNode(long nodeId) {
 		UDirectoryNode result = directoryNodeRepository.findOne(nodeId);
-		
+
 		if (result == null) {
 			return null;
 		}
-		
+
 		if (!result.isRoot()) {
-			throw new IllegalArgumentException("Argument id = " + nodeId
-					+ " is not root element of Node Directory");
+			throw new IllegalArgumentException("Argument id = " + nodeId + " is not root element of Node Directory");
 		}
 		loadLazyChildNodes(result);
 		return result;
@@ -129,7 +126,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 	 * @param nodeDirectory
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
@@ -140,10 +137,10 @@ public class UDirectoryNodeService implements SecuredRoles {
 	 * 
 	 * @param nodeDir
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public void loadLazyChildNodes(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
-		
+
 		for (UDirectoryNode child : nodeDir.getChildNodes()) {
 			loadLazyChildNodes(child);
 		}

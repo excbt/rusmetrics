@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +20,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContObjectService implements SecuredRoles {
+public class ContObjectService extends AbstractService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ContObjectService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContObjectService.class);
 
 	@Autowired
 	private ContObjectRepository contObjectRepository;
@@ -44,10 +48,16 @@ public class ContObjectService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	@Autowired
-	private SubscrUserRepository subscrUserRepository;
+	private ContObjectFiasRepository contObjectFiasRepository;
 
 	@Autowired
-	private ContObjectFiasRepository contObjectFiasRepository;
+	private TimezoneDefService timezoneDefService;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
+
+	@Autowired
+	private ContManagementService contManagementService;
 
 	/**
 	 * 
@@ -55,8 +65,12 @@ public class ContObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObject findOneContObject(Long id) {
-		return contObjectRepository.findOne(id);
+	public ContObject findOne(Long contObjectId) {
+		ContObject result = contObjectRepository.findOne(contObjectId);
+		if (result == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+		return result;
 	}
 
 	/**
@@ -71,36 +85,151 @@ public class ContObjectService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param entity
+	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public ContObject updateOneContObject(ContObject entity) {
-		checkNotNull(entity);
-		checkArgument(!entity.isNew());
+	public ContObject updateOne(ContObject contObject, Long cmOrganizationId) {
+		checkNotNull(contObject);
+		checkArgument(!contObject.isNew());
 
-		ContObject currentEntity = contObjectRepository.findOne(entity.getId());
-		if (currentEntity == null) {
-			throw new PersistenceException(String.format(
-					"ContObject (ID=%d) not found", entity.getId()));
+		ContObject currContObject = contObjectRepository.findOne(contObject.getId());
+		if (currContObject == null) {
+			throw new PersistenceException(String.format("ContObject (ID=%d) not found", contObject.getId()));
 		}
-		currentEntity.setVersion(entity.getVersion());
-		currentEntity.setName(entity.getName());
-		currentEntity.setFullName(entity.getFullName());
-		currentEntity.setFullAddress(entity.getFullAddress());
-		currentEntity.setNumber(entity.getNumber());
-		currentEntity.setDescription(entity.getDescription());
-		currentEntity.setCurrentSettingMode(entity.getCurrentSettingMode());
-		currentEntity.setComment(entity.getComment());
-		currentEntity.setOwner(entity.getOwner());
-		currentEntity.setOwnerContacts(entity.getOwnerContacts());
-		currentEntity.setCwTemp(entity.getCwTemp());
-		currentEntity.setHeatArea(entity.getHeatArea());
+		currContObject.setVersion(contObject.getVersion());
+		currContObject.setName(contObject.getName());
+		currContObject.setFullName(contObject.getFullName());
+		currContObject.setFullAddress(contObject.getFullAddress());
+		currContObject.setNumber(contObject.getNumber());
+		currContObject.setDescription(contObject.getDescription());
+		currContObject.setCurrentSettingMode(contObject.getCurrentSettingMode());
+		currContObject.setComment(contObject.getComment());
+		currContObject.setOwner(contObject.getOwner());
+		currContObject.setOwnerContacts(contObject.getOwnerContacts());
+		currContObject.setCwTemp(contObject.getCwTemp());
+		currContObject.setHeatArea(contObject.getHeatArea());
 
-		ContObject resultEntity = contObjectRepository.save(currentEntity);
+		ContObject resultContObject = contObjectRepository.save(currContObject);
 
-		return resultEntity;
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(currContObject.getId());
+		if (contObjectFiasList.size() == 0) {
+			contObjectFiasList.add(createConfObjectFias(currContObject));
+		} else {
+			contObjectFiasList.forEach(i -> {
+				i.setIsGeoRefresh(true);
+			});
+		}
+		contObjectFiasRepository.save(contObjectFiasList);
+
+		ContManagement cm = currContObject.get_activeContManagement();
+		if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			currContObject.getContManagements().clear();
+			currContObject.getContManagements().add(newCm);
+		}
+
+		return resultContObject;
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public ContObject createOne(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
+			Long cmOrganizationId) {
+
+		checkNotNull(contObject);
+		checkArgument(contObject.isNew());
+		checkArgument(contObject.getTimezoneDefKeyname() != null);
+
+		Subscriber subscriber = subscriberService.findOne(subscriberId);
+		if (subscriber == null) {
+			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
+		}
+
+		TimezoneDef timezoneDef = timezoneDefService.findOne(contObject.getTimezoneDefKeyname());
+		contObject.setTimezoneDef(timezoneDef);
+		contObject.setIsManual(true);
+
+		ContObject resultContObject = contObjectRepository.save(contObject);
+
+		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
+
+		// Inserting ContObjectFias
+		ContObjectFias contObjectFias = createConfObjectFias(resultContObject);
+		contObjectFiasRepository.save(contObjectFias);
+
+		if (cmOrganizationId != null) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			resultContObject.getContManagements().clear();
+			resultContObject.getContManagements().add(newCm);
+		}
+
+		return resultContObject;
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deleteOne(Long contObjectId, LocalDate subscrEndDate) {
+		checkNotNull(contObjectId);
+
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		if (contObject == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+
+		contObject.setIsManual(true);
+		softDelete(contObject);
+
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
+		subscrContObjectService.deleteOne(subscrContObjects, subscrEndDate);
+
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
+		contObjectFiasList.forEach(i -> {
+			softDelete(i);
+		});
+		contObjectFiasRepository.save(contObjectFiasList);
+
+		contObjectRepository.save(contObject);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deleteOnePermanent(Long contObjectId) {
+		checkNotNull(contObjectId);
+
+		ContObject contObject = contObjectRepository.findOne(contObjectId);
+		if (contObject == null) {
+			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
+		}
+
+		List<SubscrContObject> subscrContObjects = subscrContObjectService.selectByContObjectId(contObjectId);
+		subscrContObjectService.deleteOnePermanent(subscrContObjects);
+
+		List<ContManagement> contManagements = contManagementService.selectByContObject(contObjectId);
+		contManagementService.deletePermanent(contManagements);
+
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
+		contObjectFiasRepository.delete(contObjectFiasList);
+
+		contObjectRepository.delete(contObject);
 	}
 
 	/**
@@ -109,8 +238,7 @@ public class ContObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectSettingModeType> selectContObjectSettingModeType() {
-		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository
-				.findAll();
+		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository.findAll();
 		return resultList;
 	}
 
@@ -118,10 +246,10 @@ public class ContObjectService implements SecuredRoles {
 	 * 
 	 * @param contObjectIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
-	public List<Long> updateContObjectCurrentSettingModeType(
-			Long[] contObjectIds, String currentSettingMode, Long subscriberId) {
+	public List<Long> updateContObjectCurrentSettingModeType(Long[] contObjectIds, String currentSettingMode,
+			Long subscriberId) {
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length > 0);
 		checkNotNull(subscriberId);
@@ -131,11 +259,9 @@ public class ContObjectService implements SecuredRoles {
 
 		List<Long> updateCandidateIds = Arrays.asList(contObjectIds);
 
-		List<ContObject> contObjects = subscriberService
-				.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		List<ContObject> updateCandidate = contObjects.stream()
-				.filter((i) -> updateCandidateIds.contains(i.getId()))
+		List<ContObject> updateCandidate = contObjects.stream().filter((i) -> updateCandidateIds.contains(i.getId()))
 				.collect(Collectors.toList());
 
 		for (ContObject co : updateCandidate) {
@@ -151,7 +277,6 @@ public class ContObjectService implements SecuredRoles {
 		return updatedIds;
 	}
 
-
 	/**
 	 * 
 	 * @param contObjectId
@@ -160,9 +285,19 @@ public class ContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectFias findContObjectFias(Long contObjectId) {
 		checkNotNull(contObjectId);
-		List<ContObjectFias> vList = contObjectFiasRepository
-				.findByContObjectId(contObjectId);
+		List<ContObjectFias> vList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		return vList.isEmpty() ? null : vList.get(0);
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 */
+	private ContObjectFias createConfObjectFias(ContObject contObject) {
+		ContObjectFias contObjectFias = new ContObjectFias();
+		contObjectFias.setContObject(contObject);
+		contObjectFias.setIsGeoRefresh(true);
+		return contObjectFias;
 	}
 
 }

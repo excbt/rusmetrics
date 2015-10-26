@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,22 +16,34 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.DynamicUpdate;
-
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.domain.ExCodeObject;
-import ru.excbt.datafuse.nmk.data.domain.ExSystemObject;
-import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
+import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 
 @Entity
 @Table(name = "cont_object")
 @DynamicUpdate
-public class ContObject extends AbstractAuditableModel implements
-		ExSystemObject, ExCodeObject {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
+public class ContObject extends AbstractAuditableModel
+		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject {
+
+	private static final Logger logger = LoggerFactory.getLogger(ContObject.class);
 
 	/**
 	 * 
@@ -76,6 +89,7 @@ public class ContObject extends AbstractAuditableModel implements
 	@Column(name = "cont_object_description")
 	private String description;
 
+	@JsonIgnore
 	@Column(name = "cont_object_comment")
 	private String comment;
 
@@ -88,12 +102,16 @@ public class ContObject extends AbstractAuditableModel implements
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private List<ContManagement> contManagements = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "timezone_def")
 	private TimezoneDef timezoneDef;
+
+	@Column(name = "timezone_def", insertable = false, updatable = false)
+	private String timezoneDefKeyname;
 
 	@OneToOne(fetch = FetchType.EAGER, mappedBy = "contObject")
 	private ContObjectFias contObjectFias;
@@ -102,12 +120,21 @@ public class ContObject extends AbstractAuditableModel implements
 	private ContObjectGeoPos contObjectGeo;
 
 	@Column(name = "ex_system")
-	@JsonIgnore
 	private String exSystemKeyname;
 
 	@Column(name = "ex_code")
 	@JsonIgnore
 	private String exCode;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Column(name = "is_manual")
+	private Boolean isManual;
+
+	@Transient
+	private Boolean _haveSubscr;
 
 	public String getName() {
 		return name;
@@ -261,6 +288,71 @@ public class ContObject extends AbstractAuditableModel implements
 	@Override
 	public String getExCode() {
 		return exCode;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	@Override
+	public Boolean getIsManual() {
+		return isManual;
+	}
+
+	public void setIsManual(Boolean isManual) {
+		this.isManual = isManual;
+	}
+
+	public String getTimezoneDefKeyname() {
+		return timezoneDefKeyname;
+	}
+
+	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
+		this.timezoneDefKeyname = timezoneDefKeyname;
+	}
+
+	public void setExSystemKeyname(String exSystemKeyname) {
+		this.exSystemKeyname = exSystemKeyname;
+	}
+
+	public void setExCode(String exCode) {
+		this.exCode = exCode;
+	}
+
+	public Boolean get_haveSubscr() {
+		return _haveSubscr;
+	}
+
+	public void set_haveSubscr(Boolean _haveSubscr) {
+		this._haveSubscr = _haveSubscr;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public ContManagement get_activeContManagement() {
+		ContManagement result = null;
+		if (contManagements != null && contManagements.size() > 0) {
+
+			List<ContManagement> actimeCM = contManagements.stream().filter(i -> i.getEndDate() == null)
+					.sorted((a, b) -> Long.compare(b.getId(), a.getId())).collect(Collectors.toList());
+
+			if (actimeCM.size() > 1) {
+				logger.error("ContObject (id=%d) has more than one active ContManagement", getId());
+			}
+
+			if (!actimeCM.isEmpty()) {
+				result = actimeCM.get(0);
+			}
+		}
+		return result;
 	}
 
 }

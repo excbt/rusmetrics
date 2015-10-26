@@ -2,12 +2,14 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc){
 console.log("Load NoticeCtrl.");  
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
     $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
+    
+    $scope.ctrlSettings.ctxId = "notice_page";
 //console.log("$('#div-main-area').width()=");    
 //console.log($('#div-main-area').width()); 
 //    
@@ -23,12 +25,13 @@ console.log("Load NoticeCtrl.");
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
+    $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";
     //the path template of notice icon
     $scope.imgPathTmpl = "images/notice-state-";
     
     //get url params
     var loca = $location.search();
-console.log(loca);    
+//console.log(loca);    
     
     
     //messages for user
@@ -51,6 +54,8 @@ console.log(loca);
     $scope.states.tempUndefinedCriticalTypes_flag = false;
     
     $scope.allSelected = false;
+    
+    $scope.zpointList = null; //subscriber zpoint list
     
     $scope.tableDef = {
         tableClass : "crud-grid table table-lighter table-condensed table-hover table-striped",
@@ -184,6 +189,20 @@ console.log("initCtrl");
 //console.log("pageChanged");        
         $scope.getResultsPage(newPage);
     };
+    
+    var findZpointById = function(zpId){
+        var result = null;
+        if ($scope.zpointList!=null){
+            $scope.zpointList.some(function(elem){
+                if (zpId === elem.id){
+                    result = elem;
+                    return true;
+                };
+            });
+        };
+        return result;
+    };
+    
     //Преобразуем полученные уведомления в формат, который будет отображаться пользователю
     var dataParse = function(arr){
         var oneNotice = {};
@@ -191,13 +210,16 @@ console.log("initCtrl");
 //console.log(el);            
             oneNotice = {};
             oneNotice.id = el.id;
-            oneNotice.noticeType = el.contEvent.contEventType.caption;
+            var noticeCaption = el.contEvent.contEventType.caption || el.contEvent.contEventType.name;
+            oneNotice.noticeType = noticeCaption;//el.contEvent.contEventType.caption;
             oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
-            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";                        
-            if (el.contEvent.contEventType.caption.length > $scope.TYPE_CAPTION_LENGTH){
-                    oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
-                }else{
-                     oneNotice.noticeTypeCaption= el.contEvent.contEventType.caption;
+            oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";  
+            if (angular.isString(noticeCaption)){
+                if (noticeCaption.length > $scope.TYPE_CAPTION_LENGTH){
+                        oneNotice.noticeTypeCaption= noticeCaption.substr(0, $scope.TYPE_CAPTION_LENGTH)+"...";
+                    }else{
+                         oneNotice.noticeTypeCaption= noticeCaption;
+                };
             };
             if (el.contEvent.message == null){
                 oneNotice.noticeCaption = "";
@@ -210,7 +232,8 @@ console.log("initCtrl");
             };
             
             oneNotice.contObjectId = el.contObjectId;
-            oneNotice.zpointId = el.contEvent.contZPointId;
+//            oneNotice.zpointId = el.contEvent.contZPointId;
+            oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);
 
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
@@ -224,32 +247,36 @@ console.log("initCtrl");
             oneNotice.imgpath = $scope.imgPathTmpl+el.contEventLevelColor.toLowerCase()+".png";
             oneNotice.imgclass = el.contEventLevelColor==="GREEN"?"":"nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
+            
             switch (el.contEvent.contServiceType)
             {
-                case "heat" : oneNotice.noticeZpoint = "Теплоснабжение"; 
+                case "heat" : //oneNotice.noticeZpoint = "Теплоснабжение"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-85-heat.png";
                     break;
-                case "hw" : oneNotice.noticeZpoint = "ГВС";
+                case "hw" : //oneNotice.noticeZpoint = "ГВС";
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-93-tint.png";
                     break;
-                case "cw" : oneNotice.noticeZpoint = "ХВС"; 
+                case "cw" : //oneNotice.noticeZpoint = "ХВС"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-22-snowflake.png";
                     break;
-                case "gas" : oneNotice.noticeZpoint = "Газ"; 
+                case "gas" : //oneNotice.noticeZpoint = "Газ"; 
                     oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-23-fire.png";
                     break;
-                case "env" : oneNotice.noticeZpoint = "Климат"; 
+                case "env" :// oneNotice.noticeZpoint = "Климат"; 
                     oneNotice.imgSTPath = "images/es.png";
                     break;
-                case "el" : oneNotice.noticeZpoint = "Элка"; 
+                case "el" : //oneNotice.noticeZpoint = "Элка"; 
                     oneNotice.imgSTPath = "images/es.png";
                     break;    
-                case null : oneNotice.noticeZpoint = ""; 
+                case null :// oneNotice.noticeZpoint = ""; 
                     oneNotice.imgSTPath = "null";
                     break;
                 default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
                     oneNotice.imgSTPath = ""+el.contServiceType+"";
-             }
+             };
+            if (oneNotice.zpoint!=null){
+                oneNotice.noticeZpoint = oneNotice.zpoint.contServiceType.caption;
+            };
 //console.log(oneNotice);            
             return oneNotice;
         });
@@ -439,7 +466,11 @@ console.log("performObjectsFilter");
         objectSvc.promise.then(function(response){
             $scope.objects = response.data;
             objectSvc.sortObjectsByFullName($scope.objects);
-            $scope.$broadcast('notices:getNoticeTypes');   
+            if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
+                $scope.$broadcast('notices:getNoticeTypes');   
+            }else{
+                $scope.$broadcast('notices:getZpointList');   
+            };
 console.log("getObjects");            
 //            $scope.getResultsPage(1);
         });
@@ -486,9 +517,26 @@ console.log("$scope.noticeTypes");
             });
     };
     
+    $scope.getZpointList = function(url){
+        $http.get(url)
+        .success(function(data){
+            $scope.zpointList = data;
+//console.log("geted zpoint list.");            
+//console.log(data);            
+            $scope.$broadcast('notices:getNoticeTypes');
+        })
+        .error(function(e){
+            console.log(e);
+        });
+    };
+    
     $scope.$on('notices:getNoticeTypes',function(){
         $scope.getNoticeTypes($scope.noticeTypesUrl);
 //        $scope.getResultsPage(1);
+    });
+    
+    $scope.$on('notices:getZpointList',function(){
+        $scope.getZpointList($scope.zpointListUrl);
     });
     
     //new/all filter
@@ -688,6 +736,39 @@ console.log("Clear Type filters.");
 
 //        $scope.getResultsPage(1);
     };
+    
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+//console.log(elDOM) ;                       
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            }; 
+//console.log("noHide") ;             
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+        if (ctxFlag == false){
+            window.location.assign('#/');
+        };
+    };
+console.log("1");    
+    setVisibles($scope.ctrlSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+console.log("2");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    });
+    
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.ctrlSettings.ctxId);
+    }, 500);
     
     
     //chart

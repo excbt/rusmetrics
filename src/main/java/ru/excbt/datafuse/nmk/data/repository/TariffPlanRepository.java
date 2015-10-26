@@ -18,11 +18,9 @@ public interface TariffPlanRepository extends CrudRepository<TariffPlan, Long> {
 	 * @param rsoOrganizationId
 	 * @return
 	 */
-	@Query("SELECT d FROM TariffPlan d "
-			+ "WHERE d.subscriber.id = :subscriberId "
+	@Query("SELECT d FROM TariffPlan d " + "WHERE d.subscriber.id = :subscriberId "
 			+ "ORDER BY d.rso.organizationName, d.tariffOption.tariffOptionOrder, d.tariffType.tariffTypeOrder")
-	public List<TariffPlan> selectTariffPlanList(
-			@Param("subscriberId") long subscriberId);
+	public List<TariffPlan> selectTariffPlanList(@Param("subscriberId") long subscriberId);
 
 	/**
 	 * 
@@ -30,11 +28,9 @@ public interface TariffPlanRepository extends CrudRepository<TariffPlan, Long> {
 	 * @param rsoOrganizationId
 	 * @return
 	 */
-	@Query("SELECT d FROM TariffPlan d "
-			+ "WHERE d.subscriber.id = :subscriberId and d.rso.id = :rsoOrganizationId "
+	@Query("SELECT d FROM TariffPlan d " + "WHERE d.subscriber.id = :subscriberId and d.rso.id = :rsoOrganizationId "
 			+ "ORDER BY d.tariffOption.tariffOptionOrder, d.tariffType.tariffTypeOrder")
-	public List<TariffPlan> selectTariffPlanList(
-			@Param("subscriberId") long subscriberId,
+	public List<TariffPlan> selectTariffPlanList(@Param("subscriberId") long subscriberId,
 			@Param("rsoOrganizationId") long rsoOrganizationId);
 
 	/**
@@ -46,62 +42,46 @@ public interface TariffPlanRepository extends CrudRepository<TariffPlan, Long> {
 	 */
 	// @Query("SELECT d FROM TariffPlan d "
 	// +
-	// "WHERE d.subscriber.id = :subscriberId and d.rso.id = :rsoOrganizationId and d.contObject.id = :contObjectId "
+	// "WHERE d.subscriber.id = :subscriberId and d.rso.id = :rsoOrganizationId
+	// and d.contObject.id = :contObjectId "
 	// +
-	// "ORDER BY d.tariffOption.tariffOptionOrder, d.tariffType.tariffTypeOrder")
+	// "ORDER BY d.tariffOption.tariffOptionOrder,
+	// d.tariffType.tariffTypeOrder")
 	// public List<TariffPlan> selectTariffPlan(
 	// @Param("subscriberId") long subscriberId,
 	// @Param("rsoOrganizationId") long rsoOrganizationId,
 	// @Param("contObjectId") long contObjectId);
 
 	@Modifying
-	@Query("DELETE TariffPlan d "
-			+ "WHERE d.subscriber.id = :subscriberId AND d.rso.id = :rsoOrganizationId ")
-	public void deleteTariffPlan(
-			@Param("subscriberId") long subscriberId,
+	@Query("DELETE TariffPlan d " + "WHERE d.subscriber.id = :subscriberId AND d.rso.id = :rsoOrganizationId ")
+	public void deleteTariffPlan(@Param("subscriberId") long subscriberId,
 			@Param("rsoOrganizationId") long rsoOrganizationId);
 
-	
-	@Query("SELECT d FROM TariffPlan d "
-			+ "WHERE d.subscriber.id = :subscriberId and d.id = :tariffPlanId")
-	public List<Long> selectTariffPlanId(
-			@Param("subscriberId") long subscriberId,
+	@Query("SELECT d FROM TariffPlan d " + "WHERE d.subscriber.id = :subscriberId and d.id = :tariffPlanId")
+	public List<Long> selectTariffPlanId(@Param("subscriberId") long subscriberId,
 			@Param("tariffPlanId") long tariffPlanId);
 
-	
-	@Query("SELECT d.contObjects FROM TariffPlan d "
-			+ "WHERE d.subscriber.id = :subscriberId and d.id = :tariffPlanId")
-	public List<ContObject> selectTariffPlanContObjects(
-			@Param("subscriberId") long subscriberId,
+	@Query("SELECT d.contObjects FROM TariffPlan d " + "WHERE d.subscriber.id = :subscriberId and d.id = :tariffPlanId")
+	public List<ContObject> selectTariffPlanContObjects(@Param("subscriberId") long subscriberId,
 			@Param("tariffPlanId") long tariffPlanId);
 
-	
 	@Query("SELECT d.contObjects FROM TariffPlan d "
 			+ " WHERE d.id = :tariffPlanId AND d.subscriber.id = :subscriberId ")
-	public List<ContObject> selectContObjects(
-			@Param("subscriberId") long subscriberId,
-			@Param("tariffPlanId") long tariffPlanId);
-	
-	@Query("SELECT d.contObjects FROM TariffPlan d "
-			+ " WHERE d.id = :tariffPlanId ")
-	public List<ContObject> selectContObjects(
+	public List<ContObject> selectContObjects(@Param("subscriberId") long subscriberId,
 			@Param("tariffPlanId") long tariffPlanId);
 
+	@Query("SELECT d.contObjects FROM TariffPlan d " + " WHERE d.id = :tariffPlanId ")
+	public List<ContObject> selectContObjects(@Param("tariffPlanId") long tariffPlanId);
 
-	@Query("SELECT co FROM Subscriber s LEFT JOIN s.contObjects co "
-			+ "WHERE s.id = :subscriberId AND NOT EXISTS "
-			+ "( SELECT dco.id FROM TariffPlan d LEFT JOIN d.contObjects dco WHERE d.id = :tariffPlanId AND co.id = dco.id ) " 
-			+ "ORDER BY co.name, co.id")
-	public List<ContObject> selectAvailableContObjects(
-			@Param("subscriberId") long subscriberId,
+	@Query("SELECT sco.contObject FROM SubscrContObject sco " + "WHERE sco.subscriberId = :subscriberId AND NOT EXISTS "
+			+ "( SELECT dco.id FROM TariffPlan d LEFT JOIN d.contObjects dco WHERE d.id = :tariffPlanId AND sco.contObjectId = dco.id ) "
+			+ "ORDER BY sco.contObject.name, sco.contObject.id")
+	public List<ContObject> selectAvailableContObjects(@Param("subscriberId") long subscriberId,
 			@Param("tariffPlanId") long tariffPlanId);
 
-
-	@Query("SELECT d FROM TariffPlan d "
-			+ " WHERE d.subscriber.id = :subscriberId AND "
+	@Query("SELECT d FROM TariffPlan d " + " WHERE d.subscriber.id = :subscriberId AND "
 			+ " NOT EXISTS (SELECT co FROM TariffPlan i INNER JOIN i.contObjects co WHERE i.id = d.id) "
 			+ " ORDER BY d.rso.organizationName, d.tariffOption.tariffOptionOrder, d.tariffType.tariffTypeOrder")
-	public List<TariffPlan> selectTariffPlanNoContObjects(
-			@Param("subscriberId") long subscriberId);
+	public List<TariffPlan> selectTariffPlanNoContObjects(@Param("subscriberId") long subscriberId);
 
 }

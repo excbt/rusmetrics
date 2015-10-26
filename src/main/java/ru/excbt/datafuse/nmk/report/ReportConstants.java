@@ -12,10 +12,9 @@ public class ReportConstants {
 	public static final boolean IS_ACTIVE = true;
 	public static final boolean IS_NOT_ACTIVE = false;
 
-	
 	public static final String EXT_JASPER = ".jasper";
 	public static final String EXT_JRXML = ".jrxml";
-	
+
 	public static class Files {
 
 		public static final String COMM_FILE_COMPILED = "jasper_reports/nmk_com_report.jasper";
@@ -28,6 +27,8 @@ public class ReportConstants {
 		public static final String CONSUMPTION_HISTORY_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
 		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
 		public static final String LOG_JOURNAL_FILE_COMPILED = "jasper_reports/nmk_log_journal.jasper";
+		public static final String PARTNER_SERVICE_FILE_COMPILED = "jasper_reports/nmk_partner_service_rep.jasper";
+		public static final String ABONENT_SERVICE_FILE_COMPILED = "jasper_reports/nmk_abonent_service_rep.jasper";
 
 		private Files() {
 
@@ -72,6 +73,16 @@ public class ReportConstants {
 			break;
 		}
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param rtk
+	 * @return
+	 */
+	public static String getReportTypeURL(String rtk) {
+		ReportTypeKey key = ReportTypeKey.valueOf(rtk);
+		return getReportTypeURL(key);
 	}
 
 }

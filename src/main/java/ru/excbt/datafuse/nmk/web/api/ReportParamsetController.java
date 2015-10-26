@@ -23,14 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
@@ -40,16 +41,13 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/reportParamset")
-public class ReportParamsetController extends WebApiController {
+public class ReportParamsetController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -59,32 +57,21 @@ public class ReportParamsetController extends WebApiController {
 	@Autowired
 	private ReportTemplateService reportTemplateService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private SubscriberService subscriberService;
-
 	/**
 	 * 
 	 * @param reportUrlName
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyList(
-			@PathVariable("reportUrlName") String reportUrlName) {
+	public ResponseEntity<?> getAnyList(@PathVariable("reportUrlName") String reportUrlName) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(reportTypeKey,
-						ReportConstants.IS_ACTIVE,
-						currentSubscriberService.getSubscriberId());
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+				ReportConstants.IS_ACTIVE, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -95,20 +82,17 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
+		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
 	}
 
 	/**
@@ -117,20 +101,15 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyArchList(
-			@PathVariable("reportUrlName") String reportUrlName) {
+	public ResponseEntity<?> getAnyArchList(@PathVariable("reportUrlName") String reportUrlName) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportTypeParamsetList(reportTypeKey,
-						ReportConstants.IS_NOT_ACTIVE,
-						currentSubscriberService.getSubscriberId());
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
+				ReportConstants.IS_NOT_ACTIVE, currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(reportParamsetList);
 	}
@@ -141,20 +120,17 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyOneArch(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return ResponseEntity.ok(reportParamsetService
-				.findOne(reportParamsetId));
+		return ResponseEntity.ok(reportParamsetService.findOne(reportParamsetId));
 	}
 
 	/**
@@ -167,22 +143,17 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> createAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
+			@RequestBody ReportParamset reportParamset, HttpServletRequest request) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return createInternal(reportTemplateId, reportParamset, contObjectIds,
-				request);
+		return createInternal(reportTemplateId, reportParamset, contObjectIds, request);
 	}
 
 	/**
@@ -193,18 +164,16 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportParamset
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
@@ -216,16 +185,14 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return deleteInternal(reportParamsetId);
@@ -237,16 +204,14 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteAnyOneArch(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportParamsetId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return deleteInternal(reportParamsetId);
@@ -259,8 +224,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	private ResponseEntity<?> updateInternal(final Long reportParamsetId,
-			final ReportParamset reportParamset, final Long[] contObjectIds) {
+	private ResponseEntity<?> updateInternal(final Long reportParamsetId, final ReportParamset reportParamset,
+			final Long[] contObjectIds) {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
@@ -269,12 +234,10 @@ public class ReportParamsetController extends WebApiController {
 
 		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiAction action = new AbstractEntityApiAction<ReportParamset>(
-				reportParamset) {
+		ApiAction action = new AbstractEntityApiAction<ReportParamset>(reportParamset) {
 			@Override
 			public void process() {
-				setResultEntity(reportParamsetService.updateOne(entity,
-						contObjectIds));
+				setResultEntity(reportParamsetService.updateOne(entity, contObjectIds));
 			}
 		};
 
@@ -289,16 +252,14 @@ public class ReportParamsetController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	private ResponseEntity<?> createInternal(final Long reportTemplateId,
-			final ReportParamset reportParamset, final Long[] contObjectIds,
-			HttpServletRequest request) {
+	private ResponseEntity<?> createInternal(final Long reportTemplateId, final ReportParamset reportParamset,
+			final Long[] contObjectIds, HttpServletRequest request) {
 
 		checkNotNull(reportTemplateId);
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.isNew());
 
-		ReportTemplate reportTemplate = reportTemplateService
-				.findOne(reportTemplateId);
+		ReportTemplate reportTemplate = reportTemplateService.findOne(reportTemplateId);
 
 		if (reportTemplate == null) {
 			return ResponseEntity.badRequest().build();
@@ -309,20 +270,17 @@ public class ReportParamsetController extends WebApiController {
 		reportParamset.set_active(true);
 
 		try {
-			String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
-					.writeValueAsString(reportParamset);
+			String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(reportParamset);
 			logger.trace("ReportParamset JSON: {}", paramJson);
 
 		} catch (JsonProcessingException e) {
 		}
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(
-				reportParamset, request) {
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(reportParamset, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(reportParamsetService.createOne(reportParamset,
-						contObjectIds));
+				setResultEntity(reportParamsetService.createOne(reportParamset, contObjectIds));
 			}
 
 			@Override
@@ -359,11 +317,9 @@ public class ReportParamsetController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createByTemplate(
-			@PathVariable(value = "srcId") Long srcId,
+	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") Long srcId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestBody ReportParamset reportParamset,
-			HttpServletRequest request) {
+			@RequestBody ReportParamset reportParamset, HttpServletRequest request) {
 
 		checkNotNull(srcId);
 		checkNotNull(reportParamset);
@@ -372,23 +328,20 @@ public class ReportParamsetController extends WebApiController {
 		ReportParamset resultEntity = null;
 
 		try {
-			resultEntity = reportParamsetService.createByTemplate(srcId,
-					reportParamset, contObjectIds,
+			resultEntity = reportParamsetService.createByTemplate(srcId, reportParamset, contObjectIds,
 					currentSubscriberService.getSubscriber());
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during create entity by Reportparamset (id={}): {}",
-					srcId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+			logger.error("Error during create entity by Reportparamset (id={}): {}", srcId, e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 		}
 
-		URI location = URI.create("/api/reportParamset"
-				+ ReportConstants.getReportTypeURL(resultEntity
-						.getReportTemplate().getReportTypeKey()) + "/"
-				+ +resultEntity.getId());
+		String keyname = resultEntity.getReportTemplate().getReportTypeKeyname();
+		ReportTypeKey reportType = ReportTypeKey.valueOf(keyname);
+
+		URI location = URI.create(
+				"/api/reportParamset" + ReportConstants.getReportTypeURL(reportType) + "/" + +resultEntity.getId());
 
 		return ResponseEntity.created(location).body(resultEntity);
 	}
@@ -397,13 +350,12 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectUnits(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
+	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContObjectUnits(@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		List<ContObject> resultList = reportParamsetService
-				.selectParamsetContObjects(reportParamsetId);
+		List<ContObject> resultList = reportParamsetService.selectParamsetContObjects(reportParamsetId);
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -412,14 +364,14 @@ public class ReportParamsetController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportParamsetId}/contObject/available", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAvailableContObjectUnits(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		List<ContObject> resultList = reportParamsetService
-				.selectParamsetAvailableContObjectUnits(reportParamsetId,
-						currentSubscriberService.getSubscriberId());
+		List<ContObject> resultList = reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
+				currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -430,7 +382,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportParamsetId}/contObject", method = RequestMethod.POST,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> addReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId) {
@@ -438,24 +391,21 @@ public class ReportParamsetController extends WebApiController {
 		checkNotNull(reportParamsetId);
 		checkNotNull(contObjectId);
 
-		if (!subscriberService.checkContObjectSubscription(
-				currentSubscriberService.getSubscriberId(), contObjectId)) {
+		if (!subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(),
+				contObjectId)) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		ReportParamsetUnit resultEntity = null;
 
 		try {
-			resultEntity = reportParamsetService.addUnitToParamset(
-					reportParamsetId, contObjectId);
+			resultEntity = reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
 					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 		}
 
 		return ResponseEntity.accepted().body(resultEntity);
@@ -467,7 +417,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObject/{contObjectId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportParamsetId}/contObject/{contObjectId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportParamsetContObject(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@PathVariable(value = "contObjectId") Long contObjectId) {
@@ -476,16 +427,13 @@ public class ReportParamsetController extends WebApiController {
 		checkNotNull(contObjectId);
 
 		try {
-			reportParamsetService.deleteUnitFromParamset(reportParamsetId,
-					contObjectId);
+			reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
+			logger.error("Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
 					reportParamsetId, contObjectId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 		}
 
 		return ResponseEntity.ok().build();
@@ -505,13 +453,11 @@ public class ReportParamsetController extends WebApiController {
 		ApiAction action = new AbstractEntityApiAction<ReportParamset>() {
 			@Override
 			public void process() {
-				setResultEntity(reportParamsetService
-						.moveToArchive(reportParamsetId));
+				setResultEntity(reportParamsetService.moveToArchive(reportParamsetId));
 			}
 		};
 
-		ResponseEntity<?> responeResult = WebApiHelper
-				.processResponceApiActionOkBody(action);
+		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionOkBody(action);
 
 		if (action.getResult() == null) {
 			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
@@ -527,7 +473,8 @@ public class ReportParamsetController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/contObjects", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportParamsetId}/contObjects", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateReportParamsetContObjects(
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = true) Long[] contObjectIds) {
@@ -536,23 +483,19 @@ public class ReportParamsetController extends WebApiController {
 		checkNotNull(contObjectIds);
 
 		for (Long id : contObjectIds) {
-			if (!subscriberService.checkContObjectSubscription(
-					currentSubscriberService.getSubscriberId(), id)) {
+			if (!subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(), id)) {
 				return ResponseEntity.badRequest().build();
 			}
 		}
 
 		try {
-			reportParamsetService.updateUnitToParamset(reportParamsetId,
-					contObjectIds);
+			reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
 		} catch (AccessDeniedException e) {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error(
-					"Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
 					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.build();
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
 		}
 
 		return ResponseEntity.accepted().build();

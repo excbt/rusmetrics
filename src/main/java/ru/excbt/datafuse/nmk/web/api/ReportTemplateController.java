@@ -40,8 +40,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 @RequestMapping(value = "/api/reportTemplate")
 public class ReportTemplateController extends WebApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportTemplateController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateController.class);
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
@@ -64,43 +63,32 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyList(
-			@PathVariable("reportUrlName") String reportUrlName) {
+	public ResponseEntity<?> getAnyList(@PathVariable("reportUrlName") String reportUrlName) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						reportTypeKey, ReportConstants.IS_ACTIVE);
+		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(
+				currentSubscriberService.getSubscriberId(), reportTypeKey, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
-
 
 	/**
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/archive/{reportUrlName}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyArchList(
-			@PathVariable("reportUrlName") String reportUrlName) {
+	public ResponseEntity<?> getAnyArchList(@PathVariable("reportUrlName") String reportUrlName) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService
-				.getAllReportTemplates(
-						currentSubscriberService.getSubscriberId(),
-						reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
+		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(
+				currentSubscriberService.getSubscriberId(), reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -110,16 +98,14 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportTemplate result = reportTemplateService.findOne(reportTemplateId);
@@ -128,7 +114,7 @@ public class ReportTemplateController extends WebApiController {
 		}
 
 		return responseOK(result);
-	}	
+	}
 
 	/**
 	 * 
@@ -137,43 +123,39 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateAnyOne(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/{reportUrlName}/{reportTemplateId}", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportTemplateId") Long reportTemplateId,
 			@RequestBody ReportTemplate reportTemplate) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return updateInternal(reportTemplateId, reportTemplate, reportTypeKey);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param reportUrlName
 	 * @param reportTemplateId
 	 * @return
 	 */
-	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteAnyOneArch(
-			@PathVariable("reportUrlName") String reportUrlName,
+	@RequestMapping(value = "/archive/{reportUrlName}/{reportTemplateId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteAnyOneArch(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportTemplateId") long reportTemplateId) {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		return deleteInternal(reportTemplateId);
-	}	
-	
+	}
+
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -191,7 +173,6 @@ public class ReportTemplateController extends WebApiController {
 		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
-
 	/**
 	 * 
 	 * @param reportTemplateId
@@ -199,20 +180,19 @@ public class ReportTemplateController extends WebApiController {
 	 * @param reportType
 	 * @return
 	 */
-	private ResponseEntity<?> updateInternal(Long reportTemplateId,
-			ReportTemplate reportTemplate, ReportTypeKey reportType) {
+	private ResponseEntity<?> updateInternal(Long reportTemplateId, ReportTemplate reportTemplate,
+			ReportTypeKey reportType) {
 
 		checkNotNull(reportTemplateId);
 		checkNotNull(reportTemplate);
 		checkNotNull(reportTemplate.getId());
 		checkNotNull(reportType);
 		checkArgument(reportTemplate.getId().equals(reportTemplateId));
-		checkArgument(reportTemplate.getReportTypeKey() == reportType);
+		checkArgument(reportType.getKeyname().equals(reportTemplate.getReportTypeKeyname()));
 
 		reportTemplate.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiAction action = new AbstractEntityApiAction<ReportTemplate>(
-				reportTemplate) {
+		ApiAction action = new AbstractEntityApiAction<ReportTemplate>(reportTemplate) {
 			@Override
 			public void process() {
 				setResultEntity(reportTemplateService.updateOne(entity));
@@ -222,7 +202,6 @@ public class ReportTemplateController extends WebApiController {
 		return WebApiHelper.processResponceApiActionUpdate(action);
 
 	}
-
 
 	/**
 	 * 
@@ -238,20 +217,16 @@ public class ReportTemplateController extends WebApiController {
 		ApiAction action = new AbstractEntityApiAction<ReportTemplate>() {
 			@Override
 			public void process() {
-				setResultEntity(reportTemplateService
-						.moveToArchive(reportTemplateId));
+				setResultEntity(reportTemplateService.moveToArchive(reportTemplateId));
 			}
 		};
 
-		ResponseEntity<?> responeResult = WebApiHelper
-				.processResponceApiActionUpdate(action);
+		ResponseEntity<?> responeResult = WebApiHelper.processResponceApiActionUpdate(action);
 
 		if (action.getResult() == null) {
-			responeResult = ResponseEntity
-					.status(HttpStatus.FAILED_DEPENDENCY)
-					.body(ApiResult
-							.build(ApiResultCode.ERR_BRM_VALIDATION,
-									"Report Template have active ReportParamset. Moving to archive is impossible"));
+			responeResult = ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY)
+					.body(ApiResult.build(ApiResultCode.ERR_BRM_VALIDATION,
+							"Report Template have active ReportParamset. Moving to archive is impossible"));
 		}
 
 		return responeResult;
@@ -264,22 +239,19 @@ public class ReportTemplateController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/createByTemplate/{srcId}", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createByTemplate(
-			@PathVariable(value = "srcId") final Long srcId,
-			@RequestBody ReportTemplate reportTemplate,
-			HttpServletRequest request) {
+	public ResponseEntity<?> createByTemplate(@PathVariable(value = "srcId") final Long srcId,
+			@RequestBody ReportTemplate reportTemplate, HttpServletRequest request) {
 
 		checkNotNull(srcId);
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportTemplate, Long>(
-				reportTemplate, request) {
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportTemplate, Long>(reportTemplate, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(reportTemplateService.createByTemplate(srcId,
-						entity, currentSubscriberService.getSubscriber()));
+				setResultEntity(reportTemplateService.createByTemplate(srcId, entity,
+						currentSubscriberService.getSubscriber()));
 			}
 
 			@Override
@@ -291,9 +263,10 @@ public class ReportTemplateController extends WebApiController {
 			@Override
 			public URI getLocation() {
 				checkNotNull(getResultEntity());
+
 				return URI.create("/api/reportTemplate"
-						+ ReportConstants.getReportTypeURL(getResultEntity()
-								.getReportTypeKey()) + "/" + getLocationId());
+						+ ReportConstants.getReportTypeURL(getResultEntity().getReportTypeKeyname()) + "/"
+						+ getLocationId());
 			}
 
 		};

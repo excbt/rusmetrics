@@ -5,10 +5,15 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
-@Table(name="subscr_role")
+@Table(name = "subscr_role")
+@JsonInclude(Include.NON_NULL)
 public class SubscrRole extends AbstractAuditableModel {
 
 	/**
@@ -16,19 +21,18 @@ public class SubscrRole extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	
-	@Column (name="subscr_role_name")
+	@Column(name = "subscr_role_name")
 	private String roleName;
 
-	@Column (name="subscr_role_info")
+	@Column(name = "subscr_role_info")
 	private String info;
 
-	@Column (name="subscr_role_comment")
+	@Column(name = "subscr_role_comment")
 	private String comment;
-	
+
+	@JsonIgnore
 	@Version
 	private int version;
-	
 
 	public String getInfo() {
 		return info;
@@ -62,6 +66,4 @@ public class SubscrRole extends AbstractAuditableModel {
 		this.roleName = roleName;
 	}
 
-	
-	
 }

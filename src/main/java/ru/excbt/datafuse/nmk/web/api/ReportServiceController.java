@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
@@ -37,14 +39,11 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController extends WebApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportServiceController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportServiceController.class);
 
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
@@ -69,8 +68,7 @@ public class ReportServiceController extends WebApiController {
 	 *
 	 */
 	private interface ReportMaker {
-		boolean makeReport(ReportMakerParam reportMakerParam,
-				LocalDateTime dateTime, OutputStream outputStream);
+		boolean makeReport(ReportMakerParam reportMakerParam, LocalDateTime dateTime, OutputStream outputStream);
 
 		String defaultFileName();
 
@@ -84,8 +82,8 @@ public class ReportServiceController extends WebApiController {
 	private abstract class AbstractReportMaker implements ReportMaker {
 
 		@Override
-		public boolean makeReport(ReportMakerParam reportMakerParam,
-				LocalDateTime dateTime, OutputStream outputStream) {
+		public boolean makeReport(ReportMakerParam reportMakerParam, LocalDateTime dateTime,
+				OutputStream outputStream) {
 			checkNotNull(reportMakerParam);
 			checkState(reportMakerParam.isSubscriberValid());
 			checkState(reportMakerParam.isParamsetValid());
@@ -93,8 +91,7 @@ public class ReportServiceController extends WebApiController {
 			checkNotNull(dateTime);
 			boolean result = true;
 
-			reportService.makeReportByParamset(reportMakerParam, dateTime,
-					outputStream);
+			reportService.makeReportByParamset(reportMakerParam, dateTime, outputStream);
 
 			return result;
 		}
@@ -108,22 +105,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/download", method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReport(
-			@PathVariable("reportUrlName") String reportUrlName,
-			@PathVariable("reportParamsetId") long reportParamsetId,
-			HttpServletRequest request) throws IOException {
+	public ResponseEntity<?> doDowndloadAnyReport(@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportParamsetId") long reportParamsetId, HttpServletRequest request) throws IOException {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamsetId);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 
@@ -138,22 +130,17 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/preview", method = RequestMethod.GET)
-	public ResponseEntity<?> doDowndloadAnyReportPreview(
-			@PathVariable("reportUrlName") String reportUrlName,
-			@PathVariable("reportParamsetId") long reportParamsetId)
-			throws IOException {
+	public ResponseEntity<?> doDowndloadAnyReportPreview(@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportParamsetId") long reportParamsetId) throws IOException {
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamsetId, true);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId, true);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 	}
@@ -169,8 +156,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/download", method = RequestMethod.PUT)
-	public ResponseEntity<?> doPutDowndloadAnyReport(
-			@PathVariable("reportUrlName") String reportUrlName,
+	public ResponseEntity<?> doPutDowndloadAnyReport(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
@@ -184,19 +170,16 @@ public class ReportServiceController extends WebApiController {
 			logger.warn("Attention: contObjectIds is null");
 		}
 
-		ReportTypeKey reportTypeKey = ReportTypeKey
-				.findByUrlName(reportUrlName);
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
 		if (reportTypeKey == null) {
-			return responseBadRequest(ApiResult.validationError(
-					"Report of type %s is not supported", reportUrlName));
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 
@@ -211,9 +194,9 @@ public class ReportServiceController extends WebApiController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT, produces = "application/zip")
-	public ResponseEntity<?> doDowndloadReportPutZip(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT,
+			produces = "application/zip")
+	public ResponseEntity<?> doDowndloadReportPutZip(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
@@ -222,8 +205,7 @@ public class ReportServiceController extends WebApiController {
 
 		reportParamset.setOutputFileZipped(true);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds,
-				reportParamset);
+		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
 
 	}
 
@@ -237,8 +219,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
-	public ResponseEntity<?> doDowndloadReportPutPdf(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	public ResponseEntity<?> doDowndloadReportPutPdf(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
@@ -248,8 +229,7 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds,
-				reportParamset);
+		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
 
 	}
 
@@ -263,8 +243,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
-	public ResponseEntity<?> doDowndloadReportPutXlsx(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	public ResponseEntity<?> doDowndloadReportPutXlsx(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
@@ -274,8 +253,7 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.XLSX);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds,
-				reportParamset);
+		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
 
 	}
 
@@ -289,8 +267,7 @@ public class ReportServiceController extends WebApiController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
-	public ResponseEntity<?> doDowndloadReportPutHtml(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
+	public ResponseEntity<?> doDowndloadReportPutHtml(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
@@ -300,8 +277,7 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.HTML);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds,
-				reportParamset);
+		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
 
 	}
 
@@ -313,55 +289,49 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 * @throws IOException
 	 */
-	private ResponseEntity<?> processDowndloadAnyReport(
-			ReportMakerParam reportMakerParam, ReportMaker reportMaker)
+	private ResponseEntity<?> processDowndloadAnyReport(ReportMakerParam reportMakerParam, ReportMaker reportMaker)
 			throws IOException {
 
 		checkNotNull(reportMakerParam);
 		checkNotNull(reportMaker);
 		checkNotNull(reportMaker.defaultFileName());
 
-		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
-				.writeValueAsString(reportMakerParam);
+		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(reportMakerParam);
 
 		logger.debug("ReportMakerParam JSON: {}", paramJson);
 
-		if (!reportMakerParam.isParamsetValid()
-				|| !reportMakerParam.isSubscriberValid()) {
-			return responseBadRequest(ApiResult
-					.validationError("Report Maker Param is not valid"));
+		if (!reportMakerParam.isParamsetValid() || !reportMakerParam.isSubscriberValid()) {
+			return responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
 		}
 
-		boolean checkParamsCommon = reportMakerParamService
-				.isAllCommonRequiredParamsExists(reportMakerParam);
-		boolean checParamsSpecial = reportMakerParamService
-				.isAllSpecialRequiredParamsExists(reportMakerParam);
+		boolean checkParamsCommon = reportMakerParamService.isAllCommonRequiredParamsExists(reportMakerParam);
+		boolean checParamsSpecial = reportMakerParamService.isAllSpecialRequiredParamsExists(reportMakerParam);
 
-		if (!checkParamsCommon || !checParamsSpecial) {
-			return responseBadRequest(ApiResult
-					.validationError("Report Maker Param: not all required params is set"));
+		if (!checkParamsCommon) {
+			return responseBadRequest(ApiResult.validationError("Report Maker Param: Common params is not valid"));
+		}
+
+		if (!checParamsSpecial) {
+			return responseBadRequest(ApiResult.validationError("Report Maker Param: Special params is not valid"));
 		}
 
 		byte[] byteArray = null;
 		// XXX Time Zone Service
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
-			reportMaker.makeReport(reportMakerParam,
-					currentSubscriberService.getSubscriberCurrentTime_Joda(),
+			reportMaker.makeReport(reportMakerParam, currentSubscriberService.getSubscriberCurrentTime_Joda(),
 					memoryOutputStream);
 			byteArray = memoryOutputStream.toByteArray();
 		}
 
 		if (byteArray == null || byteArray.length == 0) {
-			return responseInternalServerError(ApiResult
-					.internalError("Report Maker result is empty"));
+			return responseInternalServerError(ApiResult.internalError("Report Maker result is empty"));
 		}
 
 		InputStream is = new ByteArrayInputStream(byteArray);
 
 		MediaType mediaType = MediaType.valueOf(reportMakerParam.getMimeType());
 
-		String outputFilename = reportMakerParam.getReportParamset()
-				.getOutputFileNameTemplate();
+		String outputFilename = reportMakerParam.getReportParamset().getOutputFileNameTemplate();
 
 		if (outputFilename == null) {
 			outputFilename = reportMaker.defaultFileName();
@@ -369,8 +339,7 @@ public class ReportServiceController extends WebApiController {
 
 		boolean makeAttach = !reportMakerParam.isPreviewMode();
 
-		return processDownloadInputStream(is, mediaType, byteArray.length,
-				outputFilename, makeAttach);
+		return processDownloadInputStream(is, mediaType, byteArray.length, outputFilename, makeAttach);
 
 	}
 
@@ -491,8 +460,7 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setSubscriberId(subscriber.getId());
 		reportParamset.setSubscriber(subscriber);
 
-		reportParamset.setReportPeriod(reportPeriodService
-				.findByKeyname(reportParamset.getReportPeriodKey()));
+		reportParamset.setReportPeriod(reportPeriodService.findByKeyname(reportParamset.getReportPeriodKey()));
 	}
 
 	/**
@@ -505,16 +473,15 @@ public class ReportServiceController extends WebApiController {
 	 * @return
 	 * @throws IOException
 	 */
-	private ResponseEntity<?> procedDownloadAllReports(Long reportParamsetId,
-			Long[] contObjectIds, ReportParamset reportParamset)
-			throws IOException {
+	private ResponseEntity<?> procedDownloadAllReports(Long reportParamsetId, Long[] contObjectIds,
+			ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getId());
 		checkArgument(reportParamset.getId().equals(reportParamsetId));
 		checkNotNull(reportParamset.getReportTemplate());
-		checkNotNull(reportParamset.getReportTemplate().getReportTypeKey());
+		checkNotNull(reportParamset.getReportTemplate().getReportTypeKeyname());
 
 		if (contObjectIds == null) {
 			logger.warn("Attention: contObjectIds is null");
@@ -522,16 +489,14 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService
-				.newReportMakerParam(reportParamset, contObjectIds);
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
 
-		ReportTypeKey reportTypeKey = reportParamset.getReportTemplate()
-				.getReportTypeKey();
+		String reportKeyname = reportParamset.getReportTemplate().getReportTypeKeyname();
+		ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(reportKeyname);
 
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
-		checkState(reportMaker != null, "reportTypeKey:" + reportTypeKey
-				+ " is not supported");
+		checkState(reportMaker != null, "reportTypeKey:" + reportTypeKey + " is not supported");
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 

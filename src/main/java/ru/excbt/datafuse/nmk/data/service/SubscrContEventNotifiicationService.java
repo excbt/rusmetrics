@@ -54,12 +54,11 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
 @Service
 public class SubscrContEventNotifiicationService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContEventNotifiicationService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotifiicationService.class);
 
 	private final static int DEFAULT_PAGE_SIZE = 100;
-	private final static Pageable DEFAULT_NOTIFICATION_PAGE_REQUEST = new PageRequest(
-			0, DEFAULT_PAGE_SIZE, makeDefaultSort());
+	private final static Pageable DEFAULT_NOTIFICATION_PAGE_REQUEST = new PageRequest(0, DEFAULT_PAGE_SIZE,
+			makeDefaultSort());
 
 	public final static String[] AVAILABLE_SORT_FIELDS = { "contEventTime" };
 	public final static List<String> AVAILABLE_SORT_FIELD_LIST = Collections
@@ -68,8 +67,8 @@ public class SubscrContEventNotifiicationService {
 	@Autowired
 	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	// @Autowired
+	// private SubscriberService subscriberService;
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
@@ -79,6 +78,9 @@ public class SubscrContEventNotifiicationService {
 
 	@Autowired
 	private ContEventLevelColorRepository contEventLevelColorRepository;
+
+	@Autowired
+	private SubscrContObjectService subscrContObjectService;
 
 	/**
 	 * 
@@ -107,8 +109,7 @@ public class SubscrContEventNotifiicationService {
 
 			}
 
-			throw new IllegalArgumentException(
-					"Can't determine type for CounterInfo arguments ");
+			throw new IllegalArgumentException("Can't determine type for CounterInfo arguments ");
 
 		}
 
@@ -132,15 +133,13 @@ public class SubscrContEventNotifiicationService {
 
 		private ContObjectCounterMap(List<CounterInfo> srcList) {
 			checkNotNull(srcList);
-			this.notificationMap = srcList.stream().collect(
-					Collectors.toMap(CounterInfo::getContObjectId,
-							(info) -> info));
+			this.notificationMap = srcList.stream()
+					.collect(Collectors.toMap(CounterInfo::getContObjectId, (info) -> info));
 		}
 
 		private long getCountValue(Long contObjectId) {
 			CounterInfo info = notificationMap.get(contObjectId);
-			return (info == null) || (info.count == null) ? 0 : info.count
-					.longValue();
+			return (info == null) || (info.count == null) ? 0 : info.count.longValue();
 		}
 	}
 
@@ -152,14 +151,13 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectAll(final long subscriberId,
-			final Boolean isNew, final Pageable pageable) {
+	public Page<SubscrContEventNotification> selectAll(final long subscriberId, final Boolean isNew,
+			final Pageable pageable) {
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotificationRepository
-				.findAll(Specifications.where(specSubscriberId(subscriberId))
-						.and(specIsNew(isNew)), pageRequest);
+				.findAll(Specifications.where(specSubscriberId(subscriberId)).and(specIsNew(isNew)), pageRequest);
 
 		return resultPage;
 
@@ -177,24 +175,19 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectByConditions(
-			Long subscriberId, final Date fromDate, final Date toDate,
-			final List<Long> contObjectList,
-			final List<Long> contEventTypeList, final Boolean isNew,
+	public Page<SubscrContEventNotification> selectByConditions(Long subscriberId, final Date fromDate,
+			final Date toDate, final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Pageable pageable) {
 
 		checkNotNull(subscriberId);
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
-		Specifications<SubscrContEventNotification> specs = Specifications
-				.where(specSubscriberId(subscriberId))
-				.and(specContEventDate(fromDate, toDate)).and(specIsNew(isNew))
-				.and(specContObjectId(contObjectList))
+		Specifications<SubscrContEventNotification> specs = Specifications.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(fromDate, toDate)).and(specIsNew(isNew)).and(specContObjectId(contObjectList))
 				.and(specContEventTypeId(contEventTypeList));
 
-		return subscrContEventNotificationRepository
-				.findAll(specs, pageRequest);
+		return subscrContEventNotificationRepository.findAll(specs, pageRequest);
 	}
 
 	/**
@@ -208,25 +201,19 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectByConditions(
-			Long subscriberId, final LocalDatePeriod datePeriod,
-			final List<Long> contObjectList,
-			final List<Long> contEventTypeList, final Boolean isNew,
+	public Page<SubscrContEventNotification> selectByConditions(Long subscriberId, final LocalDatePeriod datePeriod,
+			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Pageable pageable) {
 
 		checkNotNull(subscriberId);
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
-		Specifications<SubscrContEventNotification> specs = Specifications
-				.where(specSubscriberId(subscriberId))
-				.and(specContEventDate(datePeriod.getDateFrom(),
-						datePeriod.getDateTo())).and(specIsNew(isNew))
-				.and(specContObjectId(contObjectList))
-				.and(specContEventTypeId(contEventTypeList));
+		Specifications<SubscrContEventNotification> specs = Specifications.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(datePeriod.getDateFrom(), datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContObjectId(contObjectList)).and(specContEventTypeId(contEventTypeList));
 
-		return subscrContEventNotificationRepository
-				.findAll(specs, pageRequest);
+		return subscrContEventNotificationRepository.findAll(specs, pageRequest);
 
 	}
 
@@ -238,11 +225,9 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectByConditions(
-			Long subscriberId, final LocalDatePeriod datePeriod,
+	public Page<SubscrContEventNotification> selectByConditions(Long subscriberId, final LocalDatePeriod datePeriod,
 			final Pageable pageable) {
-		return selectByConditions(subscriberId, datePeriod, null, null, null,
-				pageable);
+		return selectByConditions(subscriberId, datePeriod, null, null, null, pageable);
 	}
 
 	/**
@@ -255,22 +240,17 @@ public class SubscrContEventNotifiicationService {
 	 * @param pageable
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditions(Long subscriberId,
-			final LocalDatePeriod datePeriod, final List<Long> contObjectList,
-			final List<Long> contEventTypeList, final Boolean isNew,
+	public void updateRevisionByConditions(Long subscriberId, final LocalDatePeriod datePeriod,
+			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
 
 		checkNotNull(subscriberId);
 
-		Specifications<SubscrContEventNotification> specs = Specifications
-				.where(specSubscriberId(subscriberId))
-				.and(specContEventDate(datePeriod.getDateFrom(),
-						datePeriod.getDateTo())).and(specIsNew(isNew))
-				.and(specContObjectId(contObjectList))
-				.and(specContEventTypeId(contEventTypeList));
+		Specifications<SubscrContEventNotification> specs = Specifications.where(specSubscriberId(subscriberId))
+				.and(specContEventDate(datePeriod.getDateFrom(), datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContObjectId(contObjectList)).and(specContEventTypeId(contEventTypeList));
 
-		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository
-				.findAll(specs);
+		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository.findAll(specs);
 		for (SubscrContEventNotification n : updateCandidates) {
 			updateNotificationOneIsNew(n, revisionIsNew, revisionSubscrUserId);
 		}
@@ -306,8 +286,7 @@ public class SubscrContEventNotifiicationService {
 		Iterator<Order> it = sort.iterator();
 		while (it.hasNext()) {
 			Order o = it.next();
-			result = result
-					&& AVAILABLE_SORT_FIELD_LIST.contains(o.getProperty());
+			result = result && AVAILABLE_SORT_FIELD_LIST.contains(o.getProperty());
 		}
 		return result;
 	}
@@ -335,18 +314,15 @@ public class SubscrContEventNotifiicationService {
 	 * @param sortDesc
 	 * @return
 	 */
-	public static Pageable setupPageRequestSort(Pageable pageable,
-			Boolean sortDesc) {
+	public static Pageable setupPageRequestSort(Pageable pageable, Boolean sortDesc) {
 
 		checkNotNull(pageable);
 
 		Pageable result;
 		if (sortDesc == null || Boolean.TRUE.equals(sortDesc)) {
-			result = new PageRequest(pageable.getPageNumber(),
-					pageable.getPageSize(), makeSort(Direction.DESC));
+			result = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), makeSort(Direction.DESC));
 		} else {
-			result = new PageRequest(pageable.getPageNumber(),
-					pageable.getPageSize(), makeSort(Direction.ASC));
+			result = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), makeSort(Direction.ASC));
 		}
 		return result;
 	}
@@ -356,23 +332,19 @@ public class SubscrContEventNotifiicationService {
 	 * @param searchTerm
 	 * @return
 	 */
-	public static Specification<SubscrContEventNotification> specIsNew(
-			final Boolean isNew) {
+	public static Specification<SubscrContEventNotification> specIsNew(final Boolean isNew) {
 
 		return new Specification<SubscrContEventNotification>() {
 
 			@Override
-			public Predicate toPredicate(
-					Root<SubscrContEventNotification> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
+					CriteriaBuilder cb) {
 
 				if (isNew == null) {
 					return null;
 				}
 
-				return cb.equal(
-						root.<Boolean> get(SubscrContEventNotification_.isNew),
-						Boolean.TRUE);
+				return cb.equal(root.<Boolean> get(SubscrContEventNotification_.isNew), Boolean.TRUE);
 			}
 
 		};
@@ -384,23 +356,19 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	public static Specification<SubscrContEventNotification> specSubscriberId(
-			final Long subscriberId) {
+	public static Specification<SubscrContEventNotification> specSubscriberId(final Long subscriberId) {
 
 		return new Specification<SubscrContEventNotification>() {
 
 			@Override
-			public Predicate toPredicate(
-					Root<SubscrContEventNotification> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
+					CriteriaBuilder cb) {
 
 				if (subscriberId == null) {
 					return null;
 				}
 
-				return cb.equal(root
-						.<Long> get(SubscrContEventNotification_.subscriberId),
-						subscriberId);
+				return cb.equal(root.<Long> get(SubscrContEventNotification_.subscriberId), subscriberId);
 			}
 
 		};
@@ -412,26 +380,20 @@ public class SubscrContEventNotifiicationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	public static Specification<SubscrContEventNotification> specContEventDate(
-			final Date fromDate, final Date toDate) {
+	public static Specification<SubscrContEventNotification> specContEventDate(final Date fromDate, final Date toDate) {
 		return new Specification<SubscrContEventNotification>() {
 
 			@Override
-			public Predicate toPredicate(
-					Root<SubscrContEventNotification> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
+					CriteriaBuilder cb) {
 
 				if (fromDate == null || toDate == null) {
 					return null;
 				}
 
-				return cb
-						.and(cb.greaterThanOrEqualTo(
-								root.<Date> get(SubscrContEventNotification_.contEventTime),
-								fromDate),
-								cb.lessThanOrEqualTo(
-										root.<Date> get(SubscrContEventNotification_.contEventTime),
-										toDate));
+				return cb.and(
+						cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), fromDate),
+						cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), toDate));
 			}
 
 		};
@@ -442,20 +404,17 @@ public class SubscrContEventNotifiicationService {
 	 * @param contObjectIdList
 	 * @return
 	 */
-	public static Specification<SubscrContEventNotification> specContObjectId(
-			final List<Long> contObjectIdList) {
+	public static Specification<SubscrContEventNotification> specContObjectId(final List<Long> contObjectIdList) {
 		return new Specification<SubscrContEventNotification>() {
 
 			@Override
-			public Predicate toPredicate(
-					Root<SubscrContEventNotification> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
+					CriteriaBuilder cb) {
 				if (contObjectIdList == null || contObjectIdList.size() == 0) {
 					return null;
 				}
 
-				return root.get(SubscrContEventNotification_.contObjectId).in(
-						contObjectIdList);
+				return root.get(SubscrContEventNotification_.contObjectId).in(contObjectIdList);
 			}
 
 		};
@@ -466,22 +425,19 @@ public class SubscrContEventNotifiicationService {
 	 * @param contEventTypeIdList
 	 * @return
 	 */
-	public static Specification<SubscrContEventNotification> specContEventTypeId(
-			final List<Long> contEventTypeIdList) {
+	public static Specification<SubscrContEventNotification> specContEventTypeId(final List<Long> contEventTypeIdList) {
 		return new Specification<SubscrContEventNotification>() {
 
 			@Override
-			public Predicate toPredicate(
-					Root<SubscrContEventNotification> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
+			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
+					CriteriaBuilder cb) {
 
-				if (contEventTypeIdList == null
-						|| contEventTypeIdList.size() == 0) {
+				if (contEventTypeIdList == null || contEventTypeIdList.size() == 0) {
 					return null;
 				}
 
-				return root.get(SubscrContEventNotification_.contEvent)
-						.get(ContEvent_.contEventType).in(contEventTypeIdList);
+				return root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+						.in(contEventTypeIdList);
 			}
 
 		};
@@ -493,7 +449,7 @@ public class SubscrContEventNotifiicationService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public SubscrContEventNotification findOneNotification(Long id) {
 		return subscrContEventNotificationRepository.findOne(id);
 	}
@@ -504,8 +460,7 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrContEventNotification updateNotificationOneIsNew(
-			Boolean isNew, Long subscrContEventNotificationId,
+	public SubscrContEventNotification updateNotificationOneIsNew(Boolean isNew, Long subscrContEventNotificationId,
 			Long revisionSubscrUserId) {
 
 		checkNotNull(isNew);
@@ -513,13 +468,11 @@ public class SubscrContEventNotifiicationService {
 		SubscrContEventNotification updateCandidate = subscrContEventNotificationRepository
 				.findOne(subscrContEventNotificationId);
 		if (updateCandidate == null) {
-			throw new PersistenceException(String.format(
-					"SubscrContEventNotification with id=%d is not found",
+			throw new PersistenceException(String.format("SubscrContEventNotification with id=%d is not found",
 					subscrContEventNotificationId));
 		}
 
-		return updateNotificationOneIsNew(updateCandidate, isNew,
-				revisionSubscrUserId);
+		return updateNotificationOneIsNew(updateCandidate, isNew, revisionSubscrUserId);
 
 	}
 
@@ -530,29 +483,25 @@ public class SubscrContEventNotifiicationService {
 	 * @param revisionSubscrUserId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	private SubscrContEventNotification updateNotificationOneIsNew(
-			SubscrContEventNotification subscrContEventNotification,
-			Boolean isNew, Long revisionSubscrUserId) {
+			SubscrContEventNotification subscrContEventNotification, Boolean isNew, Long revisionSubscrUserId) {
 
 		checkNotNull(subscrContEventNotification);
 		subscrContEventNotification.setIsNew(isNew);
 		Date revisionDate = new Date();
 		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
-		subscrContEventNotification
-				.setRevisionSubscrUserId(revisionSubscrUserId);
-		return subscrContEventNotificationRepository
-				.save(subscrContEventNotification);
+		subscrContEventNotification.setRevisionSubscrUserId(revisionSubscrUserId);
+		return subscrContEventNotificationRepository.save(subscrContEventNotification);
 	}
 
 	/**
 	 * 
 	 * @param notificationIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	public void updateNotificationIsNew(Boolean isNew,
-			List<Long> notificationIds, Long revisionSubscrUserId) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void updateNotificationIsNew(Boolean isNew, List<Long> notificationIds, Long revisionSubscrUserId) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
 		checkNotNull(revisionSubscrUserId);
@@ -569,16 +518,15 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public long selectNotificationsCount(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod) {
+	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
+			final LocalDatePeriod datePeriod) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		Long result = subscrContEventNotificationRepository
-				.selectNotificatoinsCount(subscriberId, contObjectId,
-						datePeriod.getDateFrom(), datePeriod.getDateTo());
+		Long result = subscrContEventNotificationRepository.selectNotificatoinsCount(subscriberId, contObjectId,
+				datePeriod.getDateFrom(), datePeriod.getDateTo());
 
 		return result == null ? 0 : result.longValue();
 	}
@@ -591,18 +539,16 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public long selectNotificationsCount(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod,
-			Boolean isNew) {
+	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
+			final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkNotNull(isNew);
 		checkState(datePeriod.isValidEq());
 
-		Long result = subscrContEventNotificationRepository
-				.selectNotificatoinsCount(subscriberId, contObjectId,
-						datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
+		Long result = subscrContEventNotificationRepository.selectNotificatoinsCount(subscriberId, contObjectId,
+				datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
 
 		return result == null ? 0 : result.longValue();
 	}
@@ -616,55 +562,7 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	@Deprecated
-	public long selectContEventTypeCount(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod) {
-
-		checkNotNull(contObjectId);
-		checkNotNull(subscriberId);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Object[]> typesList = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCount(subscriberId, contObjectId,
-						datePeriod.getDateFrom(), datePeriod.getDateTo());
-
-		return typesList.size();
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public long selectContEventTypeCountGroup(final Long subscriberId,
-			final Long contObjectId, final LocalDatePeriod datePeriod) {
-
-		checkNotNull(contObjectId);
-		checkNotNull(subscriberId);
-		checkNotNull(datePeriod);
-		checkState(datePeriod.isValidEq());
-
-		List<Object[]> typesList = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroup(subscriberId,
-						contObjectId, datePeriod.getDateFrom(),
-						datePeriod.getDateTo());
-
-		return typesList.size();
-	}
-
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(
-			final Long subscriberId, final Long contObjectId,
+	public long selectContEventTypeCount(final Long subscriberId, final Long contObjectId,
 			final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
@@ -672,14 +570,55 @@ public class SubscrContEventNotifiicationService {
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		List<Object[]> selectResult = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCount(subscriberId, contObjectId,
-						datePeriod.getDateFrom(), datePeriod.getDateTo());
+		List<Object[]> typesList = subscrContEventNotificationRepository.selectNotificationEventTypeCount(subscriberId,
+				contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
 
-		List<CounterInfo> selectList = selectResult
-				.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0],
-						objects[1])).collect(Collectors.toList());
+		return typesList.size();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public long selectContEventTypeCountGroup(final Long subscriberId, final Long contObjectId,
+			final LocalDatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> typesList = subscrContEventNotificationRepository.selectNotificationEventTypeCountGroup(
+				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		return typesList.size();
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param datePeriod
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(final Long subscriberId,
+			final Long contObjectId, final LocalDatePeriod datePeriod) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(subscriberId);
+		checkNotNull(datePeriod);
+		checkState(datePeriod.isValidEq());
+
+		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCount(
+				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		List<CounterInfo> selectList = selectResult.stream()
+				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
 
 		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
 
@@ -688,15 +627,13 @@ public class SubscrContEventNotifiicationService {
 			ContEventType contEventType = contEventTypeService.findOne(ci.id);
 			checkNotNull(contEventType);
 
-			MonitorContEventTypeStatus item = MonitorContEventTypeStatus
-					.newInstance(contEventType);
+			MonitorContEventTypeStatus item = MonitorContEventTypeStatus.newInstance(contEventType);
 			item.setTotalCount(ci.count);
 			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
 					.selectByContEventLevel(contEventType.getContEventLevel());
 
 			checkState(levelColors.size() == 1,
-					"Can't calculate eventLevelColor for contEventType with keyname:"
-							+ contEventType.getKeyname());
+					"Can't calculate eventLevelColor for contEventType with keyname:" + contEventType.getKeyname());
 
 			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
 			resultList.add(item);
@@ -714,24 +651,19 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
-			final Long subscriberId, final Long contObjectId,
-			final LocalDatePeriod datePeriod) {
+	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(final Long subscriberId,
+			final Long contObjectId, final LocalDatePeriod datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		List<Object[]> selectResult = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountCollapse(subscriberId,
-						contObjectId, datePeriod.getDateFrom(),
-						datePeriod.getDateTo());
+		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountCollapse(
+				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
 
-		List<CounterInfo> selectList = selectResult
-				.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0],
-						objects[1])).collect(Collectors.toList());
+		List<CounterInfo> selectList = selectResult.stream()
+				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
 
 		List<MonitorContEventTypeStatus> resultList = new ArrayList<>();
 
@@ -740,16 +672,14 @@ public class SubscrContEventNotifiicationService {
 			ContEventType contEventType = contEventTypeService.findOne(ci.id);
 			checkNotNull(contEventType);
 
-			MonitorContEventTypeStatus item = MonitorContEventTypeStatus
-					.newInstance(contEventType);
+			MonitorContEventTypeStatus item = MonitorContEventTypeStatus.newInstance(contEventType);
 			item.setTotalCount(ci.count);
 
 			List<ContEventLevelColor> levelColors = contEventLevelColorRepository
 					.selectByContEventLevel(contEventType.getContEventLevel());
 
 			checkState(levelColors.size() == 1,
-					"Can't calculate eventLevelColor for contEventType with keyname:"
-							+ contEventType.getKeyname());
+					"Can't calculate eventLevelColor for contEventType with keyname:" + contEventType.getKeyname());
 
 			item.setContEventLevelColorKey(levelColors.get(0).getColorKey());
 			resultList.add(item);
@@ -763,29 +693,24 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(
-			final Long subscriberId, final LocalDatePeriod datePeriod) {
+	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(final Long subscriberId,
+			final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		List<ContObject> contObjects = subscriberService
-				.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId())
-				.collect(Collectors.toList());
+		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId,
-						contObjectIds, datePeriod));
+				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod));
 
 		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId,
-						contObjectIds, datePeriod, Boolean.TRUE));
+				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
 
 		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoList(subscriberId,
-						contObjectIds, datePeriod));
+				selectContObjectEventTypeCountGroupInfoList(subscriberId, contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
@@ -793,16 +718,13 @@ public class SubscrContEventNotifiicationService {
 		List<MonitorContEventNotificationStatus> result = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
-			List<ContEventMonitor> availableMonitors = monitorContObjectsMap
-					.get(co.getId());
+			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
 
 			ContEventLevelColorKey monitorColorKey = null;
 
 			if (availableMonitors != null) {
-				ContEventLevelColor monitorColor = contEventMonitorService
-						.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorService
-						.getColorKey(monitorColor);
+				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
+				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
 			}
 
 			// ContEventLevelColorKey checkMonitorColorKey =
@@ -835,8 +757,7 @@ public class SubscrContEventNotifiicationService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus
-					.newInstance(co);
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);
@@ -855,29 +776,23 @@ public class SubscrContEventNotifiicationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
-			final Long subscriberId, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
+			final Long subscriberId, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		List<ContObject> contObjects = subscriberService
-				.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
 
-		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId())
-				.collect(Collectors.toList());
+		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		ContObjectCounterMap allMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId,
-						contObjectIds, datePeriod));
+				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod));
 
 		ContObjectCounterMap allNewMap = new ContObjectCounterMap(
-				selectContEventNotificationInfoList(subscriberId,
-						contObjectIds, datePeriod, Boolean.TRUE));
+				selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, Boolean.TRUE));
 
 		ContObjectCounterMap contallEventTypesMap = new ContObjectCounterMap(
-				selectContObjectEventTypeCountGroupInfoListCollapse(
-						subscriberId, contObjectIds, datePeriod));
+				selectContObjectEventTypeCountGroupInfoListCollapse(subscriberId, contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitor>> monitorContObjectsMap = contEventMonitorService
 				.getContObjectsContEventMonitorMap(contObjectIds);
@@ -885,16 +800,13 @@ public class SubscrContEventNotifiicationService {
 		List<MonitorContEventNotificationStatus> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
-			List<ContEventMonitor> availableMonitors = monitorContObjectsMap
-					.get(co.getId());
+			List<ContEventMonitor> availableMonitors = monitorContObjectsMap.get(co.getId());
 
 			ContEventLevelColorKey monitorColorKey = null;
 
 			if (availableMonitors != null) {
-				ContEventLevelColor monitorColor = contEventMonitorService
-						.sortWorseColor(availableMonitors);
-				monitorColorKey = contEventMonitorService
-						.getColorKey(monitorColor);
+				ContEventLevelColor monitorColor = contEventMonitorService.sortWorseColor(availableMonitors);
+				monitorColorKey = contEventMonitorService.getColorKey(monitorColor);
 			}
 
 			long allCnt = allMap.getCountValue(co.getId());
@@ -919,8 +831,7 @@ public class SubscrContEventNotifiicationService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus
-					.newInstance(co);
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co);
 
 			item.setEventsCount(allCnt);
 			item.setNewEventsCount(newCnt);
@@ -933,8 +844,7 @@ public class SubscrContEventNotifiicationService {
 		List<MonitorContEventNotificationStatus> resultList = null;
 
 		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultList = monitorStatusList
-					.stream()
+			resultList = monitorStatusList.stream()
 					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
 					.collect(Collectors.toList());
 		} else {
@@ -951,11 +861,9 @@ public class SubscrContEventNotifiicationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	private List<CounterInfo> selectContEventNotificationInfoList(
-			final Long subscriberId, final List<Long> contObjectIds,
-			final LocalDatePeriod datePeriod) {
-		return selectContEventNotificationInfoList(subscriberId, contObjectIds,
-				datePeriod, null);
+	private List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
+		return selectContEventNotificationInfoList(subscriberId, contObjectIds, datePeriod, null);
 	}
 
 	/**
@@ -966,31 +874,25 @@ public class SubscrContEventNotifiicationService {
 	 * @param isNew
 	 * @return
 	 */
-	private List<CounterInfo> selectContEventNotificationInfoList(
-			final Long subscriberId, final List<Long> contObjectIds,
-			final LocalDatePeriod datePeriod, Boolean isNew) {
+	private List<CounterInfo> selectContEventNotificationInfoList(final Long subscriberId,
+			final List<Long> contObjectIds, final LocalDatePeriod datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
 		List<Object[]> selectResult = null;
 		if (isNew == null) {
-			selectResult = subscrContEventNotificationRepository
-					.selectNotificatoinsCountList(subscriberId, contObjectIds,
-							datePeriod.getDateFrom(), datePeriod.getDateTo());
+			selectResult = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId,
+					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo());
 		} else {
-			selectResult = subscrContEventNotificationRepository
-					.selectNotificatoinsCountList(subscriberId, contObjectIds,
-							datePeriod.getDateFrom(), datePeriod.getDateTo(),
-							isNew);
+			selectResult = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId,
+					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
 		}
 
 		checkNotNull(selectResult);
 
-		List<CounterInfo> resultList = selectResult
-				.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0],
-						objects[1])).collect(Collectors.toList());
+		List<CounterInfo> resultList = selectResult.stream()
+				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
 
 		return resultList;
 	}
@@ -1003,22 +905,17 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Deprecated
-	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(
-			final Long subscriberId, final List<Long> contObjectIds,
-			final LocalDatePeriod datePeriod) {
+	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoList(final Long subscriberId,
+			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
-		List<Object[]> selectResult = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroup(subscriberId,
-						contObjectIds, datePeriod.getDateFrom(),
-						datePeriod.getDateTo());
+		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountGroup(
+				subscriberId, contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo());
 
-		List<CounterInfo> resultList = selectResult
-				.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0],
-						objects[1])).collect(Collectors.toList());
+		List<CounterInfo> resultList = selectResult.stream()
+				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
 
 		return resultList;
 	}
@@ -1030,22 +927,18 @@ public class SubscrContEventNotifiicationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(
-			final Long subscriberId, final List<Long> contObjectIds,
-			final LocalDatePeriod datePeriod) {
+	private List<CounterInfo> selectContObjectEventTypeCountGroupInfoListCollapse(final Long subscriberId,
+			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
 		List<Object[]> selectResult = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroupCollapse(subscriberId,
-						contObjectIds, datePeriod.getDateFrom(),
+				.selectNotificationEventTypeCountGroupCollapse(subscriberId, contObjectIds, datePeriod.getDateFrom(),
 						datePeriod.getDateTo());
 
-		List<CounterInfo> resultList = selectResult
-				.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0],
-						objects[1])).collect(Collectors.toList());
+		List<CounterInfo> resultList = selectResult.stream()
+				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
 
 		return resultList;
 	}
@@ -1055,19 +948,16 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(
-			final Long subscriberId, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
+	public List<CityMonitorContEventsStatus> selectMonitoryContObjectCityStatus(final Long subscriberId,
+			final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberId, datePeriod, noGreenColor);
 
-		List<CityMonitorContEventsStatus> result = CityContObjects
-				.makeCityContObjects(resultObjects,
-						CityMonitorContEventsStatus.FACTORY_INSTANCE);
+		List<CityMonitorContEventsStatus> result = CityContObjects.makeCityContObjects(resultObjects,
+				CityMonitorContEventsStatus.FACTORY_INSTANCE);
 
-		Map<UUID, Long> cityEventCount = contEventMonitorService
-				.selectCityContObjectMonitorEventCount(subscriberId);
+		Map<UUID, Long> cityEventCount = contEventMonitorService.selectCityContObjectMonitorEventCount(subscriberId);
 
 		result.forEach((i) -> {
 			Long cnt = cityEventCount.get(i.getCityFiasUUID());

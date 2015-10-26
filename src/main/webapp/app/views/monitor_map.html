@@ -1,10 +1,11 @@
+<div id="monitor_map_page">
 <div role="tabpanel" class="nmc-main-tab-panel">
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" ><a id="monitorTab" class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
-        <li role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
-        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+        <li id="monitor_2nd_menu_item" role="presentation" class="nmc-hide"><a id="monitorTab" class="nmc-main-tab-button" href="#/notices/monitor/" aria-controls="monitor" data-target="#monitor" role="tab" data-toggle="tab">Монитор</a></li>
+        <li id="notice_2nd_menu_item" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
+        <li id="monitor_map_2nd_menu_item" role="presentation" class="active nmc-hide"><a class="nmc-main-tab-button" href="" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
         <div  ng-show="mapSettings.loadingFlag" class="nmc-loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
         </div>
@@ -72,3 +73,5 @@
 	    	</div>
     	</div>
     </div>
+
+</div>

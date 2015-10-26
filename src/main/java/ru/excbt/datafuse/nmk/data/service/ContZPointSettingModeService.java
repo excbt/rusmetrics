@@ -40,18 +40,16 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointSettingMode> findSettingByContZPointId(
-			long contZPointId) {
+	public List<ContZPointSettingMode> findSettingByContZPointId(long contZPointId) {
 
-		List<ContZPointSettingMode> result = settingModeRepository
-				.findByContZPointId(contZPointId);
+		List<ContZPointSettingMode> result = settingModeRepository.findByContZPointId(contZPointId);
 
-		// Auto insert ZPointSettingMode record if option enabled
-		if (result.size() < ZPOINT_SETTING_AUTO_INIT_CNT
-				&& ZPOINT_SETTING_AUTO_INIT) {
-			initContZPointSettingMode(contZPointId);
-			result = settingModeRepository.findByContZPointId(contZPointId);
-		}
+		// // Auto insert ZPointSettingMode record if option enabled
+		// if (result.size() < ZPOINT_SETTING_AUTO_INIT_CNT
+		// && ZPOINT_SETTING_AUTO_INIT) {
+		// initContZPointSettingMode(contZPointId);
+		// result = settingModeRepository.findByContZPointId(contZPointId);
+		// }
 
 		return result;
 	}
@@ -63,18 +61,17 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointSettingMode> findSettingByContZPointId(
-			long contZPointId, String settingMode) {
+	public List<ContZPointSettingMode> findSettingByContZPointId(long contZPointId, String settingMode) {
 
-		List<ContZPointSettingMode> result = settingModeRepository
-				.findByContZPointIdAndSettingMode(contZPointId, settingMode);
+		List<ContZPointSettingMode> result = settingModeRepository.findByContZPointIdAndSettingMode(contZPointId,
+				settingMode);
 
-		// Auto insert ZPointSettingMode record if option enabled
-		if (result.size() == 0 && ZPOINT_SETTING_AUTO_INIT) {
-			initContZPointSettingMode(contZPointId);
-			result = settingModeRepository.findByContZPointIdAndSettingMode(
-					contZPointId, settingMode);
-		}
+		// // Auto insert ZPointSettingMode record if option enabled
+		// if (result.size() == 0 && ZPOINT_SETTING_AUTO_INIT) {
+		// initContZPointSettingMode(contZPointId);
+		// result = settingModeRepository.findByContZPointIdAndSettingMode(
+		// contZPointId, settingMode);
+		// }
 
 		return result;
 	}
@@ -84,15 +81,14 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * @param arg
 	 * @return
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPointSettingMode save(ContZPointSettingMode arg) {
 		checkNotNull(arg);
 		checkNotNull(arg.getContZPoint().getId());
 
 		if (arg.isNew()) {
-			throw new PersistenceException(
-					"Creating new record of ZPointSettingMode is not allowed");
+			throw new PersistenceException("Creating new record of ZPointSettingMode is not allowed");
 		}
 
 		ContZPointSettingMode result = settingModeRepository.save(arg);
@@ -104,7 +100,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	@Deprecated
 	private void delete(ContZPointSettingMode entity) {
@@ -116,8 +112,8 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_ZPOINT_ADMIN})
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ZPOINT_ADMIN })
 	@Deprecated
 	private void delete(long id) {
 		checkArgument(id > 0);
@@ -128,24 +124,21 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 * 
 	 * @param contZPointId
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT)
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void initContZPointSettingMode(long contZPointId) {
 
-		ContZPoint contZPoint = contZPointService.findContZPoint(contZPointId);
+		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			throw new PersistenceException(String.format(
-					"ContZPoint(id:{}) not found", contZPointId));
+			throw new PersistenceException(String.format("ContZPoint(id:{}) not found", contZPointId));
 		}
 
-		List<ContObjectSettingModeType> settingModeCheckList = contObjectService
-				.selectContObjectSettingModeType();
+		List<ContObjectSettingModeType> settingModeCheckList = contObjectService.selectContObjectSettingModeType();
 
 		for (ContObjectSettingModeType check : settingModeCheckList) {
-			List<ContZPointSettingMode> mode = settingModeRepository
-					.findByContZPointIdAndSettingMode(contZPointId,
-							check.getKeyname());
+			List<ContZPointSettingMode> mode = settingModeRepository.findByContZPointIdAndSettingMode(contZPointId,
+					check.getKeyname());
 			if (mode.size() == 0) {
 				ContZPointSettingMode newMode = new ContZPointSettingMode();
 				newMode.setContZPoint(contZPoint);
@@ -165,4 +158,15 @@ public class ContZPointSettingModeService implements SecuredRoles {
 		return settingModeRepository.findOne(contZPointSettingModeId);
 	}
 
+	/**
+	 * 
+	 * @param contZPointId
+	 */
+	@Secured({ ROLE_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteByContZPoint(Long contZPointId) {
+		checkNotNull(contZPointId);
+		List<ContZPointSettingMode> deleteCandidate = findSettingByContZPointId(contZPointId);
+		settingModeRepository.delete(deleteCandidate);
+	}
 }

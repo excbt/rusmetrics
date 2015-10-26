@@ -7,7 +7,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-import ru.excbt.datafuse.nmk.data.domain.StatusColorObject;
+import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

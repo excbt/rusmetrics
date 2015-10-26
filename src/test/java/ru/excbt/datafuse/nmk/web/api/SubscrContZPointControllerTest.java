@@ -25,14 +25,12 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	@Test
 	public void testGetZPointEx() throws Exception {
 		ContObject co = getFirstContObject();
-		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co
-				.getId());
+		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co.getId());
 		assertTrue(result.size() > 0);
 		// assertNotNull(result.get(0).getLastDataDate());
 
-		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx",
-				co.getId());
-		testJsonGet(url);
+		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", co.getId());
+		_testJsonGet(url);
 
 	}
 
@@ -41,40 +39,55 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 		// http://localhost:8080/nmk-p/api/subscr/contObjects/20118678/contZPointsEx
 		// Failed to load resource: the server responded with a status of 500
 		// (Internal Server Error)
-		testJsonGet("/api/subscr/contObjects/20118678/contZPointsEx ");
+		_testJsonGet("/api/subscr/contObjects/20118678/contZPointsEx ");
 	}
 
 	@Test
 	public void testZPointsStatInfo() throws Exception {
 		Long contObjectId = getFirstContObjectId();
 
-		String url = String.format(
-				"/api/subscr/contObjects/%d/contZPointsStatInfo", contObjectId);
-		testJsonGet(url);
+		String url = String.format("/api/subscr/contObjects/%d/contZPointsStatInfo", contObjectId);
+		_testJsonGet(url);
 
 	}
 
 	@Test
 	public void testGetZPoint() throws Exception {
 
-		String url = apiSubscrUrl(String.format("/contObjects/%d/zpoints/%d",
-				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
-		testJsonGet(url);
+		String url = apiSubscrUrl(
+				String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+		_testJsonGet(url);
 	}
 
 	@Test
 	public void testUpdateZPoint() throws Exception {
 
-		String url = apiSubscrUrl(String.format("/contObjects/%d/zpoints/%d",
-				MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
+		String url = apiSubscrUrl(
+				String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, MANUAL_HW_CONT_ZPOINT_ID));
 
-		ContZPoint contZPoint = contZPointService
-				.findContZPoint(MANUAL_HW_CONT_ZPOINT_ID);
-		contZPoint.setCustomServiceName("Сервис__"
-				+ RandomStringUtils.randomNumeric(5));
+		ContZPoint contZPoint = contZPointService.findOne(MANUAL_HW_CONT_ZPOINT_ID);
+		contZPoint.setCustomServiceName("Сервис__" + RandomStringUtils.randomNumeric(5));
 
 		contZPoint.setIsManualLoading(true);
 
-		testJsonUpdate(url, contZPoint);
+		_testJsonUpdate(url, contZPoint);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testContZPoints() throws Exception {
+		_testJsonGet(apiSubscrUrl("/contObjects/zpoints"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testServiceTypes() throws Exception {
+		_testJsonGet(apiSubscrUrl("/contObjects/contServiceTypes"));
 	}
 }

@@ -56,7 +56,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 			}
 			
 			long contZPointId = settingMode.getContZPoint().getId();
-			long contObjectId = contZPointService.findContZPoint(contZPointId)
+			long contObjectId = contZPointService.findOne(contZPointId)
 					.getContObject().getId();
 
 			urlStr = String.format(URL_TEMPLATE, contObjectId, contZPointId,
@@ -105,7 +105,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testAAA() throws Exception {
-		testJsonGet("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
+		_testJsonGet("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
 		
 	}
 	

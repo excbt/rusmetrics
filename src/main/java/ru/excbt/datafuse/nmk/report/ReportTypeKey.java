@@ -3,7 +3,9 @@ package ru.excbt.datafuse.nmk.report;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public enum ReportTypeKey {
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
+
+public enum ReportTypeKey implements KeynameObject {
 	COMMERCE_REPORT("commerce"), // CONS_REPORT,
 	EVENT_REPORT("event"), //
 	CONS_T1_REPORT("cons_t1"), //
@@ -12,7 +14,8 @@ public enum ReportTypeKey {
 	CONSUMPTION_REPORT("consumption"), //
 	CONSUMPTION_HISTORY_REPORT("consumption_history"), //
 	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
-	LOG_JOURNAL_REPORT("log_journal");
+	LOG_JOURNAL_REPORT("log_journal"), PARTNER_SERVICE_REPORT("partner_service"), ABONENT_SERVICE_REPORT(
+			"abonent_service");
 
 	private final String urlName;
 	private final String defaultFileName;
@@ -32,13 +35,18 @@ public enum ReportTypeKey {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
-				.filter((i) -> i.urlName.equals(urlName)).findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
+				.findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
 
 	public String getDefaultFileName() {
 		return defaultFileName;
+	}
+
+	@Override
+	public String getKeyname() {
+		return this.name();
 	}
 }

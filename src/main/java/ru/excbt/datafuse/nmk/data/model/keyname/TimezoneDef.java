@@ -4,10 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "timezone_def")
+@JsonInclude(Include.NON_NULL)
 public class TimezoneDef extends AbstractKeynameEntity {
 
 	/**
@@ -24,9 +29,11 @@ public class TimezoneDef extends AbstractKeynameEntity {
 	@Column(name = "timezone_description")
 	private String timezoneDescription;
 
+	@JsonIgnore
 	@Column(name = "canonical_id")
 	private String cononicalId;
 
+	@JsonIgnore
 	@Column(name = "timezone_is_default")
 	private Boolean isDefault;
 

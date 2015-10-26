@@ -1,9 +1,11 @@
 angular.module('portalNMC')
-.controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc){
+.controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc){
     
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
     $scope.mapSettings.loadingFlag = monitorSvc.getLoadingStatus();
+    
+    $scope.mapSettings.ctxId = "monitor_map_page";
     
     var noticesUrl = "#/notices/list/";
     var notificationsUrl = "../api/subscr/contEvent/notifications"; 
@@ -576,6 +578,35 @@ console.warn(elem);
         //off keydown listener, when go away from page
     $scope.$on('$destroy', function() {       
         window.onkeydown = undefined;
-    }); 
+    });
+    
+    //control visibles
+    var setVisibles = function(ctxId){
+        var ctxFlag = false;
+        var tmp = mainSvc.getContextIds();
+        tmp.forEach(function(element){
+            if(element.permissionTagId.localeCompare(ctxId)==0){
+                ctxFlag = true;
+            };
+            var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+            if (angular.isUndefined(elDOM)||(elDOM==null)){
+                return;
+            };              
+            $('#'+element.permissionTagId).removeClass('nmc-hide');
+        });
+        if (ctxFlag == false){
+            window.location.assign('#/');
+        };
+    };
+    setVisibles($scope.mapSettings.ctxId);
+    //listen change of service list
+    $rootScope.$on('servicePermissions:loaded', function(){
+        setVisibles($scope.mapSettings.ctxId);
+    });   
+    
+    window.setTimeout(function(){
+console.log("3");            
+        setVisibles($scope.mapSettings.ctxId);
+    }, 500);  
     
 });
