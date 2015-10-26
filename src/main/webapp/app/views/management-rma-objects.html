@@ -70,21 +70,25 @@
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox" style="padding: 0 0 3px;">
+                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 0 3px;">
                                     
+<!--
                                     <div class="btn-group">
                                         <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
                                         <span class="caret"></span>
                                         </button>
+-->
 <!--
                                       <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
                                         </i>
 -->
+<!--
                                       <ul class="dropdown-menu">
                                         <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
                                       </ul>
                                     </div>
-                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
+-->
+<!--                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>-->
                                 </th>
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
@@ -108,7 +112,7 @@
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox" style="padding: 0 5px;">
+                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 5px;">
                                     <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
                                     <div class="btn-group" style="vertical-align: initial;">
 
@@ -139,7 +143,7 @@
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
         
-                        <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox">
+                        <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control">
 <!--                            <span>{{$index}}</span>-->
                             <div class="btn-group">
                               <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
@@ -153,18 +157,23 @@
                                 <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                               </ul>
                             </div>
-                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+<!--                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>-->
 
 
                         </td>
         
                         <td class="nmc-td-for-button"> 
 
-                            <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
+                            <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>                            
                             
                         </td>
 
-                        <td ng-click="toggleShowGroupDetails(object.id)"><span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                        <td ng-click="toggleShowGroupDetails(object.id)">
+<!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
+                            <span ng-show="!object._haveSubscr">
+                                <i title="Объект не прикреплен ни к одному абоненту" class="glyphicon nmc-lock"></i>
+                            </span>
+                            {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
                         </td>
                         <td>
                             <div class="btn-toolbar">

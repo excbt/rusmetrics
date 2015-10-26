@@ -45,7 +45,22 @@ console.log('Run devices management controller.');
     $scope.getDeviceModels = function(){
         objectSvc.getDeviceModels().then(
             function(response){
+                //ставлю модель "Не определена"
+                var ndDeviceModel = null;
+                var ndDeviceModelIndex = -1;
+                response.data.some(function(dm, dmindex){
+                    if (dm.modelName == "NOT_ASSIGNED"){
+                        ndDeviceModel = dm;
+                        ndDeviceModelIndex = dmindex;
+                        return true;
+                    };
+                });
+                if (ndDeviceModelIndex != -1){
+                    response.data.splice(ndDeviceModelIndex, 1);
+                    response.data.splice(0,0,ndDeviceModel);
+                };
                 $scope.data.deviceModels = response.data;
+                
 //console.log($scope.data.deviceModels);                
             },
             function(error){
