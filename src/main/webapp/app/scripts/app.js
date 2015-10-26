@@ -24,6 +24,7 @@ var app = angular
       ,'infinite-scroll'
       ,'angularFileUpload'
       ,'leaflet-directive'
+      ,'ui.select'
   ]);
 
 //routing config
@@ -126,6 +127,7 @@ console.log("Run routeProviderConfig");
       .when('/objects/indicators', {
         templateUrl: 'views/indicators.html',
         controller: 'IndicatorsCtrl',
+        reloadOnSearch: false,
         resolve:{
             permissions: ['mainSvc', function(mainSvc){
                 return mainSvc.getLoadedServicePermission();
@@ -156,9 +158,41 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/object_groups.html',
         controller: 'ObjectGroupsCtrl'
       })
+      .when('/settings/users', {
+        templateUrl: 'views/settings-users.html',
+        controller: 'SettingsUsersCtrl'
+      })
       .when('/settings/management_services', {
         templateUrl: 'views/management-services.html',
         controller: 'ManagementServicesCtrl'
+      })
+      .when('/management/objects', {
+        templateUrl: 'views/management-rma-objects.html',
+        controller: 'MngmtObjectsCtrl',
+        resolve:{
+            rsoOrgs:['objectSvc', function(objectSvc){
+                return objectSvc.getRsoOrganizations()
+            }],
+            servTypes:['objectSvc', function(objectSvc){
+                return objectSvc.getServiceTypes()
+            }]
+        }
+      })
+      .when('/management/clients', {
+        templateUrl: 'views/management-rma-clients.html',
+        controller: 'MngmtClientsCtrl'
+      })
+      .when('/management/datasources', {
+        templateUrl: 'views/management-rma-data-sources.html',
+        controller: 'MngmtDatasourcesCtrl'
+      })
+      .when('/management/devices', {
+        templateUrl: 'views/management-rma-devices.html',
+        controller: 'MngmtDevicesCtrl'
+      })
+      .when('/management/users', {
+        templateUrl: 'views/management-rma-users.html',
+        controller: 'MngmtUsersCtrl'
       })
       .otherwise({
         redirectTo: '/'
@@ -187,3 +221,34 @@ console.log("Run main, object and monitor services.");
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();
     var objectSvcInit = objectSvc.promise;
 }]);
+
+app.filter('propsFilter', function() {
+  return function(items, props) {
+    var out = [];
+
+    if (angular.isArray(items)) {
+      items.forEach(function(item) {
+        var itemMatches = false;
+
+        var keys = Object.keys(props);
+        for (var i = 0; i < keys.length; i++) {
+          var prop = keys[i];
+          var text = props[prop].toLowerCase();
+          if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+            itemMatches = true;
+            break;
+          }
+        }
+
+        if (itemMatches) {
+          out.push(item);
+        }
+      });
+    } else {
+      // Let the output be the input untouched
+      out = items;
+    }
+
+    return out;
+  }
+});

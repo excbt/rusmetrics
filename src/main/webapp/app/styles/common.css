@@ -268,7 +268,7 @@ body{
 
     /* Разметка страницы Настройки */
 /* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
-.nmc-tariff-main-div, .nmc-object-group-main-div{
+.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div{
     overflow: auto;
     height:61vh;
     min-height: 290px;
@@ -532,7 +532,7 @@ tr.nmc-tr-odd>td{
 
 .nmc-td-for-buttons-in-object-page{
     padding-left: 5px;
-    min-width: 120px;
+    min-width: 85px;
     width: 4%;
     border-right: 1px solid #969696;
 }
@@ -608,6 +608,11 @@ tr.nmc-main-table-header > th {
 .nmc-parent-table > tbody > tr:nth-of-type(odd) {
     background-color: #FFFFFF;/* цвет фона для нечетной строки родительской таблицы*/
 /*    background-color: #f5f5f5;*/
+}
+
+/*  Ячейка таблицы, в которой содержится дочерняя таблица - используется для задания отступа от надписи родительской таблицы*/
+.nmc-td-for-child-table{
+    padding-top: 2px !important;
 }
  
     /* Вложенная таблица */
@@ -1494,6 +1499,10 @@ tr.nmc-main-table-header > th {
     margin-left: 15px;
 }
 
+.marginTop5 {
+    margin-top: 5px;
+}
+
 .marginTop10 {
     margin-top: 10px;
 }
@@ -1607,7 +1616,14 @@ tr.nmc-main-table-header > th {
     padding-bottom: 0;
     padding-top: 0;
     padding-right: 0;
-    padding-left: 15px;
+    padding-left: 15px !important;
+}
+
+.onlyPaddingLeft5 {
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 5px !important;
 }
 
 .paddingRight10{
@@ -1658,6 +1674,11 @@ tr.nmc-main-table-header > th {
     font-weight: lighter;
 }
 
+    /* Выделить заблокированный/недоступный элемент*/
+.nmc-italic {
+    font-style: italic;
+}
+
 /* Стиль для подсветки позитивных уведомлений*/
 .nmc-positive-notice{
     color: green;
@@ -1684,7 +1705,7 @@ input[type="checkbox"] {
     margin-right: 5px;
     
 }
-
+/* Класс разворачивает glyphicon иконку на 180 градусов*/
 .gly-rotate-180 {
   filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
   -webkit-transform: rotate(180deg);
@@ -1692,4 +1713,26 @@ input[type="checkbox"] {
   -ms-transform: rotate(180deg);
   -o-transform: rotate(180deg);
   transform: rotate(180deg);
+}
+
+/* Рисование "открытого замка"*/
+.nmc-unlock {
+margin-top: 0.8em;
+border-radius: 0.3em;
+box-shadow: inset 0.9em 0.8em 0 0 #2C2C2C,inset -0.9em 0.8em 0 0 #2C2C2C,inset 0em -0.4em 0 0 #2C2C2C;
+font-size: 6px;
+width: 2em;
+height: 1.8em;
+position: relative;
+}
+.nmc-unlock::before {
+left: 1.4em;
+border-radius: 1em 1em 0 0;
+top: -0.8em;
+position: absolute;
+width: 0.8em;
+content: "";
+height: 0.8em;
+border: 0.3em solid #2C2C2C;
+border-bottom: none;
 }

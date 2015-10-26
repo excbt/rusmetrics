@@ -34,14 +34,18 @@
             <div class="col-md-4 noPadding">
                 <div class="col-md-4 paddingTop5">
                     <label class="nmc-form-label">
-
                         Задайте период</label>
                 </div>    
-                <div ng-controller="DataRangeSettings" class="col-md-8">
+<!--                <div ng-controller="DataRangeSettings" class="col-md-8">-->
+                <div class="col-md-8">
                         <div class="input-group">
                             <span class="input-group-addon nmc-date-interval-form-addon">с</span>
                             <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="indicatorDates" options="dateRangeOptsRu"/>
+<!--
+                            <input date-range-picker class="form-control date-picker nmc-date-interval-form"
                                 type="text" ng-model="indicatorDates" options="queryDateOptsIndicatorRu"/>
+-->
                         </div> 
                 </div>
 

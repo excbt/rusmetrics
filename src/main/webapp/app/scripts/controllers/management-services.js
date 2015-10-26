@@ -1,17 +1,21 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
-.controller('ManagementServicesCtrl', ['$scope', '$http', function($scope, $http){
+.controller('ManagementServicesCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
     console.log("ManagementServicesCtrl run.");
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
-    $scope.ctrlSettings.servicesUrl = "../api/subscr/manage/service";
+    $scope.ctrlSettings.subscrUrl = "../api/subscr";
+    $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl+"/manage/service";
     $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
     $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl+ "/serviceItemList";
     $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl+ "/servicePriceList";
     $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
+    $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl+ "/info/subscriberContObjectCount";
+    
+    $scope.ctrlSettings.subscriberContObjectCount = null;
     
     $scope.ctrlSettings.currency = "y.e."; 
     
@@ -23,16 +27,28 @@ angular.module('portalNMC')
     
     //package columns definition
     //not used
-    $scope.ctrlSettings.packageColumns = [
-        {"name":"name", "header" : "Название", "class":"col-md-4"}
-        ,{"name":"description", "header" : "Описание", "class":"col-md-5"}
-        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
-    ];
+//    $scope.ctrlSettings.packageColumns = [
+//        {"name":"name", "header" : "Название", "class":"col-md-4"}
+//        ,{"name":"description", "header" : "Описание", "class":"col-md-5"}
+//        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
+//    ];
     //The packages, wich selected by the subscriber
     $scope.packages =[];
     //The packages, which available for the subscriber
     $scope.availablePackages = [];
     
+    //get subscriber contObject count
+    $scope.getSubscriberContObjectCount = function(url){
+        var targetUrl = url;
+        $http.get(targetUrl)
+        .then(function(response){
+            $scope.ctrlSettings.subscriberContObjectCount = response.data;
+        },
+              function(e){
+            console.log(e);
+        });
+    };
+    $scope.getSubscriberContObjectCount($scope.ctrlSettings.subscriberContObjectCountUrl);
     //get price list
     $scope.getPriceList = function(url){
         var targetUrl = url;
@@ -141,20 +157,6 @@ angular.module('portalNMC')
     $scope.getPackages($scope.ctrlSettings.packagesUrl);
 
     //control changes: 
-    //one way
-    //compare 2 package lists
-    var comparePackageLists = function(originalList, reversedList){
-        var result = null;
-        
-        originalList.forEach(function(originalPack){
-            reversedList.forEach(function(reversedPack){
-                
-            });
-        });
-        return result;
-    };
-    
-    //another way
     //control change list, when user click service list
     var serviceSetFlag = function(serv){
         if (serv.selected === true){
@@ -167,6 +169,7 @@ angular.module('portalNMC')
     //listener on service check box click
     $scope.serviceClick = function(pack, serv){
         serviceSetFlag(serv);
+        //check package services, if user select all -> set pack.selected = true
         var tmpPackFlag = false;
         pack.serviceItems.some(function(serv){
             if (serv.selected!=true){
@@ -177,48 +180,43 @@ angular.module('portalNMC')
         if (tmpPackFlag === false){pack.selected = true;};
     };
     
+    //get list with user service changes - "selector" = -1 -> get removed services, 1 -> get adding services
+    var getAddingRemovedList = function(originalArr, selector){
+        var result = [];
+        if (angular.isArray(originalArr)){
+            originalArr.forEach(function(pack){
+                var tmpPack = angular.copy(pack);
+                var addPackFlag = false;
+                tmpPack.serviceItems = [];
+    //            $scope.serviceAddedList.push(tmpPack);
+                pack.serviceItems.forEach(function(serv){
+                    if (serv.changedFlag == selector){
+                        var tmpServ = angular.copy(serv);
+                        tmpPack.serviceItems.push(tmpServ);
+                        addPackFlag = true;
+                    };
+                });
+                if (addPackFlag == true){result.push(tmpPack);};
+            });
+        };
+        return result;
+    };
+    
     //save changes
     $scope.checkPackages = function(){
         //Получить лист изменений
-            //сравнить два списка : 
-//        $scope.availablePackages;
         
         $scope.serviceAddedList = [];
         $scope.serviceRemovedList = [];
 //console.log($scope.serviceListEdition);
         //get added services
-        $scope.serviceListEdition.forEach(function(pack){
-            var tmpPack = angular.copy(pack);
-            var addPackFlag = false;
-            tmpPack.serviceItems = [];
-//            $scope.serviceAddedList.push(tmpPack);
-            pack.serviceItems.forEach(function(serv){
-                if (serv.changedFlag == 1){
-                    var tmpServ = angular.copy(serv);
-                    tmpPack.serviceItems.push(tmpServ);
-                    addPackFlag = true;
-                };
-            });
-            if (addPackFlag == true){$scope.serviceAddedList.push(tmpPack);};
-        });
+        $scope.serviceAddedList = getAddingRemovedList($scope.serviceListEdition, 1);
+
 //console.log($scope.serviceAddedList);  
         //get removed services
-        $scope.serviceListEdition.forEach(function(pack){
-            var tmpPack = angular.copy(pack);
-            var addPackFlag = false;
-            tmpPack.serviceItems = [];
-//            $scope.serviceAddedList.push(tmpPack);
-            pack.serviceItems.forEach(function(serv){
-                if (serv.changedFlag == -1){
-                    var tmpServ = angular.copy(serv);
-                    tmpPack.serviceItems.push(tmpServ);
-                    addPackFlag = true;
-                };
-            });
-            if (addPackFlag == true){$scope.serviceRemovedList.push(tmpPack);};
-        });
+        $scope.serviceRemovedList = getAddingRemovedList($scope.serviceListEdition, -1);
 //console.log($scope.serviceRemovedList); 
-        
+    
         //generation confirm code
         $scope.confirmCode = null;
         $scope.firstNum = Math.round(Math.random()*100);
@@ -226,10 +224,11 @@ angular.module('portalNMC')
         $scope.sumNums = $scope.firstNum + $scope.secondNum;
         //Вывести изменения на экран
         $('#confirmSavingModal').modal();
-        //Запросить подтверждение сохранения изменений
-        //send changes to server
     };
-    
+    //prepare data to send to server
+    //create struct:
+    //  {"packId":<packId>,
+    //   "itemId":<itemId>}
     var prepareData = function(packageList){
         var result = null;
         var tmp = [];
@@ -258,6 +257,7 @@ angular.module('portalNMC')
                 location.reload();
         },
              function(e){
+                notificationFactory.errorInfo(e.statusText,e.data.description);
                 console.log(e);
         });
     };
@@ -322,6 +322,11 @@ angular.module('portalNMC')
                 });
             };
 //        };
+    };
+    
+    //check user
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
     };
     
 }]);

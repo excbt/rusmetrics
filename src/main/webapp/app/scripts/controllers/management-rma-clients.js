@@ -1,0 +1,407 @@
+'use strict';
+angular.module('portalNMC')
+.controller('MngmtClientsCtrl', ['$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', function($scope, $http, objectSvc, notificationFactory, crudGridDataFactory){
+console.log('Run Client management controller.');
+    
+    $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
+    $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
+    
+    //controller settings
+    $scope.ctrlSettings = {};
+    $scope.ctrlSettings.rmaUrl = "../api/rma";
+    $scope.ctrlSettings.clientsUrl = "../api/rma/subscribers";
+    $scope.ctrlSettings.orgUrl = $scope.ctrlSettings.clientsUrl+"/organizations";
+    
+    $scope.ctrlSettings.availableObjectsSuffix = "/availableContObjects";
+    $scope.ctrlSettings.subscrObjectsSuffix = "/subscrContObjects";
+
+    $scope.ctrlSettings.groupUrl = "../api/contGroup";
+    
+    //Headers of modal window
+    $scope.headers = {}
+    $scope.headers.addObjects = "Доступные объекты";//header of add objects window
+    
+    //client columns
+    $scope.ctrlSettings.clientColumns =[
+        {
+            "name": "subscriberName",
+            "caption": "Наименование",
+            "class": "col-md-3"
+        },
+        {
+            "name": "info",
+            "caption": "Информация",
+            "class": "col-md-3"
+        },
+        {
+            "name": "comment",
+            "caption": "Комментарий",
+            "class": "col-md-2"
+        },
+        {
+            "name": "organizationName",
+            "caption": "Организация",
+            "class": "col-md-2"
+        }
+    ];
+    //data
+    $scope.data={};
+    $scope.data.organizations = [];
+    $scope.data.clients = [];
+    $scope.data.currentClient = {};
+    
+//    get subscribers
+    var getClients = function(){
+        var targetUrl = $scope.ctrlSettings.clientsUrl;
+        $http.get(targetUrl)
+        .then(function(response){
+//console.log(response.data);            
+            response.data.forEach(function(el){
+                el.organizationName = el.organization.organizationFullName;
+            });
+            $scope.data.clients = response.data;
+            
+//console.log($scope.data.clients);            
+        },
+             function(e){
+            console.log(e);
+        });
+    };
+    
+    //get organizations
+    var getOrganizations = function(){
+        var targetUrl = $scope.ctrlSettings.orgUrl
+        $http.get(targetUrl)
+        .then(function(response){
+            $scope.data.organizations =  response.data;
+//console.log($scope.data.organizations);
+            getClients();
+        },
+             function(e){
+            console.log(e);
+        });
+    };
+    
+    $scope.selectClient = function(client){
+        $scope.data.currentClient = client;
+    };
+    $scope.selectedItem = function (item) {
+        var curObject = angular.copy(item);
+        $scope.data.currentClient = curObject;
+    };
+    
+    $scope.editObjectList =  function(client){
+        $scope.selectedItem(client);
+        $scope.getAvailableObjects($scope.data.currentClient.id);
+        $scope.getSelectedObjects($scope.data.currentClient.id);
+        $scope.showAvailableObjects_flag = false;
+    };
+    
+    $scope.addClient = function(){
+        $scope.data.currentClient = {};
+        $('#showClientOptionModal').modal();
+    };
+    
+    // get timezones
+    var getTimezones = function(){
+        objectSvc.getTimezones()
+        .then(function(response){
+            $scope.data.timezones = response.data;                     
+            getOrganizations();
+        });
+    };
+    getTimezones();
+    
+    //data processing
+     var successCallback = function (e, cb) {                    
+        notificationFactory.success();
+        $('#deleteClientModal').modal('hide');
+        $('#showClientOptionModal').modal('hide');
+        $('#showObjectListModal').modal('hide');
+         getClients();
+    };
+    
+    var successPostCallback = function (e) {
+        successCallback(e, null);
+        location.reload();
+    };
+
+    var errorCallback = function (e) {
+        notificationFactory.errorInfo(e.statusText,e.data.description); 
+        console.log(e);
+    };
+    
+    $scope.sendClientToServer = function(obj){
+//        obj.organizationId = 726;
+//        obj.timezoneDef = null;
+//console.log(obj);        
+        var url = $scope.ctrlSettings.clientsUrl;                    
+        if (angular.isDefined(obj.id)&&(obj.id!=null)){
+            $scope.updateObject(url, obj);
+        }else{
+            $scope.saveNewClient(url,obj);
+        };
+    };
+    
+    $scope.saveNewClient = function (url, obj) {       
+        crudGridDataFactory(url).save(obj, successCallback, errorCallback);
+    };
+
+    $scope.deleteObject = function (obj) {
+        var url = $scope.ctrlSettings.clientsUrl;                  
+        crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successCallback, errorCallback);
+    };
+
+    $scope.updateObject = function (url, object) { 
+//        object.organization = null;
+        var params = { id: object[$scope.extraProps.idColumnName]};
+        crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
+    };
+    
+    $scope.deleteObjectInit = function(object){
+        $scope.selectedItem(object);
+        //generation confirm code
+        $scope.confirmCode = null;
+        $scope.firstNum = Math.round(Math.random()*100);
+        $scope.secondNum = Math.round(Math.random()*100);
+        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+    };
+    
+    
+    //client's objects
+//    processing client's objects
+//    *******************************************
+    $scope.availableObjects = [];
+    $scope.availableObjectGroups = [];
+    $scope.selectedObjects = [];
+    
+    $scope.getAvailableObjects = function(clientId){  
+        var table=$scope.ctrlSettings.rmaUrl+"/"+clientId+$scope.ctrlSettings.availableObjectsSuffix;        
+        crudGridDataFactory(table).query(function(data){           
+            $scope.availableObjects = data;
+            objectSvc.sortObjectsByFullName($scope.availableObjects);
+//console.log($scope.availableObjects);            
+        });        
+    };
+    $scope.getSelectedObjects = function(){
+        var table=$scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentClient.id+$scope.ctrlSettings.subscrObjectsSuffix; 
+        crudGridDataFactory(table).query(function(data){
+            $scope.selectedObjects = data;
+            objectSvc.sortObjectsByFullName($scope.selectedObjects);
+//console.log($scope.selectedObjects);            
+        });
+    };
+    
+    $scope.getGroupObjects = function(group){
+        var url = $scope.ctrlSettings.groupUrl+"/"+group.id+"/contObject";
+        crudGridDataFactory(url).query(function(data){           
+            group.objects = data;     
+        });
+        
+    };    
+    
+    $scope.getAvailableObjectGroups = function(){         
+        crudGridDataFactory($scope.ctrlSettings.groupUrl).query(function(data){           
+            var tempGroupArr = data;
+            tempGroupArr.forEach(function(group){
+                $scope.getGroupObjects(group);
+            });
+            $scope.availableObjectGroups = tempGroupArr;          
+        });        
+    };
+    
+    $scope.getAvailableObjectGroups();
+    
+    $scope.viewAvailableObjects = function(objectGroupFlag){
+        $scope.showAvailableObjects_flag=!$scope.showAvailableObjects_flag;
+        $scope.showAvailableObjectGroups_flag=objectGroupFlag;
+        if (objectGroupFlag){
+            $scope.headers.addObjects = "Доступные группы объектов";
+            //prepare the object goups to view in table
+//            var tmpArr = $scope.availableObjectGroups.map(function(element){
+//                var result = element;
+//                result.fullName = element.contGroupName;//set the field, which view entity name in table
+//                return result;
+//            });
+            $scope.availableEntities = $scope.availableObjectGroups;//tmpArr;
+        }else{
+            $scope.headers.addObjects = "Доступные объекты";
+            $scope.availableEntities = $scope.availableObjects;
+        };
+    };
+    
+    var objectPerform = function(addObject_flag, currentObjectId){
+        var el = {};
+        var arr1 = [];
+        var arr2 = [];
+        var resultArr = [];
+        if ($scope.addObject_flag){           
+            arr1 = $scope.availableObjects;
+            arr2 = $scope.selectedObjects; 
+            resultArr = arr2;
+        }else{             
+            arr2 = $scope.availableObjects;
+            arr1 = $scope.selectedObjects;
+            resultArr = arr1;
+        };
+       
+        for (var i=0; i<arr1.length;i++){
+            if (arr1[i].id == $scope.currentObjectId) {               
+                el = angular.copy(arr1[i]);
+                el.selected = false;
+                arr1.splice(i,1);
+                break;
+            };
+        }
+        arr2.push(el);
+        
+        var tmp = resultArr.map(function(elem){
+            return elem.id;
+        });     
+        return tmp; //Возвращаем массив Id-шников выбранных объектов
+    };
+ 
+    $scope.addObject = function(object){
+        $scope.addObject_flag = true;
+        $scope.currentObjectId = object.id;
+        objectPerform(true, object.id);
+
+    };
+    
+    $scope.removeObject = function(object){
+        $scope.addObject_flag = false;
+        $scope.currentObjectId = object.id;
+        objectPerform(false, object.id);
+
+    };
+    
+    $scope.removeSelectedObject = function(object){
+        $scope.availableObjects.push(object);
+        $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
+        objectSvc.sortObjectsByFullName($scope.availableObjects);
+    };
+    
+    $scope.joinObjectsFromSelectedGroups = function(groups){
+        var result = [];
+        groups.forEach(function(group){
+                if(group.selected){
+                    Array.prototype.push.apply(result, group.objects);
+//                    totalGroupObjects = group.objects;
+                };
+        });                 
+        return result;
+    };
+    
+    $scope.deleteDoublesObjects = function(targetArray){
+        var arrLength = targetArray.length;
+        while (arrLength>=2){
+            arrLength--;                                               
+            if (targetArray[arrLength].fullName===targetArray[arrLength-1].fullName){                   
+                targetArray.splice(arrLength, 1);
+            };
+        }; 
+    };
+    
+    $scope.addUniqueObjectsFromGroupsToSelectedObjects = function(arrFrom, arrTo){
+        for (var j=0; j < arrFrom.length; j++){
+            var uniqueFlag = true;
+            for (var i = 0; i<arrTo.length; i++){
+                if(arrFrom[j].fullName===arrTo[i].fullName){
+                    uniqueFlag = false;
+                    break;
+                };
+            };
+            if (uniqueFlag){
+                arrTo.push(arrFrom[j]);
+            };
+        }; 
+        
+    };
+    
+    $scope.removeGroupObjectsFromAvailableObjects = function(objectsFromGroup, availableObjects){
+        for (var j=0; j < objectsFromGroup.length; j++){
+            var elementIndex = -1;
+            for (var i = 0; i<availableObjects.length; i++){
+                if(objectsFromGroup[j].fullName===availableObjects[i].fullName){
+                    elementIndex = i;
+                    break;
+                };
+            };
+            if (elementIndex>=0){
+                availableObjects.splice(elementIndex,1);
+            };
+        }; 
+    };
+    
+    $scope.selectAllAvailableEntities = function(){      
+        for (var index = 0; index<$scope.availableEntities.length; index++){         
+            $scope.availableEntities[index].selected = $scope.ctrlSettings.selectedAll;
+        };
+        $scope.ctrlSettings.selectedAll = false;
+    };
+    
+    $scope.addSelectedEntities = function(){
+    //console.log($scope.availableObjects);       
+        if ($scope.showAvailableObjectGroups_flag){
+            var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.availableEntities);   
+console.log(totalGroupObjects);            
+            objectSvc.sortObjectsByFullName(totalGroupObjects);
+            //del doubles
+            
+            $scope.deleteDoublesObjects(totalGroupObjects);
+            //add groupObjects to selected objects
+                //add only unique objects
+            $scope.addUniqueObjectsFromGroupsToSelectedObjects(totalGroupObjects, $scope.selectedObjects);   
+            //remove groupObjects from availableObjects
+            $scope.removeGroupObjectsFromAvailableObjects(totalGroupObjects, $scope.availableObjects);   
+        };
+        var tmpArray = angular.copy($scope.availableObjects);
+        for(var i =0; i<$scope.availableObjects.length; i++){
+            var curObject = $scope.availableObjects[i];
+
+            if (curObject.selected){
+    //console.log(curObject);                            
+    // console.log("curObject is performanced");               
+                var elem = angular.copy(curObject);
+                elem.selected = null;
+    //console.log(tmpArray.indexOf(curObject));  
+                var elementIndex = -1;
+                tmpArray.some(function(element,index,array){
+                    if (element.fullName === curObject.fullName){
+                        elementIndex = index;
+                        return true;
+                    };
+                });
+                tmpArray.splice(elementIndex, 1);
+                $scope.selectedObjects.push(elem);
+                curObject.selected = null;
+            };
+        }
+        $scope.availableObjects = tmpArray;
+        objectSvc.sortObjectsByFullName($scope.selectedObjects);
+        if ($scope.showAvailableObjectGroups_flag){
+            $scope.availableEntities = $scope.availableObjectGroups;
+        }else{
+            $scope.availableEntities = $scope.availableObjects;
+        };
+//        $scope.showAvailableObjects_flag=false;
+    };
+    
+    $scope.showAddObjectButton = function(){     
+        return !$scope.showAvailableObjects_flag;// && $scope.set_of_objects_flag;
+    };
+    
+    $scope.saveObject = function(){
+        var tmp = $scope.selectedObjects.map(function(elem){
+            return elem.id;
+        });
+        if (($scope.data.currentClient.id != null) && (typeof $scope.data.currentClient.id != 'undefined')){
+            var table=$scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentClient.id+$scope.ctrlSettings.subscrObjectsSuffix;
+//            crudGridDataFactory(table).update({}, tmp, successCallback, errorCallback);
+            $http.put(table, tmp).then(successCallback, errorCallback);
+        };
+    };
+    
+//***************************************************    
+    
+}]);

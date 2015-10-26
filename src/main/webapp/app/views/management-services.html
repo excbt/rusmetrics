@@ -7,14 +7,7 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группы объектов</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
-<!--
-<input date-range-picker class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="testRen" options="dateOptsParamsetRu"/>
--->
-<!--
-<input id="inputSingleDate" class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="testRen"/>        
--->
+
     </ul>
 
     <div class="tab-content">
@@ -32,24 +25,6 @@
 <!--        data-target="#editServiceListModal" data-toggle="modal">-->
         Редактировать</button>
 </div>
-<!--    Непрокручиваямая шапка -->
-<!--
-<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-        <tr class="nmc-main-table-header">
-            <th class="col-md-1 nmc-td-for-buttons">
-
-            </th>
-
-            <th ng-repeat="column in ctrlSettings.packageColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
-                <div>
-                    {{column.header || column.name}}
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-1">
-            </th>
-        </tr>
-</table>-->
 
 <!-- Область с прокручиваемыми данными-->
 <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
@@ -68,12 +43,6 @@
                                 <span class="nmc-service-package-caption" ng-attr-id={{"package"+pack.id}}>{{pack.packCaption}}
                                 </span>    
                             </td>
-
-<!--
-                            <td class="col-md-7">
-                                {{pack.packDescription}}
-                            </td>
--->
                             <td class="col-md-1">
                                 {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                             </td>
@@ -82,21 +51,20 @@
 <!--                        <tr>-->
                         <tr ng-show="!pack.showDetailsFlag">
                             <td></td>
-                            <td colspan="2" style="padding-top: 2px !important;">
+                            <td colspan="2" class="nmc-td-for-child-table">
+<!--                                style="padding-top: 2px !important;">-->
                                 <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                     <tbody>
                                         <tr ng-repeat="serv in pack.serviceItems">
-                                            <td class="" style="padding: 0 0 0 5px !important;"><input disabled ng-model="serv.selected" type="checkbox"/>
+                                            <td class="onlyPaddingLeft5">
+<!--                                                style="padding: 0 0 0 5px !important;">-->
+                                                <input disabled ng-model="serv.selected" type="checkbox"/>
                                             </td>
-                                            <td class="col-md-11" style="padding: 0 0 0 5px !important;">
+                                            <td class="col-md-11 onlyPaddingLegt5">
+<!--                                                style="padding: 0 0 0 5px !important;">-->
                                                 <span class="nmc-service-package-caption" ng-attr-id={{"service"+serv.id}}>{{serv.itemCaption}}
                                                 </span>
                                             </td>
-<!--
-                                            <td class="col-md-5">
-                                                {{serv.itemDescription}}
-                                            </td>
--->
                                             <td class="col-md-1">
                                                 {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                             </td>
@@ -107,6 +75,11 @@
                         </tr>
                     </table>
                  
+                </td>
+            </tr>
+            <tr>
+                <td>
+<!--                    Подключенных объектов: {{ctrlSettings.subscriberContObjectCount}}. Сумма ежемесячного платежа: {{}}<span ng-class="{'nmc-hide':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>-->
                 </td>
             </tr>
         </tbody>    
@@ -126,59 +99,6 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-<!--
-                   <div id="divWithObjectTable" class="nmc-table-with-fixed-header">
-                    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-                        <tbody>
-                            <tr ng-repeat="pack in serviceListEdition">
-                                <td>
-                                    <table>
-                                        <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
-                                            <td class="nmc-td-for-buttons">
-                                                <input ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
-                                                <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                            </td>
-                                            <td class="col-md-3">
-                                                {{pack.packCaption}}
-                                            </td>
-                                            <td class="col-md-7">
-                                                {{pack.packDescription}}
-                                            </td>
-                                            <td class="col-md-1">
-                                                {{pack.price.priceValue}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        <tr ng-show="!pack.showDetailsFlag">
-                                            <td></td>
-                                            <td colspan="3" style="padding-top: 2px !important;">
-                                                <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table">
-                                                    <tbody>
-                                                        <tr ng-repeat="serv in pack.serviceItems">
-                                                            <td class="nmc-td-for-button"><input ng-model="serv.selected" type="checkbox"/>
-                                                            </td>
-                                                            <td class="col-md-2">
-                                                                {{serv.itemCaption}}
-                                                            </td>
-                                                            <td class="col-md-5">
-                                                                {{serv.itemDescription}}
-                                                            </td>
-                                                            <td class="col-md-1">
-                                                                {{serv.price.priceValue}}
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </td>    
-                                        </tr>
-                                    </table>
-
-                                </td>
-                            </tr>
-                        </tbody>    
-                    </table>
-                </div>
--->
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
@@ -195,12 +115,6 @@
                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
                                                     </span>    
                                                 </td>
-
-                    <!--
-                                                <td class="col-md-7">
-                                                    {{pack.packDescription}}
-                                                </td>
-                    -->
                                                 <td class="col-md-1">
                                                     {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                 </td>
@@ -209,21 +123,20 @@
                     <!--                        <tr>-->
                                             <tr ng-show="!pack.showDetailsFlag">
                                                 <td></td>
-                                                <td colspan="2" style="padding-top: 2px !important;">
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
                                                             <tr ng-repeat="serv in pack.serviceItems">
-                                                                <td class="" style="padding: 0 0 0 5px !important;"><input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
+                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
                                                                 </td>
-                                                                <td class="col-md-11" style="padding: 0 0 0 5px !important;">
+                                                                <td class="col-md-11 onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
-                    <!--
-                                                                <td class="col-md-5">
-                                                                    {{serv.itemDescription}}
-                                                                </td>
-                    -->
                                                                 <td class="col-md-1">
                                                                     {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                 </td>
@@ -286,10 +199,10 @@
                                     <td>
                                         <table class="">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
-                                                <td class="nmc-td-for-button-checkbox">
+                                                <td class="nmc-td-for-button">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
                                                 </td>
-                                                <td class="col-md-10">
+                                                <td class="col-md-10 noPadding">
                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
                                                     </span>    
                                                 </td>
@@ -307,13 +220,16 @@
                     <!--                        <tr>-->
                                             <tr ng-show="!pack.showDetailsFlag">
                                                 <td></td>
-                                                <td colspan="2" style="padding-top: 2px !important;">
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
                                                     <table class="crud-grid table table-lighter table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
                                                             <tr ng-repeat="serv in pack.serviceItems">
-                                                                <td class="" style="padding: 0 0 0 5px !important;">
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
                                                                 </td>
-                                                                <td class="col-md-11" style="padding: 0 0 0 5px !important;">
+                                                                <td class="col-md-11 onlyPaddingLeft15">
+<!--                                                                    style="padding: 0 0 0 15px !important;">-->
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
@@ -344,20 +260,14 @@
                                     <td>
                                         <table class="">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
-                                                <td class="nmc-td-for-button-checkbox">
+                                                <td class="nmc-td-for-button">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
 
                                                 </td>
-                                                <td class="col-md-10">
+                                                <td class="col-md-10 noPadding">
                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
                                                     </span>    
                                                 </td>
-
-                    <!--
-                                                <td class="col-md-7">
-                                                    {{pack.packDescription}}
-                                                </td>
-                    -->
                                                 <td class="col-md-1">
 <!--                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
                                                 </td>
@@ -366,21 +276,19 @@
                     <!--                        <tr>-->
                                             <tr ng-show="!pack.showDetailsFlag">
                                                 <td></td>
-                                                <td colspan="2" style="padding-top: 2px !important;">
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
                                                     <table class="crud-grid table table-lighter table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
                                                             <tr ng-repeat="serv in pack.serviceItems">
-                                                                <td class="" style="padding: 0 0 0 5px !important;">
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
                                                                 </td>
-                                                                <td class="col-md-11" style="padding: 0 0 0 5px !important;">
+                                                                <td class="col-md-11 onlyPaddingLeft15">
+<!--                                                                    style="padding: 0 0 0 15px !important;">-->
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
-                    <!--
-                                                                <td class="col-md-5">
-                                                                    {{serv.itemDescription}}
-                                                                </td>
-                    -->
                                                                 <td class="col-md-1">
 <!--                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
                                                                 </td>
@@ -404,7 +312,7 @@
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-            <input ng-disabled = "confirmCode!=sumNums" type="submit" class="btn btn-primary btn-xs nmc-save-button"
+            <input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-primary btn-xs nmc-save-button"
 					ng-click="savePackages()"
 					value="Сохранить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"

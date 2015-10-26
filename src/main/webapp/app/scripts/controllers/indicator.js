@@ -1,6 +1,21 @@
 
 angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
+        
+        // Настройки интервала дат для страницы с показаниями
+    if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
+        $scope.indicatorDates = {
+            startDate : $location.search().fromDate,
+            endDate :  $location.search().toDate
+        };
+    }else{
+        $scope.indicatorDates = {
+            startDate : moment().subtract(6, 'days').startOf('day'),
+            endDate :  moment().endOf('day')
+        };
+    };
+//console.log($scope.indicatorDates.startDate);
+//console.log($scope.indicatorDates.endDate); 
     
     $scope.ctrlSettings ={};
     $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
@@ -485,7 +500,8 @@ angular.module('portalNMC')
     };
         //define init indicator params method
     var initIndicatorParams = function(){
-console.log($location.search());
+//console.log($location.url());        
+//console.log($location.search());
         var pathParams = $location.search();
         var tmpZpId = null;//indicatorSvc.getZpointId();    
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
@@ -555,6 +571,14 @@ console.log($location.search());
 //        $cookies.contObject = null;
 //        $cookies.contZPointName = null;
 //        $cookies.contObjectName = null;
+        
+        //get date interval from url params
+        if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
+            $rootScope.reportStart = pathParams.fromDate;
+        };
+        if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
+            $rootScope.reportEnd = pathParams.toDate;
+        };
     };
         //run init method
     initIndicatorParams();
@@ -804,23 +828,47 @@ console.log($location.search());
 //console.log(data);            
         });
     };
+        
+        //first load data
+    $scope.getData(1);
 
     $scope.pageChanged = function(newPage) {       
         $scope.getData(newPage);
     };  
         
-    $scope.$watch('reportStart', function (newDates) {  
+//    $scope.$watch('reportStart', function (newDates, oldDates) {  
 //console.log("change reportStart");        
-        if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
+//console.log(oldDates);                
+//console.log(newDates);        
+//        if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
+//            return;
+//        };
+//        if(newDates===oldDates){
+//            return;
+//        };
+//        $scope.getData(1);                              
+//    }, false);  
+        
+    $scope.$watch('indicatorDates', function (newDates, oldDates) {
+//console.log("Date-range-settings indicatorDates");        
+        if ($location.path()!=="/objects/indicators"){
             return;
-        }
-        $scope.getData(1);                              
-    }, false);  
+        };
+//console.log("Date-range-settings indicatorDates1");  
+        if(newDates===oldDates){
+            return;
+        };
+        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $scope.getData(1);
+    }, false);    
         
     //listen window resize
     var wind = angular.element($window);
     var windowResize = function(){
-        $scope.setScoreStyles();
+        if (angular.isDefined($scope.setScoreStyles)){
+            $scope.setScoreStyles();
+        };
         $scope.$apply();
     };
     wind.bind('resize', windowResize); 
@@ -897,7 +945,7 @@ console.log($location.search());
     });
         
     window.setTimeout(function(){
-console.log("3");            
+//console.log("Timeout. setVisibles");            
         setVisibles($scope.ctrlSettings.ctxId);
     }, 500);    
                 

@@ -5,9 +5,13 @@
 
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
-        <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+        <li id="objects_edit_2nd_menu_item" role="presentation" class="active"><a id="objectsTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
 <!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
-        <li id="object_map_2nd_menu_item" role="presentation" class="nmc-hide" ><a class="nmc-main-tab-button" href="#/objects/map/" aria-controls="objects_map" role="tab" data-target="#objects_map" data-toggle="tab">Карта</a></li>
+        
+        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
+        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
 
     </ul>
 
@@ -20,9 +24,17 @@
 <div class="container-fluid" ng-hide="loading">
  
 <div class="row nmc-main-workspace-header">
-    <div class="col-md-3 noPadding">
+<!--
+    <div class="btn-toolbar marginBottom10">
+        
+    </div>
+-->
+    <div class="col-md-3 noPadding marginBottom10">
+        <button class="btn nmc-main-add-button" ng-click="addObjectInit()">Добавить объект</button>
+<!--
         <h2 class="noMargin nmc-h2">Объекты учета
         </h2>    
+-->
     </div>
     <div class="col-md-7"></div>
     <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
@@ -37,19 +49,15 @@
             <span id="timeOutput"></span>
     </div>
 </div>
+<!--
 <div class="row ">
     <div class="col-md-12 noPadding nmc-main-workspace-header">
         <hr>
     </div>
 </div>    
-</div>    
-<!--<hr>-->
-
-<!--
-<table id="objectTable" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-    <tbody></tbody>
-</table>
 -->
+</div> 
+
 <div class="row" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
     <h3 class="nmc-h3">Объектов нет.</h3>
 </div>
@@ -62,32 +70,26 @@
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
-                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
-                                    <div class="btn-group" style="vertical-align: initial;">
-
-                                      <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox" style="padding: 0 0 3px;">
+                                    
+                                    <div class="btn-group">
+                                        <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
                                         <span class="caret"></span>
-                                      </button>
+                                        </button>
+<!--
+                                      <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
+                                        </i>
+-->
                                       <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
-                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
+                                        <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
                                       </ul>
                                     </div>
+                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
                                 </th>
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
-                                    <div class="btn-group pull-right" style="vertical-align: initial;">
-
-                                      <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
-<!--                                        <span class="caret"></span>-->
-                                      </p>
-                                      <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
-                                        </li>
-                                      </ul>
-                                    </div>
+                                </th>
+                                <th>
                                 </th>
                             </tr>
                         </thead>
@@ -98,8 +100,6 @@
 </table>
 
 <div>
-<!--<div style="overflow: scroll;width:300px;height:100px;position:relative"> crolling table div -->
-<!--<div style="overflow: scroll;width:1000px;height:685px;position:relative" ng-hide="loading" infinite-scroll="addMoreObjects()" infinte-scroll-distance='50' >-->
     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
@@ -108,7 +108,7 @@
                     <table class="crud-grid table table-lighter table-condensed noMargin">
                         <thead>
                             <tr class="nmc-child-table-header">
-                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
+                                <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox" style="padding: 0 5px;">
                                     <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
                                     <div class="btn-group" style="vertical-align: initial;">
 
@@ -116,52 +116,15 @@
                                         <span class="caret"></span>
                                       </button>
                                       <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
-                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
+                                        <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
+<!--                                        <li><a href="" ng-click="">{{messages.setSelectedInSummerMode}}</a></li> -->
                                       </ul>
                                     </div>
                                 </th>
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
-<!--                                    <span class="pull-right"><input type="checkbox" title="Включить/выключить расширенный интерфейс" ng-model="objectCtrlSettings.extendedInterfaceFlag"></span>-->
-<!--
-                                    <div class="btn-group pull-right" style="vertical-align: initial; padding-top: 4px;">
-
-                                      <p title="Настройки" class="btn btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: url(images/config_tool_icon2_white.png); height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -3px;">
-                                        <span class="caret"></span>
-                                      </p>
-                                      <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div class="btn-group pull-right" style="vertical-align: initial; padding-top: 4px;">
-
-                                      <p title="Настройки" class="btn btn-xs " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: url(images/config_tool_icon_white.png); height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -3px;">
-                                        <span class="caret"></span>
-                                      </p>
-                                      <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    
--->
-                                    
-                                    <div class="btn-group pull-right" style="vertical-align: initial;">
-
-                                      <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
-<!--                                        <span class="caret"></span>-->
-                                      </p>
-                                      <ul class="dropdown-menu">
-                                        <li>
-                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
-                                        </li>
-<!--                                        <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> -->
-                                      </ul>
-                                    </div>
+                                </th>
+                                <th>
                                 </th>
                             </tr>
                         </thead>
@@ -169,36 +132,29 @@
                 </th>
             </tr>
         </thead>
-<!--    </table>-->
 
-<!--    <div >-->
-<!--    <table class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">-->
         <tbody>
         <tr ng-repeat='object in objectsOnPage | filter:filter track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
         
-                        <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page">
+                        <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-checkbox">
 <!--                            <span>{{$index}}</span>-->
-                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
-                            <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
-                            <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
                             <div class="btn-group">
-<!--                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">-->
-<!--                                <span class="caret"></span>-->
-<!--                              </i>-->
+                              <i title="Действия над объектом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                                </i>
                               <ul class="dropdown-menu">
-                                  <li ng-repeat="device in object.devices">
-                                      <a href="" ng-click="getDeviceMetaData(object,device)">прибор Модель:{{device.deviceModel.modelName}} <span ng-if="device.number!=null">- №: </span> {{device.number}}</a>
-                                  </li>
-                                  <li ng-show="object.devices.length==0" style="width:400px;">
-                                      <span>
-                                      Нет доступных для редактирования приборов.
-                                          </span>
-                                  </li>
+                                <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>
+<!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
+                                <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
+                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                               </ul>
                             </div>
+                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+
 
                         </td>
         
@@ -208,9 +164,14 @@
                             
                         </td>
 
-                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
-<!--                            <span ng-if="$index===objectsOnPage.length-1">{{onTableLoad()}}</span>-->
-
+                        <td ng-click="toggleShowGroupDetails(object.id)"><span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                        </td>
+                        <td>
+                            <div class="btn-toolbar">
+                                <div class="btn-group pull-right">                   
+                                    <i title="Удалить объект" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
@@ -227,7 +188,8 @@
 </div>
 </div><!-- end of scrolling table div -->
 
-
+<!--********************* ZPoint section *************-->
+<!--**************************************************-->
 <!--Show Zpoint options-->
 <div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showZpointOptionLabel" tabindex="-1">
@@ -236,7 +198,7 @@
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <button type="button" class="close marginRight5 nmc-close-button" ng-click="invokeHelp()"><span aria-hidden="true">?</span></button>
 			<h3 id="showZpointOptionLabel" class="nmc-h3">
-				Свойства точки учета 
+				Точка учета 
 <!--                "{{zpointSettings.zpointName}}"-->
 			</h3>
 		</div>
@@ -262,17 +224,21 @@
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
                                 <td class="nmc-text-align-left ">
-                                	<textarea disabled="true" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
+                                	<textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71" ng-model="zpointSettings.contZPointComment"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td>
                                   <label for="inputType">Тип</label>
                                 </td>
-                                <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
+                                <td class="nmc-text-align-left ">
+<!--                                    <input class="form-control nmc-text-input-form" type="text" id="inputType"  placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">-->
+                                    <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings.contServiceTypeKeyname" ng-options="serviceType.keyname as serviceType.caption for serviceType in data.serviceTypes ">
+                                        
+                                    </select>
                                     <div ng-show="zpointSettings.piped">
-                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
-                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
+                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
+                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
                                     </div>    
                                 </td>
                             </tr>
@@ -281,7 +247,9 @@
                                 	<label for="inputDevice">Прибор</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left ">
-                                	<input class="form-control nmc-text-input-form" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">
+<!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">-->
+                                    <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings._activeDeviceObjectId" ng-options="device.id as device.number for device in currentObject.devices">
+                                    </select>
                                 </td>
                             </tr>
                             <tr>
@@ -289,82 +257,13 @@
                                 	<label for="inputPCO">РСО</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="col-sm-3 ">
-                                	<label for="inputRh">Расчётный час : </label>
-                                </td>
-                                <td class="col-sm-9">
-                                	<input disabled="true"
-                                			type="text"
-                                			id="inputRh"
-                                			pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]"
-                                			class="form-control marginRight15 nmc-input-digital-data nmc-text-input-form"
-                                			ng-model="zpointSettings.checkoutTime">
-                                	<label for="inputRd" style="margin-left: 23px">Расчётный день : </label>
-                                	<input disabled="true"
-                                			type="text"
-                                			id="inputRd"
-                                			pattern="\d[0-3]\d[0-9]"
-                                			class="form-control marginRight15 nmc-input-digital-data nmc-text-input-form"
-                                			size="19"
-                                			style="margin-right: 0px"
-                                			ng-model="zpointSettings.checkoutDay">
+<!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">-->
+                                    <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings.rsoId" ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
+                                    </select>
                                 </td>
                             </tr>
                             <tr><td></td><td></td></tr>
                          </table>
-                            	<div class="col-sm-6">Эталонный интервал:</div>
-                   				<div class="col-sm-6">
-                   				  <div class="progress progress-striped">
-                   					<div id="spn_if_manual" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none">
-                   						<span><b>Указан вручную</b></span>
-                   					</div>
-                   					<div id="spn_if_auto" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none">
-                   						<span><b>Расчитан автоматически</b></span>
-                   					</div>
-                   				  </div>
-                   				</div>
-        						<div class="form-group col-sm-12 noPadding">
-        								<div class="col-sm-1">
-        									<label for="inp_ref_range_start">c:</label>
-        								</div>
-        								<div class="col-sm-3  noPadding">
-        									<input id="inp_ref_range_start"
-        											type="text"
-        											class="form-control nmc-date-input-form"
-        											ng-model="beginDate"
-        											disabled />
-<!--
-                                            <input disabled id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
-                                type="text" ng-model="psStartDateFormatted"/>
--->
-        								</div>
-        								<div class="form-group col-sm-1">
-        									<label for="inp_ref_range_end">по:</label>
-        								</div>
-        								<div class="col-sm-3  noPadding">
-        									<input id="inp_ref_range_end"
-        											type="text"
-        											class="form-control nmc-date-input-form"
-        											ng-model="endDate"
-        											disabled />
-        								</div>
-        								<div class="col-sm-4">
-        							    	<p id="i_ref_range_add"
-		            							title="Изменить эталонный интервал"
-    		        							class="btn btn-xs nmc-button-in-modal"
-                                                ng-class="{'nmc-hide':toggleFlag, 'nmc-show':!toggleFlag}"
-        		    							ng-click="editRefRangeOn()">Изменить</p>
-            								<p id="i_ref_range_save"
-            									title="Сохранить эталонный интервал"
-            									class="btn btn-xs nmc-button-in-modal nmc-hide" 
-                                                ng-class="{'nmc-hide':!toggleFlag, 'nmc-show':toggleFlag}"
-            									ng-click="addRefRange()">Сохранить</p>
-                            			</div>
-                            	</div>
                        </div>    
                  </div>
         	</div>
@@ -884,7 +783,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="showObjOptionLabel" class="nmc-h3">
-				Свойства объекта учета
+				Объект учета
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -892,12 +791,14 @@
                 <div class="row">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+<!--
                             <tr>
                                 <td class="col-sm-3"><label for="inputCode">Код объекта</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
                                 </td>
                             </tr>
+-->
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
@@ -923,10 +824,17 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.timezoneDefKeyname" ng-options="timezone.keyname as timezone.caption for timezone in data.timezones">
+                                    </select>
+                                </td>
+                            </tr> 
+                            <tr>
                                 <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-<!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
+<!--                                    <input disabled class="form-control nmc-text-input-form" type="text" ng-model="currentObject._activeContManagement.organization.organizationName">-->
                                     <select class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                 </td>
                             </tr>
@@ -966,7 +874,7 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
 							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="updateObject(currentObject)"
+								ng-click="sendObjectToServer(currentObject)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
@@ -1125,6 +1033,341 @@
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#currentDevice')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+    
+<!-- window: delete object-->
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentObject.fullName || currentObject.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+<!--                            -->
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete zpoint-->
+<div id="deleteZpointModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteZpointLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteZpointLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentZpoint.customServiceName || currentZpoint.zpointName || currentZpoint.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+<!--                            -->
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteZpoint(currentZpoint);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+    
+<!-- *****************  Devices section ************************ -->
+<!-- ***********************************************************   -->
+<!--List of contObject devices-->
+<div id="contObjectDevicesModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="contObjectDevicesLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="contObjectDevicesLabel" class="nmc-h3">
+				Список приборов объекта учета  &laquo;{{currentObject.fullName}}&raquo;
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="btn-toolbar marginBottom10">
+                        <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="divWithObjectTable" class="" ng-hide="loading" >
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                            <thead>
+                                <tr>
+                                    <th class="nmc-td-for-button">
+                                    </th>
+                                    <th>
+                                        s\n
+                                    </th>
+                                    <th>
+                                        Модель
+                                    </th>
+                                    <th class="nmc-td-for-button">
+                                    </th>
+                                </tr>
+                                
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="device in currentObject.devices" ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                    <td class="nmc-td-for-button">
+                                        <i class="btn glyphicon glyphicon-edit" ng-click="selectDevice(device)" data-target="#showDeviceModal" data-toggle="modal"></i>
+                                    </td>
+                                    <td>
+                                        {{device.number}}
+                                    </td>
+                                    <td>
+                                        {{device.deviceModel.modelName}}
+                                    </td>
+                                    <td class="nmc-td-for-button">
+                                        <i class="btn glyphicon glyphicon-trash" ng-click="selectDevice(device)" data-target="#deleteDeviceModal" data-toggle="modal"></i>
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+<!--
+            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="checkPackages()"
+					value="Сохранить" />
+-->
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Ok
+			</button>				
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+    
+<!--Show device options-->
+<div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showDeviceLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showDeviceLabel" class="nmc-h3">
+				Прибор
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputMode">s/n</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="currentDevice.number">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Модель</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="currentDevice.deviceModelId" ng-options="model.id as model.modelName for model in data.deviceModels">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Объект</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':currentDevice.contObjectId==null}">
+                                        <select disabled class="form-control nmc-select-form" id="inputContObject" ng-model="currentDevice.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in objects">
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Источник данных</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':currentDevice.subscrDataSourceId==null}">
+                                        <select class="form-control nmc-select-form" id="inputDataSource" ng-model="currentDevice.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr ng-if="currentDevice.curDatasource.dataSourceType.isRaw==true">
+                                <td><label for="inputDescription" >Адрес прибора</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="currentDevice.subscrDataSourceAddr"/>
+                                </td>
+                            </tr>
+                            <tr ng-if="currentDevice.curDatasource.dataSourceType.isDbTablePair==true">
+                                <td><label for="inputDescription" >Таблица часовых данных</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="currentDevice.dataSourceTable1h"/>
+                                </td>
+                            </tr>
+                            <tr ng-if="currentDevice.curDatasource.dataSourceType.isDbTablePair==true">
+                                <td><label for="inputDescription" >Таблица суточных данных</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="currentDevice.dataSourceTable24h"/>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveDevice(currentDevice)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentDevice')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete device-->
+<div id="deleteDeviceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteDeviceLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteDeviceLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentDevice.number || currentDevice.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteDevice(currentDevice);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
 								Отменить
 							</button>
 						</div>
