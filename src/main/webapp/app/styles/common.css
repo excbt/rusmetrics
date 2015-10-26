@@ -519,6 +519,11 @@ tr.nmc-tr-odd>td{
     width: 2%;
 }
 
+.nmc-td-for-button-object-control{
+    min-width: 25px;
+    width: 25px;
+}
+
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox{
     min-width: 45px;
@@ -1735,4 +1740,13 @@ content: "";
 height: 0.8em;
 border: 0.3em solid #2C2C2C;
 border-bottom: none;
+}
+
+.nmc-lock {
+    width: 13px;
+    height: 13px;
+    background-color: transparent;
+    background-image: url(../images/lock.png);
+    background-repeat: no-repeat;
+    padding: 5px;
 }

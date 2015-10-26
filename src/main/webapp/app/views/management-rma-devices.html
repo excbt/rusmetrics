@@ -112,7 +112,7 @@
                     <span>{{device.contObjectInfo.fullName}}</span>
             </td>
             <td class="col-md-2">
-                <div><span ng-class="">{{device.deviceModel.modelName}}<span ng-show="isSystemuser()"> (id = {{device['id']}})</span></span>
+                <div><span ng-class="">{{device.deviceModel.caption || device.deviceModel.modelName}}<span ng-show="isSystemuser()"> (id = {{device['id']}})</span></span>
                 </div>
             </td>
 
@@ -151,7 +151,7 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Модель</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as model.modelName for model in data.deviceModels">
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels">
                                     </select>
                                 </td>
                             </tr>
