@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -102,9 +103,26 @@ public class RmaContObjectController extends SubscrContObjectController {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRmaContObjects() {
-		List<ContObject> resultList = subscrContObjectService
+	public ResponseEntity<?> getContObjects() {
+		List<ContObject> contObjectList = subscrContObjectService
 				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		List<ContObject> resultList = contObjectList.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
+				.collect(Collectors.toList());
+
+		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/manage", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getRmaContObjects() {
+		List<ContObject> contObjectList = subscrContObjectService
+				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		List<ContObject> resultList = contObjectList;
 
 		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
 	}
