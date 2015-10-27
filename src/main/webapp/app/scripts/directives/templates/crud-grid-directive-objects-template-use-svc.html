@@ -174,7 +174,7 @@
 <!--    <div >-->
 <!--    <table class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">-->
         <tbody>
-        <tr ng-repeat='object in objectsOnPage | filter:filter track by $index' ng-attr-id={{"obj"+object.id}}>
+        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
@@ -183,7 +183,7 @@
 <!--                            <span>{{$index}}</span>-->
                             <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
-                            <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
+                            <i title="Редактировать свойства объекта" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
                             <div class="btn-group">
 <!--                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">-->
 <!--                                <span class="caret"></span>-->
@@ -203,7 +203,7 @@
                         </td>
         
                         <td class="nmc-td-for-button"> 
-
+                            {{$index}}
                             <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
                             
                         </td>
