@@ -102,9 +102,11 @@ public class RmaContObjectController extends SubscrContObjectController {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRmaContObjects() {
-		List<ContObject> resultList = subscrContObjectService
+	public ResponseEntity<?> getContObjects() {
+		List<ContObject> contObjectList = subscrContObjectService
 				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		List<ContObject> resultList = contObjectList;
 
 		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
 	}

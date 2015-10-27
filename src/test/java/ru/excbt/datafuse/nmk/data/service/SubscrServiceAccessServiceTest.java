@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
@@ -38,6 +39,9 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private ReportTypeService reportTypeService;
+
+	@Autowired
+	private SubscriberService subscriberService;
 
 	@Test
 	public void testServiceItems() throws Exception {
@@ -120,6 +124,32 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 		logger.info("Size of filtered reports:{}", filteredReports.size());
 		assertNotNull(filteredReports);
 		assertTrue(filteredReports.size() > 0);
+	}
+
+	@Test
+	@Ignore
+	public void testUpdateAllRmaSubscriberAccess() throws Exception {
+		Long rmaSubscriberId = 37176875L;
+
+		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList();
+
+		servicePackList.forEach(i -> {
+			logger.info("Service Pack {}: {}", i.getId(), i.getPackName());
+		});
+
+		List<Subscriber> subscribers = subscriberService.selectRmaSubscribers(rmaSubscriberId);
+		subscribers.forEach(i -> {
+			logger.info("Processing {}", i.getSubscriberName());
+
+			List<SubscrServiceAccess> fullAccessList = new ArrayList<>();
+
+			servicePackList.forEach(p -> {
+				List<SubscrServiceAccess> accessList = subscrServiceAccessService.getPackSubscrServiceAccess(p.getId());
+				fullAccessList.addAll(accessList);
+			});
+			logger.info("Total items: {}", fullAccessList.size());
+			subscrServiceAccessService.processAccessList(i.getId(), LocalDate.now(), fullAccessList);
+		});
 	}
 
 }
