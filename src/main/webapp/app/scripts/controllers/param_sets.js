@@ -766,7 +766,7 @@ console.log($scope.psEndDateFormatted);
     //console.log($scope.availableObjects);
         if ($scope.showAvailableObjectGroups_flag){
             var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.availableEntities);   
-console.log(totalGroupObjects);            
+//console.log(totalGroupObjects);            
             objectSvc.sortObjectsByFullName(totalGroupObjects);
             //del doubles
             

@@ -8,6 +8,7 @@ console.log("Load NoticeCtrl.");
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
     $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
+    $scope.ctrlSettings.showGroupsFlag=false
     
     $scope.ctrlSettings.ctxId = "notice_page";
 //console.log("$('#div-main-area').width()=");    
@@ -23,6 +24,7 @@ console.log("Load NoticeCtrl.");
     $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
     $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part 
     $scope.objectsUrl= "../api/subscr/contObjects";
+    $scope.groupUrl = "../api/contGroup";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";
@@ -110,6 +112,8 @@ console.log("Load NoticeCtrl.");
     $scope.notices = [];
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
+    
+    $scope.groups = [];
     
     //Controller initialization
     //use to redirect from the Monitor page
@@ -324,7 +328,11 @@ console.log("initCtrl");
                         var tmp = dataParse(data.objects);
                         $scope.notices = tmp;
 //console.log($scope.notices);            
-                    });
+                    },
+                                                                                                                                function(e){
+            console.log(e);
+        }
+                                                                                                                               );
     };
     
     $scope.dateFormat = function(millisec){
@@ -344,7 +352,11 @@ console.log("initCtrl");
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
 //console.log($scope.objects);        
-        $scope.objectsInWindow = angular.copy($scope.objects);
+        if ($scope.ctrlSettings.showGroupsFlag == false){
+            $scope.objectsInWindow = angular.copy($scope.objects);
+        }else{
+            $scope.objectsInWindow = angular.copy($scope.groups);
+        };
         //Если флаг состояния объектов = "ложь" (это означает, что либо объекты еще не выбирались либо выбор объектов не был подтвержден - не была нажата кнопка "Применить"), то сбросить флаги у выбранных объектов
 
 //        if (!$scope.states.applyObjects_flag){
@@ -355,6 +367,11 @@ console.log("initCtrl");
             //иначе
 //            $scope.states.applyObjects_flag = false;// сбрасываем флаг, чтобы отследить нажатие кнопки "Применить" 
 //        };
+        $('#selectObjectsModal').modal('show');
+    };
+    
+    $scope.selectGroupsClick = function(){
+        $scope.objectsInWindow = angular.copy($scope.groups);
         $('#selectObjectsModal').modal('show');
     };
     
@@ -378,14 +395,15 @@ console.log("initCtrl");
     };
     
     function performObjectsFilter(){
-console.log("performObjectsFilter");        
-        $scope.objects = $scope.objectsInWindow;
+console.log("performObjectsFilter");
         $scope.selectedObjects_list = "";
         $scope.selectedObjects = [];
         $('#selectObjectsModal').modal('hide');
+        $scope.objects = $scope.objectsInWindow;
+
         $scope.objects.map(function(el){
           if(el.selected){
-              $scope.selectedObjects_list+=el.fullName+"; ";
+//              $scope.selectedObjects_list+=el.fullName+"; ";
               $scope.selectedObjects.push(el.id);
           }
         });
@@ -395,11 +413,93 @@ console.log("performObjectsFilter");
             $scope.selectedObjects_list = $scope.selectedObjects.length;
         };
     };
+    
+        //perform objects from groups
+    function getGroupObjects(group){
+        var selectedObjectUrl = $scope.groupUrl+"/"+group.id+"/contObject";
+        $http.get(selectedObjectUrl).then(function(response){
+            group.objects = response.data;
+        });
+    };
+    
+    $scope.joinObjectsFromSelectedGroups = function(groups){
+        var result = [];
+        groups.forEach(function(group){
+                if(group.selected){
+                    Array.prototype.push.apply(result, group.objects);
+//                    totalGroupObjects = group.objects;
+                };
+        });                 
+        return result;
+    };
+    
+    $scope.deleteDoublesObjects = function(targetArray){
+        var arrLength = targetArray.length;
+        while (arrLength>=2){
+            arrLength--;                                               
+            if (targetArray[arrLength].fullName===targetArray[arrLength-1].fullName){                   
+                targetArray.splice(arrLength, 1);
+            };
+        }; 
+    };
+    
+    $scope.addUniqueObjectsFromGroupsToSelectedObjects = function(arrFrom, arrTo){
+        for (var j=0; j < arrFrom.length; j++){
+            var uniqueFlag = true;
+            for (var i = 0; i<arrTo.length; i++){
+                if(arrFrom[j].fullName===arrTo[i].fullName){
+                    uniqueFlag = false;
+                    break;
+                };
+            };
+            if (uniqueFlag){
+                arrTo.push(arrFrom[j]);
+            };
+        }; 
+        
+    };
+    
+    function performGroupsFilter(){
+        $scope.selectedObjects_list = "";
+        $scope.selectedGroups = [];
+        $scope.selectedObjects = [];
+        $('#selectObjectsModal').modal('hide');
+        $scope.groups = $scope.objectsInWindow;
+        
+        var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.groups);   
+//console.log(totalGroupObjects);            
+        objectSvc.sortObjectsByFullName(totalGroupObjects);
+        //del doubles
+        $scope.deleteDoublesObjects(totalGroupObjects);
+        //add groupObjects to selected objects
+            //add only unique objects
+        $scope.addUniqueObjectsFromGroupsToSelectedObjects(totalGroupObjects, $scope.selectedObjects);
+        var tmp = $scope.selectedObjects.map(function(el){
+            return el.id;
+        });
+        $scope.selectedObjects = tmp;
+//console.log($scope.selectedObjects);        
+        $scope.groups.map(function(el){
+          if(el.selected){
+//              $scope.selectedObjects_list+=el.fullName+"; ";
+              $scope.selectedGroups.push(el.id);
+          };
+        });
+        if ($scope.selectedGroups.length == 0){
+            $scope.selectedObjects_list = "Нет";
+        }else{
+            $scope.selectedObjects_list = $scope.selectedGroups.length;
+        };
+    };
       
     $scope.selectObjects = function(){
-         performObjectsFilter();
-//        $scope.states.applyObjects_flag = true;
-        //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
+        if ($scope.ctrlSettings.showGroupsFlag != true){
+             performObjectsFilter();
+    //        $scope.states.applyObjects_flag = true;
+        }else{
+            performGroupsFilter();
+        };
+                    //Объекты были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
         $scope.getResultsPage(1);
 
     };
@@ -477,6 +577,22 @@ console.log("getObjects");
     };
     
     $scope.getObjects();
+    
+    //get groups
+    $scope.getGroups = function () {
+        var url = $scope.groupUrl;
+        $http.get(url).then(function (response) {
+            var tmp = response.data;
+            tmp.forEach(function(el){
+                getGroupObjects(el);
+            });
+            $scope.groups = tmp;
+console.log($scope.groups);
+        }, function(e){
+            console.log(e);
+        });
+    };
+    $scope.getGroups();
     
     //click the main checkbox - select/ deselect notices
     $scope.performAllNoticesOnPage = function(){
@@ -718,8 +834,12 @@ console.log("Clear Object filters.");
         $scope.objects.forEach(function(el){
             el.selected = false;
         });
+        $scope.groups.forEach(function(el){
+            el.selected = false;
+        });
         $scope.selectedObjects_list='Нет';
         $scope.selectedObjects=[];
+        $scope.selectedGroups=[];
 //        $scope.getResultsPage(1);
     };
     
