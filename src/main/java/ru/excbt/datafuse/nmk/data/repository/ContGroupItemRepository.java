@@ -13,8 +13,10 @@ public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, L
 
 	@Query("SELECT sco.contObject FROM SubscrContObject sco WHERE sco.contObjectId IN "
 			+ "( SELECT ci.contObject.id FROM ContGroupItem ci INNER JOIN ci.contGroup cg "
-			+ "WHERE cg.id = :contGroupId ) " + " ORDER BY sco.contObject.name, sco.contObject.id ")
-	public List<ContObject> selectContGroupObjects(@Param("contGroupId") long contGroupId);
+			+ "WHERE cg.id = :contGroupId ) AND" + " sco.subscriberId = :subscriberId "
+			+ " ORDER BY sco.contObject.name, sco.contObject.id ")
+	public List<ContObject> selectContGroupObjects(@Param("contGroupId") long contGroupId,
+			@Param("subscriberId") long subscriberId);
 
 	@Query("SELECT sco.contObject FROM SubscrContObject sco "
 			+ "WHERE sco.subscriberId = :subscriberId AND sco.contObjectId NOT IN "
