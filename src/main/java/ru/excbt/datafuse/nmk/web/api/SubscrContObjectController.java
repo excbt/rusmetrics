@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,8 +51,17 @@ public class SubscrContObjectController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjects() {
-		List<ContObject> resultList = subscrContObjectService
-				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		List<ContObject> resultList = null;
+		if (currentSubscriberService.isRma()) {
+			List<ContObject> contObjectList = subscrContObjectService
+					.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+			resultList = contObjectList.stream().filter(i -> !Boolean.FALSE.equals(i.get_haveSubscr()))
+					.collect(Collectors.toList());
+		} else {
+			resultList = subscrContObjectService
+					.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		}
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
