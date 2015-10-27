@@ -110,9 +110,28 @@ angular.module('portalNMC')
         switch (param){
             case "ru": result=dateRangeOptsRu;break;
             case "monitor-ru": result=dateRangeMonitorOptsRu;break;
+            case "indicator-ru": 
+                result = angular.copy(dateRangeMonitorOptsRu);
+                result.startDate = moment($rootScope.reportStart).startOf('day');
+                result.endDate = moment($rootScope.reportEnd).endOf('day');
+                break;
         };
         return result;
     };
+    
+//    var getDateRangeOptions = function(param, start, end){
+//        var result = null;
+//        switch (param){
+//            case "ru": result=dateRangeOptsRu;break;
+//            case "monitor-ru": result=dateRangeMonitorOptsRu;break;
+//            case "indicator-ru": 
+//                result = angular.copy(dateRangeMonitorOptsRu);
+//                result.startDate = moment(start).startOf('day');
+//                result.endDate = moment(end).endOf('day');
+//                break;
+//        };
+//        return result;
+//    };
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";

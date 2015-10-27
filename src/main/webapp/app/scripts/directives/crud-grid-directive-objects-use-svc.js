@@ -458,8 +458,10 @@ console.log("Objects directive.");
                             curObject.zpoints = zpoints;
                             makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail"+curObject.id);
-                            btnDetail.classList.remove("glyphicon-chevron-right");
-                            btnDetail.classList.add("glyphicon-chevron-down");
+                            if (angular.isDefined(btnDetail)&&(btnDetail!=null)){
+                                btnDetail.classList.remove("glyphicon-chevron-right");
+                                btnDetail.classList.add("glyphicon-chevron-down");
+                            };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
@@ -611,6 +613,9 @@ console.log("Objects directive.");
                 function viewRefRangeInTable(zpoint){
                     //Получаем столбец с эталонным интервалом для заданной точки учета
                     var element = document.getElementById("zpointRefRange"+zpoint.id);
+                    if (angular.isUndefined(element) || element == null){
+                        return false;
+                    };
                     //Записываем эталонный интервал в таблицу
 //console.log(zpoint);                    
                     switch (zpoint.zpointRefRangeAuto){

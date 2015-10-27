@@ -9,9 +9,13 @@ angular.module('portalNMC')
             endDate :  $location.search().toDate
         };
     }else{
+//        $scope.indicatorDates = {
+//            startDate : moment().subtract(6, 'days').startOf('day'),
+//            endDate :  moment().endOf('day')
+//        };
         $scope.indicatorDates = {
-            startDate : moment().subtract(6, 'days').startOf('day'),
-            endDate :  moment().endOf('day')
+            startDate : indicatorSvc.getFromDate(),
+            endDate :  indicatorSvc.getToDate()
         };
     };
 //console.log($scope.indicatorDates.startDate);
@@ -572,13 +576,18 @@ angular.module('portalNMC')
 //        $cookies.contZPointName = null;
 //        $cookies.contObjectName = null;
         
-        //get date interval from url params
+        //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
             $rootScope.reportStart = pathParams.fromDate;
+        }else{
+            $rootScope.reportStart = indicatorSvc.getFromDate();
         };
         if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
             $rootScope.reportEnd = pathParams.toDate;
+        }else{
+            $rootScope.reportEnd = indicatorSvc.getToDate();
         };
+        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
     };
         //run init method
     initIndicatorParams();
@@ -858,6 +867,8 @@ angular.module('portalNMC')
         if(newDates===oldDates){
             return;
         };
+        indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
+        indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
         $scope.getData(1);
