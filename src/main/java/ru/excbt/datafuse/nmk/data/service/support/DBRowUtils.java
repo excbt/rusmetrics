@@ -21,7 +21,6 @@ public class DBRowUtils {
 			return (Long) arg;
 
 		} else if (arg instanceof Number) {
-
 			long idValue = ((Number) arg).longValue();
 			return idValue;
 
@@ -40,6 +39,9 @@ public class DBRowUtils {
 		}
 		if (arg instanceof BigDecimal) {
 			return (BigDecimal) arg;
+		}
+		if (arg instanceof Double) {
+			return new BigDecimal((Double) arg);
 		}
 		throw new IllegalArgumentException();
 	}

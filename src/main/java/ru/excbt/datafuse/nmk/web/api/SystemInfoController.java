@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
+import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -21,6 +22,9 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 @Controller
 @RequestMapping(value = "/api/systemInfo")
 public class SystemInfoController extends SubscrApiController {
+
+	@Autowired
+	private SystemParamService systemParamService;
 
 	/**
 	 * 
@@ -137,6 +141,16 @@ public class SystemInfoController extends SubscrApiController {
 		}
 
 		return responseBadRequest();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/serverName", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getServerName() {
+		String serverName = systemParamService.getParamValueAsString("SERVER_NAME");
+		return ResponseEntity.ok(serverName);
 	}
 
 }
