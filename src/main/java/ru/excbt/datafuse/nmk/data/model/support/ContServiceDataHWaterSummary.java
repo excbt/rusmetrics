@@ -14,10 +14,12 @@ public class ContServiceDataHWaterSummary implements Serializable {
 	private ContServiceDataHWaterTotals totals;
 
 	private ContServiceDataHWaterTotals diffs;
-	
-	private ContServiceDataHWater firstData; 
+
+	private ContServiceDataHWater firstData;
 
 	private ContServiceDataHWater lastData;
+
+	private ContServiceDataHWater average;
 
 	public ContServiceDataHWater getFirstData() {
 		return firstData;
@@ -51,6 +53,12 @@ public class ContServiceDataHWaterSummary implements Serializable {
 		this.diffs = diffs;
 	}
 
+	public ContServiceDataHWater getAverage() {
+		return average;
+	}
 
-	
+	public void setAverage(ContServiceDataHWater average) {
+		this.average = average;
+	}
+
 }

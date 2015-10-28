@@ -17,12 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 
 public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContServiceDataHWaterServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterServiceTest.class);
 
 	private final static long ZPOINT_ID = 18811557;
 	private final static long FAVORITE_ZPOINT_ID = 18811586;
@@ -32,11 +32,9 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectByZPoint() {
-		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
-				TimeDetailKey.TYPE_24H);
+		List<?> resultList = service.selectByContZPoint(ZPOINT_ID, TimeDetailKey.TYPE_24H);
 		assertTrue(resultList.size() > 0);
-		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID,
-				resultList.size());
+		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID, resultList.size());
 	}
 
 	@Test
@@ -47,13 +45,11 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 		LocalDateTime beginDate = srcDate.dayOfMonth().withMinimumValue();
 		LocalDateTime endDate = srcDate.dayOfMonth().withMaximumValue();
 
-		List<?> resultList = service.selectByContZPoint(ZPOINT_ID,
-				TimeDetailKey.TYPE_24H, beginDate, endDate);
+		List<?> resultList = service.selectByContZPoint(ZPOINT_ID, TimeDetailKey.TYPE_24H, beginDate, endDate);
 		assertTrue(resultList.size() > 0);
 
-		logger.info("ZPoint (ID:{}) Found {} records on period: [{}...{}]",
-				ZPOINT_ID, resultList.size(), beginDate.toDate(),
-				endDate.toDate());
+		logger.info("ZPoint (ID:{}) Found {} records on period: [{}...{}]", ZPOINT_ID, resultList.size(),
+				beginDate.toDate(), endDate.toDate());
 	}
 
 	@Test
@@ -64,10 +60,9 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testTotals() {
-		ContServiceDataHWaterTotals result = service.selectContZPointTotals(
-				ZPOINT_ID, TimeDetailKey.TYPE_1H, LocalDateTime.now()
-						.minusMonths(1).withDayOfMonth(1), LocalDateTime.now()
-						.withDayOfMonth(1).minusDays(1));
+		ContServiceDataHWaterTotals result = service.selectContZPoint_Totals(ZPOINT_ID, TimeDetailKey.TYPE_1H,
+				LocalDateTime.now().minusMonths(1).withDayOfMonth(1),
+				LocalDateTime.now().withDayOfMonth(1).minusDays(1));
 		assertNotNull(result);
 		// assertNotNull(result.getM_in());
 	}
@@ -76,11 +71,16 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 	public void testLastAbsData() throws Exception {
 		LocalDateTime n = LocalDateTime.now();
 
-		ContServiceDataHWater data = service.selectLastAbsData(
-				FAVORITE_ZPOINT_ID, TimeDetailKey.TYPE_1H, n, true);
+		ContServiceDataHWater data = service.selectLastAbsData(FAVORITE_ZPOINT_ID, TimeDetailKey.TYPE_1H, n, true);
 		logger.info("now Date:{}", n);
 		logger.info("dataDate:{}", data.getDataDate());
 		LocalDateTime ldt = new LocalDateTime(data.getDataDate());
 		logger.info("Local dataDate:{}", ldt);
+	}
+
+	@Test
+	public void testAvg() throws Exception {
+
+		service.selectContZPoint_Avgs(31877728L, TimeDetailKey.TYPE_24H, LocalDatePeriod.lastMonth());
 	}
 }

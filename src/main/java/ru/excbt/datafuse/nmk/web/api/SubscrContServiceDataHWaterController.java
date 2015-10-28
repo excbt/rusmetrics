@@ -209,12 +209,6 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
-		String serviceType = contZPoint.getContServiceType().getKeyname();
-
-		if (!SUPPORTED_SERVICES.contains(serviceType)) {
-			return responseBadRequest(ApiResult.validationError("Service type %s is not supported yet", serviceType));
-		}
-
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return responseBadRequest(
@@ -252,57 +246,47 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return ResponseEntity.badRequest().body(String.format("contZPointId (id=%d) not found", contZPointId));
+			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return ResponseEntity.badRequest().body(String
-					.format("contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
+			return responseBadRequest(ApiResult.validationError(
+					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
-		String serviceType = contZPoint.getContServiceType().getKeyname();
+		LocalDatePeriod period = LocalDatePeriod.builder().dateFrom(beginDateS).dateTo(endDateS).build();
 
-		if (!SUPPORTED_SERVICES.contains(serviceType)) {
-			return ResponseEntity.badRequest().body(String.format("Service type %s is not supported yet", serviceType));
-		}
-
-		LocalDateTime beginD = null;
-		LocalDateTime endD = null;
-		try {
-			beginD = DATE_FORMATTER.parseLocalDateTime(beginDateS);
-			endD = DATE_FORMATTER.parseLocalDateTime(endDateS);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters beginDateS:{}, endDateS:{}", beginDateS, endDateS));
-		}
-
-		if (beginD.compareTo(endD) > 0) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters beginDateS:{}, endDateS:{}", beginDateS, endDateS));
+		if (period.isInvalidEq()) {
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters beginDateS: %s, endDateS:%s", beginDateS, endDateS));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters timeDetailType:{}", timeDetailType));
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters timeDetailType:%s", timeDetailType));
 		}
 
-		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(endD.plusDays(1));
-		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(endD);
+		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
+		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 
-		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPointTotals(contZPointId,
-				timeDetail, beginD, endOfDay);
+		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPoint_Totals(contZPointId,
+				timeDetail, period.getDateTimeFrom(), endOfDay);
 
 		ContServiceDataHWater firstAbs = contServiceDataHWaterService.selectLastAbsData(contZPointId, timeDetail,
-				beginD, false);
+				period.getDateTimeFrom(), false);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService.selectLastAbsData(contZPointId, timeDetail,
 				endOfPeriod, true);
+
+		ContServiceDataHWater avg = contServiceDataHWaterService.selectContZPoint_Avgs(contZPointId, timeDetail,
+				period);
 
 		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
 		result.setTotals(totals);
 		result.setFirstData(firstAbs);
 		result.setLastData(lastAbs);
+		result.setAverage(avg);
 
 		ContServiceDataHWaterTotals diffs = new ContServiceDataHWaterTotals();
 
@@ -436,13 +420,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters fromDateStr:{} and toDateStr:{}", fromDateStr, toDateStr));
+			return responseBadRequest(ApiResult.validationError("Invalid parameters fromDateStr:%s and toDateStr:%s",
+					fromDateStr, toDateStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
@@ -493,15 +477,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(timeDetailType);
 
 		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("Data of 1h is not supported for uploading"));
+			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String inFilename = webAppPropsService.getHWatersCsvInputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -614,20 +596,18 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", dateFromStr, dateToStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", dateFromStr, dateToStr));
 		}
 
 		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("Data of 1h is not supported for uploading"));
+			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String outFilename = webAppPropsService.getHWatersCsvOutputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -669,13 +649,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters dateFrom:{} and dateTo:{}", dateFromStr, dateToStr));
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters dateFrom:%s and dateTo:%s", dateFromStr, dateToStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(
-					String.format("Invalid parameters dateFrom:{} is greater than dateTo:{}", dateFromStr, dateToStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters dateFrom:%s is greater than dateTo:%s", dateFromStr, dateToStr));
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
