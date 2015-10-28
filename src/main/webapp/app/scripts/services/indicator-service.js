@@ -5,8 +5,8 @@ angular.module('portalNMC')
     var contObjectName = null;
     var contZpointName = null;
     var timeDetailType = "24h";
-    var fromDate = moment().subtract(6, 'days').startOf('day');
-    var toDate = moment().endOf('day');
+    var fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+    var toDate = moment().endOf('day').format('YYYY-MM-DD');
 
     var getContObjectId = function(){
         return contObjectId;

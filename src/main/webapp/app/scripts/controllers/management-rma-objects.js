@@ -32,9 +32,9 @@ console.log('Run Object management controller.');
                 $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
-                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
-                $scope.objectCtrlSettings.objectTopOnPage =0;
-                $scope.objectCtrlSettings.objectBottomOnPage =34;
+//                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
+//                $scope.objectCtrlSettings.objectTopOnPage =0;
+//                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
@@ -817,12 +817,9 @@ console.log('Run Object management controller.');
                     
                     if (angular.isUndefined(searchString) || (searchString==='')){                      
                         var tempArr = [];
-                        var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
-                        if((endIndex >= $scope.objects.length)){
-                            endIndex = $scope.objects.length;
-                        }; 
-                        tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
-                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectsOnPage = tempArr;
                     }else{
 //                        $scope.objectsOnPage = $scope.objects;
                         var tempArr = [];
@@ -889,9 +886,11 @@ console.log('Run Object management controller.');
                     };
                 };
                 
-                $("#divWithObjectTable").scroll(function(){                    
-                    $scope.addMoreObjects();
-                    $scope.$apply();
+                $("#divWithObjectTable").scroll(function(){
+                    if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
+                        $scope.addMoreObjects();
+                        $scope.$apply();
+                    };
                 });
                 
                 

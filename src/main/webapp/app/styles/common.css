@@ -1276,6 +1276,12 @@ tr.nmc-main-table-header > th {
 .nmc-object-list  {
     height: 520px;
 }
+
+    /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
+.nmc-object-list-in-notices{
+    overflow-y: auto;
+    max-height: 520px;
+}
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
     padding-top: 150px;

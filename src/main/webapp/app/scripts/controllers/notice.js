@@ -8,7 +8,8 @@ console.log("Load NoticeCtrl.");
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
     $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
-    $scope.ctrlSettings.showGroupsFlag=false
+    $scope.ctrlSettings.showGroupsFlag=false;
+    $scope.ctrlSettings.loading = true;
     
     $scope.ctrlSettings.ctxId = "notice_page";
 //console.log("$('#div-main-area').width()=");    
@@ -299,6 +300,7 @@ console.log("initCtrl");
 //    });
     
     $scope.getResultsPage = function(pageNumber) {
+        $scope.ctrlSettings.loading = true;
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
         var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
@@ -327,6 +329,7 @@ console.log("initCtrl");
                         $scope.totalNotices = data.totalElements;
                         var tmp = dataParse(data.objects);
                         $scope.notices = tmp;
+                        $scope.ctrlSettings.loading = false;
 //console.log($scope.notices);            
                     },
                                                                                                                                 function(e){

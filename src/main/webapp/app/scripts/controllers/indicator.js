@@ -13,9 +13,16 @@ angular.module('portalNMC')
 //            startDate : moment().subtract(6, 'days').startOf('day'),
 //            endDate :  moment().endOf('day')
 //        };
-        $scope.indicatorDates = {
-            startDate : indicatorSvc.getFromDate(),
-            endDate :  indicatorSvc.getToDate()
+        if (angular.isDefined($cookies.fromDate)&&($cookies.toDate!=null)){
+            $scope.indicatorDates = {
+                startDate : $cookies.fromDate,
+                endDate :  $cookies.toDate
+            };
+        }else{
+            $scope.indicatorDates = {
+                startDate : indicatorSvc.getFromDate(),
+                endDate :  indicatorSvc.getToDate()
+            };
         };
     };
 //console.log($scope.indicatorDates.startDate);
@@ -507,6 +514,7 @@ angular.module('portalNMC')
 //console.log($location.url());        
 //console.log($location.search());
         var pathParams = $location.search();
+console.log($location);        
         var tmpZpId = null;//indicatorSvc.getZpointId();    
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
@@ -565,9 +573,9 @@ angular.module('portalNMC')
         };
         
         $scope.contZPoint = indicatorSvc.getZpointId();
-        $scope.contZPointName = indicatorSvc.getZpointName() || "Не задано";
+        $scope.contZPointName = (indicatorSvc.getZpointName()!="undefined")?indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";     
+        $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";     
         
         //clear cookies
 //console.log($cookies);        
@@ -579,15 +587,22 @@ angular.module('portalNMC')
         //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
             $rootScope.reportStart = pathParams.fromDate;
-        }else{
-            $rootScope.reportStart = indicatorSvc.getFromDate();
+        }else if(angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=="null")){
+                $rootScope.reportStart = $cookies.fromDate;
+            }else{
+                $rootScope.reportStart = indicatorSvc.getFromDate();
         };
         if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
             $rootScope.reportEnd = pathParams.toDate;
-        }else{
-            $rootScope.reportEnd = indicatorSvc.getToDate();
+        }else if (angular.isDefined($cookies.toDate)&&($cookies.toDate!=="null")){
+                $rootScope.reportEnd = $cookies.toDate;
+            }else{
+                $rootScope.reportEnd = indicatorSvc.getToDate();
         };
         $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
+console.log($scope.timeDetailType);  
+console.log($rootScope.reportStart);        
+console.log($rootScope.reportEnd);        
     };
         //run init method
     initIndicatorParams();
@@ -843,20 +858,7 @@ angular.module('portalNMC')
 
     $scope.pageChanged = function(newPage) {       
         $scope.getData(newPage);
-    };  
-        
-//    $scope.$watch('reportStart', function (newDates, oldDates) {  
-//console.log("change reportStart");        
-//console.log(oldDates);                
-//console.log(newDates);        
-//        if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
-//            return;
-//        };
-//        if(newDates===oldDates){
-//            return;
-//        };
-//        $scope.getData(1);                              
-//    }, false);  
+    };   
         
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("Date-range-settings indicatorDates");        
@@ -867,6 +869,8 @@ angular.module('portalNMC')
         if(newDates===oldDates){
             return;
         };
+        $cookies.fromDate = moment(newDates.startDate).format('YYYY-MM-DD');
+        $cookies.toDate = moment(newDates.endDate).format('YYYY-MM-DD');
         indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
         indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
