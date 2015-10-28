@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -292,22 +293,20 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		if (firstAbs != null && lastAbs != null) {
 
-			diffs.setM_in(lastAbs.getM_in() == null || firstAbs.getM_in() == null ? null
-					: lastAbs.getM_in().subtract(firstAbs.getM_in()));
-			diffs.setM_out(lastAbs.getM_out() == null || firstAbs.getM_out() == null ? null
-					: lastAbs.getM_out().subtract(firstAbs.getM_out()));
+			diffs.setM_in(processDelta(firstAbs.getM_in(), lastAbs.getM_in()));
+			diffs.setM_out(processDelta(firstAbs.getM_out(), lastAbs.getM_out()));
+			diffs.setV_in(processDelta(firstAbs.getV_in(), lastAbs.getV_in()));
+			diffs.setV_out(processDelta(firstAbs.getV_out(), lastAbs.getV_out()));
+			diffs.setH_delta(processDelta(firstAbs.getH_delta(), lastAbs.getH_delta()));
 
-			diffs.setV_in(lastAbs.getV_in() == null || firstAbs.getV_in() == null ? null
-					: lastAbs.getV_in().subtract(firstAbs.getV_in()));
-			diffs.setV_out(lastAbs.getV_out() == null || firstAbs.getV_out() == null ? null
-					: lastAbs.getV_out().subtract(firstAbs.getV_out()));
-
-			diffs.setH_delta(lastAbs.getH_delta() == null || firstAbs.getH_delta() == null ? null
-					: lastAbs.getH_delta().subtract(firstAbs.getH_delta()));
 		}
 		result.setDiffs(diffs);
 
 		return ResponseEntity.ok(result);
+	}
+
+	private BigDecimal processDelta(BigDecimal a, BigDecimal b) {
+		return a == null || b == null ? null : b.subtract(a);
 	}
 
 	/**
