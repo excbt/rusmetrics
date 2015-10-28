@@ -2,8 +2,12 @@ package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
+@JsonInclude(Include.NON_NULL)
 public class ContServiceDataHWaterSummary implements Serializable {
 
 	/**
