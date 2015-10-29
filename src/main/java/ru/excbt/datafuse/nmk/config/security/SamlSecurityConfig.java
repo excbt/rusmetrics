@@ -95,14 +95,13 @@ import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SamlSecurityConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(SamlSecurityConfig.class);
 
 	@Value("${saml.entityId}")
 	private String samlEntityId;
 
-	@Value("${saml.metadataProvider}")
-	private String samlMetadataProvider;
+	// @Value("${saml.metadataProvider}")
+	// private String samlMetadataProvider;
 
 	@Value("${saml.metadataProviderFile}")
 	private String samlMetadataProviderFile;
@@ -121,8 +120,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	public StaticBasicParserPool parserPool() {
 		StaticBasicParserPool result = new StaticBasicParserPool();
 		Map<String, Boolean> features = new HashMap<>();
-		features.put("http://apache.org/xml/features/dom/defer-node-expansion",
-				false);
+		features.put("http://apache.org/xml/features/dom/defer-node-expansion", false);
 		result.setBuilderFeatures(features);
 		return result;
 	}
@@ -155,8 +153,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// Provider of default SAML Context
 	@Bean
-	public SAMLContextProviderImpl contextProvider()
-			throws MetadataProviderException {
+	public SAMLContextProviderImpl contextProvider() throws MetadataProviderException {
 		SAMLContextProviderImpl sAMLContextProviderImpl = new SAMLContextProviderImpl();
 		// MetadataCredentialResolver metadataCredentialResolver = new
 		// MetadataCredentialResolver(
@@ -197,18 +194,15 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	// Bindings
 	private ArtifactResolutionProfile artifactResolutionProfile() {
-		final ArtifactResolutionProfileImpl artifactResolutionProfile = new ArtifactResolutionProfileImpl(
-				httpClient());
-		artifactResolutionProfile.setProcessor(new SAMLProcessorImpl(
-				soapBinding()));
+		final ArtifactResolutionProfileImpl artifactResolutionProfile = new ArtifactResolutionProfileImpl(httpClient());
+		artifactResolutionProfile.setProcessor(new SAMLProcessorImpl(soapBinding()));
 		return artifactResolutionProfile;
 	}
 
 	// Processor
 	@Bean
 	public HTTPArtifactBinding httpArtifactBinding() {
-		return new HTTPArtifactBinding(parserPool(), velocityEngine(),
-				artifactResolutionProfile());
+		return new HTTPArtifactBinding(parserPool(), velocityEngine(), artifactResolutionProfile());
 	}
 
 	@Bean
@@ -299,20 +293,17 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public FilterChainProxy samlFilter() throws Exception {
 		List<SecurityFilterChain> chains = new ArrayList<SecurityFilterChain>();
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/login/**"), samlEntryPoint()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/logout/**"), samlLogoutFilter()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/metadata/**"), metadataDisplayFilter()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/SSO/**"), samlWebSSOProcessingFilter()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/SSOHoK/**"), samlWebSSOHoKProcessingFilter()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/SingleLogout/**"), samlLogoutProcessingFilter()));
-		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(
-				"/saml/discovery/**"), samlIDPDiscovery()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"), samlEntryPoint()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"), samlLogoutFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/metadata/**"),
+				metadataDisplayFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"),
+				samlWebSSOProcessingFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSOHoK/**"),
+				samlWebSSOHoKProcessingFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"),
+				samlLogoutProcessingFilter()));
+		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/discovery/**"), samlIDPDiscovery()));
 		return new FilterChainProxy(chains);
 	}
 
@@ -325,8 +316,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean(name = "idp-ssocircle")
-	public ExtendedMetadataDelegate metadataProvider()
-			throws MetadataProviderException {
+	public ExtendedMetadataDelegate metadataProvider() throws MetadataProviderException {
 
 		// TODO
 		@SuppressWarnings("deprecation")
@@ -341,16 +331,14 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 			logger.info("MetadataFile:{}", metadataFile.getAbsolutePath());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			throw new MetadataProviderException("metadtaFile"
-					+ samlMetadataProviderFile + " is not found");
+			throw new MetadataProviderException("metadtaFile" + samlMetadataProviderFile + " is not found");
 		}
 
-		FilesystemMetadataProvider httpMetadataProvider = new FilesystemMetadataProvider(
-				metadataFile);
+		FilesystemMetadataProvider httpMetadataProvider = new FilesystemMetadataProvider(metadataFile);
 		httpMetadataProvider.setParserPool(parserPool());
 
-		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(
-				httpMetadataProvider, extendedMetadata());
+		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider,
+				extendedMetadata());
 		extendedMetadataDelegate.setMetadataTrustCheck(false);
 		extendedMetadataDelegate.setMetadataRequireSignature(false);
 
@@ -373,8 +361,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public KeyManager keyManager() {
 		DefaultResourceLoader loader = new DefaultResourceLoader();
-		Resource storeFile = loader
-				.getResource("classpath:security/samlKeystore.jks");
+		Resource storeFile = loader.getResource("classpath:security/samlKeystore.jks");
 		String storePass = "cUtlXNJRoSm28xBgaJmy";
 		Map<String, String> passwords = new HashMap<String, String>();
 		passwords.put("nmk-key", "Pwy2ytv10NSTTAijZ2wy");
@@ -404,16 +391,14 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	// global logout
 	@Bean
 	public SAMLLogoutProcessingFilter samlLogoutProcessingFilter() {
-		return new SAMLLogoutProcessingFilter(successLogoutHandler(),
-				logoutHandler());
+		return new SAMLLogoutProcessingFilter(successLogoutHandler(), logoutHandler());
 	}
 
 	// Overrides default logout processing filter with the one processing SAML
 	// messages
 	@Bean
 	public SAMLLogoutFilter samlLogoutFilter() {
-		return new SAMLLogoutFilter(successLogoutHandler(),
-				new LogoutHandler[] { logoutHandler() },
+		return new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[] { logoutHandler() },
 				new LogoutHandler[] { logoutHandler() });
 	}
 
@@ -439,8 +424,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SAMLAuthenticationProvider samlAuthenticationProvider() {
 		SAMLAuthenticationProvider samlAuthenticationProvider = new SAMLAuthenticationProvider();
-		samlAuthenticationProvider
-				.setUserDetails(samlSubscriberUserDetailsService);
+		samlAuthenticationProvider.setUserDetails(samlSubscriberUserDetailsService);
 		samlAuthenticationProvider.setForcePrincipalAsString(false);
 		return samlAuthenticationProvider;
 	}
@@ -449,25 +433,18 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
 		SAMLProcessingFilter samlWebSSOProcessingFilter = new SAMLProcessingFilter();
-		samlWebSSOProcessingFilter
-				.setAuthenticationManager(authenticationManager());
-		samlWebSSOProcessingFilter
-				.setAuthenticationSuccessHandler(successRedirectHandler());
-		samlWebSSOProcessingFilter
-				.setAuthenticationFailureHandler(authenticationFailureHandler());
+		samlWebSSOProcessingFilter.setAuthenticationManager(authenticationManager());
+		samlWebSSOProcessingFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+		samlWebSSOProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
 		return samlWebSSOProcessingFilter;
 	}
 
 	@Bean
-	public SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter()
-			throws Exception {
+	public SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter() throws Exception {
 		SAMLWebSSOHoKProcessingFilter samlWebSSOHoKProcessingFilter = new SAMLWebSSOHoKProcessingFilter();
-		samlWebSSOHoKProcessingFilter
-				.setAuthenticationSuccessHandler(successRedirectHandler());
-		samlWebSSOHoKProcessingFilter
-				.setAuthenticationManager(authenticationManager());
-		samlWebSSOHoKProcessingFilter
-				.setAuthenticationFailureHandler(authenticationFailureHandler());
+		samlWebSSOHoKProcessingFilter.setAuthenticationSuccessHandler(successRedirectHandler());
+		samlWebSSOHoKProcessingFilter.setAuthenticationManager(authenticationManager());
+		samlWebSSOHoKProcessingFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
 		return samlWebSSOHoKProcessingFilter;
 	}
 
@@ -507,8 +484,7 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	protected void configure(AuthenticationManagerBuilder auth)
-			throws Exception {
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(samlAuthenticationProvider());
 		auth.authenticationProvider(userAuthenticationProvider);
 	}
@@ -521,28 +497,22 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 		// выключаем защиту от CSRF атак
 		http.csrf().disable();
 
-		http.addFilterBefore(metadataGeneratorFilter(),
-				ChannelProcessingFilter.class).addFilterAfter(samlFilter(),
+		http.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class).addFilterAfter(samlFilter(),
 				BasicAuthenticationFilter.class);
 
 		// указываем правила запросов
 		// по которым будет определятся доступ к ресурсам и остальным
 		// данным
 
-		http.authorizeRequests().antMatchers("/").permitAll()
-				.antMatchers("/devTools/**").permitAll()
-				.antMatchers("/index.html").permitAll().antMatchers("/index")
-				.permitAll().antMatchers("/error").permitAll()
-				.antMatchers("/login").permitAll().antMatchers("/saml/**")
-				.permitAll();
+		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/devTools/**").permitAll()
+				.antMatchers("/index.html").permitAll().antMatchers("/index").permitAll().antMatchers("/error")
+				.permitAll().antMatchers("/login").permitAll().antMatchers("/saml/**").permitAll();
 
-		http.authorizeRequests().antMatchers("/").permitAll()
-				.antMatchers("/WEB-INF/**").denyAll().antMatchers("/app/**")
-				.authenticated().antMatchers("/api/**").permitAll()
-				.antMatchers("/resources/**").permitAll()
+		http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/WEB-INF/**").denyAll()
+				.antMatchers("/app/**").authenticated().antMatchers("/api/**").permitAll().antMatchers("/resources/**")
+				.permitAll()
 
-				.antMatchers("/bower_components/**").permitAll()
-				.antMatchers("/vendor_components/**").permitAll().and();
+				.antMatchers("/bower_components/**").permitAll().antMatchers("/vendor_components/**").permitAll().and();
 
 		http.formLogin()
 				// указываем страницу с формой логина
@@ -553,13 +523,12 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 				// указываем URL при неудачном логине
 				.failureUrl("/login?error")
 				// Указываем параметры логина и пароля с формы логина
-				.usernameParameter("j_username")
-				.passwordParameter("j_password")
+				.usernameParameter("j_username").passwordParameter("j_password")
 				// даем доступ к форме логина всем
 				.permitAll();
 
 		http.logout()
-		// разрешаем делать логаут всем
+				// разрешаем делать логаут всем
 				.permitAll()
 				// указываем URL логаута
 				.logoutUrl("/local/logout")

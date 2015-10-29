@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -176,6 +180,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
+			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		checkArgument(contObjectId > 0);
@@ -185,6 +190,11 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(toDateStr);
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		Direction dataDateDirection = Sort.Direction.DESC;
+		if ("asc".equalsIgnoreCase(dataDateSort)) {
+			dataDateDirection = Sort.Direction.ASC;
+		}
 
 		checkNotNull(datePeriodParser);
 
@@ -215,8 +225,12 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
+		Sort sort = new Sort(dataDateDirection, "dataDate");
+
+		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
-				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageable);
+				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<ContServiceDataHWater>(result));
 
@@ -292,22 +306,20 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 
 		if (firstAbs != null && lastAbs != null) {
 
-			diffs.setM_in(lastAbs.getM_in() == null || firstAbs.getM_in() == null ? null
-					: lastAbs.getM_in().subtract(firstAbs.getM_in()));
-			diffs.setM_out(lastAbs.getM_out() == null || firstAbs.getM_out() == null ? null
-					: lastAbs.getM_out().subtract(firstAbs.getM_out()));
+			diffs.setM_in(processDelta(firstAbs.getM_in(), lastAbs.getM_in()));
+			diffs.setM_out(processDelta(firstAbs.getM_out(), lastAbs.getM_out()));
+			diffs.setV_in(processDelta(firstAbs.getV_in(), lastAbs.getV_in()));
+			diffs.setV_out(processDelta(firstAbs.getV_out(), lastAbs.getV_out()));
+			diffs.setH_delta(processDelta(firstAbs.getH_delta(), lastAbs.getH_delta()));
 
-			diffs.setV_in(lastAbs.getV_in() == null || firstAbs.getV_in() == null ? null
-					: lastAbs.getV_in().subtract(firstAbs.getV_in()));
-			diffs.setV_out(lastAbs.getV_out() == null || firstAbs.getV_out() == null ? null
-					: lastAbs.getV_out().subtract(firstAbs.getV_out()));
-
-			diffs.setH_delta(lastAbs.getH_delta() == null || firstAbs.getH_delta() == null ? null
-					: lastAbs.getH_delta().subtract(firstAbs.getH_delta()));
 		}
 		result.setDiffs(diffs);
 
 		return ResponseEntity.ok(result);
+	}
+
+	private BigDecimal processDelta(BigDecimal a, BigDecimal b) {
+		return a == null || b == null ? null : b.subtract(a);
 	}
 
 	/**

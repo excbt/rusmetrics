@@ -4,22 +4,25 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class ContServiceDataHWaterTotals implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 616264830719948979L;
-	
 
 	private Long contZPointId;
-	
+
 	private Date beginDate;
 
 	private Date endDate;
-	
+
 	private String timeDetailType;
-	
+
 	private BigDecimal m_in;
 
 	private BigDecimal m_out;
@@ -27,17 +30,17 @@ public class ContServiceDataHWaterTotals implements Serializable {
 	private BigDecimal m_delta;
 
 	private BigDecimal v_in;
-	
+
 	private BigDecimal v_out;
-	
+
 	private BigDecimal v_delta;
 
 	private BigDecimal h_in;
-	
+
 	private BigDecimal h_out;
-	
+
 	private BigDecimal h_delta;
-	
+
 	public Date getBeginDate() {
 		return beginDate;
 	}
@@ -141,5 +144,5 @@ public class ContServiceDataHWaterTotals implements Serializable {
 	public void setContZPointId(Long contZPointId) {
 		this.contZPointId = contZPointId;
 	}
-	
+
 }
