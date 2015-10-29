@@ -30,6 +30,18 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings ={};
     $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
+        
+//    sort settings
+    $scope.ctrlSettings.orderBy = {};
+    if (angular.isDefined($cookies.indicatorsortorder)&&($cookies.indicatorsortorder!=null)){  
+        switch($cookies.indicatorsortorder){
+            case "asc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: true, desc: false, order: "asc"}; break;
+            case "desc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: false, desc: true, order: "desc"}; break;   
+        };        
+    }else{
+        $scope.ctrlSettings.orderBy = {field: "dataDate", asc: false, desc: true, order: "desc"};
+    };
+//console.log($scope.ctrlSettings.orderBy.order);        
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -633,7 +645,7 @@ angular.module('portalNMC')
 //console.log($cookies.timeDetailType);        
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
+         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage+"&dataDateSort="+$scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
 //console.log(table);        
         crudGridDataFactory(table).get(function (data) {
@@ -749,7 +761,15 @@ angular.module('portalNMC')
                 if (arr.hasOwnProperty(columnName) &&(!isNaN(arr[columnName]))&&(arr[columnName]!=null)){                
                     arr[columnName] = arr[columnName].toFixed(3);
                 }else{
-                    arr[columnName] = "-";
+                    if ((columnName=="m_delta")&&(arr.m_out!="-")&&(arr.m_in!="-")){                   
+                            arr[columnName] = (arr.m_in-arr.m_out).toFixed(3);
+                    }else if ((columnName=="v_delta")&&(arr.v_out!="-")&&(arr.v_in!="-")){                    
+                            arr[columnName] = (arr.v_in-arr.v_out).toFixed(3);
+                    }else if ((columnName=="p_delta")&&(arr.p_out!="-")&&(arr.p_in!="-")){                     
+                            arr[columnName] = (arr.p_in-arr.p_out).toFixed(3);
+                    }else{
+                        arr[columnName] = "-";
+                    };
                 };
             });
         };
@@ -959,6 +979,14 @@ angular.module('portalNMC')
             .error(function(err){
                 notificationFactory.errorInfo(err.title, err.description)
             });
+    };
+        
+    $scope.setOrderBy = function(field){
+        var asc = $scope.ctrlSettings.orderBy.field === field ? !$scope.ctrlSettings.orderBy.asc : true;
+        var ord = (asc==true) ? "asc" : "desc";
+        $cookies.indicatorsortorder = ord;
+        $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.indicatorsortorder };
+        $scope.getData(1);
     };
     
     //check indicators for data (проверка: есть данные для отображения или нет)

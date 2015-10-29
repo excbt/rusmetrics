@@ -111,7 +111,7 @@ angular.module('portalNMC')
             case "ru": result=dateRangeOptsRu;break;
             case "monitor-ru": result=dateRangeMonitorOptsRu;break;
             case "indicator-ru": 
-console.log($cookies.fromDate);                
+//console.log($cookies.fromDate);                
                 result = angular.copy(dateRangeMonitorOptsRu);
                 result.startDate = (angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=null))?moment($cookies.fromDate).startOf('day'):moment($rootScope.reportStart).startOf('day');
                 result.endDate = (angular.isDefined($cookies.toDate)&&($cookies.toDate!=null))?moment($cookies.toDate).startOf('day'): moment($rootScope.reportEnd).startOf('day');

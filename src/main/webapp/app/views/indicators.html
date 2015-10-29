@@ -94,8 +94,10 @@
     <!--        Непрокручиваемая шапка таблицы показаний-->
             <table class="nmc-table-nowrap-data1 nmc-main-table noMargin" ng-class="tableDef.tableClass" style="margin-bottom: -20px;">
                 <tr ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}" ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
-                        {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
+                    <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}" ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
+                        {{column.header}}
+                        <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
+                        <span ng-if="column.dataType==='temperature'">,&deg;C</span>
                     </th>
                 </tr>
                 <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" style="opacity:0;">

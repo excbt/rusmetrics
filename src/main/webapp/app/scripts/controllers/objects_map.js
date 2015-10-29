@@ -665,7 +665,7 @@ console.log($scope.diffData);
         markerArray = deleteCityMarkers(cityArray, markerArray);
        
         cityArray.forEach(function(elem){            
-            if((elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
+            if(angular.isUndefined(elem.cityGeoPosX)||angular.isUndefined(elem.cityGeoPosY)||(elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
 console.warn("Warning. City without coordinates.");                
 console.warn(elem);                                
                 return;
@@ -1043,7 +1043,7 @@ console.warn(elem);
 //console.log($scope.mapSettings.dateFrom);        
         objectArray.forEach(function(elem){
 //console.log(elem);            
-            if((elem.contObject.contObjectGeo.geoPosX ===null)||(elem.contObject.contObjectGeo.geoPosY===null)){
+            if (angular.isUndefined(elem.contObject.contObjectGeo.geoPosX) || angular.isUndefined(elem.contObject.contObjectGeo.geoPosY) ||(elem.contObject.contObjectGeo.geoPosX ===null)||(elem.contObject.contObjectGeo.geoPosY===null)){
 console.warn("Warning. Object without coordinates.");                
 console.warn(elem);                                
                 return;
@@ -1121,6 +1121,7 @@ console.warn(elem);
 //                markers = $scope.setObjectsOnMap($scope.objectsOfCities, markers);   
                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
                 $scope.markersOnMap = markersForObjects;
+//console.log($scope.markersOnMap);                
 //                angular.extend($scope, {markersOnMap: markersForObjects});
             };           
         };
