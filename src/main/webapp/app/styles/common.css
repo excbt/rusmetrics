@@ -711,13 +711,27 @@ tr.nmc-main-table-header > th {
     min-height: 360px;
     position:relative
 }
-/*  */
+/*  Таблица с непрокручиваемой шапкой для страницы Показания*/
 .nmc-indicator-table-with-fixed-header{
-    overflow: auto;
+/*    overflow-y: hidden;*/
+/*
+    overflow-x: auto;
+    margin-right: -15px;
+*/
+/*
+    height: 70vh;
+    min-height: 480px;
+    position:relative
+*/
+}
+    /* прокручиваемая часть таблицы */
+.nmc-indicator-table-without-fixed-header{
+    overflow-y: auto;
+    overflow-x: auto;
 /*    height:685px;*/
     height: 60vh;
     min-height: 360px;
-    position:relative
+/*    position: absolute;*/
 }
 /*  */
 .nmc-notice-table-with-fixed-header{

@@ -161,45 +161,50 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
-//                header : "Разница масс воды, т",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разница масс воды, т",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Температура подачи, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. подачи",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             }, 
             {
-//                header : "Температура обратки, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. обратки",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             } , 
             {
-//                header : "Температура холодной воды, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. ХВС",
+//                header : "",
+                class : "col-md-1",    
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_cold",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             } ,
             {
-//                header : "Температура окружающей среды, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. окр. среды",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
                 "imgpath" : "",
                 "imgclass": "",
@@ -215,7 +220,7 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Объем обратки",
+                header : "Объем обратки, м3",
 //                header : "",
                 class : "col-md-1",
                 name: "v_out",
@@ -224,54 +229,61 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-//                header : "Разница объемов, м3",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разница объемов, м3",
+//                header : "",
+                
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "v_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Входящие ГКал",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "ГКал на входе",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "h_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "ГКал на выходе",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "ГКал на выходе",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "h_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Давление на подаче",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Давление на подаче, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Давление на обратке",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Давление на обратке, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Разность давлений, Мпа",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разность давлений, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_delta",
                 "imgpath" : "",
                 "imgclass": "",
@@ -514,7 +526,7 @@ angular.module('portalNMC')
 //console.log($location.url());        
 //console.log($location.search());
         var pathParams = $location.search();
-console.log($location);        
+//console.log($location);        
         var tmpZpId = null;//indicatorSvc.getZpointId();    
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
@@ -600,9 +612,9 @@ console.log($location);
                 $rootScope.reportEnd = indicatorSvc.getToDate();
         };
         $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
-console.log($scope.timeDetailType);  
-console.log($rootScope.reportStart);        
-console.log($rootScope.reportEnd);        
+//console.log($scope.timeDetailType);  
+//console.log($rootScope.reportStart);        
+//console.log($rootScope.reportEnd);        
     };
         //run init method
     initIndicatorParams();
@@ -624,7 +636,8 @@ console.log($rootScope.reportEnd);
          $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
         var table =  $scope.zpointTable;
 //console.log(table);        
-        crudGridDataFactory(table).get(function (data) {           
+        crudGridDataFactory(table).get(function (data) {
+//console.log(data);            
                 $scope.totalIndicators = data.totalElements;
  
                 $scope.columns = $scope.tableDef.columns;
@@ -662,7 +675,7 @@ console.log($rootScope.reportEnd);
                         
                     };                    
                 });
-                $scope.data = data.objects;
+                $scope.data = data.objects;            
         });
          
         $scope.setScoreStyles = function(){
@@ -700,15 +713,19 @@ console.log($rootScope.reportEnd);
 //console.log(indicatorThWorkTime.clientWidth);            
             if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
                 $scope.totals_th_head_style = indicatorThDataDate.offsetWidth+indicatorThWorkTime.offsetWidth+4;
+                
             };
             
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
 //            $scope.intotalColumns.forEach(function(element){
             $scope.intotalColumns.some(function(element){    
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-//                var indicatorHead = document.getElementById("indicators_head_"+element.name);
+                var indicatorHead = document.getElementById("indicators_head_"+element.name);
                 if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
                     element.ngstyle =indicatorTh.offsetWidth;
+//                    indicatorHead.width = indicatorTh.offsetWidth;
+//console.log(indicatorHead.offsetWidth);                    
+//console.log(indicatorTh.offsetWidth);                     
 //console.log(element);                    
                 };
 //return true;
@@ -724,30 +741,48 @@ console.log($rootScope.reportEnd);
             $scope.setScoreStyles();
         };
         
+        
+        //prepare summary data to the view - apply toFixed
+        var prepareSummary = function(arr){
+            $scope.intotalColumns.forEach(function(element){                       
+                var columnName = element.name;
+                if (arr.hasOwnProperty(columnName) &&(!isNaN(arr[columnName]))&&(arr[columnName]!=null)){                
+                    arr[columnName] = arr[columnName].toFixed(3);
+                }else{
+                    arr[columnName] = "-";
+                };
+            });
+        };
+        
         // get summary (score)
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
                 $scope.summary = data;       
                 if ($scope.summary.hasOwnProperty('diffs')){
-                    $scope.intotalColumns.forEach(function(element){
-                        var columnName = element.name;
-                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
-                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
-                        }else{
-                            $scope.summary.diffs[columnName] = "-";
-                        };
-                    });
+                    prepareSummary($scope.summary.diffs);
+//                    $scope.intotalColumns.forEach(function(element){
+//                        var columnName = element.name;
+//                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
+//                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
+//                        }else{
+//                            $scope.summary.diffs[columnName] = "-";
+//                        };
+//                    });
                 };
-                if ($scope.summary.hasOwnProperty('totals')){                 
-                    $scope.intotalColumns.forEach(function(element){                       
-                        var columnName = element.name;
-                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
-                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
-                        }else{
-                            $scope.summary.totals[columnName] = "-";
-                        };
-                    });
+                if ($scope.summary.hasOwnProperty('totals')){ 
+                    prepareSummary($scope.summary.totals);
+//                    $scope.intotalColumns.forEach(function(element){                       
+//                        var columnName = element.name;
+//                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
+//                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
+//                        }else{
+//                            $scope.summary.totals[columnName] = "-";
+//                        };
+//                    });
+                };
+                if ($scope.summary.hasOwnProperty('average')){ 
+                    prepareSummary($scope.summary.average);
                 };
                 if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')){
                     return;

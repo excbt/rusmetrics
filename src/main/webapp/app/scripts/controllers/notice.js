@@ -239,7 +239,6 @@ console.log("initCtrl");
             oneNotice.contObjectId = el.contObjectId;
 //            oneNotice.zpointId = el.contEvent.contZPointId;
             oneNotice.zpoint = findZpointById(el.contEvent.contZPointId);
-
             for (var i=0; i<$scope.objects.length; i++){                       
                 if ($scope.objects[i].id == el.contObjectId ){
                     oneNotice.noticeObjectName = $scope.objects[i].fullName;  
@@ -574,7 +573,7 @@ console.log("performObjectsFilter");
             }else{
                 $scope.$broadcast('notices:getZpointList');   
             };
-console.log("getObjects");            
+//console.log("getObjects");            
 //            $scope.getResultsPage(1);
         });
     };
@@ -590,7 +589,7 @@ console.log("getObjects");
                 getGroupObjects(el);
             });
             $scope.groups = tmp;
-console.log($scope.groups);
+//console.log($scope.groups);
         }, function(e){
             console.log(e);
         });

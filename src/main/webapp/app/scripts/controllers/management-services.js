@@ -219,9 +219,11 @@ angular.module('portalNMC')
     
         //generation confirm code
         $scope.confirmCode = null;
-        $scope.firstNum = Math.round(Math.random()*100);
-        $scope.secondNum = Math.round(Math.random()*100);
-        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+//        $scope.firstNum = mainSvc.getConfirmCode().firstNum;//Math.round(Math.random()*100);
+//        $scope.secondNum = mainSvc.getConfirmCode().secondNum;//Math.round(Math.random()*100);
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;//$scope.firstNum + $scope.secondNum;
         //Вывести изменения на экран
         $('#confirmSavingModal').modal();
     };

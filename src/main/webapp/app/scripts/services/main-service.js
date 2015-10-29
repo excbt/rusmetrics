@@ -242,6 +242,24 @@ console.log($cookies.fromDate);
     
     ///////////////// end checkers
     
+    // *************** generation confirm code *****************
+    // **************************
+//    var firstNum = Math.round(Math.random()*10);
+//    var secondNum = Math.round(Math.random()*100);
+    var getConfirmCode = function(){
+        var tmpFirst = Math.round(Math.random()*10);
+        var tmpSecond = Math.round(Math.random()*100);
+        var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
+        var result = {
+//            firstNum: tmpFirst,
+//            secondNum: tmpSecond,
+            label: tmpLabel,
+            result: tmpFirst + tmpSecond
+        };
+//console.log(result);        
+        return result;
+    };
+    //************************** end generation
     
     return {
         checkContext,
@@ -249,6 +267,7 @@ console.log($cookies.fromDate);
         checkPositiveNumberValue,
         checkStrForDate,
         checkUndefinedEmptyNullValue,
+        getConfirmCode,
         getContextIds,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,

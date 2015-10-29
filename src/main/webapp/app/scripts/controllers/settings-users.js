@@ -160,9 +160,9 @@ console.log("Run user settings controller.");
         $scope.selectedItem(object);
         //generation confirm code
         $scope.confirmCode = null;
-        $scope.firstNum = Math.round(Math.random()*100);
-        $scope.secondNum = Math.round(Math.random()*100);
-        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;
     };
     
     $scope.changeClient = function(){

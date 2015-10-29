@@ -184,10 +184,12 @@
     <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
                 <td class="nmc-td-for-buttons"><span class="paddingLeft5"><input type="checkbox" class="nmc-chekbox-form" ng-model="notice.selected"/></span><img ng-class="notice.imgclass" ng-src="{{notice.imgpath}}">
     <!--                ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}"-->
-                    <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.id}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}">
+                
+                    <a ng-hide="notice.noticeObjectName==undefined" ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.id}}&fromDate={{startDate}}&toDate={{endDate}}&timeDetailType=1h&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}">
 <!--                    <a ng-href="#/objects/indicators/?objectId={{notice.contObjectId}}&zpointId={{notice.zpoint.id}}&objectName={{notice.noticeObjectName}}&zpointName={{notice.noticeZpoint}}&fromDate=2015-01-01&toDate=2015-02-01&timeDetailType=1h">-->
                         <i title="Открыть показания" class="btn btn-xs glyphicon glyphicon-list"></i>
                     </a>
+                    
     <!--                <i title="Открыть уведомление" class="btn btn-xs glyphicon glyphicon-list" ng-click="showNoticeDetail(notice)"></i>-->
     <!--
                     "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
