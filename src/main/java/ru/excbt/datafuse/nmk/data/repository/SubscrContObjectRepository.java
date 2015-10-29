@@ -84,14 +84,15 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	 * @return
 	 */
 	@Query("SELECT do FROM DeviceObject do LEFT JOIN do.contObject dco "
-			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)")
+			+ " WHERE dco.id IN (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId)"
+			+ " ORDER BY do.contObject.fullAddress, do.contObject.id ")
 	public List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 	public List<SubscrContObject> findBySubscriberId(Long subscriberId);
 
 	@Query("SELECT rco.contObject FROM SubscrContObject rco WHERE rco.subscriberId = :rmaSubscriberId AND rco.contObjectId NOT IN "
 			+ " (SELECT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId=:subscriberId AND sco.subscrEndDate IS NULL AND sco.deleted = 0) "
-			+ " ORDER BY rco.contObject.fullAddress, rco.contObject.id")
+			+ " ORDER BY rco.contObject.fullAddress, rco.contObject.id ")
 	public List<ContObject> selectAvailableContObjects(@Param("subscriberId") Long subscriberId,
 			@Param("rmaSubscriberId") Long rmaSubscriberId);
 
