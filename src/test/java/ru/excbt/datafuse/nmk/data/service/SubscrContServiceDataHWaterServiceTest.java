@@ -13,6 +13,9 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
@@ -32,7 +35,9 @@ public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testSelectByZPoint() {
-		List<?> resultList = service.selectByContZPoint(ZPOINT_ID, TimeDetailKey.TYPE_24H);
+		PageRequest pageRequest = new PageRequest(1, 100, new Sort(Direction.ASC, "dataDate"));
+
+		List<?> resultList = service.selectByContZPoint(ZPOINT_ID, TimeDetailKey.TYPE_24H, pageRequest);
 		assertTrue(resultList.size() > 0);
 		logger.info("ZPoint (ID:{}) Found {} records", ZPOINT_ID, resultList.size());
 	}

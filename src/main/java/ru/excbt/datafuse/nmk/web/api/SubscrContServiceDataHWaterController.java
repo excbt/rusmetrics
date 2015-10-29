@@ -26,7 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -177,6 +180,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
+			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		checkArgument(contObjectId > 0);
@@ -186,6 +190,11 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(toDateStr);
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		Direction dataDateDirection = Sort.Direction.DESC;
+		if ("asc".equalsIgnoreCase(dataDateSort)) {
+			dataDateDirection = Sort.Direction.ASC;
+		}
 
 		checkNotNull(datePeriodParser);
 
@@ -216,8 +225,12 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
+		Sort sort = new Sort(dataDateDirection, "dataDate");
+
+		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
-				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageable);
+				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<ContServiceDataHWater>(result));
 

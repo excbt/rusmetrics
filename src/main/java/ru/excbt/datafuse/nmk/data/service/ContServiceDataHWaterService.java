@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,10 +114,15 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail) {
+	public List<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
+			PageRequest pageRequest) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
-		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname());
+		checkNotNull(pageRequest);
+
+		Page<ContServiceDataHWater> page = contServiceDataHWaterRepository.selectByZPoint(contZPointId,
+				timeDetail.getKeyname(), pageRequest);
+		return page.getContent();
 	}
 
 	/**
@@ -189,16 +193,16 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
-			DateTime beginDate, DateTime endDate, Pageable pageable) {
+			DateTime beginDate, DateTime endDate, PageRequest pageRequest) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
 		checkNotNull(endDate, "endDate is null");
 		checkArgument(beginDate.compareTo(endDate) <= 0);
-		checkNotNull(pageable);
+		checkNotNull(pageRequest);
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(), beginDate.toDate(),
-				endDate.toDate(), pageable);
+				endDate.toDate(), pageRequest);
 	}
 
 	/**
@@ -211,15 +215,15 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZPointId, TimeDetailKey timeDetail,
-			LocalDatePeriod datePeriod, Pageable pageable) {
+			LocalDatePeriod datePeriod, PageRequest pageRequest) {
 		checkArgument(contZPointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(datePeriod, "beginDate is null");
 		checkArgument(datePeriod.isValid());
-		checkNotNull(pageable);
+		checkNotNull(pageRequest);
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZPointId, timeDetail.getKeyname(),
-				datePeriod.getDateFrom(), datePeriod.getDateTo(), pageable);
+				datePeriod.getDateFrom(), datePeriod.getDateTo(), pageRequest);
 	}
 
 	/**
@@ -281,8 +285,9 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date selectAnyDataDate(long contZPointId) {
 		checkArgument(contZPointId > 0);
-		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectAnyDataByZPoint(contZPointId,
+		Page<ContServiceDataHWater> resultPage = contServiceDataHWaterRepository.selectAnyDataByZPoint(contZPointId,
 				LIMIT1_PAGE_REQUEST);
+		List<ContServiceDataHWater> resultList = resultPage.getContent();
 		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
 	}
 
