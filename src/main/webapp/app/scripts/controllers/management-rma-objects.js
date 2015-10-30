@@ -15,6 +15,7 @@ console.log('Run Object management controller.');
 //                $scope.messages.setAllInWinterMode = "Перевести все объекты на зимний режим";
 //                $scope.messages.setAllInSummerMode = "Перевести все объекты на летний режим";
                 
+                $scope.messages.signClientsObjects = "Назначить абонентов";
                 $scope.messages.deleteObjects = "Удалить выделенные объекты";
                 $scope.messages.deleteObject = "Удалить объект";
                 $scope.messages.viewProps = "Свойства объекта";
@@ -29,6 +30,7 @@ console.log('Run Object management controller.');
                 $scope.objectCtrlSettings = {};
 
                 $scope.objectCtrlSettings.isCtrlEnd =false;
+                //флаг для объектов: true - все объекты выбраны
                 $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
@@ -53,6 +55,10 @@ console.log('Run Object management controller.');
 
 //                $scope.objectCtrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
 //                $scope.objectCtrlSettings.mapAccess = mainSvc.checkContext($scope.objectCtrlSettings.mapCtxId);
+                
+                $scope.objectCtrlSettings.rmaUrl = "../api/rma";
+                $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
+                $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();
@@ -332,6 +338,7 @@ console.log('Run Object management controller.');
                     notificationFactory.success();
                     $('#deleteObjectModal').modal('hide');
                     $('#showObjOptionModal').modal('hide');
+                    $('#setClientModal').modal('hide');
                 };
                 
                 var successCallbackUpdateObject = function(e){ 
@@ -389,7 +396,13 @@ console.log('Run Object management controller.');
                     var url = objectSvc.getRmaObjectsUrl();
 //console.log(url);                    
 //console.log(obj);                    
-                    crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
+                    if (angular.isDefined(obj)&&(angular.isDefined(obj.id))&&(obj.id!=null)){
+                        crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
+                    }else if (angular.isDefined(obj.deleteObjects)&&(obj.deleteObjects!=null)&&angular.isArray(obj.deleteObjects)){
+                        obj.deleteObjects.forEach(function(el){
+//                            $scope.deleteObject(el);
+                        });
+                    };
                 };
                 
                 $scope.deleteZpoint = function (zpoint) {
@@ -992,89 +1005,17 @@ console.log('Run Object management controller.');
                     );
                 };
                 
-                    //get device meta data and show it
-//                $scope.getDeviceMetaData = function(obj, device){
-//                    objectSvc.getDeviceMetaData(obj, device).then(
-//                        function(response){                           
-//                            device.metaData = response.data; 
-//                            $scope.currentDevice =  device;                           
-//                            $('#metaDataEditorModal').modal();
-//                        },
-//                        function(error){
-//                            notificationFactory.errorInfo(error.statusText,error.description);
-//                        }
-//                    );
-//                };
-                
-//                $scope.updateDeviceMetaData = function(device){
-////console.log(device);    
-//                    var method = "";
-//                    if(angular.isDefined(device.metaData.id)&&(device.metaData.id!==null)){
-//                        method = "PUT";
-//                    }else{
-//                        method = "POST";
-//                    };
-//                    var url = "../api/subscr/contObjects/"+device.contObject.id+"/deviceObjects/"+device.id+"/metaVzlet";
-//                    $http({
-//                        url: url,
-//                        method: method,
-//                        data: device.metaData
-//                    })
-////                    $http.put(url, device.metaData)
-//                        .then(
-////                    objectSvc.putDeviceMetaData(device).then(
-//                        function(response){
-//                            $scope.currentDevice =  {};
-//                            $('#metaDataEditorModal').modal('hide');
-//                        },
-//                        function(error){
-//                            console.log(error);                            
-//                            notificationFactory.errorInfo(error.statusText,error.description);
-//                        }
-//                    );
-//                };
-                
                 $scope.invokeHelp = function(){
                     alert('This is SPRAVKA!!!111');
                 };
-                
-                //date picker
-//                $scope.dateOptsParamsetRu ={
-//                    locale : {
-//                        daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
-//                        firstDay : 1,
-//                        monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
-//                                'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
-//                                'Октябрь', 'Ноябрь', 'Декабрь' ]
-//                    },
-//                    singleDatePicker: true,
-//                    format: "dd.mm.yy"
-//                };
-//                $(document).ready(function() {
-//                    $('#inp_ref_range_start').datepicker({
-//                      dateFormat: $scope.dateOptsParamsetRu.format,
-//                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-//                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-//                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-//                    });
-//                    $('#inp_ref_range_end').datepicker({
-//                      dateFormat: $scope.dateOptsParamsetRu.format,
-//                      firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-//                      dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-//                      monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-//                    });
-//                });
                 
                 $scope.deleteObjectInit = function(object){
                     $scope.selectedItem(object);
                     //generation confirm code
                     $scope.confirmCode = null;
-//                    $scope.firstNum = Math.round(Math.random()*100);
-//                    $scope.secondNum = Math.round(Math.random()*100);
-//                    $scope.sumNums = $scope.firstNum + $scope.secondum;
                     var tmpCode = mainSvc.getConfirmCode();
                     $scope.confirmLabel = tmpCode.label;
-                    $scope.sumNums = tmpCode.result;//$scope.firstNum + $scope.secondNum;
+                    $scope.sumNums = tmpCode.result;
                 };
                 
                 $scope.deleteZpointInit = function(objId, zpointId){
@@ -1151,6 +1092,38 @@ console.log('Run Object management controller.');
                     $('#deleteDeviceModal').modal();
                 };
                 
+                $scope.deleteObjectsInit = function(){
+                    //generate confirm code
+                    $scope.confirmCode = null;
+                    var tmpCode = mainSvc.getConfirmCode();
+                    $scope.confirmLabel = tmpCode.label;
+                    $scope.sumNums = tmpCode.result;
+                    
+                    $scope.currentObject = {};
+                    var tmpArr = [];
+                    if ($scope.objectCtrlSettings.allSelected == true){
+                        tmpArr = $scope.objects;
+                        $scope.currentObject.deleteObjects = angular.copy($scope.objects);
+                        $scope.currentObject.countDeleteObjects = $scope.objects.length;
+                        $('#deleteObjectModal').modal();
+                    }else{
+                        tmpArr = $scope.objectsOnPage;
+                        var dcount = 0;
+                        var dmas = [];
+                        tmpArr.forEach(function(el){
+                            if (el.selected == true){
+                                dmas.push(angular.copy(el));
+                                dcount+=1;
+                            };
+                        });
+                        if(dcount>0){
+                            $scope.currentObject.deleteObjects = dmas;
+                            $scope.currentObject.countDeleteObjects = dcount;
+                            $('#deleteObjectModal').modal();
+                        };
+                    };
+                };
+                
                 $scope.saveDevice = function(device){ 
                     //check device data
                     var checkDsourceFlag = true;
@@ -1176,8 +1149,69 @@ console.log('Run Object management controller.');
                     targetUrl = targetUrl+"/"+device.contObjectInfo.contObjectId+"/deviceObjects/"+device.id;
                     $http.delete(targetUrl).then(successDeviceCallback,errorCallback);
                 };
+// **************************************************************************************************
                 
+//******************************* Work with subscribers ****************************************
+// *********************************************************************************************                
+                //    get subscribers
+                var getClients = function(){
+                    var targetUrl = $scope.objectCtrlSettings.clientsUrl;
+                    $http.get(targetUrl)
+                    .then(function(response){
+                        response.data.forEach(function(el){
+                            el.organizationName = el.organization.organizationFullName;
+                        });
+                        $scope.data.clients = response.data;
+//console.log($scope.data.clients);            
+                    },
+                         function(e){
+                        console.log(e);
+                    });
+                };
                 
+                getClients();
+                
+                //инициализируем переменные и интерфейсы для назначения объектов абонентам
+                $scope.setClientsInit = function(){
+                    $scope.data.clientsOnPage = angular.copy($scope.data.clients);
+                    $('#setClientModal').modal();
+                };
+                //отправляем запрос на назначение на сервер
+                $scope.setClients = function(){
+                    //собираем идишники выбранных объектов в один массив
+                    var tmp = [];
+                    if ($scope.objectCtrlSettings.allSelected == true){
+                        $scope.objects.forEach(function(elem){
+                            if (elem.selected == true){
+                                tmp.push(elem.id);
+                                elem.selected = false;
+                            };
+                        });
+                    }else{
+                        $scope.objectsOnPage.forEach(function(elem){
+                            if (elem.selected == true){
+                                tmp.push(elem.id);
+                                elem.selected = false;
+                            };
+                        });
+                    };
+                    //для каждого абонента надо вызвать rest для задания объектов, 
+                    //передавая полученный массив идишников
+                    $scope.data.clientsOnPage.forEach(function(cl){
+                       if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
+                            var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
+            //            crudGridDataFactory(table).update({}, tmp, successCallback, errorCallback);
+                            $http.put(table, tmp).then(successCallback, errorCallback);
+                        }; 
+                    });                    
+                };
+                
+                $scope.selectAllClients = function(){
+                    $scope.data.clientsOnPage.forEach(function(el){
+                        el.selected = $scope.objectCtrlSettings.selectedAllClients;
+                    });
+                };
+// ******************************* end subscriber region ***********************                
                 
                 //checkers            
                 $scope.checkEmptyNullValue = function(numvalue){                    

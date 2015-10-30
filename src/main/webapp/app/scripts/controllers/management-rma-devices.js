@@ -45,7 +45,7 @@ console.log('Run devices management controller.');
     $scope.getDeviceModels = function(){
         objectSvc.getDeviceModels().then(
             function(response){
-                //ставлю модель "Не определена"
+                //ставлю модель "Не определена" на первое место списка
                 var ndDeviceModel = null;
                 var ndDeviceModelIndex = -1;
                 response.data.some(function(dm, dmindex){
