@@ -1226,7 +1226,11 @@ console.log("Objects directive.");
                         return true;
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
-                };              
+                };
+                
+                $scope.isAdmin = function(){
+                    return mainSvc.isAdmin();
+                };
             }]
     };
 });

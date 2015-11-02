@@ -139,7 +139,7 @@ angular.module('portalNMC')
     $http.get(userInfoUrl)
             .success(function(data, satus, headers, config){
                 $rootScope.userInfo = data;
-//console.log($rootScope.userInfo);        
+console.log($rootScope.userInfo);        
             })
             .error(function(e){
                 console.log(e);
@@ -160,6 +160,16 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo.isRma;
+        };
+        return result;
+    };
+    
+                //check user: admin? - true/false
+    var isAdmin = function(){
+        var result = false;
+        var userInfo = $rootScope.userInfo;
+        if (angular.isDefined(userInfo)){
+            result = userInfo.isAdmin;
         };
         return result;
     };
@@ -275,6 +285,7 @@ angular.module('portalNMC')
         getObjectMapSettings,
         getDateRangeOptions,
         getUserServicesPermissions,
+        isAdmin,
         isRma,
         isSystemuser,
         setMonitorMapSettings,
