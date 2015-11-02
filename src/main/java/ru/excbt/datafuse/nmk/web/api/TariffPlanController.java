@@ -22,11 +22,11 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
-import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -52,13 +52,10 @@ public class TariffPlanController extends SubscrApiController {
 	private TariffTypeRepository tariffTypeRepository;
 
 	@Autowired
-	private SubscriberRepository subscriberRepository;
-
-	@Autowired
-	private OrganizationRepository organizationRepository;
-
-	@Autowired
 	private ContObjectService contObjectService;
+
+	@Autowired
+	private OrganizationService organizationService;
 
 	/**
 	 * 
@@ -84,8 +81,8 @@ public class TariffPlanController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> rsoGet() {
-		return ResponseEntity
-				.ok(subscriberRepository.selectRsoOrganizations(currentSubscriberService.getSubscriberId()));
+		// subscriberService.selectRsoOrganizations(currentSubscriberService.getSubscriberId())
+		return ResponseEntity.ok(organizationService.selectRsoOrganizations());
 	}
 
 	/**
@@ -138,7 +135,7 @@ public class TariffPlanController extends SubscrApiController {
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationRepository.findOne(rsoOrganizationId);
+			Organization rso = organizationService.findOne(rsoOrganizationId);
 			if (rso == null) {
 				return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
@@ -201,7 +198,7 @@ public class TariffPlanController extends SubscrApiController {
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationRepository.findOne(rsoOrganizationId);
+			Organization rso = organizationService.findOne(rsoOrganizationId);
 			if (rso == null) {
 				return ResponseEntity.badRequest().body("Invalid rsoOrganizationId");
 			}
@@ -296,6 +293,18 @@ public class TariffPlanController extends SubscrApiController {
 				currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/rsoOrganizations", method = RequestMethod.GET)
+	public ResponseEntity<?> getRsoOrganizations() {
+		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations();
+		List<Organization> resultList = currentUserService.isSystem() ? rsOrganizations
+				: ObjectFilters.devModeFilter(rsOrganizations);
+		return responseOK(resultList);
 	}
 
 }
