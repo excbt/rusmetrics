@@ -5,9 +5,7 @@ angular.module('portalNMC')
     $scope.mapSettings.dateFrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD');
     $scope.mapSettings.dateTo = moment().endOf('day').format('YYYY-MM-DD');
     $scope.mapSettings.loadingFlag = objectSvc.getLoadingStatus();
-    $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
-//console.log($scope.mapSettings.loadingFlag);    
-//console.log($scope.mapSettings.drawMarkersFlag);   
+    $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;   
     
     $scope.mapSettings.abortCompareFlag = false;
     
@@ -36,15 +34,6 @@ angular.module('portalNMC')
     };
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
-//    if (angular.isDefined($cookies.objectMapZoom)){
-//        mapCenter.zoom = Number($cookies.objectMapZoom);
-//    };
-//    if (angular.isDefined($cookies.objectMapLat)){
-//        mapCenter.lat = Number($cookies.objectMapLat);
-//    };
-//    if (angular.isDefined($cookies.objectMapLng)){
-//        mapCenter.lng = Number($cookies.objectMapLng);
-//    };
     
     if (angular.isDefined(objectSvc.getObjectSettings().objectMapZoom)){
         mapCenter.zoom = Number(objectSvc.getObjectSettings().objectMapZoom);
@@ -98,11 +87,10 @@ angular.module('portalNMC')
     };
     
     //refresh data from server
-    var getCityDataWithParams = function(city, settings){
-               
+    var getCityDataWithParams = function(city, settings){               
         var citiesPromise = objectSvc.getCityConsumingData(city.cityFiasUUID, settings);
         citiesPromise.then(function(response){
-console.log("Begin prepare data.");            
+//console.log("Begin prepare data.");            
                             //if close popup by escape - abort perform
                             if($scope.mapSettings.abortCompareFlag===true){  
                                 $scope.mapSettings.abortCompareFlag = false;
@@ -136,11 +124,7 @@ console.log("Begin prepare data.");
                                 tmpDiff.heatMeasureUnit = 'м3';
                                 tmpDiff.heatAveragePerCent = ((tmpDiff.heatArea>0))?Math.abs((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)*100/$scope.newCityData.servicesSummary.heatAverage).toFixed(2):null;
                                 tmpDiff.heatAverage = ((city.servicesSummary.heatAverage-$scope.newCityData.servicesSummary.heatAverage)).toFixed(2);
-                            };
-                            
-//console.log((tmpDiff.heatAveragePerCent));                              
-//console.log((tmpDiff.heatAveragePerCent!==Infinity));                            
-//console.log(tmpDiff);            
+                            };         
                             $scope.diffCityData = tmpDiff;
                             $scope.diffData = tmpDiff;
                             $scope.newData = angular.copy($scope.newCityData.servicesSummary);
@@ -159,6 +143,7 @@ console.log("Begin prepare data.");
         var citiesPromise = objectSvc.getCitiesConsumingData($scope.mapSettings);
         citiesPromise.then(function(response){
                             $scope.cities = response.data;
+//console.log($scope.cities);            
                             $scope.objectsOfCities = getObjectsDataForCities($scope.cities, $scope.objectsOfCities);     
                             if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
                                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
@@ -212,25 +197,13 @@ console.log("Begin prepare data.");
         markersForObjects = new Array();
         $scope.setObjectsOnMap(tmpObjects, markersForObjects); 
         $scope.markersOnMap = markersForObjects;
-//console.log(curCity);        
-//console.log(markersForObjects);        
-//        angular.extend($scope, {markersOnMap: markersForObjects});
         $scope.viewCurrentCityObjectsFlag = true;
 
         angular.extend($scope, {mapCenter: mc});
-//console.log($scope.mapCenter); 
     };
     
     var compareWith = function(){
         $scope.markerSettings.cmpFlag = !$scope.markerSettings.cmpFlag;
-        
-//        if($scope.markerSettings.cmpFlag === true){ 
-//            var popup = document.getElementsByClassName("leaflet-popup-content-wrapper");
-//            popup[0].className += " nmc-leaflet-popup-content-wrapper-compare";
-//        }else{
-//            var popup = document.getElementsByClassName("leaflet-popup-content-wrapper");
-//            popup[0].className = "leaflet-popup-content-wrapper";
-//        };
     };
     
     var changeCmpPeriod = function(firstPeriod, daysAgo, secondPeriod){
@@ -242,9 +215,7 @@ console.log("Begin prepare data.");
         $scope.cmpPeriod = result;      
         return result;
     };
-    
-    //TODO: доделать сравнение по городу
-    
+
         //данные для сравнения по объекту
 //    получаем данные за заданный период по объекту, делаем сравнение с текущими данными
     //записываем новые полученные данные за заданный период в массив newObjectData
@@ -266,27 +237,14 @@ console.log("Begin prepare data.");
                     return;
                 };
                 $scope.newObjectData = response.data;
-//console.log($scope.newObjectData);            
                 for (var i=0;i<$scope.newObjectData.serviceTypeARTs.length;i++){
                     var curData = $scope.newObjectData.serviceTypeARTs[i];
-//console.log(curData);                        
                     curData.absConsValue = (curData.absConsValue===null)?null:Number(curData.absConsValue.toFixed(2));
                     curData.tempValue = (curData.tempValue===null)?null:Number(curData.tempValue.toFixed(2));
-                    
-//console.log(curData);                    
                 };
-//console.log(object);            
                 var tmpDiff = {};
                 $scope.newData = prepareObjectData(response.data);
                 var curData = prepareObjectData(object);
-//console.log(curData);
-//console.log($scope.newData);            
-            
-//                if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
-//                    tmpDiff.hw = "Нет данных";
-//                    tmpDiff.hwMeasureUnit ="";
-//                    tmpDiff.hwAverage = "Нет данных";
-//                    tmpDiff.hwAverageMeasureUnit ="";
                 if ((curData.hw!=="Нет данных")&&($scope.newData.hw!=="Нет данных")){
                     tmpDiff.hw = (curData.hw-$scope.newData.hw).toFixed(2);
                     tmpDiff.hwPerCent = Math.abs((curData.hw-$scope.newData.hw)*100/$scope.newData.hw).toFixed(2);
@@ -300,11 +258,6 @@ console.log("Begin prepare data.");
                         tmpDiff.hwAverageMeasureUnit="";
                     };
                 };
-//                if (!angular.isNumber(servType.absConsValue)||(angular.isUndefined(servType.absConsValue))||(servType.absConsValue===null)){
-//                    tmpDiff.heat = "Нет данных";
-//                    tmpDiff.heatMeasureUnit ="";
-//                    tmpDiff.heatAverage = "Нет данных";
-//                    tmpDiff.heatAverageMeasureUnit ="";
                 if ((curData.heat!=="Нет данных")&&($scope.newData.heat!=="Нет данных")){
                     tmpDiff.heat = (curData.heat-$scope.newData.heat).toFixed(2);
                     tmpDiff.heatPerCent = Math.abs((curData.heat-$scope.newData.heat)*100/$scope.newData.heat).toFixed(2);
@@ -350,7 +303,7 @@ console.log("Begin prepare data.");
                 $scope.diffObjectData = tmpDiffArray;
                 $scope.diffData = tmpDiff;
                 $scope.comparingFlag = false;
-console.log($scope.diffData);            
+//console.log($scope.diffData);            
             });
         
 //        var 
@@ -543,51 +496,6 @@ console.log($scope.diffData);
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="</table>";
-        
-        
-//        markerMessage+="    <div class='container-fluid'>";
-//        markerMessage+="        <div class='row'>";
-                //left column
-//        markerMessage+="            <div class='col-md-4 noPadding'>";
-//        markerMessage+="    <label>Горячая вода:</label><br>";
-//        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.hw.toFixed(2)+" "+city.servicesSummary.hwMeasureUnit+"<br>";
-//        if (city.servicesSummary.heatArea>0){
-//            markerMessage+="        Удельное: "+city.servicesSummary.hwAverage.toFixed(2)+" "+city.servicesSummary.hwAverageMeasureUnit+"<br>";
-//        };
-//        markerMessage+="        </div>";
-//        markerMessage+="    <label>Отопление:</label><br>";
-//        markerMessage+="        <div class='paddingLeft5'>Всего: "+city.servicesSummary.heat.toFixed(2)+" "+city.servicesSummary.heatMeasureUnit+"<br>";
-//        if (city.servicesSummary.heatArea>0){
-//            markerMessage+="        Удельное: "+city.servicesSummary.heatAverage.toFixed(2)+" "+city.servicesSummary.heatAverageMeasureUnit+"<br>";
-//        };
-//        markerMessage+="        </div>";
-//
-//        markerMessage+="    </div>";
-            // center column
-//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isDiffDataFlag,'nmc-show':markerSettings.isDiffDataFlag}\">";
-//        markerMessage+="                <br>";
-//        markerMessage+="                <div><span ng-if='diffCityData.hw>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diffCityData.hwPerCent<100),'nmc-alert':(diffCityData.hwPerCent>=100)}\"></i></span><span ng-if='diffCityData.hw<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwPerCent>=100),'nmc-normal-alt':(diffCityData.hwPerCent<100)}\"></i></span><span ng-if='diffCityData.hwPerCent!=null'>{{diffCityData.hwPerCent}}%  {{diffCityData.hw}} м<sup>3</sup></span></div>";
-//        markerMessage+="                <div><span ng-if='diffCityData.hwAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.hwAveragePerCent>=100),'nmc-normal-alt':(diffCityData.hwAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.hwAveragePerCent!=null'>{{diffCityData.hwAveragePerCent}}% {{diffCityData.hwAverage}}м<sup>3</sup></span></div>";
-//        markerMessage+="                   <br>";
-//        markerMessage+="                    <div class='marginBottom0_8em'></div>";
-//        markerMessage+="                <div><span ng-if='diffCityData.heat>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatPerCent>=100),'nmc-normal':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heat<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':'diffCityData.heatPerCent>=100','nmc-normal-alt':(diffCityData.heatPerCent<100)}\"></i></span><span ng-if='diffCityData.heatPerCent!=null'>{{diffCityData.heatPerCent}}% {{diffCityData.heat}} ГКал</span></div>";
-//        markerMessage+="                <div><span ng-if='diffCityData.heatAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100), 'nmc-normal':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-alert':(diffCityData.heatAveragePerCent>=100),'nmc-normal-alt':(diffCityData.heatAveragePerCent<100)}\"></i></span><span ng-if='diffCityData.heatAveragePerCent!=null'>{{diffCityData.heatAveragePerCent}}% {{diffCityData.heatAverage}}ГКал</span></div>";
-//        markerMessage+="    </div>";
-
-            //right column
-//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.isNewDataFlag,'nmc-show':markerSettings.isNewDataFlag}\">";
-//        markerMessage+="    <label>Горячая вода:</label><br>";
-//        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.hw.toFixed(2)}}{{newCityData.servicesSummary.hwMeasureUnit}}<br>";
-//            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.hwAverage.toFixed(2)}} {{newCityData.servicesSummary.hwAverageMeasureUnit}}</span>";
-//        markerMessage+="        </div>";
-//        markerMessage+="    <label>Отопление:</label><br>";
-//        markerMessage+="        <div class='paddingLeft5'>Всего: {{newCityData.servicesSummary.heat.toFixed(2)}} {{newCityData.servicesSummary.heatMeasureUnit}}<br>";
-//            markerMessage+="        <span ng-if='newCityData.servicesSummary.heatArea>0'> Удельное: {{newCityData.servicesSummary.heatAverage.toFixed(2)}} {{newCityData.servicesSummary.heatAverageMeasureUnit}}</span>";
-//        markerMessage+="        </div>";
-
-//        markerMessage+="    </div>";
-//        
-//        markerMessage+="        </div>";
         markerMessage+="    </div>";
         markerMessage+="</div>";  
         return markerMessage;
@@ -892,77 +800,10 @@ console.warn(elem);
         markerMessage+="        </td>";
         markerMessage+="    </tr>";
         markerMessage+="</table>";
-//        markerMessage+="        <div class='row'>";
-                //left column
-//        markerMessage+="            <div class='col-md-4 noPadding'>";
-        
-//        currentObject.serviceTypeARTs.forEach(function(servType){
-//            if(!angular.isNumber(servType.absConsValue) || !angular.isNumber(servType.tempValue)){
-//                return;
-//            };
-//            var measureUnit = "";
-//            markerMessage+="<div class='nmc-div-data'>";
-//            switch (servType.contServiceType){
-//                case "hw": 
-//                    markerMessage+="    <label>Горячая вода:</label><br>";
-//                    measureUnit="м<sup>3</sup>";
-//                    break;
-//                case "heat": 
-//                    markerMessage+="    <label>Отопление:</label><br>";
-//                    measureUnit="ГКал";
-//                    break;
-//                default: markerMessage +=""+servType.contServiceType+"";
-//                    break;
-//            };
-//            markerMessage+="</div>";
-//            markerMessage+="        <div class='paddingLeft5'>Всего: "+(angular.isNumber(servType.absConsValue)?servType.absConsValue.toFixed(2):"0")+" "+measureUnit+"<br>";
-//            if (currentObject.contObject.heatArea>0){
-//                markerMessage+="        Удельное: "+(servType.absConsValue/currentObject.contObject.heatArea).toFixed(2)+" "+measureUnit+"<br>";
-//            };
-//            markerMessage+="        t : "+(angular.isNumber(servType.tempValue)?servType.tempValue.toFixed(2):"")+" &deg;C";
-//            markerMessage+="        </div>";                   
-//        });
-//        
-//        markerMessage+="    </div>";
-            // center column
-//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.cmpFlag,'nmc-show':markerSettings.cmpFlag}\">";
-//                    
-//        markerMessage+="    <div ng-repeat='diff in diffObjectData'>";
-//        markerMessage+="<br>";
-//        markerMessage+="       <div> <span ng-if='diff.absConsValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diff.absConsValuePerCent<100),'nmc-alert':(diff.absConsValuePerCent>=100)}\"></i></span><span ng-if='diff.absConsValuePerCent!=null'>{{diff.absConsValuePerCent}}% {{diff.absConsValue}} <span ng-switch on='diff.measureUnit'><span ng-switch-when='V_M3'>м <sup>3</sup></span> <span ng-switch-when='V_GCAL'>ГКал</span></span></span></div>";
-//        markerMessage+="       <div> <span ng-if='diff.absConsValueAverage>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.absConsValueAveragePerCent<100),'nmc-alert':(diff.absConsValueAveragePerCent>=100)}\"></i></span><span ng-if='diff.absConsValueAverage<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diff.absConsValueAveragePerCent<100),'nmc-alert':(diff.absConsValueAveragePerCent>=100)}\"></i></span><span ng-if='diff.absConsValueAveragePerCent!=null'>{{diff.absConsValueAveragePerCent}}% {{diff.absConsValueAverage}} <span ng-switch on='diff.measureUnit'><span ng-switch-when='V_M3'>м <sup>3</sup></span> <span ng-switch-when='V_GCAL'>ГКал</span></span></span></div>";
-//        markerMessage+="       <div> <span ng-if='diff.tempValue>0'><i class='glyphicon glyphicon-triangle-top' ng-class=\"{'nmc-normal':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValue<0'><i class='glyphicon glyphicon-triangle-bottom' ng-class=\"{'nmc-normal-alt':(diff.tempValuePerCent<100),'nmc-alert':(diff.tempValuePerCent>=100)}\"></i></span><span ng-if='diff.tempValuePerCent!=null'>{{diff.tempValuePerCent}}% {{diff.tempValue}} </span></div>";
-//        markerMessage+="<br>";
-//        markerMessage+="    </div>";
-//        markerMessage+="    </div>";
-            //right column
-//        markerMessage+="            <div class='col-md-4 noPadding' ng-class=\"{'nmc-hide':!markerSettings.cmpFlag,'nmc-show':markerSettings.cmpFlag}\">";
-//        markerMessage+="{{newServiceData}}";
-//        markerMessage+="<div ng-repeat='newServiceData in newObjectData.serviceTypeARTs'>";
-//        
-//        markerMessage+="<div ng-switch on='newServiceData.contServiceType'>";
-//        markerMessage+="    <div ng-switch-when='hw'>";
-//        markerMessage+="        <label>Горячая вода:</label><br>";
-//        markerMessage+="     </div>";
-//        markerMessage+="    <div ng-switch-when='heat'>";
-//        markerMessage+="        <label>Отопление:</label><br>";
-//        markerMessage+="    </div>";
-//        markerMessage+="    <div class='paddingLeft5'>Всего: {{newServiceData.absConsValue || 0}} <span ng-switch-when='hw'>м<sup>3</sup></span><span ng-switch-when='heat'>ГКал</span><br>";
-//        if (currentObject.contObject.heatArea>0){
-//            markerMessage+="        Удельное: {{(newServiceData.absConsValue/curObject.contObject.heatArea).toFixed(2) || 0}} <span ng-switch-when='hw'>м<sup>3</sup></span><span ng-switch-when='heat'>ГКал</span>/м<sup>2</sup><br>";
-//        };
-//        markerMessage+="        t : {{newServiceData.tempValue}} &deg;C";
-//        markerMessage+="    </div>";
-//        markerMessage+="</div>";
-//        markerMessage+="</div>";
-//        markerMessage+="    </div>";
-        
-//        markerMessage+="        </div>";//container-fluid
         markerMessage+="    </div>";
         markerMessage+="</div>";  
         return markerMessage;
     };
-    
     
     //create object marker
     $scope.prepareObjectMarker = function(object, marker){                  
@@ -995,8 +836,6 @@ console.warn(elem);
             marker.icon =  angular.copy(monitorMarker); //set current marker
         
         marker.contObjectId = object.contObject.id;
-        
-                
         return marker;
     };
     
@@ -1056,27 +895,18 @@ console.warn(elem);
                         return false;
                     };
                     if((elem.contObject.id===el.contObjectId)){
-                        marker = el;                         
-//console.log('isMarkerExists');                        
+                        marker = el;                                                
                         isMarkerExists = true;
                         return true;
                     };
                 });
-            };            
-//console.log(marker == markerArray[0]) ;             
+            };                       
             marker= $scope.prepareObjectMarker(elem, marker);
-            marker.focus = false;
-//            marker.visible = false;
-//            marker
-//console.log(marker);    
-//console.log(markerArray);
-          
+            marker.focus = false;          
             if (isMarkerExists!==true){
                 markerArray.push(marker);  
-            };      
-//console.log(marker == markerArray[0]) ;             
-        });
-//console.log(markerArray.length);        
+            };                  
+        });       
         var arrLength = markerArray.length;
         while (arrLength>=1){
             arrLength--;                                               
@@ -1090,23 +920,16 @@ console.warn(elem);
     };
     
     if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
-//        $scope.setObjectsOnMap($scope.objectsOfCities, markers);
         markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
         $scope.markersOnMap = markersForObjects;
-//        angular.extend($scope, {markersOnMap: markersForObjects});
     }else{
-//        $scope.setCitiesOnMap($scope.cities, markers);
         markersForCities = $scope.setCitiesOnMap($scope.cities, markersForCities);
         $scope.markersOnMap = markersForCities;
-//        angular.extend($scope, {markersOnMap: markersForCities});
     };
-//    markersOnMap = markers;
-//    angular.extend($scope, {markersOnMap});
     
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log($scope.objectsOfCities);
 //console.log($scope.cities);
-//        $cookies.objectMapZoom = newZoom;
         objectSvc.setObjectSettings({objectMapZoom:newZoom});
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
@@ -1117,12 +940,10 @@ console.warn(elem);
                 };  
                 //clear open popup
                 var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
-                popupPane[0].innerHTML = "";
-//                markers = $scope.setObjectsOnMap($scope.objectsOfCities, markers);   
+                popupPane[0].innerHTML = "";  
                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
                 $scope.markersOnMap = markersForObjects;
 //console.log($scope.markersOnMap);                
-//                angular.extend($scope, {markersOnMap: markersForObjects});
             };           
         };
         if (newZoom<=$scope.mapSettings.zoomBound){
@@ -1130,28 +951,16 @@ console.warn(elem);
                 //clear open popup
                 var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
                 popupPane[0].innerHTML = "";
-//                markers = $scope.setCitiesOnMap($scope.cities, markers);
                 markersForCities = $scope.setCitiesOnMap($scope.cities, markersForCities);
                 $scope.markersOnMap = markersForCities;
-//                angular.extend($scope, {markersOnMap: markersForCities});
             };    
         };
-//        if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length ===0)){
-//            markersOnMap = markers;
-//            angular.extend($scope,{markersOnMap});
-//        }else{
-//            $scope.markersOnMap = markers;
-//        };
-        
-//        angular.extend($scope, {markersOnMap: markers});
     }, false);
     
     $scope.$watch('mapCenter.lat',function(newLat){
-//        $cookies.objectMapLat = newLat;
         objectSvc.setObjectSettings({objectMapLat:newLat});
     });
     $scope.$watch('mapCenter.lng',function(newLng){
-//        $cookies.objectMapLng = newLng;
         objectSvc.setObjectSettings({objectMapLng:newLng});        
     });
     
@@ -1199,8 +1008,6 @@ console.warn(elem);
         },
         startDate : moment().subtract(30, 'days').startOf('day'),
         endDate : moment().endOf('day'),
-//        startDate : moment().subtract(6, 'days').startOf('day'),
-//        endDate : moment().endOf('day'),
         maxDate: moment().endOf('day'),
 
         format : 'DD.MM.YYYY'
@@ -1240,14 +1047,10 @@ console.log('Watch objectDates');
         $scope.markerSettings = {};
         $scope.diffData ={};
         $scope.newData = {};
-        //set the width of the popup window
-//        var popup = document.getElementsByClassName("leaflet-popup-content-wrapper");
-//        popup[0].className = "leaflet-popup-content-wrapper nmc-leaflet-popup-content-wrapper-compare";
     });
     //
     $rootScope.$on('objectSvc:loaded',function(){
         $scope.mapSettings.loadingFlag = objectSvc.getLoadingStatus();
-//        $scope.mapSettings.drawMarkersFlag = !$scope.mapSettings.loadingFlag;
     });
     
     //key down listener
