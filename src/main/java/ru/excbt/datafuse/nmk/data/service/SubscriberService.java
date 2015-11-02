@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
@@ -318,6 +319,11 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
 		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Organization> selectRsoOrganizations2(Long subscriberId) {
+		return subscriberRepository.selectRsoOrganizations(subscriberId);
 	}
 
 }
