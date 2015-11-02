@@ -81,20 +81,12 @@
             <div class="collapse navbar-collapse">
                 
                 <div class="navbar-text nmc-main-header-title"> Система учета и обработки метрологической информации </div>
-<!--                </li>						-->
-<!--			</ul>-->
                 <div class="">
                 <ul class="nav navbar-nav navbar-right nmc-main-header-menu">	
-
-<!--
-                    <li>Система учета и обработки метрологической информации
-                    </li>
--->
                     <li class="dropdown">
-<!--                        ng-controller="UserinfoCtrl"-->
                         <a class="dropdown-toggle "  data-toggle="dropdown" href="" ><span><span
                                 class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
-                            </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.organization.organizationName}})</span></span></a>
+                            </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.subscriberName}})</span></span></a>
                         <ul class="dropdown-menu">
                             <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
                                 title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b> 
