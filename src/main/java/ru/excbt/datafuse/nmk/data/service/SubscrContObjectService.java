@@ -164,7 +164,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
 		checkNotNull(subscriberId);
 		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
-		return subscrContObjectRepository.selectRmaSubscrContObjectIds(currentDate.toDate());
+		return subscrContObjectRepository.selectRmaSubscrContObjectIds(subscriberId, currentDate.toDate());
 	}
 
 	/**

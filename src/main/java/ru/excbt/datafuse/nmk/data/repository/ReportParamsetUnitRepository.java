@@ -58,7 +58,6 @@ public interface ReportParamsetUnitRepository extends CrudRepository<ReportParam
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@Deprecated
 	@Query("SELECT u.objectId FROM ReportParamsetUnit u " + "WHERE u.reportParamset.id = :reportParamsetId ")
 	public List<Long> selectObjectIds(@Param("reportParamsetId") long reportParamsetId);
 
