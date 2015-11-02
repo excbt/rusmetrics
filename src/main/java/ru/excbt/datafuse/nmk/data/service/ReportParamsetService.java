@@ -333,8 +333,8 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private List<Long> selectParamsetContObjectIds(long reportParamsetId) {
-		return reportParamsetUnitFilterRepository.selectObjectIds(reportParamsetId);
+	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
+		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
 
 	/**
@@ -343,7 +343,7 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
+	public List<Long> selectReportParamsetFilteredObjectIds(long reportParamsetId) {
 		return reportParamsetUnitFilterRepository.selectObjectIds(reportParamsetId);
 	}
 

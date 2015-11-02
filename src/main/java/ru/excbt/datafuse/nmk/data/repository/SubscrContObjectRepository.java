@@ -22,9 +22,10 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	public List<SubscrContObject> findByContObjectId(Long contObjectId);
 
 	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
-			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId IS NOT NULL) "
+			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId ) "
 			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL ")
-	public List<Long> selectRmaSubscrContObjectIds(@Param("subscrDate") Date subscrDate);
+	public List<Long> selectRmaSubscrContObjectIds(@Param("subscriberId") Long subscriberId,
+			@Param("subscrDate") Date subscrDate);
 
 	/**
 	 * 
