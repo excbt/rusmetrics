@@ -132,7 +132,7 @@ public class ReportMakerParamService {
 		List<Long> resultContObjectIdList = Collections.emptyList();
 
 		if (contObjectIds == null && reportParamset.getId() != null) {
-			resultContObjectIdList = reportParamsetService.selectParamsetContObjectIds(reportParamset.getId());
+			resultContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
 		}
 
 		if (resultContObjectIdList.isEmpty()) {
