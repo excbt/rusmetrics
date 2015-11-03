@@ -140,7 +140,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public ContObject createOne(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
 
@@ -181,7 +181,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_CONT_OBJECT_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteOne(Long contObjectId, LocalDate subscrEndDate) {
 		checkNotNull(contObjectId);
 
@@ -204,6 +204,20 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		contObjectRepository.save(contObject);
 
+	}
+
+	/**
+	 * 
+	 * @param contObjects
+	 * @param subscrEndDate
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
+	public void deleteMany(Long[] contObjects, LocalDate subscrEndDate) {
+		checkNotNull(contObjects);
+		for (Long i : contObjects) {
+			deleteOne(i, subscrEndDate);
+		}
 	}
 
 	/**

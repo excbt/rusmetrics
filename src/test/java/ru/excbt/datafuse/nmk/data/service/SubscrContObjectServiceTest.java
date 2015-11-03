@@ -5,12 +5,17 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
-public class SubscrContObjectServiceTest extends JpaSupportTest {
+public class SubscrContObjectServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectServiceTest.class);
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
@@ -24,8 +29,9 @@ public class SubscrContObjectServiceTest extends JpaSupportTest {
 	 */
 	@Test
 	public void testSubscrContObjectIds() throws Exception {
-		List<Long> contObjectIds = subscrContObjectService
-				.selectRmaSubscrContObjectIds(currentSubscriberService.getSubscriberId());
+		logger.debug("Current Subscriber Id: {}", currentSubscriberService.getSubscriberId());
+
+		List<Long> contObjectIds = subscrContObjectService.selectRmaSubscrContObjectIds(RMA_SUBSCRIBER_ID);
 		assertTrue(contObjectIds.size() > 0);
 	}
 }
