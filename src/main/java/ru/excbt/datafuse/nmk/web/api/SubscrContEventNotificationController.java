@@ -24,9 +24,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
@@ -35,19 +35,18 @@ import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping("/api/subscr/contEvent")
-public class SubscrContEventNotificationController extends WebApiController {
+public class SubscrContEventNotificationController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContEventNotificationController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationController.class);
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
@@ -56,9 +55,6 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
 	private CurrentUserService currentUserService;
@@ -76,12 +72,10 @@ public class SubscrContEventNotificationController extends WebApiController {
 	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationsAll() {
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
-				.selectAll(currentSubscriberService.getSubscriberId(), null,
-						null);
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectAll(getSubscriberId(),
+				null, null);
 
-		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
-				resultPage));
+		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
 	}
 
@@ -95,8 +89,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsPaged(
-			@RequestParam(value = "fromDate", required = false) String fromDateStr,
+	public ResponseEntity<?> notificationsPaged(@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
@@ -104,49 +97,35 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		List<Long> contObjectList = contObjectIds == null ? null : Arrays
-				.asList(contObjectIds);
-		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
-				.asList(contEventTypeIds);
+		List<Long> contObjectList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
+		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays.asList(contEventTypeIds);
 
 		final List<Long> contEventTypeIdPairList = contEventTypeList == null ? null
-				: contEventTypeService
-						.selectContEventTypesPaired(contEventTypeList);
+				: contEventTypeService.selectContEventTypesPaired(contEventTypeList);
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& !datePeriodParser.getLocalDatePeriod().isValidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && !datePeriodParser.getLocalDatePeriod().isValidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		Pageable pageRequest = SubscrContEventNotifiicationService
-				.setupPageRequestSort(pageable, sortDesc);
+		Pageable pageRequest = SubscrContEventNotifiicationService.setupPageRequestSort(pageable, sortDesc);
 
 		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isValidEq()) {
 
-			requestDatePeriod = datePeriodParser.getLocalDatePeriod()
-					.buildEndOfDay();
+			requestDatePeriod = datePeriodParser.getLocalDatePeriod().buildEndOfDay();
 
 		}
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
-				.selectByConditions(currentSubscriberService.getSubscriberId(),
-						requestDatePeriod, contObjectList,
-						contEventTypeIdPairList, isNew, pageRequest);
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectByConditions(
+				getSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew, pageRequest);
 
-		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(
-				resultPage));
+		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
 	}
 
@@ -160,15 +139,12 @@ public class SubscrContEventNotificationController extends WebApiController {
 
 		checkNotNull(id);
 
-		SubscrContEventNotification result = subscrContEventNotifiicationService
-				.findOneNotification(id);
+		SubscrContEventNotification result = subscrContEventNotifiicationService.findOneNotification(id);
 
 		if (result == null) {
 
-			return ResponseEntity
-					.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(ApiResult
-							.build(ApiResultCode.ERR_UNPROCESSABLE_TRANSACTION));
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.body(ApiResult.build(ApiResultCode.ERR_UNPROCESSABLE_TRANSACTION));
 		}
 
 		return ResponseEntity.ok(result);
@@ -190,8 +166,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationIsNew(
-						isNew, Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
 						currentUserService.getCurrentUserId());
 			}
 		};
@@ -205,7 +180,8 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param notificationIds
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/revision/isNew", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsUpdateRevisionTrue(
 			@RequestParam(value = "notificationIds", required = true) Long[] notificationIds,
 			@RequestParam(value = "isNew", required = false, defaultValue = "true") Boolean isNew) {
@@ -215,8 +191,7 @@ public class SubscrContEventNotificationController extends WebApiController {
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateNotificationIsNew(
-						isNew, Arrays.asList(notificationIds),
+				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
 						currentUserService.getCurrentUserId());
 			}
 		};
@@ -239,36 +214,26 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "isNew", required = false) Boolean isNew,
 			@RequestParam(value = "revisionIsNew", required = true) Boolean revisionIsNew) {
 
-		List<Long> contObjectList = contObjectIds == null ? null : Arrays
-				.asList(contObjectIds);
-		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays
-				.asList(contEventTypeIds);
+		List<Long> contObjectList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
+		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays.asList(contEventTypeIds);
 
 		final List<Long> contEventTypeIdPairList = contEventTypeList == null ? null
-				: contEventTypeService
-						.selectContEventTypesPaired(contEventTypeList);
+				: contEventTypeService.selectContEventTypesPaired(contEventTypeList);
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isValidEq()) {
 
-			requestDatePeriod = datePeriodParser.getLocalDatePeriod()
-					.buildEndOfDay();
+			requestDatePeriod = datePeriodParser.getLocalDatePeriod().buildEndOfDay();
 
 		}
 
@@ -277,10 +242,9 @@ public class SubscrContEventNotificationController extends WebApiController {
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateRevisionByConditions(
-						currentSubscriberService.getSubscriberId(), actionDP,
-						contObjectList, contEventTypeIdPairList, isNew,
-						revisionIsNew, currentUserService.getCurrentUserId());
+				subscrContEventNotifiicationService.updateRevisionByConditions(getSubscriberId(), actionDP,
+						contObjectList, contEventTypeIdPairList, isNew, revisionIsNew,
+						currentUserService.getCurrentUserId());
 			}
 		};
 
@@ -299,30 +263,23 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatus(
-						currentSubscriberService.getSubscriberId(),
+				.selectMonitorContEventNotificationStatus(getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		List<MonitorContEventNotificationStatus> resultList = null;
 
 		if (Boolean.TRUE.equals(noGreenColor)) {
-			resultList = preResultList
-					.stream()
+			resultList = preResultList.stream()
 					.filter((n) -> n.getContEventLevelColorKey() != ContEventLevelColorKey.GREEN)
 					.collect(Collectors.toList());
 		} else {
@@ -338,31 +295,25 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/contObject/statusCollapse", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatusCollapse(
-						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
-						noGreenColor);
+				.selectMonitorContEventNotificationStatusCollapse(getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -373,31 +324,25 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/contObject/cityStatusCollapse", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsCityContObjectsStatusCollapse(
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr,
 			@RequestParam(value = "noGreenColor", required = false) Boolean noGreenColor) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
-				.selectMonitoryContObjectCityStatus(
-						currentSubscriberService.getSubscriberId(),
-						datePeriodParser.getLocalDatePeriod().buildEndOfDay(),
-						noGreenColor);
+				.selectMonitoryContObjectCityStatus(getSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
 	}
@@ -408,31 +353,25 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsContObjectEventTypes(
-			@PathVariable(value = "contObjectId") Long contObjectId,
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> notificationsContObjectEventTypes(@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatus(currentSubscriberService
-						.getSubscriberId(), contObjectId, datePeriodParser
-						.getLocalDatePeriod().buildEndOfDay());
+				.selectMonitorContEventTypeStatus(getSubscriberId(), contObjectId,
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -443,32 +382,26 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/eventTypes/statusCollapse",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectEventTypesStatusCollapse(
 			@PathVariable(value = "contObjectId") Long contObjectId,
 			@RequestParam(value = "fromDate", required = true) String fromDateStr,
 			@RequestParam(value = "toDate", required = true) String toDateStr) {
 
 		checkNotNull(contObjectId);
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(
-				fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 		checkNotNull(datePeriodParser);
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}",
-									fromDateStr, toDateStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest().body(String
+					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatusCollapse(
-						currentSubscriberService.getSubscriberId(),
-						contObjectId, datePeriodParser.getLocalDatePeriod()
-								.buildEndOfDay());
+				.selectMonitorContEventTypeStatusCollapse(getSubscriberId(), contObjectId,
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -478,14 +411,14 @@ public class SubscrContEventNotificationController extends WebApiController {
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/notifications/contObject/{contObjectId}/monitorEvents", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> notificationsContObjectMonitorEvents(
 			@PathVariable(value = "contObjectId") Long contObjectId) {
 
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitor> resultList = contEventMonitorService
-				.selectByContObject(contObjectId);
+		List<ContEventMonitor> resultList = contEventMonitorService.selectByContObject(contObjectId);
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -499,29 +432,20 @@ public class SubscrContEventNotificationController extends WebApiController {
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr) {
 
-		ContEventLevelColor monitorColor = contEventMonitorService
-				.getColorBySubscriberId(currentSubscriberService
-						.getSubscriberId());
+		ContEventLevelColor monitorColor = contEventMonitorService.getColorBySubscriberId(getSubscriberId());
 
 		if (monitorColor == null) {
 
-			monitorColor = contEventLevelColorService
-					.getEventColorCached(ContEventLevelColorKey.GREEN);
+			monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.GREEN);
 
-			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser
-					.parse(fromDateStr, toDateStr);
+			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
-			if (datePeriodParser.isOk()
-					&& datePeriodParser.getLocalDatePeriod().isValidEq()) {
-				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
-						.selectByConditions(currentSubscriberService
-								.getSubscriberId(), datePeriodParser
-								.getLocalDatePeriod().buildEndOfDay(),
-								PAGE_LIMIT_1);
+			if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isValidEq()) {
+				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService.selectByConditions(
+						getSubscriberId(), datePeriodParser.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
 
 				if (pageResult.getTotalElements() > 0) {
-					monitorColor = contEventLevelColorService
-							.getEventColorCached(ContEventLevelColorKey.YELLOW);
+					monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.YELLOW);
 				}
 			}
 
