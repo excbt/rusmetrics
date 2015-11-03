@@ -290,7 +290,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}
-		subscrServiceAccessService.deleteSubscriberAccess(rmaSubscriberId);
+		subscrServiceAccessService.deleteSubscriberAccess(subscriberId);
 		subscriberRepository.delete(subscriber);
 	}
 

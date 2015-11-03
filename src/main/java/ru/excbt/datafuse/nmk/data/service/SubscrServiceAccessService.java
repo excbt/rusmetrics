@@ -89,6 +89,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_ADMIN })
 	public boolean processAccess(Long subscriberId, LocalDate accessDate, SubscrServiceAccess entity) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
@@ -224,6 +225,10 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		subscrServiceAccessRepository.delete(entityId);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteSubscriberAccess(Long subscriberId) {
