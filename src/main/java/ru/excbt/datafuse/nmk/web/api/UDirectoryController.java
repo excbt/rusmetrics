@@ -47,7 +47,7 @@ public class UDirectoryController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDirectoryNodes(@PathVariable("id") long directoryId) {
-		UDirectory dir = directoryService.findOne(getSubscriberId(), directoryId);
+		UDirectory dir = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		checkNotNull(dir);
 
 		UDirectoryNode result = dir.getDirectoryNode();
@@ -62,9 +62,9 @@ public class UDirectoryController extends SubscrApiController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
-		if (directoryService.checkAvailableDirectory(getSubscriberId(), directoryId)) {
+		if (directoryService.checkAvailableDirectory(getCurrentSubscriberId(), directoryId)) {
 
-			UDirectory result = directoryService.findOne(getSubscriberId(), directoryId);
+			UDirectory result = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 			checkNotNull(result);
 
 			return ResponseEntity.ok(result);
@@ -79,7 +79,7 @@ public class UDirectoryController extends SubscrApiController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
-		List<UDirectory> result = directoryService.findAll(getSubscriberId());
+		List<UDirectory> result = directoryService.findAll(getCurrentSubscriberId());
 		checkNotNull(result);
 		return ResponseEntity.ok(result);
 	}
@@ -101,7 +101,7 @@ public class UDirectoryController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryService.save(getSubscriberId(), entity));
+				setResultEntity(directoryService.save(getCurrentSubscriberId(), entity));
 			}
 		};
 
@@ -125,7 +125,7 @@ public class UDirectoryController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryService.save(getSubscriberId(), entity));
+				setResultEntity(directoryService.save(getCurrentSubscriberId(), entity));
 			}
 
 			@Override
@@ -150,7 +150,7 @@ public class UDirectoryController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				directoryService.delete(getSubscriberId(), directoryId);
+				directoryService.delete(getCurrentSubscriberId(), directoryId);
 
 			}
 		};

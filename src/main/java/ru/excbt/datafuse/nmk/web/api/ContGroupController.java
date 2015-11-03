@@ -49,7 +49,7 @@ public class ContGroupController extends SubscrApiController {
 	public ResponseEntity<?> getContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getSubscriberId());
+		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getCurrentSubscriberId());
 
 		return ResponseEntity.ok(resultList);
 	}

@@ -81,7 +81,7 @@ public class SubscrApiController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	protected long getSubscriberId() {
+	protected long getCurrentSubscriberId() {
 		return currentSubscriberService.getSubscriberId();
 	}
 
@@ -89,8 +89,8 @@ public class SubscrApiController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	protected LocalDate getSubscriberLocalDate() {
-		Date d = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+	protected LocalDate getCurrentSubscriberLocalDate() {
+		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return new LocalDate(d);
 	}
 
@@ -114,7 +114,7 @@ public class SubscrApiController extends WebApiController {
 		if (sud != null && sud.getSkipServiceFilter()) {
 			return new ArrayList<>(objectList);
 		}
-		return filterObjectAccess(objectList, getSubscriberId());
+		return filterObjectAccess(objectList, getCurrentSubscriberId());
 	}
 
 	/**

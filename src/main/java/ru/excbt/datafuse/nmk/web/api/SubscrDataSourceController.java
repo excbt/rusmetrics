@@ -48,7 +48,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataSources() {
-		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getSubscriberId());
+		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
@@ -66,7 +66,7 @@ public class SubscrDataSourceController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("dataSourceKey is null"));
 		}
 
-		subscrDataSource.setSubscriberId(getSubscriberId());
+		subscrDataSource.setSubscriberId(getCurrentSubscriberId());
 
 		logger.trace("All Validation Passed");
 

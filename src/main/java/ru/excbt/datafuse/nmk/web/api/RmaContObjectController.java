@@ -48,13 +48,13 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
 		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createOne(entity, getSubscriberId(), rmaBeginDate, cmOrganizationId);
+				return contObjectService.createOne(entity, getCurrentSubscriberId(), rmaBeginDate, cmOrganizationId);
 			}
 
 			@Override
@@ -83,7 +83,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
 		ApiAction action = new AbstractApiAction() {
 
@@ -111,7 +111,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
 		ApiAction action = new AbstractApiAction() {
 
@@ -163,7 +163,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
-				getSubscriberId());
+				getCurrentSubscriberId());
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}

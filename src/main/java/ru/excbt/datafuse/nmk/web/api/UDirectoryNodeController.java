@@ -48,7 +48,7 @@ public class UDirectoryNodeController extends SubscrApiController {
 
 		logger.trace("getAll DirectoryNode ID {}", directoryId);
 
-		UDirectory directory = directoryService.findOne(getSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		if (directory == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -88,7 +88,7 @@ public class UDirectoryNodeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryNodeService.saveWithDictionary(getSubscriberId(), entity, directoryId));
+				setResultEntity(directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId));
 			}
 		};
 
@@ -113,7 +113,7 @@ public class UDirectoryNodeController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryNodeService.saveWithDictionary(getSubscriberId(), entity, directoryId));
+				setResultEntity(directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId));
 			}
 
 			@Override

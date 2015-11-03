@@ -72,7 +72,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationsAll() {
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectAll(getSubscriberId(),
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectAll(getCurrentSubscriberId(),
 				null, null);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
@@ -123,7 +123,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectByConditions(
-				getSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew, pageRequest);
+				getCurrentSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew, pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
@@ -242,7 +242,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		ApiAction action = new AbstractApiAction() {
 			@Override
 			public void process() {
-				subscrContEventNotifiicationService.updateRevisionByConditions(getSubscriberId(), actionDP,
+				subscrContEventNotifiicationService.updateRevisionByConditions(getCurrentSubscriberId(), actionDP,
 						contObjectList, contEventTypeIdPairList, isNew, revisionIsNew,
 						currentUserService.getCurrentUserId());
 			}
@@ -273,7 +273,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<MonitorContEventNotificationStatus> preResultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatus(getSubscriberId(),
+				.selectMonitorContEventNotificationStatus(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		List<MonitorContEventNotificationStatus> resultList = null;
@@ -312,7 +312,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventNotificationStatusCollapse(getSubscriberId(),
+				.selectMonitorContEventNotificationStatusCollapse(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(resultList);
@@ -341,7 +341,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationService
-				.selectMonitoryContObjectCityStatus(getSubscriberId(),
+				.selectMonitoryContObjectCityStatus(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
@@ -370,7 +370,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatus(getSubscriberId(), contObjectId,
+				.selectMonitorContEventTypeStatus(getCurrentSubscriberId(), contObjectId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
@@ -400,7 +400,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationService
-				.selectMonitorContEventTypeStatusCollapse(getSubscriberId(), contObjectId,
+				.selectMonitorContEventTypeStatusCollapse(getCurrentSubscriberId(), contObjectId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
@@ -432,7 +432,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr) {
 
-		ContEventLevelColor monitorColor = contEventMonitorService.getColorBySubscriberId(getSubscriberId());
+		ContEventLevelColor monitorColor = contEventMonitorService.getColorBySubscriberId(getCurrentSubscriberId());
 
 		if (monitorColor == null) {
 
@@ -442,7 +442,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 			if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isValidEq()) {
 				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService.selectByConditions(
-						getSubscriberId(), datePeriodParser.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
+						getCurrentSubscriberId(), datePeriodParser.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.YELLOW);
