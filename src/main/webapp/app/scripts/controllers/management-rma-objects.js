@@ -364,6 +364,14 @@ console.log('Run Object management controller.');
                     successCallback(e, null);
                 };
                 
+                var successDeleteObjectsCallback = function (e, cb) {
+                    $scope.currentObject.deleteObjectIds.forEach(function(el){
+                        deleteObjectFromArray(el.id, $scope.objects);
+                        deleteObjectFromArray(el.id, $scope.objectsOnPage);    
+                    });
+                    successCallback(e, null);
+                };
+                
                 var successDeleteZpointCallback = function(e){
                     $('#deleteZpointModal').modal('hide');
                     deleteObjectFromArray($scope.currentZpoint.id, $scope.currentObject.zpoints);
@@ -393,15 +401,20 @@ console.log('Run Object management controller.');
                 };
 
                 $scope.deleteObject = function (obj) {
+                    var url = objectSvc.getRmaObjectsUrl();                 
+                    if (angular.isDefined(obj)&&(angular.isDefined(obj.id))&&(obj.id!=null)){
+                        crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
+                    };
+                };
+                
+                $scope.deleteObjects = function(obj){
                     var url = objectSvc.getRmaObjectsUrl();
-//console.log(url);                    
-//console.log(obj);                    
+console.log(url);                    
+console.log(obj);                    
                     if (angular.isDefined(obj)&&(angular.isDefined(obj.id))&&(obj.id!=null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
                     }else if (angular.isDefined(obj.deleteObjects)&&(obj.deleteObjects!=null)&&angular.isArray(obj.deleteObjects)){
-                        obj.deleteObjects.forEach(function(el){
-//                            $scope.deleteObject(el);
-                        });
+                        crudGridDataFactory(url).delete({ contObjectIds: obj.deleteObjectIds }, successDeleteObjectsCallback, errorCallback);
                     };
                 };
                 
@@ -1104,20 +1117,26 @@ console.log('Run Object management controller.');
                     if ($scope.objectCtrlSettings.allSelected == true){
                         tmpArr = $scope.objects;
                         $scope.currentObject.deleteObjects = angular.copy($scope.objects);
+                        //create array with objects ids 
+                        $scope.currentObject.deleteObjectIds = $scope.objects.map(function(obj){return obj.id});
                         $scope.currentObject.countDeleteObjects = $scope.objects.length;
                         $('#deleteObjectModal').modal();
                     }else{
                         tmpArr = $scope.objectsOnPage;
                         var dcount = 0;
                         var dmas = [];
+                        // object ids arr  for delete
+                        var dmasIds = [];
                         tmpArr.forEach(function(el){
                             if (el.selected == true){
                                 dmas.push(angular.copy(el));
+                                dmasIds.push(el.id);
                                 dcount+=1;
                             };
                         });
                         if(dcount>0){
                             $scope.currentObject.deleteObjects = dmas;
+                            $scope.currentObject.deleteObjectIds = dmasIds;
                             $scope.currentObject.countDeleteObjects = dcount;
                             $('#deleteObjectModal').modal();
                         };
@@ -1171,11 +1190,43 @@ console.log('Run Object management controller.');
                 
                 getClients();
                 
+                                
+               var deleteDoubleElements = function(targetArray){
+                    var resultArray = angular.copy(targetArray);
+                    resultArray = resultArray.sort();
+                    var arrLength = resultArray.length;
+                    while (arrLength>=2){
+                        arrLength--;                                               
+                        if (resultArray[arrLength]==resultArray[arrLength-1]){                                          
+                            resultArray.splice(arrLength, 1);
+                        };
+                    };                 
+                    return resultArray;
+                };
+                
+                var prepareClient = function(table, objIdsArr){
+                    var ids = angular.copy(objIdsArr);
+                    $http.get(table).then(function(response){
+                        var subscrObjs = response.data;
+                        var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
+                        Array.prototype.push.apply(ids, subscrObjIds);
+                        ids = deleteDoubleElements(ids);
+//console.log(table);                        
+//console.log(ids);                        
+                        $http.put(table, ids).then(successCallback, errorCallback);
+                        },
+                        function(e){
+                            console.log(e);
+                    }
+                    );
+                };
+                
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
                 $scope.setClientsInit = function(){
                     $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     $('#setClientModal').modal();
                 };
+                
                 //отправляем запрос на назначение на сервер
                 $scope.setClients = function(){
                     //собираем идишники выбранных объектов в один массив
@@ -1200,8 +1251,15 @@ console.log('Run Object management controller.');
                     $scope.data.clientsOnPage.forEach(function(cl){
                        if ((cl.id != null) && (typeof cl.id != 'undefined') && (cl.selected == true)){
                             var table = $scope.objectCtrlSettings.rmaUrl + "/" + cl.id + $scope.objectCtrlSettings.subscrObjectsSuffix;
-            //            crudGridDataFactory(table).update({}, tmp, successCallback, errorCallback);
-                            $http.put(table, tmp).then(successCallback, errorCallback);
+                            prepareClient(table, tmp);
+//                            $http.get(table).then(function(response){
+//                                var subscrObjs = response.data;
+//                                var subscrObjIds = subscrObjs.map(function(obj){return obj.id});
+//                                $http.put(table, tmp).then(successCallback, errorCallback);
+//                            },
+//                                                  errorCallBack
+//                            );
+                            
                         }; 
                     });                    
                 };
