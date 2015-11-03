@@ -136,7 +136,7 @@ public class SubscrContZPointController extends SubscrApiController {
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints() {
 
-		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getSubscriberId());
+		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getCurrentSubscriberId());
 
 		return responseOK(contZPoints);
 	}

@@ -81,7 +81,7 @@ public class UDirectoryParamController extends SubscrApiController {
 		checkNotNull(uDirectoryParam);
 		checkArgument(uDirectoryParam.getId().longValue() == id);
 
-		UDirectory directory = directoryService.findOne(getSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		checkNotNull(directory);
 
 		uDirectoryParam.setDirectory(directory);
@@ -110,7 +110,7 @@ public class UDirectoryParamController extends SubscrApiController {
 
 		checkNotNull(uDirectoryParam);
 
-		UDirectory directory = directoryService.findOne(getSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		checkNotNull(directory);
 
 		uDirectoryParam.setDirectory(directory);

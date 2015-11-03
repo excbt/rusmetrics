@@ -91,7 +91,7 @@ public class TariffPlanController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
-		List<?> resultList = tariffPlanService.selectTariffPlanList(getSubscriberId());
+		List<?> resultList = tariffPlanService.selectTariffPlanList(getCurrentSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -167,7 +167,7 @@ public class TariffPlanController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(tariffPlanService.updateOne(getSubscriberId(), entity));
+				setResultEntity(tariffPlanService.updateOne(getCurrentSubscriberId(), entity));
 
 			}
 		};

@@ -21,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
-import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -35,10 +32,11 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
-public class ReportTemplateController extends WebApiController {
+public class ReportTemplateController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateController.class);
 
@@ -46,16 +44,7 @@ public class ReportTemplateController extends WebApiController {
 	private ReportTemplateService reportTemplateService;
 
 	@Autowired
-	private ReportTypeRepository reportTypeRepository;
-
-	@Autowired
-	private ReportPeriodRepository reportPeriodRepository;
-
-	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
-	private ReportWizardService reportSystemService;
 
 	/**
 	 * 
@@ -70,8 +59,8 @@ public class ReportTemplateController extends WebApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(
-				currentSubscriberService.getSubscriberId(), reportTypeKey, ReportConstants.IS_ACTIVE);
+		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(),
+				reportTypeKey, ReportConstants.IS_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 
@@ -87,8 +76,8 @@ public class ReportTemplateController extends WebApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(
-				currentSubscriberService.getSubscriberId(), reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
+		List<ReportTemplate> result = reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(),
+				reportTypeKey, ReportConstants.IS_NOT_ACTIVE);
 		return ResponseEntity.ok(result);
 	}
 

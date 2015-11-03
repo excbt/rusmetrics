@@ -83,8 +83,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult validationError(String description, Object... args) {
-		return build(ApiResultCode.ERR_VALIDATION,
-				String.format(description, args));
+		return build(ApiResultCode.ERR_VALIDATION, String.format(description, args));
 	}
 
 	/**
@@ -114,6 +113,14 @@ public class ApiResult {
 	public static ApiResult internalError(String description) {
 		return build(ApiResultCode.ERR_INTERNAL, description);
 	}
-	
-	
+
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
+	public static ApiResult invalidState(String description) {
+		return build(ApiResultCode.ERR_INVALID_STATE, description);
+	}
+
 }

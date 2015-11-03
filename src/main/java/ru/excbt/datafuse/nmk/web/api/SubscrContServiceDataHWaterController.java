@@ -671,7 +671,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getAllCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return responseOK(resultList);
@@ -705,7 +705,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfoList(getSubscriberId(),
+				.getContObjectServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
 		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
@@ -743,7 +743,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getOneCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
+				.getOneCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
 		return responseOK(resultList);

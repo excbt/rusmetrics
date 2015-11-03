@@ -95,7 +95,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/access", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServiceAccess() {
-		return responseOK(subscriberServiceAccessList(getSubscriberId()));
+		return responseOK(subscriberServiceAccessList(getCurrentSubscriberId()));
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class SubscServiceManageController extends SubscrApiController {
 
 			@Override
 			public void process() {
-				setResultEntity(subscriberAccessService.processAccessList(getSubscriberId(), LocalDate.now(),
+				setResultEntity(subscriberAccessService.processAccessList(getCurrentSubscriberId(), LocalDate.now(),
 						subscriberAccessList));
 
 			}
@@ -171,7 +171,7 @@ public class SubscServiceManageController extends SubscrApiController {
 	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServicePermissions() {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
-				.selectSubscriberPermissions(getSubscriberId(), getSubscriberLocalDate());
+				.selectSubscriberPermissions(getCurrentSubscriberId(), getCurrentSubscriberLocalDate());
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
 		return responseOK(result);
