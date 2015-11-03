@@ -98,6 +98,34 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 	/**
 	 * 
+	 * @param contObjectId
+	 * @param contObject
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
+
+		checkNotNull(contObjectIds);
+
+		if (!canAccessContObject(contObjectIds)) {
+			return responseForbidden();
+		}
+
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+
+		ApiAction action = new AbstractApiAction() {
+
+			@Override
+			public void process() {
+				contObjectService.deleteMany(contObjectIds, subscrEndDate);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	@Override

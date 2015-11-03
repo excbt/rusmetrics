@@ -48,9 +48,33 @@ public class SubscrApiController extends WebApiController {
 			return true;
 		}
 
-		List<Long> contObjectIds = subscrContObjectService
+		Long[] contObjectIds = new Long[] { contObjectId };
+		return canAccessContObject(contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	protected boolean canAccessContObject(Long[] contObjectIds) {
+		if (contObjectIds == null || contObjectIds.length == 0) {
+			return false;
+		}
+
+		if (currentUserService.isSystem()) {
+			return true;
+		}
+
+		List<Long> subscrContObjectIds = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
-		return contObjectIds.contains(contObjectId);
+
+		boolean result = true;
+		for (Long id : contObjectIds) {
+			result = result && subscrContObjectIds.contains(id);
+		}
+
+		return result;
 	}
 
 	/**
