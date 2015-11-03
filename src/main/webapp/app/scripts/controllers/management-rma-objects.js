@@ -366,8 +366,8 @@ console.log('Run Object management controller.');
                 
                 var successDeleteObjectsCallback = function (e, cb) {
                     $scope.currentObject.deleteObjectIds.forEach(function(el){
-                        deleteObjectFromArray(el.id, $scope.objects);
-                        deleteObjectFromArray(el.id, $scope.objectsOnPage);    
+                        deleteObjectFromArray(el, $scope.objects);
+                        deleteObjectFromArray(el, $scope.objectsOnPage);    
                     });
                     successCallback(e, null);
                 };
