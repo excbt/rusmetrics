@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
@@ -27,9 +26,6 @@ public class CurrentSubscriberService {
 
 	@Autowired
 	private SubscriberService subscriberService;
-
-	@Autowired
-	private ContObjectService contObjectService;
 
 	@Autowired
 	private CurrentUserService currentUserService;

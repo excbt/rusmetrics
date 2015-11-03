@@ -321,9 +321,25 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Organization> selectRsoOrganizations2(Long subscriberId) {
 		return subscriberRepository.selectRsoOrganizations(subscriberId);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public boolean checkSubscriberId(Long subscriberId) {
+		List<Long> ids = subscriberRepository.checkSubscriberId(subscriberId);
+		return ids.size() == 1;
 	}
 
 }
