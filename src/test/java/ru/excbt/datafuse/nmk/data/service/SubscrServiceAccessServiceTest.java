@@ -21,8 +21,9 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
-public class SubscrServiceAccessServiceTest extends JpaSupportTest {
+public class SubscrServiceAccessServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessServiceTest.class);
 
@@ -129,7 +130,8 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 	@Test
 	@Ignore
 	public void testUpdateAllRmaSubscriberAccess() throws Exception {
-		Long rmaSubscriberId = 37176875L;
+		// Long rmaSubscriberId = 37176875L;
+		Long rmaSubscriberId = RMA_SUBSCRIBER_ID;
 
 		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList();
 
