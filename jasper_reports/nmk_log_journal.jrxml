@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-20T14:08:24 -->
+<!-- 2015-11-03T16:48:19 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_log_journal" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="59da6482-33d5-407e-bb5d-4f3d0875b3f8">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -48,11 +48,9 @@
 		</parameter>
 		<queryString>
 			<![CDATA[select get_hwater_by_zpoint_id.*
-
-from cont_object co, cont_zpoint cz, get_hwater_by_zpoint_id(cz.id, $P{begin_date}, $P{end_date}, $P{detail_type})
-
+from cont_object co, cont_zpoint cz, reports.get_hwater_by_zpoint_id(cz.id, $P{begin_date}, $P{end_date}, $P{detail_type})
 where 
-	    co.id = $P{cont_id}
+	        co.id = $P{cont_id}
 	and cz.cont_object_id = co.id
 group by zpoint_id, service_name, d_date, work_time, m_in, m_out, h_in, h_out, h_delta, time_detail_type
 order by zpoint_id, d_date]]>
