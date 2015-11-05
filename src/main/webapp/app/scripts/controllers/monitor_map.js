@@ -334,7 +334,7 @@ angular.module('portalNMC')
                 //check cities
         cityArray.forEach(function(elem){
           
-            if((elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
+            if(angular.isUndefined(elem.cityGeoPosX)||angular.isUndefined(elem.cityGeoPosY)||(elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
 console.warn("Warning. City without coordinates.");                
 console.warn(elem);                                
                 return;
@@ -383,7 +383,7 @@ console.warn(elem);
         //check objects
         objectArray.forEach(function(elem){
 //console.log(elem);            
-            if((elem.contObject.contObjectGeo ===null)||(elem.contObject.contObjectGeo.geoPosX===null)){
+            if(angular.isUndefined(elem.contObject.contObjectGeo)||angular.isUndefined(elem.contObject.contObjectGeo.geoPosX)||(elem.contObject.contObjectGeo ===null)||(elem.contObject.contObjectGeo.geoPosX===null)){
 console.warn("Warning. Object without coordinates.");                
 console.warn(elem);                                
                 return;

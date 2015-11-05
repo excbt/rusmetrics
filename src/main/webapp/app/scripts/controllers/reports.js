@@ -699,9 +699,13 @@ console.log(curObject);
                     fileName+=".xlsx";
                 };
                 saveAs(file,fileName);
+            }, function(e){
+                notificationFactory.errorInfo(e.statusText,e);
+                console.log(e);
             })
             .catch(function(e){
                 notificationFactory.errorInfo(e.statusText,e.data.description);
+                console.log(e);
             });    
     };
     
@@ -774,10 +778,14 @@ console.log(curObject);
                 };
                 saveAs(file,fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
+        }, function(e){
+            notificationFactory.errorInfo(e.statusText,e);
+            console.log(e);
         })
         .catch(function(e){
             //если при запросе произошла ошибка, то выводим ее на экран во всплывающем окне
             notificationFactory.errorInfo(e.statusText,e);
+            console.log(e);
         });
     };
 }]);

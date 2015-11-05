@@ -21,8 +21,27 @@
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
 <div ng-show="!ctrlSettings.loading">
+<!--
 <div class="btn-toolbar marginBottom10">
-    <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
+    
+</div>
+-->
+<div class="row nmc-main-workspace-header">
+    <div class="col-md-3 marginBottom10">
+        <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
+    </div>
+    <div class="col-md-7"></div>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+        <input title="Введите текст для поиска приборов" type="text" class="form-control nmc-text-input-form" ng-model="filter">
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+<!--
+            <label class="nmc-form-label">Всего:</label>
+             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+            <span id="timeOutput"></span>
+-->
+    </div>
 </div>
 
 <!--    Непрокручиваямая шапка -->
@@ -30,13 +49,6 @@
         <tr class="nmc-main-table-header">
             <th class="col-md-1 nmc-td-for-button">
 
-            </th>
-
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    s/n
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
             </th>
             <th class="col-md-4" ng-click="setOrderBy(column.name)">
                 <div>
@@ -50,6 +62,13 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    s/n
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            
 
             <th class="col-md-3">
             </th>
@@ -62,13 +81,6 @@
             <th class="col-md-1 nmc-td-for-button">
 
             </th>
-
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    s/n
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
             <th class="col-md-4" ng-click="setOrderBy(column.name)">
                 <div>
                     Объект
@@ -81,12 +93,18 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    s/n
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
 
             <th class="col-md-3">
             </th>
         </tr>
 
-        <tr ng-repeat="device in data.devices | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+        <tr ng-repeat="device in data.devices | filter: filter" >
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div ng-if="!vzletDevice(device)" class="btn-group">
@@ -104,10 +122,6 @@
                 </div>
             </td>
 
-            <td class="col-md-2">
-                <div><span ng-class="">{{device.number}}</span>
-                </div>
-            </td>
             <td class="col-md-4">
                     <span>{{device.contObjectInfo.fullName}}</span>
             </td>
@@ -115,6 +129,11 @@
                 <div><span ng-class="">{{device.deviceModel.caption || device.deviceModel.modelName}}<span ng-show="isSystemuser()"> (id = {{device['id']}})</span></span>
                 </div>
             </td>
+            <td class="col-md-2">
+                <div><span ng-class="">{{device.number}}</span>
+                </div>
+            </td>
+
 
             <td class="col-md-3">
                 <div class="btn-toolbar">

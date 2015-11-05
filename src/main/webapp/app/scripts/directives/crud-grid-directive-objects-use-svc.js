@@ -44,9 +44,9 @@ console.log("Objects directive.");
                 $scope.objectCtrlSettings.allSelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
-                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
-                $scope.objectCtrlSettings.objectTopOnPage =0;
-                $scope.objectCtrlSettings.objectBottomOnPage =34;
+//                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
+//                $scope.objectCtrlSettings.objectTopOnPage =0;
+//                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
@@ -128,7 +128,7 @@ console.log("Objects directive.");
                     //sort by name
                     objectSvc.sortObjectsByFullName($scope.objects);
                     
-                    $scope.objectsWithoutFilter = $scope.objects;
+//                    $scope.objectsWithoutFilter = $scope.objects;
                     tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                     $scope.objectsOnPage = tempArr;
 //                    makeObjectTable(tempArr, true);
@@ -458,8 +458,10 @@ console.log("Objects directive.");
                             curObject.zpoints = zpoints;
                             makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail"+curObject.id);
-                            btnDetail.classList.remove("glyphicon-chevron-right");
-                            btnDetail.classList.add("glyphicon-chevron-down");
+                            if (angular.isDefined(btnDetail)&&(btnDetail!=null)){
+                                btnDetail.classList.remove("glyphicon-chevron-right");
+                                btnDetail.classList.add("glyphicon-chevron-down");
+                            };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
@@ -611,6 +613,9 @@ console.log("Objects directive.");
                 function viewRefRangeInTable(zpoint){
                     //Получаем столбец с эталонным интервалом для заданной точки учета
                     var element = document.getElementById("zpointRefRange"+zpoint.id);
+                    if (angular.isUndefined(element) || element == null){
+                        return false;
+                    };
                     //Записываем эталонный интервал в таблицу
 //console.log(zpoint);                    
                     switch (zpoint.zpointRefRangeAuto){
@@ -895,18 +900,14 @@ console.log("Objects directive.");
                     
                     if (angular.isUndefined(searchString) || (searchString==='')){                      
                         var tempArr = [];
-                        var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
-                        if((endIndex >= $scope.objects.length)){
-                            endIndex = $scope.objects.length;
-                        }; 
-                        tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
-                        Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                        $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectsOnPage = tempArr;
                     }else{
-//                        $scope.objectsOnPage = $scope.objects;
                         var tempArr = [];
                         
                         $scope.objects.forEach(function(elem){
-                            if (elem.fullName.indexOf(searchString)!=-1){
+                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
                                 tempArr.push(elem);
                             };
                         });
@@ -967,9 +968,11 @@ console.log("Objects directive.");
                     };
                 };
                 
-                $("#divWithObjectTable").scroll(function(){                    
-                    $scope.addMoreObjects();
-                    $scope.$apply();
+                $("#divWithObjectTable").scroll(function(){
+                    if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
+                        $scope.addMoreObjects();
+                        $scope.$apply();
+                    };
                 });
                 
                 
@@ -1223,7 +1226,11 @@ console.log("Objects directive.");
                         return true;
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
-                };              
+                };
+                
+                $scope.isAdmin = function(){
+                    return mainSvc.isAdmin();
+                };
             }]
     };
 });

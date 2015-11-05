@@ -10,7 +10,7 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-  app.controller('MainCtrl', ['$scope','$rootScope', '$window', '$location', 'monitorSvc', 'mainSvc', function ($scope, $rootScope, $window, $location, monitorSvc, mainSvc) {
+  app.controller('MainCtrl', ['$scope','$rootScope', '$cookies', '$window', '$location', 'monitorSvc', 'mainSvc', function ($scope, $rootScope, $cookies, $window, $location, monitorSvc, mainSvc) {
 console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};  
@@ -98,14 +98,21 @@ console.log("setDefaultMenuState");
               $scope.menuMassive[k] = false;
           };        
          $scope.menuMassive.object_menu_item=true;
-console.log(window.location.href);        
-console.log(window.location);        
+//console.log(window.location.href);        
+//console.log(window.location);        
     };
       
     $(window).bind("beforeunload",function(){
       console.log("beforeunload");
       $scope.setDefaultMenuState();
     });
+      
+    $scope.logOut = function(){
+        $cookies = {};
+//        $cookies.fromDate = undefined;
+//        $cookies.toDate = undefined;
+        $scope.setDefaultMenuState();
+    };
 
     initMenu();
 //      $scope.setDefaultMenuState();

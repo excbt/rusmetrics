@@ -110,16 +110,36 @@ angular.module('portalNMC')
         switch (param){
             case "ru": result=dateRangeOptsRu;break;
             case "monitor-ru": result=dateRangeMonitorOptsRu;break;
+            case "indicator-ru": 
+//console.log($cookies.fromDate);                
+                result = angular.copy(dateRangeMonitorOptsRu);
+                result.startDate = (angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=null))?moment($cookies.fromDate).startOf('day'):moment($rootScope.reportStart).startOf('day');
+                result.endDate = (angular.isDefined($cookies.toDate)&&($cookies.toDate!=null))?moment($cookies.toDate).startOf('day'): moment($rootScope.reportEnd).startOf('day');
+                break;
         };
         return result;
     };
+    
+//    var getDateRangeOptions = function(param, start, end){
+//        var result = null;
+//        switch (param){
+//            case "ru": result=dateRangeOptsRu;break;
+//            case "monitor-ru": result=dateRangeMonitorOptsRu;break;
+//            case "indicator-ru": 
+//                result = angular.copy(dateRangeMonitorOptsRu);
+//                result.startDate = moment(start).startOf('day');
+//                result.endDate = moment(end).endOf('day');
+//                break;
+//        };
+//        return result;
+//    };
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl)
             .success(function(data, satus, headers, config){
                 $rootScope.userInfo = data;
-        console.log($rootScope.userInfo);        
+console.log($rootScope.userInfo);        
             })
             .error(function(e){
                 console.log(e);
@@ -140,6 +160,16 @@ angular.module('portalNMC')
         var userInfo = $rootScope.userInfo;
         if (angular.isDefined(userInfo)){
             result = userInfo.isRma;
+        };
+        return result;
+    };
+    
+                //check user: admin? - true/false
+    var isAdmin = function(){
+        var result = false;
+        var userInfo = $rootScope.userInfo;
+        if (angular.isDefined(userInfo)){
+            result = userInfo.isAdmin;
         };
         return result;
     };
@@ -222,6 +252,24 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
+    // *************** generation confirm code *****************
+    // **************************
+//    var firstNum = Math.round(Math.random()*10);
+//    var secondNum = Math.round(Math.random()*100);
+    var getConfirmCode = function(){
+        var tmpFirst = Math.round(Math.random()*10);
+        var tmpSecond = Math.round(Math.random()*100);
+        var tmpLabel = tmpFirst+" + "+tmpSecond+" = ";
+        var result = {
+//            firstNum: tmpFirst,
+//            secondNum: tmpSecond,
+            label: tmpLabel,
+            result: tmpFirst + tmpSecond
+        };
+//console.log(result);        
+        return result;
+    };
+    //************************** end generation
     
     return {
         checkContext,
@@ -229,6 +277,7 @@ angular.module('portalNMC')
         checkPositiveNumberValue,
         checkStrForDate,
         checkUndefinedEmptyNullValue,
+        getConfirmCode,
         getContextIds,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,
@@ -236,6 +285,7 @@ angular.module('portalNMC')
         getObjectMapSettings,
         getDateRangeOptions,
         getUserServicesPermissions,
+        isAdmin,
         isRma,
         isSystemuser,
         setMonitorMapSettings,

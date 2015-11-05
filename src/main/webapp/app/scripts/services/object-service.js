@@ -145,7 +145,7 @@ console.log("Object Service. Run.");
         
         //get objects
         var getObjectsData = function () {
-console.log("Get data from server");            
+//console.log("Get data from server");            
            return $http.get(crudTableName);//.then(function(res){console.log(res)});
         };
         var getRmaObjectsData = function () {
@@ -161,11 +161,13 @@ console.log("Get data from server");
                 //get data for the setting period for one city
         var getCityConsumingData = function(cityFias, settings){
             var url=urlCitiesData+"/city/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo+"&cityFias="+cityFias;
+//console.log(url);                        
             return $http.get(url);
         };         
                  //get data for the setting period for all cities
         var getCitiesConsumingData = function(settings){
             var url=urlCitiesData+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
+//console.log(url);            
             return $http.get(url);
         };
                  

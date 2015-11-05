@@ -173,7 +173,7 @@
 	</div>
 </div>
 
-<!--Edit account service list-->
+<!-- confirm edition account service list-->
 <div id="confirmSavingModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editServiceListLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
@@ -307,7 +307,9 @@
                         
                     </div>
                     <div>
-                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
                     </div>
                 </div>  
             </div>        
