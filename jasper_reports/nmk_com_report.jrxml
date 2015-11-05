@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-20T13:44:00 -->
+<!-- 2015-11-03T14:35:56 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_com_report" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true" uuid="65372c9f-e359-47a6-bd35-26ea0029165a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="ireport.jasperserver.url" value="http://192.168.84.251:8080/jasperserver/"/>
@@ -14,14 +14,8 @@
 		<parameter name="int_begin_date" class="java.sql.Timestamp"/>
 		<parameter name="int_end_date" class="java.sql.Timestamp"/>
 		<queryString language="SQL">
-			<![CDATA[select * from get_data_integrators($P{int_cont_id}, $P{int_begin_date}, $P{int_end_date}, 3);]]>
+			<![CDATA[select * from reports.get_data_integrators($P{int_cont_id}, $P{int_begin_date}, $P{int_end_date}, 3);]]>
 		</queryString>
-		<field name="hw_data_date" class="java.sql.Timestamp"/>
-		<field name="hw_m_in" class="java.math.BigDecimal"/>
-		<field name="hw_m_out" class="java.math.BigDecimal"/>
-		<field name="hw_v_in" class="java.math.BigDecimal"/>
-		<field name="hw_v_out" class="java.math.BigDecimal"/>
-		<field name="hw_h_delta" class="java.math.BigDecimal"/>
 		<field name="heat_data_date" class="java.sql.Timestamp"/>
 		<field name="heat_m_in" class="java.math.BigDecimal"/>
 		<field name="heat_m_out" class="java.math.BigDecimal"/>
@@ -29,6 +23,12 @@
 		<field name="heat_v_out" class="java.math.BigDecimal"/>
 		<field name="heat_h_delta" class="java.math.BigDecimal"/>
 		<field name="heat_work_time" class="java.math.BigDecimal"/>
+		<field name="hw_data_date" class="java.sql.Timestamp"/>
+		<field name="hw_m_in" class="java.math.BigDecimal"/>
+		<field name="hw_m_out" class="java.math.BigDecimal"/>
+		<field name="hw_v_in" class="java.math.BigDecimal"/>
+		<field name="hw_v_out" class="java.math.BigDecimal"/>
+		<field name="hw_h_delta" class="java.math.BigDecimal"/>
 		<field name="hw_work_time" class="java.math.BigDecimal"/>
 	</subDataset>
 	<parameter name="begin_date" class="java.sql.Timestamp">
@@ -52,7 +52,7 @@
 		<defaultValueExpression><![CDATA[new String("Иванов Петр Сидорович")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from 	get_data_hwater_com_report($P{org_id}, $P{cont_id},  $P{begin_date}, $P{end_date})]]>
+		<![CDATA[select * from 	reports.get_data_hwater_com_report($P{org_id}, $P{cont_id},  $P{begin_date}, $P{end_date})]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="address" class="java.lang.String"/>

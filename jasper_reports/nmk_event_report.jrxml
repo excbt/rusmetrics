@@ -21,7 +21,7 @@
 		<defaultValueExpression><![CDATA[new String("{20118663, 20118664, 20118665}")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from get_data_group_event_report($P{org_id}, $P{cont_ids},  $P{begin_date}, $P{end_date});]]>
+		<![CDATA[select * from reports.get_data_group_event_report($P{org_id}, $P{cont_ids},  $P{begin_date}, $P{end_date});]]>
 	</queryString>
 	<field name="org_name" class="java.lang.String"/>
 	<field name="address" class="java.lang.String"/>

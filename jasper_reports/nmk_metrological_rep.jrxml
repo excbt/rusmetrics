@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-10-09T18:07:55 -->
+<!-- 2015-11-03T14:53:22 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_metrological_rep" pageWidth="5000" pageHeight="2000" orientation="Landscape" columnWidth="4960" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0cb06846-60fc-462a-bbf9-3ada50848c9b">
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
@@ -84,7 +84,7 @@
 			<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 		</parameter>
 		<queryString language="SQL">
-			<![CDATA[select * from get_full_hwater_by_cont_id($P{org_id}, $P{cont_id},  $P{sys_num1}, $P{sys_num2}, $P{sys_num3}, $P{begin_date},   $P{end_date}, $P{detail_type});]]>
+			<![CDATA[select * from reports.get_full_hwater_by_cont_id($P{org_id}, $P{cont_id},  $P{sys_num1}, $P{sys_num2}, $P{sys_num3}, $P{begin_date},   $P{end_date}, $P{detail_type});]]>
 		</queryString>
 		<field name="cont_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
@@ -797,7 +797,7 @@
 		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from get_cont_object_info($P{org_id}, $P{cont_id}, $P{sys_num1}, $P{sys_num3}, $P{sys_num3})]]>
+		<![CDATA[select * from reports.get_cont_object_info($P{org_id}, $P{cont_id}, $P{sys_num1}, $P{sys_num3}, $P{sys_num3})]]>
 	</queryString>
 	<field name="cont_id" class="java.lang.Long"/>
 	<field name="cont_address" class="java.lang.String"/>

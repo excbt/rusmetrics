@@ -114,8 +114,21 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT,
 				ReportConstants.Files.CONSUMPTION_FILE_COMPILED, isCompiled);
 
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT_V1_1,
+				ReportConstants.Files.CONSUMPTION_V1_1_FILE_COMPILED,
+				isCompiled);
+
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
 				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2,
+				ReportConstants.Files.CONSUMPTION_HISTORY_V2_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(
+				ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT,
+				ReportConstants.Files.CONSUMPTION_HISTORY_ETALON_FILE_COMPILED,
 				isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT,
@@ -141,7 +154,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_ETALON_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT_V1_1);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);

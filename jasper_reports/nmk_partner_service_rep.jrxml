@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-10-22T11:42:59 -->
+<!-- 2015-11-03T12:52:12 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_partner_service" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e2bda472-53f2-497e-8a7c-efc0daac84ed">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -45,7 +45,7 @@
 			<defaultValueExpression><![CDATA[new Long(64166466)]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select * from get_partner_service_sum($P{org_id}, $P{begin_date}, null)]]>
+			<![CDATA[select * from reports.get_partner_service_sum($P{org_id}, $P{begin_date}, $P{end_date})]]>
 		</queryString>
 		<field name="subscr_id" class="java.lang.Long"/>
 		<field name="subscr_name" class="java.lang.String"/>
@@ -68,7 +68,7 @@
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
-		<defaultValueExpression><![CDATA[new Long(64166466)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[new Long(37176875)]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select 	coalesce(o.organization_full_name, o.organization_name) as org_name
@@ -121,9 +121,10 @@ where s.id	= $P{org_id}
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
 					<jr:column width="240" uuid="e635eb8b-93b1-4889-b0c6-138ab48250d9">
-						<jr:tableFooter style="Table_TH" height="30">
+						<jr:tableFooter style="Table_TH" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<staticText>
-								<reportElement x="0" y="0" width="240" height="30" uuid="e812690a-cff6-4d93-ad6a-f8cc5e5a0193"/>
+								<reportElement x="0" y="0" width="240" height="20" uuid="e812690a-cff6-4d93-ad6a-f8cc5e5a0193"/>
 								<textElement verticalAlignment="Middle">
 									<paragraph leftIndent="3"/>
 								</textElement>
@@ -140,9 +141,10 @@ where s.id	= $P{org_id}
 								<text><![CDATA[Абонент]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="30">
+						<jr:detailCell style="Table_TD" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
 							<textField>
-								<reportElement x="0" y="0" width="240" height="30" uuid="a28cc333-aafb-4b10-92de-3011198ab1fc"/>
+								<reportElement x="0" y="0" width="240" height="20" uuid="a28cc333-aafb-4b10-92de-3011198ab1fc"/>
 								<textElement verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 									<paragraph leftIndent="3"/>
@@ -152,7 +154,7 @@ where s.id	= $P{org_id}
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="4d4ae97f-c76f-433a-ae78-398ccebee9ae">
-						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:tableFooter style="Table_TH" height="20"/>
 						<jr:columnHeader style="Table_CH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="80" height="30" uuid="8a712a9f-82d3-48c2-90b3-f35303949b43"/>
@@ -162,9 +164,9 @@ where s.id	= $P{org_id}
 								<text><![CDATA[количество объектов]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="30">
+						<jr:detailCell style="Table_TD" height="20">
 							<textField pattern="0">
-								<reportElement x="0" y="0" width="80" height="30" uuid="05cfdcc7-4ac1-4fd5-937f-e934f9b16c9f"/>
+								<reportElement x="0" y="0" width="80" height="20" uuid="05cfdcc7-4ac1-4fd5-937f-e934f9b16c9f"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<paragraph rightIndent="3"/>
 								</textElement>
@@ -173,7 +175,7 @@ where s.id	= $P{org_id}
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="70" uuid="ad5dcaff-bb7e-4aa3-afdd-5c9fca50445b">
-						<jr:tableFooter style="Table_TH" height="30"/>
+						<jr:tableFooter style="Table_TH" height="20"/>
 						<jr:columnHeader style="Table_CH" height="30">
 							<staticText>
 								<reportElement x="0" y="0" width="70" height="30" uuid="e7a5b70b-699c-4882-b8c9-77457f071748"/>
@@ -183,9 +185,9 @@ where s.id	= $P{org_id}
 								<text><![CDATA[стоимость услуг]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="30">
+						<jr:detailCell style="Table_TD" height="20">
 							<textField pattern="0.00">
-								<reportElement x="0" y="0" width="70" height="30" uuid="6bdc8da0-a0ff-4d5d-a02e-21852bfb3e04"/>
+								<reportElement x="0" y="0" width="70" height="20" uuid="6bdc8da0-a0ff-4d5d-a02e-21852bfb3e04"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<paragraph rightIndent="3"/>
 								</textElement>
@@ -194,9 +196,9 @@ where s.id	= $P{org_id}
 						</jr:detailCell>
 					</jr:column>
 					<jr:column width="80" uuid="196cd40e-1345-4798-9674-7f255ec4e828">
-						<jr:tableFooter style="Table_TH" height="30">
+						<jr:tableFooter style="Table_TH" height="20">
 							<textField pattern="0.00">
-								<reportElement x="0" y="0" width="80" height="30" uuid="b2b73cd2-d22f-4f28-8c0e-f09ce8155c19"/>
+								<reportElement x="0" y="0" width="80" height="20" uuid="b2b73cd2-d22f-4f28-8c0e-f09ce8155c19"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<paragraph rightIndent="3"/>
 								</textElement>
@@ -212,9 +214,9 @@ where s.id	= $P{org_id}
 								<text><![CDATA[сумма]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:detailCell style="Table_TD" height="30">
+						<jr:detailCell style="Table_TD" height="20">
 							<textField pattern="0.00">
-								<reportElement x="0" y="0" width="80" height="30" uuid="150f53a0-15f2-4dcf-9104-15bc6cdd9982"/>
+								<reportElement x="0" y="0" width="80" height="20" uuid="150f53a0-15f2-4dcf-9104-15bc6cdd9982"/>
 								<textElement textAlignment="Right" verticalAlignment="Middle">
 									<paragraph rightIndent="3"/>
 								</textElement>
