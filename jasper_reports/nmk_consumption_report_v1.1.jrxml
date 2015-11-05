@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-11-03T14:02:08 -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
+<!-- 2015-11-03T14:05:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report_v1.1" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -47,8 +47,8 @@
 			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select * from 
-reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
+			<![CDATA[select * from reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})
+order by cont_address]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
@@ -87,7 +87,7 @@ reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]
 			<variableExpression><![CDATA[(($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.25 ? (long) 1 : ($F{avg_h_delta}/$F{heat_area})/$F{avg_spec_h_delta} <= 1.5 ? (long) 2 : (long) 3)]]></variableExpression>
 		</variable>
 	</subDataset>
-	<subDataset name="dt2" uuid="628db370-0ac9-48a1-89e7-cbdedd93adb3">
+	<subDataset name="dt3" uuid="125a277d-421e-4f13-83e5-aa8edc7f382d">
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
@@ -103,8 +103,7 @@ reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]
 			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select * from reports.get_data_consumption_chart($P{cont_ids}, $P{begin_date}, $P{end_date})
-order by d_date]]>
+			<![CDATA[select  * from reports.get_data_consumption_stacked_bar($P{cont_ids},  $P{begin_date}, $P{end_date})]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
@@ -113,6 +112,9 @@ order by d_date]]>
 		<field name="sum_h_delta" class="java.lang.Double"/>
 		<field name="avg_h_delta" class="java.lang.Double"/>
 		<field name="avg_spec_h_delta" class="java.lang.Double"/>
+		<field name="cat_value" class="java.lang.Double"/>
+		<field name="cat_v1" class="java.lang.Double"/>
+		<field name="cat" class="java.lang.Integer"/>
 		<variable name="count" class="java.lang.Long" calculation="Count">
 			<variableExpression><![CDATA[+1]]></variableExpression>
 			<initialValueExpression><![CDATA[1]]></initialValueExpression>
@@ -123,11 +125,11 @@ order by d_date]]>
 	</subDataset>
 	<parameter name="begin_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,01,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[DATE(2014,12,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="end_date" class="java.sql.Timestamp">
 		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
-		<defaultValueExpression><![CDATA[DATE(2015,06,01)]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[DATE(2015,04,01)]]></defaultValueExpression>
 	</parameter>
 	<parameter name="org_id" class="java.lang.Long">
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
@@ -162,7 +164,7 @@ where s.id	= $P{org_id}
 		</band>
 	</title>
 	<summary>
-		<band height="367" splitType="Stretch">
+		<band height="382" splitType="Stretch">
 			<componentElement>
 				<reportElement x="0" y="0" width="2180" height="90" uuid="9da5e62e-3d54-4c02-af98-3b806e309d60"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
@@ -1503,24 +1505,23 @@ where s.id	= $P{org_id}
 					</jr:columnGroup>
 				</jr:table>
 			</componentElement>
-			<lineChart>
-				<chart evaluationTime="Report">
-					<reportElement positionType="Float" x="0" y="150" width="1480" height="200" uuid="c0420125-094b-4398-a577-4f8adef6ee7a">
+			<stackedBarChart>
+				<chart isShowLegend="false" evaluationTime="Report">
+					<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="30" y="110" width="870" height="120" uuid="55df6555-3ece-41f0-898f-7ca8d1909c6f">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
-						<font fontName="Arial cyrillic"/>
+						<font fontName="Arial cyrillic" size="12"/>
+						<titleExpression><![CDATA["График удельного потребления тепла (Гкал/м2)"]]></titleExpression>
 					</chartTitle>
-					<chartSubtitle>
-						<font fontName="Arial cyrillic"/>
-					</chartSubtitle>
+					<chartSubtitle/>
 					<chartLegend>
-						<font fontName="Arial cyrillic"/>
+						<font fontName="Arial cyrillic" size="10"/>
 					</chartLegend>
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt2" uuid="1e2419e3-bdd9-433d-aadf-853c01fe1af6">
+						<datasetRun subDataset="dt3" uuid="51e598c0-98d6-421e-a9fb-b55ae01d109a">
 							<datasetParameter name="begin_date">
 								<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -1533,21 +1534,40 @@ where s.id	= $P{org_id}
 						</datasetRun>
 					</dataset>
 					<categorySeries>
-						<seriesExpression><![CDATA[$F{cont_address}]]></seriesExpression>
-						<categoryExpression><![CDATA[($F{d_date} == null ? "" : new SimpleDateFormat("MMM.yy").format($F{d_date}))]]></categoryExpression>
-						<valueExpression><![CDATA[(($F{heat_area} == null) || ($F{sum_h_delta} == null) || ($F{heat_area} == 0.0) || ($F{sum_h_delta} == 0.0)  ? 0.0 : $F{sum_h_delta}/$F{heat_area})]]></valueExpression>
+						<seriesExpression><![CDATA[$F{cat} + " категория"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{cont_address}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{cat_v1}]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
-				<linePlot>
-					<plot/>
-					<categoryAxisFormat>
-						<axisFormat/>
+				<barPlot isShowLabels="false" isShowTickLabels="true" isShowTickMarks="true">
+					<plot orientation="Horizontal" labelRotation="0.0">
+						<seriesColor seriesOrder="0" color="#2CE635"/>
+						<seriesColor seriesOrder="1" color="#ECF241"/>
+						<seriesColor seriesOrder="2" color="#F51B0F"/>
+					</plot>
+					<itemLabel/>
+					<categoryAxisFormat labelRotation="0.0">
+						<axisFormat>
+							<labelFont>
+								<font fontName="Arial cyrillic" size="10"/>
+							</labelFont>
+							<tickLabelFont>
+								<font fontName="Arial cyrillic" size="12"/>
+							</tickLabelFont>
+						</axisFormat>
 					</categoryAxisFormat>
 					<valueAxisFormat>
-						<axisFormat/>
+						<axisFormat>
+							<labelFont>
+								<font fontName="Arial cyrillic" size="10"/>
+							</labelFont>
+							<tickLabelFont>
+								<font fontName="Arial cyrillic" size="10"/>
+							</tickLabelFont>
+						</axisFormat>
 					</valueAxisFormat>
-				</linePlot>
-			</lineChart>
+				</barPlot>
+			</stackedBarChart>
 		</band>
 	</summary>
 </jasperReport>
