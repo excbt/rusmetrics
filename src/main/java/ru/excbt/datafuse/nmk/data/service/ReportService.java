@@ -366,7 +366,7 @@ public class ReportService {
 			break;
 		}
 		case EVENT_REPORT: {
-			result = ReportType.RPT_ALERTS;
+			result = ReportType.RPT_EVENT;
 			break;
 		}
 		case METROLOGICAL_REPORT: {
