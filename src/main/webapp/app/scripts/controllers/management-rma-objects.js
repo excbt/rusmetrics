@@ -32,6 +32,8 @@ console.log('Run Object management controller.');
                 $scope.objectCtrlSettings.isCtrlEnd =false;
                 //флаг для объектов: true - все объекты выбраны
                 $scope.objectCtrlSettings.allSelected = false;
+                //выбран хотя бы один объект
+                $scope.objectCtrlSettings.anySelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
 //                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
@@ -932,12 +934,29 @@ console.log(obj);
                 
                 //toggle all objects - selected/unselected
                 $scope.toggleObjects = function(flag){
+                    $scope.objectCtrlSettings.anySelected = flag;
                     $scope.objects.forEach(function(el){
                         el.selected = flag;
                     });
                     $scope.objectsOnPage.forEach(function(el){
                         el.selected = flag;
                     });
+                };
+                    //toggle one object
+                $scope.toggleObject = function(object){
+//                    object.selected = !object.selected;
+                    var anySelectedFlag = false;
+                    $scope.objectsOnPage.some(function(elem){
+                        if (elem.selected==true){
+                            anySelectedFlag = true;
+                            return true;
+                        };
+                    });
+                    if (anySelectedFlag==true){
+                        $scope.objectCtrlSettings.anySelected = true;
+                    }else{
+                        $scope.objectCtrlSettings.anySelected = false;
+                    };
                 };
                 
                 $scope.setModeForObjects = function(mode){

@@ -55,7 +55,7 @@
                                 <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 0 3px;">
                                     
                                     <div class="btn-group">
-                                        <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
+                                        <button ng-disabled="!objectCtrlSettings.anySelected" title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
                                         <span class="caret"></span>
                                         </button>
 <!--
@@ -138,7 +138,7 @@
                               </ul>
                             </div>
 <!--                            ng-click="toggleObject(object)"-->
-                            <input type="checkbox"  ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
+                            <input type="checkbox" ng-click="toggleObject(object)" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
 
 
                         </td>
