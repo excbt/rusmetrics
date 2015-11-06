@@ -512,20 +512,21 @@ tr.nmc-tr-odd>td{
     background-color: #eee;
 }
 
-
     /*Стиль колонки с кнопками*/
 .nmc-td-for-button{
     min-width: 35px;
     width: 2%;
 }
 
+/*
 .nmc-td-for-button-object-control{
     min-width: 25px;
     width: 25px;
 }
+*/
 
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
-.nmc-td-for-button-checkbox{
+.nmc-td-for-button-checkbox, .nmc-td-for-button-object-control{
     min-width: 45px;
     width: 3%;
 }
@@ -711,13 +712,27 @@ tr.nmc-main-table-header > th {
     min-height: 360px;
     position:relative
 }
-/*  */
+/*  Таблица с непрокручиваемой шапкой для страницы Показания*/
 .nmc-indicator-table-with-fixed-header{
-    overflow: auto;
+/*    overflow-y: hidden;*/
+/*
+    overflow-x: auto;
+    margin-right: -15px;
+*/
+/*
+    height: 70vh;
+    min-height: 480px;
+    position:relative
+*/
+}
+    /* прокручиваемая часть таблицы */
+.nmc-indicator-table-without-fixed-header{
+    overflow-y: auto;
+    overflow-x: auto;
 /*    height:685px;*/
     height: 60vh;
     min-height: 360px;
-    position:relative
+/*    position: absolute;*/
 }
 /*  */
 .nmc-notice-table-with-fixed-header{
@@ -1276,6 +1291,12 @@ tr.nmc-main-table-header > th {
 .nmc-object-list  {
     height: 520px;
 }
+
+    /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
+.nmc-object-list-in-notices{
+    overflow-y: auto;
+    max-height: 520px;
+}
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
     padding-top: 150px;
@@ -1722,24 +1743,24 @@ input[type="checkbox"] {
 
 /* Рисование "открытого замка"*/
 .nmc-unlock {
-margin-top: 0.8em;
-border-radius: 0.3em;
-box-shadow: inset 0.9em 0.8em 0 0 #2C2C2C,inset -0.9em 0.8em 0 0 #2C2C2C,inset 0em -0.4em 0 0 #2C2C2C;
-font-size: 6px;
-width: 2em;
-height: 1.8em;
-position: relative;
+    margin-top: 0.8em;
+    border-radius: 0.3em;
+    box-shadow: inset 0.9em 0.8em 0 0 #2C2C2C,inset -0.9em 0.8em 0 0 #2C2C2C,inset 0em -0.4em 0 0 #2C2C2C;
+    font-size: 6px;
+    width: 2em;
+    height: 1.8em;
+    position: relative;
 }
 .nmc-unlock::before {
-left: 1.4em;
-border-radius: 1em 1em 0 0;
-top: -0.8em;
-position: absolute;
-width: 0.8em;
-content: "";
-height: 0.8em;
-border: 0.3em solid #2C2C2C;
-border-bottom: none;
+    left: 1.4em;
+    border-radius: 1em 1em 0 0;
+    top: -0.8em;
+    position: absolute;
+    width: 0.8em;
+    content: "";
+    height: 0.8em;
+    border: 0.3em solid #2C2C2C;
+    border-bottom: none;
 }
 
 .nmc-lock {

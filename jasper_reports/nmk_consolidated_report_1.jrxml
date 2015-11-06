@@ -23,7 +23,7 @@
 		<defaultValueExpression><![CDATA[new String("{20118664, 20118665, 20118666, 20118667, 20118668}")]]></defaultValueExpression>
 	</parameter>
 	<queryString language="SQL">
-		<![CDATA[select * from 	get_data_cons1_report($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
+		<![CDATA[select * from reports.get_data_cons1_report($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 	</queryString>
 	<field name="hw_sum_work_time" class="java.lang.Double"/>
 	<field name="hw_sum_h_delta" class="java.lang.Double"/>

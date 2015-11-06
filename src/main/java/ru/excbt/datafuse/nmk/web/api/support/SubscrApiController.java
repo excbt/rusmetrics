@@ -48,16 +48,40 @@ public class SubscrApiController extends WebApiController {
 			return true;
 		}
 
-		List<Long> contObjectIds = subscrContObjectService
+		Long[] contObjectIds = new Long[] { contObjectId };
+		return canAccessContObject(contObjectIds);
+	}
+
+	/**
+	 * 
+	 * @param contObjectIds
+	 * @return
+	 */
+	protected boolean canAccessContObject(Long[] contObjectIds) {
+		if (contObjectIds == null || contObjectIds.length == 0) {
+			return false;
+		}
+
+		if (currentUserService.isSystem()) {
+			return true;
+		}
+
+		List<Long> subscrContObjectIds = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
-		return contObjectIds.contains(contObjectId);
+
+		boolean result = true;
+		for (Long id : contObjectIds) {
+			result = result && subscrContObjectIds.contains(id);
+		}
+
+		return result;
 	}
 
 	/**
 	 * 
 	 * @return
 	 */
-	protected long getSubscriberId() {
+	protected long getCurrentSubscriberId() {
 		return currentSubscriberService.getSubscriberId();
 	}
 
@@ -65,8 +89,8 @@ public class SubscrApiController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	protected LocalDate getSubscriberLocalDate() {
-		Date d = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+	protected LocalDate getCurrentSubscriberLocalDate() {
+		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return new LocalDate(d);
 	}
 
@@ -90,7 +114,7 @@ public class SubscrApiController extends WebApiController {
 		if (sud != null && sud.getSkipServiceFilter()) {
 			return new ArrayList<>(objectList);
 		}
-		return filterObjectAccess(objectList, getSubscriberId());
+		return filterObjectAccess(objectList, getCurrentSubscriberId());
 	}
 
 	/**

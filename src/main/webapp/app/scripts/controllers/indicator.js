@@ -9,9 +9,20 @@ angular.module('portalNMC')
             endDate :  $location.search().toDate
         };
     }else{
-        $scope.indicatorDates = {
-            startDate : moment().subtract(6, 'days').startOf('day'),
-            endDate :  moment().endOf('day')
+//        $scope.indicatorDates = {
+//            startDate : moment().subtract(6, 'days').startOf('day'),
+//            endDate :  moment().endOf('day')
+//        };
+        if (angular.isDefined($cookies.fromDate)&&($cookies.toDate!=null)){
+            $scope.indicatorDates = {
+                startDate : $cookies.fromDate,
+                endDate :  $cookies.toDate
+            };
+        }else{
+            $scope.indicatorDates = {
+                startDate : indicatorSvc.getFromDate(),
+                endDate :  indicatorSvc.getToDate()
+            };
         };
     };
 //console.log($scope.indicatorDates.startDate);
@@ -19,6 +30,18 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings ={};
     $scope.ctrlSettings.ctxId = "zpoint_indicator_page";
+        
+//    sort settings
+    $scope.ctrlSettings.orderBy = {};
+    if (angular.isDefined($cookies.indicatorsortorder)&&($cookies.indicatorsortorder!=null)){  
+        switch($cookies.indicatorsortorder){
+            case "asc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: true, desc: false, order: "asc"}; break;
+            case "desc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: false, desc: true, order: "desc"}; break;   
+        };        
+    }else{
+        $scope.ctrlSettings.orderBy = {field: "dataDate", asc: false, desc: true, order: "desc"};
+    };
+//console.log($scope.ctrlSettings.orderBy.order);        
 
         //Определяем оформление для таблицы показаний прибора
         
@@ -150,45 +173,50 @@ angular.module('portalNMC')
                 "title":""
             }, 
             {
-//                header : "Разница масс воды, т",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разница масс воды, т",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "m_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Температура подачи, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. подачи",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             }, 
             {
-//                header : "Температура обратки, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. обратки",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             } , 
             {
-//                header : "Температура холодной воды, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. ХВС",
+//                header : "",
+                class : "col-md-1",    
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_cold",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             } ,
             {
-//                header : "Температура окружающей среды, град C",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Темп. окр. среды",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
                 "imgpath" : "",
                 "imgclass": "",
@@ -204,7 +232,7 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-                header : "Объем обратки",
+                header : "Объем обратки, м3",
 //                header : "",
                 class : "col-md-1",
                 name: "v_out",
@@ -213,54 +241,61 @@ angular.module('portalNMC')
                 "title":""
             },
             {
-//                header : "Разница объемов, м3",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разница объемов, м3",
+//                header : "",
+                
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "v_delta",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Входящие ГКал",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "ГКал на входе",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "h_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "ГКал на выходе",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "ГКал на выходе",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "h_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Давление на подаче",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Давление на подаче, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_in",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Давление на обратке",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Давление на обратке, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_out",
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
             },
             {
-//                header : "Разность давлений, Мпа",
-                header : "",
-                class : "col-md-1 nmc-th-invisible",
+                header : "Разность давлений, Мпа",
+//                header : "",
+                class : "col-md-1",
+//                class : "col-md-1 nmc-th-invisible",
                 name: "p_delta",
                 "imgpath" : "",
                 "imgclass": "",
@@ -503,6 +538,7 @@ angular.module('portalNMC')
 //console.log($location.url());        
 //console.log($location.search());
         var pathParams = $location.search();
+//console.log($location);        
         var tmpZpId = null;//indicatorSvc.getZpointId();    
         var tmpContObjectId = null;//indicatorSvc.getContObjectId();
         var tmpZpName = null;//indicatorSvc.getZpointName();    
@@ -561,9 +597,9 @@ angular.module('portalNMC')
         };
         
         $scope.contZPoint = indicatorSvc.getZpointId();
-        $scope.contZPointName = indicatorSvc.getZpointName() || "Не задано";
+        $scope.contZPointName = (indicatorSvc.getZpointName()!="undefined")?indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = indicatorSvc.getContObjectName() || "Не задано";     
+        $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";     
         
         //clear cookies
 //console.log($cookies);        
@@ -572,13 +608,25 @@ angular.module('portalNMC')
 //        $cookies.contZPointName = null;
 //        $cookies.contObjectName = null;
         
-        //get date interval from url params
+        //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
             $rootScope.reportStart = pathParams.fromDate;
+        }else if(angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=="null")){
+                $rootScope.reportStart = $cookies.fromDate;
+            }else{
+                $rootScope.reportStart = indicatorSvc.getFromDate();
         };
         if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
             $rootScope.reportEnd = pathParams.toDate;
+        }else if (angular.isDefined($cookies.toDate)&&($cookies.toDate!=="null")){
+                $rootScope.reportEnd = $cookies.toDate;
+            }else{
+                $rootScope.reportEnd = indicatorSvc.getToDate();
         };
+        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
+//console.log($scope.timeDetailType);  
+//console.log($rootScope.reportStart);        
+//console.log($rootScope.reportEnd);        
     };
         //run init method
     initIndicatorParams();
@@ -597,10 +645,11 @@ angular.module('portalNMC')
 //console.log($cookies.timeDetailType);        
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          
-         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage;
+         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage+"&dataDateSort="+$scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
 //console.log(table);        
-        crudGridDataFactory(table).get(function (data) {           
+        crudGridDataFactory(table).get(function (data) {
+//console.log(data);            
                 $scope.totalIndicators = data.totalElements;
  
                 $scope.columns = $scope.tableDef.columns;
@@ -638,7 +687,7 @@ angular.module('portalNMC')
                         
                     };                    
                 });
-                $scope.data = data.objects;
+                $scope.data = data.objects;            
         });
          
         $scope.setScoreStyles = function(){
@@ -676,15 +725,19 @@ angular.module('portalNMC')
 //console.log(indicatorThWorkTime.clientWidth);            
             if ((angular.isDefined(indicatorThDataDate))&&(indicatorThDataDate!=null)&&(angular.isDefined(indicatorThWorkTime))&&(indicatorThWorkTime!=null)){
                 $scope.totals_th_head_style = indicatorThDataDate.offsetWidth+indicatorThWorkTime.offsetWidth+4;
+                
             };
             
 //                totalThHead.clientWidth = indicatorThDataDate.clientWidth+indicatorThWorkTime.clientWidth;
 //            $scope.intotalColumns.forEach(function(element){
             $scope.intotalColumns.some(function(element){    
                 var indicatorTh = document.getElementById("indicators_th_"+element.name);
-//                var indicatorHead = document.getElementById("indicators_head_"+element.name);
+                var indicatorHead = document.getElementById("indicators_head_"+element.name);
                 if ((angular.isDefined(indicatorTh))&&(indicatorTh!=null)){
                     element.ngstyle =indicatorTh.offsetWidth;
+//                    indicatorHead.width = indicatorTh.offsetWidth;
+//console.log(indicatorHead.offsetWidth);                    
+//console.log(indicatorTh.offsetWidth);                     
 //console.log(element);                    
                 };
 //return true;
@@ -700,30 +753,56 @@ angular.module('portalNMC')
             $scope.setScoreStyles();
         };
         
+        
+        //prepare summary data to the view - apply toFixed
+        var prepareSummary = function(arr){
+            $scope.intotalColumns.forEach(function(element){                       
+                var columnName = element.name;
+                if (arr.hasOwnProperty(columnName) &&(!isNaN(arr[columnName]))&&(arr[columnName]!=null)){                
+                    arr[columnName] = arr[columnName].toFixed(3);
+                }else{
+                    if ((columnName=="m_delta")&&(arr.m_out!="-")&&(arr.m_in!="-")){                   
+                            arr[columnName] = (arr.m_in-arr.m_out).toFixed(3);
+                    }else if ((columnName=="v_delta")&&(arr.v_out!="-")&&(arr.v_in!="-")){                    
+                            arr[columnName] = (arr.v_in-arr.v_out).toFixed(3);
+                    }else if ((columnName=="p_delta")&&(arr.p_out!="-")&&(arr.p_in!="-")){                     
+                            arr[columnName] = (arr.p_in-arr.p_out).toFixed(3);
+                    }else{
+                        arr[columnName] = "-";
+                    };
+                };
+            });
+        };
+        
         // get summary (score)
         var table_summary = table.replace("paged", "summary");
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
                 $scope.summary = data;       
                 if ($scope.summary.hasOwnProperty('diffs')){
-                    $scope.intotalColumns.forEach(function(element){
-                        var columnName = element.name;
-                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
-                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
-                        }else{
-                            $scope.summary.diffs[columnName] = "-";
-                        };
-                    });
+                    prepareSummary($scope.summary.diffs);
+//                    $scope.intotalColumns.forEach(function(element){
+//                        var columnName = element.name;
+//                        if ($scope.summary.diffs.hasOwnProperty(columnName) &&(!isNaN($scope.summary.diffs[columnName]))&&($scope.summary.diffs[columnName]!=null)){                                                     
+//                            $scope.summary.diffs[columnName] = $scope.summary.diffs[columnName].toFixed(3);
+//                        }else{
+//                            $scope.summary.diffs[columnName] = "-";
+//                        };
+//                    });
                 };
-                if ($scope.summary.hasOwnProperty('totals')){                 
-                    $scope.intotalColumns.forEach(function(element){                       
-                        var columnName = element.name;
-                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
-                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
-                        }else{
-                            $scope.summary.totals[columnName] = "-";
-                        };
-                    });
+                if ($scope.summary.hasOwnProperty('totals')){ 
+                    prepareSummary($scope.summary.totals);
+//                    $scope.intotalColumns.forEach(function(element){                       
+//                        var columnName = element.name;
+//                        if ($scope.summary.totals.hasOwnProperty(columnName) &&(!isNaN($scope.summary.totals[columnName]))&&($scope.summary.totals[columnName]!=null)){                
+//                            $scope.summary.totals[columnName] = $scope.summary.totals[columnName].toFixed(3);
+//                        }else{
+//                            $scope.summary.totals[columnName] = "-";
+//                        };
+//                    });
+                };
+                if ($scope.summary.hasOwnProperty('average')){ 
+                    prepareSummary($scope.summary.average);
                 };
                 if (!$scope.summary.hasOwnProperty('diffs') || !$scope.summary.hasOwnProperty('totals')){
                     return;
@@ -834,20 +913,7 @@ angular.module('portalNMC')
 
     $scope.pageChanged = function(newPage) {       
         $scope.getData(newPage);
-    };  
-        
-//    $scope.$watch('reportStart', function (newDates, oldDates) {  
-//console.log("change reportStart");        
-//console.log(oldDates);                
-//console.log(newDates);        
-//        if( (typeof $rootScope.reportStart == 'undefined') || ($rootScope.reportStart==null) ){
-//            return;
-//        };
-//        if(newDates===oldDates){
-//            return;
-//        };
-//        $scope.getData(1);                              
-//    }, false);  
+    };   
         
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("Date-range-settings indicatorDates");        
@@ -858,6 +924,10 @@ angular.module('portalNMC')
         if(newDates===oldDates){
             return;
         };
+        $cookies.fromDate = moment(newDates.startDate).format('YYYY-MM-DD');
+        $cookies.toDate = moment(newDates.endDate).format('YYYY-MM-DD');
+        indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
+        indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
         $scope.getData(1);
@@ -909,6 +979,14 @@ angular.module('portalNMC')
             .error(function(err){
                 notificationFactory.errorInfo(err.title, err.description)
             });
+    };
+        
+    $scope.setOrderBy = function(field){
+        var asc = $scope.ctrlSettings.orderBy.field === field ? !$scope.ctrlSettings.orderBy.asc : true;
+        var ord = (asc==true) ? "asc" : "desc";
+        $cookies.indicatorsortorder = ord;
+        $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.indicatorsortorder };
+        $scope.getData(1);
     };
     
     //check indicators for data (проверка: есть данные для отображения или нет)

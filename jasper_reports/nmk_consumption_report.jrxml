@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-08-20T13:47:09 -->
+<!-- 2015-11-03T14:02:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -48,7 +48,7 @@
 		</parameter>
 		<queryString>
 			<![CDATA[select * from 
-get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
+reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>
 		<field name="cont_address" class="java.lang.String"/>
@@ -103,8 +103,7 @@ get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select * from 
-get_data_consumption_chart($P{cont_ids}, $P{begin_date}, $P{end_date})
+			<![CDATA[select * from reports.get_data_consumption_chart($P{cont_ids}, $P{begin_date}, $P{end_date})
 order by d_date]]>
 		</queryString>
 		<field name="co_id" class="java.lang.Long"/>

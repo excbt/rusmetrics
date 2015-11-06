@@ -59,7 +59,7 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
-				|| !subscriber.getRmaSubscriberId().equals(getSubscriberId())) {
+				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
 			return responseBadRequest();
 		}
 

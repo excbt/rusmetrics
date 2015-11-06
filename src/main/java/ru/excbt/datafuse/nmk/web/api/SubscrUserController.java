@@ -51,7 +51,7 @@ public class SubscrUserController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
-		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
@@ -70,7 +70,7 @@ public class SubscrUserController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.findBySubscriberId(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
@@ -86,7 +86,7 @@ public class SubscrUserController extends SubscrApiController {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(getSubscriberId(), isAdmin, subscrUser, newPassword, request);
+		return createSubscrUserInternal(getCurrentSubscriberId(), isAdmin, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -105,7 +105,7 @@ public class SubscrUserController extends SubscrApiController {
 		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
 				: null;
 
-		return updateSubscrUserInternal(getSubscriberId(), subscrUserId, isAdmin, subscrUser, passwords);
+		return updateSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isAdmin, subscrUser, passwords);
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class SubscrUserController extends SubscrApiController {
 	public ResponseEntity<?> deleteCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
-		return deleteSubscrUserInternal(getSubscriberId(), subscrUserId, isPermanent);
+		return deleteSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isPermanent);
 
 	}
 

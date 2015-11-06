@@ -25,10 +25,13 @@ public class ReportConstants {
 		public static final String METROLOGICAL_FILE_COMPILED = "jasper_reports/nmk_metrological_rep.jasper";
 		public static final String CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_consumption_report.jasper";
 		public static final String CONSUMPTION_HISTORY_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
-		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
+		public static final String CONSUMPTION_HISTORY_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper";
 		public static final String LOG_JOURNAL_FILE_COMPILED = "jasper_reports/nmk_log_journal.jasper";
 		public static final String PARTNER_SERVICE_FILE_COMPILED = "jasper_reports/nmk_partner_service_rep.jasper";
 		public static final String ABONENT_SERVICE_FILE_COMPILED = "jasper_reports/nmk_abonent_service_rep.jasper";
+		public static final String CONSUMPTION_HISTORY_V2_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report_v2.jasper";
+		public static final String CONSUMPTION_V1_1_FILE_COMPILED = "jasper_reports/nmk_consumption_report_v1.1.jasper";
+		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_etalon_report.jasper";
 
 		private Files() {
 

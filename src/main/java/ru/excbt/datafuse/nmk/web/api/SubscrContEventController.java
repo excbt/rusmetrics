@@ -18,48 +18,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
-import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-
-import com.google.common.collect.Lists;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContEventController extends WebApiController {
+public class SubscrContEventController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContEventController.class);
-
-	@Autowired
-	private SubscriberService subscrUserService;
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventController.class);
 
 	@Autowired
 	private ContEventService contEventService;
-
-	@Autowired
-	private ContEventRepository contEventRepository;
-
-	@Autowired
-	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 * 
 	 * @param contObjectId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> listAll(
-			@PathVariable("contObjectId") long contObjectId) {
-		List<ContEvent> result = contEventService
-				.findEventsByContObjectId(contObjectId);
+	@RequestMapping(value = "/contObjects/{contObjectId}/events", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> listAll(@PathVariable("contObjectId") long contObjectId) {
+		List<ContEvent> result = contEventService.findEventsByContObjectId(contObjectId);
 		return ResponseEntity.ok(result);
 	}
 
@@ -69,9 +52,7 @@ public class SubscrContEventController extends WebApiController {
 	 */
 	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
-		Page<ContEvent> result = contEventService
-				.selectEventsBySubscriber(currentSubscriberService
-						.getSubscriberId());
+		Page<ContEvent> result = contEventService.selectEventsBySubscriber(getCurrentSubscriberId());
 		return ResponseEntity.ok(Lists.newArrayList(result.iterator()));
 	}
 
@@ -83,13 +64,11 @@ public class SubscrContEventController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/eventsFilter", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> eventsFilter(
-			@RequestParam(value = "startDate", required = false) String startDateStr,
+	public ResponseEntity<?> eventsFilter(@RequestParam(value = "startDate", required = false) String startDateStr,
 			@RequestParam(value = "endDate", required = false) String endDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds) {
 
-		List<Long> contObjectList = contObjectIds != null ? Arrays
-				.asList(contObjectIds) : new ArrayList<Long>();
+		List<Long> contObjectList = contObjectIds != null ? Arrays.asList(contObjectIds) : new ArrayList<Long>();
 
 		if (startDateStr != null && endDateStr != null) {
 			DateTime startD = null;
@@ -98,44 +77,33 @@ public class SubscrContEventController extends WebApiController {
 				startD = DATE_FORMATTER.parseDateTime(startDateStr);
 				endD = DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
-				return ResponseEntity
-						.badRequest()
-						.body(String
-								.format("Invalid parameters startDateStr:{}, endDateStr:{}",
-										startDateStr, endDateStr));
+				return ResponseEntity.badRequest().body(
+						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));
 			}
 
 			if (startD.compareTo(endD) > 0) {
-				return ResponseEntity.badRequest().body(
-						String.format(
-								"startDateStr:%s is bigger than endDateStr:%s",
-								startDateStr, endDateStr));
+				return ResponseEntity.badRequest()
+						.body(String.format("startDateStr:%s is bigger than endDateStr:%s", startDateStr, endDateStr));
 			}
 
-			DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999);
+			DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+					.withMillisOfSecond(999);
 
-			Page<ContEvent> resultPage = contEventService
-					.selectBySubscriberAndDateAndContObjectIds(
-							currentSubscriberService.getSubscriberId(), startD,
-							endOfDay, contObjectList);
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndDateAndContObjectIds(
+					getCurrentSubscriberId(), startD, endOfDay, contObjectList);
 
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
 		if (contObjectList != null && contObjectList.size() > 0) {
-			Page<ContEvent> resultPage = contEventService
-					.selectBySubscriberAndContObjectIds(
-							currentSubscriberService.getSubscriberId(),
-							contObjectList);
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(getCurrentSubscriberId(),
+					contObjectList);
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
-		Page<ContEvent> resultPage = contEventService
-				.selectEventsBySubscriber(currentSubscriberService
-						.getSubscriberId());
+		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(getCurrentSubscriberId());
 
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 	}
@@ -147,15 +115,14 @@ public class SubscrContEventController extends WebApiController {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/eventsFilterPaged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> eventsFilterPaged(
-			@RequestParam(value = "startDate", required = false) String startDateStr,
+	@RequestMapping(value = "/contObjects/eventsFilterPaged", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> eventsFilterPaged(@RequestParam(value = "startDate", required = false) String startDateStr,
 			@RequestParam(value = "endDate", required = false) String endDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		List<Long> contObjectList = contObjectIds != null ? Arrays
-				.asList(contObjectIds) : new ArrayList<Long>();
+		List<Long> contObjectList = contObjectIds != null ? Arrays.asList(contObjectIds) : new ArrayList<Long>();
 
 		if (startDateStr != null && endDateStr != null) {
 			DateTime startD = null;
@@ -164,43 +131,33 @@ public class SubscrContEventController extends WebApiController {
 				startD = DATE_FORMATTER.parseDateTime(startDateStr);
 				endD = DATE_FORMATTER.parseDateTime(endDateStr);
 			} catch (Exception e) {
-				return ResponseEntity
-						.badRequest()
-						.body(String
-								.format("Invalid parameters startDateStr:{}, endDateStr:{}",
-										startDateStr, endDateStr));
+				return ResponseEntity.badRequest().body(
+						String.format("Invalid parameters startDateStr:{}, endDateStr:{}", startDateStr, endDateStr));
 			}
 
 			if (startD.compareTo(endD) > 0) {
-				return ResponseEntity.badRequest().body(
-						String.format(
-								"startDateStr:%s is bigger than endDateStr:%s",
-								startDateStr, endDateStr));
+				return ResponseEntity.badRequest()
+						.body(String.format("startDateStr:%s is bigger than endDateStr:%s", startDateStr, endDateStr));
 			}
 
-			DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999);
+			DateTime endOfDay = endD.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+					.withMillisOfSecond(999);
 
-			Page<ContEvent> resultPage = contEventService
-					.selectBySubscriberAndDateAndContObjectIds(
-							currentSubscriberService.getSubscriberId(), startD,
-							endOfDay, contObjectList, pageable);
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndDateAndContObjectIds(
+					getCurrentSubscriberId(), startD, endOfDay, contObjectList, pageable);
 
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
 		if (contObjectList != null && contObjectList.size() > 0) {
-			Page<ContEvent> resultPage = contEventService
-					.selectBySubscriberAndContObjectIds(
-							currentSubscriberService.getSubscriberId(),
-							contObjectList, pageable);
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(getCurrentSubscriberId(),
+					contObjectList, pageable);
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
-		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(
-				currentSubscriberService.getSubscriberId(), pageable);
+		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(getCurrentSubscriberId(), pageable);
 
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
@@ -231,7 +188,5 @@ public class SubscrContEventController extends WebApiController {
 	// return null; // new ResponseEntity<>(assembler.toResources(result),
 	// HttpStatus.OK);
 	// }
-
-
 
 }

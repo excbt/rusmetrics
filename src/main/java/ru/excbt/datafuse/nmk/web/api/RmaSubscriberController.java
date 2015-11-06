@@ -47,7 +47,7 @@ public class RmaSubscriberController extends SubscriberController {
 			return responseForbidden();
 		}
 
-		List<Subscriber> subscriberList = subscriberService.selectRmaSubscribers(getSubscriberId());
+		List<Subscriber> subscriberList = subscriberService.selectRmaSubscribers(getCurrentSubscriberId());
 		// List<Subscriber> resultList = currentUserService.isSystem() ?
 		// subscriberList
 		// : ObjectFilters.deletedFilter(subscriberList);
@@ -69,7 +69,7 @@ public class RmaSubscriberController extends SubscriberController {
 
 		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
 
-		if (subscriber.getRmaSubscriberId() == null || !subscriber.getRmaSubscriberId().equals(getSubscriberId())) {
+		if (subscriber.getRmaSubscriberId() == null || !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
 			return responseForbidden();
 		}
 		return responseOK(subscriber);
@@ -96,7 +96,7 @@ public class RmaSubscriberController extends SubscriberController {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return subscriberService.createRmaSubscriber(entity, getSubscriberId());
+				return subscriberService.createRmaSubscriber(entity, getCurrentSubscriberId());
 			}
 		};
 
@@ -123,7 +123,7 @@ public class RmaSubscriberController extends SubscriberController {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return subscriberService.updateRmaSubscriber(rSubscriber, getSubscriberId());
+				return subscriberService.updateRmaSubscriber(rSubscriber, getCurrentSubscriberId());
 			}
 		};
 
@@ -147,9 +147,9 @@ public class RmaSubscriberController extends SubscriberController {
 			@Override
 			public void process() {
 				if (Boolean.TRUE.equals(isPermanent)) {
-					subscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getSubscriberId());
+					subscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
 				} else {
-					subscriberService.deleteRmaSubscriber(rSubscriberId, getSubscriberId());
+					subscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
 				}
 
 			}

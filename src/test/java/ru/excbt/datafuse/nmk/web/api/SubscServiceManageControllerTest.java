@@ -15,9 +15,10 @@ import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-public class SubscServiceManageControllerTest extends AnyControllerTest {
+public class SubscServiceManageControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
 

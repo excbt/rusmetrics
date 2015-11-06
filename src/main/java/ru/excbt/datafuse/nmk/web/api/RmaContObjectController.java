@@ -48,13 +48,13 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
 		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
 			public ContObject processAndReturnResult() {
-				return contObjectService.createOne(entity, getSubscriberId(), rmaBeginDate, cmOrganizationId);
+				return contObjectService.createOne(entity, getCurrentSubscriberId(), rmaBeginDate, cmOrganizationId);
 			}
 
 			@Override
@@ -83,7 +83,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 			return responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getSubscriberId());
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
 		ApiAction action = new AbstractApiAction() {
 
@@ -98,13 +98,43 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 	/**
 	 * 
+	 * @param contObjectId
+	 * @param contObject
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
+
+		checkNotNull(contObjectIds);
+
+		if (!canAccessContObject(contObjectIds)) {
+			return responseForbidden();
+		}
+
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
+
+		ApiAction action = new AbstractApiAction() {
+
+			@Override
+			public void process() {
+				contObjectService.deleteMany(contObjectIds, subscrEndDate);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRmaContObjects() {
-		List<ContObject> resultList = subscrContObjectService
+	public ResponseEntity<?> getContObjects() {
+		List<ContObject> contObjectList = subscrContObjectService
 				.selectRmaSubscriberContObjects(currentSubscriberService.getSubscriberId());
+
+		List<ContObject> resultList = contObjectList;
 
 		return ResponseEntity.ok().body(ObjectFilters.deletedFilter(resultList));
 	}
@@ -133,7 +163,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<ContObject> resultList = subscrContObjectService.selectAvailableContObjects(subscriberId,
-				getSubscriberId());
+				getCurrentSubscriberId());
 
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}

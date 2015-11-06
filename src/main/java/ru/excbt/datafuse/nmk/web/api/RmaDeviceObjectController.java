@@ -247,7 +247,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects() {
-		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsBySubscriber(getSubscriberId());
+		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 

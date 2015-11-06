@@ -27,13 +27,13 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping(value = "/api/contGroup")
-public class ContGroupController extends WebApiController {
+public class ContGroupController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
 	@Autowired
 	private ContGroupService contGroupService;
@@ -46,12 +46,10 @@ public class ContGroupController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contGroupId}/contObject", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectItems(
-			@PathVariable(value = "contGroupId") Long contGroupId) {
+	public ResponseEntity<?> getContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService
-				.selectContGroupObjects(contGroupId);
+		List<ContObject> resultList = contGroupService.selectContGroupObjects(contGroupId, getCurrentSubscriberId());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -60,14 +58,13 @@ public class ContGroupController extends WebApiController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/{contGroupId}/contObject/available", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAvailableContObjectItems(
-			@PathVariable(value = "contGroupId") Long contGroupId) {
+	@RequestMapping(value = "/{contGroupId}/contObject/available", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getAvailableContObjectItems(@PathVariable(value = "contGroupId") Long contGroupId) {
 
 		checkNotNull(contGroupId);
-		List<ContObject> resultList = contGroupService
-				.selectAvailableContGroupObjects(contGroupId,
-						currentSubscriberService.getSubscriberId());
+		List<ContObject> resultList = contGroupService.selectAvailableContGroupObjects(contGroupId,
+				currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -80,8 +77,7 @@ public class ContGroupController extends WebApiController {
 	public ResponseEntity<?> getSubscriberGroups() {
 
 		List<ContGroup> resultList = contGroupService
-				.selectSubscriberGroups(currentSubscriberService
-						.getSubscriberId());
+				.selectSubscriberGroups(currentSubscriberService.getSubscriberId());
 
 		return ResponseEntity.ok(resultList);
 	}
@@ -94,13 +90,11 @@ public class ContGroupController extends WebApiController {
 		checkArgument(contGroup.isNew());
 		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ContGroup, Long>(
-				contGroup, request) {
+		ApiActionLocation action = new AbstractEntityApiActionLocation<ContGroup, Long>(contGroup, request) {
 
 			@Override
 			public void process() {
-				ContGroup newObject = contGroupService.createOne(entity,
-						contObjectIds);
+				ContGroup newObject = contGroupService.createOne(entity, contObjectIds);
 				setResultEntity(newObject);
 			}
 
@@ -120,8 +114,7 @@ public class ContGroupController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteOne(
-			@PathVariable(value = "contGroupId") final Long contGroupId) {
+	public ResponseEntity<?> deleteOne(@PathVariable(value = "contGroupId") final Long contGroupId) {
 
 		ApiAction action = new AbstractApiAction() {
 			@Override
@@ -139,8 +132,7 @@ public class ContGroupController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(
-			@PathVariable(value = "contGroupId") Long contGroupId,
+	public ResponseEntity<?> updateOne(@PathVariable(value = "contGroupId") Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody ContGroup contGroup) {
 
@@ -154,8 +146,7 @@ public class ContGroupController extends WebApiController {
 		ApiAction action = new AbstractEntityApiAction<ContGroup>(contGroup) {
 			@Override
 			public void process() {
-				setResultEntity(contGroupService.updateOne(entity,
-						contObjectIds));
+				setResultEntity(contGroupService.updateOne(entity, contObjectIds));
 			}
 		};
 

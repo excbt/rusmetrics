@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,25 +23,21 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
 @RequestMapping("/api/subscr/subscrAction")
-public class SubscrActionController extends WebApiController {
+public class SubscrActionController extends SubscrApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrActionController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrActionController.class);
 
 	@Autowired
 	private SubscrActionGroupService subscrActionGroupService;
-
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
 	private SubscrActionUserService subscrActionUserService;
@@ -56,8 +51,7 @@ public class SubscrActionController extends WebApiController {
 	 */
 	@RequestMapping(value = "/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllGroups() {
-		List<SubscrActionGroup> resultList = subscrActionGroupService
-				.findAll(currentSubscriberService.getSubscriberId());
+		List<SubscrActionGroup> resultList = subscrActionGroupService.findAll(getCurrentSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -78,8 +72,7 @@ public class SubscrActionController extends WebApiController {
 	 */
 	@RequestMapping(value = "/groups/{id}/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findUsersByGroup(@PathVariable("id") long id) {
-		return ResponseEntity.ok(subscrActionUserGroupService
-				.selectUsersByGroup(id));
+		return ResponseEntity.ok(subscrActionUserGroupService.selectUsersByGroup(id));
 	}
 
 	/**
@@ -89,8 +82,7 @@ public class SubscrActionController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/groups/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneGroup(
-			@PathVariable("id") long id,
+	public ResponseEntity<?> updateOneGroup(@PathVariable("id") long id,
 			@RequestParam(value = "subscrUserIds", required = false) Long[] subscrUserIds,
 			@RequestBody SubscrActionGroup entity) {
 
@@ -101,9 +93,8 @@ public class SubscrActionController extends WebApiController {
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
 		final Long[] actionIds = subscrUserIds;
-		
-		ApiAction action = new AbstractEntityApiAction<SubscrActionGroup>(
-				entity) {
+
+		ApiAction action = new AbstractEntityApiAction<SubscrActionGroup>(entity) {
 
 			@Override
 			public void process() {
@@ -133,13 +124,12 @@ public class SubscrActionController extends WebApiController {
 		entity.setSubscriber(currentSubscriberService.getSubscriber());
 
 		final Long[] actionIds = subscrUserIds;
-		
-		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrActionGroup, Long>(
-				entity, request) {
+
+		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrActionGroup, Long>(entity, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionGroupService.createOne(entity, actionIds ));
+				setResultEntity(subscrActionGroupService.createOne(entity, actionIds));
 			}
 
 			@Override
@@ -167,8 +157,7 @@ public class SubscrActionController extends WebApiController {
 				subscrActionGroupService.deleteOne(id);
 			}
 		};
-		return WebApiHelper
-				.processResponceApiActionDelete(action);
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -177,8 +166,7 @@ public class SubscrActionController extends WebApiController {
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllUsers() {
-		List<SubscrActionUser> resultList = subscrActionUserService
-				.findAll(currentSubscriberService.getSubscriberId());
+		List<SubscrActionUser> resultList = subscrActionUserService.findAll(getCurrentSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -199,8 +187,7 @@ public class SubscrActionController extends WebApiController {
 	 */
 	@RequestMapping(value = "/users/{id}/groups", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findGroupsByUser(@PathVariable("id") long id) {
-		return ResponseEntity.ok(subscrActionUserGroupService
-				.selectGroupsByUser(id));
+		return ResponseEntity.ok(subscrActionUserGroupService.selectGroupsByUser(id));
 	}
 
 	/**
@@ -210,8 +197,7 @@ public class SubscrActionController extends WebApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOneUser(
-			@PathVariable("id") long id,
+	public ResponseEntity<?> updateOneUser(@PathVariable("id") long id,
 			@RequestParam(value = "subscrGroupIds", required = false) Long[] subscrGroupIds,
 			@RequestBody SubscrActionUser entity) {
 
@@ -223,13 +209,11 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiAction action = new AbstractEntityApiAction<SubscrActionUser>(
-				entity) {
+		ApiAction action = new AbstractEntityApiAction<SubscrActionUser>(entity) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionUserService.updateOne(entity,
-						actionGroupIds));
+				setResultEntity(subscrActionUserService.updateOne(entity, actionGroupIds));
 			}
 
 		};
@@ -255,13 +239,11 @@ public class SubscrActionController extends WebApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiActionLocation userAction = new AbstractEntityApiActionLocation<SubscrActionUser, Long>(
-				entity, request) {
+		ApiActionLocation userAction = new AbstractEntityApiActionLocation<SubscrActionUser, Long>(entity, request) {
 
 			@Override
 			public void process() {
-				setResultEntity(subscrActionUserService.createOne(entity,
-						actionGroupIds));
+				setResultEntity(subscrActionUserService.createOne(entity, actionGroupIds));
 			}
 
 			@Override
@@ -291,8 +273,7 @@ public class SubscrActionController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper
-				.processResponceApiActionDelete(action);
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 }

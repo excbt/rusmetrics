@@ -48,13 +48,14 @@ angular.module('portalNMC')
             return element.id;
         });
         if ($scope.currentGroup.id == null){
-//console.log("Save");            
-//console.log($scope.groupUrl);
-//console.log(tmp);            
+console.log("Save");            
+console.log($scope.groupUrl);
+console.log(tmp);            
             crudGridDataFactory($scope.groupUrl).save({contObjectIds: tmp},$scope.currentGroup, successCallback, errorCallback);
         }else{
-//console.log("Update");            
-//console.log($scope.groupUrl);             
+console.log("Update");            
+console.log($scope.groupUrl); 
+console.log(tmp);                        
             var targetUrl = $scope.groupUrl;//+"/"+$scope.currentGroup.id;
             crudGridDataFactory(targetUrl).update({contObjectIds: tmp}, $scope.currentGroup, successCallback, errorCallback);
         };
@@ -69,13 +70,15 @@ angular.module('portalNMC')
         crudGridDataFactory(url).query(function (data) {
             switch (type){
                 case "groups": $scope.groups = data; break;
-                case "availableObjects": 
-                    $scope.availableObjects = data; 
+                case "availableObjects":                    
+                    $scope.availableObjects = angular.copy(data); 
                     objectSvc.sortObjectsByFullName($scope.availableObjects);
                     break;
                 case "selectedObjects": 
-                    $scope.selectedObjects = data; 
+//console.log(data); 
+                    $scope.selectedObjects = angular.copy(data); 
                     objectSvc.sortObjectsByFullName($scope.selectedObjects);
+//console.log($scope.selectedObjects);                                                            
                     break;    
                 default: console.log("Data type is undefined.");
             }

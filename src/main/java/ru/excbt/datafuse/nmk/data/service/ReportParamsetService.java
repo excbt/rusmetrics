@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
@@ -43,6 +44,9 @@ public class ReportParamsetService implements SecuredRoles {
 
 	@Autowired
 	private ReportParamsetUnitRepository reportParamsetUnitRepository;
+
+	@Autowired
+	private ReportParamsetUnitFilterRepository reportParamsetUnitFilterRepository;
 
 	@Autowired
 	private ReportTemplateService reportTemplateService;
@@ -329,8 +333,18 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectParamsetContObjectIds(long reportParamsetId) {
+	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
 		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
+	}
+
+	/**
+	 * 
+	 * @param reportParamsetId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Long> selectReportParamsetFilteredObjectIds(long reportParamsetId) {
+		return reportParamsetUnitFilterRepository.selectObjectIds(reportParamsetId);
 	}
 
 	/**
@@ -551,16 +565,6 @@ public class ReportParamsetService implements SecuredRoles {
 			}
 		}
 
-	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<Long> selectReportParamsetObjectIds(long reportParamsetId) {
-		return reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 	}
 
 	/**

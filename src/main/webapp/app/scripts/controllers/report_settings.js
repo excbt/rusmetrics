@@ -51,7 +51,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
                 newObjects.push(newObject);
             };           
             $scope.objects = newObjects;
-console.log($scope.reportTypes);            
+//console.log($scope.reportTypes);            
             $scope.getActive();
         });
     };

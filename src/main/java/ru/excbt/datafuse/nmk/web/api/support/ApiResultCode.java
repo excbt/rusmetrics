@@ -9,12 +9,15 @@ import javax.persistence.PersistenceException;
 import org.springframework.transaction.TransactionSystemException;
 
 public enum ApiResultCode {
-	OK(true, "OK"), ERR_UNCKNOWN(false, "Unknown Error"), ERR_ACCESS_DENIED(
-			false, "Access Denied"), ERR_UNPROCESSABLE_TRANSACTION(false,
-			"Unprocessable Transaction"), ERR_DATABASE_ERROR(false,
-			"Database Error"), ERR_BRM_VALIDATION(false,
-			"Buisiness Rule Validation Error"), ERR_VALIDATION (false, "Data Validation Error"),
-			ERR_INTERNAL(false, "Internal server error");
+	OK(true, "OK"),
+	ERR_UNCKNOWN(false, "Unknown Error"),
+	ERR_ACCESS_DENIED(false, "Access Denied"),
+	ERR_UNPROCESSABLE_TRANSACTION(false, "Unprocessable Transaction"),
+	ERR_DATABASE_ERROR(false, "Database Error"),
+	ERR_BRM_VALIDATION(false, "Buisiness Rule Validation Error"),
+	ERR_VALIDATION(false, "Data Validation Error"),
+	ERR_INTERNAL(false, "Internal server error"),
+	ERR_INVALID_STATE(false, "Invalid State Error");
 
 	private final boolean ok;
 

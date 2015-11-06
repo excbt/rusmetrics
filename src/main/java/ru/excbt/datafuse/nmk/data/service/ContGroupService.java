@@ -26,8 +26,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class ContGroupService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetService.class);
 
 	@Autowired
 	private ContGroupRepository contGroupRepository;
@@ -58,7 +57,7 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(ContGroup entity) {
 		checkNotNull(entity);
@@ -70,7 +69,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param ContGroup
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContGroup updateOne(ContGroup entity) {
 		checkNotNull(entity);
@@ -86,7 +85,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contGroup
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContGroup updateOne(ContGroup contGroup, Long[] contObjectIds) {
 		ContGroup result = updateOne(contGroup);
@@ -102,16 +101,14 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	public void updateObjectsToGroup(final long contGroupId,
-			final Long[] objectIds) {
-
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void updateObjectsToGroup(final Long contGroupId, final Long[] objectIds) {
+		checkNotNull(contGroupId);
 		checkNotNull(objectIds);
 
 		List<Long> newObjectIdList = Arrays.asList(objectIds);
 
-		List<Long> currentIds = contGroupItemRepository
-				.selectObjectIds(contGroupId);
+		List<Long> currentIds = contGroupItemRepository.selectObjectIds(contGroupId);
 		for (Long currentId : currentIds) {
 			if (!newObjectIdList.contains(currentId)) {
 				logger.trace("removing objectId:{}", currentId);
@@ -130,30 +127,26 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)		
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
-	public void deleteObjectsFromGroup(final long contGroupId,
-			final long contObjectId) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public void deleteObjectsFromGroup(final Long contGroupId, final Long contObjectId) {
+		checkNotNull(contGroupId);
+		checkNotNull(contObjectId);
 
-		List<Long> ids = contGroupItemRepository.selectItemIds(contGroupId,
-				contObjectId);
+		List<Long> ids = contGroupItemRepository.selectItemIds(contGroupId, contObjectId);
 
 		if (ids.size() > 1) {
-			logger.trace(
-					"Can't delete ReportParamsetUnit. Too Many Rows. (contGroupId={}, contObjectId={})",
+			logger.trace("Can't delete ReportParamsetUnit. Too Many Rows. (contGroupId={}, contObjectId={})",
 					contGroupId, contObjectId);
 			throw new PersistenceException(
-					String.format(
-							"Can't delete ReportParamsetUnit. Too Many Rows. (contGroupId=%d, contObjectId=%d)",
+					String.format("Can't delete ReportParamsetUnit. Too Many Rows. (contGroupId=%d, contObjectId=%d)",
 							contGroupId, contObjectId));
 		}
 		if (ids.size() == 0) {
-			logger.trace(
-					"Can't delete ReportParamsetUnit. No Rows Found. (contGroupId={}, contObjectId={})",
+			logger.trace("Can't delete ReportParamsetUnit. No Rows Found. (contGroupId={}, contObjectId={})",
 					contGroupId, contObjectId);
 			throw new PersistenceException(
-					String.format(
-							"Can't delete ReportParamsetUnit. No Rows Found. (contGroupId=%d, contObjectId=%d)",
+					String.format("Can't delete ReportParamsetUnit. No Rows Found. (contGroupId=%d, contObjectId=%d)",
 							contGroupId, contObjectId));
 		}
 
@@ -166,10 +159,11 @@ public class ContGroupService implements SecuredRoles {
 	 * @param objectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)		
-	public boolean checkContGroupObject(long contGroupId, long objectId) {
-		return contGroupItemRepository.selectItemIds(contGroupId, objectId)
-				.size() > 0;
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public boolean checkContGroupObject(Long contGroupId, Long objectId) {
+		checkNotNull(contGroupId);
+		checkNotNull(objectId);
+		return contGroupItemRepository.selectItemIds(contGroupId, objectId).size() > 0;
 	}
 
 	/**
@@ -177,16 +171,16 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)		
-	public ContGroupItem addObjectToGroup(ContGroup contGroup, long objectId) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public ContGroupItem addObjectToGroup(ContGroup contGroup, Long objectId) {
 		checkNotNull(contGroup);
+		checkNotNull(objectId);
 		checkArgument(!contGroup.isNew());
 
 		if (checkContGroupObject(contGroup.getId(), objectId)) {
-			throw new PersistenceException(
-					String.format(
-							"ContGroupItem error. A pair of ContGroup (id=%d) and Object (id=%d) is alredy exists",
-							contGroup.getId(), objectId));
+			throw new PersistenceException(String.format(
+					"ContGroupItem error. A pair of ContGroup (id=%d) and Object (id=%d) is alredy exists",
+					contGroup.getId(), objectId));
 		}
 
 		ContGroupItem ci = new ContGroupItem();
@@ -202,8 +196,9 @@ public class ContGroupService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)		
-	public ContGroupItem addObjectToGroup(long contGroupId, Long objectId) {
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public ContGroupItem addObjectToGroup(Long contGroupId, Long objectId) {
+		checkNotNull(contGroupId);
 		ContGroup cg = findOne(contGroupId);
 		checkNotNull(cg);
 		return addObjectToGroup(cg, objectId);
@@ -213,9 +208,10 @@ public class ContGroupService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void deleteOne(long contGroupId) {
+	public void deleteOne(Long contGroupId) {
+		checkNotNull(contGroupId);
 		if (contGroupRepository.exists(contGroupId)) {
 			List<Long> ids = contGroupItemRepository.selectItemIds(contGroupId);
 			for (Long id : ids) {
@@ -223,8 +219,7 @@ public class ContGroupService implements SecuredRoles {
 			}
 			contGroupRepository.delete(contGroupId);
 		} else {
-			throw new PersistenceException(String.format(
-					"Can't delete ContGroup(id=%d)", contGroupId));
+			throw new PersistenceException(String.format("Can't delete ContGroup(id=%d)", contGroupId));
 		}
 
 	}
@@ -235,7 +230,8 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContGroup findOne(long contGroupId) {
+	public ContGroup findOne(Long contGroupId) {
+		checkNotNull(contGroupId);
 		ContGroup result = contGroupRepository.findOne(contGroupId);
 		return result;
 	}
@@ -246,8 +242,10 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContGroupObjects(long contGroupId) {
-		return contGroupItemRepository.selectContGroupObjects(contGroupId);
+	public List<ContObject> selectContGroupObjects(Long contGroupId, Long subscriberId) {
+		checkNotNull(contGroupId);
+		checkNotNull(subscriberId);
+		return contGroupItemRepository.selectContGroupObjects(contGroupId, subscriberId);
 	}
 
 	/**
@@ -257,10 +255,11 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectAvailableContGroupObjects(long contGroupId,
-			long subscriberId) {
-		return contGroupItemRepository.selectAvailableContGroupObjects(
-				contGroupId, subscriberId);
+	public List<ContObject> selectAvailableContGroupObjects(Long contGroupId, Long subscriberId) {
+		checkNotNull(contGroupId);
+		checkNotNull(subscriberId);
+
+		return contGroupItemRepository.selectAvailableContGroupObjects(contGroupId, subscriberId);
 	}
 
 	/**
@@ -269,7 +268,8 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContGroup> selectSubscriberGroups(long subscriberId) {
+	public List<ContGroup> selectSubscriberGroups(Long subscriberId) {
+		checkNotNull(subscriberId);
 		return contGroupRepository.findBySubscriberId(subscriberId);
 	}
 

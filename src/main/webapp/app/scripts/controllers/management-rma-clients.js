@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtClientsCtrl', ['$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', function($scope, $http, objectSvc, notificationFactory, crudGridDataFactory){
+.controller('MngmtClientsCtrl', ['$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
 console.log('Run Client management controller.');
     
     $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
@@ -162,9 +162,9 @@ console.log('Run Client management controller.');
         $scope.selectedItem(object);
         //generation confirm code
         $scope.confirmCode = null;
-        $scope.firstNum = Math.round(Math.random()*100);
-        $scope.secondNum = Math.round(Math.random()*100);
-        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;
     };
     
     
@@ -344,7 +344,7 @@ console.log('Run Client management controller.');
     //console.log($scope.availableObjects);       
         if ($scope.showAvailableObjectGroups_flag){
             var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.availableEntities);   
-console.log(totalGroupObjects);            
+//console.log(totalGroupObjects);            
             objectSvc.sortObjectsByFullName(totalGroupObjects);
             //del doubles
             

@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -176,6 +180,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
+			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		checkArgument(contObjectId > 0);
@@ -185,6 +190,11 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(toDateStr);
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+		Direction dataDateDirection = Sort.Direction.DESC;
+		if ("asc".equalsIgnoreCase(dataDateSort)) {
+			dataDateDirection = Sort.Direction.ASC;
+		}
 
 		checkNotNull(datePeriodParser);
 
@@ -209,20 +219,18 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
-		String serviceType = contZPoint.getContServiceType().getKeyname();
-
-		if (!SUPPORTED_SERVICES.contains(serviceType)) {
-			return responseBadRequest(ApiResult.validationError("Service type %s is not supported yet", serviceType));
-		}
-
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return responseBadRequest(
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
+		Sort sort = new Sort(dataDateDirection, "dataDate");
+
+		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
 		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
-				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageable);
+				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<ContServiceDataHWater>(result));
 
@@ -252,78 +260,66 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint == null) {
-			return ResponseEntity.badRequest().body(String.format("contZPointId (id=%d) not found", contZPointId));
+			return responseBadRequest(ApiResult.validationError("contZPointId (id=%d) not found", contZPointId));
 		}
 
 		if (contZPoint.getContObject() == null || contZPoint.getContObject().getId() != contObjectId) {
-			return ResponseEntity.badRequest().body(String
-					.format("contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
+			return responseBadRequest(ApiResult.validationError(
+					"contZPointId (id=%d) is not valid for contObject (id=%d)", contZPointId, contObjectId));
 		}
 
-		String serviceType = contZPoint.getContServiceType().getKeyname();
+		LocalDatePeriod period = LocalDatePeriod.builder().dateFrom(beginDateS).dateTo(endDateS).build();
 
-		if (!SUPPORTED_SERVICES.contains(serviceType)) {
-			return ResponseEntity.badRequest().body(String.format("Service type %s is not supported yet", serviceType));
-		}
-
-		LocalDateTime beginD = null;
-		LocalDateTime endD = null;
-		try {
-			beginD = DATE_FORMATTER.parseLocalDateTime(beginDateS);
-			endD = DATE_FORMATTER.parseLocalDateTime(endDateS);
-		} catch (Exception e) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters beginDateS:{}, endDateS:{}", beginDateS, endDateS));
-		}
-
-		if (beginD.compareTo(endD) > 0) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters beginDateS:{}, endDateS:{}", beginDateS, endDateS));
+		if (period.isInvalidEq()) {
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters beginDateS: %s, endDateS:%s", beginDateS, endDateS));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters timeDetailType:{}", timeDetailType));
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters timeDetailType:%s", timeDetailType));
 		}
 
-		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(endD.plusDays(1));
-		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(endD);
+		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
+		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 
-		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPointTotals(contZPointId,
-				timeDetail, beginD, endOfDay);
+		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPoint_Totals(contZPointId,
+				timeDetail, period.getDateTimeFrom(), endOfDay);
 
 		ContServiceDataHWater firstAbs = contServiceDataHWaterService.selectLastAbsData(contZPointId, timeDetail,
-				beginD, false);
+				period.getDateTimeFrom(), false);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService.selectLastAbsData(contZPointId, timeDetail,
 				endOfPeriod, true);
+
+		ContServiceDataHWater avg = contServiceDataHWaterService.selectContZPoint_Avgs(contZPointId, timeDetail,
+				period);
 
 		ContServiceDataHWaterSummary result = new ContServiceDataHWaterSummary();
 		result.setTotals(totals);
 		result.setFirstData(firstAbs);
 		result.setLastData(lastAbs);
+		result.setAverage(avg);
 
 		ContServiceDataHWaterTotals diffs = new ContServiceDataHWaterTotals();
 
 		if (firstAbs != null && lastAbs != null) {
 
-			diffs.setM_in(lastAbs.getM_in() == null || firstAbs.getM_in() == null ? null
-					: lastAbs.getM_in().subtract(firstAbs.getM_in()));
-			diffs.setM_out(lastAbs.getM_out() == null || firstAbs.getM_out() == null ? null
-					: lastAbs.getM_out().subtract(firstAbs.getM_out()));
+			diffs.setM_in(processDelta(firstAbs.getM_in(), lastAbs.getM_in()));
+			diffs.setM_out(processDelta(firstAbs.getM_out(), lastAbs.getM_out()));
+			diffs.setV_in(processDelta(firstAbs.getV_in(), lastAbs.getV_in()));
+			diffs.setV_out(processDelta(firstAbs.getV_out(), lastAbs.getV_out()));
+			diffs.setH_delta(processDelta(firstAbs.getH_delta(), lastAbs.getH_delta()));
 
-			diffs.setV_in(lastAbs.getV_in() == null || firstAbs.getV_in() == null ? null
-					: lastAbs.getV_in().subtract(firstAbs.getV_in()));
-			diffs.setV_out(lastAbs.getV_out() == null || firstAbs.getV_out() == null ? null
-					: lastAbs.getV_out().subtract(firstAbs.getV_out()));
-
-			diffs.setH_delta(lastAbs.getH_delta() == null || firstAbs.getH_delta() == null ? null
-					: lastAbs.getH_delta().subtract(firstAbs.getH_delta()));
 		}
 		result.setDiffs(diffs);
 
 		return ResponseEntity.ok(result);
+	}
+
+	private BigDecimal processDelta(BigDecimal a, BigDecimal b) {
+		return a == null || b == null ? null : b.subtract(a);
 	}
 
 	/**
@@ -436,13 +432,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters fromDateStr:{} and toDateStr:{}", fromDateStr, toDateStr));
+			return responseBadRequest(ApiResult.validationError("Invalid parameters fromDateStr:%s and toDateStr:%s",
+					fromDateStr, toDateStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", fromDateStr, toDateStr));
 		}
 
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
@@ -493,15 +489,13 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(timeDetailType);
 
 		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("Data of 1h is not supported for uploading"));
+			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String inFilename = webAppPropsService.getHWatersCsvInputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -614,20 +608,18 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(String
-					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", dateFromStr, dateToStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters fromDateStr:%s is greater than toDateStr:%s", dateFromStr, dateToStr));
 		}
 
 		if (TimeDetailKey.TYPE_1H.getKeyname().equals(timeDetailType)) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("Data of 1h is not supported for uploading"));
+			return responseBadRequest(ApiResult.validationError("Data of 1h is not supported for uploading"));
 		}
 
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (BooleanUtils.isNotTrue(contZPoint.getIsManualLoading())) {
-			return ResponseEntity.badRequest()
-					.body(ApiResult.validationError("ContZPoint is not suported manual loading"));
+			return responseBadRequest(ApiResult.validationError("ContZPoint is not suported manual loading"));
 		}
 
 		String outFilename = webAppPropsService.getHWatersCsvOutputDir() + webAppPropsService.getSubscriberCsvFilename(
@@ -669,17 +661,17 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		checkNotNull(datePeriodParser);
 
 		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest()
-					.body(String.format("Invalid parameters dateFrom:{} and dateTo:{}", dateFromStr, dateToStr));
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters dateFrom:%s and dateTo:%s", dateFromStr, dateToStr));
 		}
 
 		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity.badRequest().body(
-					String.format("Invalid parameters dateFrom:{} is greater than dateTo:{}", dateFromStr, dateToStr));
+			return responseBadRequest(ApiResult.validationError(
+					"Invalid parameters dateFrom:%s is greater than dateTo:%s", dateFromStr, dateToStr));
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getAllCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return responseOK(resultList);
@@ -713,7 +705,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfoList(getSubscriberId(),
+				.getContObjectServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
 		return responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
@@ -751,7 +743,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getOneCityMapContObjectsServiceTypeInfoList(getSubscriberId(),
+				.getOneCityMapContObjectsServiceTypeInfoList(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
 		return responseOK(resultList);

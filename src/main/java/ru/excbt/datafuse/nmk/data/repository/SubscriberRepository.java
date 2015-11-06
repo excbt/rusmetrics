@@ -35,6 +35,19 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	@Query("SELECT r.organization FROM SubscrRso r WHERE r.subscriberId = :subscriberId")
 	public List<Organization> selectRsoOrganizations(@Param("subscriberId") Long subscriberId);
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	public List<Subscriber> findByRmaSubscriberId(Long subscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT s.id FROM Subscriber s WHERE s.id = :subscriberId")
+	public List<Long> checkSubscriberId(@Param("subscriberId") Long subscriberId);
 
 }

@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
@@ -62,40 +61,60 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	@Autowired
 	private HWatersCsvService HWatersCsvService;
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testHWater24h() throws Exception {
 
 		String urlStr = String.format(API_SERVICE_URL_TEMPLATE, CONT_OBJECT_ID, CONT_ZPOINT_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2013-10-01").param("endDate", "2013-10-31").with(testSecurityContext()));
+		RequestExtraInitializer param = (builder) -> {
+			builder.param("beginDate", "2013-10-01").param("endDate", "2013-10-31");
+		};
 
-		resultAction.andDo(MockMvcResultHandlers.print());
+		_testGet(urlStr, param);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testHWater24hPaged() throws Exception {
 
 		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/paged?page=0&size=100", CONT_OBJECT_ID,
 				CONT_ZPOINT_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2013-10-01").param("endDate", "2013-10-31").with(testSecurityContext()));
+		RequestExtraInitializer param = (builder) -> {
+			builder.param("beginDate", "2013-10-01").param("endDate", "2013-10-31").param("dataDateSort", "asc");
+		};
 
-		resultAction.andDo(MockMvcResultHandlers.print());
+		_testGet(urlStr, param);
+
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testHWaterSummary() throws Exception {
 
 		String urlStr = String.format(API_SERVICE_URL_TEMPLATE + "/summary", CONT_OBJECT2_ID, CONT_ZPOINT2_ID);
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
-				.param("beginDate", "2015-05-19").param("endDate", "2015-05-25").with(testSecurityContext()));
+		RequestExtraInitializer param = (builder) -> {
+			builder.param("beginDate", "2015-05-19").param("endDate", "2015-05-25");
+		};
 
-		resultAction.andDo(MockMvcResultHandlers.print());
+		_testGet(urlStr, param);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testManualLoadData() throws Exception {
 
@@ -129,6 +148,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testGetAvailableFiles() throws Exception {
 		String url = apiSubscrUrl("/service/out/csv");
@@ -159,6 +182,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 		_testJsonGetNoJsonCheck(url);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testManualDeleteData() throws Exception {
 
@@ -178,6 +205,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testContObjectServiceTypeInfo() throws Exception {
 
@@ -192,6 +223,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testOneCityContObjectServiceTypeInfo() throws Exception {
 
@@ -206,6 +241,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testContObjectServiceTypeInfoOne() throws Exception {
 
@@ -223,6 +262,10 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testKupavna() throws Exception {
 		_testJsonGet(apiSubscrUrl(

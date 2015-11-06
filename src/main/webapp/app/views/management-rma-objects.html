@@ -24,38 +24,20 @@
 <div class="container-fluid" ng-hide="loading">
  
 <div class="row nmc-main-workspace-header">
-<!--
-    <div class="btn-toolbar marginBottom10">
-        
-    </div>
--->
     <div class="col-md-3 noPadding marginBottom10">
         <button class="btn nmc-main-add-button" ng-click="addObjectInit()">Добавить объект</button>
-<!--
-        <h2 class="noMargin nmc-h2">Объекты учета
-        </h2>    
--->
     </div>
     <div class="col-md-7"></div>
     <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
         <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-<!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
     </div>
-<!--    <div class="col-md-3"></div>-->
     <div class="col-md-offset-2 col-md-2">
             <label class="nmc-form-label">Всего:</label>
              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
             <span id="timeOutput"></span>
     </div>
 </div>
-<!--
-<div class="row ">
-    <div class="col-md-12 noPadding nmc-main-workspace-header">
-        <hr>
-    </div>
-</div>    
--->
 </div> 
 
 <div class="row" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
@@ -72,23 +54,21 @@
                             <tr class="nmc-child-table-header">
                                 <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-button-object-control" style="padding: 0 0 3px;">
                                     
-<!--
                                     <div class="btn-group">
                                         <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
                                         <span class="caret"></span>
                                         </button>
--->
 <!--
                                       <i title="Действия над объектами" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="">
                                         </i>
 -->
-<!--
                                       <ul class="dropdown-menu">
-                                        <li><a href="" ng-click="">{{messages.deleteObjects}}</a></li>
+                                        <li><a href="" ng-click="setClientsInit()">{{messages.signClientsObjects}}</a></li>
+                                        <li role="separator" class="divider"></li>  
+                                        <li><a href="" ng-click="deleteObjectsInit()">{{messages.deleteObjects}}</a></li>
                                       </ul>
                                     </div>
--->
-<!--                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>-->
+                                    <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
                                 </th>
                                 <th class="nmc-td-for-button"></th>
                                 <th>Название объекта
@@ -138,7 +118,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat='object in objectsOnPage | filter:filter track by $index' ng-attr-id={{"obj"+object.id}}>
+        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
@@ -157,7 +137,8 @@
                                 <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                               </ul>
                             </div>
-<!--                            <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>-->
+<!--                            ng-click="toggleObject(object)"-->
+                            <input type="checkbox"  ng-model="object.selected" class="marginRight2" style="vertical-align: middle;"/>
 
 
                         </td>
@@ -1073,12 +1054,15 @@
 				<p>
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary nmc-form-label">{{currentObject.fullName || currentObject.id}}</label>
+					<label class="text-primary nmc-form-label">{{currentObject.fullName || currentObject.id || (currentObject.countDeleteObjects + " объектов")}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
                 <div class="marginLeft15">
-                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                        <label class="nmc-form-label">Введите код подтверждения: 
+<!--                            {{firstNum}} + {{secondNum}} = -->
+                            {{confirmLabel}}
+                    </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
                 </div>
 			</form>
 		</div>
@@ -1089,7 +1073,7 @@
 						<div class="col-xs-offset-6 col-md-3">
 <!--                            -->
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
-								ng-click="deleteObject(currentObject);"
+								ng-click="deleteObjects(currentObject);"
 								value="Удалить" />
 						</div>
 
@@ -1382,6 +1366,54 @@
 						</div>
 					</div>
 				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: set subscribers for objects-->
+<div id="setClientModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="setClientLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="setClientLabel" class="nmc-h3">
+				Назначение абонентов
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                            <tbody>
+                                <tr ng-repeat="client in data.clientsOnPage">
+                                    <td><input type="checkbox" ng-model="client.selected" class="nmc-checkbox-form"/>
+                                        {{client.subscriberName}}
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <span class="pull-left">
+            <input class="nmc-checkbox-form" ng-model="objectCtrlSettings.selectedAllClients" type="checkbox" ng-click="selectAllClients()"/><span style="margin-bottom: 0;
+    margin-top: 3px;">Выбрать все</span>
+        </span>
+            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="setClients()"
+					value="Назначить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+			</button>				
 		</div>
 		<span class="alert alert-error dialogErrorMessage"
 			ng-show="errorOnSubmit"> Request error

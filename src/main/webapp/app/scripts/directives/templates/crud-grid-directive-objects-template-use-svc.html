@@ -174,7 +174,7 @@
 <!--    <div >-->
 <!--    <table class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">-->
         <tbody>
-        <tr ng-repeat='object in objectsOnPage | filter:filter track by $index' ng-attr-id={{"obj"+object.id}}>
+        <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
                     <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
@@ -183,7 +183,7 @@
 <!--                            <span>{{$index}}</span>-->
                             <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
-                            <i title="Редактировать свойства объекта" ng-show="!bList" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
+                            <i title="Редактировать свойства объекта" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
                             <div class="btn-group">
 <!--                              <i title="Редактирование метаданных прибора" type="button" class="btn btn-xs glyphicon glyphicon-list-alt nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="getDevices(object)">-->
 <!--                                <span class="caret"></span>-->
@@ -203,7 +203,7 @@
                         </td>
         
                         <td class="nmc-td-for-button"> 
-
+<!--                            {{$index}}-->
                             <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
                             
                         </td>
@@ -901,25 +901,25 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" >Описание</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
+                                <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputAddress">Адрес</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
                                 </td>
                             </tr>
                             <tr>
@@ -927,13 +927,13 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
-                                    <select class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
+                                    <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">Режим функционирования</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                <td class="nmc-text-align-left col-sm-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
                                     </select>
                                 </td>
                             </tr>       
@@ -942,7 +942,7 @@
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                        <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
+                                        <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
                                     </div>
                                 </td>                               
                             </tr>                           
@@ -951,7 +951,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
-                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
+                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
                                     </div>        
                                 </td>
                             </tr>
@@ -965,7 +965,7 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || !isAdmin()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateObject(currentObject)"
 								value="Сохранить" />
 						</div>

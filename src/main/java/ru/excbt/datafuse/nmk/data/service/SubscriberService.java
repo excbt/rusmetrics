@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
@@ -289,7 +290,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}
-		subscrServiceAccessService.deleteSubscriberAccess(rmaSubscriberId);
+		subscrServiceAccessService.deleteSubscriberAccess(subscriberId);
 		subscriberRepository.delete(subscriber);
 	}
 
@@ -318,6 +319,27 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
 		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Organization> selectRsoOrganizations2(Long subscriberId) {
+		return subscriberRepository.selectRsoOrganizations(subscriberId);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public boolean checkSubscriberId(Long subscriberId) {
+		List<Long> ids = subscriberRepository.checkSubscriberId(subscriberId);
+		return ids.size() == 1;
 	}
 
 }

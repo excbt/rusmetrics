@@ -2,8 +2,12 @@ package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
+@JsonInclude(Include.NON_NULL)
 public class ContServiceDataHWaterSummary implements Serializable {
 
 	/**
@@ -14,10 +18,12 @@ public class ContServiceDataHWaterSummary implements Serializable {
 	private ContServiceDataHWaterTotals totals;
 
 	private ContServiceDataHWaterTotals diffs;
-	
-	private ContServiceDataHWater firstData; 
+
+	private ContServiceDataHWater firstData;
 
 	private ContServiceDataHWater lastData;
+
+	private ContServiceDataHWater average;
 
 	public ContServiceDataHWater getFirstData() {
 		return firstData;
@@ -51,6 +57,12 @@ public class ContServiceDataHWaterSummary implements Serializable {
 		this.diffs = diffs;
 	}
 
+	public ContServiceDataHWater getAverage() {
+		return average;
+	}
 
-	
+	public void setAverage(ContServiceDataHWater average) {
+		this.average = average;
+	}
+
 }

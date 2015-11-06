@@ -67,23 +67,19 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @param objects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteOne(List<SubscrContObject> objects, LocalDate subscrEndDate) {
 		checkNotNull(objects);
 		checkNotNull(subscrEndDate);
 		Date endDate = subscrEndDate.toDate();
 
 		List<SubscrContObject> updateCandidate = new ArrayList<>();
-		List<SubscrContObject> deleteCandidate = new ArrayList<>();
-
 		objects.forEach(i -> {
-			if (i.getSubscrBeginDate().equals(endDate)) {
-				deleteCandidate.add(i);
-			} else if (i.getSubscrEndDate() == null) {
+			if (i.getSubscrEndDate() == null) {
 				i.setSubscrEndDate(endDate);
 				updateCandidate.add(i);
 			}
 		});
-		subscrContObjectRepository.delete(deleteCandidate);
 		subscrContObjectRepository.save(updateCandidate);
 	}
 
@@ -92,6 +88,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @param subscrContObject
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteOne(SubscrContObject subscrContObject, LocalDate subscrEndDate) {
 		checkNotNull(subscrContObject);
 		if (subscrContObject.getSubscrBeginDate().equals(subscrContObject.getSubscrEndDate())) {
@@ -107,6 +104,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @param objects
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteOnePermanent(List<SubscrContObject> objects) {
 		subscrContObjectRepository.delete(objects);
 	}
@@ -116,6 +114,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @param subscrContObject
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteOnePermanent(SubscrContObject subscrContObject) {
 		subscrContObjectRepository.delete(subscrContObject);
 	}
@@ -164,7 +163,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	public List<Long> selectRmaSubscrContObjectIds(Long subscriberId) {
 		checkNotNull(subscriberId);
 		LocalDate currentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
-		return subscrContObjectRepository.selectRmaSubscrContObjectIds(currentDate.toDate());
+		return subscrContObjectRepository.selectRmaSubscrContObjectIds(subscriberId, currentDate.toDate());
 	}
 
 	/**
