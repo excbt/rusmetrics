@@ -748,6 +748,10 @@ tr.nmc-main-table-header > th {
 /*    border-bottom-width: 0px;*/
 }
 
+.nmc-totals-indicator-highlight{
+    background-color: aquamarine;
+}
+
 
 /*********
  * Формы
