@@ -152,15 +152,15 @@
                     </td>
                 </tr> 
                 <tr>
-                    <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
-                    <td ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{'min-width': column.ngstyle+'px'}">
+                    <td class="col-md-3 nmc-totals-indicator-highlight" ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
+                    <td ng-repeat="column in intotalColumns" class="nmc-text-align-right nmc-totals-indicator-highlight" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{'min-width': column.ngstyle+'px'}">
                         {{summary.totals[column.name]}}
                     </td>
                 </tr> 
                 <tr>
-                    <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
+                    <td class="col-md-3 nmc-totals-indicator-highlight" ng-style="{width: totals_th_head_style+'px'}"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
                     </td>
-                    <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.diffs[column.name]!='-','nmc-text-align-center':summary.diffs[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
+                    <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right nmc-totals-indicator-highlight" ng-class="{'nmc-text-align-right':summary.diffs[column.name]!='-','nmc-text-align-center':summary.diffs[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
     <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                         {{summary.diffs[column.name]}}
                     </td>
