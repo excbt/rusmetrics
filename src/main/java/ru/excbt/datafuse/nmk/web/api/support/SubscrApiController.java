@@ -114,7 +114,10 @@ public class SubscrApiController extends WebApiController {
 		if (sud != null && sud.getSkipServiceFilter()) {
 			return new ArrayList<>(objectList);
 		}
-		return filterObjectAccess(objectList, getCurrentSubscriberId());
+
+		boolean isRma = currentSubscriberService.isRma();
+
+		return filterObjectAccess(objectList, getCurrentSubscriberId(), isRma);
 	}
 
 	/**
@@ -123,10 +126,10 @@ public class SubscrApiController extends WebApiController {
 	 * @param objectList
 	 * @return
 	 */
-	protected <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId) {
+	protected <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId, Boolean isRma) {
 		checkNotNull(objectList);
 
-		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberId,
+		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberId, isRma,
 				getSubscriberLocalDate(subscriberId));
 
 		return resultObjects;
