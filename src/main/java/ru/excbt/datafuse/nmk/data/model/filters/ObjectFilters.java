@@ -45,6 +45,16 @@ public class ObjectFilters {
 
 	/**
 	 * 
+	 * @param inList
+	 * @return
+	 */
+	public static <T extends DisabledObject> List<T> disabledFilter(List<T> inList) {
+		checkNotNull(inList);
+		return disabledFilter(inList.stream(), false).collect(Collectors.toList());
+	}
+
+	/**
+	 * 
 	 * @param inStream
 	 * @return
 	 */

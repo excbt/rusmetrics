@@ -68,6 +68,9 @@ public class SubscrServicePermission extends AbstractKeynameEntity {
 	@Column(name = "permission_tag_id")
 	private String permissionTagId;
 
+	@Column(name = "is_rma_filter")
+	private Boolean isRmaFilter;
+
 	public String getCaption() {
 		return caption;
 	}
@@ -122,6 +125,10 @@ public class SubscrServicePermission extends AbstractKeynameEntity {
 
 	public String getPermissionTagId() {
 		return permissionTagId;
+	}
+
+	public Boolean getIsRmaFilter() {
+		return isRmaFilter;
 	}
 
 }
