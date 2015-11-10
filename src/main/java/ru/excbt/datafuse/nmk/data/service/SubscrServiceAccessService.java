@@ -259,9 +259,9 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId, LocalDate accessDate) {
+	public <T> List<T> filterObjectAccess(List<T> objectList, Long subscriberId, boolean isRma, LocalDate accessDate) {
 		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberId, accessDate);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions);
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, isRma);
 		return filter.filterObjects(objectList);
 	}
 
