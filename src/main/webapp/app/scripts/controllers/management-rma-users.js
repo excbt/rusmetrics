@@ -163,10 +163,16 @@ console.log('Run user management controller.');
     $scope.deleteObjectInit = function(object){
         $scope.selectedItem(object);
         //generation confirm code
+//        $scope.confirmCode = null;
+//        $scope.firstNum = Math.round(Math.random()*100);
+//        $scope.secondNum = Math.round(Math.random()*100);
+//        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        
         $scope.confirmCode = null;
-        $scope.firstNum = Math.round(Math.random()*100);
-        $scope.secondNum = Math.round(Math.random()*100);
-        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;
+        
     };
     
     $scope.changeClient = function(){

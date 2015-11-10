@@ -116,7 +116,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
+                                        <input ng-disabled="data.currentUser.id!=null" class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
                                     </div>
                                 </td>
                             </tr>

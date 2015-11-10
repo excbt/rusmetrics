@@ -26,7 +26,7 @@
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
-            <th class="col-md-1 nmc-td-for-buttons-3">
+            <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
             <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
@@ -41,7 +41,7 @@
 <div class="nmc-data-sources-main-div">
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
         <tr class="nmc-main-table-header nmc-hide">
-            <th class="col-md-1 nmc-td-for-buttons-3">
+            <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
             <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
@@ -53,12 +53,12 @@
         </tr>
 
         <tr ng-repeat="client in data.clients | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
-            <td class="nmc-td-for-buttons-3">
+            <td class="nmc-td-for-buttons">
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <i title="Редактировать абонента" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(client)" data-target="#showClientOptionModal" data-toggle="modal"></i>
                         <i title="Связанные объекты" class="btn btn-xs glyphicon glyphicon-th-list nmc-button-in-table" ng-click="editObjectList(client)" data-target="#showObjectListModal" data-toggle="modal"></i>
-                        <i title="Абонентский прайс" class="btn btn-xs glyphicon glyphicon-usd nmc-button-in-table" ng-click="" data-target="" data-toggle="modal"></i>
+<!--                        <i title="Абонентский прайс" class="btn btn-xs glyphicon glyphicon-usd nmc-button-in-table" ng-click="" data-target="" data-toggle="modal"></i>-->
                     </div>
                 </div>
             </td>
