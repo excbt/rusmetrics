@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeKey;
+import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
@@ -250,17 +250,19 @@ public class ReportMakerParamService {
 
 					if (paramDef.getId().equals(checkValue.getReportMetaParamSpecialId())) {
 
-						String paramTypeKeyname = paramDef.getParamSpecialType().getKeyname();
+						// String paramTypeKeyname =
+						// paramDef.getParamSpecialType().getKeyname();
+						String paramTypeName = paramDef.getParamSpecialType().getSpecialTypeName();
 
 						logger.debug("Found param value id: {}. paramDef.id: {} paramTypeKeyname: {}",
 								checkValue.getId(), paramDef.getId(), paramDef.getParamSpecialKeyname());
 
-						if (paramTypeKeyname == null) {
+						if (paramTypeName == null) {
 							break;
 						}
-						ReportMetaParamSpecialTypeKey typeKey = ReportMetaParamSpecialTypeKey.valueOf(paramTypeKeyname);
+						ReportMetaParamSpecialTypeName typeName = ReportMetaParamSpecialTypeName.valueOf(paramTypeName);
 
-						checkRequired = checkParamSpecialFieldValue(typeKey, checkValue);
+						checkRequired = checkParamSpecialFieldValue(typeName, checkValue);
 
 						// logger.debug("Remove: {}",
 						// paramValues.remove(paramValue));
@@ -296,34 +298,34 @@ public class ReportMakerParamService {
 	 * @param param
 	 * @return
 	 */
-	private boolean checkParamSpecialFieldValue(ReportMetaParamSpecialTypeKey typeKey,
+	private boolean checkParamSpecialFieldValue(ReportMetaParamSpecialTypeName typeName,
 			ReportParamsetParamSpecial param) {
 
 		boolean result = false;
 
-		switch (typeKey) {
-		case SPECIAL_STRING:
+		switch (typeName) {
+		case STRING:
 			result = param.getTextValue() != null;
 			break;
-		case SPECIAL_DATE:
+		case DATE:
 			result = param.getOneDateValue() != null;
 			break;
-		case SPECIAL_DATETIME:
+		case DATETIME:
 			result = param.getOneDateValue() != null;
 			break;
-		case SPECIAL_BOOL:
+		case BOOL:
 			result = param.getBoolValue() != null;
 			break;
-		case SPECIAL_NUMERIC:
+		case NUMERIC:
 			result = param.getNumericValue() != null;
 			break;
-		case SPECIAL_PERIOD_DATE:
+		case DATE_PERIOD:
 			result = param.getStartDateValue() != null && param.getEndDateValue() != null;
 			break;
-		case SPECIAL_PERIOD_DATETIME:
+		case DATETIME_PERIOD:
 			result = param.getStartDateValue() != null && param.getEndDateValue() != null;
 			break;
-		case SPECIAL_CONT_OBJECT_GROUP:
+		case DIRECTORY:
 			result = param.getDirectoryValue() != null;
 			break;
 		default:
