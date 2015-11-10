@@ -111,14 +111,15 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		loadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
 				ReportConstants.Files.METROLOGICAL_FILE_COMPILED, isCompiled);
 
-		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT,
+		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT, // deprecated
 				ReportConstants.Files.CONSUMPTION_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_REPORT_V1_1,
 				ReportConstants.Files.CONSUMPTION_V1_1_FILE_COMPILED,
 				isCompiled);
 
-		loadReportMasterTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT,
+		loadReportMasterTemplate(
+				ReportTypeKey.CONSUMPTION_HISTORY_REPORT, // deprecated
 				ReportConstants.Files.CONSUMPTION_HISTORY_FILE_COMPILED,
 				isCompiled);
 
@@ -127,6 +128,12 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				isCompiled);
 
 		loadReportMasterTemplate(
+				ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2,
+				ReportConstants.Files.CONSUMPTION_HISTORY_ETALON_V2_FILE_COMPILED,
+				isCompiled);
+
+		loadReportMasterTemplate(
+				// deprecated
 				ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT,
 				ReportConstants.Files.CONSUMPTION_HISTORY_ETALON_FILE_COMPILED,
 				isCompiled);
@@ -140,6 +147,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		loadReportMasterTemplate(ReportTypeKey.ABONENT_SERVICE_REPORT,
 				ReportConstants.Files.ABONENT_SERVICE_FILE_COMPILED, isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT,
+				ReportConstants.Files.RMA_ABONENT_SERVICE_FILE_COMPILED,
+				isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT,
 				ReportConstants.Files.PARTNER_SERVICE_FILE_COMPILED, isCompiled);
@@ -156,12 +167,14 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_REPORT_V1_1);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT_V2);
+		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT_V2);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONSUMPTION_HISTORY_ETALON_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.CONS_T1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.EVENT_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.METROLOGICAL_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.ABONENT_SERVICE_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT);
 
 	}
