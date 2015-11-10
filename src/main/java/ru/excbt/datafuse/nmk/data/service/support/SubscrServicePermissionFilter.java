@@ -21,10 +21,25 @@ public class SubscrServicePermissionFilter {
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServicePermissionFilter.class);
 
 	private final List<SubscrServicePermission> permissionList = new ArrayList<>();
+	private final boolean isRma;
 
-	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
+	/**
+	 * 
+	 * @param permissionList
+	 * @param isRma
+	 */
+	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList, boolean isRma) {
 		checkNotNull(permissionList);
 		this.permissionList.addAll(permissionList);
+		this.isRma = isRma;
+	}
+
+	/**
+	 * 
+	 * @param permissionList
+	 */
+	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
+		this(permissionList, false);
 	}
 
 	/**
@@ -43,7 +58,7 @@ public class SubscrServicePermissionFilter {
 
 		if (keynameSupports) {
 			String className = obj.getClass().getSimpleName();
-			List<String> keynames = getObjectKeynamesByClass(className);
+			List<String> keynames = filterKeynamesByClass(className);
 			resultObjectList = keynameFilter(keynames, objectList);
 		} else {
 			resultObjectList = new ArrayList<>(objectList);
@@ -93,11 +108,12 @@ public class SubscrServicePermissionFilter {
 	 * @param className
 	 * @return
 	 */
-	public List<String> getObjectKeynamesByClass(String className) {
+	public List<String> filterKeynamesByClass(String className) {
 		checkNotNull(className, "class name is null");
 		checkState(permissionList != null, "permissionList is not initialized");
 		List<SubscrServicePermission> objectPermissions = permissionList.stream()
-				.filter((i) -> className.equals(i.getPermissionObjectClass())).collect(Collectors.toList());
+				.filter((i) -> className.equals(i.getPermissionObjectClass()))
+				.filter((i) -> i.getIsRmaFilter() == null || i.getIsRmaFilter() == isRma).collect(Collectors.toList());
 		return new ArrayList<>(objectKeynames(objectPermissions));
 	}
 
