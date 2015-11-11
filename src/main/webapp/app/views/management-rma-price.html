@@ -1,0 +1,317 @@
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
+        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс лист</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="clientsTab">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row nmc-main-workspace-header">  
+        <div class="col-md-4 noPadding marginBottom10 nmc-search-form">
+                <select class="form-control  nmc-select-form" ng-model="data.currentClient.id" ng-options="client.id as client.subscriberName for client in data.clients" ng-change="changeClient()"></select>
+        </div>
+        <div class="col-md-8">
+            <input ng-model="ctrlSettings.viewHistoryFlag" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/> Показывать историю
+        </div>
+    </div>    
+</div>
+
+<!-- Область с прокручиваемыми данными-->
+<div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+    <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table">
+        <tbody>
+            <tr ng-repeat="priceList in data.prices" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':priceList.active, 'nmc-inactive-price':(!priceList.active&&!priceList.project)}">
+                <td class="col-md-1 nmc-td-for-button" >
+                    <div class="btn-group">
+                      <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                        </i>
+                      <ul class="dropdown-menu">
+                        <li><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+<!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
+                        <li><a href="" ng-click="" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+                        <li><a href="" ng-click="">{{messages.viewDevices}}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>  
+                      </ul>
+                    </div>
+                </td>
+                <td class="col-md-2">
+                    {{priceList.priceName}}
+                </td>
+                <td class="col-md-1">
+                    <span ng-if="priceList.fromDate">с</span> {{priceList.fromDate | date:'dd.MM.yyyy'}}
+                </td>
+                <td class="col-md-1">
+                    <span ng-if="priceList.toDate">по</span> {{priceList.toDate | date:'dd.MM.yyyy'}}
+                </td>
+                <td class="col-md-7">
+                    <span ng-if="priceList.project">
+                        <i class="pull-right btn btn-xs glyphicon glyphicon-trash"></i>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+<!--                    Подключенных объектов: {{ctrlSettings.subscriberContObjectCount}}. Сумма ежемесячного платежа: {{}}<span ng-class="{'nmc-hide':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>-->
+                </td>
+            </tr>
+        </tbody>    
+    </table>
+</div>
+
+<!--Edit account service list-->
+<div id="editServiceListModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="editServiceListLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-wide-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="editServiceListLabel" class="nmc-h3">
+				Редактирование списка услуг
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                            <tbody>
+                                <tr ng-repeat="pack in serviceListEdition">
+                                    <td>
+                                        <table class="nmc-table-nowrap-data">
+                                            <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
+                                                <td class="nmc-td-for-button-checkbox">
+                                                    <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
+                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)"/>
+
+                                                </td>
+                                                <td class="col-md-10">
+                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
+                                                    </span>    
+                                                </td>
+                                                <td class="col-md-1">
+                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                </td>
+
+                                            </tr>
+                    <!--                        <tr>-->
+                                            <tr ng-show="!pack.showDetailsFlag">
+                                                <td></td>
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
+                                                    <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
+                                                        <tbody>
+                                                            <tr ng-repeat="serv in pack.serviceItems">
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
+                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
+                                                                </td>
+                                                                <td class="col-md-11 onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
+                                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="col-md-1">
+                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>    
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="checkPackages()"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- confirm edition account service list-->
+<div id="confirmSavingModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="editServiceListLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="confirmSavingLabel" class="nmc-h3">
+				Подтверждение сохранения списка услуг
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <p> Вы действительно хотите сохранить внесенные изменения?
+                    </p>
+<!--
+                    <p> <label class="text-primary nmc-form-label">Здесь будет перечень добавляемых/удаляемых услуг</label>
+                    </p>
+-->
+                    <div id="divWithObjectTable" class="" ng-hide="loading" style="overflow-x: auto;">
+                        <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Добавлены услуги:</label></div>
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                            <tbody>
+                                <tr ng-repeat="pack in serviceAddedList">
+                                    <td>
+                                        <table class="">
+                                            <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
+                                                <td class="nmc-td-for-button">
+                                                    <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
+                                                </td>
+                                                <td class="col-md-10 noPadding">
+                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
+                                                    </span>    
+                                                </td>
+
+                    <!--
+                                                <td class="col-md-7">
+                                                    {{pack.packDescription}}
+                                                </td>
+                    -->
+                                                <td class="col-md-1">
+<!--                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
+                                                </td>
+
+                                            </tr>
+                    <!--                        <tr>-->
+                                            <tr ng-show="!pack.showDetailsFlag">
+                                                <td></td>
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
+                                                    <table class="crud-grid table table-lighter table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
+                                                        <tbody>
+                                                            <tr ng-repeat="serv in pack.serviceItems">
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
+                                                                </td>
+                                                                <td class="col-md-11 onlyPaddingLeft15">
+<!--                                                                    style="padding: 0 0 0 15px !important;">-->
+                                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
+                                                                    </span>
+                                                                </td>
+                    <!--
+                                                                <td class="col-md-5">
+                                                                    {{serv.itemDescription}}
+                                                                </td>
+                    -->
+                                                                <td class="col-md-1">
+<!--                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>    
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                        
+                        <div ng-show="serviceRemovedList.length>0"><label class="nmc-form-label">Удалены услуги:</label></div>
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                            <tbody>
+                                <tr ng-repeat="pack in serviceRemovedList">
+                                    <td>
+                                        <table class="">
+                                            <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
+                                                <td class="nmc-td-for-button">
+                                                    <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
+
+                                                </td>
+                                                <td class="col-md-10 noPadding">
+                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editpackage"+pack.id}}>{{pack.packCaption}}
+                                                    </span>    
+                                                </td>
+                                                <td class="col-md-1">
+<!--                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
+                                                </td>
+
+                                            </tr>
+                    <!--                        <tr>-->
+                                            <tr ng-show="!pack.showDetailsFlag">
+                                                <td></td>
+                                                <td colspan="2" class="nmc-td-for-child-table">
+<!--                                                    style="padding-top: 2px !important;">-->
+                                                    <table class="crud-grid table table-lighter table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
+                                                        <tbody>
+                                                            <tr ng-repeat="serv in pack.serviceItems">
+                                                                <td class="onlyPaddingLeft5">
+<!--                                                                    style="padding: 0 0 0 5px !important;">-->
+                                                                </td>
+                                                                <td class="col-md-11 onlyPaddingLeft15">
+<!--                                                                    style="padding: 0 0 0 15px !important;">-->
+                                                                    <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
+                                                                    </span>
+                                                                </td>
+                                                                <td class="col-md-1">
+<!--                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>-->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>    
+                                            </tr>
+                                        </table>
+
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                        
+                    </div>
+                    <div>
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="savePackages()"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+			</button>	
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
