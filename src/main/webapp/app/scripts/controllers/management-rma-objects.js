@@ -496,6 +496,7 @@ console.log(obj);
                     result.customServiceName = zpoint.customServiceName;
                     result.contServiceTypeKeyname = zpoint.contServiceTypeKeyname;
                     result.zpointName = zpoint.customServiceName;
+                    result.tsNumber = zpoint.tsNumber;
                     result.contZPointComment = zpoint.contZPointComment;
                     if ((typeof zpoint.rso != 'undefined') && (zpoint.rso!=null)){
                         result.zpointRSO = zpoint.rso.organizationFullName || zpoint.rso.organizationName;
@@ -764,6 +765,7 @@ console.log(obj);
 //console.log(zps);
                     zps.zpointModel = object.zpointModel;
                     zps.zpointRSO = object.zpointRSO;
+                    zps.tsNumber = object.tsNumber;
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
                     zps.winter = {};
@@ -1385,5 +1387,9 @@ console.log(obj);
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };              
+                            //set mask for tsNumber input
+                $(document).ready(function(){
+                    $('#inputTSNumber').inputmask();
+                });
 //            }]
 }]);
