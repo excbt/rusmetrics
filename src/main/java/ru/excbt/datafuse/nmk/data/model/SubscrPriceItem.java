@@ -17,10 +17,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
-@Table(name = ModelTables.SERVICE_PRICE_ITEM)
+@Table(name = ModelTables.SUBSCR_PRICE_ITEM)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ServicePriceItem extends AbstractAuditableModel {
+public class SubscrPriceItem extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -29,11 +29,11 @@ public class ServicePriceItem extends AbstractAuditableModel {
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "service_price_list_id")
-	private ServicePriceList servicePriceList;
+	@JoinColumn(name = "subscr_price_list_id")
+	private SubscrPriceList subscrPriceList;
 
-	@Column(name = "service_price_list_id", insertable = false, updatable = false)
-	private Long servicePriceListId;
+	@Column(name = "subscr_price_list_id", insertable = false, updatable = false)
+	private Long subscrPriceListId;
 
 	@Column(name = "src_price_item_id")
 	private Long srcPriceItemId;
@@ -50,20 +50,20 @@ public class ServicePriceItem extends AbstractAuditableModel {
 	@Column(name = "price_value")
 	private BigDecimal priceValue;
 
-	public ServicePriceList getServicePriceList() {
-		return servicePriceList;
+	public SubscrPriceList getSubscrPriceList() {
+		return subscrPriceList;
 	}
 
-	public void setServicePriceList(ServicePriceList servicePriceList) {
-		this.servicePriceList = servicePriceList;
+	public void setSubscrPriceList(SubscrPriceList subscrPriceList) {
+		this.subscrPriceList = subscrPriceList;
 	}
 
-	public Long getServicePriceListId() {
-		return servicePriceListId;
+	public Long getSubscrPriceListId() {
+		return subscrPriceListId;
 	}
 
-	public void setServicePriceListId(Long servicePriceListId) {
-		this.servicePriceListId = servicePriceListId;
+	public void setSubscrPriceListId(Long subscrPriceListId) {
+		this.subscrPriceListId = subscrPriceListId;
 	}
 
 	public Long getSrcPriceItemId() {
@@ -105,4 +105,5 @@ public class ServicePriceItem extends AbstractAuditableModel {
 	public void setPriceValue(BigDecimal priceValue) {
 		this.priceValue = priceValue;
 	}
+
 }

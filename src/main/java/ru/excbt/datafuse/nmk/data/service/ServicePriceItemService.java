@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ServicePriceItem;
-import ru.excbt.datafuse.nmk.data.repository.ServicePriceItemRepository;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
+import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemRepository;
 
 @Service
 public class ServicePriceItemService {
 
 	@Autowired
-	private ServicePriceItemRepository servicePriceItemRepository;
+	private SubscrPriceItemRepository servicePriceItemRepository;
 
 	/**
 	 * 
@@ -22,7 +22,7 @@ public class ServicePriceItemService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ServicePriceItem> findPriceItems(Long servicePriceListId) {
-		return servicePriceItemRepository.findByServicePriceListId(servicePriceListId);
+	public List<SubscrPriceItem> findPriceItems(Long servicePriceListId) {
+		return servicePriceItemRepository.findBySubscrPriceListId(servicePriceListId);
 	}
 }

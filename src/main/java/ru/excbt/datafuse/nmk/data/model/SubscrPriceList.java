@@ -7,20 +7,23 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
-@Table(name = ModelTables.SERVICE_PRICE_LIST)
+@Table(name = ModelTables.SUBSCR_PRICE_LIST)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ServicePriceList extends AbstractAuditableModel implements DisabledObject, ActiveObject {
+public class SubscrPriceList extends AbstractAuditableModel implements DisabledObject, ActiveObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -59,6 +62,14 @@ public class ServicePriceList extends AbstractAuditableModel implements Disabled
 	@Temporal(TemporalType.DATE)
 	private Date planEndDate;
 
+	@Column(name = "fact_begin_date")
+	@Temporal(TemporalType.DATE)
+	private Date factBeginDate;
+
+	@Column(name = "fact_end_date")
+	@Temporal(TemporalType.DATE)
+	private Date factEndDate;
+
 	@Column(name = "is_active")
 	private Boolean isActive;
 
@@ -67,6 +78,19 @@ public class ServicePriceList extends AbstractAuditableModel implements Disabled
 
 	@Column(name = "is_master")
 	private Boolean isMaster;
+
+	@Column(name = "is_draft")
+	private Boolean isDraft = true;
+
+	@Column(name = "is_archive")
+	private Boolean isArchive = false;
+
+	@Version
+	private int version;
+
+	@JsonIgnore
+	@Column(name = "deleted")
+	private int deleted;
 
 	public Long getSrcPriceListId() {
 		return srcPriceListId;
@@ -173,4 +197,55 @@ public class ServicePriceList extends AbstractAuditableModel implements Disabled
 	public void setIsMaster(Boolean isMaster) {
 		this.isMaster = isMaster;
 	}
+
+	public Boolean getIsDraft() {
+		return isDraft;
+	}
+
+	public void setIsDraft(Boolean isDraft) {
+		this.isDraft = isDraft;
+	}
+
+	public Boolean getIsArchive() {
+		return isArchive;
+	}
+
+	public void setIsArchive(Boolean isArchive) {
+		this.isArchive = isArchive;
+	}
+
+	public Date getFactBeginDate() {
+		return factBeginDate;
+	}
+
+	public void setFactBeginDate(Date factBeginDate) {
+		this.factBeginDate = factBeginDate;
+	}
+
+	public Date getFactEndDate() {
+		return factEndDate;
+	}
+
+	public void setFactEndDate(Date factEndDate) {
+		this.factEndDate = factEndDate;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
 }
