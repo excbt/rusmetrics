@@ -13,7 +13,8 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.priceListLevel = :priceListLevel")
 	public List<SubscrPriceList> findByLevel(@Param("priceListLevel") Integer priceListLevel);
 
-	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.subscriberId1 = :subscriberId")
+	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.subscriberId1 = :subscriberId "
+			+ " ORDER BY pl.priceListLevel, pl.priceListType")
 	public List<SubscrPriceList> findByRma(@Param("subscriberId") Long subscriberId);
 
 }

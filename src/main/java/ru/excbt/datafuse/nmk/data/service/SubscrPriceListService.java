@@ -2,10 +2,12 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -81,6 +83,8 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(subscriberIds);
 		checkArgument(subscriberIds.length > 0 && subscriberIds.length <= 3);
 
+		archiveRmaActivePriceList(subscriberIds);
+
 		Long rmaSubscriberId = subscriberIds[0];
 
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcServicePriceListId);
@@ -146,10 +150,11 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public void deleteSubcrPriceList(SubscrPriceList subscrPriceList) {
+	public void deleteSubscrPriceList(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
 		checkArgument(!subscrPriceList.isNew());
 		checkArgument(subscrPriceList.getPriceListLevel() != PRICE_LEVEL_NMC);
+		subscrPriceListRepository.delete(subscrPriceList);
 	}
 
 	/**
@@ -164,6 +169,85 @@ public class SubscrPriceListService implements SecuredRoles {
 		List<SubscrPriceList> result = ObjectFilters.deletedFilter(preResult);
 
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public boolean archiveRmaActivePriceList(Long... subscriberIds) {
+		SubscrPriceList activePriceList = findActivePriceList(subscriberIds);
+		if (activePriceList == null) {
+			return false;
+		}
+		activePriceList.setFactEndDate(subscriberService.getSubscriberCurrentTime(subscriberIds[0]));
+		activePriceList.setIsActive(false);
+		activePriceList.setIsArchive(true);
+		subscrPriceListRepository.save(activePriceList);
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public void deleteActivePriceList(Long... subscriberIds) {
+		SubscrPriceList activePriceList = findActivePriceList(subscriberIds);
+		if (activePriceList != null) {
+			deleteSubscrPriceList(activePriceList);
+		}
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	private SubscrPriceList findActivePriceList(Long[] subscriberIds) {
+		checkNotNull(subscriberIds);
+		checkArgument(subscriberIds.length > 0 && subscriberIds.length <= 3);
+
+		for (Long l : subscriberIds) {
+			checkNotNull(l, "subscriberIds elements is null");
+		}
+
+		Long rmaSubscriberId = subscriberIds[0];
+		int priceListType = subscriberIds.length;
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
+		List<SubscrPriceList> activePriceLists = rmaPriceLists.stream().filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE)
+				.filter(i -> i.getPriceListType() != null && i.getPriceListType() == priceListType)
+				.collect(Collectors.toList());
+
+		if (priceListType == 2) {
+			Long subscriberId2 = subscriberIds[1];
+
+			activePriceLists.stream()
+					.filter(i -> i.getSubscriberId2() != null && i.getSubscriberId2().equals(subscriberId2));
+		}
+
+		if (activePriceLists.size() == 0) {
+			return null;
+		}
+
+		checkState(activePriceLists.size() <= 1);
+		SubscrPriceList result = activePriceLists.get(0);
+		return result;
+	}
+
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public SubscrPriceList makeSubscrPriceListDraft(Long srcPriceListId) {
+		checkNotNull(srcPriceListId);
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
+		if (srcPriceList == null) {
+			throw new PersistenceException(String.format("SUbscrPriceList (id=%d) is not found", srcPriceListId));
+		}
+		SubscrPriceList newPriceList = copyServicePriceList(srcPriceList);
+		return null;
 	}
 
 }
