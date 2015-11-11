@@ -747,11 +747,19 @@ tr.nmc-main-table-header > th {
     padding: 5px 0px 0 5px !important;
 /*    border-bottom-width: 0px;*/
 }
-
+/* Подсветка показаний Итого и Итого по интеграторам*/
 .nmc-totals-indicator-highlight{
     background-color: aquamarine;
 }
-
+/* Подсветка действующего/активного прайса*/
+tr.nmc-active-price > td{
+    background-color: bisque;
+    font-weight: bold;
+}
+/* Подсветка HE действующего/активного прайса*/
+tr.nmc-inactive-price > td{
+    font-style: italic;
+}
 
 /*********
  * Формы
