@@ -79,7 +79,6 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 	private String dbUser;
 
 	@Column(name = "db_password")
-	@JsonIgnore
 	private String dbPassword;
 
 	public Subscriber getSubscriber() {
