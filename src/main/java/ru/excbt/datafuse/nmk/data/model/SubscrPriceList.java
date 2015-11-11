@@ -4,6 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,8 +42,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "subscriber_id_1")
 	private Long subscriberId1;
 
-	@Column(name = "subscriber_id_2")
+	@Column(name = "subscriber_id_2", insertable = false, updatable = false)
 	private Long subscriberId2;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subscriber_id_2")
+	private Subscriber subscriber2;
 
 	@Column(name = "subscriber_id_3")
 	private Long subscriberId3;
@@ -246,6 +253,14 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Subscriber getSubscriber2() {
+		return subscriber2;
+	}
+
+	public void setSubscriber2(Subscriber subscriber2) {
+		this.subscriber2 = subscriber2;
 	}
 
 }

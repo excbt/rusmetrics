@@ -103,7 +103,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setSubscriberId1(rmaSubscriberId);
 
 		if (subscriberIds.length > 1) {
-			newPriceList.setSubscriberId2(subscriberIds[1]);
+			newPriceList.setSubscriber2(subscriberService.findOne(subscriberIds[1]));
 		}
 		if (subscriberIds.length > 2) {
 			newPriceList.setSubscriberId3(subscriberIds[2]);
@@ -167,6 +167,11 @@ public class SubscrPriceListService implements SecuredRoles {
 		List<SubscrPriceList> preResult = subscrPriceListRepository.findByRma(subscriberId);
 
 		List<SubscrPriceList> result = ObjectFilters.deletedFilter(preResult);
+		result.forEach(i -> {
+			if (i.getSubscriber2() != null) {
+				i.getSubscriber2().getId();
+			}
+		});
 
 		return result;
 	}

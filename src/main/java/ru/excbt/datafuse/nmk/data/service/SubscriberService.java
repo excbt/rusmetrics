@@ -194,7 +194,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<Subscriber> selectRmaSubscribers(Long rmaSubscriberId) {
-		return subscriberRepository.findByRmaSubscriberId(rmaSubscriberId);
+		return subscriberRepository.selectByRmaSubscriberId(rmaSubscriberId);
 	}
 
 	/**
