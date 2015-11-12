@@ -16,6 +16,11 @@ public abstract class EntityApiActionLocationAdapter<T, K> extends EntityApiActi
 		this.request = request;
 	}
 
+	public EntityApiActionLocationAdapter(HttpServletRequest request) {
+		super(null);
+		this.request = request;
+	}
+
 	protected abstract K getLocationId();
 
 	/**

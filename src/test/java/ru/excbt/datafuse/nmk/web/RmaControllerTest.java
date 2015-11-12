@@ -29,7 +29,7 @@ public class RmaControllerTest extends AbstractControllerTest implements TestExc
 
 	@Before
 	public void setup() {
-		setupAuditor(RMA_USER_ID, RMA_SUBSCRIBER_ID);
+		setupAuditor(EXCBT_RMA_SUBSCRIBER_USER_ID, EXCBT_RMA_SUBSCRIBER_ID);
 
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).addFilters(springSecurityFilterChain).build();
 	}
