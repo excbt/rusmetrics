@@ -215,6 +215,10 @@
                                     <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h"/>
                                 </td>
                             </tr>
+                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                <td colspan="2" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isDeviceObjectMetadata"/><label for="inputIDOM">Использовать метаданные прибора</label>
+                                </td>  
+                            </tr>
                         </table>
                     </div>    
                 </div>  
