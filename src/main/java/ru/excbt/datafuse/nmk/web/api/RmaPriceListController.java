@@ -6,24 +6,40 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.BooleanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaPriceListController extends SubscrPriceListController {
 
+	@Autowired
+	private SubscrPriceListService subscrPriceListService;
+
+	/**
+	 * 
+	 * @author kovtonyk
+	 *
+	 */
 	public class PriceListSubscriber {
 		private final Long id;
 		private final String subscriberName;
@@ -86,7 +102,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @param priceList
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}//priceList/{priceListId}", method = RequestMethod.PUT,
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestBody SubscrPriceList priceList) {
@@ -96,7 +112,6 @@ public class RmaPriceListController extends SubscrPriceListController {
 		checkNotNull(priceList);
 		checkArgument(!priceList.isNew());
 		checkNotNull(priceList.getPriceListLevel());
-		checkNotNull(priceList.getIsMaster());
 		checkNotNull(priceList.getIsActive());
 		checkNotNull(priceList.getIsDraft());
 
@@ -104,7 +119,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return responseBadRequest(ApiResult.validationError("Invalid Price List Level"));
 		}
 
-		if (priceList.getIsMaster()) {
+		if (BooleanUtils.isTrue(priceList.getIsMaster())) {
 			return responseBadRequest(ApiResult.validationError("Can't process master price list"));
 		}
 
@@ -116,11 +131,40 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
-				return null;
+				return subscrPriceListService.updateOne(entity);
 			}
 		};
 
-		return responseBadRequest();
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param srcPriceListId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createDraftPriceList(@PathVariable("subscriberId") Long subscriberId,
+			@RequestParam(value = "srcPriceListId", required = true) Long srcPriceListId, HttpServletRequest reques) {
+
+		checkNotNull(subscriberId);
+		checkNotNull(srcPriceListId);
+
+		ApiActionLocation action = new EntityApiActionLocationAdapter<SubscrPriceList, Long>(reques) {
+
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
+
+			@Override
+			public SubscrPriceList processAndReturnResult() {
+				return subscrPriceListService.makeSubscrPriceListDraft(srcPriceListId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
 }

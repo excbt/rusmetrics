@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -219,18 +220,22 @@ public class SubscrPriceListService implements SecuredRoles {
 		}
 	}
 
-	/**
-	 * 
-	 * @param subscriberIds
-	 * @return
-	 */
-	private SubscrPriceList findActivePriceList(Long[] subscriberIds) {
+	private void checkSubscriberIds(Long[] subscriberIds) {
 		checkNotNull(subscriberIds);
 		checkArgument(subscriberIds.length > 0 && subscriberIds.length <= 3);
 
 		for (Long l : subscriberIds) {
 			checkNotNull(l, "subscriberIds elements is null");
 		}
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 * @return
+	 */
+	private SubscrPriceList findActivePriceList(Long[] subscriberIds) {
+		checkSubscriberIds(subscriberIds);
 
 		Long rmaSubscriberId = subscriberIds[0];
 		int priceListType = subscriberIds.length;
@@ -253,6 +258,26 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkState(activePriceLists.size() <= 1);
 		SubscrPriceList result = activePriceLists.get(0);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrPriceList> findDraftPriceLists(Long... subscriberIds) {
+		checkSubscriberIds(subscriberIds);
+
+		Long rmaSubscriberId = subscriberIds[0];
+		int priceListType = subscriberIds.length;
+
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
+		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream().filter(i -> BooleanUtils.isTrue(i.getIsDraft()))
+				.filter(i -> i.getPriceListType() != null && i.getPriceListType() == priceListType)
+				.collect(Collectors.toList());
+
+		return resultPriceLists;
 	}
 
 	/**
@@ -295,6 +320,39 @@ public class SubscrPriceListService implements SecuredRoles {
 		SubscrPriceList result;
 		result = findActivePriceList(subscriberIds);
 		return result;
+	}
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	private Subscriber initSubscriber(Long id) {
+		return id == null ? null : subscriberService.findOne(id);
+	}
+
+	/**
+	 * 
+	 * @param subscrPriceList
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public SubscrPriceList updateOne(SubscrPriceList subscrPriceList) {
+		checkNotNull(subscrPriceList);
+		checkArgument(!subscrPriceList.isNew());
+		checkArgument(subscrPriceList.getPriceListLevel() != PRICE_LEVEL_NMC);
+		checkArgument(Boolean.FALSE.equals(subscrPriceList.getIsActive()));
+		checkArgument(Boolean.FALSE.equals(subscrPriceList.getIsArchive()));
+		checkArgument(Boolean.TRUE.equals(subscrPriceList.getIsDraft()));
+
+		Subscriber s1 = initSubscriber(subscrPriceList.getSubscriberId1());
+		Subscriber s2 = initSubscriber(subscrPriceList.getSubscriberId2());
+		Subscriber s3 = initSubscriber(subscrPriceList.getSubscriberId3());
+		subscrPriceList.setSubscriber1(s1);
+		subscrPriceList.setSubscriber2(s2);
+		subscrPriceList.setSubscriber3(s3);
+
+		return subscrPriceListRepository.save(subscrPriceList);
 	}
 
 }

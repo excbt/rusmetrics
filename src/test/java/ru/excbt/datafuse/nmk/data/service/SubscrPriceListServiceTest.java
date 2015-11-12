@@ -23,6 +23,10 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	@JsonIgnore
 	public void testName() throws Exception {
@@ -46,7 +50,12 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		// ServicePriceList
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
+	@JsonIgnore
 	public void testCreateRmaDraft() throws Exception {
 		SubscrPriceList srcPriceList = subscrPriceListService.findRmaActivePriceList(EXCBT_RMA_SUBSCRIBER_ID);
 		assertNotNull(srcPriceList);
@@ -54,8 +63,9 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 				srcPriceList.getIsMaster());
 
 		SubscrPriceList draft1 = subscrPriceListService.makeSubscrPriceListDraft(srcPriceList.getId());
+		assertNotNull(draft1);
 		SubscrPriceList draft2 = subscrPriceListService.makeSubscrPriceListDraft(draft1.getId());
-
+		assertNotNull(draft2);
 	}
 
 }

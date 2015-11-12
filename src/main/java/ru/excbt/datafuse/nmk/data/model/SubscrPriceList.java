@@ -33,7 +33,7 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	 */
 	private static final long serialVersionUID = -6899333535833888171L;
 
-	@Column(name = "src_price_list_id")
+	@Column(name = "src_price_list_id", updatable = false)
 	private Long srcPriceListId;
 
 	@Column(name = "price_list_name")
@@ -60,13 +60,13 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@JoinColumn(name = "subscriber_id_3")
 	private Subscriber subscriber3;
 
-	@Column(name = "price_list_level")
+	@Column(name = "price_list_level", updatable = false)
 	private Integer priceListLevel;
 
-	@Column(name = "price_list_type")
+	@Column(name = "price_list_type", updatable = false)
 	private Integer priceListType;
 
-	@Column(name = "price_list_option")
+	@Column(name = "price_list_option", updatable = false)
 	private String priceListOption;
 
 	@Column(name = "plan_begin_date")
@@ -91,7 +91,7 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
-	@Column(name = "is_master")
+	@Column(name = "is_master", updatable = false)
 	private Boolean isMaster;
 
 	@Column(name = "is_draft")
@@ -100,10 +100,11 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "is_archive")
 	private Boolean isArchive = false;
 
-	@Column(name = "master_price_list_id")
+	@Column(name = "master_price_list_id", updatable = false)
 	private Long masterPriceListId;
 
 	@Version
+	@Column(name = "version")
 	private int version;
 
 	@JsonIgnore

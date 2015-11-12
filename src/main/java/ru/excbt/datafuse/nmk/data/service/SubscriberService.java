@@ -85,6 +85,17 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Subscriber findOneSubscriber(long subscriberId) {
+		Subscriber result = subscriberRepository.findOne(subscriberId);
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
 	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	// public List<ContObject> selectSubscriberContObjects(long subscriberId) {
 	// List<ContObject> result =
