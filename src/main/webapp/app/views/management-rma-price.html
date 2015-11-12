@@ -21,7 +21,7 @@
 <div class="container-fluid">
     <div class="row nmc-main-workspace-header">  
         <div class="col-md-4 noPadding marginBottom10 nmc-search-form">
-                <select class="form-control  nmc-select-form" ng-model="data.currentClient.id" ng-options="client.id as client.subscriberName for client in data.clients" ng-change="changeClient()"></select>
+                <select class="form-control  nmc-select-form" ng-model="data.currentMode.id" ng-options="mode.id as mode.subscriberName for mode in data.priceModes" ng-change="changeMode(data.currentMode.id)"></select>
         </div>
         <div class="col-md-8">
             <input ng-model="ctrlSettings.viewHistoryFlag" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/> Показывать историю
@@ -39,12 +39,12 @@
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                         </i>
                       <ul class="dropdown-menu">
-                        <li><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
-<!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
-                        <li><a href="" ng-click="" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
-                        <li><a href="" ng-click="">{{messages.viewDevices}}</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>  
+                        <li ng-if="!data.currentMode.isRma&&priceList.project"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+                        <li ng-if="data.currentMode.isRma"><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
+                        <li ng-if="priceList.project"><a href="" ng-click="">{{messages.priceMenuItem3}}</a></li>
+                        <li><a href="" ng-click="">{{messages.priceMenuItem4}}</a></li>
+                        <li ng-if="priceList.project" role="separator" class="divider"></li>
+                        <li ng-if="priceList.project"><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
                       </ul>
                     </div>
                 </td>
@@ -307,6 +307,127 @@
 								ng-click="exit()">
 								Отменить
 			</button>	
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- Clone price -->
+<div id="clonePriceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="clonePriceLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="clonePriceLabel" class="nmc-h3">
+				Клонирование прайс листа
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table ">
+                            <thead>
+                                <tr class="nmc-main-table-header">
+                                    <th class="col-md-1 nmc-td-for-button">
+<!--                                        <input type="checkbox"/>-->
+                                        <i class="btn btn-xs glyphicon glyphicon-duplicate nmc-btn-dup paddingLeft0" title="Клонировать всем" ng-click="selectedAllPressed()"></i>
+                                    </th>
+                                    <th class="col-md-1 nmc-td-for-button">
+<!--                                        <input type="checkbox"/>-->
+                                        <i class="btn btn-xs glyphicon glyphicon-off nmc-btn-on paddingLeft0" title="Активировать у выбранных" ng-click="activatedAllPressed()"></i>
+                                    </th>
+                                    <th class="col-md-10">
+                                        Абонент
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="client in data.clientsAtWindow" ng-class="{'nmc-tr-odd':($index%2!==1)}">
+                                    <td class="col-md-1 nmc-td-for-button">
+                                        <input type="checkbox" ng-model="client.selected"/>
+                                    </td >
+                                    <td class="col-md-1 nmc-td-for-button">
+                                        <input type="checkbox" ng-disabled="!client.selected" ng-model="client.activated"/>
+                                    </td>
+                                    <td class="col-md-10">
+                                        {{client.subscriberName}}
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
+					ng-click=""
+					value="Клонировать" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete project price-->
+<div id="deletePriceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deletePriceLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deletePriceLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.currentPrice.priceName || data.currentPrice.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+<!--                            -->
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click=""
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentUser');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
 		</div>
 		<span class="alert alert-error dialogErrorMessage"
 			ng-show="errorOnSubmit"> Request error

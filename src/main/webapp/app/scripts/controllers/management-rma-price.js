@@ -1,14 +1,30 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
+.filter('withoutOldPrices', function(){
+    return function(input){
+        if (angular.isArray(input, revisionFlag)){
+            var tmpArr = [];
+            input.forEach(function(el){
+                if (revisionFlag && (angular.isUndefined(el.toDate))){
+                    tmpArr.push(el);
+                };
+            });
+            return tmpArr;
+        }
+    }
+});
+
+angular.module('portalNMC')
 .controller('MngmtPriceCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
     console.log("MngmtPriceCtrl run.");
     //messages & titles
     $scope.messages = {};
     $scope.messages.priceMenuItem1 = "Активировать";
     $scope.messages.priceMenuItem2 = "Клонировать";
-    $scope.messages.priceMenuItem3 = "Копировать";
-    $scope.messages.priceMenuItem4 = "Удалить";
+    $scope.messages.priceMenuItem3 = "Редактировать";
+    $scope.messages.priceMenuItem4 = "Копировать";
+    $scope.messages.priceMenuItem5 = "Удалить";
     
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -52,6 +68,8 @@ angular.module('portalNMC')
     //data
     $scope.data= {};
     $scope.data.currentClient = {};
+    $scope.data.currentMode = {};
+    $scope.data.priceModes = [];
     $scope.data.clients = [];
     $scope.data.prices = [];
     
@@ -61,7 +79,7 @@ angular.module('portalNMC')
         $http.get(targetUrl)
         .then(function(response){
             $scope.data.prices = response.data;
-console.log($scope.data.prices);            
+//console.log($scope.data.prices);            
         },
               function(e){
             notificationFactory.errorInfo(e.status, e.data);
@@ -69,6 +87,25 @@ console.log($scope.data.prices);
         });
     };
     getPrices();
+    
+    $scope.cloneInit = function(){
+        $scope.data.clientsAtWindow = angular.copy($scope.data.clients);
+    };
+    
+    $scope.selectedAllPressed = function(){
+        $scope.data.selectedAll = !$scope.data.selectedAll;
+        $scope.data.clientsAtWindow.forEach(function(el){
+            el.selected = $scope.data.selectedAll;
+        });
+    };
+    $scope.activatedAllPressed = function(){
+        $scope.data.activatedAll = !$scope.data.activatedAll;
+        $scope.data.clientsAtWindow.forEach(function(el){
+            if (el.selected){
+                el.activated = $scope.data.activatedAll;
+            };
+        });
+    };
     //----------------------------------------------------------
     
         //    get subscribers
@@ -80,21 +117,34 @@ console.log($scope.data.prices);
                 el.organizationName = el.organization.organizationFullName;
             });
             $scope.data.clients = response.data;
+            $scope.data.priceModes = angular.copy(response.data);
             var rmaClient = angular.copy($scope.data.clients[0]);
             rmaClient.id = 8080;
-            
+            rmaClient.isRma = true;
             rmaClient.organization.organizationFullName = "Партнерский";
             rmaClient.subscriberName = rmaClient.organization.organizationFullName;
             rmaClient.organizationName = rmaClient.organization.organizationFullName;
-            $scope.data.clients.unshift(rmaClient);
-//console.log($scope.data.clients);             
-            $scope.data.currentClient.id = $scope.data.clients[0].id;           
+            $scope.data.priceModes.unshift(rmaClient);
+//console.log($scope.data.clients); 
+            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
+            //$scope.data.currentClient.id = $scope.data.clients[0].id;           
         },
              function(e){
             console.log(e);
         });
     };
     getClients();
+    
+    $scope.changeMode = function(modeId){
+        var mode = null;
+        $scope.data.priceModes.some(function(el){
+            if (el.id == modeId){
+                mode = angular.copy(el);
+                return true;
+            };
+        });
+        $scope.data.currentMode = mode;
+    };
     
     //get subscriber contObject count
     $scope.getSubscriberContObjectCount = function(url){
