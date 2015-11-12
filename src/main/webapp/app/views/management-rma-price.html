@@ -41,7 +41,7 @@
                       <ul class="dropdown-menu">
                         <li ng-if="!data.currentMode.isRma&&priceList.project"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
                         <li ng-if="data.currentMode.isRma"><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
-                        <li ng-if="priceList.project"><a href="" ng-click="">{{messages.priceMenuItem3}}</a></li>
+                        <li ng-if="priceList.project"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>
                         <li><a href="" ng-click="">{{messages.priceMenuItem4}}</a></li>
                         <li ng-if="priceList.project" role="separator" class="divider"></li>
                         <li ng-if="priceList.project"><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
@@ -73,18 +73,21 @@
 </div>
 
 <!--Edit account service list-->
-<div id="editServiceListModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="editServiceListLabel" tabindex="-1">
+<div id="editPriceModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="editPriceLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-wide-dialog">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="editServiceListLabel" class="nmc-h3">
-				Редактирование списка услуг
+			<h3 id="editPriceLabel" class="nmc-h3">
+				Редактирование прайс-листа
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
+                    <div>
+                        Наименование: <input type="text"/>
+                    </div>
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>

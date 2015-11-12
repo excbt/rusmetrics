@@ -390,14 +390,14 @@ angular.module('portalNMC')
     };
     
     //Edit button onClick listener
-    $scope.editPackages = function(){
+    $scope.editPrice = function(){
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         initChangdFlags($scope.serviceListEdition);
-        $('#editServiceListModal').modal();
+        $('#editPriceModal').modal();
     };
     
     //listener on edit service modal window show
-    $('#editServiceListModal').on('show.bs.modal',function(e){
+    $('#editPriceModal').on('show.bs.modal',function(e){
         window.setTimeout(function(){
                 //add popup for editable packages and services
             $scope.serviceListEdition.forEach(function(pack){
