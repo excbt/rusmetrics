@@ -16,9 +16,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -35,8 +32,6 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	 * 
 	 */
 	private static final long serialVersionUID = -199459403017867220L;
-
-	private static final Logger logger = LoggerFactory.getLogger(DeviceObject.class);
 
 	public class ContObjectInfo {
 		public ContObjectInfo() {
@@ -98,6 +93,9 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Column(name = "is_device_object_metadata")
+	private Boolean isDeviceObjectMetadata;
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
@@ -216,6 +214,14 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setIsManual(Boolean isManual) {
 		this.isManual = isManual;
+	}
+
+	public Boolean getIsDeviceObjectMetadata() {
+		return isDeviceObjectMetadata;
+	}
+
+	public void setIsDeviceObjectMetadata(Boolean isDeviceObjectMetadata) {
+		this.isDeviceObjectMetadata = isDeviceObjectMetadata;
 	}
 
 }
