@@ -39,8 +39,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "price_list_name")
 	private String priceListName;
 
-	@Column(name = "subscriber_id_1")
+	@Column(name = "subscriber_id_1", insertable = false, updatable = false)
 	private Long subscriberId1;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subscriber_id_1")
+	private Subscriber subscriber1;
 
 	@Column(name = "subscriber_id_2", insertable = false, updatable = false)
 	private Long subscriberId2;
@@ -49,8 +53,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@JoinColumn(name = "subscriber_id_2")
 	private Subscriber subscriber2;
 
-	@Column(name = "subscriber_id_3")
+	@Column(name = "subscriber_id_3", insertable = false, updatable = false)
 	private Long subscriberId3;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subscriber_id_3")
+	private Subscriber subscriber3;
 
 	@Column(name = "price_list_level")
 	private Integer priceListLevel;
@@ -78,7 +86,7 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	private Date factEndDate;
 
 	@Column(name = "is_active")
-	private Boolean isActive;
+	private Boolean isActive = false;
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
@@ -91,6 +99,9 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	@Column(name = "is_archive")
 	private Boolean isArchive = false;
+
+	@Column(name = "master_price_list_id")
+	private Long masterPriceListId;
 
 	@Version
 	private int version;
@@ -119,24 +130,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 		return subscriberId1;
 	}
 
-	public void setSubscriberId1(Long subscriberId1) {
-		this.subscriberId1 = subscriberId1;
-	}
-
 	public Long getSubscriberId2() {
 		return subscriberId2;
 	}
 
-	public void setSubscriberId2(Long subscriberId2) {
-		this.subscriberId2 = subscriberId2;
-	}
-
 	public Long getSubscriberId3() {
 		return subscriberId3;
-	}
-
-	public void setSubscriberId3(Long subscriberId3) {
-		this.subscriberId3 = subscriberId3;
 	}
 
 	public Integer getPriceListLevel() {
@@ -261,6 +260,30 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	public void setSubscriber2(Subscriber subscriber2) {
 		this.subscriber2 = subscriber2;
+	}
+
+	public Subscriber getSubscriber1() {
+		return subscriber1;
+	}
+
+	public void setSubscriber1(Subscriber subscriber1) {
+		this.subscriber1 = subscriber1;
+	}
+
+	public Subscriber getSubscriber3() {
+		return subscriber3;
+	}
+
+	public void setSubscriber3(Subscriber subscriber3) {
+		this.subscriber3 = subscriber3;
+	}
+
+	public Long getMasterPriceListId() {
+		return masterPriceListId;
+	}
+
+	public void setMasterPriceListId(Long masterPriceListId) {
+		this.masterPriceListId = masterPriceListId;
 	}
 
 }

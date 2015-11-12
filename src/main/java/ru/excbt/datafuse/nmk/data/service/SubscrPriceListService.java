@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceListRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -33,6 +34,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 	private final static int PRICE_LEVEL_NMC = 0;
 	private final static int PRICE_LEVEL_RMA = 1;
+	private final static int PRICE_LEVEL_SUBSCRIBER = 2;
 
 	@Autowired
 	private SubscrPriceListRepository subscrPriceListRepository;
@@ -86,6 +88,10 @@ public class SubscrPriceListService implements SecuredRoles {
 		archiveRmaActivePriceList(subscriberIds);
 
 		Long rmaSubscriberId = subscriberIds[0];
+		Subscriber rmaSubscriber = subscriberService.findOne(rmaSubscriberId);
+		if (rmaSubscriber == null || !Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
+			throw new PersistenceException(String.format("Invalid Rma Subscriber Id (%d)", rmaSubscriberId));
+		}
 
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcServicePriceListId);
 		if (srcPriceList == null) {
@@ -97,16 +103,16 @@ public class SubscrPriceListService implements SecuredRoles {
 			throw new UnsupportedOperationException();
 		}
 
-		SubscrPriceList newPriceList = copyServicePriceList(srcPriceList);
+		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
 		newPriceList.setSrcPriceListId(srcServicePriceListId);
 		newPriceList.setPriceListLevel(PRICE_LEVEL_RMA);
-		newPriceList.setSubscriberId1(rmaSubscriberId);
+		newPriceList.setSubscriber1(rmaSubscriber);
 
 		if (subscriberIds.length > 1) {
 			newPriceList.setSubscriber2(subscriberService.findOne(subscriberIds[1]));
 		}
 		if (subscriberIds.length > 2) {
-			newPriceList.setSubscriberId3(subscriberIds[2]);
+			newPriceList.setSubscriber3(subscriberService.findOne(subscriberIds[2]));
 		}
 		newPriceList.setPriceListType(subscriberIds.length);
 		newPriceList.setIsMaster(true);
@@ -132,15 +138,21 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @return
 	 */
 
-	private SubscrPriceList copyServicePriceList(SubscrPriceList srcServicePriceList) {
+	private SubscrPriceList copyPriceList_L1(SubscrPriceList srcServicePriceList) {
 		checkNotNull(srcServicePriceList);
 		checkArgument(!srcServicePriceList.isNew());
 		SubscrPriceList newPriceList = new SubscrPriceList();
+
 		newPriceList.setPriceListName(srcServicePriceList.getPriceListName());
 		newPriceList.setPriceListOption(srcServicePriceList.getPriceListOption());
 		newPriceList.setPlanBeginDate(srcServicePriceList.getPlanBeginDate());
 		newPriceList.setPlanEndDate(srcServicePriceList.getPlanEndDate());
 		newPriceList.setIsActive(false);
+		newPriceList.setSubscriber1(srcServicePriceList.getSubscriber1());
+		newPriceList.setSubscriber2(srcServicePriceList.getSubscriber2());
+		newPriceList.setSubscriber3(srcServicePriceList.getSubscriber3());
+		newPriceList.setMasterPriceListId(srcServicePriceList.getMasterPriceListId());
+
 		return newPriceList;
 	}
 
@@ -212,7 +224,6 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @param subscriberIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
 	private SubscrPriceList findActivePriceList(Long[] subscriberIds) {
 		checkNotNull(subscriberIds);
 		checkArgument(subscriberIds.length > 0 && subscriberIds.length <= 3);
@@ -244,6 +255,12 @@ public class SubscrPriceListService implements SecuredRoles {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param srcPriceListId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList makeSubscrPriceListDraft(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
@@ -251,8 +268,33 @@ public class SubscrPriceListService implements SecuredRoles {
 		if (srcPriceList == null) {
 			throw new PersistenceException(String.format("SUbscrPriceList (id=%d) is not found", srcPriceListId));
 		}
-		SubscrPriceList newPriceList = copyServicePriceList(srcPriceList);
-		return null;
+		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
+		newPriceList.setPriceListLevel(PRICE_LEVEL_SUBSCRIBER);
+		newPriceList.setIsActive(false);
+		newPriceList.setIsArchive(false);
+		newPriceList.setIsDraft(true);
+		newPriceList.setPriceListType(srcPriceList.getPriceListType());
+		newPriceList.setSrcPriceListId(srcPriceListId);
+		newPriceList.setPriceListName(PRICE_LIST_PREFIX + srcPriceList.getPriceListName());
+
+		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())) {
+			newPriceList.setMasterPriceListId(srcPriceList.getId());
+		}
+
+		subscrPriceListRepository.save(newPriceList);
+		return newPriceList;
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public SubscrPriceList findRmaActivePriceList(Long... subscriberIds) {
+		SubscrPriceList result;
+		result = findActivePriceList(subscriberIds);
+		return result;
 	}
 
 }

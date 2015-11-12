@@ -6,7 +6,11 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
@@ -14,10 +18,13 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 public class SubscrPriceListServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
 
+	private static final Logger logger = LoggerFactory.getLogger(SubscrPriceListServiceTest.class);
+
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
 
 	@Test
+	@JsonIgnore
 	public void testName() throws Exception {
 		SubscrPriceList nmcPriceList = subscrPriceListService.findRootPriceLists("TEST 1");
 		assertNotNull(nmcPriceList);
@@ -38,4 +45,17 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		// subscrPriceListService.deleteSubcrPriceList(rmaSubscriberPriceList);
 		// ServicePriceList
 	}
+
+	@Test
+	public void testCreateRmaDraft() throws Exception {
+		SubscrPriceList srcPriceList = subscrPriceListService.findRmaActivePriceList(EXCBT_RMA_SUBSCRIBER_ID);
+		assertNotNull(srcPriceList);
+		logger.info("Found scrPriceList (id={}): {}. master:{}", srcPriceList.getId(), srcPriceList.getPriceListName(),
+				srcPriceList.getIsMaster());
+
+		SubscrPriceList draft1 = subscrPriceListService.makeSubscrPriceListDraft(srcPriceList.getId());
+		SubscrPriceList draft2 = subscrPriceListService.makeSubscrPriceListDraft(draft1.getId());
+
+	}
+
 }

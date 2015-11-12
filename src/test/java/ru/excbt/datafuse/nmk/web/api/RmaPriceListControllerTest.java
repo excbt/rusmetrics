@@ -18,6 +18,6 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 
 	@Test
 	public void testSubscrPriceList() throws Exception {
-		_testJsonGet("/api/rma/priceList/" + currentSubscriberService.getSubscriberId());
+		_testJsonGet(String.format("/api/rma/%d/priceList/", currentSubscriberService.getSubscriberId()));
 	}
 }
