@@ -29,37 +29,60 @@
     </div>    
 </div>
 
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-md-1 nmc-td-for-button">
+
+            </th>
+            <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
+                {{column.caption}}                
+            </th>
+            <th class="col-md-4">
+            </th>
+        </tr>
+</table>
+
 <!-- Область с прокручиваемыми данными-->
 <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
     <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table">
+        <thead>
+            <tr class="nmc-main-table-header nmc-hide">
+                <th class="col-md-1 nmc-td-for-button">
+
+                </th>
+                <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
+                    {{column.caption}}                
+                </th>
+                <th class="col-md-4">
+                </th>
+            </tr>
+        </thead>
         <tbody>
-            <tr ng-repeat="priceList in data.prices" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':priceList.active, 'nmc-inactive-price':(!priceList.active&&!priceList.project)}">
+            <tr ng-repeat="priceList in data.prices" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive&&priceList.isMaster), 'nmc-inactive-price':priceList.isArchive}">
                 <td class="col-md-1 nmc-td-for-button" >
                     <div class="btn-group">
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                         </i>
                       <ul class="dropdown-menu">
-                        <li ng-if="!data.currentMode.isRma&&priceList.project"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+                        <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
+                        <li ng-if="!data.currentMode.isRma&&priceList.isDraft"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
                         <li ng-if="data.currentMode.isRma"><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
-                        <li ng-if="priceList.project"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>
+                        <li ng-if="priceList.isDraft"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>
                         <li><a href="" ng-click="">{{messages.priceMenuItem4}}</a></li>
-                        <li ng-if="priceList.project" role="separator" class="divider"></li>
-                        <li ng-if="priceList.project"><a href="" ng-click="" data-target="#deleteObjectModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
+                        <li ng-if="priceList.isDraft" role="separator" class="divider"></li>
+                        <li ng-if="priceList.isDraft"><a href="" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
                       </ul>
                     </div>
                 </td>
-                <td class="col-md-2">
-                    {{priceList.priceName}}
+                <td ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
+                    <span ng-class="{'nmc-distinguish':priceList.isMaster}">
+                        {{priceList[column.name]}}
+                    </span>
                 </td>
-                <td class="col-md-1">
-                    <span ng-if="priceList.fromDate">с</span> {{priceList.fromDate | date:'dd.MM.yyyy'}}
-                </td>
-                <td class="col-md-1">
-                    <span ng-if="priceList.toDate">по</span> {{priceList.toDate | date:'dd.MM.yyyy'}}
-                </td>
-                <td class="col-md-7">
-                    <span ng-if="priceList.project">
-                        <i class="pull-right btn btn-xs glyphicon glyphicon-trash"></i>
+                <td class="col-md-4">
+                    <span ng-if="priceList.isDraft">
+                        <i class="pull-right btn btn-xs glyphicon glyphicon-trash" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal"></i>
                     </span>
                 </td>
             </tr>
@@ -85,9 +108,6 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div>
-                        Наименование: <input type="text"/>
-                    </div>
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
@@ -401,7 +421,7 @@
 				<p>
 					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
 					</label> 
-					<label class="text-primary nmc-form-label">{{data.currentPrice.priceName || data.currentPrice.id}}</label>
+					<label class="text-primary nmc-form-label">{{data.currentPrice.priceListName || data.currentPrice.id}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
@@ -426,6 +446,88 @@
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#data.currentUser');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- Price list property window-->
+<div id="pricePropModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="pricePropLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="pricePropLabel" class="nmc-h3">
+				Свойства прайс-листа
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input ng-disabled="!data.currentPrice.isDraft" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentPrice.priceListName"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputPlanBeginDate">Плановая дата ввода</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input ng-disabled="!data.currentPrice.isDraft" class="form-control nmc-text-input-form" type="text" id="inputPlanBeginDate" placeholder=""  ng-model="data.currentPrice.planBeginDate"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputPlanEndDate">Плановая дата завершения</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input ng-disabled="!data.currentPrice.isDraft" class="form-control nmc-text-input-form" type="text" id="inputPlanEndDate" placeholder=""  ng-model="data.currentPrice.planEndDate"/>
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentPrice.factBeginDate">
+                                <td class="col-sm-3"><label>Фактическая дата ввода</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    {{data.currentPrice.factBeginDate}}
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentPrice.factEndDate">
+                                <td class="col-sm-3"><label>Фактическая дата завершения</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    {{data.currentPrice.factEndDate}}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="!data.currentPrice.isDraft" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="savePriceProp(data.currentPrice)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentPrice')">
 								Отменить
 							</button>
 						</div>

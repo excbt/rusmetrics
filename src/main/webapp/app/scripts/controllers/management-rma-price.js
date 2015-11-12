@@ -25,19 +25,47 @@ angular.module('portalNMC')
     $scope.messages.priceMenuItem3 = "Редактировать";
     $scope.messages.priceMenuItem4 = "Копировать";
     $scope.messages.priceMenuItem5 = "Удалить";
+    $scope.messages.priceMenuItem6 = "Свойства";
     
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     
     $scope.ctrlSettings.subscrUrl = "../api/subscr";
+    $scope.ctrlSettings.rmaUrl = "../api/rma";
+    $scope.ctrlSettings.priceSuffix = "/priceList";
     $scope.ctrlSettings.clientsUrl = "../api/rma/subscribers";
+    $scope.ctrlSettings.modesUrl = "../api/rma/priceList/subscribers";
     $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl+"/manage/service";
     $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
     $scope.ctrlSettings.itemsUrl = $scope.ctrlSettings.servicesUrl+ "/serviceItemList";
     $scope.ctrlSettings.priceUrl = $scope.ctrlSettings.servicesUrl+ "/servicePriceList";
     $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
     $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl+ "/info/subscriberContObjectCount";
+    
+    $scope.ctrlSettings.priceListColumns = [
+        {
+            "name": "priceListName",
+            "caption": "Прайс",
+            "class": "col-md-3"
+        },{
+            "name": "planBeginDate",
+            "caption": "Запланир. дата ввода",
+            "class": "col-md-1"
+        },{
+            "name": "planEndDate",
+            "caption": "Запланир. дата завершения",
+            "class": "col-md-1"
+        },{
+            "name": "factBeginDate",
+            "caption": "Факт. дата ввода",
+            "class": "col-md-1"
+        },{
+            "name": "factEndDate",
+            "caption": "Факт. дата завершения",
+            "class": "col-md-1"
+        }
+    ];
     
     // ----------------------- dummy -------------------------
     $scope.ctrlSettings.pricesUrl = "resource/prices.json";
@@ -68,12 +96,26 @@ angular.module('portalNMC')
     //data
     $scope.data= {};
     $scope.data.currentClient = {};
+    $scope.data.currentPrice = {};
     $scope.data.currentMode = {};
     $scope.data.priceModes = [];
     $scope.data.clients = [];
     $scope.data.prices = [];
     
     //---------------------------- Prices ----------------------
+        //callbacks
+     var successCallback = function (e, cb) {                    
+        notificationFactory.success();
+        $('#deletePriceModal').modal('hide');
+        $('#pricePropModal').modal('hide');
+         getModePrices($scope.data.currentMode.id);
+    };
+
+    var errorCallback = function (e) {
+        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
+        console.log(e);
+    };
+    
     var getPrices = function(){
         var targetUrl = $scope.ctrlSettings.pricesUrl;
         $http.get(targetUrl)
@@ -86,7 +128,21 @@ angular.module('portalNMC')
             console.log(e);
         });
     };
-    getPrices();
+//    getPrices();
+    
+    var getModePrices = function(subscrId){
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+subscrId+$scope.ctrlSettings.priceSuffix;
+        $http.get(targetUrl)
+        .then(function(response){
+            $scope.data.prices = response.data;
+console.log($scope.data.prices);            
+        },
+              function(e){
+            notificationFactory.errorInfo(e.status, e.data);
+            console.log(e);
+        });
+    };
+    
     
     $scope.cloneInit = function(){
         $scope.data.clientsAtWindow = angular.copy($scope.data.clients);
@@ -106,6 +162,25 @@ angular.module('portalNMC')
             };
         });
     };
+    
+    $scope.selectItem = function(object){
+        $scope.data.currentPrice = angular.copy(object);
+    };
+    
+    $scope.deletePriceInit = function(object){
+        $scope.selectItem(object);
+        //generation confirm code
+        $scope.confirmCode = null;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;
+    };
+    
+    $scope.savePriceProp = function(object){
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+object.id;
+        $http.put(targetUrl, object).then(successCallback, errorCallback)
+        
+    };
     //----------------------------------------------------------
     
         //    get subscribers
@@ -117,16 +192,16 @@ angular.module('portalNMC')
                 el.organizationName = el.organization.organizationFullName;
             });
             $scope.data.clients = response.data;
-            $scope.data.priceModes = angular.copy(response.data);
-            var rmaClient = angular.copy($scope.data.clients[0]);
-            rmaClient.id = 8080;
-            rmaClient.isRma = true;
-            rmaClient.organization.organizationFullName = "Партнерский";
-            rmaClient.subscriberName = rmaClient.organization.organizationFullName;
-            rmaClient.organizationName = rmaClient.organization.organizationFullName;
-            $scope.data.priceModes.unshift(rmaClient);
+//            $scope.data.priceModes = angular.copy(response.data);
+//            var rmaClient = angular.copy($scope.data.clients[0]);
+//            rmaClient.id = 8080;
+//            rmaClient.isRma = true;
+//            rmaClient.organization.organizationFullName = "Партнерский";
+//            rmaClient.subscriberName = rmaClient.organization.organizationFullName;
+//            rmaClient.organizationName = rmaClient.organization.organizationFullName;
+//            $scope.data.priceModes.unshift(rmaClient);
 //console.log($scope.data.clients); 
-            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
+//            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
             //$scope.data.currentClient.id = $scope.data.clients[0].id;           
         },
              function(e){
@@ -134,6 +209,22 @@ angular.module('portalNMC')
         });
     };
     getClients();
+    
+    var getModes = function(){
+        var targetUrl = $scope.ctrlSettings.modesUrl;
+        $http.get(targetUrl)
+        .then(function(response){
+            $scope.data.priceModes = angular.copy(response.data);
+console.log($scope.data.priceModes); 
+            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
+            getModePrices($scope.data.currentMode.id);
+            //$scope.data.currentClient.id = $scope.data.clients[0].id;           
+        },
+             function(e){
+            console.log(e);
+        });
+    };
+    getModes();
     
     $scope.changeMode = function(modeId){
         var mode = null;
@@ -144,6 +235,7 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentMode = mode;
+        getModePrices($scope.data.currentMode.id);
     };
     
     //get subscriber contObject count
@@ -439,5 +531,32 @@ angular.module('portalNMC')
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
     };
+    
+    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true,
+        format: $scope.ctrlSettings.dateFormat
+    };
+    $(document).ready(function() {
+        $('#inputPlanBeginDate').datepicker({
+          dateFormat: "yy-mm-dd",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });
+        $('#inputPlanEndDate').datepicker({
+          dateFormat: "yy-mm-dd",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });                  
+    });
     
 }]);
