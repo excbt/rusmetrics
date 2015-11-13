@@ -70,7 +70,7 @@
                         </i>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
-                        <li ng-if="!data.currentMode.rma&&priceList.isDraft"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+                        <li ng-if="!data.currentMode.rma&&priceList.isDraft"><a href="" ng-click="activatePriceList(priceList)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
 <!--                          ng-if="data.currentMode.rma"-->
                         <li ng-if="data.currentMode.rma"><a href="" ng-click="cloneInit(priceList)" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
                         <li ng-if="priceList.isDraft"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>

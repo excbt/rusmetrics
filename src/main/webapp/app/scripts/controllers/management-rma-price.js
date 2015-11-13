@@ -110,6 +110,7 @@ angular.module('portalNMC')
         $('#deletePriceModal').modal('hide');
         $('#pricePropModal').modal('hide');
         $('#clonePriceModal').modal('hide');
+        $scope.data.currentPrice = {};
         getModePrices($scope.data.currentMode.id);
     };
 
@@ -205,6 +206,12 @@ angular.module('portalNMC')
         })
             .then(successCallback, errorCallback);
         
+    };
+    
+    $scope.activatePriceList = function(pl){
+        $scope.selectItem(pl);
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+ $scope.data.currentPrice.id+"/activate";
+        $http.put(targetUrl).then(successCallback, errorCallback);
     };
     //----------------------------------------------------------
     
