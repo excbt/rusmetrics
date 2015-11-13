@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
@@ -34,6 +37,9 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
+
+	@Autowired
+	private RmaSubscriberService rmaSubscriberService;
 
 	/**
 	 * 
@@ -69,7 +75,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
 
-		List<Subscriber> subscribers = subscriberService.selectRmaSubscribers(getCurrentSubscriberId());
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
 		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
@@ -86,11 +92,12 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		checkNotNull(subscriberId);
 
+		List<SubscrPriceList> subscrPriceLists = new ArrayList<>();
 		if (subscriberId.equals(getCurrentSubscriberId())) {
-
+			subscrPriceLists = subscrPriceListService.findRmaPriceLists(subscriberId);
+		} else {
+			subscrPriceLists = subscrPriceListService.findSubscriberPriceLists(getCurrentSubscriberId(), subscriberId);
 		}
-
-		List<SubscrPriceList> subscrPriceLists = subscrPriceListService.findRmaPriceLists(subscriberId);
 
 		return responseOK(subscrPriceLists);
 	}
@@ -160,11 +167,40 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
-				return subscrPriceListService.makeSubscrPriceListDraft(srcPriceListId);
+				return subscrPriceListService.makeDraftRmaPriceList(srcPriceListId);
 			}
 		};
 
 		return WebApiHelper.processResponceApiActionCreate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param priceListId
+	 * @param priceList
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/subscr", method = RequestMethod.POST,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> createSubscrPriceList(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("priceListId") Long priceListId, @RequestParam("subscriberIds") Long[] subscriberIds,
+			@RequestParam("activeIds") Long[] activeIds) {
+
+		checkNotNull(subscriberId);
+		checkNotNull(priceListId);
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				subscrPriceListService.makeSubscrPriceLists(priceListId, Arrays.asList(subscriberIds),
+						Arrays.asList(activeIds));
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }

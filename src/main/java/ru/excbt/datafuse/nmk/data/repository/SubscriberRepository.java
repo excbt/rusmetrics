@@ -40,7 +40,15 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param subscriberId
 	 * @return
 	 */
-	public List<Subscriber> findByRmaSubscriberId(Long subscriberId);
+	public List<Subscriber> findByRmaSubscriberId(Long rmaSubscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId")
+	public List<Long> selectByRmaSubscriberIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 * 
