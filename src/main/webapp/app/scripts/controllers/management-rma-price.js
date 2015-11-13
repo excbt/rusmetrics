@@ -49,25 +49,26 @@ angular.module('portalNMC')
     $scope.ctrlSettings.priceListColumns = [
         {
             "name": "priceListName",
-            "caption": "Прайс",
+            "caption": "Наименование",
             "class": "col-md-3"
         },{
-            "name": "planBeginDate",
-            "caption": "План. дата ввода",
-            "class": "col-md-1"
-        },{
-            "name": "planEndDate",
-            "caption": "План. дата завершения",
-            "class": "col-md-1"
-        },{
             "name": "factBeginDate",
-            "caption": "Факт. дата ввода",
+            "caption": "Дата ввода",
             "class": "col-md-1"
         },{
             "name": "factEndDate",
-            "caption": "Факт. дата завершения",
+            "caption": "Дата завершения",
             "class": "col-md-1"
         }
+//        ,{
+//            "name": "factBeginDate",
+//            "caption": "Факт. дата ввода",
+//            "class": "col-md-1 "
+//        },{
+//            "name": "factEndDate",
+//            "caption": "Факт. дата завершения",
+//            "class": "col-md-1"
+//        }
     ];
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
@@ -108,7 +109,8 @@ angular.module('portalNMC')
         notificationFactory.success();
         $('#deletePriceModal').modal('hide');
         $('#pricePropModal').modal('hide');
-         getModePrices($scope.data.currentMode.id);
+        $('#clonePriceModal').modal('hide');
+        getModePrices($scope.data.currentMode.id);
     };
 
     var errorCallback = function (e) {
@@ -129,8 +131,8 @@ angular.module('portalNMC')
         });
     };
     
-    
-    $scope.cloneInit = function(){
+    $scope.cloneInit = function(pl){
+        $scope.selectItem(pl);
         $scope.data.clientsAtWindow = angular.copy($scope.data.clients);
     };
     
@@ -172,6 +174,38 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/?srcPriceListId="+srcPrice.id;
         $http.post(targetUrl, null).then(successCallback, errorCallback);
     };
+    
+    $scope.clonePriceList = function(){
+        //get selected clients ids
+        var tmpSelected = [];
+        $scope.data.clientsAtWindow.forEach(function(el){
+            if(el.selected){
+                tmpSelected.push(el.id);
+            };
+        });
+        //get activated clients ids
+        var tmpActivated = [];
+        $scope.data.clientsAtWindow.forEach(function(el){
+            if(el.activated){
+                tmpActivated.push(el.id);
+            };
+        });  
+        if (tmpSelected.length == 0){
+            notificationFactory.info("Не выбрано ни одного абонента!");
+            return 0;
+        };
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+ $scope.data.currentPrice.id+"/subscr";
+        $http({
+            method: "POST",
+            url: targetUrl,
+            params: {
+                subscriberIds: tmpSelected,
+                activeIds: tmpActivated
+            }
+        })
+            .then(successCallback, errorCallback);
+        
+    };
     //----------------------------------------------------------
     
         //    get subscribers
@@ -195,8 +229,9 @@ angular.module('portalNMC')
         $http.get(targetUrl)
         .then(function(response){
             $scope.data.priceModes = angular.copy(response.data);
+//console.log($scope.data.priceModes);            
                 //set current mode - rma mode
-            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
+            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);           
             //get prices for rma
             getModePrices($scope.data.currentMode.id);
         },
@@ -214,7 +249,7 @@ angular.module('portalNMC')
                 return true;
             };
         });
-        $scope.data.currentMode = mode;
+        $scope.data.currentMode = mode;     
         getModePrices($scope.data.currentMode.id);
     };
     

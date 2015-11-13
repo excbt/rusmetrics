@@ -42,7 +42,7 @@
             <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
                 {{column.caption}}                
             </th>
-            <th class="col-md-4">
+            <th class="col-md-6">
             </th>
         </tr>
 </table>
@@ -58,21 +58,21 @@
                 <th ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
                     {{column.caption}}                
                 </th>
-                <th class="col-md-4">
+                <th class="col-md-6">
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive&&priceList.isMaster), 'nmc-inactive-price':priceList.isArchive}">
+            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive), 'nmc-inactive-price':priceList.isArchive}">
                 <td class="col-md-1 nmc-td-for-button" >
                     <div class="btn-group">
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                         </i>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
-                        <li ng-if="!data.currentMode.isRma&&priceList.isDraft"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
-<!--                          ng-if="data.currentMode.isRma"-->
-                        <li ><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
+                        <li ng-if="!data.currentMode.rma&&priceList.isDraft"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
+<!--                          ng-if="data.currentMode.rma"-->
+                        <li ng-if="data.currentMode.rma"><a href="" ng-click="cloneInit(priceList)" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
                         <li ng-if="priceList.isDraft"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>
                         <li><a href="" ng-click="copyPriceList(priceList)">{{messages.priceMenuItem4}}</a></li>
                         <li ng-if="priceList.isDraft" role="separator" class="divider"></li>
@@ -82,10 +82,13 @@
                 </td>
                 <td ng-repeat="column in ctrlSettings.priceListColumns" ng-class="column.class">
                     <span ng-class="{'nmc-distinguish':priceList.isMaster}">
-                        {{priceList[column.name]}}
+                        <span ng-switch on="column.name">
+                            <span ng-switch-when="factBeginDate">{{priceList["factBeginDate"] || priceList["planBeginDate"]}}</span>
+                            <span ng-switch-default>{{priceList[column.name]}}</span>
+                        </span>    
                     </span>
                 </td>
-                <td class="col-md-4">
+                <td class="col-md-6">
                     <span ng-if="priceList.isDraft">
                         <i class="pull-right btn btn-xs glyphicon glyphicon-trash" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal"></i>
                     </span>
@@ -343,7 +346,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="clonePriceLabel" class="nmc-h3">
-				Клонирование прайс листа
+				Клонирование прайс-листа
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -359,7 +362,7 @@
                                     </th>
                                     <th class="col-md-1 nmc-td-for-button">
 <!--                                        <input type="checkbox"/>-->
-                                        <i class="btn btn-xs glyphicon glyphicon-off nmc-btn-on paddingLeft0" title="Активировать у выбранных" ng-click="activatedAllPressed()"></i>
+                                        <i class="btn btn-xs glyphicon glyphicon-off nmc-btn-on paddingLeft0" title="Активировать все" ng-click="activatedAllPressed()"></i>
                                     </th>
                                     <th class="col-md-10">
                                         Абонент
@@ -386,8 +389,8 @@
 		</div>
 		<div class="modal-footer nmc-modal-footer">
             <input type="submit" class="btn btn-primary btn-xs nmc-save-button"
-					ng-click=""
-					value="Клонировать" />
+					ng-click="clonePriceList()"
+					value="Применить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit()">
 								Отменить
