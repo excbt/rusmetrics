@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -36,6 +37,9 @@ public class RmaSubscriberController extends SubscriberController {
 	@Autowired
 	private OrganizationService organizationService;
 
+	@Autowired
+	private RmaSubscriberService rmaSubscriberService;
+
 	/**
 	 * 
 	 * @return
@@ -47,7 +51,7 @@ public class RmaSubscriberController extends SubscriberController {
 			return responseForbidden();
 		}
 
-		List<Subscriber> subscriberList = subscriberService.selectRmaSubscribers(getCurrentSubscriberId());
+		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
 		// List<Subscriber> resultList = currentUserService.isSystem() ?
 		// subscriberList
 		// : ObjectFilters.deletedFilter(subscriberList);
@@ -69,7 +73,8 @@ public class RmaSubscriberController extends SubscriberController {
 
 		Subscriber subscriber = subscriberService.findOne(rSubscriberId);
 
-		if (subscriber.getRmaSubscriberId() == null || !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
+		if (subscriber.getRmaSubscriberId() == null
+				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
 			return responseForbidden();
 		}
 		return responseOK(subscriber);
@@ -96,7 +101,7 @@ public class RmaSubscriberController extends SubscriberController {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return subscriberService.createRmaSubscriber(entity, getCurrentSubscriberId());
+				return rmaSubscriberService.createRmaSubscriber(entity, getCurrentSubscriberId());
 			}
 		};
 
@@ -123,7 +128,7 @@ public class RmaSubscriberController extends SubscriberController {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return subscriberService.updateRmaSubscriber(rSubscriber, getCurrentSubscriberId());
+				return rmaSubscriberService.updateRmaSubscriber(rSubscriber, getCurrentSubscriberId());
 			}
 		};
 
@@ -147,9 +152,9 @@ public class RmaSubscriberController extends SubscriberController {
 			@Override
 			public void process() {
 				if (Boolean.TRUE.equals(isPermanent)) {
-					subscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
+					rmaSubscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
 				} else {
-					subscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
+					rmaSubscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
 				}
 
 			}

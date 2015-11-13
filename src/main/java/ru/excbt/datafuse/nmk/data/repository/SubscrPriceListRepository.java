@@ -17,4 +17,8 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 			+ " ORDER BY pl.priceListLevel, pl.priceListType")
 	public List<SubscrPriceList> findByRma(@Param("subscriberId") Long subscriberId);
 
+	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.subscriberId2 = :subscriberId "
+			+ " ORDER BY pl.priceListLevel, pl.priceListType")
+	public List<SubscrPriceList> findBySubscriber(@Param("subscriberId") Long subscriberId);
+
 }
