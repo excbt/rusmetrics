@@ -4,14 +4,15 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	private final static int PRICE_LEVEL_RMA = 1;
 	private final static int PRICE_LEVEL_SUBSCRIBER = 2;
 
+	public static final Predicate<? super SubscrPriceList> PRICE_DRAFT_PREDICATE = (i) -> Boolean.TRUE
+			.equals(i.getIsDraft());
+
 	@Autowired
 	private SubscrPriceListRepository subscrPriceListRepository;
 
 	@Autowired
-	private SubscriberService subscriberService;
+	private RmaSubscriberService rmaSubscriberService;
 
 	/**
 	 * 
@@ -89,7 +93,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		archiveRmaActivePriceList(subscriberIds);
 
 		Long rmaSubscriberId = subscriberIds[0];
-		Subscriber rmaSubscriber = subscriberService.findOne(rmaSubscriberId);
+		Subscriber rmaSubscriber = rmaSubscriberService.findOne(rmaSubscriberId);
 		if (rmaSubscriber == null || !Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
 			throw new PersistenceException(String.format("Invalid Rma Subscriber Id (%d)", rmaSubscriberId));
 		}
@@ -110,10 +114,10 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setSubscriber1(rmaSubscriber);
 
 		if (subscriberIds.length > 1) {
-			newPriceList.setSubscriber2(subscriberService.findOne(subscriberIds[1]));
+			newPriceList.setSubscriber2(rmaSubscriberService.findOne(subscriberIds[1]));
 		}
 		if (subscriberIds.length > 2) {
-			newPriceList.setSubscriber3(subscriberService.findOne(subscriberIds[2]));
+			newPriceList.setSubscriber3(rmaSubscriberService.findOne(subscriberIds[2]));
 		}
 		newPriceList.setPriceListType(subscriberIds.length);
 		newPriceList.setIsMaster(true);
@@ -121,7 +125,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setIsActive(isActive);
 
 		if (isActive) {
-			Date rmaCurrentDate = subscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+			Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
 			/**
 			 * TODO check setting factBeginDate
 			 */
@@ -170,24 +174,25 @@ public class SubscrPriceListService implements SecuredRoles {
 		subscrPriceListRepository.delete(subscrPriceList);
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrPriceList> findRmaPriceLists(Long subscriberId) {
-		List<SubscrPriceList> preResult = subscrPriceListRepository.findByRma(subscriberId);
-
-		List<SubscrPriceList> result = ObjectFilters.deletedFilter(preResult);
-		result.forEach(i -> {
-			if (i.getSubscriber2() != null) {
-				i.getSubscriber2().getId();
-			}
-		});
-
-		return result;
-	}
+	// /**
+	// *
+	// * @param subscriberId
+	// * @return
+	// */
+	// @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	// public List<SubscrPriceList> findRmaPriceLists(Long subscriberId) {
+	// List<SubscrPriceList> preResult =
+	// subscrPriceListRepository.findByRma(subscriberId);
+	//
+	// List<SubscrPriceList> result = ObjectFilters.deletedFilter(preResult);
+	// result.forEach(i -> {
+	// if (i.getSubscriber2() != null) {
+	// i.getSubscriber2().getId();
+	// }
+	// });
+	//
+	// return result;
+	// }
 
 	/**
 	 * 
@@ -196,11 +201,11 @@ public class SubscrPriceListService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public boolean archiveRmaActivePriceList(Long... subscriberIds) {
-		SubscrPriceList activePriceList = findActivePriceList(subscriberIds);
+		SubscrPriceList activePriceList = findActiveRmaPriceList(subscriberIds);
 		if (activePriceList == null) {
 			return false;
 		}
-		activePriceList.setFactEndDate(subscriberService.getSubscriberCurrentTime(subscriberIds[0]));
+		activePriceList.setFactEndDate(rmaSubscriberService.getSubscriberCurrentTime(subscriberIds[0]));
 		activePriceList.setIsActive(false);
 		activePriceList.setIsArchive(true);
 		subscrPriceListRepository.save(activePriceList);
@@ -214,7 +219,7 @@ public class SubscrPriceListService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteActivePriceList(Long... subscriberIds) {
-		SubscrPriceList activePriceList = findActivePriceList(subscriberIds);
+		SubscrPriceList activePriceList = findActiveRmaPriceList(subscriberIds);
 		if (activePriceList != null) {
 			deleteSubscrPriceList(activePriceList);
 		}
@@ -234,22 +239,12 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @param subscriberIds
 	 * @return
 	 */
-	private SubscrPriceList findActivePriceList(Long[] subscriberIds) {
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public SubscrPriceList findActiveRmaPriceList(Long... subscriberIds) {
 		checkSubscriberIds(subscriberIds);
 
-		Long rmaSubscriberId = subscriberIds[0];
-		int priceListType = subscriberIds.length;
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
-		List<SubscrPriceList> activePriceLists = rmaPriceLists.stream().filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE)
-				.filter(i -> i.getPriceListType() != null && i.getPriceListType() == priceListType)
-				.collect(Collectors.toList());
-
-		if (priceListType == 2) {
-			Long subscriberId2 = subscriberIds[1];
-
-			activePriceLists.stream()
-					.filter(i -> i.getSubscriberId2() != null && i.getSubscriberId2().equals(subscriberId2));
-		}
+		List<SubscrPriceList> activePriceLists = findRmaPriceLists(subscriberIds).stream()
+				.filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE).collect(Collectors.toList());
 
 		if (activePriceLists.size() == 0) {
 			return null;
@@ -266,15 +261,56 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrPriceList> findDraftPriceLists(Long... subscriberIds) {
+	public List<SubscrPriceList> findDraftRmaPriceLists(Long... subscriberIds) {
+		checkSubscriberIds(subscriberIds);
+
+		List<SubscrPriceList> rmaPriceLists = findRmaPriceLists(subscriberIds);
+		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream().filter(PRICE_DRAFT_PREDICATE)
+				.collect(Collectors.toList());
+
+		return resultPriceLists;
+	}
+
+	/**
+	 * 
+	 * @param subscriberIds
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrPriceList> findRmaPriceLists(Long... subscriberIds) {
 		checkSubscriberIds(subscriberIds);
 
 		Long rmaSubscriberId = subscriberIds[0];
-		int priceListType = subscriberIds.length;
 
 		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
-		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream().filter(i -> BooleanUtils.isTrue(i.getIsDraft()))
-				.filter(i -> i.getPriceListType() != null && i.getPriceListType() == priceListType)
+
+		final int priceListType = subscriberIds.length;
+
+		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream()
+				.filter(i -> i.getPriceListLevel() == PRICE_LEVEL_RMA).filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(i -> i.getPriceListType() != null && i.getPriceListType().equals(priceListType))
+				.filter(i -> (priceListType == 1 && i.getSubscriberId2() == null)
+						|| (i.getSubscriberId2() != null && i.getSubscriberId2().equals(subscriberIds[1])))
+				.collect(Collectors.toList());
+
+		return resultPriceLists;
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrPriceList> findSubscriberPriceLists(Long rmaSubscriberId, Long subscriberId) {
+		checkNotNull(rmaSubscriberId);
+		checkNotNull(subscriberId);
+
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
+		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream()
+				.filter(i -> i.getPriceListLevel() == PRICE_LEVEL_SUBSCRIBER)
+				.filter(i -> i.getSubscriberId2() != null && i.getSubscriberId2().equals(subscriberId))
 				.collect(Collectors.toList());
 
 		return resultPriceLists;
@@ -287,14 +323,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeSubscrPriceListDraft(Long srcPriceListId) {
+	public SubscrPriceList makeDraftRmaPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
-			throw new PersistenceException(String.format("SUbscrPriceList (id=%d) is not found", srcPriceListId));
+			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
 		}
 		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
-		newPriceList.setPriceListLevel(PRICE_LEVEL_SUBSCRIBER);
+		newPriceList.setPriceListLevel(PRICE_LEVEL_RMA);
 		newPriceList.setIsActive(false);
 		newPriceList.setIsArchive(false);
 		newPriceList.setIsDraft(true);
@@ -312,14 +348,77 @@ public class SubscrPriceListService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param subscriberIds
+	 * @param srcPriceListId
+	 * @param subscriberId
+	 * @param isActive
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrPriceList findRmaActivePriceList(Long... subscriberIds) {
-		SubscrPriceList result;
-		result = findActivePriceList(subscriberIds);
-		return result;
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public SubscrPriceList makeSubscrPriceList(Long srcPriceListId, Long subscriberId, boolean isActive) {
+		checkNotNull(srcPriceListId);
+		checkNotNull(subscriberId);
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
+		if (srcPriceList == null) {
+			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
+		}
+
+		Long rmaSubscriberId = srcPriceList.getSubscriberId1();
+
+		List<Long> rmaSubscribersIds = rmaSubscriberService.selectRmaSubscriberIds(srcPriceList.getSubscriberId1());
+		if (!rmaSubscribersIds.contains(subscriberId)) {
+			throw new PersistenceException(
+					String.format("Subscriber (id=%d) is not set to rma (id=%d)", subscriberId, rmaSubscribersIds));
+		}
+
+		if (srcPriceList.getSubscriberId2() != null && !srcPriceList.getSubscriberId2().equals(subscriberId)) {
+			throw new PersistenceException(
+					String.format("SubscrPriceList is not compatabile with Subscriber (id=%d)", subscriberId));
+		}
+
+		if (isActive) {
+			setInctiveSubscrPriceList(rmaSubscriberId, subscriberId);
+		}
+
+		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
+		newPriceList.setSubscriber2(initSubscriber(subscriberId));
+		newPriceList.setPriceListLevel(PRICE_LEVEL_SUBSCRIBER);
+		if (isActive) {
+			Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+			newPriceList.setFactBeginDate(rmaCurrentDate);
+			newPriceList.setIsActive(isActive);
+		}
+		newPriceList.setIsArchive(false);
+		newPriceList.setIsDraft(!isActive);
+		newPriceList.setPriceListType(2);
+		newPriceList.setSrcPriceListId(srcPriceListId);
+		newPriceList.setPriceListName(PRICE_LIST_PREFIX + srcPriceList.getPriceListName());
+
+		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())) {
+			newPriceList.setMasterPriceListId(srcPriceList.getId());
+		}
+
+		subscrPriceListRepository.save(newPriceList);
+		return newPriceList;
+	}
+
+	/**
+	 * 
+	 * @param srcPriceListId
+	 * @param subscriberIds
+	 * @param activeIds
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public void makeSubscrPriceLists(Long srcPriceListId, List<Long> subscriberIds, List<Long> activeIds) {
+		checkNotNull(srcPriceListId);
+		checkNotNull(subscriberIds);
+
+		List<Long> activeIdList = activeIds != null ? new ArrayList<>(activeIds) : new ArrayList<>();
+		for (Long id : subscriberIds) {
+			boolean isActive = activeIdList.contains(id);
+			makeSubscrPriceList(srcPriceListId, id, isActive);
+		}
 	}
 
 	/**
@@ -328,7 +427,7 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @return
 	 */
 	private Subscriber initSubscriber(Long id) {
-		return id == null ? null : subscriberService.findOne(id);
+		return id == null ? null : rmaSubscriberService.findOne(id);
 	}
 
 	/**
@@ -353,6 +452,33 @@ public class SubscrPriceListService implements SecuredRoles {
 		subscrPriceList.setSubscriber3(s3);
 
 		return subscrPriceListRepository.save(subscrPriceList);
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param subscriberId
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public int setInctiveSubscrPriceList(Long rmaSubscriberId, Long subscriberId) {
+		List<SubscrPriceList> subscrPriceLists = findSubscriberPriceLists(rmaSubscriberId, subscriberId);
+		List<SubscrPriceList> activePriceLists = subscrPriceLists.stream().filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE)
+				.collect(Collectors.toList());
+
+		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+
+		activePriceLists.forEach(i -> {
+			i.setFactEndDate(rmaCurrentDate);
+			i.setIsActive(false);
+			i.setIsArchive(true);
+		});
+
+		if (!activePriceLists.isEmpty()) {
+			subscrPriceListRepository.save(activePriceLists);
+		}
+
+		return activePriceLists.size();
 	}
 
 }
