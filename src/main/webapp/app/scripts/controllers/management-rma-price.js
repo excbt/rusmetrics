@@ -1,12 +1,15 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
-.filter('withoutOldPrices', function(){
-    return function(input){
+.filter('viewHistory', function(){
+    return function(input, revisionFlag){
         if (angular.isArray(input, revisionFlag)){
             var tmpArr = [];
+            if(revisionFlag){
+                return input;
+            };
             input.forEach(function(el){
-                if (revisionFlag && (angular.isUndefined(el.toDate))){
+                if ((angular.isUndefined(el.factEndDate)) && (!el.isArchive)){
                     tmpArr.push(el);
                 };
             });
@@ -50,11 +53,11 @@ angular.module('portalNMC')
             "class": "col-md-3"
         },{
             "name": "planBeginDate",
-            "caption": "Запланир. дата ввода",
+            "caption": "План. дата ввода",
             "class": "col-md-1"
         },{
             "name": "planEndDate",
-            "caption": "Запланир. дата завершения",
+            "caption": "План. дата завершения",
             "class": "col-md-1"
         },{
             "name": "factBeginDate",
@@ -66,10 +69,6 @@ angular.module('portalNMC')
             "class": "col-md-1"
         }
     ];
-    
-    // ----------------------- dummy -------------------------
-    $scope.ctrlSettings.pricesUrl = "resource/prices.json";
-    // -------------------------- end dummy -------------------
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
     
@@ -97,6 +96,7 @@ angular.module('portalNMC')
     $scope.data= {};
     $scope.data.currentClient = {};
     $scope.data.currentPrice = {};
+    //mode - one of the list: rma or one of the rma clients
     $scope.data.currentMode = {};
     $scope.data.priceModes = [];
     $scope.data.clients = [];
@@ -116,26 +116,12 @@ angular.module('portalNMC')
         console.log(e);
     };
     
-    var getPrices = function(){
-        var targetUrl = $scope.ctrlSettings.pricesUrl;
-        $http.get(targetUrl)
-        .then(function(response){
-            $scope.data.prices = response.data;
-//console.log($scope.data.prices);            
-        },
-              function(e){
-            notificationFactory.errorInfo(e.status, e.data);
-            console.log(e);
-        });
-    };
-//    getPrices();
-    
     var getModePrices = function(subscrId){
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+subscrId+$scope.ctrlSettings.priceSuffix;
         $http.get(targetUrl)
         .then(function(response){
             $scope.data.prices = response.data;
-console.log($scope.data.prices);            
+//console.log($scope.data.prices);            
         },
               function(e){
             notificationFactory.errorInfo(e.status, e.data);
@@ -181,6 +167,11 @@ console.log($scope.data.prices);
         $http.put(targetUrl, object).then(successCallback, errorCallback)
         
     };
+    
+    $scope.copyPriceList = function(srcPrice){
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/?srcPriceListId="+srcPrice.id;
+        $http.post(targetUrl, null).then(successCallback, errorCallback);
+    };
     //----------------------------------------------------------
     
         //    get subscribers
@@ -191,18 +182,7 @@ console.log($scope.data.prices);
             response.data.forEach(function(el){
                 el.organizationName = el.organization.organizationFullName;
             });
-            $scope.data.clients = response.data;
-//            $scope.data.priceModes = angular.copy(response.data);
-//            var rmaClient = angular.copy($scope.data.clients[0]);
-//            rmaClient.id = 8080;
-//            rmaClient.isRma = true;
-//            rmaClient.organization.organizationFullName = "Партнерский";
-//            rmaClient.subscriberName = rmaClient.organization.organizationFullName;
-//            rmaClient.organizationName = rmaClient.organization.organizationFullName;
-//            $scope.data.priceModes.unshift(rmaClient);
-//console.log($scope.data.clients); 
-//            $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
-            //$scope.data.currentClient.id = $scope.data.clients[0].id;           
+            $scope.data.clients = response.data;         
         },
              function(e){
             console.log(e);
@@ -215,10 +195,10 @@ console.log($scope.data.prices);
         $http.get(targetUrl)
         .then(function(response){
             $scope.data.priceModes = angular.copy(response.data);
-console.log($scope.data.priceModes); 
+                //set current mode - rma mode
             $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);
+            //get prices for rma
             getModePrices($scope.data.currentMode.id);
-            //$scope.data.currentClient.id = $scope.data.clients[0].id;           
         },
              function(e){
             console.log(e);
@@ -485,10 +465,10 @@ console.log($scope.data.priceModes);
     $scope.editPrice = function(){
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         initChangdFlags($scope.serviceListEdition);
-        $('#editPriceModal').modal();
+        $('#editPriceModal').modal();        
     };
     
-    //listener on edit service modal window show
+    //listener on edit price modal window show
     $('#editPriceModal').on('show.bs.modal',function(e){
         window.setTimeout(function(){
                 //add popup for editable packages and services
@@ -502,6 +482,8 @@ console.log($scope.data.priceModes);
                 });
 
             });
+                //apply mask
+            $("input[name='inputPrice']").inputmask();
         }, 500);
     });
     
@@ -557,6 +539,23 @@ console.log($scope.data.priceModes);
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
           monthNames: $scope.dateOptsParamsetRu.locale.monthNames
         });                  
+    });
+    
+    //set mask for price value
+    $(document).ready(function(){
+        $(':input').inputmask();
+    });
+    
+    //set setting for history toggle
+    $(document).ready(function(){
+        $('#history-view').bootstrapToggle({
+            on: "да",
+            off: "нет"
+        });
+        $('#history-view').change(function(){
+            $scope.ctrlSettings.viewHistoryFlag = Boolean($(this).prop('checked'));
+            $scope.$apply();
+        });
     });
     
 }]);

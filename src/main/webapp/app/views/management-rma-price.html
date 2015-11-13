@@ -8,12 +8,13 @@
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс лист</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
 
     </ul>
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="clientsTab">
+          
       </div>
     </div>
 </div>
@@ -21,10 +22,13 @@
 <div class="container-fluid">
     <div class="row nmc-main-workspace-header">  
         <div class="col-md-4 noPadding marginBottom10 nmc-search-form">
-                <select class="form-control  nmc-select-form" ng-model="data.currentMode.id" ng-options="mode.id as mode.subscriberName for mode in data.priceModes" ng-change="changeMode(data.currentMode.id)"></select>
+                <select class="form-control nmc-select-form-for-price" ng-model="data.currentMode.id" ng-options="mode.id as mode.subscriberName for mode in data.priceModes" ng-change="changeMode(data.currentMode.id)"></select>
         </div>
-        <div class="col-md-8">
-            <input ng-model="ctrlSettings.viewHistoryFlag" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/> Показывать историю
+        <div class="col-md-8">            
+            <label>
+                <input id="history-view" ng-model="ctrlSettings.viewHistoryFlag" data-toggle="toggle" data-size="small" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;">
+                Показывать историю
+            </label>
         </div>
     </div>    
 </div>
@@ -59,7 +63,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="priceList in data.prices" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive&&priceList.isMaster), 'nmc-inactive-price':priceList.isArchive}">
+            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive&&priceList.isMaster), 'nmc-inactive-price':priceList.isArchive}">
                 <td class="col-md-1 nmc-td-for-button" >
                     <div class="btn-group">
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
@@ -67,9 +71,10 @@
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
                         <li ng-if="!data.currentMode.isRma&&priceList.isDraft"><a href="" ng-click="" data-target="#showObjOptionModal" data-toggle="modal">{{messages.priceMenuItem1}}</a></li>
-                        <li ng-if="data.currentMode.isRma"><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
+<!--                          ng-if="data.currentMode.isRma"-->
+                        <li ><a href="" ng-click="cloneInit()" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
                         <li ng-if="priceList.isDraft"><a href="" ng-click="editPrice()">{{messages.priceMenuItem3}}</a></li>
-                        <li><a href="" ng-click="">{{messages.priceMenuItem4}}</a></li>
+                        <li><a href="" ng-click="copyPriceList(priceList)">{{messages.priceMenuItem4}}</a></li>
                         <li ng-if="priceList.isDraft" role="separator" class="divider"></li>
                         <li ng-if="priceList.isDraft"><a href="" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
                       </ul>
@@ -95,7 +100,7 @@
     </table>
 </div>
 
-<!--Edit account service list-->
+<!--Edit client price list-->
 <div id="editPriceModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editPriceLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-wide-dialog">
@@ -117,7 +122,6 @@
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                                                 <td class="nmc-td-for-button-checkbox">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)"/>
 
                                                 </td>
                                                 <td class="col-md-10">
@@ -129,25 +133,18 @@
                                                 </td>
 
                                             </tr>
-                    <!--                        <tr>-->
                                             <tr ng-show="!pack.showDetailsFlag">
                                                 <td></td>
                                                 <td colspan="2" class="nmc-td-for-child-table">
-<!--                                                    style="padding-top: 2px !important;">-->
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
                                                             <tr ng-repeat="serv in pack.serviceItems">
-                                                                <td class="onlyPaddingLeft5">
-<!--                                                                    style="padding: 0 0 0 5px !important;">-->
-                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
-                                                                </td>
                                                                 <td class="col-md-11 onlyPaddingLeft5">
-<!--                                                                    style="padding: 0 0 0 5px !important;">-->
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
                                                                 <td class="col-md-1">
-                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                                    <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.priceValue" data-inputmask="'mask': '9{1,50}', 'greedy':false"/> <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -541,3 +538,9 @@
 		</span>
 	</div>
 </div>
+
+<script>
+      $(function() {
+
+  })
+</script>

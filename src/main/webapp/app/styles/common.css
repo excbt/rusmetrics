@@ -789,6 +789,13 @@ tr.nmc-inactive-price > td{
     height: 26px;
     padding: 3px;
 }
+
+/* выпадающий список на странице с прайсами*/
+.nmc-select-form-for-price {
+    font-size: 12px;
+    height: 29px;
+    padding: 3px;
+}
  
 /* дата */
 .nmc-date-input-form {
