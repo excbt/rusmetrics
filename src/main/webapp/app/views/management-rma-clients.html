@@ -101,7 +101,9 @@
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentClient.subscriberName"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentClient.subscriberName>'')}">
+                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentClient.subscriberName"/>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -121,14 +123,20 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
 <!--                                    <input disabled class="form-control nmc-text-input-form" type="text" ng-model="data.currentClient._activeContManagement.organization.organizationName">-->
-                                    <select class="form-control nmc-select-form" id="inputCm" ng-model="data.currentClient.organizationId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.organizations">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!data.currentClient.organizationId}">
+                                        <select class="form-control nmc-select-form" id="inputCm" ng-model="data.currentClient.organizationId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.organizations">
+                                        </select>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">Часовой пояс</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="data.currentClient.timezoneDefKeyname" ng-options="timezone.keyname as timezone.caption for timezone in data.timezones">
-                                    </select>
+                                <td class="nmc-text-align-left col-sm-9">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!data.currentClient.timezoneDefKeyname}">
+                                        <select class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="data.currentClient.timezoneDefKeyname" ng-options="timezone.keyname as timezone.caption for timezone in data.timezones">
+                                        </select>
+                                    </div>
                                 </td>
                             </tr> 
                         </table>

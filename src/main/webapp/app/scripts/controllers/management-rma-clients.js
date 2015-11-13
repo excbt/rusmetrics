@@ -88,6 +88,7 @@ console.log('Run Client management controller.');
     $scope.selectedItem = function (item) {
         var curObject = angular.copy(item);
         $scope.data.currentClient = curObject;
+//console.log($scope.data.currentClient);        
     };
     
     $scope.editObjectList =  function(client){
