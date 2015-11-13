@@ -147,4 +147,10 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		assertTrue(setInactiveResult == 1);
 	}
 
+	@Test
+	@Ignore
+	public void testSetActivePriceList() throws Exception {
+		subscrPriceListService.setActiveSubscrPriceList(EXCBT_RMA_SUBSCRIBER_ID, 70318507L);
+	}
+
 }

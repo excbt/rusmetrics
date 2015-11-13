@@ -209,4 +209,29 @@ public class RmaPriceListController extends SubscrPriceListController {
 		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param priceListId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/activate", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> setActivePriceList(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("priceListId") Long priceListId) {
+
+		checkNotNull(subscriberId);
+		checkNotNull(priceListId);
+
+		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>() {
+
+			@Override
+			public SubscrPriceList processAndReturnResult() {
+				return subscrPriceListService.setActiveSubscrPriceList(getCurrentSubscriberId(), priceListId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
 }
