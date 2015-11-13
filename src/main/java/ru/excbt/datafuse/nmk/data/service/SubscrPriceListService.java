@@ -323,14 +323,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeDraftRmaPriceList(Long srcPriceListId) {
+	public SubscrPriceList makeDraftPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
 			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
 		}
 		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
-		newPriceList.setPriceListLevel(PRICE_LEVEL_RMA);
+		newPriceList.setPriceListLevel(srcPriceList.getPriceListLevel());
 		newPriceList.setIsActive(false);
 		newPriceList.setIsArchive(false);
 		newPriceList.setIsDraft(true);
@@ -464,6 +464,7 @@ public class SubscrPriceListService implements SecuredRoles {
 	public int setInctiveSubscrPriceList(Long rmaSubscriberId, Long subscriberId) {
 		List<SubscrPriceList> subscrPriceLists = findSubscriberPriceLists(rmaSubscriberId, subscriberId);
 		List<SubscrPriceList> activePriceLists = subscrPriceLists.stream().filter(ObjectFilters.ACTIVE_OBJECT_PREDICATE)
+				.filter(i -> i.getPriceListLevel() != null && i.getPriceListLevel() == PRICE_LEVEL_SUBSCRIBER)
 				.collect(Collectors.toList());
 
 		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
@@ -479,6 +480,44 @@ public class SubscrPriceListService implements SecuredRoles {
 		}
 
 		return activePriceLists.size();
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	public SubscrPriceList setActiveSubscrPriceList(Long rmaSubscriberId, Long subscrPriceListId) {
+		checkNotNull(rmaSubscriberId);
+		checkNotNull(subscrPriceListId);
+
+		SubscrPriceList subscrPriceList = subscrPriceListRepository.findOne(subscrPriceListId);
+		if (subscrPriceList == null) {
+			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", subscrPriceListId));
+		}
+
+		if (!rmaSubscriberId.equals(subscrPriceList.getSubscriberId1())) {
+			throw new PersistenceException(
+					String.format("SubscrPriceList (id=%d) is not belongs to RMA", subscrPriceListId));
+		}
+
+		if (subscrPriceList.getPriceListLevel() == null
+				|| subscrPriceList.getPriceListLevel() != PRICE_LEVEL_SUBSCRIBER) {
+			throw new PersistenceException(
+					String.format("SubscrPriceList (id=%d) is wrong price level", subscrPriceListId));
+		}
+
+		if (Boolean.TRUE.equals(subscrPriceList.getIsActive()) || Boolean.TRUE.equals(subscrPriceList.getIsArchive())) {
+			throw new PersistenceException(
+					String.format("SubscrPriceList (id=%d) is in wrong state", subscrPriceListId));
+		}
+
+		setInctiveSubscrPriceList(subscrPriceList.getSubscriberId1(), subscrPriceList.getSubscriberId2());
+
+		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+		subscrPriceList.setFactBeginDate(rmaCurrentDate);
+		subscrPriceList.setIsActive(true);
+		subscrPriceList.setIsDraft(false);
+
+		return subscrPriceListRepository.save(subscrPriceList);
+
 	}
 
 }

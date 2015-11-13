@@ -173,7 +173,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
-				return subscrPriceListService.makeDraftRmaPriceList(srcPriceListId);
+				return subscrPriceListService.makeDraftPriceList(srcPriceListId);
 			}
 		};
 
@@ -191,7 +191,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrPriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestParam("subscriberIds") Long[] subscriberIds,
-			@RequestParam("activeIds") Long[] activeIds) {
+			@RequestParam(value = "activeIds", required = false) Long[] activeIds) {
 
 		checkNotNull(subscriberId);
 		checkNotNull(priceListId);
@@ -201,9 +201,34 @@ public class RmaPriceListController extends SubscrPriceListController {
 			@Override
 			public void process() {
 				subscrPriceListService.makeSubscrPriceLists(priceListId, Arrays.asList(subscriberIds),
-						Arrays.asList(activeIds));
+						activeIds != null ? Arrays.asList(activeIds) : null);
 			}
 
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param priceListId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/activate", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> setActivePriceList(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("priceListId") Long priceListId) {
+
+		checkNotNull(subscriberId);
+		checkNotNull(priceListId);
+
+		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>() {
+
+			@Override
+			public SubscrPriceList processAndReturnResult() {
+				return subscrPriceListService.setActiveSubscrPriceList(getCurrentSubscriberId(), priceListId);
+			}
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);

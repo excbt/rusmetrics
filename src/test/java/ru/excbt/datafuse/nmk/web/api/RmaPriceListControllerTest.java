@@ -92,8 +92,14 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 
 		RequestExtraInitializer params = (builder) -> {
 			builder.param("subscriberIds", arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
-			builder.param("activeIds", arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
+			// builder.param("activeIds", arrayToString(new long[] {}));
 		};
 		_testJsonPost(String.format("/api/rma/%d/priceList/%d/subscr", EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
+	}
+
+	@Test
+	@Ignore
+	public void testSetActiveSubscrPriceList() throws Exception {
+		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", EXCBT_SUBSCRIBER_ID, 70318507L));
 	}
 }
