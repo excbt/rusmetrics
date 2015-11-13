@@ -49,10 +49,12 @@ public class RmaPriceListController extends SubscrPriceListController {
 	public class PriceListSubscriber {
 		private final Long id;
 		private final String subscriberName;
+		private final boolean isRma;
 
 		private PriceListSubscriber(Subscriber subscriber) {
 			this.id = subscriber.getId();
 			this.subscriberName = subscriber.getSubscriberName();
+			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
 		}
 
 		public Long getId() {
@@ -61,6 +63,10 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		public String getSubscriberName() {
 			return subscriberName;
+		}
+
+		public boolean isRma() {
+			return isRma;
 		}
 
 	}
