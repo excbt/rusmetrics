@@ -323,14 +323,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeDraftRmaPriceList(Long srcPriceListId) {
+	public SubscrPriceList makeDraftPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
 			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
 		}
 		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
-		newPriceList.setPriceListLevel(PRICE_LEVEL_RMA);
+		newPriceList.setPriceListLevel(srcPriceList.getPriceListLevel());
 		newPriceList.setIsActive(false);
 		newPriceList.setIsArchive(false);
 		newPriceList.setIsDraft(true);

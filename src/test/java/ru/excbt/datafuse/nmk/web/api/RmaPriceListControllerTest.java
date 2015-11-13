@@ -77,7 +77,6 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
 	public void testCreateSubscrPriceLists() throws Exception {
 
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListService.findDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
@@ -93,7 +92,7 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 
 		RequestExtraInitializer params = (builder) -> {
 			builder.param("subscriberIds", arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
-			builder.param("activeIds", arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
+			// builder.param("activeIds", arrayToString(new long[] {}));
 		};
 		_testJsonPost(String.format("/api/rma/%d/priceList/%d/subscr", EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
 	}

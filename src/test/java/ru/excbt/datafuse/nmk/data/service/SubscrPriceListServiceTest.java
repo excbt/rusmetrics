@@ -61,9 +61,9 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		logger.info("Found scrPriceList (id={}): {}. master:{}", srcPriceList.getId(), srcPriceList.getPriceListName(),
 				srcPriceList.getIsMaster());
 
-		SubscrPriceList draft1 = subscrPriceListService.makeDraftRmaPriceList(srcPriceList.getId());
+		SubscrPriceList draft1 = subscrPriceListService.makeDraftPriceList(srcPriceList.getId());
 		assertNotNull(draft1);
-		SubscrPriceList draft2 = subscrPriceListService.makeDraftRmaPriceList(draft1.getId());
+		SubscrPriceList draft2 = subscrPriceListService.makeDraftPriceList(draft1.getId());
 		assertNotNull(draft2);
 	}
 
@@ -75,7 +75,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 
 		assertTrue(rmaPriceLists.size() > 0);
 		SubscrPriceList priceList = rmaPriceLists.get(0);
-		SubscrPriceList newPriceList = subscrPriceListService.makeDraftRmaPriceList(priceList.getId());
+		SubscrPriceList newPriceList = subscrPriceListService.makeDraftPriceList(priceList.getId());
 		assertNotNull(newPriceList);
 	}
 
