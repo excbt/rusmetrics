@@ -16,7 +16,7 @@
             <span ng-if="isSystemuser()">
                 <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile('/noAbs')"></i>
             </span>    
-            <i title="Загрузить показания из CSV файла" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="uploader.clearQueue()" data-target="#upLoadFileModal" data-toggle="modal"></i>
+            <i title="Загрузить показания из CSV файла" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="uploader.clearQueue()" data-target="#upLoadFileModal" data-toggle="modal"></i>
             <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
         </div>  
         <div class="btn-group">
