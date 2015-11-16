@@ -194,6 +194,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-users.html',
         controller: 'MngmtUsersCtrl'
       })
+      .when('/management/price', {
+        templateUrl: 'views/management-rma-price.html',
+        controller: 'MngmtPriceCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

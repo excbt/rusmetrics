@@ -11,6 +11,7 @@
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
 
     </ul>
 
@@ -57,6 +58,7 @@
                     <div class="btn-group">
                         <i title="Редактировать абонента" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(client)" data-target="#showClientOptionModal" data-toggle="modal"></i>
                         <i title="Связанные объекты" class="btn btn-xs glyphicon glyphicon-th-list nmc-button-in-table" ng-click="editObjectList(client)" data-target="#showObjectListModal" data-toggle="modal"></i>
+<!--                        <i title="Абонентский прайс" class="btn btn-xs glyphicon glyphicon-usd nmc-button-in-table" ng-click="" data-target="" data-toggle="modal"></i>-->
                     </div>
                 </div>
             </td>
@@ -98,7 +100,8 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentClient.subscriberName">
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentClient.subscriberName"/>
                                 </td>
                             </tr>
                             <tr>

@@ -12,6 +12,7 @@
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
 
     </ul>
 
@@ -250,6 +251,14 @@
 <!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">-->
                                     <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings.rsoId" ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTSNumber">Номер теплосистемы</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputTSNumber"  ng-model="zpointSettings.tsNumber" data-inputmask="'mask': '9[9]', 'greedy':false"/>
                                 </td>
                             </tr>
                             <tr><td></td><td></td></tr>

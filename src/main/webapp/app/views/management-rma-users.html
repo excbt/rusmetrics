@@ -11,6 +11,7 @@
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
 
     </ul>
 
@@ -116,7 +117,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
+                                        <input ng-disabled="data.currentUser.id!=null" class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
                                     </div>
                                 </td>
                             </tr>
@@ -166,11 +167,27 @@
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">
                                 <td colspan="2">
-                                    <label class="nmc-form-label">Новый пароль:</label>
+                                    <label class="nmc-form-label">Смена пароля:</label>
                                 </td>
                             </tr>
+                            <tr ng-if="data.currentUser.id!=null">
+                                <td class="col-sm-3"><label for="inputCurPwd">Текущий пароль:</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
+                                        <input class="form-control nmc-text-input-form" type="password" id="inputCurPwd" placeholder="Текущий пароль"  ng-model="data.currentUser.curpassword">
+                                    </div>
+                                </td>
+                            </tr>
+                            
                             <tr>
-                                <td class="col-sm-3"><label for="inputEmail">Пароль</label><span ng-if="data.currentUser.id==null" style="color:red;">*</span>
+                                <td class="col-sm-3">
+                                    <span ng-if="data.currentUser.id==null">
+                                        <label for="inputPassword">Пароль:</label><span style="color:red;">*</span>
+                                    </span>
+                                    <span ng-if="data.currentUser.id!=null">
+                                        <label for="inputPassword">Новый пароль:</label>
+                                    </span>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                      <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
@@ -179,7 +196,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputPhone">Повтор пароля</label>
+                                <td class="col-sm-3"><label for="inputPhone">Подтверждение пароля:</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">

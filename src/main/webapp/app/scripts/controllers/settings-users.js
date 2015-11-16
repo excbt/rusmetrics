@@ -116,7 +116,7 @@ console.log("Run user settings controller.");
     };
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description); 
+        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
         console.log(e);
     };
     
@@ -151,6 +151,7 @@ console.log("Run user settings controller.");
         var params = { id: object[$scope.extraProps.idColumnName],
                      isAdmin: object.isAdmin};
         if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){
+            params.oldPassword = object.curpassword;
             params.newPassword = object.password;
         };
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
@@ -180,7 +181,11 @@ console.log("Run user settings controller.");
         result = !((($scope.data.currentUser.id==null)&&($scope.emptyString($scope.data.currentUser.password)))
             || ($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm))
         ;
-        
+        if (($scope.data.currentUser.id!=null)
+            &&((angular.isString($scope.data.currentUser.password)))
+            &&((angular.isUndefined($scope.data.currentUser.curpassword))||($scope.data.currentUser.curpassword==null)||($scope.data.currentUser.curpassword==""))){
+            result = false;
+        };
         return result;
     };
     

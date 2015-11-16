@@ -154,7 +154,8 @@ console.log('Run user management controller.');
         if (angular.isDefined(object.isAdmin)&&(object.isAdmin!=null)){
                      params.isAdmin = object.isAdmin;
         };
-        if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){           
+        if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){ 
+            params.oldPassword = object.curpassword;
             params.newPassword = object.password;           
         };
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
@@ -163,10 +164,16 @@ console.log('Run user management controller.');
     $scope.deleteObjectInit = function(object){
         $scope.selectedItem(object);
         //generation confirm code
+//        $scope.confirmCode = null;
+//        $scope.firstNum = Math.round(Math.random()*100);
+//        $scope.secondNum = Math.round(Math.random()*100);
+//        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        
         $scope.confirmCode = null;
-        $scope.firstNum = Math.round(Math.random()*100);
-        $scope.secondNum = Math.round(Math.random()*100);
-        $scope.sumNums = $scope.firstNum + $scope.secondNum;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;
+        
     };
     
     $scope.changeClient = function(){
@@ -182,9 +189,14 @@ console.log('Run user management controller.');
     $scope.checkPassword = function(){
         var result = false;
         result = !((($scope.data.currentUser.id==null)&&($scope.emptyString($scope.data.currentUser.password)))
-            || ($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm))
+            || ($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm)
+            )
         ;
-        
+        if (($scope.data.currentUser.id!=null)
+            &&((angular.isString($scope.data.currentUser.password)))
+            &&((angular.isUndefined($scope.data.currentUser.curpassword))||($scope.data.currentUser.curpassword==null)||($scope.data.currentUser.curpassword==""))){
+            result = false;
+        };
         return result;
     };
     

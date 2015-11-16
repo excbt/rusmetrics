@@ -1384,6 +1384,10 @@ console.log(obj);
                         return true;
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
-                };              
+                };
+                
+                $(document).ready(function(){
+                    $('#inputTSNumber').inputmask();
+                });
 //            }]
 }]);

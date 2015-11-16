@@ -88,7 +88,7 @@ console.log('Run devices management controller.');
                  //get Objects
     $scope.getObjects = function(){
 //        crudGridDataFactory($scope.objectsUrl).query(function(data){
-        objectSvc.promise.then(function(response){
+        objectSvc.getRmaPromise().then(function(response){
             objectSvc.sortObjectsByFullName(response.data);
             $scope.data.objects = response.data;
         });
