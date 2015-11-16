@@ -101,6 +101,7 @@ angular.module('portalNMC')
     $scope.data.currentMode = {};
     $scope.data.priceModes = [];
     $scope.data.clients = [];
+    $scope.data.clientsAtWindow = [];
     $scope.data.prices = [];
     
     //---------------------------- Prices ----------------------
@@ -121,8 +122,12 @@ angular.module('portalNMC')
     
     var getModePrices = function(subscrId){
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+subscrId+$scope.ctrlSettings.priceSuffix;
+//console.log(targetUrl);        
         $http.get(targetUrl)
         .then(function(response){
+            if (angular.isUndefined(response.data)||(response.data == null)|| !angular.isArray(response.data)){
+                return false;
+            };
             $scope.data.prices = response.data;
 //console.log($scope.data.prices);            
         },
@@ -193,7 +198,7 @@ angular.module('portalNMC')
         });  
         if (tmpSelected.length == 0){
             notificationFactory.info("Не выбрано ни одного абонента!");
-            return 0;
+            return 1;
         };
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+ $scope.data.currentPrice.id+"/subscr";
         $http({
@@ -220,6 +225,9 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         $http.get(targetUrl)
         .then(function(response){
+            if (angular.isUndefined(response.data)||(response.data == null)|| !angular.isArray(response.data)){
+                return false;
+            };
             response.data.forEach(function(el){
                 el.organizationName = el.organization.organizationFullName;
             });
@@ -235,6 +243,9 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.modesUrl;
         $http.get(targetUrl)
         .then(function(response){
+            if (angular.isUndefined(response.data)||(response.data == null)|| !angular.isArray(response.data)){
+                return false;
+            };
             $scope.data.priceModes = angular.copy(response.data);
 //console.log($scope.data.priceModes);            
                 //set current mode - rma mode
@@ -277,7 +288,9 @@ angular.module('portalNMC')
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
             var tmpPrices = response.data;
-            
+            if (angular.isUndefined(tmpPrices)||(tmpPrices == null)|| !angular.isArray(tmpPrices)){
+                return false;
+            };
             $scope.availablePackages.forEach(function(pack){
                 tmpPrices.forEach(function(price){
                     if ((price.packId === pack.id) && (price.itemId === null)){
@@ -347,7 +360,10 @@ angular.module('portalNMC')
     $scope.getSelectedPackages = function(url){
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
-            var tmp = response.data;            
+            var tmp = response.data;
+            if (angular.isUndefined(tmp)||(tmp == null)|| !angular.isArray(tmp)){
+                return false;
+            };
             tmp.forEach(function(elem){
                 $scope.availablePackages.forEach(function(pack){
                     if ((pack.id === elem.packId)&&(!elem.hasOwnProperty("itemId"))){

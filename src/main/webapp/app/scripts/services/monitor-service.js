@@ -46,6 +46,9 @@ console.log("Monitor service. Run Monitor service.");
         };
         
         function getObjectsFromCities(cities){
+            if (angular.isUndefined(cities)||(cities == null)|| !angular.isArray(cities)){
+                return false;
+            };
             var resultObjectArray = [];
             cities.forEach(function(elem){
                 elem.contEventNotificationStatuses.forEach(function(obj){
