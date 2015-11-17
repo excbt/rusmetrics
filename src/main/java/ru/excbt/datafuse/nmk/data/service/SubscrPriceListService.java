@@ -493,6 +493,12 @@ public class SubscrPriceListService implements SecuredRoles {
 		return activePriceLists.size();
 	}
 
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @param subscrPriceListId
+	 * @return
+	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList setActiveSubscrPriceList(Long rmaSubscriberId, Long subscrPriceListId) {

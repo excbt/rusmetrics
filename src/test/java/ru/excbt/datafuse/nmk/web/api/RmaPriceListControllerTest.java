@@ -53,7 +53,6 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
 	public void testMakeDraft() throws Exception {
 		SubscrPriceList priceList = subscrPriceListService.findActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID);
 		assertNotNull(priceList);
