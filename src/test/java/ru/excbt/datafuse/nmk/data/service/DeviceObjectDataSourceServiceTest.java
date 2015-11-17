@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -33,6 +34,7 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testDeviceObjectDataSource() throws Exception {
 		DeviceObject deviceObject = deviceObjectService.findOne(TEST_DEVICE_OBJECT_ID);
 		assertNotNull(deviceObject);
