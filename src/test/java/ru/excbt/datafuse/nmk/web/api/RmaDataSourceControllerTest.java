@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,6 +43,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
