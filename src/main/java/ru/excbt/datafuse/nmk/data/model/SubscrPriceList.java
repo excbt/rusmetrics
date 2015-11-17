@@ -66,8 +66,8 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "price_list_type", updatable = false)
 	private Integer priceListType;
 
-	@Column(name = "price_list_option", updatable = false)
-	private String priceListOption;
+	@Column(name = "price_option", updatable = false)
+	private String priceOption;
 
 	@Column(name = "plan_begin_date")
 	@Temporal(TemporalType.DATE)
@@ -155,12 +155,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 		this.priceListType = priceListType;
 	}
 
-	public String getPriceListOption() {
-		return priceListOption;
+	public String getPriceOption() {
+		return priceOption;
 	}
 
-	public void setPriceListOption(String priceListOption) {
-		this.priceListOption = priceListOption;
+	public void setPriceOption(String priceOption) {
+		this.priceOption = priceOption;
 	}
 
 	public Date getPlanBeginDate() {

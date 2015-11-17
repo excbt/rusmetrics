@@ -47,6 +47,9 @@ public class SubscrPriceListService implements SecuredRoles {
 	@Autowired
 	private RmaSubscriberService rmaSubscriberService;
 
+	@Autowired
+	private SubscrPriceItemService subscrPriceItemService;
+
 	/**
 	 * 
 	 * @param level
@@ -71,7 +74,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		});
 
 		Optional<SubscrPriceList> preResult = list.stream().filter(
-				i -> priceListOption.equalsIgnoreCase(i.getPriceListOption()) && Boolean.TRUE.equals(i.getIsActive()))
+				i -> priceListOption.equalsIgnoreCase(i.getPriceOption()) && Boolean.TRUE.equals(i.getIsActive()))
 				.findFirst();
 
 		return preResult.isPresent() ? preResult.get() : null;
@@ -79,14 +82,14 @@ public class SubscrPriceListService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param srcServicePriceListId
+	 * @param srcPriceListId
 	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeRmaPriceList(Long srcServicePriceListId, boolean isActive, Long... subscriberIds) {
-		checkNotNull(srcServicePriceListId);
+	public SubscrPriceList createRmaPriceList(Long srcPriceListId, boolean isActive, Long... subscriberIds) {
+		checkNotNull(srcPriceListId);
 		checkNotNull(subscriberIds);
 		checkArgument(subscriberIds.length > 0 && subscriberIds.length <= 3);
 
@@ -98,10 +101,9 @@ public class SubscrPriceListService implements SecuredRoles {
 			throw new PersistenceException(String.format("Invalid Rma Subscriber Id (%d)", rmaSubscriberId));
 		}
 
-		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcServicePriceListId);
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
-			throw new PersistenceException(
-					String.format("ServicePriceList (id=%d) is not found", srcServicePriceListId));
+			throw new PersistenceException(String.format("ServicePriceList (id=%d) is not found", srcPriceListId));
 		}
 
 		if (srcPriceList.getPriceListLevel() != PRICE_LEVEL_NMC) {
@@ -109,7 +111,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		}
 
 		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
-		newPriceList.setSrcPriceListId(srcServicePriceListId);
+		newPriceList.setSrcPriceListId(srcPriceListId);
 		newPriceList.setPriceListLevel(PRICE_LEVEL_RMA);
 		newPriceList.setSubscriber1(rmaSubscriber);
 
@@ -134,6 +136,8 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		subscrPriceListRepository.save(newPriceList);
 
+		subscrPriceItemService.copySubscrPriceItems(srcPriceListId, newPriceList);
+
 		return newPriceList;
 	}
 
@@ -149,7 +153,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		SubscrPriceList newPriceList = new SubscrPriceList();
 
 		newPriceList.setPriceListName(srcServicePriceList.getPriceListName());
-		newPriceList.setPriceListOption(srcServicePriceList.getPriceListOption());
+		newPriceList.setPriceOption(srcServicePriceList.getPriceOption());
 		newPriceList.setPlanBeginDate(srcServicePriceList.getPlanBeginDate());
 		newPriceList.setPlanEndDate(srcServicePriceList.getPlanEndDate());
 		newPriceList.setIsActive(false);
@@ -171,6 +175,8 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(subscrPriceList);
 		checkArgument(!subscrPriceList.isNew());
 		checkArgument(subscrPriceList.getPriceListLevel() != PRICE_LEVEL_NMC);
+
+		subscrPriceItemService.deleteSubscrPriceItems(subscrPriceList.getId());
 		subscrPriceListRepository.delete(subscrPriceList);
 	}
 
@@ -317,13 +323,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	}
 
 	/**
+	 * Creates PriceList on the same level, as srcPriceListId
 	 * 
 	 * @param srcPriceListId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeDraftPriceList(Long srcPriceListId) {
+	public SubscrPriceList createDraftPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
@@ -343,10 +350,12 @@ public class SubscrPriceListService implements SecuredRoles {
 		}
 
 		subscrPriceListRepository.save(newPriceList);
+		subscrPriceItemService.copySubscrPriceItems(srcPriceListId, newPriceList);
 		return newPriceList;
 	}
 
 	/**
+	 * Creates PriceList on the Subscriber Level
 	 * 
 	 * @param srcPriceListId
 	 * @param subscriberId
@@ -355,7 +364,7 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList makeSubscrPriceList(Long srcPriceListId, Long subscriberId, boolean isActive) {
+	public SubscrPriceList createSubscrPriceList(Long srcPriceListId, Long subscriberId, boolean isActive) {
 		checkNotNull(srcPriceListId);
 		checkNotNull(subscriberId);
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
@@ -399,10 +408,12 @@ public class SubscrPriceListService implements SecuredRoles {
 		}
 
 		subscrPriceListRepository.save(newPriceList);
+		subscrPriceItemService.copySubscrPriceItems(srcPriceListId, newPriceList);
 		return newPriceList;
 	}
 
 	/**
+	 * Creates PriceList on the Subscriber Level
 	 * 
 	 * @param srcPriceListId
 	 * @param subscriberIds
@@ -410,14 +421,14 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public void makeSubscrPriceLists(Long srcPriceListId, List<Long> subscriberIds, List<Long> activeIds) {
+	public void createSubscrPriceLists(Long srcPriceListId, List<Long> subscriberIds, List<Long> activeIds) {
 		checkNotNull(srcPriceListId);
 		checkNotNull(subscriberIds);
 
 		List<Long> activeIdList = activeIds != null ? new ArrayList<>(activeIds) : new ArrayList<>();
 		for (Long id : subscriberIds) {
 			boolean isActive = activeIdList.contains(id);
-			makeSubscrPriceList(srcPriceListId, id, isActive);
+			createSubscrPriceList(srcPriceListId, id, isActive);
 		}
 	}
 
@@ -518,6 +529,16 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		return subscrPriceListRepository.save(subscrPriceList);
 
+	}
+
+	/**
+	 * 
+	 * @param subscrPriceListId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public SubscrPriceList findOne(Long subscrPriceListId) {
+		return subscrPriceListRepository.findOne(subscrPriceListId);
 	}
 
 }

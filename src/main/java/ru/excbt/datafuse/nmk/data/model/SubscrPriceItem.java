@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -15,12 +16,13 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = ModelTables.SUBSCR_PRICE_ITEM)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubscrPriceItem extends AbstractAuditableModel {
+public class SubscrPriceItem extends AbstractAuditableModel implements DeletableObject {
 
 	/**
 	 * 
@@ -49,6 +51,16 @@ public class SubscrPriceItem extends AbstractAuditableModel {
 
 	@Column(name = "price_value")
 	private BigDecimal priceValue;
+
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Version
+	@Column(name = "version")
+	private int version;
+
+	@Column(name = "is_single_price")
+	private Boolean isSinglePrice;
 
 	public SubscrPriceList getSubscrPriceList() {
 		return subscrPriceList;
@@ -104,6 +116,32 @@ public class SubscrPriceItem extends AbstractAuditableModel {
 
 	public void setPriceValue(BigDecimal priceValue) {
 		this.priceValue = priceValue;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public Boolean getIsSinglePrice() {
+		return isSinglePrice;
+	}
+
+	public void setIsSinglePrice(Boolean isSinglePrice) {
+		this.isSinglePrice = isSinglePrice;
 	}
 
 }
