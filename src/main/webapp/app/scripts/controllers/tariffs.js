@@ -119,7 +119,7 @@ app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDat
         var table = $scope.crudTableName+"/rso";
         crudGridDataFactory(table).query(function (data) {
             $scope.rsos = data; 
-console.log($scope.rsos);            
+//console.log($scope.rsos);            
         });
     };
     

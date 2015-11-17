@@ -747,11 +747,19 @@ tr.nmc-main-table-header > th {
     padding: 5px 0px 0 5px !important;
 /*    border-bottom-width: 0px;*/
 }
-
+/* Подсветка показаний Итого и Итого по интеграторам*/
 .nmc-totals-indicator-highlight{
     background-color: aquamarine;
 }
-
+/* Подсветка действующего/активного прайса*/
+tr.nmc-active-price > td{
+    background-color: bisque;
+    font-weight: bold;
+}
+/* Подсветка HE действующего/активного прайса*/
+tr.nmc-inactive-price > td{
+    font-style: italic;
+}
 
 /*********
  * Формы
@@ -779,6 +787,13 @@ tr.nmc-main-table-header > th {
 .nmc-select-form {
     font-size: 12px;
     height: 26px;
+    padding: 3px;
+}
+
+/* выпадающий список на странице с прайсами*/
+.nmc-select-form-for-price {
+    font-size: 12px;
+    height: 29px;
     padding: 3px;
 }
  
@@ -922,6 +937,10 @@ tr.nmc-main-table-header > th {
  
 /* чекбокс */
 .nmc-checkbox-form {
+}
+/* Недоступный чекбокс*/
+.nmc-checkbox-notallowed{
+    cursor: default !important;
 }
 
 /* чекбокс в заголовке рабочей области - например, в строке настроек фильтров уведомлений*/
@@ -1215,6 +1234,10 @@ tr.nmc-main-table-header > th {
 .nmc-button-trash{
     padding-left: 0;
     padding-right: 24px;
+}
+/* Кнопки для прайс-листов: "Клонировать всем" и "Активировать у выбранных"*/
+.nmc-btn-dup:hover, .nmc-btn-on:hover{
+    color: lightgreen;
 }
  
 /**************************************************************************************
@@ -1628,6 +1651,10 @@ tr.nmc-main-table-header > th {
 
 .noPaddingTop {
     padding-top: 0px;
+}
+
+.paddingLeft0{
+    padding-left: 0;
 }
 
 .paddingLeft20 {

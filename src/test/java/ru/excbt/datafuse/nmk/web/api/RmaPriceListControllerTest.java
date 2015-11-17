@@ -3,13 +3,16 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
+import ru.excbt.datafuse.nmk.data.service.SubscrPriceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
@@ -18,6 +21,9 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
+
+	@Autowired
+	private SubscrPriceItemService subscrPriceItemService;
 
 	/**
 	 * 
@@ -102,4 +108,27 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 	public void testSetActiveSubscrPriceList() throws Exception {
 		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", EXCBT_SUBSCRIBER_ID, 70318507L));
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetRmaPriceItemsVo() throws Exception {
+		_testJsonGet(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, 71270733L));
+	}
+
+	@Test
+	public void testUpdateRmaPriceItemVOs() throws Exception {
+		List<SubscrPriceItemVO> priceItemsVO = subscrPriceItemService.findPriceItemVOs(71270733L);
+
+		SubscrPriceItemVO oldVO = priceItemsVO.get(0);
+
+		oldVO.setValue(oldVO.getValue() != null ? oldVO.getValue().multiply(BigDecimal.valueOf(0.9)) : null);
+		// oldVO.setValue(null);
+
+		_testJsonUpdate(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, 71270733L),
+				priceItemsVO);
+	}
+
 }

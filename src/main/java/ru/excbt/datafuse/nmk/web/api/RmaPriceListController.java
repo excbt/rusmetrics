@@ -6,10 +6,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
@@ -34,6 +40,8 @@ import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaPriceListController extends SubscrPriceListController {
+
+	private static final Logger logger = LoggerFactory.getLogger(RmaPriceListController.class);
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
@@ -173,7 +181,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
-				return subscrPriceListService.makeDraftPriceList(srcPriceListId);
+				return subscrPriceListService.createDraftPriceList(srcPriceListId);
 			}
 		};
 
@@ -200,7 +208,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public void process() {
-				subscrPriceListService.makeSubscrPriceLists(priceListId, Arrays.asList(subscriberIds),
+				subscrPriceListService.createSubscrPriceLists(priceListId, Arrays.asList(subscriberIds),
 						activeIds != null ? Arrays.asList(activeIds) : null);
 			}
 
@@ -217,7 +225,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/activate", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> setActivePriceList(@PathVariable("subscriberId") Long subscriberId,
+	public ResponseEntity<?> activatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId) {
 
 		checkNotNull(subscriberId);
@@ -228,6 +236,63 @@ public class RmaPriceListController extends SubscrPriceListController {
 			@Override
 			public SubscrPriceList processAndReturnResult() {
 				return subscrPriceListService.setActiveSubscrPriceList(getCurrentSubscriberId(), priceListId);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param priceListId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/items", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getPriceListItems(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("priceListId") Long priceListId) {
+
+		List<SubscrPriceItem> priceItems = subscrPriceItemService.findPriceItems(priceListId);
+
+		List<SubscrPriceItemVO> resultList = priceItems.stream().map(i -> new SubscrPriceItemVO(i))
+				.collect(Collectors.toList());
+
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param subscrPriceListId
+	 * @param subscrPriceItemVOs
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.PUT,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updatePriceItems(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("subscrPriceListId") Long subscrPriceListId,
+			@RequestBody List<SubscrPriceItemVO> subscrPriceItemVOs) {
+
+		checkNotNull(subscrPriceItemVOs);
+		logger.info("Count of VOs: {}", subscrPriceItemVOs.size());
+
+		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(subscrPriceListId);
+		if (subscrPriceList == null) {
+			return responseBadRequest(
+					ApiResult.validationError("SubscrPriceList (id=%d) is not found", subscrPriceListId));
+		}
+
+		LocalDate localDate = getCurrentSubscriberLocalDate();
+
+		ApiAction action = new EntityApiActionAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
+
+			@Override
+			public List<SubscrPriceItemVO> processAndReturnResult() {
+				List<SubscrPriceItem> resultPriceItems = subscrPriceItemService
+						.updateSubscrPriceItemValues(subscrPriceList, entity, localDate);
+				List<SubscrPriceItemVO> result = subscrPriceItemService.convertSubscrPriceItemVOs(resultPriceItems);
+				return result;
 			}
 		};
 

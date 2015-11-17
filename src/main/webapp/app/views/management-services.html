@@ -37,7 +37,7 @@
                         <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                             <td class="nmc-td-for-button-checkbox">
                                 <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                <input disabled ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
+                                <input disabled ng-model="pack.selected" type="checkbox" class="marginRight2 nmc-checkbox-notallowed" style="vertical-align: middle; margin-right: 7px;"/>
                                 
                             </td>
                             <td class="col-md-10">
@@ -59,7 +59,7 @@
                                         <tr ng-repeat="serv in pack.serviceItems">
                                             <td class="onlyPaddingLeft5">
 <!--                                                style="padding: 0 0 0 5px !important;">-->
-                                                <input disabled ng-model="serv.selected" type="checkbox"/>
+                                                <input disabled ng-model="serv.selected" type="checkbox" class="nmc-checkbox-notallowed"/>
                                             </td>
                                             <td class="col-md-11 onlyPaddingLegt5">
 <!--                                                style="padding: 0 0 0 5px !important;">-->
@@ -109,7 +109,7 @@
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                                                 <td class="nmc-td-for-button-checkbox">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)"/>
+                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)" ng-class="{'nmc-checkbox-notallowed': ((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))}"/>
 
                                                 </td>
                                                 <td class="col-md-10">
@@ -131,7 +131,7 @@
                                                             <tr ng-repeat="serv in pack.serviceItems">
                                                                 <td class="onlyPaddingLeft5">
 <!--                                                                    style="padding: 0 0 0 5px !important;">-->
-                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
+                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)" ng-class="{'nmc-checkbox-notallowed': pack.selected || (pack.keyname=='PACK_BASE_SERVICE')}"/>
                                                                 </td>
                                                                 <td class="col-md-11 onlyPaddingLeft5">
 <!--                                                                    style="padding: 0 0 0 5px !important;">-->

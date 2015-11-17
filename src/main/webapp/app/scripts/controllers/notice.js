@@ -878,17 +878,14 @@ console.log("Clear Type filters.");
         if (ctxFlag == false){
             window.location.assign('#/');
         };
-    };
-console.log("1");    
+    };    
     setVisibles($scope.ctrlSettings.ctxId);
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
-console.log("2");            
         setVisibles($scope.ctrlSettings.ctxId);
     });
     
     window.setTimeout(function(){
-console.log("3");            
         setVisibles($scope.ctrlSettings.ctxId);
     }, 500);
     
