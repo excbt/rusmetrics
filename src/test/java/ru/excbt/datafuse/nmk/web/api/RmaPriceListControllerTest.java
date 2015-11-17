@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -123,9 +124,8 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 
 		SubscrPriceItemVO oldVO = priceItemsVO.get(0);
 
-		// oldVO.setValue(oldVO.getValue() != null ?
-		// oldVO.getValue().multiply(BigDecimal.valueOf(0.9)) : null);
-		oldVO.setValue(null);
+		oldVO.setValue(oldVO.getValue() != null ? oldVO.getValue().multiply(BigDecimal.valueOf(0.9)) : null);
+		// oldVO.setValue(null);
 
 		_testJsonUpdate(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, 71270733L),
 				priceItemsVO);

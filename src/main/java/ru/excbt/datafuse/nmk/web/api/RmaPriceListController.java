@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.BooleanUtils;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -269,7 +270,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updatePriceList(@PathVariable("subscriberId") Long subscriberId,
+	public ResponseEntity<?> updatePriceItems(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("subscrPriceListId") Long subscrPriceListId,
 			@RequestBody List<SubscrPriceItemVO> subscrPriceItemVOs) {
 
@@ -282,13 +283,15 @@ public class RmaPriceListController extends SubscrPriceListController {
 					ApiResult.validationError("SubscrPriceList (id=%d) is not found", subscrPriceListId));
 		}
 
+		LocalDate localDate = getCurrentSubscriberLocalDate();
+
 		ApiAction action = new EntityApiActionAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
 
 			@Override
 			public List<SubscrPriceItemVO> processAndReturnResult() {
-				List<SubscrPriceItem> resultPriceItems = subscrPriceItemService.updateSubscrPriceItems(subscrPriceList,
-						entity);
-				List<SubscrPriceItemVO> result = subscrPriceItemService.makeSubscrPriceItemVOs(resultPriceItems);
+				List<SubscrPriceItem> resultPriceItems = subscrPriceItemService
+						.updateSubscrPriceItemValues(subscrPriceList, entity, localDate);
+				List<SubscrPriceItemVO> result = subscrPriceItemService.convertSubscrPriceItemVOs(resultPriceItems);
 				return result;
 			}
 		};
