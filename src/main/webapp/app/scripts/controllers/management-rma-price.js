@@ -19,7 +19,7 @@ angular.module('portalNMC')
 });
 
 angular.module('portalNMC')
-.controller('MngmtPriceCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
+.controller('MngmtPriceCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', '$log', function($scope, $http, mainSvc, notificationFactory, $log){
     console.log("MngmtPriceCtrl run.");
     //messages & titles
     $scope.messages = {};
@@ -231,7 +231,8 @@ angular.module('portalNMC')
             response.data.forEach(function(el){
                 el.organizationName = el.organization.organizationFullName;
             });
-            $scope.data.clients = response.data;         
+            $scope.data.clients = response.data;   
+$log.debug("(MngmtPriceCtrl: 235) Subscriber list:",$scope.data.clients);            
         },
              function(e){
             console.log(e);
