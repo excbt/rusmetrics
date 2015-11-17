@@ -28,6 +28,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	private ContZPointService contZPointService;
 
 	@Test
+	@Ignore
 	public void testZPointCRUD() throws Exception {
 
 		ContZPoint contZPoint = new ContZPoint();
