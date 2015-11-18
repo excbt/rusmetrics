@@ -119,7 +119,7 @@
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
-                                <tr ng-repeat="pack in serviceListEdition">
+                                <tr ng-repeat="pack in serviceListEdition" ng-hide="!pack.price.value&&!isSystemuser()">
                                     <td>
                                         <table class="nmc-table-nowrap-data">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
@@ -144,7 +144,7 @@
                                                 <td colspan="2" class="nmc-td-for-child-table">
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
-                                                            <tr ng-repeat="serv in pack.serviceItems">
+                                                            <tr ng-repeat="serv in pack.serviceItems" ng-hide="!serv.price.value&&!isSystemuser()">
                                                                 <td class="col-md-11 onlyPaddingLeft5">
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
