@@ -24,7 +24,7 @@ angular.module('portalNMC')
     //messages & titles
     $scope.messages = {};
     $scope.messages.priceMenuItem1 = "Активировать";
-    $scope.messages.priceMenuItem2 = "Клонировать";
+    $scope.messages.priceMenuItem2 = "Назначить абонентам";
     $scope.messages.priceMenuItem3 = "Редактировать";
     $scope.messages.priceMenuItem4 = "Копировать";
     $scope.messages.priceMenuItem5 = "Удалить";
@@ -38,6 +38,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.rmaUrl = "../api/rma";
     $scope.ctrlSettings.priceSuffix = "/priceList";
     $scope.ctrlSettings.clientsUrl = "../api/rma/subscribers";
+    $scope.ctrlSettings.rmaClientsUrl = "../api/rma/priceList/rma";
     $scope.ctrlSettings.modesUrl = "../api/rma/priceList/subscribers";
     $scope.ctrlSettings.servicesUrl = $scope.ctrlSettings.subscrUrl+"/manage/service";
     $scope.ctrlSettings.packagesUrl = $scope.ctrlSettings.servicesUrl + "/servicePackList";
@@ -46,6 +47,8 @@ angular.module('portalNMC')
 //    /api/rma/%d/priceList/%d/items
     $scope.ctrlSettings.accountServicesUrl = $scope.ctrlSettings.servicesUrl+ "/access";
     $scope.ctrlSettings.subscriberContObjectCountUrl = $scope.ctrlSettings.subscrUrl+ "/info/subscriberContObjectCount";
+    
+    $scope.ctrlSettings.MASTER_RMA_ID = 0;
     
     $scope.ctrlSettings.priceListColumns = [
         {
@@ -119,7 +122,7 @@ angular.module('portalNMC')
 
     var errorCallback = function (e) {
         notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
-        console.log(e);
+        console.log(e.data);
     };
     
     var getModePrices = function(subscrId){
@@ -202,6 +205,7 @@ angular.module('portalNMC')
             notificationFactory.info("Не выбрано ни одного абонента!");
             return 1;
         };
+//console.log(tmpSelected);        
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+ $scope.data.currentPrice.id+"/subscr";
         $http({
             method: "POST",
@@ -223,15 +227,16 @@ angular.module('portalNMC')
     //----------------------------------------------------------
     
         //    get subscribers
-    var getClients = function(){
-        var targetUrl = $scope.ctrlSettings.clientsUrl;
+    var getClients = function(url){
+        var targetUrl = url;//$scope.ctrlSettings.clientsUrl;
         $http.get(targetUrl)
         .then(function(response){
             if (angular.isUndefined(response.data)||(response.data == null)|| !angular.isArray(response.data)){
                 return false;
             };
+//console.log(response.data);            
             response.data.forEach(function(el){
-                el.organizationName = el.organization.organizationFullName;
+                el.organizationName = (angular.isDefined(el.organization)&&(el.organization!=null))? el.organization.organizationFullName : el.subscriberName;
             });
             $scope.data.clients = response.data;   
 //$log.debug("(MngmtPriceCtrl: 235) Subscriber list:",$scope.data.clients);            
@@ -240,7 +245,7 @@ angular.module('portalNMC')
             console.log(e);
         });
     };
-    getClients();
+    
     
     var getModes = function(){
         var targetUrl = $scope.ctrlSettings.modesUrl;
@@ -255,6 +260,11 @@ angular.module('portalNMC')
             $scope.data.currentMode = angular.copy($scope.data.priceModes[0]);           
             //get prices for rma
             getModePrices($scope.data.currentMode.id);
+            var targetUrl = $scope.ctrlSettings.clientsUrl;
+            if ($scope.data.currentMode.id == $scope.ctrlSettings.MASTER_RMA_ID){
+                targetUrl = $scope.ctrlSettings.rmaClientsUrl;
+            };
+            getClients(targetUrl);
         },
              function(e){
             console.log(e);
@@ -271,8 +281,13 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentMode = angular.copy(mode); 
-console.log(mode);        
+//console.log(mode);        
         getModePrices($scope.data.currentMode.id);
+        var targetUrl = $scope.ctrlSettings.clientsUrl;
+        if ($scope.data.currentMode.id == $scope.ctrlSettings.MASTER_RMA_ID){
+            targetUrl = $scope.ctrlSettings.rmaClientsUrl;
+        };
+        getClients(targetUrl);
     };
     
     //get subscriber contObject count
@@ -291,8 +306,7 @@ console.log(mode);
     $scope.getPriceList = function(url){
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
-            var tmpPrices = angular.copy(response.data);
-//console.log(response.data);            
+            var tmpPrices = angular.copy(response.data);            
             if (angular.isUndefined(tmpPrices)||(tmpPrices == null)|| !angular.isArray(tmpPrices)){
                 return false;
             };
