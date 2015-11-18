@@ -1709,12 +1709,17 @@ tr.nmc-inactive-price > td{
 }
 
     /* Управление отображением элементов*/
+/*Показать*/
 .nmc-show {
     display:inherit;
 }
-
+/*Скрыть*/
 .nmc-hide {
     display:none !important;
+}
+/*Сделать прозрачным*/
+.nmc-transparent {
+    opacity: 0;
 }
 
 /*

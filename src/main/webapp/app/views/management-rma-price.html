@@ -134,9 +134,14 @@
                                                 <td class="col-md-1">
 <!--                                                    {{pack.price.value}} -->
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.value)}">
-                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-hide':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.value}">{{ctrlSettings.currency}}</span>
                                                     </div>
                                                 </td>
+<!--
+                                                <td>
+                                                    <span ng-class="{'nmc-hide':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                </td>
+-->
 
                                             </tr>
                                             <tr ng-show="!pack.showDetailsFlag">
@@ -151,9 +156,14 @@
                                                                 </td>
                                                                 <td class="col-md-1">
                                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.value)}">
-                                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-hide':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.value}">{{ctrlSettings.currency}}</span>
                                                                     </div>
                                                                 </td>
+<!--
+                                                                <td>
+                                                                    <span ng-class="{'nmc-hide':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                </td>
+-->
                                                             </tr>
                                                         </tbody>
                                                     </table>

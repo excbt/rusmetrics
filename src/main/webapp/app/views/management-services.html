@@ -45,7 +45,7 @@
                                 </span>    
                             </td>
                             <td class="col-md-1">
-                                {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                {{pack.price.priceValue}} <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                             </td>
 
                         </tr>
@@ -67,7 +67,7 @@
                                                 </span>
                                             </td>
                                             <td class="col-md-1">
-                                                {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                {{serv.price.priceValue}} <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -117,7 +117,7 @@
                                                     </span>    
                                                 </td>
                                                 <td class="col-md-1">
-                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                 </td>
 
                                             </tr>
@@ -139,7 +139,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td class="col-md-1">
-                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -193,7 +193,7 @@
                     </p>
 -->
                     <div id="divWithObjectTable" class="" ng-hide="loading" style="overflow-x: auto;">
-                        <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Добавлены услуги:</label></div>
+                        <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Подключены услуги:</label></div>
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="pack in serviceAddedList">
@@ -254,7 +254,7 @@
                             </tbody>    
                         </table>
                         
-                        <div ng-show="serviceRemovedList.length>0"><label class="nmc-form-label">Удалены услуги:</label></div>
+                        <div ng-show="serviceRemovedList.length>0"><label class="nmc-form-label">Отключены услуги:</label></div>
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="pack in serviceRemovedList">

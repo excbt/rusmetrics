@@ -365,10 +365,18 @@ angular.module('portalNMC')
         var tmp = [];
         $scope.serviceListEdition.forEach(function(pack){
             if (angular.isDefined(pack.price)&&(pack.price!=null)){
+                if (angular.isUndefined(pack.price.id)||(pack.price.id == null)){
+                    pack.price.id = pack.id;
+                    pack.price.value = Number(pack.price.value);
+                };
                 tmp.push(pack.price);
             };
             pack.serviceItems.forEach(function(serv){
                 if (angular.isDefined(serv.price)&&(serv.price!=null)){
+                    if (angular.isUndefined(serv.price.id)||(serv.price.id == null)){
+                        serv.price.id = serv.id;
+                        serv.price.value = Number(serv.price.value);
+                    };
                     tmp.push(serv.price);
                 };
             });
@@ -380,9 +388,9 @@ angular.module('portalNMC')
     $scope.savePackages = function(){
         //var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
-        var data = [];
+        var data = [];       
         data = prepareData($scope.serviceListEdition);
-        var checkPrice = true;
+        var checkPrice = true;      
         data.some(function(el){
             if (!$scope.checkNumericValue(el.value)){
                 notificationFactory.errorInfo("Ошибка!","Неправильно задана цена услуги!");
