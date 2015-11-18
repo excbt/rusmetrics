@@ -136,4 +136,13 @@ public class RmaSubscriberService extends SubscriberService {
 		return subscriberRepository.selectByRmaSubscriberIds(subscriberId);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Subscriber> selectRmaList() {
+		return subscriberRepository.selectRmaList();
+	}
+
 }

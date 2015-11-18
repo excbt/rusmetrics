@@ -40,6 +40,15 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	 * @throws Exception
 	 */
 	@Test
+	public void testRmaList() throws Exception {
+		_testJsonGet("/api/rma/priceList/rma");
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
 	public void testRmaPriceList() throws Exception {
 		_testJsonGet(String.format("/api/rma/%d/priceList", EXCBT_RMA_SUBSCRIBER_ID));
 	}

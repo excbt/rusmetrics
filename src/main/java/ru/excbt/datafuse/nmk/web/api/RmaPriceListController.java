@@ -97,9 +97,30 @@ public class RmaPriceListController extends SubscrPriceListController {
 			resultList.add(new PriceListSubscriber("MASTER"));
 		}
 
-		resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
+		if (currentSubscriberService.isRma()) {
+			resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
+		}
 
 		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
+		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
+			resultList.add(new PriceListSubscriber(i));
+		});
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getPriceListRma() {
+		List<PriceListSubscriber> resultList = new ArrayList<>();
+
+		if (!isSystemUser()) {
+			return responseForbidden();
+		}
+
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaList();
 		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
