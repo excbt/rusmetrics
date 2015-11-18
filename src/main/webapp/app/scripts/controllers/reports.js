@@ -547,7 +547,7 @@ console.log(curObject);
         var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
         var ed = (endDate!=null)?(new Date(endDate)) : null;                
 //        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
-        if ((sd==null)|| (ed==null)){return console.log("2"); false;};               
+        if ((sd==null)|| (ed==null)){return false;};               
         return ed>=sd;
     };
         //check fields

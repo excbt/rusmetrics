@@ -219,6 +219,11 @@ app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, Idl
 //  Idle.watch();
 //}]);
 
+//configure $log service
+app.config(function($logProvider){
+    $logProvider.debugEnabled(true);
+});
+
 app.run(['objectSvc', 'monitorSvc', 'mainSvc', function(objectSvc, monitorSvc, mainSvc){
 console.log("Run main, object and monitor services.");  
     var mainSvcInit = mainSvc.getUserServicesPermissions();

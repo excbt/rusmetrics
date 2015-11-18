@@ -853,7 +853,7 @@ console.log(obj);
                         var tempArr = [];
                         
                         $scope.objects.forEach(function(elem){
-                            if (elem.fullName.indexOf(searchString)!=-1){
+                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
                                 tempArr.push(elem);
                             };
                         });

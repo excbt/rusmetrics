@@ -1,7 +1,8 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope){
+.service('mainSvc', function($cookies, $http, $rootScope, $log){
+    $log.debug("Run main service. main service: row: 5");
     //set services settings
     var mainSvcSettings = {};
     mainSvcSettings.subscrUrl = "../api/subscr";
