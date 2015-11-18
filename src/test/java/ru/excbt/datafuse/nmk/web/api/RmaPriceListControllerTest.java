@@ -14,10 +14,11 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
-public class RmaPriceListControllerTest extends RmaControllerTest {
+public class RmaPriceListControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
@@ -41,6 +42,11 @@ public class RmaPriceListControllerTest extends RmaControllerTest {
 	@Test
 	public void testRmaPriceList() throws Exception {
 		_testJsonGet(String.format("/api/rma/%d/priceList", EXCBT_RMA_SUBSCRIBER_ID));
+	}
+
+	@Test
+	public void testMasterPriceList() throws Exception {
+		_testJsonGet(String.format("/api/rma/%d/priceList", 0));
 	}
 
 	@Test
