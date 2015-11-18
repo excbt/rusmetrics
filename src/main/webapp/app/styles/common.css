@@ -1544,6 +1544,11 @@ tr.nmc-inactive-price > td{
     margin-bottom: .8em;
 }
 
+.marginBottomMinus20{
+    margin: 0 0 -20px 0;
+/*    margin-bottom: -20px;*/
+}
+
 .marginLeft5 {
     margin-left: 5px;
 }
@@ -1570,6 +1575,10 @@ tr.nmc-inactive-price > td{
 
 .marginTopMinus10{
     margin-top: -10px;
+}
+
+.marginTopMinus79{
+    margin-top: -79px;
 }
 
 .margin10 {
@@ -1709,12 +1718,17 @@ tr.nmc-inactive-price > td{
 }
 
     /* Управление отображением элементов*/
+/*Показать*/
 .nmc-show {
     display:inherit;
 }
-
+/*Скрыть*/
 .nmc-hide {
     display:none !important;
+}
+/*Сделать прозрачным*/
+.nmc-transparent {
+    opacity: 0;
 }
 
 /*

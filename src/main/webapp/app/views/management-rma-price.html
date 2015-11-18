@@ -119,7 +119,7 @@
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
-                                <tr ng-repeat="pack in serviceListEdition">
+                                <tr ng-repeat="pack in serviceListEdition" ng-hide="!pack.price.value&&!isSystemuser()">
                                     <td>
                                         <table class="nmc-table-nowrap-data">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
@@ -134,9 +134,14 @@
                                                 <td class="col-md-1">
 <!--                                                    {{pack.price.value}} -->
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.value)}">
-                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-hide':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.value}">{{ctrlSettings.currency}}</span>
                                                     </div>
                                                 </td>
+<!--
+                                                <td>
+                                                    <span ng-class="{'nmc-hide':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                </td>
+-->
 
                                             </tr>
                                             <tr ng-show="!pack.showDetailsFlag">
@@ -144,16 +149,21 @@
                                                 <td colspan="2" class="nmc-td-for-child-table">
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
-                                                            <tr ng-repeat="serv in pack.serviceItems">
+                                                            <tr ng-repeat="serv in pack.serviceItems" ng-hide="!serv.price.value&&!isSystemuser()">
                                                                 <td class="col-md-11 onlyPaddingLeft5">
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
                                                                 <td class="col-md-1">
                                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.value)}">
-                                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-hide':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.value}">{{ctrlSettings.currency}}</span>
                                                                     </div>
                                                                 </td>
+<!--
+                                                                <td>
+                                                                    <span ng-class="{'nmc-hide':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                </td>
+-->
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -198,7 +208,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="clonePriceLabel" class="nmc-h3">
-				Клонирование прайс-листа
+				Назначение прайс-листа {{data.currentPrice.priceListName}}
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -291,7 +301,7 @@
 						<div class="col-xs-offset-6 col-md-3">
 <!--                            -->
 							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
-								ng-click=""
+								ng-click="deletePrice(data.currentPrice)"
 								value="Удалить" />
 						</div>
 
