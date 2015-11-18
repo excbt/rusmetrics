@@ -191,6 +191,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             }, 
             {
                 header : "Темп. обратки",
@@ -201,6 +202,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             } , 
             {
                 header : "Темп. ХВС",
@@ -211,6 +213,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             } ,
             {
                 header : "Темп. окр. среды",
@@ -221,6 +224,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             },
             {
                 header : "Объем подачи, м3",

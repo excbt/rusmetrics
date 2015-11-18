@@ -270,7 +270,8 @@ angular.module('portalNMC')
                 return true;
             };
         });
-        $scope.data.currentMode = mode;     
+        $scope.data.currentMode = angular.copy(mode); 
+console.log(mode);        
         getModePrices($scope.data.currentMode.id);
     };
     
