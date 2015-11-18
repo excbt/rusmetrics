@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
-@Table(name = ModelTables.SUBSCR_PRICE_LIST)
+@Table(name = "subscr_price_list", schema = DBMetadata.DB_SCHEME)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubscrPriceList extends AbstractAuditableModel implements DisabledObject, ActiveObject, DeletableObjectId {

@@ -47,14 +47,10 @@ public class RmaSubscriberController extends SubscriberController {
 	@RequestMapping(value = "/subscribers", method = RequestMethod.GET)
 	public ResponseEntity<?> getRmaSubscribers() {
 		if (!currentSubscriberService.isRma()) {
-			logger.warn("Current User is not RMA");
 			return responseForbidden();
 		}
 
 		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
-		// List<Subscriber> resultList = currentUserService.isSystem() ?
-		// subscriberList
-		// : ObjectFilters.deletedFilter(subscriberList);
 		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
 		return responseOK(resultList);
 	}

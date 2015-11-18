@@ -57,7 +57,10 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrPriceList> findRootPriceLists() {
-		return subscrPriceListRepository.findByLevel(0);
+		List<SubscrPriceList> preResult = subscrPriceListRepository.findByLevel(0);
+		List<SubscrPriceList> result = preResult.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.collect(Collectors.toList());
+		return result;
 	}
 
 	/**
@@ -315,6 +318,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.findByRma(rmaSubscriberId);
 		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream()
+				.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(i -> i.getPriceListLevel() == PRICE_LEVEL_SUBSCRIBER)
 				.filter(i -> i.getSubscriberId2() != null && i.getSubscriberId2().equals(subscriberId))
 				.collect(Collectors.toList());
@@ -345,8 +349,14 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setSrcPriceListId(srcPriceListId);
 		newPriceList.setPriceListName(PRICE_LIST_PREFIX + srcPriceList.getPriceListName());
 
-		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())) {
+		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())
+				&& srcPriceList.getPriceListLevel().intValue() != PRICE_LEVEL_NMC) {
 			newPriceList.setMasterPriceListId(srcPriceList.getId());
+		}
+
+		if (srcPriceList.getPriceListLevel().intValue() == PRICE_LEVEL_NMC) {
+			newPriceList.setIsMaster(true);
+			newPriceList.setMasterPriceListId(null);
 		}
 
 		subscrPriceListRepository.save(newPriceList);
@@ -447,10 +457,12 @@ public class SubscrPriceListService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList updateOne(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
 		checkArgument(!subscrPriceList.isNew());
-		checkArgument(subscrPriceList.getPriceListLevel() != PRICE_LEVEL_NMC);
+		// checkArgument(subscrPriceList.getPriceListLevel() !=
+		// PRICE_LEVEL_NMC);
 		checkArgument(Boolean.FALSE.equals(subscrPriceList.getIsActive()));
 		checkArgument(Boolean.FALSE.equals(subscrPriceList.getIsArchive()));
 		checkArgument(Boolean.TRUE.equals(subscrPriceList.getIsDraft()));
