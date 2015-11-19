@@ -39,32 +39,28 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "price_list_name")
 	private String priceListName;
 
-	@Column(name = "subscriber_id_1", insertable = false, updatable = false)
-	private Long subscriberId1;
+	@Column(name = "rma_subscriber_id", insertable = false, updatable = false)
+	private Long rmaSubscriberId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id_1")
-	private Subscriber subscriber1;
+	@JoinColumn(name = "rma_subscriber_id")
+	private Subscriber rmaSubscriber;
 
-	@Column(name = "subscriber_id_2", insertable = false, updatable = false)
-	private Long subscriberId2;
-
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id_2")
-	private Subscriber subscriber2;
-
-	@Column(name = "subscriber_id_3", insertable = false, updatable = false)
-	private Long subscriberId3;
+	@Column(name = "subscriber_id", insertable = false, updatable = false)
+	private Long subscriberId;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id_3")
-	private Subscriber subscriber3;
+	@JoinColumn(name = "subscriber_id")
+	private Subscriber subscriber;
 
 	@Column(name = "price_list_level", updatable = false)
 	private Integer priceListLevel;
 
 	@Column(name = "price_list_type", updatable = false)
 	private Integer priceListType;
+
+	@Column(name = "price_list_keyname", updatable = false)
+	private String priceListKeyname;
 
 	@Column(name = "price_option", updatable = false)
 	private String priceOption;
@@ -127,16 +123,20 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 		this.priceListName = priceListName;
 	}
 
-	public Long getSubscriberId1() {
-		return subscriberId1;
+	public Subscriber getRmaSubscriber() {
+		return rmaSubscriber;
 	}
 
-	public Long getSubscriberId2() {
-		return subscriberId2;
+	public void setRmaSubscriber(Subscriber rmaSubscriber) {
+		this.rmaSubscriber = rmaSubscriber;
 	}
 
-	public Long getSubscriberId3() {
-		return subscriberId3;
+	public Subscriber getSubscriber() {
+		return subscriber;
+	}
+
+	public void setSubscriber(Subscriber subscriber) {
+		this.subscriber = subscriber;
 	}
 
 	public Integer getPriceListLevel() {
@@ -177,6 +177,22 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	public void setPlanEndDate(Date planEndDate) {
 		this.planEndDate = planEndDate;
+	}
+
+	public Date getFactBeginDate() {
+		return factBeginDate;
+	}
+
+	public void setFactBeginDate(Date factBeginDate) {
+		this.factBeginDate = factBeginDate;
+	}
+
+	public Date getFactEndDate() {
+		return factEndDate;
+	}
+
+	public void setFactEndDate(Date factEndDate) {
+		this.factEndDate = factEndDate;
 	}
 
 	@Override
@@ -221,20 +237,12 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 		this.isArchive = isArchive;
 	}
 
-	public Date getFactBeginDate() {
-		return factBeginDate;
+	public Long getMasterPriceListId() {
+		return masterPriceListId;
 	}
 
-	public void setFactBeginDate(Date factBeginDate) {
-		this.factBeginDate = factBeginDate;
-	}
-
-	public Date getFactEndDate() {
-		return factEndDate;
-	}
-
-	public void setFactEndDate(Date factEndDate) {
-		this.factEndDate = factEndDate;
+	public void setMasterPriceListId(Long masterPriceListId) {
+		this.masterPriceListId = masterPriceListId;
 	}
 
 	public int getVersion() {
@@ -255,36 +263,20 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 		this.deleted = deleted;
 	}
 
-	public Subscriber getSubscriber2() {
-		return subscriber2;
+	public Long getRmaSubscriberId() {
+		return rmaSubscriberId;
 	}
 
-	public void setSubscriber2(Subscriber subscriber2) {
-		this.subscriber2 = subscriber2;
+	public Long getSubscriberId() {
+		return subscriberId;
 	}
 
-	public Subscriber getSubscriber1() {
-		return subscriber1;
+	public String getPriceListKeyname() {
+		return priceListKeyname;
 	}
 
-	public void setSubscriber1(Subscriber subscriber1) {
-		this.subscriber1 = subscriber1;
-	}
-
-	public Subscriber getSubscriber3() {
-		return subscriber3;
-	}
-
-	public void setSubscriber3(Subscriber subscriber3) {
-		this.subscriber3 = subscriber3;
-	}
-
-	public Long getMasterPriceListId() {
-		return masterPriceListId;
-	}
-
-	public void setMasterPriceListId(Long masterPriceListId) {
-		this.masterPriceListId = masterPriceListId;
+	public void setPriceListKeyname(String priceListKeyname) {
+		this.priceListKeyname = priceListKeyname;
 	}
 
 }
