@@ -391,7 +391,8 @@ angular.module('portalNMC')
     $scope.savePackages = function(){
         //var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
-        var data = [];       
+        var data = [];
+console.log($scope.serviceListEdition);        
         data = prepareData($scope.serviceListEdition);
         var checkPrice = true;      
         data.some(function(el){
@@ -405,7 +406,7 @@ angular.module('portalNMC')
             return false;
         };
 console.log(data);        
-//return;        
+return;        
         $http.put(targetUrl, data).then(successCallback,errorCallback);
     };
     
