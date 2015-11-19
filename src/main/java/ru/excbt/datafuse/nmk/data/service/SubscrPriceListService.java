@@ -142,6 +142,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		newPriceList.setPriceListName(srcServicePriceList.getPriceListName());
 		newPriceList.setPriceOption(srcServicePriceList.getPriceOption());
+		newPriceList.setPriceListCurrency(srcServicePriceList.getPriceListCurrency());
 		newPriceList.setPlanBeginDate(srcServicePriceList.getPlanBeginDate());
 		newPriceList.setPlanEndDate(srcServicePriceList.getPlanEndDate());
 		newPriceList.setIsActive(false);

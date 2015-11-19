@@ -43,6 +43,8 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaPriceListController.class);
 
+	private final static Long MASTER_PRICE_LIST_SUBSCRIBER_ID = 0L;
+
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
 
@@ -65,10 +67,16 @@ public class RmaPriceListController extends SubscrPriceListController {
 			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
 		}
 
-		private PriceListSubscriber(String subscriberName) {
-			this.id = 0L;
+		private PriceListSubscriber(Long id, String subscriberName) {
+			this.id = id;
 			this.subscriberName = subscriberName;
 			this.isRma = true;
+		}
+
+		private PriceListSubscriber() {
+			this.id = -1L;
+			this.subscriberName = "---------";
+			this.isRma = false;
 		}
 
 		public Long getId() {
@@ -94,10 +102,14 @@ public class RmaPriceListController extends SubscrPriceListController {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
 		if (isSystemUser()) {
-			resultList.add(new PriceListSubscriber("MASTER"));
-		}
-
-		if (currentSubscriberService.isRma()) {
+			resultList.add(new PriceListSubscriber(MASTER_PRICE_LIST_SUBSCRIBER_ID, "MASTER"));
+			resultList.add(new PriceListSubscriber());
+			List<Subscriber> rmaList = rmaSubscriberService.selectRmaList();
+			rmaList.forEach(i -> {
+				resultList.add(new PriceListSubscriber(i));
+			});
+			resultList.add(new PriceListSubscriber());
+		} else {
 			resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
 		}
 
@@ -135,15 +147,32 @@ public class RmaPriceListController extends SubscrPriceListController {
 	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceList(@PathVariable("subscriberId") Long subscriberId) {
 
-		checkNotNull(subscriberId);
-
 		List<SubscrPriceList> subscrPriceLists = new ArrayList<>();
-		if (subscriberId.equals(getCurrentSubscriberId())) {
-			subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
-		} else {
 
-			if (isSystemUser() && subscriberId.intValue() == 0) {
+		if (subscriberId == null || subscriberId.intValue() == -1) {
+			return responseOK(subscrPriceLists);
+		}
+
+		// For System user
+		if (isSystemUser()) {
+			if (subscriberId.intValue() == 0) {
 				subscrPriceLists = subscrPriceListService.findRootPriceLists();
+			} else {
+				Subscriber checkSubscriber = subscriberService.findOne(subscriberId);
+				if (checkSubscriber == null) {
+					return responseBadRequest();
+				}
+				if (Boolean.TRUE.equals(checkSubscriber.getIsRma())) {
+					subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
+				} else {
+					subscrPriceLists = subscrPriceListService.findSubscriberPriceLists(getCurrentSubscriberId(),
+							subscriberId);
+				}
+			}
+		} else {
+			// Main Case
+			if (subscriberId.equals(getCurrentSubscriberId())) {
+				subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
 			} else {
 				subscrPriceLists = subscrPriceListService.findSubscriberPriceLists(getCurrentSubscriberId(),
 						subscriberId);
@@ -346,7 +375,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			public List<SubscrPriceItemVO> processAndReturnResult() {
 				// For MASTER price list & SystemUser
 				//&& subscrPriceList.getPriceListLevel() == SubscrPriceListService.PRICE_LEVEL_NMC
-				if (isSystemUser() ) {
+				if (isSystemUser()) {
 					List<SubscrPriceItem> resultPriceItems = subscrPriceItemService
 							.updateRmaPriceItemValues(subscrPriceList, entity, localDate);
 					List<SubscrPriceItemVO> result = subscrPriceItemService.convertSubscrPriceItemVOs(resultPriceItems);

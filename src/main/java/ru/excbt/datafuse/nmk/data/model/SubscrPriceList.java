@@ -62,6 +62,9 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 	@Column(name = "price_list_keyname", updatable = false)
 	private String priceListKeyname;
 
+	@Column(name = "price_list_currency", updatable = false)
+	private String priceListCurrency;
+
 	@Column(name = "price_option", updatable = false)
 	private String priceOption;
 
@@ -277,6 +280,14 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	public void setPriceListKeyname(String priceListKeyname) {
 		this.priceListKeyname = priceListKeyname;
+	}
+
+	public String getPriceListCurrency() {
+		return priceListCurrency;
+	}
+
+	public void setPriceListCurrency(String priceListCurrency) {
+		this.priceListCurrency = priceListCurrency;
 	}
 
 }
