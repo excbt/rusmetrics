@@ -262,7 +262,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 				} else if (subscrPriceList.getPriceListLevel().intValue() == SubscrPriceListService.PRICE_LEVEL_NMC) {
 					Subscriber rmaSubscriber = subscriberService.findOne(subscriberIds[0]);
 					subscrPriceListService.createRmaPriceList(priceListId, rmaSubscriber,
-							subscrPriceList.getSubscriber(), false);
+							subscrPriceList.getSubscriber());
 				}
 
 			}
@@ -344,6 +344,16 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 			@Override
 			public List<SubscrPriceItemVO> processAndReturnResult() {
+				// For MASTER price list & SystemUser
+				//&& subscrPriceList.getPriceListLevel() == SubscrPriceListService.PRICE_LEVEL_NMC
+				if (isSystemUser() ) {
+					List<SubscrPriceItem> resultPriceItems = subscrPriceItemService
+							.updateRmaPriceItemValues(subscrPriceList, entity, localDate);
+					List<SubscrPriceItemVO> result = subscrPriceItemService.convertSubscrPriceItemVOs(resultPriceItems);
+					return result;
+				}
+
+				// Main case
 				List<SubscrPriceItem> resultPriceItems = subscrPriceItemService
 						.updateSubscrPriceItemValues(subscrPriceList, entity, localDate);
 				List<SubscrPriceItemVO> result = subscrPriceItemService.convertSubscrPriceItemVOs(resultPriceItems);

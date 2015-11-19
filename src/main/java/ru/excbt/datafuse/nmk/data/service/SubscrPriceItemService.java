@@ -133,6 +133,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 			List<SubscrPriceItemVO> subscrPriceItemVOs, LocalDate localDate) {
 		checkNotNull(subscrPriceList);
 		checkNotNull(localDate);
+
 		List<SubscrPriceItem> currentPriceItems = servicePriceItemRepository
 				.findBySubscrPriceListId(subscrPriceList.getId());
 
@@ -170,6 +171,73 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @param subscrPriceList
+	 * @param subscrPriceItemVOs
+	 * @param localDate
+	 * @return
+	 */
+	@Secured({ ROLE_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrPriceItem> updateRmaPriceItemValues(SubscrPriceList subscrPriceList,
+			List<SubscrPriceItemVO> subscrPriceItemVOs, LocalDate localDate) {
+		checkNotNull(subscrPriceList);
+		checkNotNull(localDate);
+
+		List<SubscrPriceItem> currentPriceItems = servicePriceItemRepository
+				.findBySubscrPriceListId(subscrPriceList.getId());
+
+		Map<Long, SubscrPriceItemVO> voList = new HashMap<>();
+		subscrPriceItemVOs.forEach(i -> {
+			voList.put(i.getId(), i);
+		});
+
+		List<SubscrPriceItem> modifiedPriceItems = currentPriceItems.stream().filter(i -> voList.containsKey(i.getId()))
+				.collect(Collectors.toList());
+
+		List<SubscrPriceItem> newPriceItems = subscrPriceItemVOs.stream().filter(i -> i.getId() == null).map(i -> {
+			SubscrPriceItem item = new SubscrPriceItem();
+			item.setSubscrPriceList(subscrPriceList);
+			item.setSubscrServiceItemId(i.getItemId());
+			item.setSubscrServicePackId(i.getPackId());
+			item.setPriceValue(i.getValue());
+			return item;
+		}).collect(Collectors.toList());
+
+		List<SubscrPriceItemValue> priceItemValues = new ArrayList<>();
+
+		modifiedPriceItems.forEach(i -> {
+			SubscrPriceItemVO newValue = voList.get(i.getId());
+			if (newValue != null && newValue.getValue() != null && !newValue.getValue().equals(i.getPriceValue())) {
+				i.setPriceValue(newValue != null ? newValue.getValue() : null);
+				SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
+				itemValue.setSubcrPriceItem(i);
+				itemValue.setPriceValue(newValue.getValue());
+				itemValue.setValueBeginDate(localDate.toDate());
+				priceItemValues.add(itemValue);
+			}
+		});
+
+		newPriceItems.forEach(i -> {
+			SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
+			itemValue.setSubcrPriceItem(i);
+			itemValue.setPriceValue(i.getPriceValue());
+			itemValue.setValueBeginDate(localDate.toDate());
+			priceItemValues.add(itemValue);
+		});
+
+		Set<Long> modifiedPriceItemIds = modifiedPriceItems.stream().map(i -> i.getId()).collect(Collectors.toSet());
+
+		updatePriceListValues(modifiedPriceItemIds, localDate);
+
+		servicePriceItemRepository.save(newPriceItems);
+		servicePriceItemRepository.save(modifiedPriceItems);
+		servicePriceItemValueRepository.save(priceItemValues);
+
+		return modifiedPriceItems;
+	}
+
+	/**
+	 * 
 	 * @param subscrPriceItems
 	 * @return
 	 */
@@ -194,7 +262,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 		List<SubscrPriceItemValue> allCurrentValues = new ArrayList<>();
 
 		modifiedPriceItemIds.forEach(i -> {
-			List<SubscrPriceItemValue> currentValues = servicePriceItemValueRepository.selectSubscrPriceItemValues(i);
+			List<SubscrPriceItemValue> currentValues = servicePriceItemValueRepository.selectSubscrPriceItemValue(i);
 			currentValues.forEach(cv -> {
 				cv.setValueEndDate(endDate.toDate());
 			});

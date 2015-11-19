@@ -11,5 +11,5 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemValue;
 public interface SubscrPriceItemValueRepository extends CrudRepository<SubscrPriceItemValue, Long> {
 
 	@Query("SELECT o FROM SubscrPriceItemValue o WHERE o.subcrPriceItemId = :subscrPriceItemId")
-	public List<SubscrPriceItemValue> selectSubscrPriceItemValues(@Param("subscrPriceItemId") Long subscrPriceItemId);
+	public List<SubscrPriceItemValue> selectSubscrPriceItemValue(@Param("subscrPriceItemId") Long subscrPriceItemId);
 }

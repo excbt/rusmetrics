@@ -30,18 +30,16 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	 * @throws Exception
 	 */
 	@Test
-	@Ignore
 	public void testCreateRmaPriceList() throws Exception {
 		SubscrPriceList nmcPriceList = subscrPriceListService.findRootPriceLists("DEFAULT");
 		assertNotNull(nmcPriceList);
 
 		SubscrPriceList rmaSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), null, true);
+				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), null);
 		assertNotNull(rmaSubscriberPriceList);
 
 		SubscrPriceList rmaSpecialSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), subscriberService.findOne(EXCBT_SUBSCRIBER_ID),
-				true);
+				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), subscriberService.findOne(EXCBT_SUBSCRIBER_ID));
 		assertNotNull(rmaSpecialSubscriberPriceList);
 
 		List<SubscrPriceList> rmaPrices = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
