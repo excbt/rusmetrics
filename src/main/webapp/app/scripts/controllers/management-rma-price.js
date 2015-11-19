@@ -369,7 +369,7 @@ angular.module('portalNMC')
         $scope.serviceListEdition.forEach(function(pack){
             if (angular.isDefined(pack.price)&&(pack.price!=null)){
                 if (angular.isUndefined(pack.price.id)||(pack.price.id == null)){
-                    pack.price.id = pack.id;
+                    pack.price.packId = pack.id;
                     pack.price.value = Number(pack.price.value);
                 };
                 tmp.push(pack.price);
@@ -377,7 +377,7 @@ angular.module('portalNMC')
             pack.serviceItems.forEach(function(serv){
                 if (angular.isDefined(serv.price)&&(serv.price!=null)){
                     if (angular.isUndefined(serv.price.id)||(serv.price.id == null)){
-                        serv.price.id = serv.id;
+                        serv.price.itemId = serv.id;
                         serv.price.value = Number(serv.price.value);
                     };
                     tmp.push(serv.price);
@@ -404,7 +404,7 @@ angular.module('portalNMC')
         if (!checkPrice){
             return false;
         };
-//console.log(data);        
+console.log(data);        
 //return;        
         $http.put(targetUrl, data).then(successCallback,errorCallback);
     };
