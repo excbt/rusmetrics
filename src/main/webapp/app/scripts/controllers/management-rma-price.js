@@ -54,25 +54,16 @@ angular.module('portalNMC')
         {
             "name": "priceListName",
             "caption": "Наименование",
-            "class": "col-md-3"
+            "class": "col-xs-3 col-md-3"
         },{
             "name": "factBeginDate",
             "caption": "Дата ввода",
-            "class": "col-md-1"
+            "class": "col-xs-1 col-md-1"
         },{
             "name": "factEndDate",
             "caption": "Дата завершения",
-            "class": "col-md-1"
+            "class": "col-xs-1 col-md-1"
         }
-//        ,{
-//            "name": "factBeginDate",
-//            "caption": "Факт. дата ввода",
-//            "class": "col-md-1 "
-//        },{
-//            "name": "factEndDate",
-//            "caption": "Факт. дата завершения",
-//            "class": "col-md-1"
-//        }
     ];
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
@@ -85,15 +76,6 @@ angular.module('portalNMC')
         //service packages which is edition on form
     $scope.serviceListEdition = null;
     
-    //package columns definition
-    //not used
-//    $scope.ctrlSettings.packageColumns = [
-//        {"name":"name", "header" : "Название", "class":"col-md-4"}
-//        ,{"name":"description", "header" : "Описание", "class":"col-md-5"}
-//        ,{"name":"cost", "header" : "Стоимость, руб.", "class":"col-md-1"}
-//    ];
-    //The packages, wich selected by the subscriber
-    $scope.packages =[];
     //The packages, which available for the subscriber
     $scope.availablePackages = [];
     
@@ -173,6 +155,12 @@ angular.module('portalNMC')
         var tmpCode = mainSvc.getConfirmCode();
         $scope.confirmLabel = tmpCode.label;
         $scope.sumNums = tmpCode.result;
+    };
+    
+    $scope.deletePrice = function(object){
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+object.id;
+        $http.delete(targetUrl).then(successCallback, errorCallback)
+        
     };
     
     $scope.savePriceProp = function(object){
