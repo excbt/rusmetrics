@@ -69,10 +69,11 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	 */
 	@Test
 	public void testMakeDraft() throws Exception {
-		SubscrPriceList priceList = subscrPriceListService.findActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID);
-		assertNotNull(priceList);
+		List<SubscrPriceList> priceList = subscrPriceListService.selectActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID,
+				null);
+		assertTrue(priceList.size() > 0);
 		RequestExtraInitializer param = (builder) -> {
-			builder.param("srcPriceListId", priceList.getId().toString());
+			builder.param("srcPriceListId", priceList.get(0).getId().toString());
 		};
 		_testJsonPost(String.format("/api/rma/%d/priceList", EXCBT_RMA_SUBSCRIBER_ID), param);
 	}
@@ -83,7 +84,8 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	 */
 	@Test
 	public void testUpdate() throws Exception {
-		List<SubscrPriceList> priceLists = subscrPriceListService.findDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
+		List<SubscrPriceList> priceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
+				null);
 		assertNotNull(priceLists);
 		assertTrue(priceLists.size() > 0);
 		SubscrPriceList priceList = priceLists.get(0);
@@ -99,11 +101,11 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Test
 	public void testCreateSubscrPriceLists() throws Exception {
 
-		List<SubscrPriceList> subscrPriceLists = subscrPriceListService.findDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		List<SubscrPriceList> subscrPriceLists = subscrPriceListService
+				.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);
 
 		if (subscrPriceLists.size() == 0) {
-			subscrPriceLists = subscrPriceListService.findDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
+			subscrPriceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID, null);
 		}
 
 		assertTrue(subscrPriceLists.size() > 0);
