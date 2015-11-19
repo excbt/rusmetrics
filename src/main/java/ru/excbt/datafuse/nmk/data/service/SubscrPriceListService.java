@@ -31,7 +31,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrPriceListService.class);
 
-	private final static String PRICE_LIST_PREFIX = "Черновик ";
+	private final static String PRICE_LIST_PREFIX = "Копия ";
 
 	public final static int PRICE_LEVEL_NMC = 0;
 	public final static int PRICE_LEVEL_RMA = 1;
@@ -328,6 +328,11 @@ public class SubscrPriceListService implements SecuredRoles {
 		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
 		if (srcPriceList == null) {
 			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
+		}
+
+		if (srcPriceList.getIsArchive()) {
+			throw new PersistenceException(String
+					.format("Archive SubscrPriceList (id=%d) is not allowed to assing to Subscribers", srcPriceListId));
 		}
 
 		Long rmaSubscriberId = srcPriceList.getRmaSubscriberId();

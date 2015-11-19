@@ -315,10 +315,20 @@ public class RmaPriceListController extends SubscrPriceListController {
 		checkNotNull(subscriberId);
 		checkNotNull(priceListId);
 
+		SubscrPriceList priceList = subscrPriceListService.findOne(priceListId);
+		if (priceList == null) {
+			return responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
+		}
+
 		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>() {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
+
+				if (isSystemUser() && priceList.getPriceListLevel() == SubscrPriceListService.PRICE_LEVEL_RMA) {
+					return subscrPriceListService.setActiveRmaPriceList(priceListId, getCurrentSubscriber());
+				}
+
 				return subscrPriceListService.setActiveSubscrPriceList(priceListId, getCurrentSubscriber());
 			}
 		};
