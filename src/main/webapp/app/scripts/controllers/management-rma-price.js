@@ -406,7 +406,7 @@ console.log($scope.serviceListEdition);
             return false;
         };
 console.log(data);        
-return;        
+//return;        
         $http.put(targetUrl, data).then(successCallback,errorCallback);
     };
     
