@@ -118,35 +118,6 @@
             <td class="col-md-2">
                     <span>{{dataSource.dataSourcePort}}</span>
             </td>
-<!--
-            <td ng-class="col-md-10">
-                <div><span ng-class=""><b>{{dataSource.dataSourceName || "Без названия"}}</b><span class="marginLeft15"><b>Тип:</b>{{dataSource.dataSourceType.caption}}</span><span ng-show="isSystemuser()"> (id = {{dataSource['id']}})</span></span>
-                </div>
-                <div class="marginLeft15">
-                    <span><small><b>IP:</b> {{dataSource.dataSourceIp}}</small></span>
-                    <span><small><b>Port:</b> {{dataSource.dataSourcePort}}</small></span>
-                </div>
-            </td>
--->
-<!--
-            <td ng-class="columns[1].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> </span>
-            </td>
--->
-<!--
-            <td ng-class="columns[2].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.rso.organizationFullName}}</span>
-            </td>
-            <td ng-class="columns[3].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffOption.tariffOptionName}}</span>
-            </td> 
-            <td ng-class="columns[4].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanValue}}</span>
-            </td>
-            <td ng-class="columns[5].class">
-                <span  ng-class="{'nmc-distinguish': object._default}"> {{object.tariffPlanDescription}}</span>
-            </td>
--->
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
@@ -183,7 +154,10 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentObject.dataSourceName">
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div id="divInputName" class="form-group noMarginBottom" ng-class="{'has-error':(!data.currentObject.dataSourceName||(data.currentObject.dataSourceName==''))}">
+                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentObject.dataSourceName">
+                                    </div>    
                                 </td>
                             </tr>
                             <tr>
@@ -203,7 +177,7 @@
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9">
 <!--                                    <div id="divInputIp" class="form-group noMarginBottom" ng-class="{'has-error':!ctrlSettings.inputIpComplete}">-->
-                                    <div id="divInputIp" class="form-group noMarginBottom">
+                                    <div id="divInputIp" class="form-group noMarginBottom" ng-class="{'has-error':(!data.currentObject.dataSourceIp||(data.currentObject.dataSourceIp==''))}">
                                         <input class="form-control nmc-text-input-form" type="text" id="inputIP" placeholder="" ng-model="data.currentObject.dataSourceIp"/> 
                                     </div>
                                 </td>                               
