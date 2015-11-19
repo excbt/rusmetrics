@@ -29,10 +29,12 @@ angular.module('portalNMC')
     $scope.messages.priceMenuItem4 = "Копировать";
     $scope.messages.priceMenuItem5 = "Удалить";
     $scope.messages.priceMenuItem6 = "Свойства";
+    $scope.messages.priceMenuItem7 = "Посмотреть цены";
     
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
+    $scope.ctrlSettings.modeView = false; // the price list mode view: false - r/w, true - r 
     
     $scope.ctrlSettings.subscrUrl = "../api/subscr";
     $scope.ctrlSettings.rmaUrl = "../api/rma";
@@ -148,6 +150,11 @@ angular.module('portalNMC')
         $scope.data.currentPrice = angular.copy(object);
     };
     
+    $scope.dblClickPriceList = function(pl){
+        $scope.selectItem(pl);
+        $('#pricePropModal').modal();
+    };
+    
     $scope.deletePriceInit = function(object){
         $scope.selectItem(object);
         //generation confirm code
@@ -227,7 +234,7 @@ angular.module('portalNMC')
                 el.organizationName = (angular.isDefined(el.organization)&&(el.organization!=null))? el.organization.organizationFullName : el.subscriberName;
             });
             $scope.data.clients = response.data;   
-//$log.debug("(MngmtPriceCtrl: 235) Subscriber list:",$scope.data.clients);            
+//$log.debug("(MngmtPriceCtrl: 237) Subscriber list:",$scope.data.clients);            
         },
              function(e){
             console.log(e);
@@ -260,7 +267,7 @@ angular.module('portalNMC')
     };
     getModes();
     
-    $scope.changeMode = function(modeId){
+    $scope.changeMode = function(modeId){      
         var mode = null;
         $scope.data.priceModes.some(function(el){
             if (el.id == modeId){
@@ -274,7 +281,7 @@ angular.module('portalNMC')
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         if ($scope.data.currentMode.id == $scope.ctrlSettings.MASTER_RMA_ID){
             targetUrl = $scope.ctrlSettings.rmaClientsUrl;
-        };
+        };               
         getClients(targetUrl);
     };
     
@@ -423,11 +430,21 @@ console.log(data);
         $scope.confirmLabel = tmpCode.label;
         $scope.sumNums = tmpCode.result;
         
+        $scope.ctrlSettings.modeView = false;
         $scope.selectItem(priceList);
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
         $scope.getPriceList(targetUrl);
         //$('#editPriceModal').modal();        
+    };
+    
+    //view price list
+    $scope.viewPrice = function(priceList){
+        $scope.ctrlSettings.modeView = true;
+        $scope.selectItem(priceList);
+        $scope.serviceListEdition = angular.copy($scope.availablePackages);
+        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
+        $scope.getPriceList(targetUrl);
     };
     
     //listener on edit price modal window show
@@ -501,6 +518,11 @@ console.log(data);
             $scope.ctrlSettings.viewHistoryFlag = Boolean($(this).prop('checked'));
             $scope.$apply();
         });
+    });
+    
+    //set focus on Save button for pricelist properties window
+    $('#pricePropModal').on('shown.bs.modal', function () {
+      $('#btnSaveProp').focus()
     });
     
 }]);

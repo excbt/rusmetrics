@@ -63,21 +63,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive), 'nmc-inactive-price':priceList.isArchive}">
+            <tr ng-repeat="priceList in data.prices | viewHistory:ctrlSettings.viewHistoryFlag" ng-class="{'nmc-tr-odd':($index%2!==1), 'nmc-active-price':(priceList.isActive), 'nmc-inactive-price':priceList.isArchive}" ng-dblclick="dblClickPriceList(priceList)">
                 <td class="col-xs-1 col-md-1 nmc-td-for-button" >
                     <div class="btn-group">
                       <i title="Действия над прайсом" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
                         </i>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
-                        <li ng-if="((!data.currentMode.rma)&&priceList.isDraft)"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>
-                        <li ng-if="((data.currentMode.id!=0)&&(data.currentMode.rma)&&priceList.isMaster&&isSystemuser())"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>  
+                        <li><a href="" ng-click="viewPrice(priceList)">{{messages.priceMenuItem7}}</a></li>
+                        <li ng-if="((!data.currentMode.rma)&&priceList.isDraft&&(!priceList.isArchive))"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>
+                        <li ng-if="((data.currentMode.id!=0)&&(data.currentMode.rma)&&priceList.isMaster&&isSystemuser()&&(!priceList.isArchive))"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>  
 <!--                          ng-if="data.currentMode.rma"-->
-                        <li ng-if="data.currentMode.rma"><a href="" ng-click="cloneInit(priceList)" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
-                        <li ng-if="priceList.isDraft"><a href="" ng-click="editPrice(priceList)">{{messages.priceMenuItem3}}</a></li>
+                        <li ng-if="data.currentMode.rma&&(!priceList.isArchive)"><a href="" ng-click="cloneInit(priceList)" data-target="#clonePriceModal" data-toggle="modal">{{messages.priceMenuItem2}}</a></li>
+                        <li ng-if="priceList.isDraft&&(!priceList.isArchive)"><a href="" ng-click="editPrice(priceList)">{{messages.priceMenuItem3}}</a></li>
                         <li><a href="" ng-click="copyPriceList(priceList)">{{messages.priceMenuItem4}}</a></li>
-                        <li ng-if="priceList.isDraft" role="separator" class="divider"></li>
-                        <li ng-if="priceList.isDraft"><a href="" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
+                        <li ng-if="priceList.isDraft&&(!priceList.isArchive)" role="separator" class="divider"></li>
+                        <li ng-if="priceList.isDraft&&(!priceList.isArchive)"><a href="" ng-click="deletePriceInit(priceList)" data-target="#deletePriceModal" data-toggle="modal">{{messages.priceMenuItem5}}</a></li>  
                       </ul>
                     </div>
                 </td>
@@ -111,7 +112,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="editPriceLabel" class="nmc-h3">
-				Редактирование прайс-листа {{data.currentPrice.priceListName}}
+				Прайс-лист {{data.currentPrice.priceListName}}
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
@@ -135,7 +136,7 @@
                                                 <td class="col-md-1">
 <!--                                                    {{pack.price.value}} -->
                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.value)}">
-                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.value}">{{ctrlSettings.currency}}</span>
                                                     </div>
                                                 </td>
 <!--
@@ -157,7 +158,7 @@
                                                                 </td>
                                                                 <td class="col-md-1">
                                                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.value)}">
-                                                                        <input type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.value}">{{ctrlSettings.currency}}</span>
                                                                     </div>
                                                                 </td>
 <!--
@@ -177,7 +178,7 @@
                             </tbody>    
                         </table>
                     </div>
-                    <div class="pull-right">
+                    <div ng-if="!ctrlSettings.modeView" class="pull-right">
                         <label class="nmc-form-label">Введите код подтверждения: 
                             {{confirmLabel}}
                         </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
@@ -186,7 +187,7 @@
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-            <input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-primary btn-xs nmc-save-button"
+            <input ng-disabled = "(confirmCode!=sumNums && !isSystemuser()) || ctrlSettings.modeView" type="submit" class="btn btn-primary btn-xs nmc-save-button"
 					ng-click="savePackages()"
 					value="Сохранить" />
             <button class="btn btn-default btn-xs nmc-cancel-button" data-dismiss="modal"
@@ -384,7 +385,7 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="!data.currentPrice.isDraft" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input id="btnSaveProp" ng-disabled="!data.currentPrice.isDraft" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="savePriceProp(data.currentPrice)"
 								value="Сохранить" />
 						</div>
