@@ -395,7 +395,7 @@ angular.module('portalNMC')
         return result;
     };
     
-    $scope.savePackages = function(){
+    $scope.updatePriceList = function(){
         //var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
         var data = [];
@@ -522,7 +522,19 @@ console.log(data);
     
     //set focus on Save button for pricelist properties window
     $('#pricePropModal').on('shown.bs.modal', function () {
-      $('#btnSaveProp').focus()
+        $('#inputName').focus();
+        $('#pricePropModal').keydown(function(e){          
+            if(e.keyCode==13){ //enter press
+                $scope.savePriceProp($scope.data.currentPrice);
+                $scope.$apply();
+            };
+        });
     });
+    
+    $('#pricePropModal').on('hide.bs.modal', function(){
+        $('#pricePropModal').off('keydown');
+    });
+
+    
     
 }]);
