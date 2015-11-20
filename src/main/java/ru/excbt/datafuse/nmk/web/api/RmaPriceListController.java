@@ -156,7 +156,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		// For System user
 		if (isSystemUser()) {
 			if (subscriberId.intValue() == 0) {
-				subscrPriceLists = subscrPriceListService.findRootPriceLists();
+				subscrPriceLists = subscrPriceListService.selectRootPriceLists();
 			} else {
 				Subscriber checkSubscriber = subscriberService.findOne(subscriberId);
 				if (checkSubscriber == null) {
@@ -165,7 +165,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 				if (Boolean.TRUE.equals(checkSubscriber.getIsRma())) {
 					subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
 				} else {
-					subscrPriceLists = subscrPriceListService.findSubscriberPriceLists(getCurrentSubscriberId(),
+					subscrPriceLists = subscrPriceListService.selectSubscriberPriceLists(getCurrentSubscriberId(),
 							subscriberId);
 				}
 			}
@@ -174,7 +174,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			if (subscriberId.equals(getCurrentSubscriberId())) {
 				subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
 			} else {
-				subscrPriceLists = subscrPriceListService.findSubscriberPriceLists(getCurrentSubscriberId(),
+				subscrPriceLists = subscrPriceListService.selectSubscriberPriceLists(getCurrentSubscriberId(),
 						subscriberId);
 			}
 		}
@@ -195,7 +195,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			@PathVariable("priceListId") Long priceListId, @RequestBody SubscrPriceList priceList) {
 
 		checkNotNull(subscriberId);
-		checkNotNull(subscriberId);
+		checkNotNull(priceListId);
 		checkNotNull(priceList);
 		checkArgument(!priceList.isNew());
 		checkNotNull(priceList.getPriceListLevel());
@@ -223,6 +223,52 @@ public class RmaPriceListController extends SubscrPriceListController {
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param priceListId
+	 * @return
+	 */
+	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.DELETE,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> deletePriceList(@PathVariable("subscriberId") Long subscriberId,
+			@PathVariable("priceListId") Long priceListId) {
+		checkNotNull(subscriberId);
+		checkNotNull(priceListId);
+
+		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(priceListId);
+
+		if (subscrPriceList == null) {
+			return responseBadRequest();
+		}
+
+		logger.info("version:{}", subscrPriceList.getVersion());
+
+		ApiAction action = new ApiActionAdapter() {
+
+			@Override
+			public void process() {
+				if (isSystemUser() && subscrPriceList.getPriceListLevel() != null
+						&& subscrPriceList.getPriceListLevel().intValue() == SubscrPriceListService.PRICE_LEVEL_NMC) {
+					subscrPriceListService.softDeleteRootPriceList(subscrPriceList);
+				}
+
+				if (subscrPriceList.getPriceListLevel() != null
+						&& subscrPriceList.getPriceListLevel().intValue() == SubscrPriceListService.PRICE_LEVEL_RMA) {
+					subscrPriceListService.softDeleteRmaPriceList(subscrPriceList);
+				}
+
+				if (subscrPriceList.getPriceListLevel() != null && subscrPriceList.getPriceListLevel()
+						.intValue() == SubscrPriceListService.PRICE_LEVEL_SUBSCRIBER) {
+					subscrPriceListService.softDeleteSubscrPriceList(subscrPriceList);
+				}
+
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -280,18 +326,18 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return responseBadRequest();
 		}
 
+		List<Long> subscriberIdList = Arrays.asList(subscriberIds);
+		List<Long> activeIdList = activeIds != null ? Arrays.asList(activeIds) : null;
+
 		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
 
 				if (subscrPriceList.getPriceListLevel().intValue() == SubscrPriceListService.PRICE_LEVEL_RMA) {
-					subscrPriceListService.createSubscrPriceLists(priceListId, Arrays.asList(subscriberIds),
-							activeIds != null ? Arrays.asList(activeIds) : null);
+					subscrPriceListService.createSubscrPriceLists(priceListId, subscriberIdList, activeIdList);
 				} else if (subscrPriceList.getPriceListLevel().intValue() == SubscrPriceListService.PRICE_LEVEL_NMC) {
-					Subscriber rmaSubscriber = subscriberService.findOne(subscriberIds[0]);
-					subscrPriceListService.createRmaPriceList(priceListId, rmaSubscriber,
-							subscrPriceList.getSubscriber());
+					subscrPriceListService.createRmaPriceLists(priceListId, subscriberIdList, activeIdList);
 				}
 
 			}
@@ -320,16 +366,18 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
 		}
 
+		LocalDate startDate = currentSubscriberService.getSubscriberCurrentTime_Joda().toLocalDate();
+
 		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>() {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
 
 				if (isSystemUser() && priceList.getPriceListLevel() == SubscrPriceListService.PRICE_LEVEL_RMA) {
-					return subscrPriceListService.setActiveRmaPriceList(priceListId, getCurrentSubscriber());
+					return subscrPriceListService.activateRmaPriceList(priceListId, startDate);
+				} else {
+					return subscrPriceListService.activateSubscrPriceList(priceListId, getCurrentSubscriber());
 				}
-
-				return subscrPriceListService.setActiveSubscrPriceList(priceListId, getCurrentSubscriber());
 			}
 		};
 

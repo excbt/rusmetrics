@@ -31,15 +31,15 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	 */
 	@Test
 	public void testCreateRmaPriceList() throws Exception {
-		SubscrPriceList nmcPriceList = subscrPriceListService.findRootPriceLists("DEFAULT");
+		SubscrPriceList nmcPriceList = subscrPriceListService.selectRootPriceLists("DEFAULT");
 		assertNotNull(nmcPriceList);
 
 		SubscrPriceList rmaSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), null);
+				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSubscriberPriceList);
 
 		SubscrPriceList rmaSpecialSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID), subscriberService.findOne(EXCBT_SUBSCRIBER_ID));
+				subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSpecialSubscriberPriceList);
 
 		List<SubscrPriceList> rmaPrices = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
@@ -96,10 +96,10 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		assertTrue(rmaPriceLists.size() > 0);
 		SubscrPriceList srcPriceList = rmaPriceLists.get(0);
 		subscrPriceListService.createSubscrPriceList(srcPriceList.getId(),
-				subscriberService.findOne(EXCBT_SUBSCRIBER_ID), false);
+				subscriberService.findOne(EXCBT_SUBSCRIBER_ID));
 
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListService
-				.findSubscriberPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);
+				.selectSubscriberPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);
 		logger.info("Size of price lists : {}", subscrPriceLists.size());
 
 	}
@@ -146,7 +146,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 
 	@Test
 	public void testSetInactiveSubscrPriceList() throws Exception {
-		int setInactiveResult = subscrPriceListService.setInctiveSubscrActivePriceList(EXCBT_RMA_SUBSCRIBER_ID,
+		int setInactiveResult = subscrPriceListService.deactiveOtherSubscrPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
 				EXCBT_SUBSCRIBER_ID);
 		logger.info("Inactive Result: {}", setInactiveResult);
 		// assertTrue(setInactiveResult == 1);
@@ -155,7 +155,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testSetActivePriceList() throws Exception {
-		subscrPriceListService.setActiveSubscrPriceList(70318507L, subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
+		subscrPriceListService.activateSubscrPriceList(70318507L, subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
 	}
 
 }

@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -174,6 +176,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date getSubscriberCurrentTime(Long subscriberId) {
+		checkNotNull(subscriberId);
 		Object dbResult = em.createNativeQuery("SELECT get_subscriber_current_time(?1);").setParameter(1, subscriberId)
 				.getSingleResult();
 		if (dbResult == null) {
