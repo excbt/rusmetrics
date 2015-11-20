@@ -301,7 +301,8 @@ angular.module('portalNMC')
     $scope.getPriceList = function(url){
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
-            var tmpPrices = angular.copy(response.data);            
+            var tmpPrices = angular.copy(response.data);   
+//console.log(response.data);            
             if (angular.isUndefined(tmpPrices)||(tmpPrices == null)|| !angular.isArray(tmpPrices)){
                 return false;
             };
@@ -310,12 +311,14 @@ angular.module('portalNMC')
                 tmpPrices.forEach(function(price){
                     if ((price.packId === pack.id) && (angular.isUndefined(price.itemId)||(price.itemId === null))){
                         pack.price = price;
+                        $scope.ctrlSettings.currency = price.currency;
                     };
                 });
                 pack.serviceItems.forEach(function(svitem){
                      tmpPrices.forEach(function(price){
                         if ((angular.isUndefined(price.packId)||(price.packId === null)) && (price.itemId === svitem.id)){
                             svitem.price = price;
+                            $scope.ctrlSettings.currency = price.currency;
                         };
                      });
                 });
@@ -400,7 +403,7 @@ angular.module('portalNMC')
         //var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
         var data = [];
-console.log($scope.serviceListEdition);        
+//console.log($scope.serviceListEdition);        
         data = prepareData($scope.serviceListEdition);
         var checkPrice = true;      
         data.some(function(el){
@@ -413,7 +416,7 @@ console.log($scope.serviceListEdition);
         if (!checkPrice){
             return false;
         };
-console.log(data);        
+//console.log(data);        
 //return;        
         $http.put(targetUrl, data).then(successCallback,errorCallback);
     };
