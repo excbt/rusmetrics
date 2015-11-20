@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -155,7 +156,13 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testSetActivePriceList() throws Exception {
-		subscrPriceListService.activateSubscrPriceList(70318507L, subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID));
+		subscrPriceListService.activateSubscrPriceList(70318507L, LocalDate.now());
+	}
+
+	@Test
+	public void testSelectActiveBySubscriber() throws Exception {
+		int count = subscrPriceListService.selectSubscrActiveCount(67628679L);
+		logger.info("Active: {}", count);
 	}
 
 }

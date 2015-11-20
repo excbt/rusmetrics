@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 import java.util.Date;
 import java.util.List;
@@ -243,9 +244,10 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		List<SubscrPriceList> resultPriceLists = rmaPriceLists.stream()
 				.filter(i -> i.getPriceListLevel() == PRICE_LEVEL_RMA).filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-				.filter(i -> i.getPriceListType() != null && i.getPriceListType().equals(priceListType))
-				.filter(i -> (priceListType == 1 && i.getSubscriberId() == null)
-						|| (i.getSubscriberId() != null && i.getSubscriberId().equals(subscriberId)))
+				//.filter(i -> i.getPriceListType() != null && i.getPriceListType().equals(priceListType))
+				.filter(i -> (subscriberId == null) || (priceListType == 1 && i.getSubscriberId() == null)
+						|| (priceListType == 2 && i.getSubscriberId() != null
+								&& i.getSubscriberId().equals(subscriberId)))
 				.collect(Collectors.toList());
 
 		return resultPriceLists;
@@ -455,7 +457,7 @@ public class SubscrPriceListService implements SecuredRoles {
 			boolean isActive = activeIds != null && activeIds.contains(id);
 			LocalDate startDate = subscriberService.getSubscriberCurrentDateJoda(id);
 			if (isActive) {
-				activateRmaPriceList(createdPriceList.getId(), startDate);
+				activateSubscrPriceList(createdPriceList.getId(), startDate);
 			}
 		}
 	}
@@ -594,18 +596,13 @@ public class SubscrPriceListService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	public SubscrPriceList activateSubscrPriceList(Long subscrPriceListId, Subscriber rmaSubscriber) {
-		checkNotNull(rmaSubscriber);
+	public SubscrPriceList activateSubscrPriceList(Long subscrPriceListId, LocalDate startDate) {
 		checkNotNull(subscrPriceListId);
+		checkNotNull(startDate);
 
 		SubscrPriceList subscrPriceList = subscrPriceListRepository.findOne(subscrPriceListId);
 		if (subscrPriceList == null) {
 			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", subscrPriceListId));
-		}
-
-		if (!rmaSubscriber.getId().equals(subscrPriceList.getRmaSubscriberId())) {
-			throw new PersistenceException(
-					String.format("SubscrPriceList (id=%d) is not belongs to RMA", subscrPriceListId));
 		}
 
 		if (subscrPriceList.getPriceListLevel() == null
@@ -621,7 +618,10 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		deactiveOtherSubscrPriceLists(subscrPriceList);
 
-		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriber.getId());
+		int count = selectSubscrActiveCount(subscrPriceList.getSubscriber());
+		checkState(count == 0);
+
+		Date rmaCurrentDate = startDate.toDate();
 		subscrPriceList.setFactBeginDate(rmaCurrentDate);
 		subscrPriceList.setIsActive(true);
 		subscrPriceList.setIsDraft(false);
@@ -693,6 +693,29 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(rmaSubscriber);
 		checkNotNull(rmaSubscriber.getId());
 		return subscriber != null ? calcPriceListType(rmaSubscriber.getId(), subscriber.getId()) : 1;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public int selectSubscrActiveCount(Long subscriberId) {
+		Long result = subscrPriceListRepository.selectActiveCountBySubscriber(subscriberId);
+		return result != null ? result.intValue() : 0;
+	}
+
+	/**
+	 * 
+	 * @param subscriber
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public int selectSubscrActiveCount(Subscriber subscriber) {
+		checkNotNull(subscriber);
+		Long result = subscrPriceListRepository.selectActiveCountBySubscriber(subscriber.getId());
+		return result != null ? result.intValue() : 0;
 	}
 
 }

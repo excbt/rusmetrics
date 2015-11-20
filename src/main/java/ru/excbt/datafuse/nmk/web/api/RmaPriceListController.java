@@ -376,7 +376,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 				if (isSystemUser() && priceList.getPriceListLevel() == SubscrPriceListService.PRICE_LEVEL_RMA) {
 					return subscrPriceListService.activateRmaPriceList(priceListId, startDate);
 				} else {
-					return subscrPriceListService.activateSubscrPriceList(priceListId, getCurrentSubscriber());
+					return subscrPriceListService.activateSubscrPriceList(priceListId, startDate);
 				}
 			}
 		};

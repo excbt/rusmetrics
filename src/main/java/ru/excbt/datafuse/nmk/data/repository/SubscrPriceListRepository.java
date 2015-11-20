@@ -37,4 +37,12 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 			+ " ORDER BY pl.priceListLevel, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectBySubscriber(@Param("subscriberId") Long subscriberId);
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT count(*) FROM SubscrPriceList pl WHERE pl.subscriberId = :subscriberId AND pl.isActive = true AND pl.priceListLevel = 2 ")
+	public Long selectActiveCountBySubscriber(@Param("subscriberId") Long subscriberId);
+
 }

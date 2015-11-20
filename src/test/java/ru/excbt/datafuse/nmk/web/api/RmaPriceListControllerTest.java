@@ -123,9 +123,8 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Ignore
 	public void testSetActiveSubscrPriceList() throws Exception {
 
-		Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
-
-		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", EXCBT_SUBSCRIBER_ID, priceListId));
+		//Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", 67628679L, 85609507L));
 	}
 
 	/**
