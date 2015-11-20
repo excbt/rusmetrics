@@ -45,4 +45,23 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	@Query("SELECT count(*) FROM SubscrPriceList pl WHERE pl.subscriberId = :subscriberId AND pl.isActive = true AND pl.priceListLevel = 2 ")
 	public Long selectActiveCountBySubscriber(@Param("subscriberId") Long subscriberId);
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT pl FROM SubscrPriceList pl "
+			+ " WHERE pl.subscriberId = :subscriberId AND pl.isActive = true AND pl.priceListLevel = 2 ")
+	public List<SubscrPriceList> selectActiveBySubscriber(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT pl FROM SubscrPriceList pl "
+			+ " WHERE pl.rmaSubscriberId = :rmaSubscriberId AND pl.isActive = true AND pl.priceListLevel = 1 "
+			+ " AND pl.subscriberId IS NULL")
+	public List<SubscrPriceList> selectActiveByRmaSubscriber(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
 }

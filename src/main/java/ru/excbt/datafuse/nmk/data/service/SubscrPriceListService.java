@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
@@ -570,7 +572,6 @@ public class SubscrPriceListService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public int deactiveOtherRmaPriceLists(Long rmaSubscriberId, Long subscriberId) {
 		checkNotNull(rmaSubscriberId);
-		checkNotNull(subscriberId);
 
 		List<SubscrPriceList> activePriceLists = selectActiveRmaPriceList(rmaSubscriberId, subscriberId);
 
@@ -716,6 +717,47 @@ public class SubscrPriceListService implements SecuredRoles {
 		checkNotNull(subscriber);
 		Long result = subscrPriceListRepository.selectActiveCountBySubscriber(subscriber.getId());
 		return result != null ? result.intValue() : 0;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrPriceItemVO> selectActiveSubscrPriceListItemVOs(Long subscriberId) {
+		List<SubscrPriceList> subscrPriceLists = subscrPriceListRepository.selectActiveBySubscriber(subscriberId);
+		if (subscrPriceLists.size() == 0) {
+			return new ArrayList<>();
+		}
+		SubscrPriceList pl = subscrPriceLists.get(0);
+
+		List<SubscrPriceItemVO> result = subscrPriceItemService.findPriceItemVOs(pl.getId());
+		result.forEach(i -> {
+			i.setCurrency(pl.getPriceListCurrency());
+		});
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrPriceItemVO> selectActiveRmaPriceListItemVOs(Long rmaSubscriberId) {
+		List<SubscrPriceList> subscrPriceLists = subscrPriceListRepository.selectActiveByRmaSubscriber(rmaSubscriberId);
+		if (subscrPriceLists.size() == 0) {
+			return new ArrayList<>();
+		}
+		SubscrPriceList pl = subscrPriceLists.get(0);
+
+		List<SubscrPriceItemVO> result = subscrPriceItemService.findPriceItemVOs(pl.getId());
+		result.forEach(i -> {
+			i.setCurrency(pl.getPriceListCurrency());
+		});
+		return result;
 	}
 
 }
