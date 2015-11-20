@@ -19,8 +19,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
 public class WebApiHelper {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(WebApiHelper.class);
+	private static final Logger logger = LoggerFactory.getLogger(WebApiHelper.class);
 
 	public static class ProcessResponseHelper<T> {
 		private final ResponseEntity<T> response;
@@ -51,23 +50,18 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	private static ResponseEntity<?> processResponceApiAction(ApiAction action,
-			HttpStatus successStatus) {
+	private static ResponseEntity<?> processResponceApiAction(ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
 
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-					ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
-					ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
 		}
 
 		return ResponseEntity.status(successStatus).build();
@@ -79,34 +73,31 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	private static ResponseEntity<?> processResponceApiActionBody(
-			ApiAction action, HttpStatus successStatus) {
+	private static ResponseEntity<?> processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
 
 		checkNotNull(action);
-		checkArgument(successStatus != HttpStatus.CREATED,
-				"HttpStatus.CREATED is not supported");
+		checkArgument(successStatus != HttpStatus.CREATED, "HttpStatus.CREATED is not supported");
 
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
 
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-					ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
-					ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
+
+		} catch (Exception e) {
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResult.error(e));
+
 		}
 
-		if (action.getResult() == null
-				|| action.getResult() == AbstractApiAction.EMPTY_RESULT) {
+		if (action.getResult() == null || action.getResult() == AbstractApiAction.EMPTY_RESULT) {
 			return ResponseEntity.status(successStatus).build();
 		} else {
-			return ResponseEntity.status(successStatus)
-					.body(action.getResult());
+			return ResponseEntity.status(successStatus).body(action.getResult());
 		}
 
 	}
@@ -117,30 +108,24 @@ public class WebApiHelper {
 	 * @param id
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionCreate(
-			ApiActionLocation action) {
+	public static ResponseEntity<?> processResponceApiActionCreate(ApiActionLocation action) {
 
 		checkNotNull(action);
 
 		try {
 			action.process();
 		} catch (AccessDeniedException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-					ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.error(e));
 		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during process UserAction:{}. exception:{}",
-					action.getClass(), e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(
-					ApiResult.error(e));
+			logger.error("Error during process UserAction:{}. exception:{}", action.getClass(), e);
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(ApiResult.error(e));
 		}
 
 		if (action.getResult() == null) {
 			return ResponseEntity.created(action.getLocation()).build();
 		} else {
-			return ResponseEntity.created(action.getLocation()).body(
-					action.getResult());
+			return ResponseEntity.created(action.getLocation()).body(action.getResult());
 		}
 
 	}
@@ -151,8 +136,7 @@ public class WebApiHelper {
 	 * @param successStatus
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionOkBody(
-			ApiAction action) {
+	public static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
 		return processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
@@ -172,8 +156,7 @@ public class WebApiHelper {
 	 * @param successStatus
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionDelete(
-			ApiAction action) {
+	public static ResponseEntity<?> processResponceApiActionDelete(ApiAction action) {
 		return processResponceApiAction(action, HttpStatus.NO_CONTENT);
 	}
 
@@ -183,8 +166,7 @@ public class WebApiHelper {
 	 * @param successStatus
 	 * @return
 	 */
-	public static ResponseEntity<?> processResponceApiActionUpdate(
-			ApiAction action) {
+	public static ResponseEntity<?> processResponceApiActionUpdate(ApiAction action) {
 		return processResponceApiActionBody(action, HttpStatus.OK);
 	}
 
