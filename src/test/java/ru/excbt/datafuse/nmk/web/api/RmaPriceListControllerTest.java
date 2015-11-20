@@ -122,7 +122,9 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Test
 	@Ignore
 	public void testSetActiveSubscrPriceList() throws Exception {
-		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", EXCBT_SUBSCRIBER_ID, 70318507L));
+
+		//Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+		_testJsonPut(String.format("/api/rma/%d/priceList/%d/activate", 67628679L, 85609507L));
 	}
 
 	/**
@@ -131,20 +133,41 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	 */
 	@Test
 	public void testGetRmaPriceItemsVo() throws Exception {
-		_testJsonGet(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, 71270733L));
+		Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+
+		_testJsonGet(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, priceListId));
 	}
 
 	@Test
+	@Ignore
 	public void testUpdateRmaPriceItemVOs() throws Exception {
-		List<SubscrPriceItemVO> priceItemsVO = subscrPriceItemService.findPriceItemVOs(71270733L);
+
+		Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+
+		List<SubscrPriceItemVO> priceItemsVO = subscrPriceItemService.findPriceItemVOs(priceListId);
+
+		if (priceItemsVO.size() == 0) {
+			return;
+		}
 
 		SubscrPriceItemVO oldVO = priceItemsVO.get(0);
 
 		oldVO.setValue(oldVO.getValue() != null ? oldVO.getValue().multiply(BigDecimal.valueOf(0.9)) : null);
 		// oldVO.setValue(null);
 
-		_testJsonUpdate(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, 71270733L),
+		_testJsonUpdate(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, priceListId),
 				priceItemsVO);
+	}
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	private SubscrPriceList getAnyRmaPriceList(Long rmaSubscriberId) {
+		List<SubscrPriceList> preResult = subscrPriceListService.selectRmaPriceLists(rmaSubscriberId);
+		assertTrue(preResult.size() > 0);
+		return preResult.get(0);
 	}
 
 }

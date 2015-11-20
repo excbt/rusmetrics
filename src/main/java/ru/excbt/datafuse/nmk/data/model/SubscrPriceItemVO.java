@@ -18,6 +18,7 @@ public class SubscrPriceItemVO {
 	private final Long packId;
 	private final Long itemId;
 	private BigDecimal value;
+	private String currency;
 
 	/**
 	 * 
@@ -90,6 +91,14 @@ public class SubscrPriceItemVO {
 
 	public void setValue(BigDecimal value) {
 		this.value = value;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
 	}
 
 }
