@@ -331,13 +331,14 @@ angular.module('portalNMC')
     //get packages
     $scope.getPackages = function(url){
         var targetUrl = url;
-        $http.get(targetUrl).then(function(response){
-            var tmp = response.data;
+        $http.get(targetUrl)
+            .then(function(response){
+                    var tmp = response.data;
 //console.log(tmp)            
-            $scope.availablePackages = tmp;// [tmp, angular.copy(tmp)];
+                    $scope.availablePackages = tmp;// [tmp, angular.copy(tmp)];
         },
-                                 function(e){
-            console.log(e);
+                 function(e){
+                    console.log(e);
         });
     };
     
@@ -430,17 +431,18 @@ console.log(data);
         $scope.confirmLabel = tmpCode.label;
         $scope.sumNums = tmpCode.result;
         
-        $scope.ctrlSettings.modeView = false;
-        $scope.selectItem(priceList);
-        $scope.serviceListEdition = angular.copy($scope.availablePackages);
-        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
-        $scope.getPriceList(targetUrl);
+        $scope.viewPrice(priceList, false)
+//        $scope.ctrlSettings.modeView = false;
+//        $scope.selectItem(priceList);
+//        $scope.serviceListEdition = angular.copy($scope.availablePackages);
+//        var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
+//        $scope.getPriceList(targetUrl);
         //$('#editPriceModal').modal();        
     };
     
     //view price list
-    $scope.viewPrice = function(priceList){
-        $scope.ctrlSettings.modeView = true;
+    $scope.viewPrice = function(priceList, mode){
+        $scope.ctrlSettings.modeView = mode;
         $scope.selectItem(priceList);
         $scope.serviceListEdition = angular.copy($scope.availablePackages);
         var targetUrl = $scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentMode.id+$scope.ctrlSettings.priceSuffix+"/"+$scope.data.currentPrice.id+"/items";
@@ -520,7 +522,7 @@ console.log(data);
         });
     });
     
-    //set focus on Save button for pricelist properties window
+    //key listener for pricelist properties window
     $('#pricePropModal').on('shown.bs.modal', function () {
         $('#inputName').focus();
         $('#pricePropModal').keydown(function(e){          
