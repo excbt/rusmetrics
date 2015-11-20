@@ -149,11 +149,12 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 		modifiedPriceItems.forEach(i -> {
 			SubscrPriceItemVO newValue = voList.get(i.getId());
-			if (newValue != null && newValue.getValue() != null && !newValue.getValue().equals(i.getPriceValue())) {
-				i.setPriceValue(newValue != null ? newValue.getValue() : null);
+			if (newValue != null && newValue.getPriceValue() != null
+					&& !newValue.getPriceValue().equals(i.getPriceValue())) {
+				i.setPriceValue(newValue != null ? newValue.getPriceValue() : null);
 				SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
 				itemValue.setSubcrPriceItem(i);
-				itemValue.setPriceValue(newValue.getValue());
+				itemValue.setPriceValue(newValue.getPriceValue());
 				itemValue.setValueBeginDate(localDate.toDate());
 				priceItemValues.add(itemValue);
 			}
@@ -199,7 +200,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 			item.setSubscrPriceList(subscrPriceList);
 			item.setSubscrServiceItemId(i.getItemId());
 			item.setSubscrServicePackId(i.getPackId());
-			item.setPriceValue(i.getValue());
+			item.setPriceValue(i.getPriceValue());
 			return item;
 		}).collect(Collectors.toList());
 
@@ -207,11 +208,12 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 		modifiedPriceItems.forEach(i -> {
 			SubscrPriceItemVO newValue = voList.get(i.getId());
-			if (newValue != null && newValue.getValue() != null && !newValue.getValue().equals(i.getPriceValue())) {
-				i.setPriceValue(newValue != null ? newValue.getValue() : null);
+			if (newValue != null && newValue.getPriceValue() != null
+					&& !newValue.getPriceValue().equals(i.getPriceValue())) {
+				i.setPriceValue(newValue != null ? newValue.getPriceValue() : null);
 				SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
 				itemValue.setSubcrPriceItem(i);
-				itemValue.setPriceValue(newValue.getValue());
+				itemValue.setPriceValue(newValue.getPriceValue());
 				itemValue.setValueBeginDate(localDate.toDate());
 				priceItemValues.add(itemValue);
 			}

@@ -17,7 +17,7 @@ public class SubscrPriceItemVO {
 	private final Long id;
 	private final Long packId;
 	private final Long itemId;
-	private BigDecimal value;
+	private BigDecimal priceValue;
 	private String currency;
 
 	/**
@@ -29,7 +29,7 @@ public class SubscrPriceItemVO {
 		this.id = subscrPriceItem.getId();
 		this.packId = subscrPriceItem.getSubscrServicePackId();
 		this.itemId = subscrPriceItem.getSubscrServiceItemId();
-		this.value = subscrPriceItem.getPriceValue();
+		this.priceValue = subscrPriceItem.getPriceValue();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class SubscrPriceItemVO {
 		this.id = srcVO.id;
 		this.packId = srcVO.packId;
 		this.itemId = srcVO.itemId;
-		this.value = srcVO.value;
+		this.priceValue = srcVO.priceValue;
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class SubscrPriceItemVO {
 		this.id = srcVO.id;
 		this.packId = srcVO.packId;
 		this.itemId = srcVO.itemId;
-		this.value = newValue;
+		this.priceValue = newValue;
 	}
 
 	/**
@@ -66,11 +66,11 @@ public class SubscrPriceItemVO {
 	 */
 	@JsonCreator
 	public SubscrPriceItemVO(@JsonProperty("id") Long id, @JsonProperty("packId") Long packId,
-			@JsonProperty("itemId") Long itemId, @JsonProperty("value") BigDecimal value) {
+			@JsonProperty("itemId") Long itemId, @JsonProperty("priceValue") BigDecimal priceValue) {
 		this.id = id;
 		this.packId = packId;
 		this.itemId = itemId;
-		this.value = value;
+		this.priceValue = priceValue;
 	}
 
 	public Long getId() {
@@ -85,12 +85,12 @@ public class SubscrPriceItemVO {
 		return itemId;
 	}
 
-	public BigDecimal getValue() {
-		return value;
+	public BigDecimal getPriceValue() {
+		return priceValue;
 	}
 
-	public void setValue(BigDecimal value) {
-		this.value = value;
+	public void setPriceValue(BigDecimal priceValue) {
+		this.priceValue = priceValue;
 	}
 
 	public String getCurrency() {
