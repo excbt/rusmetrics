@@ -387,18 +387,28 @@ public class RmaPriceListController extends SubscrPriceListController {
 	/**
 	 * 
 	 * @param subscriberId
-	 * @param priceListId
+	 * @param subscrPriceListId
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/items", method = RequestMethod.GET,
+	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListItems(@PathVariable("subscriberId") Long subscriberId,
-			@PathVariable("priceListId") Long priceListId) {
+			@PathVariable("subscrPriceListId") Long subscrPriceListId) {
 
-		List<SubscrPriceItem> priceItems = subscrPriceItemService.findPriceItems(priceListId);
+		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(subscrPriceListId);
+
+		if (subscrPriceList == null) {
+			return responseBadRequest();
+		}
+
+		List<SubscrPriceItem> priceItems = subscrPriceItemService.findPriceItems(subscrPriceListId);
 
 		List<SubscrPriceItemVO> resultList = priceItems.stream().map(i -> new SubscrPriceItemVO(i))
 				.collect(Collectors.toList());
+
+		resultList.forEach(i -> {
+			i.setCurrency(subscrPriceList.getPriceListCurrency());
+		});
 
 		return responseOK(resultList);
 	}

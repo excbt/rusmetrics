@@ -376,7 +376,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		for (Long id : rmaSubscriberIds) {
 			SubscrPriceList createdPriceList = createRmaPriceList(srcPriceListId, subscriberService.findOne(id));
-			boolean isActive = activeIds.contains(id);
+			boolean isActive = activeIds != null && activeIds.contains(id);
 			LocalDate startDate = subscriberService.getSubscriberCurrentDateJoda(id);
 			if (isActive) {
 				activateRmaPriceList(createdPriceList.getId(), startDate);
@@ -452,7 +452,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 		for (Long id : subscriberIds) {
 			SubscrPriceList createdPriceList = createSubscrPriceList(srcPriceListId, subscriberService.findOne(id));
-			boolean isActive = activeIds.contains(id);
+			boolean isActive = activeIds != null && activeIds.contains(id);
 			LocalDate startDate = subscriberService.getSubscriberCurrentDateJoda(id);
 			if (isActive) {
 				activateRmaPriceList(createdPriceList.getId(), startDate);

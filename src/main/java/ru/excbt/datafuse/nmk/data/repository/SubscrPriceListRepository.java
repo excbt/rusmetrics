@@ -15,7 +15,8 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	 * @param priceListLevel
 	 * @return
 	 */
-	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.priceListLevel = :priceListLevel")
+	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.priceListLevel = :priceListLevel"
+			+ " ORDER BY pl.priceListLevel, pl.priceListKeyname, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectByLevel(@Param("priceListLevel") Integer priceListLevel);
 
 	/**
