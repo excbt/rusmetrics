@@ -56,6 +56,9 @@ public class FullUserInfo implements Serializable {
 	@Column(name = "is_admin")
 	private Boolean isAdmin;
 
+	@Column(name = "is_readonly")
+	private Boolean isReadonly;
+
 	public FullUserInfo() {
 
 	}
@@ -69,6 +72,7 @@ public class FullUserInfo implements Serializable {
 			this.version = src.version;
 			this._system = src._system;
 			this.isSystem = src.isSystem;
+			this.isReadonly = src.isReadonly;
 			this.isAdmin = src.isAdmin;
 			this.subscriberId = src.subscriberId;
 			this.subscriber = src.subscriber;
@@ -128,6 +132,10 @@ public class FullUserInfo implements Serializable {
 
 	public Boolean getIsAdmin() {
 		return isAdmin;
+	}
+
+	public Boolean getIsReadonly() {
+		return isReadonly;
 	}
 
 }

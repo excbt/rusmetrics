@@ -89,6 +89,10 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 	@Column(name = "is_admin")
 	private Boolean isAdmin;
 
+	@JsonIgnore
+	@Column(name = "is_readonly")
+	private Boolean isReadonly;
+
 	public String getUserName() {
 		return userName;
 	}
@@ -203,6 +207,14 @@ public class SubscrUser extends AbstractAuditableModel implements SubscriberUser
 
 	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+
+	public Boolean getIsReadonly() {
+		return isReadonly;
+	}
+
+	public void setIsReadonly(Boolean isReadonly) {
+		this.isReadonly = isReadonly;
 	}
 
 }
