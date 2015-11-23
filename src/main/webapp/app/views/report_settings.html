@@ -124,44 +124,6 @@
                                                 {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
                                              </div>
                                          </td>
-<!--
-                                         <td>
-                                            <p class="btn btn-xs nmc-add-button-in-modal"
-                                                title="Предварительный просмотр"   
-                                                ng-click="preview(oldObject)"
-                                                >
-                                                Предпросмотр
-                                            </p>
-                                         </td>
--->
-
-<!--                                         <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
-                                                            </td>
-                                                            <td><i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
-                                                 <div class="col-md-3" ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                        {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                                </div>
-                                                <div class="col-md-8"  ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                        действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
-                                                </div>
-                                         </td>
--->
 
                                      </tr>
                                     </table>         
@@ -233,32 +195,6 @@
                                          <td class="col-md-7">
                                              {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                          </td>
-
-<!--                                         <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right" style="">
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
-                                             <div class="col-md-2">     
-                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-7">     
-                                                    в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
-                                            </div>
-                                         </td>
--->
                                          <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 

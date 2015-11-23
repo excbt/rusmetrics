@@ -49,7 +49,7 @@ app.controller(
 						var tmpl_id = $scope.paramsets[zx].reportTemplate.id;
 					}
 				};
-console.log($scope.cur_rep_shdl);                
+//console.log($scope.cur_rep_shdl);                
 				// Проверяем, создаётся новая рассылка или модифицируется имеющаяся
 				if($scope.cur_rep_shdl.id == 'new'){
 					var url = $scope.url_rep_shdls + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
@@ -64,6 +64,10 @@ console.log($scope.cur_rep_shdl);
 				}
 				else {
 					var url = $scope.url_rep_shdls + '/' + $scope.cur_rep_shdl.id + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
+                    
+console.log(url);                                        
+console.log($scope.cur_rep_shdl);                                        
+                    
 					$http.put(url, $scope.cur_rep_shdl)
 						.success(function(){
 							$scope.getReportShedules();
@@ -120,16 +124,20 @@ console.log($scope.cur_rep_shdl);
 			$scope.getParamsets = function(){
 				// Получаем суффикс выбранного типа отчёта и формируем с ним url
 				for(var zx = 0; zx < $scope.rep_types.length; zx++){
-					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKey){
+					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKeyname){
 						var url = $scope.url_paramsets + $scope.rep_types[zx].suffix;
 					}
-				}
+				};
+//console.log(url);
+//console.log($scope.cur_rep_shdl);                
+//console.log($scope.rep_types);                
 				$http.get(url)
 					.success(function(data){
 						$scope.paramsets = data;
 					})
 					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
+                        console.log(e);
+						notificationFactory.errorInfo(e.statusText,e.description || e.data);
 					});
 			}
 			
@@ -301,7 +309,7 @@ console.log($scope.cur_rep_shdl);
 					 notificationFactory.errorInfo("Не указано название рассылки", "Укажите, пожалуйста, название рассылки");
 					 is_errors = true;
 				 }
-				 console.log($scope.cur_rep_shdl.reportTemplate);
+//console.log($scope.cur_rep_shdl.reportTemplate);
 				 if (typeof $scope.cur_rep_shdl.reportTemplate == 'undefined'){
 					 notificationFactory.errorInfo("Не указан тип отчёта", "Укажите, пожалуйста, тип отчёта");
 					 is_errors = true;
@@ -313,7 +321,7 @@ console.log($scope.cur_rep_shdl);
 					 }
 				 }
 				 // Проверяем, указаны ли получатели
-				 //console.log($scope.cur_rep_shdl.sheduleAction1Key);
+//console.log($scope.cur_rep_shdl.sheduleAction1Key);
 				 if($scope.cur_rep_shdl.sheduleAction1Key == null){
 					 notificationFactory.errorInfo("Не указан способ доставки", "Укажите, пожалуйста, способ доставки");
 					 is_errors = true;
