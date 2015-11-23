@@ -387,4 +387,21 @@ console.log(curObject);
         setVisibles($scope.ctrlSettings.ctxId);
     });
     
+    $scope.isDisabled = function(){
+        return ($scope.isROfield() || $scope.currentObject.common);
+    };
+    
+        //check user rights
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+
+    $scope.isReadonly = function(){
+        return mainSvc.isReadonly();
+    };
+
+    $scope.isROfield = function(){
+        return ($scope.isReadonly());
+    };
+    
 }]);

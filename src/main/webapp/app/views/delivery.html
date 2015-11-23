@@ -58,7 +58,7 @@
 <!--		<h2>Рассылки</h2>-->
 		<!-- Кнопка добавления рассылок -->
 		<div class="btn-group">
-			<button class="btn marginTop15 nmc-main-add-button" ng-click="addNewReportShedule('new')">Добавить рассылку</button>
+			<button ng-disabled="isROfield()" class="btn marginTop15 nmc-main-add-button" ng-click="addNewReportShedule('new')">Добавить рассылку</button>
 		</div><br><br>		
 		<!-- Таблица со списком рассылок -->
    		<table id="table_deliveries_header" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table noMargin">
@@ -75,7 +75,7 @@
                     <td class="col-md-1 nmc-td-for-buttons"><i title='Изменить'	class='btn btn-xs glyphicon glyphicon-edit' data-target='#div_edit_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
                     <td class="col-md-2">{{rep_shdl.name}}</td>
                     <td class="col-md-8">{{rep_shdl.description}}</td>
-                    <td class="col-md-1 nmc-td-for-buttons"><i title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
+                    <td class="col-md-1 nmc-td-for-buttons"><i ng-disabled="isROfield()" title='Удалить'	class='btn btn-xs glyphicon glyphicon-trash' data-target='#div_delete_delivery' data-toggle='modal' ng-click="editReportShedule(rep_shdl)"></i></td>
                 </tr>
             </table>
         </div>    
@@ -101,7 +101,8 @@
 	   	               					<td>
 		   	               					<div class="form-group col-sm-12">
 		    									<label for="inp_dlvr_name">Название:</label>
-		   										<input id="inp_dlvr_name"
+		   										<input ng-disabled="isROfield()"
+                                                       id="inp_dlvr_name"
 		   												type="text"
 		   												placeholder="Введите название рассылки..."
 		   												class="form-control nmc-text-input-form"
@@ -113,7 +114,8 @@
 	   	               					<td>
 	   	               						<div class="form-group col-sm-12">
 	   	               							<label for="inp_dlvr_descr">Описание:</label>
-	   	               							<textarea id="txtarea_dlvr_descr"
+	   	               							<textarea ng-disabled="isROfield()"
+                                                          id="txtarea_dlvr_descr"
 	   	               										type="textarea"
 	   	               										placeholder="Введите описание для рассылки..."
 	   	               										class="form-control nmc-textarea-form"
@@ -126,16 +128,17 @@
 	   	               					<td>
 		   	               					<div class="form-group pull-left col-sm-6">
 		   	               						<label for="slct_rep_type">Тип отчёта:</label>
-		   	               							<select id="slct_rep_type"
+		   	               							<select ng-disabled="isROfield()"
+                                                            id="slct_rep_type"
 		   	               									class="form-control  nmc-select-form"
-		   	               									ng-model="cur_rep_shdl.reportTemplate.reportTypeKey"
+		   	               									ng-model="cur_rep_shdl.reportTemplate.reportTypeKeyname"
 		   	               									ng-options="rep_type.keyname as rep_type.caption for rep_type in rep_types"
 		   	               									ng-change="changeReportType()">
 		   	               							</select>
 		   	               					</div>
 		   	               					<div class="form-group col-sm-6">
 		   	               						<label for="slct_rep_tmpl_var">Вариант шаблона:</label>
-		   	               						<select id="slct_rep_tmpl_var"
+		   	               						<select id="slct_rep_tmpl_var"                                                        
 		   	               								disabled
 		   	               								class="form-control  nmc-select-form"
 		   	               								ng-model="cur_rep_shdl.reportParamset.id"
@@ -148,7 +151,8 @@
 	   	               					<td>
 		   	               					<div class="form-group pull-left col-sm-6">
 		   	               						<label for="slct_period">Периодичность запуска</label>
-		   	               							<select id="slct_period"
+		   	               							<select ng-disabled="isROfield()"
+                                                            id="slct_period"
 		   	               									class="form-control  nmc-select-form"
 		   	               									ng-model="cur_rep_shdl.reportSheduleTypeKey"
 		   	               									ng-options="rep_act_type.keyname as rep_act_type.caption for rep_act_type in rep_act_types"
@@ -215,7 +219,8 @@
 	   	               							<div id="div_rcpt_form_inps">
 	   	               								<div id="div_dlvr_type_slct" class="form-group pull-left col-sm-6">
 	   	               									<label for="slct_dlvr_type">Тип рассылки:</label>
-	   	               									<select id="slct_dlvr_type"
+	   	               									<select ng-disabled="isROfield()"
+                                                                id="slct_dlvr_type"
 	   	               											class="form-control  nmc-select-form"
 	   	               											ng-model="cur_rep_shdl.sheduleAction1Key"
 		   	               										ng-options="rep_shdl_type.keyname as rep_shdl_type.caption for rep_shdl_type in rep_shdl_types"
@@ -249,14 +254,16 @@
 	   	               						<div id="div_dlvr_begin" class="form-group">
 	   	               							<div id="div_dlvr_begin_input" class="form-group pull-left col-sm-6">
 	   	               							<label for="inp_dlvr_begin">Начало действия рассылки:</label>
-	   	               								<input id="inp_dlvr_begin"
+	   	               								<input ng-disabled="isROfield()"
+                                                           id="inp_dlvr_begin"
 	   	               										type="date" placeholder="Укажите дату..."
 	   	               										class="form-control  nmc-date-input-form"
 	   	               										ng-model="start_date">
 	   	               							</div>
 	   	               							<div id="div_dlvr_end_input" class="form-group pull-left col-sm-6">
 	   	               							<label for="inp_dlvr_begin">Окончание действия рассылки:</label>
-	   	               								<input id="inp_dlvr_end"
+	   	               								<input ng-disabled="isROfield()"
+                                                           id="inp_dlvr_end"
 	   	               										type="date"
 	   	               										placeholder="Укажите дату..."
 	   	               										class="form-control  nmc-date-input-form"
@@ -275,9 +282,11 @@
     			<div class="container-fluid">
 					<div class="row">
                        	<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								ng-click="dlvrSave()"
-								value="Сохранить" />
+							<input ng-disabled="isROfield()"
+                                   type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
+								    ng-click="dlvrSave()"
+								    value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
@@ -319,7 +328,7 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="delReportShedule(cur_rep_shdl);"
 								value="Удалить" />
 						</div>
