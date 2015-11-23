@@ -54,17 +54,19 @@ angular.module('portalNMC')
         var targetUrl = url;
         $http.get(targetUrl).then(function(response){
             var tmpPrices = response.data;
-            
+//console.log(response.data);            
             $scope.availablePackages.forEach(function(pack){
                 tmpPrices.forEach(function(price){
-                    if ((price.packId === pack.id) && (price.itemId === null)){
+                    if ((price.packId === pack.id) && (angular.isUndefined(price.itemId)||(price.itemId === null))){
                         pack.price = price;
+                        $scope.ctrlSettings.currency = price.currency;
                     };
                 });
                 pack.serviceItems.forEach(function(svitem){
                      tmpPrices.forEach(function(price){
-                        if ((price.packId === null) && (price.itemId === svitem.id)){
+                        if ((angular.isUndefined(price.packId)||(price.packId === null)) && (price.itemId === svitem.id)){
                             svitem.price = price;
+                            $scope.ctrlSettings.currency = price.currency;
                         };
                      });
                 });
@@ -329,6 +331,10 @@ angular.module('portalNMC')
     //check user
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
+    };
+    
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
     };
     
 }]);

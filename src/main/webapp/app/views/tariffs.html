@@ -186,14 +186,12 @@
                     <div class="row-fluid">
                         <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" style="">
 
-<!--                                    <div id = "available_objects" class = "">-->
                                     <table id="table_objects_in_window" class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="object in availableEntities">
                                             <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form"/>{{object.fullName || object.contGroupName}}
                                             </td>
                                         </tr>
                                     </table>
-<!--                                    </div>-->
                             <br>
                         </div>
                     </div>
@@ -202,28 +200,7 @@
             <div class="modal-footer nmc-modal-footer">
                 <div class="container-fluid">
                     <div class="row">
-<!--
-                        <div class="col-md-5 noPadding">
-                            <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
 
-                                ng-click="addSelectedEntities()"
-                                value="Добавить" />
-                        </div>
-                        <div class=" pull-right col-xs-offset-2 col-md-4 noPadding">
-                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button"
-                                ng-click="showAvailableObjects_flag=false">
-                                Закрыть
-                            </button>
-                        </div>
--->
-                        <!--
-                        <div class="col-xs-offset-1 col-md-4 noPadding">
-                            <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
-
-                                ng-click="addSelectedEntities()"
-                                value="Добавить все" />
-                        </div>
--->
                         <div class="col-md-4 noPadding">
                             <input class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
     margin-top: 3px;">Выбрать все</p>
@@ -413,7 +390,6 @@
 				<div class="container-fluid ">
 					<div class="row">
                         <div class=" col-md-3">
-<!--                             <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>-->
                             <div class="btn-group">
                               <button title="Добавить объекты" type="button" class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
                                       ng-click="prepareObjectsList()" 

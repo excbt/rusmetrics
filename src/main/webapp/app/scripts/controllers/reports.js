@@ -124,7 +124,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
         var activeStartDate = new Date(curObject.activeStartDate);
-console.log(curObject);         
+//console.log(curObject);         
         $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
         $scope.getTemplates();       
     };

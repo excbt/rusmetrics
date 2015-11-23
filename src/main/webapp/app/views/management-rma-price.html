@@ -70,7 +70,7 @@
                         </i>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="selectItem(priceList)" data-target="#pricePropModal" data-toggle="modal">{{messages.priceMenuItem6}}</a></li>
-                        <li><a href="" ng-click="viewPrice(priceList)">{{messages.priceMenuItem7}}</a></li>
+                        <li><a href="" ng-click="viewPrice(priceList, true)">{{messages.priceMenuItem7}}</a></li>
                         <li ng-if="((!data.currentMode.rma)&&priceList.isDraft&&(!priceList.isArchive)&&(!priceList.isActive))"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>
                         <li ng-if="((data.currentMode.id!=0)&&(data.currentMode.rma)&&priceList.isMaster&&isSystemuser()&&(!priceList.isArchive)&&(!priceList.isActive))"><a href="" ng-click="activatePriceList(priceList)">{{messages.priceMenuItem1}}</a></li>  
 <!--                          ng-if="data.currentMode.rma"-->
@@ -121,7 +121,7 @@
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
-                                <tr ng-repeat="pack in serviceListEdition" ng-hide="!pack.price.value&&!isSystemuser()">
+                                <tr ng-repeat="pack in serviceListEdition" ng-hide="!pack.price.priceValue&&!isSystemuser()">
                                     <td>
                                         <table class="nmc-table-nowrap-data">
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
@@ -135,8 +135,8 @@
                                                 </td>
                                                 <td class="col-md-1">
 <!--                                                    {{pack.price.value}} -->
-                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.value)}">
-                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.value}">{{ctrlSettings.currency}}</span>
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(pack.price.priceValue)}">
+                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="pack.price.priceValue" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                     </div>
                                                 </td>
 <!--
@@ -151,14 +151,14 @@
                                                 <td colspan="2" class="nmc-td-for-child-table">
                                                     <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-object-table nmc-table-nowrap-data">
                                                         <tbody>
-                                                            <tr ng-repeat="serv in pack.serviceItems" ng-hide="!serv.price.value&&!isSystemuser()">
+                                                            <tr ng-repeat="serv in pack.serviceItems" ng-hide="!serv.price.priceValue&&!isSystemuser()">
                                                                 <td class="col-md-11 onlyPaddingLeft5">
                                                                     <span class="nmc-service-package-caption" ng-attr-id={{"editservice"+serv.id}}>{{serv.itemCaption}}
                                                                     </span>
                                                                 </td>
                                                                 <td class="col-md-1">
-                                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.value)}">
-                                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.value" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.value}">{{ctrlSettings.currency}}</span>
+                                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(serv.price.priceValue)}">
+                                                                        <input ng-disabled="ctrlSettings.modeView" type="text" id="inpp" name="inputPrice" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="serv.price.priceValue" data-inputmask="'alias': 'numeric'"/> <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                     </div>
                                                                 </td>
 <!--
@@ -210,7 +210,8 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="clonePriceLabel" class="nmc-h3">
-				Назначение прайс-листа {{data.currentPrice.priceListName}}
+				Абоненты
+<!--                для прайс-листа {{data.currentPrice.priceListName}}-->
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">

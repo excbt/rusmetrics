@@ -21,29 +21,8 @@
     </div>
 </div>
 <div class="btn-toolbar marginBottom10">
-    <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
+    <button ng-disabled="!isAdmin()" class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
 </div>
-<!--
-<div class="container-fluid">
-    <div class="row nmc-main-workspace-header">
-        <div class="col-md-2 noPadding marginBottom10">
-            <div class="btn-toolbar">
-                <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
-            </div>
-        </div>    
-        <div class="col-md-4 marginBottom10 nmc-search-form">
-            <div class="col-md-2" style="min-width: 71px;">
-                <label class="nmc-form-label marginTop5">Абонент:</label>
-            </div>
-            <div class="col-md-8 noPadding">
-                <select class="form-control  nmc-select-form" ng-model="data.currentClient.id" ng-options="client.id as client.subscriberName for client in data.clients" ng-change="changeClient()"></select>
-            </div>
-        </div>
-        <div class="col-md-6">
-        </div>
-    </div>    
-</div>
--->
 <!--    Непрокручиваямая шапка -->
 <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
         <tr class="nmc-main-table-header">
@@ -77,7 +56,7 @@
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i title="Редактировать пользователя" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(user)" data-target="#showUserOptionModal" data-toggle="modal"></i>
+                        <i ng-disabled="!isAdmin()" title="Редактировать пользователя" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(user)" data-target="#showUserOptionModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -93,7 +72,7 @@
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
+                        <i ng-disabled="!isAdmin()" title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>

@@ -48,8 +48,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.availableObjectGroups = [];
     
     $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
+        return mainSvc.isSystemuser();
     };
     
     //report types
@@ -235,7 +234,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             object.paramsetStartDate = null;
             object.paramsetEndDate = null;
         }
-console.log(object);
+//console.log(object);
 //console.log((moment($scope.paramsetStartDateFormatted.startDate).startOf('day')));        
 //console.log(typeof (moment($scope.paramsetStartDateFormatted.startDate).startOf('day')));                
         if ($scope.createByTemplate_flag){
@@ -287,6 +286,7 @@ console.log(object);
         $scope.currentObject = angular.copy(object);
         $scope.currentObject.id = null;
         $scope.currentObject._active = true;
+        $scope.currentObject.activeEndDate = null;
         $scope.getAvailableObjects(object.id);
 //        $scope.selectedObjects = [];
         $scope.getSelectedObjects($scope.archiveParamset.id);
