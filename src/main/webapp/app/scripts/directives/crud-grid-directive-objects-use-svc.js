@@ -1227,10 +1227,19 @@ console.log("Objects directive.");
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
-                
+                    //check user rights
                 $scope.isAdmin = function(){
                     return mainSvc.isAdmin();
                 };
+                
+                $scope.isReadonly = function(){
+                    return mainSvc.isReadonly();
+                };
+                
+                $scope.isROfield = function(){
+                    return ($scope.isReadonly() || !$scope.isAdmin());
+                };
+                
             }]
     };
 });

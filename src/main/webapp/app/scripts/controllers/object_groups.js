@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', function($scope, crudGridDataFactory, notificationFactory, objectSvc){
+.controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     //controller settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.selectedAll = false;
@@ -48,14 +48,14 @@ angular.module('portalNMC')
             return element.id;
         });
         if ($scope.currentGroup.id == null){
-console.log("Save");            
-console.log($scope.groupUrl);
-console.log(tmp);            
+//console.log("Save");            
+//console.log($scope.groupUrl);
+//console.log(tmp);            
             crudGridDataFactory($scope.groupUrl).save({contObjectIds: tmp},$scope.currentGroup, successCallback, errorCallback);
         }else{
-console.log("Update");            
-console.log($scope.groupUrl); 
-console.log(tmp);                        
+//console.log("Update");            
+//console.log($scope.groupUrl); 
+//console.log(tmp);                        
             var targetUrl = $scope.groupUrl;//+"/"+$scope.currentGroup.id;
             crudGridDataFactory(targetUrl).update({contObjectIds: tmp}, $scope.currentGroup, successCallback, errorCallback);
         };
@@ -175,4 +175,17 @@ console.log(tmp);
     
      //get the list of groups
     $scope.getData($scope.groupUrl, "groups");
+    
+            //check user rights
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+
+    $scope.isReadonly = function(){
+        return mainSvc.isReadonly();
+    };
+
+    $scope.isROfield = function(){
+        return ($scope.isReadonly());
+    };
 }]);

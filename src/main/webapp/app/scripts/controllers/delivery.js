@@ -4,7 +4,7 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'DlvrCtrl',
-		function($scope, $http, notificationFactory){
+		function($scope, $http, notificationFactory, mainSvc){
 			/************************************
 			 * Определяем глобальные переменные *
 			 ************************************/
@@ -120,7 +120,7 @@ console.log($scope.cur_rep_shdl);
 			$scope.getParamsets = function(){
 				// Получаем суффикс выбранного типа отчёта и формируем с ним url
 				for(var zx = 0; zx < $scope.rep_types.length; zx++){
-					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKey){
+					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKeyname){
 						var url = $scope.url_paramsets + $scope.rep_types[zx].suffix;
 					}
 				}
@@ -380,5 +380,18 @@ console.log($scope.cur_rep_shdl);
 			 *********************/
 			$scope.getReportShedules();
 			$scope.getReportParameters();
+            
+                    //Функции проверки прав доступа пользователя к полям
+            $scope.isAdmin = function(){
+                return mainSvc.isAdmin();
+            };
+
+            $scope.isReadonly = function(){
+                return mainSvc.isReadonly();
+            };
+
+            $scope.isROfield = function(){
+                return ($scope.isReadonly());
+            };
 		}	
 );
