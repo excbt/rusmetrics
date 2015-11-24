@@ -49,7 +49,9 @@ console.log("Run user settings controller.");
                 elem.subscrRoles.some(function(role){
                     if (role.roleName == "ROLE_SUBSCR_ADMIN"){
                         elem.isAdmin = true;
-                        return true;
+                    };
+                    if (role.roleName == "ROLE_SUBSCR_READONLY"){
+                        elem.isReadonly = true;
                     };
                 });
             });
@@ -104,6 +106,7 @@ console.log("Run user settings controller.");
         $scope.data.currentUser = {};
         $scope.data.currentUser.id=null;
         $scope.data.currentUser.isAdmin = false;
+        $scope.data.currentUser.isReadonly = false;
         $('#showUserOptionModal').modal();
     };
     
@@ -139,6 +142,9 @@ console.log("Run user settings controller.");
         if (angular.isDefined(obj.password)&&(obj.password!=null)&&(obj.password !="")){
             url+= "&newPassword="+obj.password;
         };
+        if (angular.isDefined(obj.isReadonly)&&(obj.isReadonly!=null)){
+            url+= "&isReadonly="+obj.isReadonly;
+        };
         crudGridDataFactory(url).save(obj, successCallback, errorCallback);
     };
 
@@ -154,6 +160,10 @@ console.log("Run user settings controller.");
             params.oldPassword = object.curpassword;
             params.newPassword = object.password;
         };
+        if (angular.isDefined(object.isReadonly)&&(object.isReadonly!=null)){
+            params.isReadonly = object.isReadonly;
+        };
+//console.log(params);        
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
     };
     
@@ -225,4 +235,17 @@ console.log("Run user settings controller.");
             }
         );
     });
+    
+        //check user rights
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+
+    $scope.isReadonly = function(){
+        return mainSvc.isReadonly();
+    };
+
+    $scope.isROfield = function(){
+        return ($scope.isReadonly() || !$scope.isAdmin());
+    };
 }]);

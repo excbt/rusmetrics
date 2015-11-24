@@ -160,8 +160,11 @@
                             </tr>
 -->
                             <tr>
-                                <td colspan="2" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор?
+                                <td class="col-sm-3">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                </td>
+                                <td class="col-sm-9">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">Права "Только чтение"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">

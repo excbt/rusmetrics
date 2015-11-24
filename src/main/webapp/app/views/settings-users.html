@@ -21,7 +21,7 @@
     </div>
 </div>
 <div class="btn-toolbar marginBottom10">
-    <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
+    <button ng-disabled="isROfield()" class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button>            
 </div>
 <!--
 <div class="container-fluid">
@@ -93,7 +93,7 @@
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
+                        <i ng-disabled="isROfield()" title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -121,7 +121,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.userName)}">
-                                        <input ng-disabled="data.currentUser.id!=null" class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
+                                        <input ng-disabled="isROfield()|| (data.currentUser.id!=null)" class="form-control nmc-text-input-form" type="text" id="inputUserName" placeholder="Логин"  ng-model="data.currentUser.userName" />
                                     </div>
                                 </td>
                             </tr>
@@ -130,7 +130,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.firstName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputFirstName" placeholder="Имя"  ng-model="data.currentUser.firstName">
                                     </div>
                                 </td>
                             </tr>
@@ -139,21 +139,21 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':emptyString(data.currentUser.lastName)}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputLastName" placeholder="Фамилия"  ng-model="data.currentUser.lastName">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputLastName" placeholder="Фамилия"  ng-model="data.currentUser.lastName">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Комментарий</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="data.currentUser.userComment"></textarea>
+                                <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="data.currentUser.userComment"></textarea>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputEMail">E-mail</label>
 <!--                                    <span style="color:red;">*</span>-->
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.userEMail">
+                                <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="text" id="inputEMail" placeholder="E-mail"  ng-model="data.currentUser.userEMail">
                                 </td>
                             </tr>
 <!--
@@ -165,8 +165,11 @@
                             </tr>
 -->
                             <tr>
-                                <td colspan="2" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор?
+                                <td class="col-sm-3">
+                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                </td>
+                                <td class="col-sm-9">
+                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">права "Только для чтения"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">
@@ -179,7 +182,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                      <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
-                                        <input class="form-control nmc-text-input-form" type="password" id="inputCurPwd" placeholder="Текущий пароль"  ng-model="data.currentUser.curpassword">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="password" id="inputCurPwd" placeholder="Текущий пароль"  ng-model="data.currentUser.curpassword">
                                     </div>
                                 </td>
                             </tr>
@@ -195,7 +198,7 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                      <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
-                                        <input class="form-control nmc-text-input-form" type="password" id="inputPassword" placeholder="Пароль"  ng-model="data.currentUser.password">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="password" id="inputPassword" placeholder="Пароль"  ng-model="data.currentUser.password">
                                     </div>
                                 </td>
                             </tr>
@@ -204,13 +207,13 @@
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
-                                        <input class="form-control nmc-text-input-form" type="password" id="inputPasswordConfirm" placeholder="Повтор пароля"  ng-model="data.currentUser.passwordConfirm">
+                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="password" id="inputPasswordConfirm" placeholder="Повтор пароля"  ng-model="data.currentUser.passwordConfirm">
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isBlocked">Заблокирован
+                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isBlocked">Заблокирован
                                 </td>
                             </tr>
                             <tr>
@@ -228,7 +231,7 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input ng-disabled="isROfield()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="sendUserToServer(data.currentUser)"
 								value="Сохранить" />
 						</div>
@@ -283,7 +286,7 @@
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
 <!--                            -->
-							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input ng-disabled = "(confirmCode!=sumNums && !isAdmin())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(data.currentUser);"
 								value="Удалить" />
 						</div>
