@@ -390,7 +390,33 @@ console.log('Run Object management controller.');
                     $scope.orderBy = { field: field, asc: asc };
                 };
                 
+                
+                var checkObjectSettings = function(obj){
+                    //check name, type, rso, device
+                    var result = true;
+                    if ($scope.emptyString(obj.fullName)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование объекта!");
+                        result = false;
+                    };
+                    if ($scope.emptyString(obj.timezoneDefKeyname)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан часовой пояс объекта!");
+                        result = false;
+                    };
+                    if ($scope.checkUndefinedNull(obj.contManagementId)){
+                        notificationFactory.errorInfo("Ошибка", "Не задана управляющая компания!");
+                        result = false;
+                    };
+                    if ($scope.emptyString(obj.currentSettingMode)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан режим функционирования!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
                 $scope.sendObjectToServer = function(obj){
+                    if(!checkObjectSettings(obj)){
+                        return false;
+                    };
                     var url = objectSvc.getRmaObjectsUrl();                    
                     if (angular.isDefined(obj.id)&&(obj.id!=null)){
                         $scope.updateObject(url, obj);
@@ -757,23 +783,26 @@ console.log('Run Object management controller.');
                 $scope.emptyString = function(str){
                     return mainSvc.checkUndefinedEmptyNullValue(str);
                 };
+                $scope.checkUndefinedNull = function(val){
+                    return mainSvc.checkUndefinedNull(val);
+                };
                 
                 var checkZpointCommonSettings = function(){
                     //check name, type, rso, device
                     var result = true;
                     if ($scope.emptyString($scope.zpointSettings.customServiceName)){
-                        notificationFactory.errorInfo("Ошибка", "Не задано название точки учета!");
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование точки учета!");
                         result = false;
                     };
-                    if (angular.isUndefined($scope.zpointSettings.contServiceTypeKeyname)|| ($scope.zpointSettings.contServiceTypeKeyname==null)){
+                    if ($scope.emptyString($scope.zpointSettings.contServiceTypeKeyname)){
                         notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
                         result = false;
                     };
-                    if (angular.isUndefined($scope.zpointSettings._activeDeviceObjectId)|| ($scope.zpointSettings._activeDeviceObjectId==null)){
+                    if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
                         notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
                         result = false;
                     };
-                    if (angular.isUndefined($scope.zpointSettings.rsoId)|| ($scope.zpointSettings.rsoId==null)){
+                    if ($scope.checkUndefinedNull($scope.zpointSettings.rsoId)){
                         notificationFactory.errorInfo("Ошибка", "Не задано РСО для точки учета!");
                         result = false;
                     };
@@ -783,7 +812,7 @@ console.log('Run Object management controller.');
                 $scope.updateZpointCommonSettings = function(){
 //console.log($scope.zpointSettings);
                     if (!checkZpointCommonSettings()){
-                        return;
+                        return false;
                     };
                     var url = objectSvc.getRmaObjectsUrl()+"/"+$scope.currentObject.id+"/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id)&&($scope.zpointSettings.id!=null)){

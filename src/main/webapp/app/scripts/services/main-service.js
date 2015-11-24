@@ -227,7 +227,7 @@ console.log($rootScope.userInfo);
     
     var checkUndefinedEmptyNullValue = function(numvalue){                    
         var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue === "") || (numvalue==null)){
+        if ((angular.isUndefined(numvalue)) || (numvalue==null) || (numvalue === "")){
             result = true;
             return result;
         }
@@ -261,6 +261,14 @@ console.log($rootScope.userInfo);
         return result;
     };
     
+    var checkUndefinedNull = function(numvalue){
+        var result = false;
+        if ((angular.isUndefined(numvalue)) || (numvalue==null)){
+            result = true;
+        }
+        return result;
+    };
+    
     ///////////////// end checkers
     
     // *************** generation confirm code *****************
@@ -288,6 +296,7 @@ console.log($rootScope.userInfo);
         checkPositiveNumberValue,
         checkStrForDate,
         checkUndefinedEmptyNullValue,
+        checkUndefinedNull,
         getConfirmCode,
         getContextIds,
         getLoadingServicePermissionFlag,
