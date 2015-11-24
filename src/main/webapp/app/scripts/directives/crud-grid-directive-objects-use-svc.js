@@ -493,7 +493,7 @@ console.log("Objects directive.");
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
-                        trHTML+="<th ng-class=\""+column.class+"\">";
+                        trHTML+="<th class=\""+column.class+"\">";
                         trHTML+=""+(column.header || column.name)+"";
                         trHTML+="</th>";
                     });

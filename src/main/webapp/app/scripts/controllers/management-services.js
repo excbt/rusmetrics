@@ -17,7 +17,7 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
     
-    $scope.ctrlSettings.currency = "y.e."; 
+    $scope.ctrlSettings.currency = "";//"y.e."; 
     
     //var initialization
         //available service packages
@@ -71,6 +71,7 @@ angular.module('portalNMC')
                      });
                 });
             });
+            $scope.ctrlSettings.currency = "";
 //console.log($scope.availablePackages);            
         },
                                  function(e){

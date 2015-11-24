@@ -25,7 +25,7 @@ angular.module('portalNMC')
     $scope.messages = {};
     $scope.messages.priceMenuItem1 = "Активировать";
     $scope.messages.priceMenuItem2 = "Назначить абонентам";
-    $scope.messages.priceMenuItem3 = "Редактировать";
+    $scope.messages.priceMenuItem3 = "Редактировать цены";
     $scope.messages.priceMenuItem4 = "Копировать";
     $scope.messages.priceMenuItem5 = "Удалить";
     $scope.messages.priceMenuItem6 = "Свойства";
@@ -70,7 +70,7 @@ angular.module('portalNMC')
     
     $scope.ctrlSettings.subscriberContObjectCount = null;
     
-    $scope.ctrlSettings.currency = "y.e."; 
+    $scope.ctrlSettings.currency = "";//"y.e."; 
     
     //var initialization
         //available service packages
@@ -276,7 +276,7 @@ angular.module('portalNMC')
             };
         });
         $scope.data.currentMode = angular.copy(mode); 
-//console.log(mode);        
+//console.log($scope.data.currentMode);        
         getModePrices($scope.data.currentMode.id);
         var targetUrl = $scope.ctrlSettings.clientsUrl;
         if ($scope.data.currentMode.id == $scope.ctrlSettings.MASTER_RMA_ID){
@@ -312,6 +312,9 @@ angular.module('portalNMC')
                     if ((price.packId === pack.id) && (angular.isUndefined(price.itemId)||(price.itemId === null))){
                         pack.price = price;
                         $scope.ctrlSettings.currency = price.currency;
+                        if (angular.isDefined(price.priceValue)&&(angular.isNumber(price.priceValue))){
+                            pack.isAvailable = true;
+                        };
                     };
                 });
                 pack.serviceItems.forEach(function(svitem){
@@ -319,10 +322,14 @@ angular.module('portalNMC')
                         if ((angular.isUndefined(price.packId)||(price.packId === null)) && (price.itemId === svitem.id)){
                             svitem.price = price;
                             $scope.ctrlSettings.currency = price.currency;
+                            if (angular.isDefined(price.priceValue)&&(angular.isNumber(price.priceValue))){
+                                svitem.isAvailable = true;
+                            };
                         };
                      });
                 });
             });
+            $scope.ctrlSettings.currency ="";           
             $('#editPriceModal').modal();        
 //console.log($scope.serviceListEdition);            
         },
@@ -381,7 +388,7 @@ angular.module('portalNMC')
             if (angular.isDefined(pack.price)&&(pack.price!=null)){
                 if (angular.isUndefined(pack.price.id)||(pack.price.id == null)){
                     pack.price.packId = pack.id;
-                    pack.price.value = Number(pack.price.value);
+                    pack.price.priceValue = Number(pack.price.priceValue);
                 };
                 tmp.push(pack.price);
             };
@@ -389,7 +396,7 @@ angular.module('portalNMC')
                 if (angular.isDefined(serv.price)&&(serv.price!=null)){
                     if (angular.isUndefined(serv.price.id)||(serv.price.id == null)){
                         serv.price.itemId = serv.id;
-                        serv.price.value = Number(serv.price.value);
+                        serv.price.priceValue = Number(serv.price.priceValue);
                     };
                     tmp.push(serv.price);
                 };
@@ -407,7 +414,8 @@ angular.module('portalNMC')
         data = prepareData($scope.serviceListEdition);
         var checkPrice = true;      
         data.some(function(el){
-            if (!$scope.checkNumericValue(el.value)){
+            if (!$scope.checkNumericValue(el.priceValue)){
+//console.log(el);                
                 notificationFactory.errorInfo("Ошибка!","Неправильно задана цена услуги!");
                 checkPrice = false;
                 return true;
@@ -432,8 +440,7 @@ angular.module('portalNMC')
         $scope.confirmCode = null;
         var tmpCode = mainSvc.getConfirmCode();
         $scope.confirmLabel = tmpCode.label;
-        $scope.sumNums = tmpCode.result;
-        
+        $scope.sumNums = tmpCode.result;        
         $scope.viewPrice(priceList, false)
 //        $scope.ctrlSettings.modeView = false;
 //        $scope.selectItem(priceList);
@@ -539,7 +546,43 @@ angular.module('portalNMC')
     $('#pricePropModal').on('hide.bs.modal', function(){
         $('#pricePropModal').off('keydown');
     });
-
     
+    //check access to buttons
+    //properties - always
+    //view price - always
+    //activate - systemuser & (rmaMode || subscrMode) & !isActive & !isArchive || isRma & subscrMode & !isActive & !isArchive =   
+    // = (systemuser & (rmaMode || subscrMode) || isRma & subscrMode) & !isActive & !isArchive
+    
+    //clone - rmaMode & !isArchive
+    //copy - !isArchive
+    //edit - !rma & !isArchive & !isDraft
+    //delete - !isDraft & !isArchive
+    $scope.checkPropBtn = function(priceList){
+        return true;
+    };
+    
+    $scope.checkViewBtn = function(priceList){
+        return true;
+    };
+    
+    $scope.checkActivateBtn = function(priceList){
+        var result = ($scope.isSystemuser() && ($scope.data.currentMode.id!=0) || !$scope.isSystemuser()&&$scope.isRma() && !$scope.data.currentMode.rma) & !priceList.isActive && !priceList.isArchive;
+        return result;
+    };
+    
+    $scope.checkDeleteBtn = function(priceList){
+        return priceList.isDraft && !priceList.isArchive;
+    };
+    
+    $scope.checkEditBtn = function(priceList){
+        return priceList.isDraft && !priceList.isArchive;
+    };
+    
+    $scope.checkCopyBtn = function(priceList){
+        return !priceList.isArchive;
+    };
+    $scope.checkCloneBtn = function(priceList){
+        return priceList.isDraft && !priceList.isArchive && $scope.data.currentMode.rma;
+    };
     
 }]);

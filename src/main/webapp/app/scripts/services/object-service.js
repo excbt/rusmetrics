@@ -221,7 +221,8 @@ console.log("Object Service. Run.");
        };
        loadData();
                  
-       $rootScope.$on('objectSvc:requestReloadData', function(){        
+       $rootScope.$on('objectSvc:requestReloadData', function(){
+//console.log("Reload objects data.");           
            loadData();
        });
         var getPromise = function(){
