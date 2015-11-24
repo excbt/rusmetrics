@@ -135,6 +135,8 @@ public class ReportMakerParamService {
 			resultContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
 		}
 
+		List<Long> subscrContObjectIds = null;
+
 		if (resultContObjectIdList.isEmpty()) {
 
 			if (!Boolean.TRUE.equals(reportParamset.getReportTemplate().getReportType().getReportMetaParamCommon()
@@ -143,12 +145,12 @@ public class ReportMakerParamService {
 				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
 						: reportParamset.getSubscriberId();
 
-				resultContObjectIdList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
+				subscrContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
 			}
 
 		}
 
-		return new ReportMakerParam(reportParamset, resultContObjectIdList, previewMode);
+		return new ReportMakerParam(reportParamset, resultContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
 

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ public class ReportMakerParam {
 	private final static String PAR_IDPARAM = "PAR_ID_PARAM";
 
 	private final Long[] contObjectIds;
+	private final Long[] subscrContObjectIds;
 	private final ReportParamset reportParamset;
 	private final boolean previewMode;
 
@@ -45,6 +47,7 @@ public class ReportMakerParam {
 		checkArgument(contObjectIds.length > 0);
 		this.reportParamset = reportParamset;
 		this.contObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
+		this.subscrContObjectIds = Arrays.copyOf(contObjectIds, contObjectIds.length);
 		this.previewMode = previewMode;
 	}
 
@@ -62,13 +65,15 @@ public class ReportMakerParam {
 	 * @param reportParamset
 	 * @param contObjectIdList
 	 */
-	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList, boolean previewMode) {
+	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList, List<Long> subscrObjectIdList,
+			boolean previewMode) {
 		checkNotNull(reportParamset);
 		checkNotNull(reportParamset.getReportTemplate());
 		checkNotNull(contObjectIdList);
 		// checkArgument(!contObjectIdList.isEmpty());
 		this.reportParamset = reportParamset;
 		this.contObjectIds = contObjectIdList.toArray(new Long[0]);
+		this.subscrContObjectIds = subscrObjectIdList != null ? subscrObjectIdList.toArray(new Long[0]) : new Long[0];
 		this.previewMode = previewMode;
 	}
 
@@ -78,7 +83,7 @@ public class ReportMakerParam {
 	 * @param contObjectIdList
 	 */
 	public ReportMakerParam(ReportParamset reportParamset, List<Long> contObjectIdList) {
-		this(reportParamset, contObjectIdList, false);
+		this(reportParamset, contObjectIdList, null, false);
 	}
 
 	/**
@@ -86,7 +91,7 @@ public class ReportMakerParam {
 	 * @return
 	 */
 	public Long[] getContObjectIds() {
-		return contObjectIds;
+		return contObjectIds == null ? null : Arrays.copyOf(contObjectIds, contObjectIds.length);
 	}
 
 	/**
@@ -104,6 +109,25 @@ public class ReportMakerParam {
 	 * 
 	 * @return
 	 */
+	public Long[] getSubscrContObjectIds() {
+		return subscrContObjectIds == null ? null : Arrays.copyOf(subscrContObjectIds, subscrContObjectIds.length);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public List<Long> getSubscrContObjectList() {
+		if (subscrContObjectIds == null) {
+			return Collections.emptyList();
+		}
+		return Arrays.asList(subscrContObjectIds);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public ReportParamset getReportParamset() {
 		return reportParamset;
 	}
@@ -114,6 +138,23 @@ public class ReportMakerParam {
 	 */
 	public boolean contObjectsEmpty() {
 		return contObjectIds == null || contObjectIds.length == 0;
+	}
+
+	/**
+	 * (
+	 * 
+	 * @return
+	 */
+	public List<Long> getReportContObjectIds() {
+		List<Long> result = new ArrayList<>();
+		if (contObjectIds != null && contObjectIds.length > 0) {
+			result.addAll(Arrays.asList(contObjectIds));
+		} else {
+			if (subscrContObjectIds != null) {
+				result.addAll(Arrays.asList(subscrContObjectIds));
+			}
+		}
+		return result;
 	}
 
 	/**
