@@ -34,7 +34,7 @@ public class SubscrPriceListService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrPriceListService.class);
 
-	private final static String PRICE_LIST_PREFIX = "Копия ";
+	private final static String PRICE_LIST_SUFFIX = " (Копия)";
 
 	public final static int PRICE_LEVEL_NMC = 0;
 	public final static int PRICE_LEVEL_RMA = 1;
@@ -307,7 +307,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setIsDraft(true);
 		newPriceList.setPriceListType(srcPriceList.getPriceListType());
 		newPriceList.setSrcPriceListId(srcPriceListId);
-		newPriceList.setPriceListName(PRICE_LIST_PREFIX + srcPriceList.getPriceListName());
+		newPriceList.setPriceListName(srcPriceList.getPriceListName() + PRICE_LIST_SUFFIX);
 
 		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())
 				&& srcPriceList.getPriceListLevel().intValue() != PRICE_LEVEL_NMC) {
@@ -430,7 +430,7 @@ public class SubscrPriceListService implements SecuredRoles {
 		newPriceList.setIsDraft(true);
 		newPriceList.setPriceListType(2);
 		newPriceList.setSrcPriceListId(srcPriceListId);
-		newPriceList.setPriceListName(PRICE_LIST_PREFIX + srcPriceList.getPriceListName());
+		newPriceList.setPriceListName(srcPriceList.getPriceListName() + PRICE_LIST_SUFFIX);
 
 		if (Boolean.TRUE.equals(srcPriceList.getIsMaster())) {
 			newPriceList.setMasterPriceListId(srcPriceList.getId());

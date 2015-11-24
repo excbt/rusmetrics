@@ -554,4 +554,17 @@ console.log(totalGroupObjects);
 //        return right>=left;
     };
     
+        //check user rights
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+
+    $scope.isReadonly = function(){
+        return mainSvc.isReadonly();
+    };
+
+    $scope.isROfield = function(){
+        return ($scope.isReadonly());
+    };
+    
 }]);

@@ -102,9 +102,6 @@ public class ReportSheduleService implements SecuredRoles {
 
 		ReportShedule resultEntity = reportSheduleRepository.save(reportShedule);
 
-		resultEntity.getReportParamset().getId();
-		resultEntity.getReportParamset().getParamSpecialList().size();
-
 		return resultEntity;
 	}
 
@@ -144,7 +141,6 @@ public class ReportSheduleService implements SecuredRoles {
 
 		ReportShedule resultEntity = reportSheduleRepository.save(reportShedule);
 
-		resultEntity.getReportParamset().getId();
 		resultEntity.getReportParamset().getParamSpecialList().size();
 
 		return resultEntity;

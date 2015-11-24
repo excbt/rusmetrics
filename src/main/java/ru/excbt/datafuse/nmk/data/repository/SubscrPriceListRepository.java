@@ -16,7 +16,9 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	 * @return
 	 */
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.priceListLevel = :priceListLevel"
-			+ " ORDER BY pl.priceListLevel, pl.priceListKeyname, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
+			+ " ORDER BY pl.priceListKeyname NULLS LAST, pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
+			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
+	//+ " ORDER BY pl.priceListLevel, pl.priceListKeyname, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectByLevel(@Param("priceListLevel") Integer priceListLevel);
 
 	/**
@@ -25,7 +27,9 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	 * @return
 	 */
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.rmaSubscriberId = :rmaSubscriberId "
-			+ " ORDER BY pl.priceListLevel, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
+			+ " ORDER BY pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
+			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
+	//+ " ORDER BY pl.priceListLevel, pl.isDraft DESC, pl.isActive NULLS FIRST, pl.isMaster, pl.isArchive, pl.planBeginDate DESC, pl.priceListName ")
 	public List<SubscrPriceList> selectByRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
@@ -34,7 +38,9 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	 * @return
 	 */
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.subscriberId = :subscriberId "
-			+ " ORDER BY pl.priceListLevel, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
+			+ " ORDER BY pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
+			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
+	//+ " ORDER BY pl.priceListLevel, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectBySubscriber(@Param("subscriberId") Long subscriberId);
 
 	/**

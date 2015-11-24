@@ -37,7 +37,7 @@
 <!--      Варианты отчетов-->
         <div role="tabpanel" class="tab-pane fade in active" id="object_groups">
             <div class="btn-toolbar marginBottom10">
-			<button id="btn_add_object_group" class="btn nmc-main-add-button" ng-click="addGroup()">Добавить группу объектов</button>
+			<button ng-disabled="isROfield()" id="btn_add_object_group" class="btn nmc-main-add-button" ng-click="addGroup()">Добавить группу объектов</button>
 		</div>
             <div class="nmc-object-group-main-div">
                 <table id="table_contact_lists" class="crud-grid table table-striped table-lighter table-condensed table-hover nmc-main-table">
@@ -53,7 +53,7 @@
                         <td>
                             {{group.contGroupName}}
                         </td>
-                        <td title="Удалить группу объектов" class="nmc-td-for-buttons"><i class="btn btn-xs glyphicon glyphicon-trash" ng-click="selectedGroup(group)" data-target="#deleteGroupModal" data-toggle="modal"></i>
+                        <td title="Удалить группу объектов" class="nmc-td-for-buttons"><i ng-disabled="isROfield()" class="btn btn-xs glyphicon glyphicon-trash" ng-click="selectedGroup(group)" data-target="#deleteGroupModal" data-toggle="modal"></i>
                         </td>
                     </tr>
                 </table>
@@ -107,7 +107,7 @@
                             </div>
 -->
                             <div class="col-md-4 noPadding">
-                                <input class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
+                                <input  class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
         margin-top: 3px;">Выбрать все</p>
                             </div>
                             <div class="col-xs-offset-1 col-md-3 noPadding">
@@ -141,7 +141,7 @@
    	               		<div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel" style="">
    							<form>
     							<label for = "inp_name" class="nmc-form-label">Название группы:</label>
-   								<input id = "inp_name" type="text" class="form-control nmc-text-input-form" ng-model="currentGroup.contGroupName" />
+   								<input ng-disabled="isROfield()" id = "inp_name" type="text" class="form-control nmc-text-input-form" ng-model="currentGroup.contGroupName" />
    							</form>
    							<br>
    							<label for = "objects_in_window" class="nmc-form-label">Объекты в группе:</label>
@@ -151,7 +151,7 @@
                                     <tr ng-repeat="object in selectedObjects">
                                         <td class="col-md-11">{{object.fullName}}
                                         </td>
-                                        <td class="col-md-1"><button class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+                                        <td class="col-md-1"><button ng-disabled="isROfield()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
 <!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
                                         </td>
                                     </tr>
@@ -166,12 +166,12 @@
     			<div class="container-fluid">
 					<div class="row">
                         <div class=" col-md-3">
-                             <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;ctrlSettings.selectedAll = false;" ng-class="{'nmc-show':!showAvailableObjects_flag, 'nmc-hide':showAvailableObjects_flag}">Добавить объекты</button>
+                             <button ng-disabled="isROfield()" class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;ctrlSettings.selectedAll = false;" ng-class="{'nmc-show':!showAvailableObjects_flag, 'nmc-hide':showAvailableObjects_flag}">Добавить объекты</button>
                         </div>
                         
                        	<div class="col-xs-offset-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                ng-disabled="!checkForm()"   
+                                ng-disabled="isROfield() || !checkForm()"   
 								ng-click="saveGroup()"
 								value="Сохранить" />
 						</div>
@@ -216,7 +216,7 @@
 
 					<div class="row">
 						<div class="col-xs-offset-2 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteGroup(currentGroup);"
 								value="Удалить" />
 						</div>

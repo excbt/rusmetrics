@@ -52,4 +52,16 @@ public class SubscrRoleService {
 						|| SecuredRoles.ROLE_ZPOINT_ADMIN.equals(i.getRoleName()))
 				.collect(Collectors.toList());
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrRole> subscrReadonlyRoles() {
+		List<SubscrRole> allRoles = findAll();
+		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName()))
+				.collect(Collectors.toList());
+	}
+
 }

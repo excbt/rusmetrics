@@ -31,6 +31,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	 * @throws Exception
 	 */
 	@Test
+	@Ignore
 	public void testCreateRmaPriceList() throws Exception {
 		SubscrPriceList nmcPriceList = subscrPriceListService.selectRootPriceLists("DEFAULT");
 		assertNotNull(nmcPriceList);

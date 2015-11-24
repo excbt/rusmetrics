@@ -1,7 +1,7 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'ContactsCtrl',
-		function($scope, $http){			
+		function($scope, $http, mainSvc){			
 			/*************************
 			 * Определяем переменные *
 			 *************************/
@@ -267,5 +267,18 @@ app.controller(
 			 *********************/
 			$scope.getContacts();
 			$scope.getLists();
+            
+                        //check user rights
+            $scope.isAdmin = function(){
+                return mainSvc.isAdmin();
+            };
+
+            $scope.isReadonly = function(){
+                return mainSvc.isReadonly();
+            };
+
+            $scope.isROfield = function(){
+                return ($scope.isReadonly());
+            };
 		}
 );
