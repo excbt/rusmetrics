@@ -175,6 +175,16 @@ console.log($rootScope.userInfo);
         return result;
     };
     
+                    //check user rights: read only?:  - true/false
+    var isReadonly = function(){
+        var result = false;
+        var userInfo = $rootScope.userInfo;
+        if (angular.isDefined(userInfo)){
+            result = userInfo.isReadonly;
+        };
+        return result;
+    };
+    
     //get user permission
     var getUserServicesPermissions = function(){
         mainSvcSettings.loadingServicePermissionFlag = true;
@@ -288,6 +298,7 @@ console.log($rootScope.userInfo);
         getUserServicesPermissions,
         isAdmin,
         isRma,
+        isReadonly,
         isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,

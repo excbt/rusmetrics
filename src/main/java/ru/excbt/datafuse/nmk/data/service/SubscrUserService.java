@@ -82,7 +82,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @param subscrUser
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUser createOne(SubscrUser subscrUser, String password) {
 		checkNotNull(subscrUser);
@@ -116,7 +116,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @param subscrUser
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUser updateOne(SubscrUser subscrUser, String[] passwords) {
 		checkNotNull(subscrUser);
@@ -181,7 +181,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * 
 	 * @param subscrUserId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
+	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteOne(Long subscrUserId) {
 		checkNotNull(subscrUserId);

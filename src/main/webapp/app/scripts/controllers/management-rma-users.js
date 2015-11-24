@@ -51,7 +51,9 @@ console.log('Run user management controller.');
                 elem.subscrRoles.some(function(role){
                     if (role.roleName == "ROLE_SUBSCR_ADMIN"){
                         elem.isAdmin = true;
-                        return true;
+                    };                    
+                    if (role.roleName == "ROLE_SUBSCR_READONLY"){
+                        elem.isReadonly = true;
                     };
                 });
             });
@@ -106,6 +108,7 @@ console.log('Run user management controller.');
         $scope.data.currentUser = {};
         $scope.data.currentUser.id=null;
         $scope.data.currentUser.isAdmin = false;
+        $scope.data.currentUser.isReadonly = false;
         $('#showUserOptionModal').modal();
     };
     
@@ -141,6 +144,10 @@ console.log('Run user management controller.');
         if (angular.isDefined(obj.password)&&(obj.password!=null)&&(obj.password !="")){
             url+= "&newPassword="+obj.password;
         };
+        if (angular.isDefined(obj.isReadonly)&&(obj.isReadonly!=null)){
+            url+= "&isReadonly="+obj.isReadonly;
+        };
+//console.log(url);        
         crudGridDataFactory(url).save(obj, successCallback, errorCallback);
     };
 
@@ -157,6 +164,9 @@ console.log('Run user management controller.');
         if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){ 
             params.oldPassword = object.curpassword;
             params.newPassword = object.password;           
+        };
+        if (angular.isDefined(object.isReadonly)&&(object.isReadonly!=null)){
+            params.isReadonly = object.isReadonly;
         };
         crudGridDataFactory(url).update(params, object, successCallback, errorCallback);
     };

@@ -846,7 +846,7 @@ console.log($scope.psEndDateFormatted);
     }, false);
     
     $scope.isDisabled = function(){
-        return $scope.currentObject.common || !$scope.currentObject._active;
+        return $scope.isROfield() || $scope.currentObject.common || !$scope.currentObject._active;
     };
     
     $scope.showAddObjectButton = function(){      
@@ -1056,6 +1056,19 @@ console.log($scope.psEndDateFormatted);
             $scope.currentObject.showParamsBeforeRunReport = true;
         };
         return result;
+    };
+    
+        //check user rights
+    $scope.isAdmin = function(){
+        return mainSvc.isAdmin();
+    };
+
+    $scope.isReadonly = function(){
+        return mainSvc.isReadonly();
+    };
+
+    $scope.isROfield = function(){
+        return ($scope.isReadonly());
     };
 
 }]);

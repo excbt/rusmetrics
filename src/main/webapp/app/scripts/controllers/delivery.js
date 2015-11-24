@@ -4,7 +4,7 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'DlvrCtrl',
-		function($scope, $http, notificationFactory){
+		function($scope, $http, notificationFactory, mainSvc){
 			/************************************
 			 * Определяем глобальные переменные *
 			 ************************************/
@@ -388,5 +388,18 @@ console.log($scope.cur_rep_shdl);
 			 *********************/
 			$scope.getReportShedules();
 			$scope.getReportParameters();
+            
+                    //Функции проверки прав доступа пользователя к полям
+            $scope.isAdmin = function(){
+                return mainSvc.isAdmin();
+            };
+
+            $scope.isReadonly = function(){
+                return mainSvc.isReadonly();
+            };
+
+            $scope.isROfield = function(){
+                return ($scope.isReadonly());
+            };
 		}	
 );

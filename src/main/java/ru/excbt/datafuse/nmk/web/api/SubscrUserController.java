@@ -83,10 +83,12 @@ public class SubscrUserController extends SubscrApiController {
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.POST)
 	public ResponseEntity<?> createCurrentSubscrUsers(
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
+			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(getCurrentSubscriberId(), isAdmin, subscrUser, newPassword, request);
+		return createSubscrUserInternal(getCurrentSubscriberId(), isAdmin, isReadonly, subscrUser, newPassword,
+				request);
 	}
 
 	/**
@@ -98,6 +100,7 @@ public class SubscrUserController extends SubscrApiController {
 	@RequestMapping(value = "/subscrUsers/{subscrUserId}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
+			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "oldPassword", required = false) String oldPassword,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser) {
@@ -105,7 +108,8 @@ public class SubscrUserController extends SubscrApiController {
 		String[] passwords = oldPassword != null && newPassword != null ? new String[] { oldPassword, newPassword }
 				: null;
 
-		return updateSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isAdmin, subscrUser, passwords);
+		return updateSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isAdmin, isReadonly, subscrUser,
+				passwords);
 	}
 
 	/**
@@ -130,8 +134,8 @@ public class SubscrUserController extends SubscrApiController {
 	 * @param request
 	 * @return
 	 */
-	protected ResponseEntity<?> createSubscrUserInternal(Long rSubscriberId, Boolean isAdmin, SubscrUser subscrUser,
-			String password, HttpServletRequest request) {
+	protected ResponseEntity<?> createSubscrUserInternal(Long rSubscriberId, Boolean isAdmin, Boolean isReadonly,
+			SubscrUser subscrUser, String password, HttpServletRequest request) {
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUser);
 
@@ -156,11 +160,17 @@ public class SubscrUserController extends SubscrApiController {
 		subscrUser.setSubscriberId(rSubscriberId);
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
+		subscrUser.setIsReadonly(isReadonly);
 
-		if (isAdmin) {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+		if (Boolean.TRUE.equals(isReadonly)) {
+			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrReadonlyRoles());
+			subscrUser.setIsAdmin(false);
 		} else {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
+			if (Boolean.TRUE.equals(isAdmin)) {
+				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+			} else {
+				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
+			}
 		}
 
 		ApiActionLocation action = new EntityApiActionLocationAdapter<SubscrUser, Long>(subscrUser, request) {
@@ -188,7 +198,7 @@ public class SubscrUserController extends SubscrApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> updateSubscrUserInternal(Long rSubscriberId, Long subscrUserId, Boolean isAdmin,
-			SubscrUser subscrUser, String[] passwords) {
+			Boolean isReadonly, SubscrUser subscrUser, String[] passwords) {
 
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUserId);
@@ -214,10 +224,15 @@ public class SubscrUserController extends SubscrApiController {
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
 
-		if (isAdmin) {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+		if (Boolean.TRUE.equals(isReadonly)) {
+			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrReadonlyRoles());
+			subscrUser.setIsAdmin(false);
 		} else {
-			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
+			if (Boolean.TRUE.equals(isAdmin)) {
+				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+			} else {
+				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
+			}
 		}
 
 		ApiAction action = new EntityApiActionAdapter<SubscrUser>(subscrUser) {
