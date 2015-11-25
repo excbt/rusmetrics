@@ -127,6 +127,7 @@ console.log('Run Object management controller.');
                     objectSvc.getServiceTypes()
                     .then(function(response){
                         $scope.data.serviceTypes = response.data;
+//console.log(response.data);                        
                     });
                 };
                 getServiceTypes();
@@ -392,7 +393,7 @@ console.log('Run Object management controller.');
                 
                 
                 var checkObjectSettings = function(obj){
-                    //check name, type, rso, device
+                    //check name, timezone, uk, mode
                     var result = true;
                     if ($scope.emptyString(obj.fullName)){
                         notificationFactory.errorInfo("Ошибка", "Не задано наименование объекта!");
@@ -814,6 +815,10 @@ console.log('Run Object management controller.');
                     if (!checkZpointCommonSettings()){
                         return false;
                     };
+                    //prepare piped info
+//                    if ($scope.zpointSettings.singlePipe){
+//                        $scope.zpointSettings.doublePipe = false;
+//                    };
                     var url = objectSvc.getRmaObjectsUrl()+"/"+$scope.currentObject.id+"/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id)&&($scope.zpointSettings.id!=null)){
                         url = url+"/"+$scope.zpointSettings.id;

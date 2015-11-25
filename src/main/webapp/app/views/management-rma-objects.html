@@ -231,10 +231,10 @@
                                         
                                         </select>
                                     </div>
-                                    <div ng-show="zpointSettings.piped">
-                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
-                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
-                                    </div>    
+                                    <div ng-show="(zpointSettings.contServiceTypeKeyname=='hw'|| zpointSettings.contServiceTypeKeyname=='heat')">
+                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="false" > Однотрубная
+                                        <input type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true"> Двухтрубная
+                                    </div>   
                                 </td>
                             </tr>
                             <tr>
