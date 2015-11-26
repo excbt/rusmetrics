@@ -683,7 +683,7 @@ console.log("Objects directive.");
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
-                    if (angular.isUndefined($cookies.timeDetailType)&&($cookies.timeDetailType=="undefined")&&($cookies.timeDetailType!="null")){
+                    if (angular.isUndefined($cookies.timeDetailType)||($cookies.timeDetailType=="undefined")||($cookies.timeDetailType=="null")){
                         $cookies.timeDetailType="24h";
                     };
                     
