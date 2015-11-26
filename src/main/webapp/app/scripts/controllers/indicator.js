@@ -2,6 +2,8 @@
 angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
         
+//console.log($rootScope.reportStart);
+//console.log($rootScope.reportEnd);        
         // Настройки интервала дат для страницы с показаниями
     if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
         $scope.indicatorDates = {
@@ -596,7 +598,13 @@ angular.module('portalNMC')
 //                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
                 $scope.timeDetailType = pathParams.timeDetailType;
             }else{
-                $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+//console.log($cookies.timeDetailType);                
+                if (angular.isDefined($cookies.timeDetailType)&&($cookies.timeDetailType!="undefined")&&($cookies.timeDetailType!="null")){
+                    $scope.timeDetailType = $cookies.timeDetailType;
+                }else{
+//console.log("param TDT and COOKie TDT is undefined");                    
+                    $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+                };
             };
         };
         
@@ -651,7 +659,7 @@ angular.module('portalNMC')
          
          $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage+"&dataDateSort="+$scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
-//console.log(table);        
+console.log(table);        
         crudGridDataFactory(table).get(function (data) {
 //console.log(data);            
                 $scope.totalIndicators = data.totalElements;
@@ -780,9 +788,10 @@ angular.module('portalNMC')
         
         // get summary (score)
         var table_summary = table.replace("paged", "summary");
+//console.log(table_summary);        
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
-                $scope.summary = data;       
+                $scope.summary = angular.copy(data);      
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
 //                    $scope.intotalColumns.forEach(function(element){
@@ -913,11 +922,19 @@ angular.module('portalNMC')
     };
         
         //first load data
+//console.log("first load data");        
     $scope.getData(1);
 
-    $scope.pageChanged = function(newPage) {       
+    $scope.pageChanged = function(newPage) {
+//console.log("pageChanged getData");        
         $scope.getData(newPage);
-    };   
+    };
+    $scope.changeTimeDetailType = function(){
+//console.log("changeTimeDetailType getData");
+        $cookies.timeDetailType = $scope.timeDetailType;
+//console.log($cookies.timeDetailType);        
+        $scope.getData(1);
+    };
         
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("Date-range-settings indicatorDates");        
@@ -933,7 +950,8 @@ angular.module('portalNMC')
         indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
         indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+//console.log("watch('indicatorDates') getData");        
         $scope.getData(1);
     }, false);    
         
@@ -978,6 +996,7 @@ angular.module('portalNMC')
                 $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/"+ data.filename;
                 $scope.fileWithDeleteData = data.filename;
                 $scope.showLinkToFileFlag = true;
+//console.log("getData on success deleteData");            
                 $scope.getData(1);
             })
             .error(function(err){
@@ -990,6 +1009,7 @@ angular.module('portalNMC')
         var ord = (asc==true) ? "asc" : "desc";
         $cookies.indicatorsortorder = ord;
         $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.indicatorsortorder };
+//console.log("getData on setOrderBy");        
         $scope.getData(1);
     };
     

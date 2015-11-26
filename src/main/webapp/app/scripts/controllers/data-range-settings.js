@@ -90,6 +90,9 @@ app
     };
     
     $scope.$watch('navPlayerDates', function (newDates) {
+        if ($location.path()==="/objects/indicators"){
+            return;
+        };
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
 //!Attention. Эта штуковина может чудить - она меняет url строку.
@@ -105,17 +108,17 @@ app
     
                         
     // Настройки для страницы с показаниями
-    if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
-        $scope.indicatorDates = {
-            startDate : $location.search().fromDate,
-            endDate :  $location.search().toDate
-        };
-    }else{
-        $scope.indicatorDates = {
-            startDate : moment().subtract(6, 'days').startOf('day'),
-            endDate :  moment().endOf('day')
-        };
-    };
+//    if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
+//        $scope.indicatorDates = {
+//            startDate : $location.search().fromDate,
+//            endDate :  $location.search().toDate
+//        };
+//    }else{
+//        $scope.indicatorDates = {
+//            startDate : moment().subtract(6, 'days').startOf('day'),
+//            endDate :  moment().endOf('day')
+//        };
+//    };
 //console.log($scope.indicatorDates.startDate);
 //console.log($scope.indicatorDates.endDate); 
 
@@ -158,8 +161,10 @@ app
             return;
         };
 //console.log("Date-range-settings indicatorDates1");                
-        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+//        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
+//        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+//console.log($rootScope.reportStart);
+//console.log($rootScope.reportEnd);
     }, false);
     
         //Страница с показаниями - удаление показаний
