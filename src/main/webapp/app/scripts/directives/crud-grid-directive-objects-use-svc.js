@@ -415,7 +415,7 @@ console.log("Objects directive.");
                                 tmp = data;
                             };
                             var zPointsByObject = tmp;
-console.log(tmp);                            
+//console.log(tmp);                            
                             var zpoints = [];
                             for(var i=0;i<zPointsByObject.length;i++){
                                 var zpoint = {};
@@ -683,7 +683,10 @@ console.log(tmp);
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
-                    $cookies.timeDetailType="24h";
+                    if (angular.isUndefined($cookies.timeDetailType)&&($cookies.timeDetailType=="undefined")&&($cookies.timeDetailType!="null")){
+                        $cookies.timeDetailType="24h";
+                    };
+                    
                     $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
 //console.log($scope.currentZpoint);                    
                     $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
