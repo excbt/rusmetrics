@@ -791,6 +791,12 @@ console.log(table);
 //console.log(table_summary);        
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
+                $scope.intotalColumns.forEach(function(element, index, array){
+                    element.imgpath = EMPTY_IMG_PATH;
+                    element.imgclass= "";
+                    element.title = "";
+                });
+
                 $scope.summary = angular.copy(data);      
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
@@ -874,7 +880,7 @@ console.log(table);
                     var total = $scope.summary.totals[columnName];
 //console.log(diff);                    
 //console.log(total);                                        
-                    if((diff==null) || (total==null)){
+                    if((diff==null) || (total==null) || (diff=="-") || (total=="-")){
                         return;
                     }
                     var diffStr = diff.toString();
