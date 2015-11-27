@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import javax.persistence.Column;
@@ -77,6 +78,15 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@JsonIgnore
 	@Column(name = "rma_ldap_ou", insertable = false, updatable = false)
 	private String rmaLdapOu;
+	
+	@Column(name = "map_center_lat")
+	private BigDecimal mapCenterLat;
+	
+	@Column(name = "map_center_lng")
+	private BigDecimal mapCenterLng;
+	
+	@Column(name = "map_zoom")
+	private BigDecimal mapZoom;
 
 	public String getInfo() {
 		return info;
@@ -191,5 +201,30 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
 		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
+	
+	public BigDecimal getMapCenterLat() {
+		return mapCenterLat;
+	}
+	
+	public void setMapCenterLat(BigDecimal mapCenterLat) {
+		this.mapCenterLat = mapCenterLat;
+	}
+	
+	public BigDecimal getMapCenterLng() {
+		return mapCenterLng;
+	}
+	
+	public void setMapCenterLng(BigDecimal mapCenterLng) {
+		this.mapCenterLng = mapCenterLng;
+	}
+	
+	public BigDecimal getMapZoom() {
+		return mapZoom;
+	}
+	
+	public void setMapZoom(BigDecimal mapZoom) {
+		this.mapZoom = mapZoom;
+	}
+
 
 }

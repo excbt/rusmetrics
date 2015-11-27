@@ -29,14 +29,14 @@ angular.module('portalNMC')
     
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
-    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapZoom)){
-        mapCenter.zoom = Number(monitorSvc.getMonitorSettings().monitorMapZoom);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoom)){
+        mapCenter.zoom = Number(monitorSvc.getMonitorSettings().mapZoom);
     };
-    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapLat)){
-        mapCenter.lat = Number(monitorSvc.getMonitorSettings().monitorMapLat);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLat)){
+        mapCenter.lat = Number(monitorSvc.getMonitorSettings().mapCenterLat);
     };
-    if (angular.isDefined(monitorSvc.getMonitorSettings().monitorMapLng)){
-        mapCenter.lng = Number(monitorSvc.getMonitorSettings().monitorMapLng);
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapCenterLng)){
+        mapCenter.lng = Number(monitorSvc.getMonitorSettings().mapCenterLng);
     };
     
     angular.extend($scope,{
@@ -473,7 +473,7 @@ console.warn(elem);
     $scope.$watch("mapCenter.zoom", function(newZoom, oldZoom){
 //console.log(newZoom);
 //console.log(oldZoom); 
-        monitorSvc.setMonitorSettings({monitorMapZoom:newZoom});
+        monitorSvc.setMonitorSettings({mapZoom:newZoom});
 //        $cookies.monitorMapZoom = newZoom;
         if (newZoom>$scope.mapSettings.zoomBound){
             if (oldZoom<=$scope.mapSettings.zoomBound)
@@ -513,11 +513,11 @@ console.warn(elem);
     
     $scope.$watch('mapCenter.lat',function(newLat){
 //        $cookies.monitorMapLat = newLat;
-        monitorSvc.setMonitorSettings({monitorMapLat:newLat});
+        monitorSvc.setMonitorSettings({mapCenterLat:newLat});
     });
     $scope.$watch('mapCenter.lng',function(newLng){
 //        $cookies.monitorMapLng = newLng;
-        monitorSvc.setMonitorSettings({monitorMapLng:newLng});
+        monitorSvc.setMonitorSettings({mapCenterLng:newLng});
     });
     
     function findObjectById(objId){
@@ -605,7 +605,7 @@ console.warn(elem);
     });   
     
     window.setTimeout(function(){
-console.log("3");            
+//console.log("3");            
         setVisibles($scope.mapSettings.ctxId);
     }, 500);  
     

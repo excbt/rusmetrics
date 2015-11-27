@@ -109,6 +109,7 @@ console.log("Monitor Controller.");
 //console.log(url);          
         $http.get(url)
             .success(function(data){
+console.log(data);            
             //if data is not array - exit
                 if (!data.hasOwnProperty('length')||(data.length == 0)){
                     return;
