@@ -87,6 +87,9 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	
 	@Column(name = "map_zoom")
 	private BigDecimal mapZoom;
+	
+	@Column(name = "map_zoom_detail")
+	private BigDecimal mapZoomDetail;
 
 	public String getInfo() {
 		return info;
@@ -224,6 +227,14 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	
 	public void setMapZoom(BigDecimal mapZoom) {
 		this.mapZoom = mapZoom;
+	}
+	
+	public BigDecimal getMapZoomDetail() {
+		return mapZoomDetail;
+	}
+	
+	public void setMapZoomDetail(BigDecimal mapZoomDetail) {
+		this.mapZoomDetail = mapZoomDetail;
 	}
 
 

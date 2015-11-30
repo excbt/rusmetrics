@@ -120,6 +120,8 @@ console.log("Load NoticeCtrl.");
     //use to redirect from the Monitor page
     $scope.initCtrl = function(){
 //console.log("initCtrl"); 
+//console.log(loca);         
+//console.log($scope.objects);        
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};

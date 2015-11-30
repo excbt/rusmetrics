@@ -20,6 +20,10 @@ angular.module('portalNMC')
     objectSvc.sortObjectsByFullName($scope.objects);
     $scope.cities = monitorSvc.getAllMonitorCities();
     
+    if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoomDetail)){
+        $scope.mapSettings.zoomDetail = Number(monitorSvc.getMonitorSettings().mapZoomDetail);
+    };
+    
     //cities positions
     $scope.izhevsk = {
         lat: 56.85,
@@ -199,7 +203,7 @@ angular.module('portalNMC')
             };
         });
       
-        mc.zoom = $scope.mapSettings.zoomBound+2;
+        mc.zoom = $scope.mapSettings.zoomDetail || $scope.mapSettings.zoomBound+2;
 //        $scope.mapCenter.zoom = $scope.mapSettings.zoomBound+1;
         angular.extend($scope, {mapCenter: mc});
         

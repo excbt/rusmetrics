@@ -35,6 +35,10 @@ angular.module('portalNMC')
     var mapCenter = $scope.izhevsk; //center of map
     //get map settings from user context
     
+    if (angular.isDefined(objectSvc.getObjectSettings().mapZoomDetail)){
+        $scope.mapSettings.zoomDetail = Number(objectSvc.getObjectSettings().mapZoomDetail);
+    };
+    
     if (angular.isDefined(objectSvc.getObjectSettings().mapZoom)){
         mapCenter.zoom = Number(objectSvc.getObjectSettings().mapZoom);
     };
@@ -143,7 +147,7 @@ console.log(mapCenter);
         var citiesPromise = objectSvc.getCitiesConsumingData($scope.mapSettings);
         citiesPromise.then(function(response){
                             $scope.cities = response.data;
-//console.log($scope.cities);            
+console.log($scope.cities);            
                             $scope.objectsOfCities = getObjectsDataForCities($scope.cities, $scope.objectsOfCities);     
                             if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
                                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
@@ -191,7 +195,7 @@ console.log(mapCenter);
                 return true;
             };
         });
-        mc.zoom = $scope.mapSettings.zoomBound+2;
+        mc.zoom = $scope.mapSettings.zoomDetail || $scope.mapSettings.zoomBound+2;
         
         var tmpObjects = curCity.cityObjects;
         markersForObjects = new Array();
@@ -310,6 +314,8 @@ console.log(mapCenter);
     };
     
     var getObjectsConsumingForCity = function(city, settings){
+console.log("start comparing");   
+console.log(city);        
         $scope.mapSettings.abortCompareFlag = false;
         $scope.markerSettings.cmpDataFlag=true;
         $scope.markerSettings.runFlag = true;
@@ -501,40 +507,87 @@ console.log(mapCenter);
         return markerMessage;
     };
     
+    var cmgms = function(newMarker){
+console.log(newMarker);        
+        return function(newMarker){
+            console.log("getMessageScope");                
+console.log(newMarker);        
+            angular.extend($scope, {
+                markerSettings:{
+                    cmpFlag: false,
+                    dateFrom: $scope.mapSettings.dateFrom,
+                    dateTo: $scope.mapSettings.dateTo
+                }
+            });
+            var tmpCity = angular.copy(newMarker.city);
+    //                $scope.curCity = tmpCity;
+            angular.extend($scope, {curCity: tmpCity});
+            angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
+            angular.extend($scope,{compareWith: compareWith});
+            angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
+            angular.extend($scope, {getObjectsConsumingForCity: getObjectsConsumingForCity});
+            return $scope;
+        };
+    };
+
+    var cityMarkerGetMessageScope = function (newMarker) {
+console.log("getMessageScope");                
+console.log(newMarker);        
+        angular.extend($scope, {
+            markerSettings:{
+                cmpFlag: false,
+                dateFrom: $scope.mapSettings.dateFrom,
+                dateTo: $scope.mapSettings.dateTo
+            }
+        });
+        var tmpCity = angular.copy(newMarker.city);
+//                $scope.curCity = tmpCity;
+        angular.extend($scope, {curCity: tmpCity});
+        angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
+        angular.extend($scope,{compareWith: compareWith});
+        angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
+        angular.extend($scope, {getObjectsConsumingForCity: getObjectsConsumingForCity});
+        return $scope; 
+    };
+    
         //prepare city marker
-    $scope.prepareCityMarker = function(city, marker){                  
+    $scope.prepareCityMarker = function(city, marker){         
         if ((city.cityGeoPosX === null) || (city.cityGeoPosY===null)){
             return;
-        }; 
-        
+        };          
         //calculate system indicators for all objects of the city
-        calculateCityServicesSummary(city);
-        
+        calculateCityServicesSummary(city);       
         var markerMessage = createMessageForCityMarker(city);
-        
+        //var newMarker = {};
         marker.focus= false;
         marker.city = city;
         marker.lng=city.cityGeoPosX;
-            marker.lat= city.cityGeoPosY;
-            marker.getMessageScope=function () {
-                angular.extend($scope, {
-                    markerSettings:{
-                        cmpFlag: false,
-                        dateFrom: $scope.mapSettings.dateFrom,
-                        dateTo: $scope.mapSettings.dateTo
-                    }
-                });
-                var tmpCity = angular.copy(marker.city);
-                angular.extend($scope, {curCity: tmpCity});
-                angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
-                angular.extend($scope,{compareWith: compareWith});
-                angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
-                angular.extend($scope, {getObjectsConsumingForCity: getObjectsConsumingForCity});
-                return $scope; };
-            marker.message = ""+markerMessage+"";
-            marker.compileMessage = true;
-            marker.icon =  angular.copy(monitorMarker); //set current marker      
-        marker.cityFiasUUID = city.cityFiasUUID;                
+        marker.lat= city.cityGeoPosY;
+        marker.getMessageScope = null;
+        marker.getMessageScope=function(){
+            console.log("getMessageScope");                
+console.log(marker);        
+            angular.extend($scope, {
+                markerSettings:{
+                    cmpFlag: false,
+                    dateFrom: $scope.mapSettings.dateFrom,
+                    dateTo: $scope.mapSettings.dateTo
+                }
+            });
+            var tmpCity = angular.copy(marker.city);
+    //                $scope.curCity = tmpCity;
+            angular.extend($scope, {curCity: tmpCity});
+            angular.extend($scope,{changeCmpPeriod: changeCmpPeriod});
+            angular.extend($scope,{compareWith: compareWith});
+            angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
+            angular.extend($scope, {getObjectsConsumingForCity: getObjectsConsumingForCity});
+            return $scope;
+        };
+        marker.message = ""+markerMessage+"";
+        marker.compileMessage = true;
+        marker.icon =  angular.copy(monitorMarker); //set current marker      
+        marker.cityFiasUUID = city.cityFiasUUID;  
+console.log(marker);        
         return marker;
     };
     
@@ -565,13 +618,13 @@ console.log(mapCenter);
         return markerArray;
     };
     
-    $scope.setCitiesOnMap = function(cityArray, markerArray){
+    $scope.setCitiesOnMap = function(cityArray, oldmarkerArray){
 //console.log(cityArray, markerArray);        
-        if (!angular.isArray(cityArray)||(cityArray.length === 0)||!angular.isArray(markerArray)){
+        if (!angular.isArray(cityArray)||(cityArray.length === 0)||!angular.isArray(oldmarkerArray)){
             return [];
         };
-        markerArray = deleteCityMarkers(cityArray, markerArray);
-       
+        oldmarkerArray = deleteCityMarkers(cityArray, oldmarkerArray);
+       markerArray = [];
         cityArray.forEach(function(elem){            
             if(angular.isUndefined(elem.cityGeoPosX)||angular.isUndefined(elem.cityGeoPosY)||(elem.cityGeoPosX ===null)||(elem.cityGeoPosY===null)){
 console.warn("Warning. City without coordinates.");                
@@ -586,7 +639,8 @@ console.warn(elem);
                         return false;
                     };
                     if((elem.cityFiasUUID===el.cityFiasUUID)){
-                        marker = el;                                               
+                        marker = el;
+//console.log("marker.Exists");                        
                         isMarkerExists = true;
                         return true;
                     };
@@ -594,7 +648,7 @@ console.warn(elem);
             };                        
             marker= $scope.prepareCityMarker(elem, marker);
             marker.focus = false;
-            if (isMarkerExists!==true){
+            if (isMarkerExists!==true){                
                 markerArray.push(marker);  
             };                   
         });
@@ -607,6 +661,7 @@ console.warn(elem);
             };
         }; 
         $scope.mapSettings.drawMarkersFlag = false;
+console.log(markerArray);        
         return markerArray;
     };
     
@@ -806,7 +861,8 @@ console.warn(elem);
     };
     
     //create object marker
-    $scope.prepareObjectMarker = function(object, marker){                  
+    $scope.prepareObjectMarker = function(object, marker){ 
+//console.log("prepareObjectMarker");        
         if ((object.contObject.contObjectGeo.geoPosX === null) || (object.contObject.contObjectGeo.geoPosY===null)){
             return;
         }; 
@@ -816,7 +872,10 @@ console.warn(elem);
         marker.object = object;
         marker.lng=object.contObject.contObjectGeo.geoPosX;
         marker.lat= object.contObject.contObjectGeo.geoPosY;
+        marker.getMessageScope = null;
         marker.getMessageScope=function () {
+console.log("getMessageScope object");
+console.log(marker);            
                 angular.extend($scope, {
                     markerSettings:{
                         cmpFlag: false,
@@ -830,6 +889,12 @@ console.warn(elem);
                 angular.extend($scope,{compareWith: compareWith});
                 angular.extend($scope, {viewObjectsOnMap: viewObjectsOnMap});
                 angular.extend($scope, {getObjectsConsumingForObject: getObjectsConsumingForObject});
+            
+            var tmpCity = angular.copy(marker.city);
+    //                $scope.curCity = tmpCity;
+            angular.extend($scope, {curCity: tmpCity});
+            angular.extend($scope, {getObjectsConsumingForCity: getObjectsConsumingForCity});
+            
                 return $scope; };
             marker.message = ""+markerMessage+"";
             marker.compileMessage = true;
@@ -942,6 +1007,7 @@ console.warn(elem);
                 var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
                 popupPane[0].innerHTML = "";  
                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
+                $scope.markersOnMap = [];
                 $scope.markersOnMap = markersForObjects;
 //console.log($scope.markersOnMap);                
             };           
@@ -952,7 +1018,9 @@ console.warn(elem);
                 var popupPane = document.getElementsByClassName("leaflet-pane leaflet-popup-pane");
                 popupPane[0].innerHTML = "";
                 markersForCities = $scope.setCitiesOnMap($scope.cities, markersForCities);
+                $scope.markersOnMap = [];
                 $scope.markersOnMap = markersForCities;
+//console.log($scope.markersOnMap);                
             };    
         };
     }, false);

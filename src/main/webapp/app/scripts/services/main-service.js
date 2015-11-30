@@ -160,6 +160,9 @@ console.log($rootScope.userInfo.subscriber);
                     if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoom)){
                         mapSettings.mapZoom = $rootScope.userInfo.subscriber.mapZoom;
                     };
+                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoomDetail)){
+                        mapSettings.mapZoomDetail = $rootScope.userInfo.subscriber.mapZoomDetail;
+                    };
 console.log(mapSettings);                     
                     if (mapSettings!=EMPTY_OBJECT){
 console.log(mapSettings);                        

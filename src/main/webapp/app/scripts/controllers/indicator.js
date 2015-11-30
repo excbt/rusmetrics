@@ -797,7 +797,8 @@ console.log(table);
                     element.title = "";
                 });
 
-                $scope.summary = angular.copy(data);      
+                $scope.summary = angular.copy(data);
+console.log(data);            
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
 //                    $scope.intotalColumns.forEach(function(element){

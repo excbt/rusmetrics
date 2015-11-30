@@ -109,7 +109,7 @@ console.log("Monitor Controller.");
 //console.log(url);          
         $http.get(url)
             .success(function(data){
-console.log(data);            
+//console.log(data);            
             //if data is not array - exit
                 if (!data.hasOwnProperty('length')||(data.length == 0)){
                     return;
@@ -691,14 +691,14 @@ console.log("Monitor destroy");
     }); 
     
     $scope.setMonitorEventsForObject = function(obj){
-console.log(obj);        
+//console.log(obj);        
         if (angular.isUndefined(obj.monitorEvents)){
             return;
         };
         var imgObj = "#imgObj"+obj.contObject.id; 
 //            imgObj = "#"+imgObj;
         $(imgObj).ready(function(){
-console.log(imgObj+" ready!");
+//console.log(imgObj+" ready!");
             $(imgObj).qtip({
                 content:{
                     text: obj.monitorEvents
@@ -708,7 +708,7 @@ console.log(imgObj+" ready!");
                 }
             });
         });
-console.log($(imgObj));            
+//console.log($(imgObj));            
 //            $(imgObj).qtip({
 //                content:{
 //                    text: obj.monitorEvents
@@ -781,7 +781,12 @@ console.log($(imgObj));
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
         setVisibles($scope.monitorSettings.ctxId);
-    });    
+    });
+      
+    window.setTimeout(function(){
+//console.log(3);        
+        setVisibles($scope.monitorSettings.ctxId);
+    }, 500);  
     
         //chart
     $scope.runChart = function(objId){
