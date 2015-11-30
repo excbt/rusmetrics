@@ -454,7 +454,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 		checkNotNull(localDateTime);
 		checkNotNull(timeDetail);
-
+logger.debug("localDateTime = {}", localDateTime);
 		String[] dataTimeDetails = { timeDetail.getKeyname() };
 
 		Date dataDateLimit;
@@ -468,19 +468,31 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 			}
 
 			dataDateLimit = dataList.get(0).getDataDate();
+logger.debug("dataDateLimit, after get(0) = {}", dataDateLimit);			
 			// Truncate dataDateLimit
 			LocalDateTime ldt = new LocalDateTime(dataDateLimit);
 			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();
+logger.debug("dataDateLimit, after joda trans = {}", dataDateLimit);			
 		} else {
 			dataDateLimit = localDateTime.toDate();
 		}
 
 		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
-
-		List<ContServiceDataHWater> integratorList = contServiceDataHWaterRepository
+		List<ContServiceDataHWater> integratorList = null;
+		if (isEndDate){
+			integratorList = contServiceDataHWaterRepository
 				.selectLastDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
-
-		return integratorList.size() > 0 ? integratorList.get(0) : null;
+		}else{
+			integratorList = contServiceDataHWaterRepository
+					.selectFirstDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
+		};
+		//integratorList.size() > 0 ? integratorList.get(0) : null;
+//		logger.debug("contZPointId = {}", contZPointId);
+//		logger.debug("integratorTimeDetails = {}", integratorTimeDetails);
+//		logger.debug("dataDateLimit = {}", dataDateLimit);
+		logger.debug("integratorList.size = {}",integratorList.size());
+//		logger.debug("Integrator list = {}", integratorList.get(0));
+		return integratorList.size() > 0 ? integratorList.get(integratorList.size()-1) : null;
 	}
 
 	/**
