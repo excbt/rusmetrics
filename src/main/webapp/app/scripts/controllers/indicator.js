@@ -2,6 +2,8 @@
 angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
         
+//console.log($rootScope.reportStart);
+//console.log($rootScope.reportEnd);        
         // Настройки интервала дат для страницы с показаниями
     if (angular.isDefined($location.search().fromDate)&&($location.search().fromDate!=null)){
         $scope.indicatorDates = {
@@ -191,6 +193,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             }, 
             {
                 header : "Темп. обратки",
@@ -201,6 +204,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             } , 
             {
                 header : "Темп. ХВС",
@@ -211,6 +215,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             } ,
             {
                 header : "Темп. окр. среды",
@@ -221,6 +226,7 @@ angular.module('portalNMC')
                 "imgpath" : "",
                 "imgclass": "",
                 "title":""
+                ,dataType: "temperature"
             },
             {
                 header : "Объем подачи, м3",
@@ -592,7 +598,13 @@ angular.module('portalNMC')
 //                indicatorSvc.setTimeDetailType(pathParams.timeDetailType);
                 $scope.timeDetailType = pathParams.timeDetailType;
             }else{
-                $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+//console.log($cookies.timeDetailType);                
+                if (angular.isDefined($cookies.timeDetailType)&&($cookies.timeDetailType!="undefined")&&($cookies.timeDetailType!="null")){
+                    $scope.timeDetailType = $cookies.timeDetailType;
+                }else{
+//console.log("param TDT and COOKie TDT is undefined");                    
+                    $scope.timeDetailType = indicatorSvc.getTimeDetailType();
+                };
             };
         };
         
@@ -776,9 +788,16 @@ console.log(table);
         
         // get summary (score)
         var table_summary = table.replace("paged", "summary");
+//console.log(table_summary);        
         crudGridDataFactory(table_summary).get(function(data){        
                 $scope.setScoreStyles();
-                $scope.summary = data;       
+                $scope.intotalColumns.forEach(function(element, index, array){
+                    element.imgpath = EMPTY_IMG_PATH;
+                    element.imgclass= "";
+                    element.title = "";
+                });
+
+                $scope.summary = angular.copy(data);      
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
 //                    $scope.intotalColumns.forEach(function(element){
@@ -861,7 +880,7 @@ console.log(table);
                     var total = $scope.summary.totals[columnName];
 //console.log(diff);                    
 //console.log(total);                                        
-                    if((diff==null) || (total==null)){
+                    if((diff==null) || (total==null) || (diff=="-") || (total=="-")){
                         return;
                     }
                     var diffStr = diff.toString();
@@ -909,11 +928,19 @@ console.log(table);
     };
         
         //first load data
+//console.log("first load data");        
     $scope.getData(1);
 
-    $scope.pageChanged = function(newPage) {       
+    $scope.pageChanged = function(newPage) {
+//console.log("pageChanged getData");        
         $scope.getData(newPage);
-    };   
+    };
+    $scope.changeTimeDetailType = function(){
+//console.log("changeTimeDetailType getData");
+        $cookies.timeDetailType = $scope.timeDetailType;
+//console.log($cookies.timeDetailType);        
+        $scope.getData(1);
+    };
         
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("Date-range-settings indicatorDates");        
@@ -929,7 +956,8 @@ console.log(table);
         indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
         indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');                                
+        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
+//console.log("watch('indicatorDates') getData");        
         $scope.getData(1);
     }, false);    
         
@@ -974,6 +1002,7 @@ console.log(table);
                 $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/"+ data.filename;
                 $scope.fileWithDeleteData = data.filename;
                 $scope.showLinkToFileFlag = true;
+//console.log("getData on success deleteData");            
                 $scope.getData(1);
             })
             .error(function(err){
@@ -986,6 +1015,7 @@ console.log(table);
         var ord = (asc==true) ? "asc" : "desc";
         $cookies.indicatorsortorder = ord;
         $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.indicatorsortorder };
+//console.log("getData on setOrderBy");        
         $scope.getData(1);
     };
     

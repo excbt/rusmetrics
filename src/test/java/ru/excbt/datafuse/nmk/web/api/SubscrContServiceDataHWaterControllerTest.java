@@ -277,6 +277,16 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	 * @throws Exception
 	 */
 	@Test
+	public void testKupavnaSummary() throws Exception {
+		_testJsonGet(apiSubscrUrl(
+				"/20118666/service/24h/20118715/summary?beginDate=2015-09-22&endDate=2015-10-21"));
+	}
+	
+	/**
+	 * @author Artamonov
+	 * @throws Exception
+	 */
+	@Test
 	public void testDemoKlin() throws Exception {
 		//Klin, Children hospital
 		//hw
