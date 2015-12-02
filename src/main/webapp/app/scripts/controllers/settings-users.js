@@ -181,10 +181,6 @@ console.log("Run user settings controller.");
     };
     
     //checkers
-        //user: admin?
-    $scope.isAdmin = function(){
-        return mainSvc.isAdmin();
-    };
     //$scope.checkString  
     $scope.emptyString = function(str){
         return mainSvc.checkUndefinedEmptyNullValue(str);

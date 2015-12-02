@@ -11,7 +11,6 @@
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
-        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
 
     </ul>
 
@@ -24,7 +23,7 @@
     <div class="row nmc-main-workspace-header">
         <div class="col-md-2 noPadding marginBottom10">
             <div class="btn-toolbar">
-                <button ng-disabled="!isAdmin()" class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button> 
+                <button class="btn nmc-main-add-button" ng-click="addUser()">Добавить пользователя</button> 
 <!--                <input type="text" id="inputTest"/>-->
             </div>
         </div>    
@@ -73,7 +72,7 @@
             <td class="nmc-td-for-button">
                 <div class="btn-toolbar">
                     <div class="btn-group">
-                        <i ng-disabled="!isAdmin()" title="Редактировать пользователя" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(user)" data-target="#showUserOptionModal" data-toggle="modal"></i>
+                        <i title="Редактировать пользователя" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(user)" data-target="#showUserOptionModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -89,7 +88,7 @@
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i ng-disabled="!isAdmin()" title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
+                        <i title="Удалить пользователя" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(user)" data-target="#deleteUserModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -161,8 +160,11 @@
                             </tr>
 -->
                             <tr>
-                                <td colspan="2" class="col-sm-12">
+                                <td class="col-sm-3">
                                    <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                </td>
+                                <td class="col-sm-9">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">Права "Только чтение"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">
