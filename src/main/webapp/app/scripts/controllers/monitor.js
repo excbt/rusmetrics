@@ -109,10 +109,11 @@ console.log("Monitor Controller.");
 //console.log(url);          
         $http.get(url)
             .success(function(data){
+//console.log(data);            
             //if data is not array - exit
                 if (!data.hasOwnProperty('length')||(data.length == 0)){
                     return;
-                };            
+                };
                 //temp array
                 var tmpTypes = [];
                 //make the new array of the types wich formatted to display
@@ -121,19 +122,6 @@ console.log("Monitor Controller.");
                     tmpType.id = element.contEventType.id;
                     tmpType.isBaseEvent = element.contEventType.isBaseEvent;
                     tmpType.typeCategory = element.statusColor.toLowerCase();
-                    var activeEventflag = false;
-                    if (angular.isArray(obj.monitorEventsForMap)){                        
-                        obj.monitorEventsForMap.some(function(el){
-                            if(el.contEventType.id == tmpType.id){
-                                activeEventflag = true;
-                                return true;
-                            };
-                        });
-                    };
-                    if (!activeEventflag){
-                        tmpType.typeCategory+="-mono";
-                    };
-
                     tmpType.typeEventCount = element.totalCount;
                     tmpType.typeName = element.contEventType.caption;
                     tmpTypes.push(tmpType);
@@ -148,7 +136,6 @@ console.log("Monitor Controller.");
                     return 0;
                 });
                 obj.eventTypes = tmpTypes;
-console.log(obj);            
                 //If need diagram - don't create child table
                 if (isChart){
                     $scope.runChart(obj.contObject.id);
@@ -281,10 +268,7 @@ console.log(obj);
     //Формируем таблицу с событиями объекта
     function makeEventTypesByObjectTable(obj){ 
         var trObj = document.getElementById("obj"+obj.contObject.id);
-        if (angular.isUndefined(trObj)|| (trObj==null)){
-            return;
-        };
-//console.log(trObj);        
+//console.log(obj);        
         var trObjEvents = trObj.getElementsByClassName("nmc-tr-object-events")[0];
 //        var trObjEvents = document.getElementById("trObjEvents"+obj.contObject.id);  
         if (angular.isUndefined(trObjEvents)){
@@ -334,9 +318,6 @@ console.log(obj);
                             case "red": title = "Критическая ситуация"; break;
                             case "orange": title = "Некритическая ситуация"; break;
                             case "yellow": title = "Уведомление"; break;
-                            case "red-mono": title = "Критическая ситуация"; break;
-                            case "orange-mono": title = "Некритическая ситуация"; break;
-                            case "yellow-mono": title = "Уведомление"; break;
                                 
                         };
                         trHTML +="<td><img title=\""+title+"\" height=\""+size+"\" width=\""+size+"\" src=\""+"images/object-state-"+event[column.name]+".png"+"\"/></td>"; break;   
@@ -449,7 +430,6 @@ console.log(obj);
 //console.log('On monitorObjects:getObjectEvents');        
 //console.log(event);
 //console.log(args);   
-        //set popup message for object
         var obj = args.obj;
         var imgObj = "#imgObj"+obj.contObject.id; 
 //console.log(obj); 
@@ -461,14 +441,7 @@ console.log(obj);
             style:{
                 classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
             }
-        });
-        
-        //set status color for object types
-        if (angular.isArray(obj.eventTypes)){
-            obj.eventTypes.some(function(el){
-                
-            });
-        };
+        }); 
     });
       
 //    $(window).bind("onscroll",function(){
@@ -718,14 +691,14 @@ console.log("Monitor destroy");
     }); 
     
     $scope.setMonitorEventsForObject = function(obj){
-console.log(obj);        
+//console.log(obj);        
         if (angular.isUndefined(obj.monitorEvents)){
             return;
         };
         var imgObj = "#imgObj"+obj.contObject.id; 
 //            imgObj = "#"+imgObj;
         $(imgObj).ready(function(){
-console.log(imgObj+" ready!");
+//console.log(imgObj+" ready!");
             $(imgObj).qtip({
                 content:{
                     text: obj.monitorEvents
@@ -735,7 +708,7 @@ console.log(imgObj+" ready!");
                 }
             });
         });
-console.log($(imgObj));            
+//console.log($(imgObj));            
 //            $(imgObj).qtip({
 //                content:{
 //                    text: obj.monitorEvents
@@ -808,7 +781,12 @@ console.log($(imgObj));
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
         setVisibles($scope.monitorSettings.ctxId);
-    });    
+    });
+      
+    window.setTimeout(function(){
+//console.log(3);        
+        setVisibles($scope.monitorSettings.ctxId);
+    }, 500);  
     
         //chart
     $scope.runChart = function(objId){
