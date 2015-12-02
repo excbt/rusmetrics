@@ -1051,6 +1051,10 @@ tr.nmc-inactive-price > td{
 .nmc-button-in-header{
  }
 
+.nmc-button-sort{
+    cursor: pointer;
+}
+
     /* Главная кнопка в заголовке рабочей области - */
 .nmc-primary-button-in-header{
     background: linear-gradient(to top, #FF6802,#FF811B);

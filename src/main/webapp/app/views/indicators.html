@@ -97,7 +97,7 @@
                 <tr ng-class="tableDef.headerClassTR">
                     <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}" ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
                         {{column.header}}
-                        <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
+                        <i class="nmc-button-sort glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
                         <span ng-if="column.dataType==='temperature'">,&deg;C</span>
                     </th>
                 </tr>
