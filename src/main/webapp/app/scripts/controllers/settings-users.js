@@ -154,8 +154,10 @@ console.log("Run user settings controller.");
     };
 
     $scope.updateObject = function (url, object) {
-        var params = { id: object[$scope.extraProps.idColumnName],
-                     isAdmin: object.isAdmin};
+        var params = { id: object[$scope.extraProps.idColumnName]};
+        if (angular.isDefined(object.isAdmin)&&(object.isAdmin!=null)){
+                     params.isAdmin = object.isAdmin;
+        };
         if (angular.isDefined(object.password)&&(object.password!=null)&&(object.password !="")){
             params.oldPassword = object.curpassword;
             params.newPassword = object.password;
