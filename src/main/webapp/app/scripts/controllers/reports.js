@@ -25,9 +25,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
     ];
     $scope.paramsetColumns = [
-        {"name":"name","header":"Наименование", "class":"col-md-1"}
-        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-1"}
-        ,{"name":"period","header":"Период", "class":"col-md-1"}
+        {"name":"name","header":"Наименование", "class":"col-md-3"}
+        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-3"}
+        ,{"name":"period","header":"Период", "class":"col-md-2"}
         ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
     ];
     $scope.groupUrl = "../api/contGroup";
@@ -47,7 +47,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
             $scope.reportTypes = data;
-//console.log(data);
+console.log(data);
             var newObjects = [];
             var newObject = {};
             for (var i = 0; i<data.length; i++){
@@ -99,7 +99,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
-            type.paramsets = data;
+console.log(angular.copy(data));            
+            type.paramsets = data;            
             type.paramsetsCount = data.length;            
         });
     };

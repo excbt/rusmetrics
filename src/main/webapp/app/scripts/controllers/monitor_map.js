@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc){
+.controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc, $timeout){
     
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
@@ -461,15 +461,16 @@ console.warn(elem);
             markers = new Array();
             $scope.setCitiesOnMap($scope.cities, markers);  
         };
-        if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length ===0)){
-//console.log(markersOnMap);        
-            markersOnMap = markers;
-            angular.extend($scope,{markersOnMap});
-        }else{
-//console.log(markersOnMap);                    
-            $scope.markersOnMap = markers;
-        };
-        
+        $timeout(function(){
+            if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length ===0)){
+    //console.log(markersOnMap);        
+                markersOnMap = markers;
+                angular.extend($scope,{markersOnMap});
+            }else{
+    //console.log(markersOnMap);                    
+                $scope.markersOnMap = markers;
+            };
+        }, 10);
         $scope.mapSettings.loadingFlag = false;
     });
     
@@ -505,12 +506,14 @@ console.warn(elem);
                 $scope.setCitiesOnMap($scope.cities, markers);
             };    
         };
-        if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length ===0)){
-            markersOnMap = markers;
-            angular.extend($scope,{markersOnMap});
-        }else{
-            $scope.markersOnMap = markers;
-        };
+        $timeout(function(){
+            if (angular.isArray($scope.markersOnMap)&&($scope.markersOnMap.length ===0)){
+                markersOnMap = markers;
+                angular.extend($scope,{markersOnMap});
+            }else{
+                $scope.markersOnMap = markers;
+            };
+        }, 10);
 //        angular.extend($scope,{markersOnMap});
         ///////////////////////////////////////
     }, false);
