@@ -1151,12 +1151,12 @@ tr.nmc-inactive-price > td{
 .nmc-button-in-table {
 }
 /* кнопка Запустить используется, например, для  формирования отчета*/
-.nmc-button-in-table-run {
-    color:lightgreen;
+.nmc-button-in-table-run, .nmc-button-in-table-run:hover, .nmc-button-in-table-run:focus {
+    color:green;
 }
 
 /* недоступная кнопка Запустить*/
-.nmc-button-in-table-run-disabled {
+.nmc-button-in-table-run-disabled, .nmc-button-in-table-run-disabled:hover {
     color:rgba(0, 0, 0, 0.65);
 }
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/
@@ -1523,6 +1523,11 @@ tr.nmc-inactive-price > td{
     /*Вертикальная линия в кнопках на странице Объекты*/
 .nmc-line-right{
     border-right: 1px solid black;
+}
+
+.nmc-textfield{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333;
 }
 
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
