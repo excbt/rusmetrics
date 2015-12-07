@@ -28,7 +28,7 @@
 
                                         <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>                                           
+                                            <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toggleShowGroupDetails(object);"></i>                                           
 
                                         </div>
                                         <div class="col-md-11">
@@ -61,7 +61,8 @@
                                         </tr>
                                     </thead>    
 
-                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="" ng-mouseover="editParamSet(object, oldObject, ctrlSettings.openModes.preview)">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
+<!--                                         ng-mouseover="editParamSet(object, oldObject, ctrlSettings.openModes.preview)">-->
                                          <td class="nmc-btn-toolbar-in-table-3">
 <!--
                                             <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table-3 nmc-text-align-right">
@@ -70,7 +71,7 @@
                                                       <tr>
                                                         <td>
 -->
-                                                            <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.create)" ng-class="{'nmc-button-in-table-run-disabled': !oldObject.allRequiredParamsPassed}"></i>
+                                                            <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.create)" ng-class="{'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
 <!--                                             ng-disabled="!oldObject.allRequiredParamsPassed"-->
 <!--
                                                         </td>
@@ -81,7 +82,7 @@
                                                         </td>
                                                         <td>
 -->
-                                                          <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table-run" ng-click="previewReport(object, oldObject)" ng-disabled="(object.reportType=='COMMERCE_REPORT')||(!oldObject.checkFlag)" ng-class="{'nmc-button-in-table-run-disabled': !oldObject.allRequiredParamsPassed || (object.reportType=='COMMERCE_REPORT')}"></i>
+                                                          <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table-run" ng-click="previewReport(object, oldObject)" ng-disabled="(object.reportType=='COMMERCE_REPORT')" ng-class="{'nmc-button-in-table-run-disabled': object.reportType=='COMMERCE_REPORT', 'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
 <!--
                                              <a ng-attr-id="{{'preview1'+oldObject.id}}" ng-attr-href="../api/reportService{{object.suffix}}/{{oldObject.id}}/preview" target="_blank">test</a>
                                              <i ng-attr-id="{{'preview'+oldObject.id}}" ng-click="previewReport(object, oldObject)">test</i>
@@ -589,7 +590,7 @@
 
 					<div class="row">
 						<div class="col-xs-offset-4 col-md-5">
-							<button ng-show="showMessageForUserModalExFlag" class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal"
+							<button ng-show="showMessageForUserModalExFlag" class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal" data-target="#main_properties" data-toggle="tab"
 								ng-click="editParamSet(currentReportType, currentObject, ctrlSettings.openModes.edit)">
 								Настройка параметров
 							</button>

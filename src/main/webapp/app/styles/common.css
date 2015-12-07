@@ -1151,8 +1151,17 @@ tr.nmc-inactive-price > td{
 .nmc-button-in-table {
 }
 /* кнопка Запустить используется, например, для  формирования отчета*/
-.nmc-button-in-table-run, .nmc-button-in-table-run:hover, .nmc-button-in-table-run:focus {
-    color:green;
+/*.nmc-button-in-table-run, .nmc-button-in-table-run:hover, .nmc-button-in-table-run:focus {*/
+.nmc-button-in-table-run{
+    color:black;
+}
+
+.nmc-button-in-table-run-green:hover{
+    color: green;
+}
+
+.nmc-button-in-table-run-red:hover{
+    color: red;
 }
 
 /* недоступная кнопка Запустить*/
