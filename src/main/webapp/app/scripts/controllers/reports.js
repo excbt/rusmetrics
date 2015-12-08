@@ -167,9 +167,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         if (flag===false){
             $('#messageForUserModal').modal();
         }else{
-            var previewFile = null;
             var previewWin = null;
+            var previewFile = new Blob([""], {type : 'text/html'});//new Blob(["temp"], "temp");//null;
             if(previewFlag){
+                //window.URL= window.URL || window.webkitURL;
                 var url = window.URL.createObjectURL(previewFile);//формируем url на сформированный файл
                 previewWin = window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
             };
@@ -221,7 +222,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
     
     var prepareParamSpecialList = function(reportType, reportParamset){
-console.log(reportType);        
+//console.log(reportType);        
         var resultParamSpecialList = reportType.reportMetaParamSpecialList.map(function(element){
             var result = {};
             result.paramSpecialCaption = element.paramSpecialCaption;
@@ -292,9 +293,11 @@ console.log(reportType);
     
     
     $scope.editParamSet =function(parentObject, object, mode){
+//console.log(parentObject);        
         $scope.showMessageForUserModalExFlag = false;
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
+//console.log($scope.currentReportType);        
         $scope.currentParamSpecialList = prepareParamSpecialList($scope.currentReportType, object);
 //            $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
 //            var result = {};
@@ -402,7 +405,7 @@ console.log(reportType);
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
             objectSvc.sortObjectsByFullName($scope.selectedObjects); 
-console.log(mode);            
+//console.log(mode);            
             switch (mode){
                 case $scope.ctrlSettings.openModes.edit :  activateMainPropertiesTab(); break;
                 case $scope.ctrlSettings.openModes.create :  
@@ -1023,6 +1026,7 @@ console.log(mode);
     };
     
     $scope.previewReport = function(type, paramset){
+        $scope.selectedItem(type, paramset);
         if (paramset.checkFlag){
             var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
             window.open(url, "_blank");
