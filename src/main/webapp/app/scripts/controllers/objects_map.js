@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ObjectsMapCtrl', function($rootScope, $scope, $cookies, objectSvc, mainSvc){
+.controller('ObjectsMapCtrl', function($rootScope, $scope, $cookies, objectSvc, mainSvc, $timeout){
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
     $scope.mapSettings.dateFrom = moment().subtract(30, 'days').startOf('day').format('YYYY-MM-DD');
@@ -1008,7 +1008,9 @@ console.warn(elem);
                 popupPane[0].innerHTML = "";  
                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
                 $scope.markersOnMap = [];
-                $scope.markersOnMap = markersForObjects;
+                $timeout(function(){
+                    $scope.markersOnMap = markersForObjects;
+                }, 10);
 //console.log($scope.markersOnMap);                
             };           
         };
@@ -1019,7 +1021,9 @@ console.warn(elem);
                 popupPane[0].innerHTML = "";
                 markersForCities = $scope.setCitiesOnMap($scope.cities, markersForCities);
                 $scope.markersOnMap = [];
-                $scope.markersOnMap = markersForCities;
+                $timeout(function(){
+                    $scope.markersOnMap = markersForCities;
+                }, 10);
 //console.log($scope.markersOnMap);                
             };    
         };

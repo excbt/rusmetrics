@@ -98,10 +98,10 @@
     <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
                                             <th></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
-                                            <th></th>
+                                            <th class="nmc-td-for-button"></th>
                                             <th>
                                                 Действует с
                                             </th>
@@ -190,13 +190,13 @@
                                         <tr class="nmc-child-table-header">
     <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
                                             <th>
                                                 В архиве с
                                             </th>
-                                            <th>
+                                            <th class="nmc-td-for-button">
                                             </th>
                                         </tr>
                                     </thead>    
@@ -738,7 +738,7 @@
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
 			<form name="moveForm" novalidate>
-                <pre>
+                <pre class="nmc-textfield">
                     {{messageForUser}}  
                 </pre>
 			</form>

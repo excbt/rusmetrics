@@ -149,7 +149,7 @@ angular.module('portalNMC')
                 $rootScope.userInfo = angular.copy(data);
 console.log($rootScope.userInfo);
                 if (!checkUndefinedNull($rootScope.userInfo.subscriber)){
-console.log($rootScope.userInfo.subscriber);                    
+//console.log($rootScope.userInfo.subscriber);                    
                     var mapSettings = {};
                     if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLat)){
                         mapSettings.mapCenterLat = $rootScope.userInfo.subscriber.mapCenterLat;
@@ -163,9 +163,9 @@ console.log($rootScope.userInfo.subscriber);
                     if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoomDetail)){
                         mapSettings.mapZoomDetail = $rootScope.userInfo.subscriber.mapZoomDetail;
                     };
-console.log(mapSettings);                     
+//console.log(mapSettings);                     
                     if (mapSettings!=EMPTY_OBJECT){
-console.log(mapSettings);                        
+//console.log(mapSettings);                        
                         objectSvc.setObjectSettings(mapSettings);
                         monitorSvc.setMonitorSettings(mapSettings);
                     };
