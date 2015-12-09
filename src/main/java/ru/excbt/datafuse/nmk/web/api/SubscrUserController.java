@@ -223,6 +223,7 @@ public class SubscrUserController extends SubscrApiController {
 
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
+		subscrUser.setIsReadonly(isReadonly);
 
 		if (Boolean.TRUE.equals(isReadonly)) {
 			subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrReadonlyRoles());

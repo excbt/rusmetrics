@@ -493,7 +493,7 @@ console.log("Objects directive.");
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons-3\"></th>";
                     $scope.oldColumns.forEach(function(column){
-                        trHTML+="<th ng-class=\""+column.class+"\">";
+                        trHTML+="<th class=\""+column.class+"\">";
                         trHTML+=""+(column.header || column.name)+"";
                         trHTML+="</th>";
                     });
@@ -683,7 +683,10 @@ console.log("Objects directive.");
                     $cookies.contObject=$scope.currentObject.id;
                     $cookies.contZPointName = $scope.currentZpoint.zpointName;
                     $cookies.contObjectName=$scope.currentObject.fullName;
-                    $cookies.timeDetailType="24h";
+                    if (angular.isUndefined($cookies.timeDetailType)||($cookies.timeDetailType=="undefined")||($cookies.timeDetailType=="null")){
+                        $cookies.timeDetailType="24h";
+                    };
+                    
                     $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
 //console.log($scope.currentZpoint);                    
                     $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');

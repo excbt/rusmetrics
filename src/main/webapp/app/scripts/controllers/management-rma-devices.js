@@ -14,6 +14,21 @@ console.log('Run devices management controller.');
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
             //get devices
+    function sortDevicesByConObjectFullName(array){
+            if (angular.isUndefined(array)||(array == null)|| !angular.isArray(array)){
+                return false;
+            };           
+            array.sort(function(a, b){
+                if (a.contObjectInfo.fullName>b.contObjectInfo.fullName){
+                    return 1;
+                };
+                if (a.contObjectInfo.fullName<b.contObjectInfo.fullName){
+                    return -1;
+                };
+                return 0;
+            }); 
+        };
+    
     $scope.getDevices = function(){
         objectSvc.getAllDevices().then(
             function(response){
@@ -30,12 +45,14 @@ console.log('Run devices management controller.');
                         elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
                     };
                 });
+                sortDevicesByConObjectFullName(tmp);
                 $scope.data.devices = tmp;
                 $scope.ctrlSettings.loading = false;
 //console.log(tmp);                
             },
             function(error){
-                notificationFactory.errorInfo(error.statusText,error.description);
+                console.log(error.data);
+                notificationFactory.errorInfo(error.statusText,error.data.description || error.data);
             }
         );
     };

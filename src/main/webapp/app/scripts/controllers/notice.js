@@ -119,7 +119,9 @@ console.log("Load NoticeCtrl.");
     //Controller initialization
     //use to redirect from the Monitor page
     $scope.initCtrl = function(){
-console.log("initCtrl"); 
+//console.log("initCtrl"); 
+//console.log(loca);         
+//console.log($scope.objects);        
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};
@@ -628,7 +630,7 @@ console.log("performObjectsFilter");
                 $scope.noticeTypes = data;
                 $scope.initCtrl();
                 $scope.getResultsPage(1);
-console.log("$scope.noticeTypes");           
+//console.log("$scope.noticeTypes");           
             })
             .error(function(e){
                 console.log(e);
