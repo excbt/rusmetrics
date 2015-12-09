@@ -188,7 +188,7 @@ public class ReportMakerParam {
 		}
 
 		return Boolean.TRUE.equals(reportParamset.getOutputFileZipped())
-				|| (getContObjectList().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
+				|| (getReportContObjectIds().size() > 1 && Boolean.TRUE.equals(reportParamset.getReportTemplate()
 						.getReportType().getReportMetaParamCommon().getManyContObjectsZipOnly()));
 	}
 

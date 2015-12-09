@@ -189,19 +189,19 @@ public class ReportMakerParamService {
 		// Only one object required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.FALSE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() == 1;
+			result = result && reportMakerParam.getReportContObjectIds().size() == 1;
 		}
 
 		// More than 0 Objects required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() > 0;
+			result = result && reportMakerParam.getReportContObjectIds().size() > 0;
 		}
 
 		// More than 1 object required
 		if (Boolean.FALSE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() > 1;
+			result = result && reportMakerParam.getReportContObjectIds().size() > 1;
 		}
 
 		return result;
