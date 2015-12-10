@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
@@ -78,13 +79,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
 				: new DeviceObjectDataSource();
 
-		if (deviceObjectDataSource != null) {
-			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(subscrDataSourceId);
+		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+		if (deviceObjectDataSource != null && dsi != null) {
+			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
 			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-			deviceObjectDataSource.setSubscrDataSourceAddr(subscrDataSourceAddr);
-			deviceObjectDataSource.setDataSourceTable(dataSourceTable);
-			deviceObjectDataSource.setDataSourceTable1h(dataSourceTable1h);
-			deviceObjectDataSource.setDataSourceTable24h(dataSourceTable24h);
+			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
 			deviceObjectDataSource.setIsActive(true);
 		}
 
@@ -247,7 +249,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjects() {
-		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
+		List<DeviceObject> deviceObjects = deviceObjectService
+				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
 	}
 

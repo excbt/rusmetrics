@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
 @Entity
@@ -53,6 +54,9 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Transient
 	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
+
+	@Transient
+	private DataSourceInfo editDataSourceInfo;
 
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "device_model_id", nullable = false)
@@ -222,6 +226,18 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setIsDeviceObjectMetadata(Boolean isDeviceObjectMetadata) {
 		this.isDeviceObjectMetadata = isDeviceObjectMetadata;
+	}
+
+	public DataSourceInfo getEditDataSourceInfo() {
+		if (editDataSourceInfo == null) {
+			DeviceObjectDataSource dods = getActiveDataSource();
+			editDataSourceInfo = dods != null ? new DataSourceInfo(dods) : new DataSourceInfo();
+		}
+		return editDataSourceInfo;
+	}
+
+	public void setEditDataSourceInfo(DataSourceInfo dataSourceInfo) {
+		this.editDataSourceInfo = dataSourceInfo;
 	}
 
 }

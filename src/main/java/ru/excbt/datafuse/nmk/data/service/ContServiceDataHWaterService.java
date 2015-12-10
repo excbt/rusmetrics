@@ -467,18 +467,23 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 				return null;
 			}
 
-			dataDateLimit = dataList.get(0).getDataDate();
+			dataDateLimit = dataList.get(0).getDataDate();			
 			// Truncate dataDateLimit
 			LocalDateTime ldt = new LocalDateTime(dataDateLimit);
-			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();
+			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();			
 		} else {
 			dataDateLimit = localDateTime.toDate();
 		}
 
 		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
-
-		List<ContServiceDataHWater> integratorList = contServiceDataHWaterRepository
+		List<ContServiceDataHWater> integratorList = null;
+		if (isEndDate){
+			integratorList = contServiceDataHWaterRepository
 				.selectLastDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
+		}else{
+			integratorList = contServiceDataHWaterRepository
+					.selectFirstDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
+		};
 
 		return integratorList.size() > 0 ? integratorList.get(0) : null;
 	}

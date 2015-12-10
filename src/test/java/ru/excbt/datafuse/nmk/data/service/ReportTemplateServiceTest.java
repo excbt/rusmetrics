@@ -271,6 +271,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+	@Ignore
 	public void updateCommerce263() {
 		reportTemplateService.updateTemplateBodyFromMaster(ReportTypeKey.COMMERCE_REPORT, 28618263, true);
 	}
