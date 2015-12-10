@@ -460,6 +460,8 @@ console.log('Run Object management controller.');
                     var result = {};
                               
                     result.id = zpoint.id;
+                    result.exSystem = zpoint.exSystem;
+                    result.exCode = zpoint.exCode;
                     result.version = zpoint.version;
                     result.contObjectId = zpoint.contObjectId;
                     result.startDate = zpoint.startDate;
@@ -716,6 +718,8 @@ console.log('Run Object management controller.');
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
                     zps.id = object.id;
+                    zps.exSystem = object.exSystem;
+                    zps.exCode = object.exCode;
                     zps.version = object.version;
                     zps.contObjectId = object.contObjectId;
                     zps.startDate = object.startDate;
@@ -1399,6 +1403,7 @@ console.log('Run Object management controller.');
                 
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
+                    $('#inputEXCode').inputmask();
                 });
 //            }]
 }]);
