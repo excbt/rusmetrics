@@ -185,13 +185,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
 				: new DeviceObjectDataSource();
 
-		if (deviceObjectDataSource != null) {
-			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(subscrDataSourceId);
+		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+		if (deviceObjectDataSource != null && dsi != null) {
+			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
 			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
-			deviceObjectDataSource.setSubscrDataSourceAddr(subscrDataSourceAddr);
-			deviceObjectDataSource.setDataSourceTable(tableHolder.dataSourceTable);
-			deviceObjectDataSource.setDataSourceTable1h(tableHolder.dataSourceTable1h);
-			deviceObjectDataSource.setDataSourceTable24h(tableHolder.dataSourceTable24h);
+			deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
+			deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
+			deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
+			deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
 			deviceObjectDataSource.setIsActive(true);
 		}
 
