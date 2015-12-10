@@ -76,10 +76,11 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
 		deviceObject.setDeviceModel(deviceModel);
 
-		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
+		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+
+		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
 				: new DeviceObjectDataSource();
 
-		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
 		if (deviceObjectDataSource != null && dsi != null) {
 			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
 			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
@@ -182,10 +183,11 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		DeviceModel deviceModel = deviceModelService.findOne(deviceObject.getDeviceModelId());
 		deviceObject.setDeviceModel(deviceModel);
 
-		DeviceObjectDataSource deviceObjectDataSource = subscrDataSourceId == null ? null
+		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
+
+		DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
 				: new DeviceObjectDataSource();
 
-		DataSourceInfo dsi = deviceObject.getEditDataSourceInfo();
 		if (deviceObjectDataSource != null && dsi != null) {
 			SubscrDataSource subscrDataSource = subscrDataSourceService.findOne(dsi.getSubscrDataSourceId());
 			deviceObjectDataSource.setSubscrDataSource(subscrDataSource);
