@@ -271,12 +271,12 @@
                                 	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputTSNumber"  ng-model="zpointSettings.tsNumber" data-inputmask="'mask': '9[9]', 'greedy':false"/>
                                 </td>
                             </tr>
-                            <tr ng-show="zpointSettings.exSystem == 'LERS'">
+                            <tr ng-show="zpointSettings.exSystemKeyname == 'LERS'">
                                 <td class="col-sm-3">
                                     <label for="inputTSNumber">Код точки учета</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputEXCode" ng-model="zpointSettings.exCode" data-inputmask="'alias': 'numeric'"/>
+                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputEXCode" ng-model="zpointSettings.exCode"/>
                                 </td>
                             </tr>
                             <tr><td></td><td></td></tr>

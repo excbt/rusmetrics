@@ -208,12 +208,14 @@ console.log('Run devices management controller.');
         if (angular.isDefined(device.id)&&(device.id !=null)){
             targetUrl = targetUrl+"/"+device.id;
         };
+        params.subscrDataSourceId=device.subscrDataSourceId;
             //add url params
-        targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
-        if (paramString!=""){
-            paramString="&"+paramString;
-        };
-        targetUrl= targetUrl+paramString;
+        //targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
+//        if (paramString!=""){
+//            paramString="&"+paramString;
+//        };
+//        targetUrl= targetUrl+paramString;
+        device.editDataSourceInfo = params;
 //console.log(targetUrl);        
         if (angular.isDefined(device.id)&&(device.id !=null)){
             $http.put(targetUrl, device)
