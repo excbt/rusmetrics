@@ -460,6 +460,9 @@ console.log('Run Object management controller.');
                     var result = {};
                               
                     result.id = zpoint.id;
+                    result.exSystemKeyname = zpoint.exSystemKeyname;
+                    result.tsNumber = zpoint.tsNumber;
+                    result.exCode = zpoint.exCode;
                     result.version = zpoint.version;
                     result.contObjectId = zpoint.contObjectId;
                     result.startDate = zpoint.startDate;
@@ -525,7 +528,7 @@ console.log('Run Object management controller.');
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             var copyTmp = angular.copy(response.data);
-//console.log(copyTmp);                              
+console.log(copyTmp);                              
                             if (mode == "Ex"){
                                 tmp = response.data.map(function(el){
                                     var result = {};
@@ -712,10 +715,13 @@ console.log('Run Object management controller.');
                 
                 $scope.getZpointSettings = function(objId, zpointId){
                     $scope.selectedZpoint(objId, zpointId);          
-//console.log($scope.currentZpoint); 
+console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
                     zps.id = object.id;
+                    zps.exSystemKeyname = object.exSystemKeyname;
+                    zps.tsNumber = object.tsNumber;
+                    zps.exCode = object.exCode;
                     zps.version = object.version;
                     zps.contObjectId = object.contObjectId;
                     zps.startDate = object.startDate;
@@ -1399,6 +1405,7 @@ console.log('Run Object management controller.');
                 
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
+                    $('#inputEXCode').inputmask();
                 });
 //            }]
 }]);
