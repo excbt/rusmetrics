@@ -28,7 +28,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 	private ContZPointService contZPointService;
 
 	@Test
-	@Ignore
+	//@Ignore
 	public void testZPointCRUD() throws Exception {
 
 		ContZPoint contZPoint = new ContZPoint();
@@ -55,6 +55,7 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		contZPoint.setRso(null);
 		contZPoint.setDeviceObjects(null);
 		contZPoint.set_activeDeviceObjectId(activeDeviceObjectId);
+		contZPoint.setExCode("ex_code111");
 		_testJsonUpdate(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
 				contZPoint);
 

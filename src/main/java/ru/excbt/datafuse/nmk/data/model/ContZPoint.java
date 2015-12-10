@@ -94,11 +94,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private Boolean isManualLoading;
 
 	@Column(name = "ex_system")
-	@JsonIgnore
 	private String exSystemKeyname;
 
 	@Column(name = "ex_code")
-	@JsonIgnore
 	private String exCode;
 
 	@Column(name = "ts_number")
