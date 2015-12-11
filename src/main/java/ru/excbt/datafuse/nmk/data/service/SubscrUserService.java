@@ -154,7 +154,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 			}
 
 			LdapAction action = (u) -> {
-				ldapService.changePassword(u, passwords[0], passwords[1]);
+				//ldapService.changePassword(u, passwords[0], passwords[1]);
+				ldapService.changePassword(u, passwords[1]);
 			};
 
 			processLdapAction(result, action);
