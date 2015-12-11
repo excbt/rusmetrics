@@ -1061,13 +1061,11 @@ console.log($scope.currentZpoint);
                 $scope.deleteObjectInit = function(object){
                     $scope.selectedItem(object);
                     //generation confirm code
-                    $scope.confirmCode = null;
-                    var tmpCode = mainSvc.getConfirmCode();
-                    $scope.confirmLabel = tmpCode.label;
-                    $scope.sumNums = tmpCode.result;
+                    setConfirmCode();
                 };
                 
                 $scope.deleteZpointInit = function(objId, zpointId){
+                    //setConfirmCode();
                     $scope.selectedZpoint(objId, zpointId);
                     $scope.deleteObjectInit($scope.currentObject);
                 };
@@ -1130,6 +1128,13 @@ console.log($scope.currentZpoint);
 //                    $scope.currentDevice.contObjectId = $scope.currentObject.id;
                 };
                 
+                var setConfirmCode = function(){
+                    $scope.confirmCode = null;
+                    var tmpCode = mainSvc.getConfirmCode();
+                    $scope.confirmLabel = tmpCode.label;
+                    $scope.sumNums = tmpCode.result;                    
+                };
+                
                 $scope.addDevice = function(){
                     $scope.currentDevice = {};
                     $scope.currentDevice.contObjectId = $scope.currentObject.id;
@@ -1137,16 +1142,14 @@ console.log($scope.currentZpoint);
                 };
                 
                 $scope.deleteDeviceInit = function(device){
+                    setConfirmCode();
                     $scope.selectDevice(device);
-                    $('#deleteDeviceModal').modal();
+                    //$('#deleteDeviceModal').modal();
                 };
                 
                 $scope.deleteObjectsInit = function(){
                     //generate confirm code
-                    $scope.confirmCode = null;
-                    var tmpCode = mainSvc.getConfirmCode();
-                    $scope.confirmLabel = tmpCode.label;
-                    $scope.sumNums = tmpCode.result;
+                    setConfirmCode();
                     
                     $scope.currentObject = {};
                     var tmpArr = [];
