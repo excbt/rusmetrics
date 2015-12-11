@@ -88,6 +88,7 @@ console.log('Run Client management controller.');
     $scope.selectedItem = function (item) {
         var curObject = angular.copy(item);
         $scope.data.currentClient = curObject;
+//console.log($scope.data.currentClient);        
     };
     
     $scope.editObjectList =  function(client){
@@ -131,10 +132,33 @@ console.log('Run Client management controller.');
         console.log(e);
     };
     
+    var checkData = function(obj){
+        var result = true;
+        if (angular.isUndefined(obj) || (obj == null) || angular.isUndefined(obj.subscriberName) || (obj.subscriberName==null) || (obj.subscriberName == "")){
+            notificationFactory.errorInfo("Ошибка", "Не задано наименование абонента!");
+            result = false;
+        };
+        if (angular.isUndefined(obj) || (obj == null) || angular.isUndefined(obj.organizationId) || (obj.organizationId==null)){
+            notificationFactory.errorInfo("Ошибка", "Не задана организация абонента!");
+            result = false;
+        };
+        if (angular.isUndefined(obj) || (obj == null) || angular.isUndefined(obj.timezoneDefKeyname) || (obj.timezoneDefKeyname==null)){
+            notificationFactory.errorInfo("Ошибка", "Не задан часовой пояс абонента!");
+            result = false;
+        };
+        return result;
+    };
+    
     $scope.sendClientToServer = function(obj){
 //        obj.organizationId = 726;
 //        obj.timezoneDef = null;
-//console.log(obj);        
+//console.log(obj);
+        
+        //check data before sending
+        if (checkData(obj) == false){
+            return;
+        };        
+        
         var url = $scope.ctrlSettings.clientsUrl;                    
         if (angular.isDefined(obj.id)&&(obj.id!=null)){
             $scope.updateObject(url, obj);

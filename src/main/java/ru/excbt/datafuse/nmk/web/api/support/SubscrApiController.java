@@ -9,6 +9,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -83,6 +84,14 @@ public class SubscrApiController extends WebApiController {
 	 */
 	protected long getCurrentSubscriberId() {
 		return currentSubscriberService.getSubscriberId();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	protected Subscriber getCurrentSubscriber() {
+		return currentSubscriberService.getSubscriber();
 	}
 
 	/**

@@ -74,7 +74,7 @@
                                             <div class="col-md-5 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                             </div>    
                                             <div class="col-md-7" ng-show="object.reportType=='COMMERCE_REPORT'">
-                                                <button ng-disabled="isROfield()" title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addTemplate(object)" >Добавить</button>
+                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addTemplate(object)" >Добавить</button>
                                             </div>
                                         </div>
 
@@ -107,7 +107,7 @@
                                          <td class="nmc-td-for-buttons-3">
                                             <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
 
-                                            <i title="В архив" ng-disabled="isROfield()||(object.reportType!='COMMERCE_REPORT')" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                            <i title="В архив" ng-disabled="object.reportType!='COMMERCE_REPORT'" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
                                             <i class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table"
                                                 title="Предварительный просмотр"   
                                                 ng-click="preview(oldObject)"
@@ -124,44 +124,6 @@
                                                 {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
                                              </div>
                                          </td>
-<!--
-                                         <td>
-                                            <p class="btn btn-xs nmc-add-button-in-modal"
-                                                title="Предварительный просмотр"   
-                                                ng-click="preview(oldObject)"
-                                                >
-                                                Предпросмотр
-                                            </p>
-                                         </td>
--->
-
-<!--                                         <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right">
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editTemplate(object, oldObject);" data-target="#editTemplateModal" data-toggle="modal"></i>
-                                                            </td>
-                                                            <td><i title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
-                                                 <div class="col-md-3" ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                        {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                                </div>
-                                                <div class="col-md-8"  ng-class="{'nmc-distinguish': oldObject._default}">     
-                                                        действует с: {{oldObject.activeStartDate | date: 'dd.MM.yyyy'}}
-                                                </div>
-                                         </td>
--->
 
                                      </tr>
                                     </table>         
@@ -225,7 +187,7 @@
 
                                      <tr ng-repeat="oldObject in object.templates | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
                                          <td class="nmc-td-for-buttons">
-                                             <i ng-disabled="isROfield()" title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
+                                             <i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
                                          </td>
                                          <td class="col-md-4">
                                              {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
@@ -233,33 +195,7 @@
                                          <td class="col-md-7">
                                              {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
                                          </td>
-
-<!--                                         <td class="col-md-12">-->
-<!--
-                                             <div class="col-md-1" style="width:45px;">
-                                             </div>
--->
-<!--
-                                              <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table nmc-text-align-right" style="">
-                                                    <div class="btn-group">
-                                                      <table>
-                                                          <tr>
-                                                            <td><i title="Создать действующий шаблон на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#editTemplateModal" data-toggle="modal"></i>
-                                                            </td>
-
-                                                          </tr>
-                                                      </table>
-                                                    </div>    
-                                                </div>
-                                             <div class="col-md-2">     
-                                                    {{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
-                                            </div>
-                                            <div class="col-md-7">     
-                                                    в архиве с: {{oldObject.activeEndDate | date: 'dd.MM.yyyy'}}
-                                            </div>
-                                         </td>
--->
-                                         <td><i ng-disabled="isROfield()" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                         <td><i class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectToDelete(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                                          </td>
 
                                      </tr>
@@ -324,7 +260,7 @@
 					<div class="row">
 <!--                        <div class="col-md-3"></div>-->
 						<div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
@@ -621,18 +557,18 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputName" class="nmc-form-label">Наименование</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="isDisabled()">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" id="inputName" type=text placeholder="Наименование шаблона" ng-model="currentObject.name" ng-disabled="currentObject.common">
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputDescription" class="nmc-form-label">Описание</label>
                                 </td>
-                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="isDisabled()"></textarea>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description" ng-disabled="currentObject.common"></textarea>
                                 </td>
                             </tr>
 
                             <tr>
-                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="isDisabled()" class="nmc-checkbox-form">По умолчанию
+                                <td colspan="2" class="col-sm-3"><input type=checkbox ng-model="currentObject._default" ng-disabled="currentObject.common" class="nmc-checkbox-form">По умолчанию
                                 </td>
 
                             </tr>                            
@@ -643,7 +579,7 @@
                                     {{currentObject.activeStartDate | date:'dd.MM.yyyy'}}
                                 </td>
                                 <td class="nmc-text-align-left col-sm-9" ng-show="createByTemplate_flag">
-                                    <input class="form-control marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()"> 
+                                    <input class="form-control marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="currentObject.common"> 
                                 </td>                                
                             </tr>
                             
@@ -672,7 +608,7 @@
                             </p>
 						</div>
                         <div class="col-xs-offset-3 col-md-3">
-							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="updateTemplate(currentObject)"
 								value="Сохранить" />
 						</div>
@@ -720,7 +656,7 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="isDisabled()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="deleteObject(currentObject);"
 								value="Удалить" />
 						</div>

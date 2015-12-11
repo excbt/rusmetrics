@@ -747,11 +747,19 @@ tr.nmc-main-table-header > th {
     padding: 5px 0px 0 5px !important;
 /*    border-bottom-width: 0px;*/
 }
-
+/* Подсветка показаний Итого и Итого по интеграторам*/
 .nmc-totals-indicator-highlight{
     background-color: aquamarine;
 }
-
+/* Подсветка действующего/активного прайса*/
+tr.nmc-active-price > td{
+    background-color: bisque;
+    font-weight: bold;
+}
+/* Подсветка HE действующего/активного прайса*/
+tr.nmc-inactive-price > td{
+    font-style: italic;
+}
 
 /*********
  * Формы
@@ -779,6 +787,13 @@ tr.nmc-main-table-header > th {
 .nmc-select-form {
     font-size: 12px;
     height: 26px;
+    padding: 3px;
+}
+
+/* выпадающий список на странице с прайсами*/
+.nmc-select-form-for-price {
+    font-size: 12px;
+    height: 29px;
     padding: 3px;
 }
  
@@ -923,6 +938,10 @@ tr.nmc-main-table-header > th {
 /* чекбокс */
 .nmc-checkbox-form {
 }
+/* Недоступный чекбокс*/
+.nmc-checkbox-notallowed{
+    cursor: default !important;
+}
 
 /* чекбокс в заголовке рабочей области - например, в строке настроек фильтров уведомлений*/
 .nmc-checkbox-form-in-header {
@@ -1032,6 +1051,10 @@ tr.nmc-main-table-header > th {
 .nmc-button-in-header{
  }
 
+.nmc-button-sort{
+    cursor: pointer;
+}
+
     /* Главная кнопка в заголовке рабочей области - */
 .nmc-primary-button-in-header{
     background: linear-gradient(to top, #FF6802,#FF811B);
@@ -1128,12 +1151,21 @@ tr.nmc-main-table-header > th {
 .nmc-button-in-table {
 }
 /* кнопка Запустить используется, например, для  формирования отчета*/
-.nmc-button-in-table-run {
-    color:lightgreen;
+/*.nmc-button-in-table-run, .nmc-button-in-table-run:hover, .nmc-button-in-table-run:focus {*/
+.nmc-button-in-table-run{
+    color:black;
+}
+
+.nmc-button-in-table-run-green:hover{
+    color: green;
+}
+
+.nmc-button-in-table-run-red:hover{
+    color: red;
 }
 
 /* недоступная кнопка Запустить*/
-.nmc-button-in-table-run-disabled {
+.nmc-button-in-table-run-disabled, .nmc-button-in-table-run-disabled:hover {
     color:rgba(0, 0, 0, 0.65);
 }
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/
@@ -1215,6 +1247,10 @@ tr.nmc-main-table-header > th {
 .nmc-button-trash{
     padding-left: 0;
     padding-right: 24px;
+}
+/* Кнопки для прайс-листов: "Клонировать всем" и "Активировать у выбранных"*/
+.nmc-btn-dup:hover, .nmc-btn-on:hover{
+    color: lightgreen;
 }
  
 /**************************************************************************************
@@ -1498,6 +1534,11 @@ tr.nmc-main-table-header > th {
     border-right: 1px solid black;
 }
 
+.nmc-textfield{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    color: #333;
+}
+
 /*************** Отступы внутри элементов (padding) и отступы от других элементов (margin) *********************/
 /******************************************************************************************************/
 .noMarginTop {
@@ -1519,6 +1560,11 @@ tr.nmc-main-table-header > th {
 
 .marginBottom0_8em{
     margin-bottom: .8em;
+}
+
+.marginBottomMinus20{
+    margin: 0 0 -20px 0;
+/*    margin-bottom: -20px;*/
 }
 
 .marginLeft5 {
@@ -1547,6 +1593,10 @@ tr.nmc-main-table-header > th {
 
 .marginTopMinus10{
     margin-top: -10px;
+}
+
+.marginTopMinus79{
+    margin-top: -79px;
 }
 
 .margin10 {
@@ -1630,6 +1680,10 @@ tr.nmc-main-table-header > th {
     padding-top: 0px;
 }
 
+.paddingLeft0{
+    padding-left: 0;
+}
+
 .paddingLeft20 {
     padding-left: 20px;
 }
@@ -1682,12 +1736,17 @@ tr.nmc-main-table-header > th {
 }
 
     /* Управление отображением элементов*/
+/*Показать*/
 .nmc-show {
     display:inherit;
 }
-
+/*Скрыть*/
 .nmc-hide {
     display:none !important;
+}
+/*Сделать прозрачным*/
+.nmc-transparent {
+    opacity: 0;
 }
 
 /*

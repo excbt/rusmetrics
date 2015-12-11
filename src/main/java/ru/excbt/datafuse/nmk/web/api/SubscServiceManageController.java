@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,12 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
-import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
+import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
@@ -45,6 +47,9 @@ public class SubscServiceManageController extends SubscrApiController {
 
 	@Autowired
 	private SubscrServiceAccessService subscriberAccessService;
+
+	@Autowired
+	private SubscrPriceListService subscrPriceListService;
 
 	/**
 	 * 
@@ -74,8 +79,14 @@ public class SubscServiceManageController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/manage/service/servicePriceList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePrices() {
-		List<SubscrServicePrice> result = subscrServicePriceService.selectPriceByDate(LocalDate.now());
-		return responseOK(result);
+		List<SubscrPriceItemVO> priceItems = new ArrayList<>();
+		logger.info("currentSubscriber: {}", getCurrentSubscriberId());
+		if (currentSubscriberService.isRma()) {
+			priceItems = subscrPriceListService.selectActiveRmaPriceListItemVOs(getCurrentSubscriberId());
+		} else {
+			priceItems = subscrPriceListService.selectActiveSubscrPriceListItemVOs(getCurrentSubscriberId());
+		}
+		return responseOK(priceItems);
 	}
 
 	/**

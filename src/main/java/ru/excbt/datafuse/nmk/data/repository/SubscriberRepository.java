@@ -40,7 +40,23 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 * @param subscriberId
 	 * @return
 	 */
-	public List<Subscriber> findByRmaSubscriberId(Long subscriberId);
+	public List<Subscriber> findByRmaSubscriberId(Long rmaSubscriberId);
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Query("SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId")
+	public List<Long> selectByRmaSubscriberIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
+	/**
+	 * 
+	 * @param rmaSubscriberId
+	 * @return
+	 */
+	@Query("SELECT s FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId ORDER BY s.subscriberName")
+	public List<Subscriber> selectByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 * 
@@ -49,5 +65,12 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	 */
 	@Query("SELECT s.id FROM Subscriber s WHERE s.id = :subscriberId")
 	public List<Long> checkSubscriberId(@Param("subscriberId") Long subscriberId);
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Query("SELECT s FROM Subscriber s WHERE s.isRma = true")
+	public List<Subscriber> selectRmaList();
 
 }

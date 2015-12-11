@@ -185,6 +185,9 @@ console.log("Object Service. Run.");
         };
                  
         function sortObjectsByConObjectFullName(array){
+            if (angular.isUndefined(array)||(array == null)|| !angular.isArray(array)){
+                return false;
+            };           
             array.sort(function(a, b){
                 if (a.contObject.fullName>b.contObject.fullName){
                     return 1;
@@ -218,7 +221,8 @@ console.log("Object Service. Run.");
        };
        loadData();
                  
-       $rootScope.$on('objectSvc:requestReloadData', function(){        
+       $rootScope.$on('objectSvc:requestReloadData', function(){
+//console.log("Reload objects data.");           
            loadData();
        });
         var getPromise = function(){

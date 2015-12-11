@@ -16,9 +16,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
     ];
     $scope.paramsetColumns = [
-        {"name":"name","header":"Наименование", "class":"col-md-1"}
-        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-1"}
-        ,{"name":"period","header":"Период", "class":"col-md-1"}
+        {"name":"name","header":"Наименование", "class":"col-md-3"}
+        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-3"}
+        ,{"name":"period","header":"Период", "class":"col-md-2"}
         ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
     ];
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
@@ -48,8 +48,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.availableObjectGroups = [];
     
     $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
+        return mainSvc.isSystemuser();
     };
     
     //report types
@@ -235,7 +234,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             object.paramsetStartDate = null;
             object.paramsetEndDate = null;
         }
-console.log(object);
+//console.log(object);
 //console.log((moment($scope.paramsetStartDateFormatted.startDate).startOf('day')));        
 //console.log(typeof (moment($scope.paramsetStartDateFormatted.startDate).startOf('day')));                
         if ($scope.createByTemplate_flag){
@@ -287,6 +286,7 @@ console.log(object);
         $scope.currentObject = angular.copy(object);
         $scope.currentObject.id = null;
         $scope.currentObject._active = true;
+        $scope.currentObject.activeEndDate = null;
         $scope.getAvailableObjects(object.id);
 //        $scope.selectedObjects = [];
         $scope.getSelectedObjects($scope.archiveParamset.id);
@@ -385,6 +385,7 @@ console.log(object);
        
         $scope.createByTemplate_flag = false;
         $scope.createParamset_flag = true;
+        $scope.editParamset_flag = false;
         $scope.currentSign = 9999;
         $scope.getTemplates();
         $scope.getAvailableObjects(0); //Ноль используем для вновь созданных объектов - у нас нет другого способа получить доступные объекты для нового парамсета.
@@ -467,8 +468,8 @@ console.log(object);
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
                     result.oneDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
-                    result.startDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
-                    result.endDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
+                    result.startDateValueFormatted=(angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null :new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
+                    result.endDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
                     result.directoryValue = Number(paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
                     result.version = paramsetObj.paramSpecialList[elementIndex].version || null;
                 }else{
@@ -492,7 +493,7 @@ console.log(object);
     $scope.editParamSet =function(parentObject,object){
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
-        $scope.currentParamSpecialList = prepareParamSpecialList(object, $scope.currentReportType);
+        $scope.currentParamSpecialList = prepareParamSpecialList(object, $scope.currentReportType);        
 //        $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
 //            var result = {};
 //            result.paramSpecialCaption = element.paramSpecialCaption;
@@ -980,6 +981,12 @@ console.log($scope.psEndDateFormatted);
         var result= true;
         $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
         //Check common params before save
+            //file ext
+        if (angular.isUndefined($scope.currentObject.outputFileType)||($scope.currentObject.outputFileType===null)||($scope.currentObject.outputFileType==="")){
+            $scope.messageForUser += "Основные свойства: "+"\n";
+            $scope.messageForUser += "\u2022"+" Не задан тип файла"+"\n";
+            result= false;
+        };
             //one date - for future
 //        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
         
@@ -996,7 +1003,9 @@ console.log($scope.psEndDateFormatted);
             var endDate = new Date(endDateMillisec); 
             if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
             {
-                $scope.messageForUser += "- Некорректно задано начало периода"+"\n";
+                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+                $scope.messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
+                result= false;
             };
                         //end date
 //            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
@@ -1006,23 +1015,40 @@ console.log($scope.psEndDateFormatted);
 //            };
             if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
             {
-                $scope.messageForUser += "- Некорректно задан конец периода"+"\n";
+                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+                $scope.messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
+                result= false;
             };
             
             if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
             {
-                $scope.messageForUser += "- Некорректно заданы границы периода"+"\n";
+                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+                $scope.messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
+                result= false;
             };
         }
 
                     //Count of objects
-        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0))
+        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && $scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
         {
-            $scope.messageForUser += "- Должен быть выбран хотя бы один объект"+"\n";
+            $scope.messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
+            result= false;
+        };
+        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && !$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
+        {
+            $scope.messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
+            result= false;
         };
         if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length<=0))
         {
-            $scope.messageForUser += "- Необходимо выбрать несколько объектов"+"\n";
+            $scope.messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
+            result= false;
+        };
+        
+        if (!$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length>1) &&  $scope.currentReportType.reportMetaParamCommon.oneContObjectRequired)
+        {
+            $scope.messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
+            result= false;
         };
         
         if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
@@ -1030,7 +1056,9 @@ console.log($scope.psEndDateFormatted);
             $scope.currentObject.outputFileZipped =  true;
         };
         if (angular.isArray($scope.currentParamSpecialList)){
-            $scope.currentParamSpecialList.forEach(function(element, index, array){
+            //check special properties
+                var specListFlag = true;
+            $scope.currentParamSpecialList.forEach(function(element, index, array){                 
                 if (element.paramSpecialRequired && !(element.textValue 
                                                      || element.numericValue 
                                                      || element.oneDateValue 
@@ -1039,7 +1067,10 @@ console.log($scope.psEndDateFormatted);
                                                      || element.directoryValue)
                    )
                 {
-                    $scope.messageForUser += "- Не задан параметр \""+element.paramSpecialCaption+"\" \n";
+                    if (specListFlag){$scope.messageForUser += "Дополнительные свойства: "+"\n";};
+                    $scope.messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
+                    result= false;
+                    specListFlag = false;
                 }
             });
         };

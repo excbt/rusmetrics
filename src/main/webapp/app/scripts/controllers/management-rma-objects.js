@@ -6,14 +6,8 @@ angular.module('portalNMC')
 console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
                 
-//                TODO: get and set time zone for object
-                
                     //messages for user
                 $scope.messages = {};
-//                $scope.messages.setSelectedInWinterMode = "Перевести выделенные объекты на зимний режим";
-//                $scope.messages.setSelectedInSummerMode = "Перевести выделенные объекты на летний режим";
-//                $scope.messages.setAllInWinterMode = "Перевести все объекты на зимний режим";
-//                $scope.messages.setAllInSummerMode = "Перевести все объекты на летний режим";
                 
                 $scope.messages.signClientsObjects = "Назначить абонентов";
                 $scope.messages.deleteObjects = "Удалить выделенные объекты";
@@ -36,9 +30,6 @@ console.log('Run Object management controller.');
                 $scope.objectCtrlSettings.anySelected = false;
                 $scope.objectCtrlSettings.objectsPerScroll = 34;//the pie of the object array, which add to the page on window scrolling
                 $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;//50;//current the count of objects, which view on the page
-//                $scope.objectCtrlSettings.currentScrollYPos = window.pageYOffset || document.documentElement.scrollTop; 
-//                $scope.objectCtrlSettings.objectTopOnPage =0;
-//                $scope.objectCtrlSettings.objectBottomOnPage =34;
                 
                 //list of system for meta data editor
                 $scope.objectCtrlSettings.vzletSystemList = [];
@@ -54,9 +45,6 @@ console.log('Run Object management controller.');
                 //service permission settings
 //                $scope.objectCtrlSettings.mapAccess = false;
                 $scope.objectCtrlSettings.ctxId = "management_objects_2nd_menu_item";
-
-//                $scope.objectCtrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
-//                $scope.objectCtrlSettings.mapAccess = mainSvc.checkContext($scope.objectCtrlSettings.mapCtxId);
                 
                 $scope.objectCtrlSettings.rmaUrl = "../api/rma";
                 $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
@@ -95,36 +83,29 @@ console.log('Run Object management controller.');
                     return obj;
                 };
                 
-//console.log(objectSvc.promise);                 
-                objectSvc.getRmaPromise().then(function(response){
-                    var tempArr = response.data;
-//console.log(tempArr);                    
-//                    tempArr.forEach(function(element){
-//                        element.imgsrc='images/object-mode-'+element.currentSettingMode+'.png';
-//                        $scope.cont_zpoint_setting_mode_check
-//                        if (element.currentSettingMode===$scope.cont_zpoint_setting_mode_check[0].keyname){
-//                            element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[0].caption;
-//                            
-//                        }else if(element.currentSettingMode===$scope.cont_zpoint_setting_mode_check[1].keyname){
-//                            element.currentSettingModeTitle = $scope.cont_zpoint_setting_mode_check[1].caption;
-//                        };
-//                    });
-                    $scope.objects = response.data;
-                    //sort by name
-                    objectSvc.sortObjectsByFullName($scope.objects);
-                    
-                    $scope.objectsWithoutFilter = $scope.objects;
-                    tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                    $scope.objectsOnPage = tempArr;
-//                    makeObjectTable(tempArr, true);
-                    $scope.loading = false;  
-                    //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                    if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                        $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                        $cookies.contObject = null;          
-                    };
-                    $rootScope.$broadcast('objectSvc:loaded');
-                });
+//console.log(objectSvc.promise);
+                var getObjectsData = function(){
+//console.log("getObjectsData");                    
+                    objectSvc.getRmaPromise().then(function(response){
+                        var tempArr = response.data;
+    //console.log(tempArr);                    
+                        $scope.objects = response.data;
+                        //sort by name
+                        objectSvc.sortObjectsByFullName($scope.objects);
+
+                        $scope.objectsWithoutFilter = $scope.objects;
+                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                        $scope.objectsOnPage = tempArr;
+                        $scope.loading = false;  
+                        //if we have the contObject id in cookies, then draw the Zpoint table for this object.
+                        if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
+                            $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                            $cookies.contObject = null;          
+                        };
+                        $rootScope.$broadcast('objectSvc:loaded');
+                    });
+                };
+                getObjectsData();
                 
                 var getRsoOrganizations = function(){
                     objectSvc.getRsoOrganizations()
@@ -146,6 +127,7 @@ console.log('Run Object management controller.');
                     objectSvc.getServiceTypes()
                     .then(function(response){
                         $scope.data.serviceTypes = response.data;
+//console.log(response.data);                        
                     });
                 };
                 getServiceTypes();
@@ -158,41 +140,6 @@ console.log('Run Object management controller.');
                     });
                 };
                 getTimezones();
-                
-                
-                
-                function makeObjectTable(objectArray, isNewFlag){
-                    
-                    var objTable = document.getElementById('objectTable').getElementsByTagName('tbody')[0];       
-            //        var temptableHTML = "";
-                    var tableHTML = "";
-                    if (!isNewFlag){
-                        tableHTML = objTable.innerHTML;
-                    };
-
-                    objectArray.forEach(function(element, index){
-                        var globalElementIndex = $scope.objectCtrlSettings.objectBottomOnPage-objectArray.length+index;
-                        var trClass= globalElementIndex%2>0?"":"nmc-tr-odd"; //Подкрашиваем разным цветом четные / нечетные строки
-                        tableHTML += "<tr class=\""+trClass+"\" id=\"obj"+element.id+"\"><td class=\"nmc-td-for-button-object-control\"> <i title=\"Показать/Скрыть точки учета\" id=\"btnDetail"+element.id+"\" class=\"btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table\" ng-click=\"toggleShowGroupDetails("+element.id+")\"></i>";
-                        tableHTML += "<i title=\"Редактировать свойства объекта\" ng-show=\"!bList\" class=\"btn btn-xs glyphicon glyphicon-edit nmc-button-in-table\" ng-click=\"selectedObject("+element.id+")\" data-target=\"#showObjOptionModal\" data-toggle=\"modal\"></i>";
-                        tableHTML+= "</td>";
-                        tableHTML += "<td ng-click=\"toggleShowGroupDetails("+element.id+")\">"+element.fullName;
-                        if ($scope.isSystemuser()){
-                            tableHTML+=" <span>(id = "+element.id+")</span>";
-                        };
-                        tableHTML+="</td></tr>";
-                        tableHTML +="<tr id=\"trObjZp"+element.id+"\">";
-                        tableHTML += "</tr>";                       
-                    });
-//console.log(objTable); 
-                    if (angular.isDefined(objTable.innerHTML)){
-//console.log("angular.isDefined(objTable.innerHTML) =  true");                        
-                        objTable.innerHTML = tableHTML;
-                    };
-//console.log(objTable);                    
-                    $compile(objTable)($scope);
-                    
-                };
                 
 //                $scope.objects = objectSvc.getObjects();
                 $scope.loading = objectSvc.getLoadingStatus();//loading;
@@ -215,7 +162,7 @@ console.log('Run Object management controller.');
                 $scope.bList = true;//angular.fromJson($attrs.blist) || true; //Признак того, что объекты выводятся только для просмотра        
                 //zpoint column names
                 $scope.oldColumns = [
-                        {"name":"zpointName", "header" : "Наименование", "class":"col-md-2"},
+                        {"name":"zpointName", "header" : "Наименование", "class":"col-md-5"},
                         {"name":"zpointModel", "header" : "Модель", "class":"col-md-2"},
                         {"name":"zpointNumber", "header" : "Номер", "class":"col-md-2"},
 //                        {"name":"zpointLastDataDate", "header" : "Последние данные", "class":"col-md-2"}
@@ -384,10 +331,11 @@ console.log('Run Object management controller.');
 
                 var successPostCallback = function (e) {
                     
-                    successCallback(e, function () {
-//                        $scope.toggleAddMode();
-                    });
-                    location.reload();
+                    successCallback(e, null);
+                    $rootScope.$broadcast('objectSvc:requestReloadData');
+                    $scope.loading = true;
+                    getObjectsData();
+//                    location.reload();
                 };
 
                 var errorCallback = function (e) {
@@ -411,8 +359,8 @@ console.log('Run Object management controller.');
                 
                 $scope.deleteObjects = function(obj){
                     var url = objectSvc.getRmaObjectsUrl();
-console.log(url);                    
-console.log(obj);                    
+//console.log(url);                    
+//console.log(obj);                    
                     if (angular.isDefined(obj)&&(angular.isDefined(obj.id))&&(obj.id!=null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
                     }else if (angular.isDefined(obj.deleteObjects)&&(obj.deleteObjects!=null)&&angular.isArray(obj.deleteObjects)){
@@ -443,7 +391,33 @@ console.log(obj);
                     $scope.orderBy = { field: field, asc: asc };
                 };
                 
+                
+                var checkObjectSettings = function(obj){
+                    //check name, timezone, uk, mode
+                    var result = true;
+                    if ($scope.emptyString(obj.fullName)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование объекта!");
+                        result = false;
+                    };
+                    if ($scope.emptyString(obj.timezoneDefKeyname)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан часовой пояс объекта!");
+                        result = false;
+                    };
+                    if ($scope.checkUndefinedNull(obj.contManagementId)){
+                        notificationFactory.errorInfo("Ошибка", "Не задана управляющая компания!");
+                        result = false;
+                    };
+                    if ($scope.emptyString(obj.currentSettingMode)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан режим функционирования!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
                 $scope.sendObjectToServer = function(obj){
+                    if(!checkObjectSettings(obj)){
+                        return false;
+                    };
                     var url = objectSvc.getRmaObjectsUrl();                    
                     if (angular.isDefined(obj.id)&&(obj.id!=null)){
                         $scope.updateObject(url, obj);
@@ -486,6 +460,9 @@ console.log(obj);
                     var result = {};
                               
                     result.id = zpoint.id;
+                    result.exSystemKeyname = zpoint.exSystemKeyname;
+                    result.tsNumber = zpoint.tsNumber;
+                    result.exCode = zpoint.exCode;
                     result.version = zpoint.version;
                     result.contObjectId = zpoint.contObjectId;
                     result.startDate = zpoint.startDate;
@@ -496,7 +473,6 @@ console.log(obj);
                     result.customServiceName = zpoint.customServiceName;
                     result.contServiceTypeKeyname = zpoint.contServiceTypeKeyname;
                     result.zpointName = zpoint.customServiceName;
-                    result.tsNumber = zpoint.tsNumber;
                     result.contZPointComment = zpoint.contZPointComment;
                     if ((typeof zpoint.rso != 'undefined') && (zpoint.rso!=null)){
                         result.zpointRSO = zpoint.rso.organizationFullName || zpoint.rso.organizationName;
@@ -552,7 +528,7 @@ console.log(obj);
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             var copyTmp = angular.copy(response.data);
-//console.log(copyTmp);                              
+console.log(copyTmp);                              
                             if (mode == "Ex"){
                                 tmp = response.data.map(function(el){
                                     var result = {};
@@ -606,7 +582,7 @@ console.log(obj);
                     trHTML+="<thead><tr class=\"nmc-child-table-header\">";
                     trHTML+="<th ng-show=\"bObject || bList\" class=\"nmc-td-for-buttons\"></th>";
                     $scope.oldColumns.forEach(function(column){
-                        trHTML+="<th ng-class=\""+column.class+"\">";
+                        trHTML+="<th class=\""+column.class+"\">";
                         trHTML+=""+(column.header || column.name)+"";
                         trHTML+="</th>";
                     });
@@ -739,10 +715,13 @@ console.log(obj);
                 
                 $scope.getZpointSettings = function(objId, zpointId){
                     $scope.selectedZpoint(objId, zpointId);          
-//console.log($scope.currentZpoint); 
+console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
                     zps.id = object.id;
+                    zps.exSystemKeyname = object.exSystemKeyname;
+                    zps.tsNumber = object.tsNumber;
+                    zps.exCode = object.exCode;
                     zps.version = object.version;
                     zps.contObjectId = object.contObjectId;
                     zps.startDate = object.startDate;
@@ -765,7 +744,6 @@ console.log(obj);
 //console.log(zps);
                     zps.zpointModel = object.zpointModel;
                     zps.zpointRSO = object.zpointRSO;
-                    zps.tsNumber = object.tsNumber;
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
                     zps.winter = {};
@@ -808,8 +786,45 @@ console.log(obj);
                 };
                 
                 //Save new Zpoint | Update the common zpoint setiing - for example, Name
+                //$scope.checkString  
+                $scope.emptyString = function(str){
+                    return mainSvc.checkUndefinedEmptyNullValue(str);
+                };
+                $scope.checkUndefinedNull = function(val){
+                    return mainSvc.checkUndefinedNull(val);
+                };
+                
+                var checkZpointCommonSettings = function(){
+                    //check name, type, rso, device
+                    var result = true;
+                    if ($scope.emptyString($scope.zpointSettings.customServiceName)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано наименование точки учета!");
+                        result = false;
+                    };
+                    if ($scope.emptyString($scope.zpointSettings.contServiceTypeKeyname)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
+                        result = false;
+                    };
+                    if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)){
+                        notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
+                        result = false;
+                    };
+                    if ($scope.checkUndefinedNull($scope.zpointSettings.rsoId)){
+                        notificationFactory.errorInfo("Ошибка", "Не задано РСО для точки учета!");
+                        result = false;
+                    };
+                    return result;
+                };
+                
                 $scope.updateZpointCommonSettings = function(){
-//console.log($scope.zpointSettings);  
+//console.log($scope.zpointSettings);
+                    if (!checkZpointCommonSettings()){
+                        return false;
+                    };
+                    //prepare piped info
+//                    if ($scope.zpointSettings.singlePipe){
+//                        $scope.zpointSettings.doublePipe = false;
+//                    };
                     var url = objectSvc.getRmaObjectsUrl()+"/"+$scope.currentObject.id+"/zpoints";
                     if (angular.isDefined($scope.zpointSettings.id)&&($scope.zpointSettings.id!=null)){
                         url = url+"/"+$scope.zpointSettings.id;
@@ -855,7 +870,7 @@ console.log(obj);
                         var tempArr = [];
                         
                         $scope.objects.forEach(function(elem){
-                            if (elem.fullName.indexOf(searchString)!=-1){
+                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
                                 tempArr.push(elem);
                             };
                         });
@@ -1234,7 +1249,7 @@ console.log(obj);
                         ids = deleteDoubleElements(ids);
 //console.log(table);                        
 //console.log(ids);                        
-                        $http.put(table, ids).then(successCallback, errorCallback);
+                        $http.put(table, ids).then(successPostCallback, errorCallback);
                         },
                         function(e){
                             console.log(e);
@@ -1386,10 +1401,11 @@ console.log(obj);
                         return true;
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
-                };              
-                            //set mask for tsNumber input
+                };
+                
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
+                    $('#inputEXCode').inputmask();
                 });
 //            }]
 }]);

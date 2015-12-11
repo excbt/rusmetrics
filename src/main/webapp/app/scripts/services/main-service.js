@@ -1,7 +1,9 @@
 //Service decides common tasks for all portal
 
 angular.module('portalNMC')
-.service('mainSvc', function($cookies, $http, $rootScope){
+.service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc){
+    var EMPTY_OBJECT = {};
+    $log.debug("Run main service. main service: row: 5");
     //set services settings
     var mainSvcSettings = {};
     mainSvcSettings.subscrUrl = "../api/subscr";
@@ -134,12 +136,41 @@ angular.module('portalNMC')
 //        return result;
 //    };
     
+    var hasMapSettings = function(userInfo){
+        var result = false;
+        result = !checkUndefinedNull(userInfo.subscriber);
+        result=result&&!checkUndefinedNull(userInfo.subscriber.mapCenterLat)
+    };
+    
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl)
             .success(function(data, satus, headers, config){
-                $rootScope.userInfo = data;
-console.log($rootScope.userInfo);        
+                $rootScope.userInfo = angular.copy(data);
+console.log($rootScope.userInfo);
+                if (!checkUndefinedNull($rootScope.userInfo.subscriber)){
+//console.log($rootScope.userInfo.subscriber);                    
+                    var mapSettings = {};
+                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLat)){
+                        mapSettings.mapCenterLat = $rootScope.userInfo.subscriber.mapCenterLat;
+                    };
+                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapCenterLng)){
+                        mapSettings.mapCenterLng = $rootScope.userInfo.subscriber.mapCenterLng;
+                    };
+                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoom)){
+                        mapSettings.mapZoom = $rootScope.userInfo.subscriber.mapZoom;
+                    };
+                    if (!checkUndefinedNull($rootScope.userInfo.subscriber.mapZoomDetail)){
+                        mapSettings.mapZoomDetail = $rootScope.userInfo.subscriber.mapZoomDetail;
+                    };
+//console.log(mapSettings);                     
+                    if (mapSettings!=EMPTY_OBJECT){
+//console.log(mapSettings);                        
+                        objectSvc.setObjectSettings(mapSettings);
+                        monitorSvc.setMonitorSettings(mapSettings);
+                    };
+                    
+                };
             })
             .error(function(e){
                 console.log(e);
@@ -226,7 +257,7 @@ console.log($rootScope.userInfo);
     
     var checkUndefinedEmptyNullValue = function(numvalue){                    
         var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue === "") || (numvalue==null)){
+        if ((angular.isUndefined(numvalue)) || (numvalue==null) || (numvalue === "")){
             result = true;
             return result;
         }
@@ -260,6 +291,14 @@ console.log($rootScope.userInfo);
         return result;
     };
     
+    var checkUndefinedNull = function(numvalue){
+        var result = false;
+        if ((angular.isUndefined(numvalue)) || (numvalue==null)){
+            result = true;
+        }
+        return result;
+    };
+    
     ///////////////// end checkers
     
     // *************** generation confirm code *****************
@@ -287,6 +326,7 @@ console.log($rootScope.userInfo);
         checkPositiveNumberValue,
         checkStrForDate,
         checkUndefinedEmptyNullValue,
+        checkUndefinedNull,
         getConfirmCode,
         getContextIds,
         getLoadingServicePermissionFlag,

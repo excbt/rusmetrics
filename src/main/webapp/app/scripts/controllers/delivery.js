@@ -31,15 +31,18 @@ app.controller(
 			/****************************
 			 * Функции для работы с API *
 			 ****************************/
+                //Обработка error-ответа от сервера
+            errorCallback = function(e){
+                console.log(e.data);
+				notificationFactory.errorInfo(e.statusText,e.description || e.data);
+            };
 			// Получение списка рассылок
 			$scope.getReportShedules = function(){
 				$http.get($scope.url_rep_shdls)
 					.success(function(data){
-						$scope.rep_shdls = data;
+						$scope.rep_shdls = data;                    
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 			}
 			
 			// Добавление/изменение рассылки
@@ -49,28 +52,28 @@ app.controller(
 						var tmpl_id = $scope.paramsets[zx].reportTemplate.id;
 					}
 				};
-console.log($scope.cur_rep_shdl);                
+//console.log($scope.cur_rep_shdl);
+                
 				// Проверяем, создаётся новая рассылка или модифицируется имеющаяся
 				if($scope.cur_rep_shdl.id == 'new'){
 					var url = $scope.url_rep_shdls + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
 					$scope.cur_rep_shdl.id = null;
 					$http.post(url, $scope.cur_rep_shdl)
 						.success(function(){
+                            notificationFactory.success();
 							$scope.getReportShedules();
 						})
-						.error(function(e){
-							notificationFactory.errorInfo(e.statusText,e.description);
-						});
+						.error(errorCallback);
 				}
 				else {
-					var url = $scope.url_rep_shdls + '/' + $scope.cur_rep_shdl.id + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
+					var url = $scope.url_rep_shdls + '/' + $scope.cur_rep_shdl.id + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;                                     
+                    
 					$http.put(url, $scope.cur_rep_shdl)
 						.success(function(){
+                            notificationFactory.success();
 							$scope.getReportShedules();
 						})
-						.error(function(e){
-							notificationFactory.errorInfo(e.statusText,e.description);
-						});
+						.error(errorCallback);
 					}
 			}
 			
@@ -80,11 +83,10 @@ console.log($scope.cur_rep_shdl);
 				$http.delete(url)
 					.success(function(){
                         $('#div_delete_delivery').modal('hide');
+                        notificationFactory.success();
 						$scope.getReportShedules();
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 			}
 			
 			// Получение списков параметров рассылок
@@ -94,43 +96,46 @@ console.log($scope.cur_rep_shdl);
 					.success(function(data){
 						$scope.rep_types = data;
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 
 				// Получаем список периодов
 				$http.get($scope.url_rep_act_types)
 					.success(function(data){
 						$scope.rep_act_types = data;
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 				// Получаем список способов доставки
 				$http.get($scope.url_rep_shdl_types)
 					.success(function(data){
 						$scope.rep_shdl_types = data;
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 			}
 			
 			// Получение списка вариантов шаблонов
-			$scope.getParamsets = function(){
+			$scope.getParamsets = function(initialFlag){
 				// Получаем суффикс выбранного типа отчёта и формируем с ним url
 				for(var zx = 0; zx < $scope.rep_types.length; zx++){
 					if ($scope.rep_types[zx].keyname == $scope.cur_rep_shdl.reportTemplate.reportTypeKeyname){
 						var url = $scope.url_paramsets + $scope.rep_types[zx].suffix;
 					}
-				}
+				};
+//console.log(url);
+//console.log($scope.cur_rep_shdl);                
+//console.log($scope.rep_types);                
 				$http.get(url)
 					.success(function(data){
 						$scope.paramsets = data;
+                        if (!initialFlag){
+//console.log($scope.paramsets);                            
+                            if (angular.isArray($scope.paramsets)&&($scope.paramsets.length>0)){
+                                $scope.cur_rep_shdl.reportParamset = $scope.paramsets[0];
+                            }else{
+                                $scope.cur_rep_shdl.reportParamset = null;
+                            };
+                        };
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 			}
 			
 			// Получение списка рассылок
@@ -142,9 +147,7 @@ console.log($scope.cur_rep_shdl);
 							$scope.dlvr_lists[zx].id = $scope.dlvr_lists[zx].id.toString();
 						}
 					})
-					.error(function(e){
-						notificationFactory.errorInfo(e.statusText,e.description);
-					});
+					.error(errorCallback);
 			}
 			
 			/************************************
@@ -182,9 +185,9 @@ console.log($scope.cur_rep_shdl);
 					$scope.cur_rep_shdl.sheduleTimeTemplate = '15 0 1 * 1';
 				}
 				else {
-					$scope.cur_rep_shdl = rep_shdl;
+					$scope.cur_rep_shdl = angular.copy(rep_shdl);
 					// Получаем список вариантов шаблонов
-					$scope.changeReportType();
+					$scope.changeReportType(true);
 					// Настраиваем способы доставки
 					$scope.changeSheduleAction();
 					// Настраиваем дату начала и конца действия рассылки
@@ -195,9 +198,9 @@ console.log($scope.cur_rep_shdl);
 			}
 			
 			// Подготовка данных для списка вариантов шаблона
-			$scope.changeReportType = function (){
+			$scope.changeReportType = function (initialFlag){
 				document.getElementById('slct_rep_tmpl_var').disabled = false;
-				$scope.getParamsets();
+				$scope.getParamsets(initialFlag);
 			}
 			
 			// Подготовка данных для редактирования способа доставки
@@ -301,19 +304,20 @@ console.log($scope.cur_rep_shdl);
 					 notificationFactory.errorInfo("Не указано название рассылки", "Укажите, пожалуйста, название рассылки");
 					 is_errors = true;
 				 }
-				 console.log($scope.cur_rep_shdl.reportTemplate);
+//console.log($scope.cur_rep_shdl.reportTemplate);
+//console.log($scope.cur_rep_shdl.reportParamset);                 
 				 if (typeof $scope.cur_rep_shdl.reportTemplate == 'undefined'){
 					 notificationFactory.errorInfo("Не указан тип отчёта", "Укажите, пожалуйста, тип отчёта");
 					 is_errors = true;
 				 }
 				 else {
-					 if(typeof $scope.cur_rep_shdl.reportParamset == 'undefined'){
+					 if((typeof $scope.cur_rep_shdl.reportParamset == 'undefined') || ($scope.cur_rep_shdl.reportParamset==null)){
 						 notificationFactory.errorInfo("Не указан вариант шаблона", "Укажите, пожалуйста, вариант шаблона");
 						 is_errors = true;
 					 }
 				 }
 				 // Проверяем, указаны ли получатели
-				 //console.log($scope.cur_rep_shdl.sheduleAction1Key);
+//console.log($scope.cur_rep_shdl.sheduleAction1Key);
 				 if($scope.cur_rep_shdl.sheduleAction1Key == null){
 					 notificationFactory.errorInfo("Не указан способ доставки", "Укажите, пожалуйста, способ доставки");
 					 is_errors = true;

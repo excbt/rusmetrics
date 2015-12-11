@@ -28,14 +28,17 @@
 
                                         <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>                                           
+                                            <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toggleShowGroupDetails(object);"></i>                                           
 
                                         </div>
                                         <div class="col-md-11">
-                                            <div class="col-md-5 noPadding"><b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+<!--                                            <div class="col-md-5 noPadding">-->
+                                                <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+<!--
                                             </div>    
                                             <div class="col-md-7" ng-show="object.reportType=='COMMERCE_REPORT'">
                                             </div>
+-->
                                         </div>
 
 
@@ -50,15 +53,16 @@
                                         <tr class="nmc-child-table-header">
     <!--                                            td for buttons-->
                                             <th class="nmc-btn-toolbar-in-table-3"></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
-                                            <th></th>
+                                            <th class="nmc-td-for-button"></th>
                                             <th>Действует с</th>
                                         </tr>
                                     </thead>    
 
                                      <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
+<!--                                         ng-mouseover="editParamSet(object, oldObject, ctrlSettings.openModes.preview)">-->
                                          <td class="nmc-btn-toolbar-in-table-3">
 <!--
                                             <div class="btn-toolbar col-md-2 nmc-btn-toolbar-in-table-3 nmc-text-align-right">
@@ -67,17 +71,22 @@
                                                       <tr>
                                                         <td>
 -->
-                                                            <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="createReport(object,oldObject)" ng-disabled="!oldObject.allRequiredParamsPassed" ng-class="{'nmc-button-in-table-run-disabled':!oldObject.allRequiredParamsPassed}"></i>
+                                                            <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.create)" ng-class="{'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
+<!--                                             ng-disabled="!oldObject.allRequiredParamsPassed"-->
 <!--
                                                         </td>
                                                         <td>
 -->
-                                                          <i title="Отредактировать параметры и сформировать отчет" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object,oldObject)" data-target="#main_properties" data-toggle="tab"></i>                                                                
+                                                          <i title="Отредактировать параметры и сформировать отчет" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.edit)" data-target="#main_properties" data-toggle="tab"></i>                                                                
 <!--
                                                         </td>
                                                         <td>
 -->
-                                                          <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table" ng-click="previewReport(object,oldObject)" ng-disabled="object.reportType=='COMMERCE_REPORT'"></i>                                      
+                                                          <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table-run" ng-click="previewReport(object, oldObject)" ng-disabled="(object.reportType=='COMMERCE_REPORT')" ng-class="{'nmc-button-in-table-run-disabled': object.reportType=='COMMERCE_REPORT', 'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
+<!--
+                                             <a ng-attr-id="{{'preview1'+oldObject.id}}" ng-attr-href="../api/reportService{{object.suffix}}/{{oldObject.id}}/preview" target="_blank">test</a>
+                                             <i ng-attr-id="{{'preview'+oldObject.id}}" ng-click="previewReport(object, oldObject)">test</i>
+-->
 <!--
                                                         </td>
                                                       </tr>
@@ -571,7 +580,7 @@
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
 			<form name="moveForm" novalidate>
-                <pre>
+                <pre class="nmc-textfield">
                     {{messageForUser}}  
                 </pre>
 			</form>
@@ -580,21 +589,18 @@
 				<div class="container-fluid">
 
 					<div class="row">
-<!--
-						<div class="col-xs-offset-6 col-md-3">
-							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-								ng-click="saveParamset(currentObject);"
-								value="Ок" 
-                                data-target="#main_properties" data-toggle="tab"    
-                                   />
+						<div class="col-xs-offset-4 col-md-5">
+							<button ng-show="showMessageForUserModalExFlag" class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal" data-target="#main_properties" data-toggle="tab"
+								ng-click="editParamSet(currentReportType, currentObject, ctrlSettings.openModes.edit)">
+								Настройка параметров
+							</button>
 						</div>
--->
 
 						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
 								ng-click="exit('#moveToArchive');">
 								Ок
-							</button>
+							</button>                            
 						</div>
 					</div>
 				</div>		

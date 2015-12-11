@@ -56,7 +56,7 @@
                                      Показания</label>
                         </div>
                         <div class="col-md-8">
-                            <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="getData(1)">
+                            <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="changeTimeDetailType()">
                                 <option selected value="24h">Суточные</option>
                                 <option value="1h">Часовые</option>
                             </select>
@@ -92,15 +92,17 @@
         </div>
         <div class="row" ng-show="data.length >0">
     <!--        Непрокручиваемая шапка таблицы показаний-->
-            <table class="nmc-table-nowrap-data1 nmc-main-table noMargin" ng-class="tableDef.tableClass" style="margin-bottom: -20px;">
+<!--            style="margin-bottom: -20px;"-->
+            <table class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
                 <tr ng-class="tableDef.headerClassTR">
                     <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}" ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
                         {{column.header}}
-                        <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
+                        <i class="nmc-button-sort glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
                         <span ng-if="column.dataType==='temperature'">,&deg;C</span>
                     </th>
                 </tr>
-                <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" style="opacity:0;">
+<!--                style="opacity:0;"-->
+                <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" class="nmc-transparent">
                     <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
                         {{indicator[column.fieldName]}}
                         <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
@@ -112,7 +114,8 @@
     </div>
     <div class="container-fluid nmc-indicator-table-without-fixed-header">
         <div class="row" ng-show="data.length >0">
-            <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass" style="margin-top: -79px;">
+<!--            style="margin-top: -79px;"-->
+            <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" ng-class="tableDef.tableClass">
     <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                 <tr class="" ng-class="tableDef.headerClassTR">
                     <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
@@ -141,7 +144,7 @@
                     <th id="totals_th_head" class="col-md-3" ng-style="{'min-width': totals_th_head_style+'px'}">
                     </th>
                     <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{'min-width': column.ngstyle+'px'}">
-                        {{column.header}}
+                        {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                             <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.title}}"/>
                     </th>
                 </tr>

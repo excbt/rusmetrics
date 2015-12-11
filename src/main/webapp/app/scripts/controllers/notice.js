@@ -119,7 +119,9 @@ console.log("Load NoticeCtrl.");
     //Controller initialization
     //use to redirect from the Monitor page
     $scope.initCtrl = function(){
-console.log("initCtrl"); 
+//console.log("initCtrl"); 
+//console.log(loca);         
+//console.log($scope.objects);        
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};
@@ -628,7 +630,7 @@ console.log("performObjectsFilter");
                 $scope.noticeTypes = data;
                 $scope.initCtrl();
                 $scope.getResultsPage(1);
-console.log("$scope.noticeTypes");           
+//console.log("$scope.noticeTypes");           
             })
             .error(function(e){
                 console.log(e);
@@ -878,17 +880,14 @@ console.log("Clear Type filters.");
         if (ctxFlag == false){
             window.location.assign('#/');
         };
-    };
-console.log("1");    
+    };    
     setVisibles($scope.ctrlSettings.ctxId);
     //listen change of service list
     $rootScope.$on('servicePermissions:loaded', function(){
-console.log("2");            
         setVisibles($scope.ctrlSettings.ctxId);
     });
     
     window.setTimeout(function(){
-console.log("3");            
         setVisibles($scope.ctrlSettings.ctxId);
     }, 500);
     

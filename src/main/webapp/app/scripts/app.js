@@ -194,6 +194,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-users.html',
         controller: 'MngmtUsersCtrl'
       })
+      .when('/management/price', {
+        templateUrl: 'views/management-rma-price.html',
+        controller: 'MngmtPriceCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
@@ -214,6 +218,11 @@ app.config(['KeepaliveProvider', 'IdleProvider', function(KeepaliveProvider, Idl
 //app.run(['Idle', function(Idle) {
 //  Idle.watch();
 //}]);
+
+//configure $log service
+app.config(function($logProvider){
+    $logProvider.debugEnabled(true);
+});
 
 app.run(['objectSvc', 'monitorSvc', 'mainSvc', function(objectSvc, monitorSvc, mainSvc){
 console.log("Run main, object and monitor services.");  

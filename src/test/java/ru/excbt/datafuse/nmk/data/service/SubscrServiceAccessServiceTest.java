@@ -44,6 +44,9 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 	@Autowired
 	private SubscriberService subscriberService;
 
+	@Autowired
+	private RmaSubscriberService rmaSubscriberService;
+
 	@Test
 	public void testServiceItems() throws Exception {
 		List<SubscrServiceItem> result = subscrServiceItemService.selectServiceItemList();
@@ -131,7 +134,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 	@Ignore
 	public void testUpdateAllRmaSubscriberAccess() throws Exception {
 		// Long rmaSubscriberId = 37176875L;
-		Long rmaSubscriberId = RMA_SUBSCRIBER_ID;
+		Long rmaSubscriberId = EXCBT_RMA_SUBSCRIBER_ID;
 
 		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList();
 
@@ -139,7 +142,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 			logger.info("Service Pack {}: {}", i.getId(), i.getPackName());
 		});
 
-		List<Subscriber> subscribers = subscriberService.selectRmaSubscribers(rmaSubscriberId);
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(rmaSubscriberId);
 		subscribers.forEach(i -> {
 			logger.info("Processing {}", i.getSubscriberName());
 

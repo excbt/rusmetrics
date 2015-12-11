@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
@@ -25,6 +26,9 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 	private SubscriberService subscriberService;
 
 	@Autowired
+	private RmaSubscriberService rmaSubscriberService;
+
+	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
 	private Long testSubscriberId;
@@ -34,7 +38,7 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 	 */
 	@Before
 	public void initTestSubscriberId() {
-		List<Subscriber> subscribers = subscriberService.selectRmaSubscribers(RMA_SUBSCRIBER_ID);
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(subscribers.size() > 0);
 		testSubscriberId = subscribers.get(0).getId();
 	}
@@ -79,7 +83,7 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 	@Test
 	public void testSubscrContObjectsUpdate() throws Exception {
 		List<ContObject> availableContObjects = subscrContObjectService.selectAvailableContObjects(testSubscriberId,
-				RMA_SUBSCRIBER_ID);
+				EXCBT_RMA_SUBSCRIBER_ID);
 		List<Long> addContObjects = new ArrayList<>();
 		List<Long> currContObjects = subscrContObjectService.selectSubscriberContObjectIds(testSubscriberId);
 		for (int i = 0; i < availableContObjects.size(); i++) {

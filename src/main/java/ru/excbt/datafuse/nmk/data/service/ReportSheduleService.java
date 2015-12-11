@@ -30,14 +30,12 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportShedule> selectReportShedule(long subscriberId,
-			LocalDateTime dateTime) {
-		
-		List<ReportShedule> result = reportSheduleRepository.selectReportShedule(subscriberId,
-				dateTime.toDate()); 
-		
+	public List<ReportShedule> selectReportShedule(long subscriberId, LocalDateTime dateTime) {
+
+		List<ReportShedule> result = reportSheduleRepository.selectReportShedule(subscriberId, dateTime.toDate());
+
 		result.forEach((s) -> s.getReportParamset().getParamSpecialList().size());
-		
+
 		return result;
 	}
 
@@ -48,10 +46,10 @@ public class ReportSheduleService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId) {
-		List<ReportShedule> result = reportSheduleRepository.findBySubscriberId(subscriberId); 
-		
+		List<ReportShedule> result = reportSheduleRepository.findBySubscriberId(subscriberId);
+
 		result.forEach((s) -> s.getReportParamset().getParamSpecialList().size());
-		
+
 		return result;
 	}
 
@@ -74,53 +72,35 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportShedule createOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
 		checkArgument(reportShedule.isNew());
 
-		checkNotNull(reportShedule.getSubscriber(),
-				"Subscriber of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportTemplate(),
-				"ReportTemplate of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportParamset(),
-				"ReportParamset of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportSheduleTypeKey(),
-				"getReportSheduleTypeKey of reportShedule IS NULL");
+		checkNotNull(reportShedule.getSubscriber(), "Subscriber of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportTemplate(), "ReportTemplate of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportParamset(), "ReportParamset of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportSheduleTypeKey(), "getReportSheduleTypeKey of reportShedule IS NULL");
 
-		checkNotNull(reportShedule.getSheduleStartDate(),
-				"SheduleStartDate of reportShedule is NULL");
+		checkNotNull(reportShedule.getSheduleStartDate(), "SheduleStartDate of reportShedule is NULL");
 
 		if (reportShedule.getSheduleEndDate() != null) {
-			checkArgument(
-					reportShedule.getSheduleStartDate().compareTo(
-							reportShedule.getSheduleEndDate()) <= 0,
+			checkArgument(reportShedule.getSheduleStartDate().compareTo(reportShedule.getSheduleEndDate()) <= 0,
 					"SheduleEndDate of reportShedule is less than SheduleStartDate");
 		}
 
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction1Key(),
-						reportShedule.getSheduleAction1Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction1Key(), reportShedule.getSheduleAction1Param()),
 				"SheduleAction1 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction2Key(),
-						reportShedule.getSheduleAction2Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction2Key(), reportShedule.getSheduleAction2Param()),
 				"SheduleAction2 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction3Key(),
-						reportShedule.getSheduleAction3Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction3Key(), reportShedule.getSheduleAction3Param()),
 				"SheduleAction3 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction4Key(),
-						reportShedule.getSheduleAction4Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction4Key(), reportShedule.getSheduleAction4Param()),
 				"SheduleAction4 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction5Key(),
-						reportShedule.getSheduleAction5Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction5Key(), reportShedule.getSheduleAction5Param()),
 				"SheduleAction5 is not properly configured");
 
-		ReportShedule resultEntity = reportSheduleRepository
-				.save(reportShedule);
+		ReportShedule resultEntity = reportSheduleRepository.save(reportShedule);
 
 		return resultEntity;
 	}
@@ -131,53 +111,37 @@ public class ReportSheduleService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportShedule updateOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
 		checkArgument(!reportShedule.isNew());
 
-		checkNotNull(reportShedule.getSubscriber(),
-				"Subscriber of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportTemplate(),
-				"ReportTemplate of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportParamset(),
-				"ReportParamset of reportShedule is NULL");
-		checkNotNull(reportShedule.getReportSheduleTypeKey(),
-				"getReportSheduleTypeKey of reportShedule IS NULL");
+		checkNotNull(reportShedule.getSubscriber(), "Subscriber of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportTemplate(), "ReportTemplate of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportParamset(), "ReportParamset of reportShedule is NULL");
+		checkNotNull(reportShedule.getReportSheduleTypeKey(), "getReportSheduleTypeKey of reportShedule IS NULL");
 
-		checkNotNull(reportShedule.getSheduleStartDate(),
-				"SheduleStartDate of reportShedule is NULL");
+		checkNotNull(reportShedule.getSheduleStartDate(), "SheduleStartDate of reportShedule is NULL");
 
 		if (reportShedule.getSheduleEndDate() != null) {
-			checkArgument(
-					reportShedule.getSheduleStartDate().compareTo(
-							reportShedule.getSheduleEndDate()) <= 0,
+			checkArgument(reportShedule.getSheduleStartDate().compareTo(reportShedule.getSheduleEndDate()) <= 0,
 					"SheduleEndDate of reportShedule is less than SheduleStartDate");
 		}
 
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction1Key(),
-						reportShedule.getSheduleAction1Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction1Key(), reportShedule.getSheduleAction1Param()),
 				"SheduleAction1 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction2Key(),
-						reportShedule.getSheduleAction2Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction2Key(), reportShedule.getSheduleAction2Param()),
 				"SheduleAction2 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction3Key(),
-						reportShedule.getSheduleAction3Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction3Key(), reportShedule.getSheduleAction3Param()),
 				"SheduleAction3 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction4Key(),
-						reportShedule.getSheduleAction4Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction4Key(), reportShedule.getSheduleAction4Param()),
 				"SheduleAction4 is not properly configured");
-		checkArgument(
-				checkReportAction(reportShedule.getSheduleAction5Key(),
-						reportShedule.getSheduleAction5Param()),
+		checkArgument(checkReportAction(reportShedule.getSheduleAction5Key(), reportShedule.getSheduleAction5Param()),
 				"SheduleAction5 is not properly configured");
 
-		ReportShedule resultEntity = reportSheduleRepository
-				.save(reportShedule);
+		ReportShedule resultEntity = reportSheduleRepository.save(reportShedule);
+
+		resultEntity.getReportParamset().getParamSpecialList().size();
 
 		return resultEntity;
 	}
@@ -198,18 +162,18 @@ public class ReportSheduleService implements SecuredRoles {
 	 * 
 	 * @param reportSheduleId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })	
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long reportSheduleId) {
 		reportSheduleRepository.delete(reportSheduleId);
 	}
-	
+
 	/**
 	 * 
 	 * @param reportParamsetId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByReportParamset(long reportParamsetId) {
 		reportSheduleRepository.softDeleteByReportParamset(reportParamsetId);
 	}

@@ -36,6 +36,13 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
 		String url = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
+
+		deviceObject.getEditDataSourceInfo().setSubscrDataSourceId(65523603L);
+		deviceObject.getEditDataSourceInfo().setSubscrDataSourceAddr("РУС Addr 222:" + System.currentTimeMillis());
+		deviceObject.getEditDataSourceInfo().setDataSourceTable("РУС Table 222:" + System.currentTimeMillis());
+		deviceObject.getEditDataSourceInfo().setDataSourceTable1h("РУС Table1h 222:" + System.currentTimeMillis());
+		deviceObject.getEditDataSourceInfo().setDataSourceTable24h("РУС Table24h 222:" + System.currentTimeMillis());
+
 		RequestExtraInitializer paramInit = (builder) -> {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());

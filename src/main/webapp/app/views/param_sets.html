@@ -56,7 +56,6 @@
         <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
             <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#active_paramsets" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
             <li role="presentation" class="nmc-toggle-archive"><a class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();">Архив</a></li>
-<!--            <li ng-show="active_tab_active_templates" ><a class="" href="" aria-controls="" data-target="#createParamsetModal" role="" data-toggle="modal" style="margin-left: 15px;border: 1px solid #ddd; background-color: #337ab7;color:white;" ng-click="">Добавить</a></li>-->
         </ul>
         <div class="tab-content">
 <!--            Активные варианты-->
@@ -99,10 +98,10 @@
     <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
                                             <th></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
-                                            <th></th>
+                                            <th class="nmc-td-for-button"></th>
                                             <th>
                                                 Действует с
                                             </th>
@@ -191,13 +190,13 @@
                                         <tr class="nmc-child-table-header">
     <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
                                             <th>
                                                 В архиве с
                                             </th>
-                                            <th>
+                                            <th class="nmc-td-for-button">
                                             </th>
                                         </tr>
                                     </thead>    
@@ -337,20 +336,6 @@
             <div class="modal-footer nmc-modal-footer">
                 <div class="container-fluid">
                     <div class="row">
-<!--
-                        <div class="col-md-5 noPadding">
-                            <input type="submit" class="btn btn-block btn-xs nmc-add-button-in-modal"
-
-                                ng-click="addSelectedEntities()"
-                                value="Добавить" />
-                        </div>
-                        <div class=" pull-right col-xs-offset-2 col-md-4 noPadding">
-                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button"
-                                ng-click="showAvailableObjects_flag=false">
-                                Закрыть
-                            </button>
-                        </div>
--->
                         
                         <div class="col-md-4 noPadding">
                             <input ng-disabled="isROfield()" class="pull-left nmc-checkbox-form" ng-model="ctrlSettings.selectedAll" type="checkbox" ng-click="selectAllAvailableEntities()"/><p style="margin-bottom: 0;
@@ -377,8 +362,6 @@
     </div>
 
 	<div class="modal-dialog  modal-content col-md-7 col-xs-7 noPadding nmc-modal-dialog">
-<!--        ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">-->
-
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="createParamsetLabel" ng-show="createParamset_flag" class="nmc-h3">
@@ -469,11 +452,6 @@
                                                 </div>    
                                                 <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">по</label></div>
                                                 <div class="col-sm-5">
-<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="paramsetEndDateFormat">-->
-<!--
-                                                    <input date-range-picker class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="paramsetEndDateFormatted" options="dateOptsParamsetRu"/>
--->
                                                     <input ng-disabled="isDisabled()" id="inputSingleDateEnd" class="form-control date-picker nmc-date-input-form"
                                 type="text" ng-model="psEndDateFormatted"/> 
                                                 </div>
@@ -659,7 +637,6 @@
 				<div class="container-fluid">
 					<div class="row">
                         <div class=" col-md-3">
-<!--                             <button class="btn btn-xs nmc-add-button-in-modal" ng-click="showAvailableObjects_flag=!showAvailableObjects_flag;" ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">Добавить объекты</button>-->
                             <div class="btn-group">
                               <button ng-disabled="isDisabled()" title="Добавить объекты" type="button" class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
                                       ng-click="prepareObjectsList()" 
@@ -761,7 +738,7 @@
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
 			<form name="moveForm" novalidate>
-                <pre>
+                <pre class="nmc-textfield">
                     {{messageForUser}}  
                 </pre>
 			</form>

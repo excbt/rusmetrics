@@ -274,7 +274,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			return responseBadRequest(
 					ApiResult.validationError("Invalid parameters beginDateS: %s, endDateS:%s", beginDateS, endDateS));
 		}
-
+		
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return responseBadRequest(
@@ -282,6 +282,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
+		
 		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 
 		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPoint_Totals(contZPointId,
@@ -291,7 +292,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 				period.getDateTimeFrom(), false);
 
 		ContServiceDataHWater lastAbs = contServiceDataHWaterService.selectLastAbsData(contZPointId, timeDetail,
-				endOfPeriod, true);
+				endOfDay, true);
 
 		ContServiceDataHWater avg = contServiceDataHWaterService.selectContZPoint_Avgs(contZPointId, timeDetail,
 				period);

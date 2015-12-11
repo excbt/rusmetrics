@@ -135,6 +135,8 @@ public class ReportMakerParamService {
 			resultContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
 		}
 
+		List<Long> subscrContObjectIds = null;
+
 		if (resultContObjectIdList.isEmpty()) {
 
 			if (!Boolean.TRUE.equals(reportParamset.getReportTemplate().getReportType().getReportMetaParamCommon()
@@ -143,12 +145,12 @@ public class ReportMakerParamService {
 				Long subscriberId = reportParamset.getSubscriber() != null ? reportParamset.getSubscriber().getId()
 						: reportParamset.getSubscriberId();
 
-				resultContObjectIdList = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
+				subscrContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
 			}
 
 		}
 
-		return new ReportMakerParam(reportParamset, resultContObjectIdList, previewMode);
+		return new ReportMakerParam(reportParamset, resultContObjectIdList, subscrContObjectIds, previewMode);
 
 	}
 
@@ -187,19 +189,19 @@ public class ReportMakerParamService {
 		// Only one object required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.FALSE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() == 1;
+			result = result && reportMakerParam.getReportContObjectIds().size() == 1;
 		}
 
 		// More than 0 Objects required
 		if (Boolean.TRUE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() > 0;
+			result = result && reportMakerParam.getReportContObjectIds().size() > 0;
 		}
 
 		// More than 1 object required
 		if (Boolean.FALSE.equals(paramCommon.getOneContObjectRequired())
 				&& Boolean.TRUE.equals(paramCommon.getManyContObjectsRequired())) {
-			result = result && reportMakerParam.getContObjectList().size() > 1;
+			result = result && reportMakerParam.getReportContObjectIds().size() > 1;
 		}
 
 		return result;

@@ -22,7 +22,7 @@
     <hr>
 </div>
 <div class="btn-toolbar marginBottom10">
-    <button ng-disabled="isROfield()" class="btn nmc-main-add-button" ng-click="editPackages()">
+    <button ng-disabled="!isAdmin()" class="btn nmc-main-add-button" ng-click="editPackages()">
 <!--        data-target="#editServiceListModal" data-toggle="modal">-->
         Редактировать</button>
 </div>
@@ -37,7 +37,7 @@
                         <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                             <td class="nmc-td-for-button-checkbox">
                                 <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                <input disabled ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
+                                <input disabled ng-model="pack.selected" type="checkbox" class="marginRight2 nmc-checkbox-notallowed" style="vertical-align: middle; margin-right: 7px;"/>
                                 
                             </td>
                             <td class="col-md-10">
@@ -45,7 +45,7 @@
                                 </span>    
                             </td>
                             <td class="col-md-1">
-                                {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                {{pack.price.priceValue}} <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                             </td>
 
                         </tr>
@@ -59,7 +59,7 @@
                                         <tr ng-repeat="serv in pack.serviceItems">
                                             <td class="onlyPaddingLeft5">
 <!--                                                style="padding: 0 0 0 5px !important;">-->
-                                                <input disabled ng-model="serv.selected" type="checkbox"/>
+                                                <input disabled ng-model="serv.selected" type="checkbox" class="nmc-checkbox-notallowed"/>
                                             </td>
                                             <td class="col-md-11 onlyPaddingLegt5">
 <!--                                                style="padding: 0 0 0 5px !important;">-->
@@ -67,7 +67,7 @@
                                                 </span>
                                             </td>
                                             <td class="col-md-1">
-                                                {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                {{serv.price.priceValue}} <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -109,7 +109,7 @@
                                             <tr ng-class="{'nmc-tr-odd':($index%2!==1)}">
                                                 <td class="nmc-td-for-button-checkbox">
                                                     <i title="Показать/Скрыть услуги" ng-attr-id={{"btnDetail"+pack.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(pack)"></i>
-                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)"/>
+                                                    <input ng-disabled="((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))" ng-model="pack.selected" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;" ng-click="packClick(pack)" ng-class="{'nmc-checkbox-notallowed': ((pack.keyname=='PACK_BASE_SERVICE')&&(pack.selected==true))}"/>
 
                                                 </td>
                                                 <td class="col-md-10">
@@ -117,7 +117,7 @@
                                                     </span>    
                                                 </td>
                                                 <td class="col-md-1">
-                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                    {{pack.price.priceValue}} <span ng-class="{'nmc-transparent':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                 </td>
 
                                             </tr>
@@ -131,7 +131,7 @@
                                                             <tr ng-repeat="serv in pack.serviceItems">
                                                                 <td class="onlyPaddingLeft5">
 <!--                                                                    style="padding: 0 0 0 5px !important;">-->
-                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)"/>
+                                                                    <input ng-model="serv.selected" type="checkbox" ng-disabled="pack.selected || (pack.keyname=='PACK_BASE_SERVICE')" ng-click="serviceClick(pack,serv)" ng-class="{'nmc-checkbox-notallowed': pack.selected || (pack.keyname=='PACK_BASE_SERVICE')}"/>
                                                                 </td>
                                                                 <td class="col-md-11 onlyPaddingLeft5">
 <!--                                                                    style="padding: 0 0 0 5px !important;">-->
@@ -139,7 +139,7 @@
                                                                     </span>
                                                                 </td>
                                                                 <td class="col-md-1">
-                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-hide':!pack.price.priceValue}">{{ctrlSettings.currency}}</span>
+                                                                    {{serv.price.priceValue}} <span ng-class="{'nmc-transparent':!serv.price.priceValue}">{{ctrlSettings.currency}}</span>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -193,7 +193,7 @@
                     </p>
 -->
                     <div id="divWithObjectTable" class="" ng-hide="loading" style="overflow-x: auto;">
-                        <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Добавлены услуги:</label></div>
+                        <div ng-show="serviceAddedList.length>0"><label class="nmc-form-label">Подключены услуги:</label></div>
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="pack in serviceAddedList">
@@ -254,7 +254,7 @@
                             </tbody>    
                         </table>
                         
-                        <div ng-show="serviceRemovedList.length>0"><label class="nmc-form-label">Удалены услуги:</label></div>
+                        <div ng-show="serviceRemovedList.length>0"><label class="nmc-form-label">Отключены услуги:</label></div>
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
                                 <tr ng-repeat="pack in serviceRemovedList">
