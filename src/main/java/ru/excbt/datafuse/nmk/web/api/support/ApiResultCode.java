@@ -17,7 +17,8 @@ public enum ApiResultCode {
 	ERR_BRM_VALIDATION(false, "Buisiness Rule Validation Error"),
 	ERR_VALIDATION(false, "Data Validation Error"),
 	ERR_INTERNAL(false, "Internal server error"),
-	ERR_INVALID_STATE(false, "Invalid State Error");
+	ERR_INVALID_STATE(false, "Invalid State Error"),
+	ERR_USER_ALREADY_EXISTS(false, "User Already Exists");
 
 	private final boolean ok;
 
