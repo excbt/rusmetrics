@@ -17,8 +17,8 @@ angular.module('portalNMC')
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
                 
 console.log("Objects directive.");
 //var timeDirStart = (new Date()).getTime();
@@ -135,7 +135,27 @@ console.log("Objects directive.");
                     $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
                     if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                        $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                        var curObj = objectSvc.findObjectById(Number($cookies.contObject), $scope.objects);
+                        if (curObj!=null){
+                            var curObjIndex = $scope.objects.indexOf(curObj);                        
+                            if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
+                                //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
+                                var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex+1);
+                                    //добавляем к выведимому на экран массиву новый блок элементов
+                                Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                                $scope.objectCtrlSettings.objectsOnPage = curObjIndex;
+                                //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
+                                $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
+                                $timeout(function(){
+                                    var curObjElem = document.getElementById("obj"+$scope.objectCtrlSettings.tmpCurContObj);                     
+                                    if (!mainSvc.checkUndefinedNull(curObjElem)){        
+                                        curObjElem.scrollIntoView();
+                                    };
+                                    $scope.objectCtrlSettings.tmpCurContObj = null;
+                                }, 50);
+                            };
+                            $scope.toggleShowGroupDetails(Number($cookies.contObject));                            
+                        };
                         $cookies.contObject = null;          
                     };
                     $rootScope.$broadcast('objectSvc:loaded');
@@ -925,9 +945,9 @@ console.log("Objects directive.");
                 
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){                                          
-                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
+                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)){
                         $scope.loading =  true;    
-                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
+                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
                         
@@ -939,8 +959,8 @@ console.log("Objects directive.");
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
                 $scope.onTableLoad = function(){ 
 //console.log("Run onTableLoad");                    
-                    if ($scope.objectCtrlSettings.isCtrlEnd === true){                    
-                        var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
+                    if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
+                        var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
                         window.scrollTo(0, Math.round(pageHeight));
                         $scope.objectCtrlSettings.isCtrlEnd = false;
                         $scope.loading =  false;
@@ -948,20 +968,18 @@ console.log("Objects directive.");
                 };
                 
                 //function add more objects for table on user screen
-                $scope.addMoreObjects = function(){
-//console.log("addMoreObjects. Run");
+                $scope.addMoreObjects = function(){                 
                     if (($scope.objects.length<=0)){
                         return;
                     };
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
                     var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
-//console.log($scope.objects.length);                    
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
                     };
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
+                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
@@ -969,15 +987,7 @@ console.log("Objects directive.");
                     }else{
                         $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
                     };
-                };
-                
-                $("#divWithObjectTable").scroll(function(){
-                    if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
-                        $scope.addMoreObjects();
-                        $scope.$apply();
-                    };
-                });
-                
+                };                                
                 
                 // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){
@@ -1132,6 +1142,13 @@ console.log("Objects directive.");
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+                    });
+                    
+                    $("#divWithObjectListTable").scroll(function(){                    
+                        if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
+                            $scope.addMoreObjects();
+                            $scope.$apply();
+                        };
                     });
                 });
                 

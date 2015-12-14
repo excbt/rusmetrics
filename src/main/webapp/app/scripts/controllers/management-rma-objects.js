@@ -931,13 +931,12 @@ console.log($scope.currentZpoint);
                     };
                 };
                 
-                $("#divWithObjectTable").scroll(function(){
+                $("#divWithObjectTable").scroll(function(){                    
                     if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
                         $scope.addMoreObjects();
                         $scope.$apply();
                     };
-                });
-                
+                });               
                 
                 // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){

@@ -166,10 +166,10 @@
 -->
                             <tr>
                                 <td class="col-sm-3">
-                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                   <input ng-disabled="isROfield() || data.currentUser.isReadonly" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
                                 </td>
                                 <td class="col-sm-9">
-                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">права "Только для чтения"
+                                   <input ng-disabled="isROfield() || data.currentUser.isAdmin" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">права "Только для чтения"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">
