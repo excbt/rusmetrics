@@ -44,4 +44,31 @@ public interface ContServiceDataElTechRepository extends CrudRepository<ContServ
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
 			@Param("endDate") Date endDate, Pageable pageable);
 
+	/**
+	 * @param contZPointId
+	 * @param timeDetailType
+	 * @param dataDate
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElTech d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :dataDate "
+			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate ASC ")
+	public List<ContServiceDataElTech> selectFirstDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetailType
+	 * @param dataDate
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElTech d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate DESC ")
+	public List<ContServiceDataElTech> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
 }

@@ -42,4 +42,32 @@ public interface ContServiceDataElProfileRepository extends CrudRepository<ContS
 	public Page<ContServiceDataElProfile> selectByZPoint(@Param("contZPointId") Long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
 			@Param("endDate") Date endDate, Pageable pageable);
+
+	/**
+	 * @param contZPointId
+	 * @param timeDetailType
+	 * @param dataDate
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElProfile d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :dataDate "
+			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate ASC ")
+	public List<ContServiceDataElProfile> selectFirstDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param timeDetailType
+	 * @param dataDate
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElProfile d "
+			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate DESC ")
+	public List<ContServiceDataElProfile> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
 }
