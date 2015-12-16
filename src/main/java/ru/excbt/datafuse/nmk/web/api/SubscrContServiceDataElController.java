@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +22,8 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
-import ru.excbt.datafuse.nmk.web.api.support.RequestDataSelector;
-import ru.excbt.datafuse.nmk.web.api.support.RequestDataSelectorPaged;
+import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
+import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 
 @Controller
 @RequestMapping(value = "/api/subscr")
@@ -49,11 +51,12 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		RequestDataSelectorPaged<ContServiceDataElCons> dataSelector = new RequestDataSelectorPaged<ContServiceDataElCons>() {
+		RequestPageDataSelector<ContServiceDataElCons> dataSelector = new RequestPageDataSelector<ContServiceDataElCons>() {
 
 			@Override
-			public Page<ContServiceDataElCons> selectDataPaged(Long contZPointId, TimeDetailKey timeDetail,
+			public Page<ContServiceDataElCons> selectData(Long contZPointId, TimeDetailKey timeDetail,
 					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
+				checkNotNull(pageRequest);
 				return contServiceDataElService.selectConsByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay(), pageRequest);
 			}
@@ -81,14 +84,15 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
-		RequestDataSelector<ContServiceDataElCons> dataSelector = new RequestDataSelector<ContServiceDataElCons>() {
+		RequestListDataSelector<ContServiceDataElCons> dataSelector = new RequestListDataSelector<ContServiceDataElCons>() {
 
 			@Override
 			public List<ContServiceDataElCons> selectData(Long contZPointId, TimeDetailKey timeDetail,
-					LocalDatePeriod localDatePeriod) {
+					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 				return contServiceDataElService.selectConsByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay());
 			}
+
 		};
 
 		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
@@ -117,11 +121,12 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		RequestDataSelectorPaged<ContServiceDataElProfile> dataSelector = new RequestDataSelectorPaged<ContServiceDataElProfile>() {
+		RequestPageDataSelector<ContServiceDataElProfile> dataSelector = new RequestPageDataSelector<ContServiceDataElProfile>() {
 
 			@Override
-			public Page<ContServiceDataElProfile> selectDataPaged(Long contZPointId, TimeDetailKey timeDetail,
+			public Page<ContServiceDataElProfile> selectData(Long contZPointId, TimeDetailKey timeDetail,
 					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
+				checkNotNull(pageRequest);
 				return contServiceDataElService.selectProfileByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay(), pageRequest);
 			}
@@ -149,11 +154,11 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
-		RequestDataSelector<ContServiceDataElProfile> dataSelector = new RequestDataSelector<ContServiceDataElProfile>() {
+		RequestListDataSelector<ContServiceDataElProfile> dataSelector = new RequestListDataSelector<ContServiceDataElProfile>() {
 
 			@Override
 			public List<ContServiceDataElProfile> selectData(Long contZPointId, TimeDetailKey timeDetail,
-					LocalDatePeriod localDatePeriod) {
+					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 				return contServiceDataElService.selectProfileByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay());
 			}
@@ -185,14 +190,16 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		RequestDataSelectorPaged<ContServiceDataElTech> pageSelector = new RequestDataSelectorPaged<ContServiceDataElTech>() {
+		RequestPageDataSelector<ContServiceDataElTech> pageSelector = new RequestPageDataSelector<ContServiceDataElTech>() {
 
 			@Override
-			public Page<ContServiceDataElTech> selectDataPaged(Long contZPointId, TimeDetailKey timeDetail,
+			public Page<ContServiceDataElTech> selectData(Long contZPointId, TimeDetailKey timeDetail,
 					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
+				checkNotNull(pageRequest);
 				return contServiceDataElService.selectTechByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay(), pageRequest);
 			}
+
 		};
 
 		ResponseEntity<?> resultResponse = getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
@@ -217,11 +224,11 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
-		RequestDataSelector<ContServiceDataElTech> dataSelector = new RequestDataSelector<ContServiceDataElTech>() {
+		RequestListDataSelector<ContServiceDataElTech> dataSelector = new RequestListDataSelector<ContServiceDataElTech>() {
 
 			@Override
 			public List<ContServiceDataElTech> selectData(Long contZPointId, TimeDetailKey timeDetail,
-					LocalDatePeriod localDatePeriod) {
+					LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 				return contServiceDataElService.selectTechByContZPoint(contZPointId, timeDetail,
 						localDatePeriod.buildEndOfDay());
 			}

@@ -19,8 +19,8 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.RequestDataSelector;
-import ru.excbt.datafuse.nmk.web.api.support.RequestDataSelectorPaged;
+import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
+import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 
 public class SubscrContServiceDataWebApiController extends WebApiController {
 
@@ -41,7 +41,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 	 */
 	protected <T> ResponseEntity<?> getResponseServiceDataPaged(long contObjectId, long contZPointId,
 			String timeDetailType, String fromDateStr, String toDateStr, String dataDateSort, Pageable pageable,
-			RequestDataSelectorPaged<T> dataSelector) {
+			RequestPageDataSelector<T> dataSelector) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -89,7 +89,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 
 		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-		Page<T> result = dataSelector.selectDataPaged(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod(),
+		Page<T> result = dataSelector.selectData(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod(),
 				pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<T>(result));
@@ -107,7 +107,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 	 * @return
 	 */
 	protected <T> ResponseEntity<?> getResponseServiceData(long contObjectId, long contZPointId, String timeDetailType,
-			String fromDateStr, String toDateStr, RequestDataSelector<T> dataSelector) {
+			String fromDateStr, String toDateStr, RequestListDataSelector<T> dataSelector) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -146,7 +146,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
-		List<T> result = dataSelector.selectData(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod());
+		List<T> result = dataSelector.selectData(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod(), null);
 
 		return ResponseEntity.ok(result);
 
