@@ -303,7 +303,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq());
 
-		String[] columns = new String[] { "u1", "f1", "u1", "f2" };
+		String[] columns = new String[] { "u1", "u1", "u3", "i1", "i2", "i3", "phase1", "phase2", "phase3" };
 
 		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
 
@@ -312,11 +312,16 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ContServiceDataElTech result = new ContServiceDataElTech();
 		result.setU1(columnHelper.getResult(queryResults, "u1"));
-		result.setF1(columnHelper.getResult(queryResults, "f1"));
 		result.setU2(columnHelper.getResult(queryResults, "u2"));
-		result.setF2(columnHelper.getResult(queryResults, "f2"));
 		result.setU3(columnHelper.getResult(queryResults, "u3"));
-		result.setF3(columnHelper.getResult(queryResults, "f3"));
+
+		result.setI1(columnHelper.getResult(queryResults, "i1"));
+		result.setI2(columnHelper.getResult(queryResults, "i2"));
+		result.setI3(columnHelper.getResult(queryResults, "i3"));
+
+		result.setPhase1(columnHelper.getResult(queryResults, "phase1"));
+		result.setPhase2(columnHelper.getResult(queryResults, "phase2"));
+		result.setPhase3(columnHelper.getResult(queryResults, "phase3"));
 
 		return result;
 

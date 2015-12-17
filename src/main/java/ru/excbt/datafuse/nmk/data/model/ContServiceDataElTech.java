@@ -52,20 +52,32 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 	@Column(name = "u_1")
 	private BigDecimal u1;
 
-	@Column(name = "f_1")
-	private BigDecimal f1;
-
 	@Column(name = "u_2")
 	private BigDecimal u2;
-
-	@Column(name = "f_2")
-	private BigDecimal f2;
 
 	@Column(name = "u_3")
 	private BigDecimal u3;
 
-	@Column(name = "f_3")
-	private BigDecimal f3;
+	@Column(name = "i_1")
+	private BigDecimal i1;
+
+	@Column(name = "i_2")
+	private BigDecimal i2;
+
+	@Column(name = "i_3")
+	private BigDecimal i3;
+
+	@Column(name = "phase_1")
+	private BigDecimal phase1;
+
+	@Column(name = "phase_2")
+	private BigDecimal phase2;
+
+	@Column(name = "phase_3")
+	private BigDecimal phase3;
+
+	@Column(name = "frequency")
+	private BigDecimal frequency;
 
 	@Column(name = "device_temp")
 	private BigDecimal deviceTemp;
@@ -126,28 +138,12 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.u1 = u1;
 	}
 
-	public BigDecimal getF1() {
-		return f1;
-	}
-
-	public void setF1(BigDecimal f1) {
-		this.f1 = f1;
-	}
-
 	public BigDecimal getU2() {
 		return u2;
 	}
 
 	public void setU2(BigDecimal u2) {
 		this.u2 = u2;
-	}
-
-	public BigDecimal getF2() {
-		return f2;
-	}
-
-	public void setF2(BigDecimal f2) {
-		this.f2 = f2;
 	}
 
 	public BigDecimal getU3() {
@@ -158,12 +154,60 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.u3 = u3;
 	}
 
-	public BigDecimal getF3() {
-		return f3;
+	public BigDecimal getI1() {
+		return i1;
 	}
 
-	public void setF3(BigDecimal f3) {
-		this.f3 = f3;
+	public void setI1(BigDecimal i1) {
+		this.i1 = i1;
+	}
+
+	public BigDecimal getI2() {
+		return i2;
+	}
+
+	public void setI2(BigDecimal i2) {
+		this.i2 = i2;
+	}
+
+	public BigDecimal getI3() {
+		return i3;
+	}
+
+	public void setI3(BigDecimal i3) {
+		this.i3 = i3;
+	}
+
+	public BigDecimal getPhase1() {
+		return phase1;
+	}
+
+	public void setPhase1(BigDecimal phase1) {
+		this.phase1 = phase1;
+	}
+
+	public BigDecimal getPhase2() {
+		return phase2;
+	}
+
+	public void setPhase2(BigDecimal phase2) {
+		this.phase2 = phase2;
+	}
+
+	public BigDecimal getPhase3() {
+		return phase3;
+	}
+
+	public void setPhase3(BigDecimal phase3) {
+		this.phase3 = phase3;
+	}
+
+	public BigDecimal getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(BigDecimal frequency) {
+		this.frequency = frequency;
 	}
 
 	public BigDecimal getDeviceTemp() {
