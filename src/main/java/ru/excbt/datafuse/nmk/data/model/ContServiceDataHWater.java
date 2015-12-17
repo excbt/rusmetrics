@@ -11,15 +11,15 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
@@ -32,9 +32,6 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	 * 
 	 */
 	private static final long serialVersionUID = -6897555657365451006L;
-
-	private static final String DATE_FORMAT_STR_FULL = "dd-MM-yyyy HH:mm";
-	private static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
 
 	@Column(name = "data_date")
 	private Date dataDate;
@@ -311,14 +308,11 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	 */
 	public String getDataDateString() {
 
-		TimeDetailKey timeDetailKey = TimeDetailKey
-				.searchKeyname(this.timeDetailType);
+		TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(this.timeDetailType);
 		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
-			return DateFormatUtils.formatDateTime(this.dataDate,
-					DATE_FORMAT_STR_TRUNC);
+			return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_TRUNC);
 		}
 
-		return DateFormatUtils.formatDateTime(this.dataDate,
-				DATE_FORMAT_STR_FULL);
+		return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_FULL);
 	}
 }
