@@ -1,31 +1,33 @@
 angular.module('portalNMC')
 .controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
 console.log("Run ConsumptionCtrl.");
+    
+    $scope.data = [];
     //TEMPPPPPPPPPPPPPPP
-    $scope.data = [
-        {
-            "id": 0,
-            "dataDate": "01.01.2016 00:00",
-            "PPPt1": 11,
-            "PPNt1": 11.11,
-            "PPPt2": 111111
-        },
-        {
-            "id": 1,
-            "dataDate": "01.01.2016 01:00",
-            "PPPt1": 12,
-            "PPPt2": 12222.123
-        },
-        {
-            "id": 2,
-            "dataDate": "Итого",
-            "PPPt1": 33,
-            "PPNt1": 11.11,
-            "PPPt2": Number(111111+12222.123).toFixed(3),
-            "class": "nmc-el-totals-indicator-highlight nmc-view-digital-data",
-            "onlyCons": true
-        }
-    ];
+//    $scope.data = [
+//        {
+//            "id": 0,
+//            "dataDate": "01.01.2016 00:00",
+//            "PPPt1": 11,
+//            "PPNt1": 11.11,
+//            "PPPt2": 111111
+//        },
+//        {
+//            "id": 1,
+//            "dataDate": "01.01.2016 01:00",
+//            "PPPt1": 12,
+//            "PPPt2": 12222.123
+//        },
+//        {
+//            "id": 2,
+//            "dataDate": "Итого",
+//            "PPPt1": 33,
+//            "PPNt1": 11.11,
+//            "PPPt2": Number(111111+12222.123).toFixed(3),
+//            "class": "nmc-el-totals-indicator-highlight nmc-view-digital-data",
+//            "onlyCons": true
+//        }
+//    ];
     /////////end TEMP region ////////////////
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
     $scope.totalIndicators = $scope.data.length;
@@ -67,8 +69,8 @@ console.log("Run ConsumptionCtrl.");
         columns : []
     };
     //create columns
-    var elecType = [{"name":"P", "caption": "A"}, {"name":"Q", "caption":"R"}];
-    var elecKind = [{"name":"P", "caption":"+"}, {"name":"N", "caption":"-"}];
+    var elecType = [{"name":"p_A", "caption": "A"}, {"name":"q_R", "caption":"R"}];
+    var elecKind = [{"name":"p", "caption":"+"}, {"name":"n", "caption":"-"}];
     var tariffPlans = [1,2,3,4];
     var columns = [{
                 header : "Дата",
@@ -113,81 +115,23 @@ console.log("Run ConsumptionCtrl.");
     };
     
                 // Проверка пользователя - системный/ не системный
-    $scope.isSystemuser = function(){
-        var result = false;
-        $scope.userInfo = $rootScope.userInfo;
-        if (angular.isDefined($scope.userInfo)){
-            result = $scope.userInfo._system;
-        };
-        return result;
-    };
-        //define init indicator params method
-    var initIndicatorParams = function(){
-        var pathParams = $location.search();       
-        var tmpZpId = null;//indicatorSvc.getZpointId();    
-        var tmpContObjectId = null;//indicatorSvc.getContObjectId();
-        var tmpZpName = null;//indicatorSvc.getZpointName();    
-        var tmpContObjectName = null;//indicatorSvc.getContObjectName();
-        var tmpTimeDetailType = null;
-
-        if (angular.isUndefined(tmpZpId)||(tmpZpId===null)){
-            if (angular.isDefined(pathParams.zpointId)&&(pathParams.zpointId!=="null")){
-                indicatorSvc.setZpointId(pathParams.zpointId);
-            };
-        };
-        if (angular.isUndefined(tmpContObjectId)||(tmpContObjectId===null)){
-            if (angular.isDefined(pathParams.objectId)&&(pathParams.objectId!=="null")){
-                indicatorSvc.setContObjectId(pathParams.objectId);
-            };
-        };
-        
-        if (angular.isUndefined(tmpZpName)||(tmpZpName===null)){
-            if (angular.isDefined(pathParams.zpointName)&&(pathParams.zpointName!=="null")){
-                indicatorSvc.setZpointName(pathParams.zpointName);
-            };
-        };
-        if (angular.isUndefined(tmpContObjectName)||(tmpContObjectName===null)){
-            if (angular.isDefined(pathParams.objectName)&&(pathParams.objectName!=="null")){
-                indicatorSvc.setContObjectName(pathParams.objectName);
-            };
-        };
-        
-        if (angular.isUndefined(tmpTimeDetailType)||(tmpTimeDetailType===null)){
-            if (angular.isDefined(pathParams.timeDetailType)&&(pathParams.timeDetailType!=="null")){
-                $scope.timeDetailType = pathParams.timeDetailType;
-            }else{               
-                if (angular.isDefined($cookies.timeDetailType)&&($cookies.timeDetailType!="undefined")&&($cookies.timeDetailType!="null")){
-                    $scope.timeDetailType = $cookies.timeDetailType;
-                }else{                   
-                    $scope.timeDetailType = indicatorSvc.getTimeDetailType();
-                };
-            };
-        };
-        
-        $scope.contZPoint = indicatorSvc.getZpointId();
-        $scope.contZPointName = (indicatorSvc.getZpointName()!="undefined")?indicatorSvc.getZpointName() : "Без названия";
-        $scope.contObject = indicatorSvc.getContObjectId();
-        $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";     
-        
-        //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
-        if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
-            $rootScope.reportStart = pathParams.fromDate;
-        }else if(angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=="null")){
-                $rootScope.reportStart = $cookies.fromDate;
-            }else{
-                $rootScope.reportStart = indicatorSvc.getFromDate();
-        };
-        if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
-            $rootScope.reportEnd = pathParams.toDate;
-        }else if (angular.isDefined($cookies.toDate)&&($cookies.toDate!=="null")){
-                $rootScope.reportEnd = $cookies.toDate;
-            }else{
-                $rootScope.reportEnd = indicatorSvc.getToDate();
-        };
-        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");     
-    };
-        //run init method
-    initIndicatorParams();
+//    $scope.isSystemuser = function(){
+//        return mainSvc.isSystemuser();
+//    };
+//        
+     $scope.getData = function (pageNumber) {       
+        $scope.pagination.current = pageNumber;         
+         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
+         
+         $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/serviceElCons/"+timeDetailType+"/"+$scope.contZPoint+"/?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+        var table =  $scope.zpointTable;
+console.log(table);        
+        $http.get(table).then(function (response) {
+                $scope.data = angular.copy(response.data);            
+console.log($scope.data);            
+        });
+     };
+    $scope.getData(0);
     
     $(document).ready(function() {
 

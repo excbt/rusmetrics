@@ -8,12 +8,13 @@ angular.module('portalNMC')
             type: "=type"
         },
         templateUrl: 'scripts/directives/templates/nmc-view-electricity.html',
-        controller: function($scope, $element, $attrs, $http, notificationFactory){
-            
-            $scope.curDate = moment().endOf('day').format("YYYY-MM-DD");
+        controller: function($scope, $element, $attrs, $http, notificationFactory, mainSvc){            
             
             $scope.dirSettings = {};
-            $scope.dirSettings.dateFormat = "DD.MM.YYYY"; //date format
+            $scope.dirSettings.userFormat = "DD.MM.YYYY"; //date format
+            $scope.dirSettings.requestFormat = "YYYY-MM-DD"; //date format
+            $scope.dirSettings.dataDate = moment().endOf('day').format($scope.dirSettings.userFormat);
+            
             $scope.dateOptsParamsetRu ={
                 locale : {
                     daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
@@ -25,33 +26,20 @@ angular.module('portalNMC')
                 singleDatePicker: true,
                 format: $scope.dirSettings.dateFormat
             };
-//            var url = $attrs.url;
-//            $scope.columns = $attrs.columns;
-//console.log($scope.dataUrl);            
-//console.log($scope.columns);             
+            
             var successCallback = function(response){
                 var tmp = angular.copy(response.data);
                 tmp.forEach(function(el){
                     var result  = {};
                     for(var i in $scope.columns){
-                        if ($scope.columns[i].fieldName == "dataDate"){
-            //console.log("Indicator id = "+el.id);                            
-            //console.log("Indicator timestamp in millisec, which get from server = "+el.dataDate);
-            //console.log("Indicator timestamp +3 hours in sec = "+(Math.round(el.dataDate/1000.0)+3*3600));                            
-            //                          var datad = DateNMC(el.dataDate);
-            //console.log(datad.getTimezoneOffset());
-            //console.log(datad.toLocaleString());                            
-                            //el.dataDate=el.dataDateString;//printDateNMC(datad);
-                            continue;
-                        };
-                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].fieldName !== "dataDate")){
+                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         };
-
                     };                    
                 });
                 $scope.data = tmp;
             };
+            
             var errorCallback = function(e){
                 console.log(e);
                 notificationFactory.errorInfo(e.statusText, e.data.description || e.data);
@@ -78,8 +66,10 @@ angular.module('portalNMC')
                 $http.get(url).then(successCallback, errorCallback);
             };
             
-            $scope.refreshData = function(){               
-               var url = $scope.dataUrl + "/?beginDate=" + $scope.curDate + "&endDate=" + $scope.curDate;
+            $scope.refreshData = function(){        
+//console.log(moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat));                
+                var requestDate = moment($scope.dirSettings.dataDate, $scope.dirSettings.userFormat).format($scope.dirSettings.requestFormat)
+                var url = $scope.dataUrl + "/?beginDate=" + requestDate + "&endDate=" + requestDate;
                 getData(url);
             };
             
@@ -92,6 +82,10 @@ angular.module('portalNMC')
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
                   });
+            };
+            
+            $scope.isSystemuser = function(){
+                return mainSvc.isSystemuser();
             };
         }
     };

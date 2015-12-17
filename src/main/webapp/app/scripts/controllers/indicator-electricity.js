@@ -3,12 +3,7 @@ angular.module('portalNMC')
 console.log("run ElectricityCtrl"); 
                     // Проверка пользователя - системный/ не системный
     $scope.isSystemuser = function(){
-        var result = false;
-        $scope.userInfo = $rootScope.userInfo;
-        if (angular.isDefined($scope.userInfo)){
-            result = $scope.userInfo._system;
-        };
-        return result;
+        return mainSvc.isSystemuser();
     };
     
      //define init controller
@@ -58,20 +53,22 @@ console.log("run ElectricityCtrl");
         $scope.contZPointName = (indicatorSvc.getZpointName()!="undefined")?indicatorSvc.getZpointName() : "Без названия";
         $scope.contObject = indicatorSvc.getContObjectId();
         $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";
+        
+        //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
+        if (angular.isDefined(pathParams.fromDate)&&(pathParams.fromDate!=="null")){
+            $rootScope.reportStart = pathParams.fromDate;
+        }else if(angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=="null")){
+                $rootScope.reportStart = $cookies.fromDate;
+            }else{
+                $rootScope.reportStart = indicatorSvc.getFromDate();
+        };
+        if (angular.isDefined(pathParams.toDate)&&(pathParams.toDate!=="null")){
+            $rootScope.reportEnd = pathParams.toDate;
+        }else if (angular.isDefined($cookies.toDate)&&($cookies.toDate!=="null")){
+                $rootScope.reportEnd = $cookies.toDate;
+            }else{
+                $rootScope.reportEnd = indicatorSvc.getToDate();
+        };
     };
     initCtrl();
-    
-    $(document).ready(function() {
-        $timeout(function(){
-console.log($('.date-picker'));                
-        }, 100);
-//                  $('#input'+$scope.electroKind+'Date').datepicker({
-//                $('#inputElectroDate').datepicker({
-//            $('.data-picker').datepicker({
-//              dateFormat: "dd.mm.yy",
-//              firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-//              dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-//              monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-//          });
-    });
 });

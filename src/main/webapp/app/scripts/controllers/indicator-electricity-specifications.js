@@ -2,73 +2,80 @@ angular.module('portalNMC')
 .controller('ElectricitySpecCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
 console.log("Run ElectricitySpecCtrl.");
     $scope.electroKind = "Spec";
-    $scope.dataUrl = "url";
+    ///api/subscr/66948436/serviceElProfile/30min/159919982
+    //{beginDate=[2015-12-01], endDate=[2015-12-31]}
+    var apiSubscUrl = "../api/subscr/";
+    var timeDetailType = "abs";
+    var viewMode = "serviceElTech";
+    $scope.dataUrl = apiSubscUrl + $scope.contObject + "/" + viewMode + "/" + timeDetailType + "/" + $scope.contZPoint;
     $scope.columns = [
         {
             header : "Дата",
             headerClass : "col-xs-2 col-md-2 nmc-text-align-center",
             dataClass : "col-xs-2 col-md-2",
-            fieldName: "dataDate"
+            fieldName: "dataDateString",
+            type: "string",
+            date: true
         }, 
         {
             header : "Ua, V",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Ua"
+            fieldName: "u1"
         },
         {
             header : "Ub, V",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Ub"
+            fieldName: "u2"
         },
         {
             header : "Uc, V",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Uc"
+            fieldName: "u3"
         },
         {
             header : "Ia, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Ia"
+            fieldName: "i1"
         },
         {
             header : "Ib, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Ib"
+            fieldName: "i2"
         },
         {
             header : "Ic, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "Ic"
+            fieldName: "i3"
         },
         {
             header : "cos \u03C6a",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "cosXa"
+            fieldName: "phase1"
         },
         {
             header : "cos \u03C6b",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "cosXb"
+            fieldName: "phase2"
         },
         {
             header : "cos \u03C6c",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "cosXc"
+            fieldName: "phase3"
         },
         {
             header : "f, Hz",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "frenc"
+            fieldName: "frec"
         },
         {
             header : "T, \u2103",
@@ -77,23 +84,4 @@ console.log("Run ElectricitySpecCtrl.");
             fieldName: "temp"
         },
     ];
-    
-    //TEMPPPPPPPPPPPPPPP
-    $scope.data = [
-        {
-            "id": 0,
-            "dataDate": "01.01.2016 00:00",
-            "Ua": "30",
-            "Ic": 11.11,
-            "temp": 111111
-        },
-        {
-            "id": 1,
-            "dataDate": "01.01.2016 01:00",
-            "Ib": "100",
-            "cosXa": 12,
-            "frenc": 12222.123
-        }
-    ];
-    /////////end TEMP region ////////////////
 });

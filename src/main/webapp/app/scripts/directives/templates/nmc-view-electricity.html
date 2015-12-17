@@ -10,7 +10,7 @@
                 <div>
 <!--                     ng-attr-id={{"input"+electroKind+"Date"}} -->
                     <input ng-attr-id={{"input"+type+"Date"}} class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
-                type="text" ng-model="curDate"/>
+                type="text" ng-model="dirSettings.dataDate" ng-change="refreshData()"/>
                 </div>
             </div>
             <div class="col-md-1 noPadding nmc-div-refresh">
@@ -47,7 +47,7 @@
 <!-- | orderBy:orderBy.field:!orderBy.asc-->
                 <tr ng-repeat="element in data track by $index">
                     <td ng-repeat = "column in columns track by $index" ng-class="column.dataClass">
-                        {{element[column.fieldName]}}
+                        {{element[column.fieldName]}} <span ng-show="isSystemuser()&&(column.date)">( id = {{element['id']}})</span>
                     </td>
 
                 </tr>
