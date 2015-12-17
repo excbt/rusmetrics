@@ -3,8 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
+import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 
 public class SubscrContServiceDataWebApiController extends WebApiController {
@@ -107,7 +105,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 	 * @return
 	 */
 	protected <T> ResponseEntity<?> getResponseServiceData(long contObjectId, long contZPointId, String timeDetailType,
-			String fromDateStr, String toDateStr, RequestListDataSelector<T> dataSelector) {
+			String fromDateStr, String toDateStr, RequestAnyDataSelector<T> dataSelector) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -146,7 +144,7 @@ public class SubscrContServiceDataWebApiController extends WebApiController {
 					ApiResult.validationError("Invalid parameters timeDetailType: %s", timeDetailType));
 		}
 
-		List<T> result = dataSelector.selectData(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod(), null);
+		T result = dataSelector.selectData(contZPointId, timeDetail, datePeriodParser.getLocalDatePeriod());
 
 		return ResponseEntity.ok(result);
 

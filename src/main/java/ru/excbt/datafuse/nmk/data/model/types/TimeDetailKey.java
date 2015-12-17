@@ -13,7 +13,8 @@ public enum TimeDetailKey implements KeynameObject {
 	TYPE_1H("1h", false, true),
 	TYPE_1DAY("1day", true, true),
 	TYPE_1MON("1mon", true, true),
-	TYPE_30MIN("30min", false, false);
+	TYPE_30MIN("30min", false, false),
+	TYPE_ABS("abs", false, false);
 
 	private final String keyname;
 	private final static String ABS_SUFFIX = "_abs";

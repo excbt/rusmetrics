@@ -44,6 +44,7 @@ public class ContServiceDataElProfile extends AbstractAuditableModel {
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
+	@JsonIgnore
 	@Version
 	private int version;
 
@@ -51,7 +52,7 @@ public class ContServiceDataElProfile extends AbstractAuditableModel {
 	private Integer profileInterval;
 
 	@Column(name = "p_ap")
-	private BigDecimal p_Ar;
+	private BigDecimal p_Ap;
 
 	@Column(name = "p_an")
 	private BigDecimal p_An;
@@ -118,12 +119,12 @@ public class ContServiceDataElProfile extends AbstractAuditableModel {
 		this.profileInterval = profileInterval;
 	}
 
-	public BigDecimal getP_Ar() {
-		return p_Ar;
+	public BigDecimal getP_Ap() {
+		return p_Ap;
 	}
 
-	public void setP_Ar(BigDecimal p_Ar) {
-		this.p_Ar = p_Ar;
+	public void setP_Ap(BigDecimal p_Ap) {
+		this.p_Ap = p_Ap;
 	}
 
 	public BigDecimal getP_An() {

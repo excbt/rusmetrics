@@ -49,7 +49,7 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 
 	// 1	
 	@Column(name = "p_ap_1")
-	private BigDecimal p_Ar1;
+	private BigDecimal p_Ap1;
 
 	@Column(name = "p_an_1")
 	private BigDecimal p_An1;
@@ -62,7 +62,7 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 
 	// 2
 	@Column(name = "p_ap_2")
-	private BigDecimal p_Ar2;
+	private BigDecimal p_Ap2;
 
 	@Column(name = "p_an_2")
 	private BigDecimal p_An2;
@@ -75,7 +75,7 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 
 	// 3
 	@Column(name = "p_ap_3")
-	private BigDecimal p_Ar3;
+	private BigDecimal p_Ap3;
 
 	@Column(name = "p_an_3")
 	private BigDecimal p_An3;
@@ -88,20 +88,20 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 
 	// 4
 	@Column(name = "p_ap_4")
-	private BigDecimal p_Ar4;
+	private BigDecimal p_Ap4;
 
 	@Column(name = "p_an_4")
 	private BigDecimal p_An4;
 
 	@Column(name = "q_rp_4")
-	private BigDecimal q_Ap4;
+	private BigDecimal q_Rp4;
 
 	@Column(name = "q_rn_4")
-	private BigDecimal q_An4;
+	private BigDecimal q_Rn4;
 
 	// All
 	@Column(name = "p_ap")
-	private BigDecimal p_Ar;
+	private BigDecimal p_Ap;
 
 	@Column(name = "p_an")
 	private BigDecimal p_An;
@@ -160,12 +160,12 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	public BigDecimal getP_Ar1() {
-		return p_Ar1;
+	public BigDecimal getP_Ap1() {
+		return p_Ap1;
 	}
 
-	public void setP_Ar1(BigDecimal p_Ar1) {
-		this.p_Ar1 = p_Ar1;
+	public void setP_Ap1(BigDecimal p_Ap1) {
+		this.p_Ap1 = p_Ap1;
 	}
 
 	public BigDecimal getP_An1() {
@@ -192,12 +192,12 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 		this.q_Rn1 = q_Rn1;
 	}
 
-	public BigDecimal getP_Ar2() {
-		return p_Ar2;
+	public BigDecimal getP_Ap2() {
+		return p_Ap2;
 	}
 
-	public void setP_Ar2(BigDecimal p_Ar2) {
-		this.p_Ar2 = p_Ar2;
+	public void setP_Ap2(BigDecimal p_Ap2) {
+		this.p_Ap2 = p_Ap2;
 	}
 
 	public BigDecimal getP_An2() {
@@ -224,12 +224,12 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 		this.q_Rn2 = q_Rn2;
 	}
 
-	public BigDecimal getP_Ar3() {
-		return p_Ar3;
+	public BigDecimal getP_Ap3() {
+		return p_Ap3;
 	}
 
-	public void setP_Ar3(BigDecimal p_Ar3) {
-		this.p_Ar3 = p_Ar3;
+	public void setP_Ap3(BigDecimal p_Ap3) {
+		this.p_Ap3 = p_Ap3;
 	}
 
 	public BigDecimal getP_An3() {
@@ -256,12 +256,12 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 		this.q_Rn3 = q_Rn3;
 	}
 
-	public BigDecimal getP_Ar4() {
-		return p_Ar4;
+	public BigDecimal getP_Ap4() {
+		return p_Ap4;
 	}
 
-	public void setP_Ar4(BigDecimal p_Ar4) {
-		this.p_Ar4 = p_Ar4;
+	public void setP_Ap4(BigDecimal p_Ap4) {
+		this.p_Ap4 = p_Ap4;
 	}
 
 	public BigDecimal getP_An4() {
@@ -272,28 +272,28 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 		this.p_An4 = p_An4;
 	}
 
-	public BigDecimal getQ_Ap4() {
-		return q_Ap4;
+	public BigDecimal getQ_Rp4() {
+		return q_Rp4;
 	}
 
-	public void setQ_Ap4(BigDecimal q_Ap4) {
-		this.q_Ap4 = q_Ap4;
+	public void setQ_Rp4(BigDecimal q_Rp4) {
+		this.q_Rp4 = q_Rp4;
 	}
 
-	public BigDecimal getQ_An4() {
-		return q_An4;
+	public BigDecimal getQ_Rn4() {
+		return q_Rn4;
 	}
 
-	public void setQ_An4(BigDecimal q_An4) {
-		this.q_An4 = q_An4;
+	public void setQ_Rn4(BigDecimal q_Rn4) {
+		this.q_Rn4 = q_Rn4;
 	}
 
-	public BigDecimal getP_Ar() {
-		return p_Ar;
+	public BigDecimal getP_Ap() {
+		return p_Ap;
 	}
 
-	public void setP_Ar(BigDecimal p_Ar) {
-		this.p_Ar = p_Ar;
+	public void setP_Ap(BigDecimal p_Ap) {
+		this.p_Ap = p_Ap;
 	}
 
 	public BigDecimal getP_An() {
@@ -319,5 +319,4 @@ public class ContServiceDataElCons extends AbstractAuditableModel {
 	public void setQ_Rn(BigDecimal q_Rn) {
 		this.q_Rn = q_Rn;
 	}
-
 }
