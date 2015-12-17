@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ElectricityCtrl', function($scope, mainSvc, indicatorSvc, $location, $cookies, $rootScope){
+.controller('ElectricityCtrl', function($scope, mainSvc, indicatorSvc, $location, $cookies, $rootScope, $timeout){
 console.log("run ElectricityCtrl"); 
                     // Проверка пользователя - системный/ не системный
     $scope.isSystemuser = function(){
@@ -60,4 +60,18 @@ console.log("run ElectricityCtrl");
         $scope.contObjectName = (indicatorSvc.getContObjectName()!="undefined")?indicatorSvc.getContObjectName() : "Без названия";
     };
     initCtrl();
+    
+    $(document).ready(function() {
+        $timeout(function(){
+console.log($('.date-picker'));                
+        }, 100);
+//                  $('#input'+$scope.electroKind+'Date').datepicker({
+//                $('#inputElectroDate').datepicker({
+//            $('.data-picker').datepicker({
+//              dateFormat: "dd.mm.yy",
+//              firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+//              dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+//              monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+//          });
+    });
 });

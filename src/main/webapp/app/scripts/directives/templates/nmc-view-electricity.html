@@ -9,12 +9,12 @@
             <div class="col-md-9">
                 <div>
 <!--                     ng-attr-id={{"input"+electroKind+"Date"}} -->
-                    <input id="inputElectroDate" class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
+                    <input ng-attr-id={{"input"+type+"Date"}} class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
                 type="text" ng-model="curDate"/>
                 </div>
             </div>
             <div class="col-md-1 noPadding nmc-div-refresh">
-                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
+                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></button>
             </div>
         </div>
         
@@ -44,12 +44,15 @@
                         </div>
                     </th>
                 </tr>
-
-                <tr ng-repeat="element in data | orderBy:orderBy.field:!orderBy.asc">
+<!-- | orderBy:orderBy.field:!orderBy.asc-->
+                <tr ng-repeat="element in data track by $index">
                     <td ng-repeat = "column in columns track by $index" ng-class="column.dataClass">
                         {{element[column.fieldName]}}
                     </td>
 
+                </tr>
+                <tr class="nmc-hide">
+                    {{onTableLoad()}}
                 </tr>
             </table>
         </div> 
