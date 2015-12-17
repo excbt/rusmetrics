@@ -751,6 +751,11 @@ tr.nmc-main-table-header > th {
 .nmc-totals-indicator-highlight{
     background-color: aquamarine;
 }
+
+/* Подсветка показаний Итого для электричества*/
+.nmc-el-totals-indicator-highlight{
+    background-color: azure;
+}
 /* Подсветка действующего/активного прайса*/
 tr.nmc-active-price > td{
     background-color: bisque;
@@ -969,11 +974,18 @@ tr.nmc-inactive-price > td{
     /* общее поле ввода*/
 .nmc-input-data{
     width: 150px;
+    display: inline;
 }
     /* Поле ввода числовых данных*/
 .nmc-input-digital-data{
     width: 80px;
     display: inline;   
+}
+
+    /* Поле вывода числовых данных*/
+.nmc-view-digital-data{
+    width: 80px;
+    min-width: 60px;
 }
     /* Поле ввода числовых данных - укороченный вариант*/
 .nmc-input-digital-data-sm{
@@ -1597,6 +1609,9 @@ tr.nmc-inactive-price > td{
 
 .marginTopMinus79{
     margin-top: -79px;
+}
+.marginTopMinus57{
+    margin-top: -57px;
 }
 
 .margin10 {

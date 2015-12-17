@@ -1,0 +1,57 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 noPadding marginBottom10 marginTop5">
+            <div class="col-md-2 noPadding paddingTop5">
+                <label class="nmc-form-label">
+                    Укажите дату                    
+                </label>
+            </div>    
+            <div class="col-md-9">
+                <div>
+<!--                     ng-attr-id={{"input"+electroKind+"Date"}} -->
+                    <input id="inputElectroDate" class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
+                type="text" ng-model="curDate"/>
+                </div>
+            </div>
+            <div class="col-md-1 noPadding nmc-div-refresh">
+                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+               <!--    Непрокручиваямая шапка -->
+        <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
+                <tr class="nmc-main-table-header">                    
+                    <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                        <div>
+                            {{column.header || column.fieldName}}
+                            <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                        </div>
+                    </th>
+                </tr>
+        </table>
+
+        <div class="nmc-tariff-main-div">
+            <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
+                <tr class="nmc-main-table-header nmc-hide">
+                    <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                        <div>
+                            {{column.header || column.fieldName}}
+                            <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                        </div>
+                    </th>
+                </tr>
+
+                <tr ng-repeat="element in data | orderBy:orderBy.field:!orderBy.asc">
+                    <td ng-repeat = "column in columns track by $index" ng-class="column.dataClass">
+                        {{element[column.fieldName]}}
+                    </td>
+
+                </tr>
+            </table>
+        </div> 
+    </div>
+</div>
