@@ -14,6 +14,8 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 @Entity
 @Table(name = "cont_service_data_el_tech")
@@ -170,5 +172,19 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 
 	public void setDeviceTemp(BigDecimal deviceTemp) {
 		this.deviceTemp = deviceTemp;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDataDateString() {
+
+		TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(this.timeDetailType);
+		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
+			return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_TRUNC);
+		}
+
+		return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_FULL);
 	}
 }
