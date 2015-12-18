@@ -86,11 +86,11 @@
                         <img ng-attr-id="{{'imgObj'+object.contObject.id}}" title="" height="" width="" ng-src="{{'images/object-state-'+object.statusColor.toLowerCase()+'.png'}}"/>
                         
                             </td>
-                        <td class="col-xs-1 col-md-1 nmc-td-notices-counts"><a title="Всего уведомлений" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
+                        <td class="col-xs-1 col-md-1 nmc-td-notices-counts noPadding"><a title="Всего уведомлений" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}" ng-mousedown="setNoticeFilterByObject(object.contObject.id)"> {{object.eventsCount}} / {{object.eventsTypesCount}}</a> (<a title="Новые уведомления" ng-href="#/notices/list/?objectMonitorId={{object.contObject.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}&isNew=true" ng-mousedown="setNoticeFilterByObjectAndRevision(object.contObject.id)">{{object.newEventsCount}}</a>)
 
                         </td>
                         <td class="nmc-td-for-buttons"><i title="Показать диаграмму уведомлений" class="btn btn-xs" ng-click="getEventTypesByObject(object.contObject.id, true)"><img height="16" width="16" src='images/roundDiagram4.png'/></i></td>
-                        <td class="col-xs-11 col-md-11" ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
+                        <td class="col-xs-9 col-md-9" ng-click="toggleShowGroupDetails(object.contObject.id)">{{object.contObject.fullName}}
                             <span ng-if="isSystemuser()">(id = {{object.contObject.id}})</span>
                         </td>
 <!--                        <td class="col-xs-8 col-md-8"></td>-->

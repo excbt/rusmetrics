@@ -206,7 +206,12 @@ console.log('Run Object management controller.');
                     
                     notificationFactory.success();
                     $('#showZpointOptionModal').modal('hide');
+                    if (mainSvc.checkUndefinedNull($scope.currentObject.zpoints) || !angular.isArray($scope.currentObject.zpoints)){
+                        $scope.zpointSettings = {};
+                        return;
+                    };
                     var curIndex = -1;
+console.log($scope.currentObject); 
                     $scope.currentObject.zpoints.some(function(elem, index){
                         if (elem.id === $scope.zpointSettings.id){
                             curIndex = index;
@@ -528,7 +533,7 @@ console.log('Run Object management controller.');
                         objectSvc.getZpointsDataByObject(curObject, mode).then(function(response){
                             var tmp = [];
                             var copyTmp = angular.copy(response.data);
-console.log(copyTmp);                              
+//console.log(copyTmp);                              
                             if (mode == "Ex"){
                                 tmp = response.data.map(function(el){
                                     var result = {};
@@ -549,8 +554,10 @@ console.log(copyTmp);
                             curObject.zpoints = zpoints;
                             makeZpointTable(curObject);
                             var btnDetail = document.getElementById("btnDetail"+curObject.id);
-                            btnDetail.classList.remove("glyphicon-chevron-right");
-                            btnDetail.classList.add("glyphicon-chevron-down");
+                            if (!mainSvc.checkUndefinedNull(btnDetail)){
+                                btnDetail.classList.remove("glyphicon-chevron-right");
+                                btnDetail.classList.add("glyphicon-chevron-down");
+                            };
                             
                             curObject.showGroupDetailsFlag = !curObject.showGroupDetailsFlag;
                         });
@@ -636,7 +643,7 @@ console.log(copyTmp);
                                             imgPath = "images/es.png";
                                             break;
                                         case "el":
-                                            imgPath = "images/es.png";
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";               
                                             break;
                                         default:
                                             imgPath = column['zpointType'];
@@ -733,9 +740,9 @@ console.log($scope.currentZpoint);
                     zps.contZPointComment = object.contZPointComment;
                     zps.zpointName = object.zpointName;
                     switch (object.zpointType){
-                       case "heat" :  zps.zpointType="ТС"; break;
+                       case "heat" :  zps.zpointType="Теплоснабжение"; break;
                        case "hw" : zps.zpointType="ГВС"; break;
-                       case "cw" : zps.zpointType="ХВ"; break;    
+                       case "cw" : zps.zpointType="ХВС"; break;    
                         default : zps.zpointType=object.zpointType;        
                     };
                     zps.piped = object.piped;

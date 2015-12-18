@@ -1,0 +1,46 @@
+<div class="container-fluid">
+    <div class="row">
+        <div  ng-show="loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+        <div class="col-md-12 noPadding nmc-main-workspace-header"> 
+            <h2 class="noMargin nmc-h2">Объект &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()"> (id = {{contZPoint}}) </span>&gt;
+            </h2>
+        </div>
+        <div class="col-md-12 noPadding nmc-main-workspace-header">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+          <!-- Навигационная полоса -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li id="consumption_2nd_menu_item" role="presentation" class="active">
+                    <a id="consumptionTab" class="nmc-main-tab-button" href="" aria-controls="consumption" data-target="#consumption" role="tab" data-toggle="tab" ng-click="initCons()">Потребление
+                    </a>
+                </li>        
+                <li id="energy_profile_2nd_menu_item" role="presentation" class="">
+                    <a id="energyTab" class="nmc-main-tab-button" href="" aria-controls="energy" data-target="#energy" role="tab" data-toggle="tab" ng-click="initProfile()">Энергетический профиль
+                    </a>
+                </li>
+                <li id="specifications_2nd_menu_item" role="presentation" class="">
+                    <a id="specificationsTab" class="nmc-main-tab-button" href="" aria-controls="specifications" data-target="#specifications" role="tab" data-toggle="tab" ng-click="initTech()">Технические характеристики
+                    </a>
+                </li>        
+            </ul>
+
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane fade in active" id="consumption">
+                  <div ng-include="'../app/views/indicator-electricity-consumption.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="energy">
+                  <div ng-include src="'../app/views/indicator-electricity-energy.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="specifications">
+                  <div ng-include src="'../app/views/indicator-electricity-specifications.html'"></div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

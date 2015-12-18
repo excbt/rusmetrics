@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +40,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
@@ -69,44 +67,6 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 	@Autowired
 	private HWatersCsvService hWatersCsvService;
-
-	private class ColumnHelper {
-		private final String[] columns;
-		private final String operator;
-		private final List<String> columnList;
-
-		ColumnHelper(String[] columns, String operator) {
-			checkNotNull(columns);
-			this.columns = columns;
-			this.operator = operator;
-			this.columnList = Collections.unmodifiableList(Arrays.asList(columns));
-		}
-
-		String build() {
-			StringBuilder sb = new StringBuilder();
-			for (String col : columns) {
-				sb.append(String.format(operator, col));
-				sb.append(" as ");
-				sb.append(col);
-				sb.append(',');
-			}
-			sb.delete(sb.length() - 1, sb.length());
-			return sb.toString();
-		}
-
-		int indexOf(String column) {
-			return columnList.indexOf(column);
-		}
-
-		BigDecimal getResult(Object[] results, String column) {
-			int idx = indexOf(column);
-			checkState(idx >= 0, "Invalid column index");
-			Object value = results[idx];
-			return DBRowUtils.asBigDecimal(value);
-
-		}
-
-	}
 
 	/**
 	 * 
@@ -416,7 +376,6 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		result.setP_delta(columnHelper.getResult(results, "p_delta"));
 		result.setWorkTime(columnHelper.getResult(results, "workTime"));
 		result.setFailTime(columnHelper.getResult(results, "failTime"));
-		logger.info("value: {}", result.getT_in());
 
 		return result;
 
@@ -467,23 +426,24 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 				return null;
 			}
 
-			dataDateLimit = dataList.get(0).getDataDate();			
+			dataDateLimit = dataList.get(0).getDataDate();
 			// Truncate dataDateLimit
 			LocalDateTime ldt = new LocalDateTime(dataDateLimit);
-			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();			
+			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();
 		} else {
 			dataDateLimit = localDateTime.toDate();
 		}
 
 		String[] integratorTimeDetails = { TimeDetailKey.TYPE_1H.getAbsPair(), TimeDetailKey.TYPE_24H.getAbsPair() };
 		List<ContServiceDataHWater> integratorList = null;
-		if (isEndDate){
-			integratorList = contServiceDataHWaterRepository
-				.selectLastDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
-		}else{
-			integratorList = contServiceDataHWaterRepository
-					.selectFirstDetailDataByZPoint(contZPointId, integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
-		};
+		if (isEndDate) {
+			integratorList = contServiceDataHWaterRepository.selectLastDetailDataByZPoint(contZPointId,
+					integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
+		} else {
+			integratorList = contServiceDataHWaterRepository.selectFirstDetailDataByZPoint(contZPointId,
+					integratorTimeDetails, dataDateLimit, LIMIT1_PAGE_REQUEST);
+		}
+		;
 
 		return integratorList.size() > 0 ? integratorList.get(0) : null;
 	}

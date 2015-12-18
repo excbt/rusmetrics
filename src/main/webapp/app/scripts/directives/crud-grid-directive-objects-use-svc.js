@@ -536,14 +536,19 @@ console.log("Objects directive.");
                                     "data-placement=\"bottom\""+
                                     "title=\"Эксплуатационные параметры точки учёта\">"+
                                         "<img height=12 width=12 src=\"vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png\" />"+
-                                "</i>"+
-                                "<a href='#/objects/indicators/?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
+                                "</i>";
+                        
+                        if (zpoint.zpointType == 'el'){
+                            trHTML+="<a href='#/objects/indicator-electricity/";
+                        }else{
+                                trHTML+="<a href='#/objects/indicators/";
+                        };
+                        trHTML += "?objectId="+object.id+"&zpointId="+zpoint.id+"&objectName="+object.fullName+"&zpointName="+zpoint.zpointName+"'><i class=\"btn btn-xs glyphicon glyphicon-list nmc-button-in-table\""+
 //                                    "ng-click=\"getIndicators("+object.id+","+zpoint.id+")\""+
                                     "ng-mousedown=\"setIndicatorsParams("+object.id+","+zpoint.id+")\""+
                                     "title=\"Показания точки учёта\">"+
-                                "</i></a>"+
-
-                            "</td>";
+                                "</i></a>";
+                        trHTML+="</td>";
                         $scope.oldColumns.forEach(function(column){
                             switch (column.name){
                                 case "zpointName": 
@@ -565,7 +570,10 @@ console.log("Objects directive.");
                                             imgPath = "images/es.png";
                                             break;
                                         case "el":
-                                            imgPath = "images/es.png";
+                                            //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-206-electricity.png";
+                                        //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-543-lamp.png";
+                                            //imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-65-lightbulb.png";         
+                                            imgPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";               
                                             break;
                                         default:
                                             imgPath = column['zpointType'];
