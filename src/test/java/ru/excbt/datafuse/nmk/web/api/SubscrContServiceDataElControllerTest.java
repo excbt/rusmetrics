@@ -15,7 +15,7 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 
 	private final static String CONS_TIME_DETAIL = TimeDetailKey.TYPE_ABS.getKeyname();
 	private final static String PROFILE_TIME_DETAIL = TimeDetailKey.TYPE_30MIN.getKeyname();
-	private final static String TECH_TIME_DETAIL = TimeDetailKey.TYPE_24H.getKeyname();
+	private final static String TECH_TIME_DETAIL = TimeDetailKey.TYPE_ABS.getKeyname();
 
 	private RequestExtraInitializer requestParamInitializer() {
 		return (builder) -> {
@@ -69,9 +69,24 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testElConsDataAbs() throws Exception {
+		String url = apiSubscrUrl(String.format("/%d/serviceElCons/24h_abs/%d", TEST_OBJECT_ID, EL_ZPOINT_ID));
+
+		_testGet(url, requestParamInitializer());
+	}
+
+	@Test
 	public void testElProfileData() throws Exception {
 		String url = apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
+
+		_testGet(url, requestParamInitializer());
+	}
+
+	@Test
+	public void testElTechData() throws Exception {
+		String url = apiSubscrUrl(
+				String.format("/%d/serviceElTech/%s/%d", TEST_OBJECT_ID, TECH_TIME_DETAIL, EL_ZPOINT_ID));
 
 		_testGet(url, requestParamInitializer());
 	}

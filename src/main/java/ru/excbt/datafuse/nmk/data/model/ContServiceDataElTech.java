@@ -14,12 +14,11 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 @Entity
 @Table(name = "cont_service_data_el_tech")
-public class ContServiceDataElTech extends AbstractAuditableModel {
+public class ContServiceDataElTech extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
 	 * 
@@ -67,14 +66,14 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 	@Column(name = "i_3")
 	private BigDecimal i3;
 
-	@Column(name = "phase_1")
-	private BigDecimal phase1;
+	@Column(name = "k_1")
+	private BigDecimal k1;
 
-	@Column(name = "phase_2")
-	private BigDecimal phase2;
+	@Column(name = "k_2")
+	private BigDecimal k2;
 
-	@Column(name = "phase_3")
-	private BigDecimal phase3;
+	@Column(name = "k_3")
+	private BigDecimal k3;
 
 	@Column(name = "frequency")
 	private BigDecimal frequency;
@@ -82,6 +81,7 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 	@Column(name = "device_temp")
 	private BigDecimal deviceTemp;
 
+	@Override
 	public Date getDataDate() {
 		return dataDate;
 	}
@@ -114,6 +114,7 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.contZPointId = contZPointId;
 	}
 
+	@Override
 	public String getTimeDetailType() {
 		return timeDetailType;
 	}
@@ -178,28 +179,28 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.i3 = i3;
 	}
 
-	public BigDecimal getPhase1() {
-		return phase1;
+	public BigDecimal getK1() {
+		return k1;
 	}
 
-	public void setPhase1(BigDecimal phase1) {
-		this.phase1 = phase1;
+	public void setK1(BigDecimal k1) {
+		this.k1 = k1;
 	}
 
-	public BigDecimal getPhase2() {
-		return phase2;
+	public BigDecimal getK2() {
+		return k2;
 	}
 
-	public void setPhase2(BigDecimal phase2) {
-		this.phase2 = phase2;
+	public void setK2(BigDecimal k2) {
+		this.k2 = k2;
 	}
 
-	public BigDecimal getPhase3() {
-		return phase3;
+	public BigDecimal getK3() {
+		return k3;
 	}
 
-	public void setPhase3(BigDecimal phase3) {
-		this.phase3 = phase3;
+	public void setK3(BigDecimal k3) {
+		this.k3 = k3;
 	}
 
 	public BigDecimal getFrequency() {
@@ -218,17 +219,4 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.deviceTemp = deviceTemp;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDataDateString() {
-
-		TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(this.timeDetailType);
-		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
-			return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_TRUNC);
-		}
-
-		return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_FULL);
-	}
 }
