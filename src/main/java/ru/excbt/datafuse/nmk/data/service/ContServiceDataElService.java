@@ -303,7 +303,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq());
 
-		String[] columns = new String[] { "u1", "u1", "u3", "i1", "i2", "i3", "k1", "k2", "k3" };
+		String[] columns = new String[] { "u1", "u2", "u3", "i1", "i2", "i3", "k1", "k2", "k3" };
 
 		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
 
