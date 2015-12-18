@@ -68,13 +68,13 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 	private BigDecimal i3;
 
 	@Column(name = "phase_1")
-	private BigDecimal phase1;
+	private BigDecimal k1;
 
 	@Column(name = "phase_2")
-	private BigDecimal phase2;
+	private BigDecimal k2;
 
 	@Column(name = "phase_3")
-	private BigDecimal phase3;
+	private BigDecimal k3;
 
 	@Column(name = "frequency")
 	private BigDecimal frequency;
@@ -178,28 +178,28 @@ public class ContServiceDataElTech extends AbstractAuditableModel {
 		this.i3 = i3;
 	}
 
-	public BigDecimal getPhase1() {
-		return phase1;
+	public BigDecimal getK1() {
+		return k1;
 	}
 
-	public void setPhase1(BigDecimal phase1) {
-		this.phase1 = phase1;
+	public void setK1(BigDecimal k1) {
+		this.k1 = k1;
 	}
 
-	public BigDecimal getPhase2() {
-		return phase2;
+	public BigDecimal getK2() {
+		return k2;
 	}
 
-	public void setPhase2(BigDecimal phase2) {
-		this.phase2 = phase2;
+	public void setK2(BigDecimal k2) {
+		this.k2 = k2;
 	}
 
-	public BigDecimal getPhase3() {
-		return phase3;
+	public BigDecimal getK3() {
+		return k3;
 	}
 
-	public void setPhase3(BigDecimal phase3) {
-		this.phase3 = phase3;
+	public void setK3(BigDecimal k3) {
+		this.k3 = k3;
 	}
 
 	public BigDecimal getFrequency() {

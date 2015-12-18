@@ -303,7 +303,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq());
 
-		String[] columns = new String[] { "u1", "u1", "u3", "i1", "i2", "i3", "phase1", "phase2", "phase3" };
+		String[] columns = new String[] { "u1", "u1", "u3", "i1", "i2", "i3", "k1", "k2", "k3" };
 
 		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
 
@@ -319,9 +319,9 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		result.setI2(columnHelper.getResult(queryResults, "i2"));
 		result.setI3(columnHelper.getResult(queryResults, "i3"));
 
-		result.setPhase1(columnHelper.getResult(queryResults, "phase1"));
-		result.setPhase2(columnHelper.getResult(queryResults, "phase2"));
-		result.setPhase3(columnHelper.getResult(queryResults, "phase3"));
+		result.setK1(columnHelper.getResult(queryResults, "k1"));
+		result.setK2(columnHelper.getResult(queryResults, "k2"));
+		result.setK3(columnHelper.getResult(queryResults, "k3"));
 
 		return result;
 
