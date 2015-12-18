@@ -110,6 +110,18 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setOwnerContacts(contObject.getOwnerContacts());
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
+		currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
+
+		ContObjectFias currObjectFias = currContObject.getContObjectFias();
+
+		if (currObjectFias == null) {
+			currObjectFias = createConfObjectFias(currContObject);
+		} else {
+			currObjectFias.setFiasFullAddress(currContObject.getFullAddress());
+			currObjectFias.setGeoFullAddress(currContObject.getFullAddress());
+			currObjectFias.setIsGeoRefresh(true);
+		}
+		contObjectFiasRepository.save(currObjectFias);
 
 		ContObject resultContObject = contObjectRepository.save(currContObject);
 
@@ -310,6 +322,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	private ContObjectFias createConfObjectFias(ContObject contObject) {
 		ContObjectFias contObjectFias = new ContObjectFias();
 		contObjectFias.setContObject(contObject);
+		contObjectFias.setFiasFullAddress(contObject.getFullAddress());
+		contObjectFias.setGeoFullAddress(contObject.getFullAddress());
 		contObjectFias.setIsGeoRefresh(true);
 		return contObjectFias;
 	}
