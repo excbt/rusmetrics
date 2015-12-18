@@ -974,6 +974,10 @@ tr.nmc-inactive-price > td{
     /* общее поле ввода*/
 .nmc-input-data{
     width: 150px;
+/*    display: inline;*/
+}
+.nmc-input-data-with-label{
+    width: 150px;
     display: inline;
 }
     /* Поле ввода числовых данных*/

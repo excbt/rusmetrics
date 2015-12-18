@@ -28,6 +28,7 @@ angular.module('portalNMC')
             };
             
             var successCallback = function(response){
+//console.log(response.data);                
                 var tmp = angular.copy(response.data);
                 tmp.forEach(function(el){
                     var result  = {};
