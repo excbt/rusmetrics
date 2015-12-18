@@ -69,6 +69,13 @@ public class SubscrContServiceDataElControllerTest extends AnyControllerTest {
 	}
 
 	@Test
+	public void testElConsDataAbs() throws Exception {
+		String url = apiSubscrUrl(String.format("/%d/serviceElCons/24h_abs/%d", TEST_OBJECT_ID, EL_ZPOINT_ID));
+
+		_testGet(url, requestParamInitializer());
+	}
+
+	@Test
 	public void testElProfileData() throws Exception {
 		String url = apiSubscrUrl(
 				String.format("/%d/serviceElProfile/%s/%d", TEST_OBJECT_ID, PROFILE_TIME_DETAIL, EL_ZPOINT_ID));
