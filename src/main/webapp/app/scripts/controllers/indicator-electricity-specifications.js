@@ -75,13 +75,13 @@ console.log("Run ElectricitySpecCtrl.");
             header : "f, Hz",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
-            fieldName: "frec"
+            fieldName: "frequency"
         },
         {
             header : "T, \u2103",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
-            fieldName: "temp"
+            fieldName: "deviceTemp"
         },
     ];
 });

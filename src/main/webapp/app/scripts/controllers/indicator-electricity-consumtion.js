@@ -1,6 +1,6 @@
 angular.module('portalNMC')
 .controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
-console.log("Run ConsumptionCtrl.");
+//console.log("Run ConsumptionCtrl.");
     
     $scope.data = [];
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
@@ -61,7 +61,7 @@ console.log("Run ConsumptionCtrl.");
         for (var tariff = 0; tariff < tariffPlans.length; tariff++){
             for (var kind = 0; kind < elecKind.length; kind++){
                 var column = {};
-                column.header = ""+elecType[type].caption+elecKind[kind].caption+"(T"+tariffPlans[tariff]+")";
+                column.header = ""+elecType[type].caption+elecKind[kind].caption+" (T"+tariffPlans[tariff]+")";
                 column.headerClass = "nmc-view-digital-data";
                 column.dataClass = "nmc-view-digital-data";
                 column.fieldName = ""+elecType[type].name+elecKind[kind].name+""+tariffPlans[tariff]+"";
@@ -189,6 +189,6 @@ console.log("Run ConsumptionCtrl.");
         indicatorSvc.setToDate(moment(newDates.endDate).format($scope.ctrlSettings.requestFormat));
         $rootScope.reportStart = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);
         $rootScope.reportEnd = moment(newDates.endDate).format($scope.ctrlSettings.requestFormat);       
-        $scope.getData("");
+        $scope.getData();
     }, false);    
 });

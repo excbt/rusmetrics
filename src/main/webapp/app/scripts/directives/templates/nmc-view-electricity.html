@@ -1,36 +1,27 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-5 col-md-4 noPadding marginBottom10 marginTop5">
+            <label class="nmc-form-label">
+            Укажите дату                    
+            </label>
+            <input ng-attr-id={{"input"+type+"Date"}} class="form-control date-picker nmc-input-data-with-label nmc-date-input-form"
+        type="text" ng-model="dirSettings.dataDate" ng-change="refreshData()"/>
+            <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></button>
 <!--
-            <div class="col-xs-4 col-md-2 noPadding paddingTop5">
-                <label class="nmc-form-label">
-                    Укажите дату                    
-                </label>
-            </div>    
+            <label>
+                <input ng-attr-id={{type+"Chart-view"}} ng-model="chartFlag" data-toggle="toggle" data-size="small" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;">
+                Показать график
+            </label>
 -->
-<!--            <div class="col-xs-6 col-md-6">-->
-<!--                <div>-->
-                    <label class="nmc-form-label">
-                    Укажите дату                    
-                    </label>
-<!--                     ng-attr-id={{"input"+electroKind+"Date"}} -->
-                    <input ng-attr-id={{"input"+type+"Date"}} class="form-control date-picker nmc-input-data-with-label nmc-date-input-form"
-                type="text" ng-model="dirSettings.dataDate" ng-change="refreshData()"/>
-                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></button>
-<!--                </div>-->
-<!--            </div>-->
-<!--
-            <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
-                <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></button>
-            </div>
--->
-<!--            <div class="col-md-5"></div>-->
-        </div>
-<!--        <div class="col-md-9"></div>-->
-        
+        </div> 
     </div>
 </div>
 <div class="container">
+    <div class="row" ng-show="chartFlag">
+        <div>
+            <div class="marginBottom10" ng-attr-id={{type+"Chart-area"}}></div>
+        </div>
+    </div>
     <div class="row">
                <!--    Непрокручиваямая шапка -->
         <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
@@ -44,7 +35,7 @@
                 </tr>
         </table>
 
-        <div class="nmc-tariff-main-div">
+        <div ng-class="{'nmc-el-view-main-div': !chartFlag, 'nmc-el-view-main-div-with-chart': chartFlag}">
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
                 <tr class="nmc-main-table-header nmc-hide">
                     <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
@@ -61,9 +52,11 @@
                     </td>
 
                 </tr>
+<!--
                 <tr class="nmc-hide">
                     {{onTableLoad()}}
                 </tr>
+-->
             </table>
         </div> 
     </div>

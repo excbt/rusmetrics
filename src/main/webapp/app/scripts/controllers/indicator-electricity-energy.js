@@ -29,25 +29,29 @@ angular.module('portalNMC')
             header : "A+, кВт/ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
-            fieldName: "p_Ap"
+            fieldName: "p_Ap",
+            graph: true
         },
         {
             header : "A-, кВт/ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
-            fieldName: "p_An"
+            fieldName: "p_An",
+            graph: true
         },
         {
             header : "R+, кВАр/ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
-            fieldName: "q_Rp"
+            fieldName: "q_Rp",
+            graph: true
         },
         {
             header : "R-, кВАр/ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
-            fieldName: "q_Rn"
+            fieldName: "q_Rn",
+            graph: true
         },
     ];
     

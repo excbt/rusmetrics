@@ -268,11 +268,18 @@ body{
 
     /* Разметка страницы Настройки */
 /* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
-.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div{
+.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div{
     overflow: auto;
     height:61vh;
     min-height: 290px;
 }
+
+.nmc-el-view-main-div-with-chart{
+    overflow: auto;
+    height:45vh;
+    min-height: 190px;
+}
+
 
 /*  Стиль главных дивов разделов "Отчеты" и "Контакты"*/
 .nmc-report-settings-main-div{

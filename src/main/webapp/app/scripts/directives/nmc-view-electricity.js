@@ -5,10 +5,11 @@ angular.module('portalNMC')
         scope: {
             dataUrl: "=url",
             columns: "=columns",
-            type: "=type"
+            type: "=type",
+            chartFlag: "=chart"
         },
         templateUrl: 'scripts/directives/templates/nmc-view-electricity.html',
-        controller: function($scope, $element, $attrs, $http, notificationFactory, mainSvc){            
+        controller: function($scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout){            
             
             $scope.dirSettings = {};
             $scope.dirSettings.userFormat = "DD.MM.YYYY"; //date format
@@ -39,6 +40,7 @@ angular.module('portalNMC')
                     };                    
                 });
                 $scope.data = tmp;
+                $scope.runChart();
             };
             
             var errorCallback = function(e){
@@ -77,17 +79,78 @@ angular.module('portalNMC')
             $scope.refreshData();
             
             $scope.onTableLoad= function(){
+console.log("onTableLoad");                
+                               
+            };
+            
+            //set setting for input date and chart controls toggle
+            $timeout(function(){
                 $('#input'+$scope.type+'Date').datepicker({
                       dateFormat: "dd.mm.yy",
                       firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
                       dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
                       monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-                  });
-            };
+                }); 
+                
+                $('#'+$scope.type+'Chart-view').bootstrapToggle({
+                    on: "да",
+                    off: "нет"
+                });
+                $('#'+$scope.type+'Chart-view').change(function(){
+                    $scope.chartFlag = Boolean($(this).prop('checked'));
+                    $scope.$apply();
+                });
+            }, 10);
             
             $scope.isSystemuser = function(){
                 return mainSvc.isSystemuser();
             };
+            
+                    //chart
+            $scope.runChart = function(){
+                var graph = [];//["p_Ap", "p_An", "q_Rp", "q_Rn"];
+                $scope.columns.forEach(function(column){
+                    column.graph && graph.push(column);
+                });
+                var data = [];//, series = Math.floor(Math.random() * 6) + 3;       
+                var count = graph.length;//4;
+                for (var i = 0; i < count; i++) {
+                    var rowCount = $scope.data.length;
+                    var seria = [];
+                    for (var ser = 0; ser<rowCount; ser++){
+                        seria[ser] = [$scope.data[ser].dataDate+3*3600*1000, Number($scope.data[ser][graph[i].fieldName])];
+                    };
+                    var label= graph[i].header;
+                    data.push({label: label, data: seria});                    
+                };
+//console.log(data);
+                // выводим график
+                var width = $(".nmc-el-view-main-div").width();
+//console.log(width);                
+                $("#"+$scope.type+"Chart-area").width(1110);
+                $("#"+$scope.type+"Chart-area").height(150);
+
+                $.plot('#'+$scope.type+'Chart-area', data,{
+                    series: {
+                        lines: {show: true}, 
+                        points: {show: true}
+                    },
+                    legend: {
+                        show: true,
+                        labelFormatter: labelFormatter,
+                        position: "se"
+                    },
+                    xaxis:{
+                        mode: "time"
+                    },
+                    yaxis: {                        
+                    }
+                });
+
+            };
+            function labelFormatter(label, series) {
+                return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label +"</div>";
+            }
         }
     };
 });
