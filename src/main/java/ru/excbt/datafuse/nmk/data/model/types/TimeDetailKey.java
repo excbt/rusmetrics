@@ -14,7 +14,12 @@ public enum TimeDetailKey implements KeynameObject {
 	TYPE_1DAY("1day", true, true),
 	TYPE_1MON("1mon", true, true),
 	TYPE_30MIN("30min", false, false),
-	TYPE_ABS("abs", false, false);
+	TYPE_ABS("abs", false, false),
+
+	TYPE_24H_ABS("24h_abs", true, false),
+	TYPE_1H_ABS("1h_abs", false, false),
+	TYPE_1DAY_ABS("1day_abs", true, false),
+	TYPE_1MON_ABS("1mon_abs", true, false);
 
 	private final String keyname;
 	private final static String ABS_SUFFIX = "_abs";
@@ -54,6 +59,23 @@ public enum TimeDetailKey implements KeynameObject {
 		return opt.isPresent() ? opt.get() : null;
 	}
 
+	/**
+	 * 
+	 * @param keyname
+	 * @return
+	 */
+	public static TimeDetailKey searchKeynameAbs(String keyname) {
+
+		Optional<TimeDetailKey> opt = Stream.of(TimeDetailKey.values())
+				.filter((i) -> i.haveAbs && i.getAbsPair().equals(keyname)).findFirst();
+
+		return opt.isPresent() ? opt.get() : null;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isTruncDate() {
 		return truncDate;
 	}
