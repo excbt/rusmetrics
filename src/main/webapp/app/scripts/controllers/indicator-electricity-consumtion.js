@@ -3,32 +3,6 @@ angular.module('portalNMC')
 console.log("Run ConsumptionCtrl.");
     
     $scope.data = [];
-    //TEMPPPPPPPPPPPPPPP
-//    $scope.data = [
-//        {
-//            "id": 0,
-//            "dataDate": "01.01.2016 00:00",
-//            "PPPt1": 11,
-//            "PPNt1": 11.11,
-//            "PPPt2": 111111
-//        },
-//        {
-//            "id": 1,
-//            "dataDate": "01.01.2016 01:00",
-//            "PPPt1": 12,
-//            "PPPt2": 12222.123
-//        },
-//        {
-//            "id": 2,
-//            "dataDate": "Итого",
-//            "PPPt1": 33,
-//            "PPNt1": 11.11,
-//            "PPPt2": Number(111111+12222.123).toFixed(3),
-//            "class": "nmc-el-totals-indicator-highlight nmc-view-digital-data",
-//            "onlyCons": true
-//        }
-//    ];
-    /////////end TEMP region ////////////////
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
     $scope.totalIndicators = $scope.data.length;
     $scope.pagination = {
@@ -61,6 +35,7 @@ console.log("Run ConsumptionCtrl.");
     $scope.ctrlSettings.requestFormat = "YYYY-MM-DD"; //date format
     $scope.ctrlSettings.viewMode = "";
     $scope.ctrlSettings.dataDate = moment().endOf('day').format($scope.ctrlSettings.userFormat);
+    $scope.ctrlSettings.loading = true;
     
     $scope.ctrlSettings.ctxId = "electricity_consumption_page";
     
@@ -93,6 +68,7 @@ console.log("Run ConsumptionCtrl.");
                 columns.push(column);
             };
         };
+        //columns for sum
         for (var kind = 0; kind < elecKind.length; kind++){
                 var column = {};
                 column.header = "\u03A3"+elecType[type].caption+elecKind[kind].caption;
@@ -118,9 +94,12 @@ console.log("Run ConsumptionCtrl.");
         format: $scope.ctrlSettings.dateFormat
     };
     
-    var getIndicators = function(table){       
-        $http.get(table).then(function (response) {
-                var tmp = angular.copy(response.data);          
+    var getIndicators = function(table, paramString){
+        var url = table+paramString;
+        $http.get(url).then(function (response) {
+                var tmp = angular.copy(response.data); 
+                if (mainSvc.checkUndefinedNull(tmp)){ return "Electricity indicators undefined or null."};            
+//console.log(response.data);    
                 tmp.forEach(function(el){
                     for(var i in $scope.columns){
                         if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
@@ -128,26 +107,38 @@ console.log("Run ConsumptionCtrl.");
                         };
                     };                    
                 });
-                $scope.data = tmp;             
+                $scope.data = tmp;
+                $scope.ctrlSettings.loading = false;
+                if ($scope.ctrlSettings.viewMode==""&&$scope.data.length>0){
+                    getSummary(table+"/summary"+paramString);
+                };
+        }, function(e){
+            $scope.ctrlSettings.loading = false;
+            console.log(e);
         });
     };
     
     var getSummary = function(table){       
         $http.get(table).then(function (response) {
-            var el = angular.copy(response.data.totals);           
-                for(var i in $scope.columns){
-                    if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
-                        el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
-                    };
-                };                    
+            var el = angular.copy(response.data.totals);
+            if (mainSvc.checkUndefinedNull(el)){ return "Summary undefined or null."};          
+            for(var i in $scope.columns){
+                if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
+                    el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
+                };
+            };                    
             el.onlyCons = true;
             el.dataDateString = "Итого";
             el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
             $scope.data.push(el);
+        }, function(e){
+            console.log(e);
         });
     };
      
-     $scope.getData = function () { 
+     $scope.getData = function () {
+         $scope.ctrlSettings.loading = true;
+         $scope.data = [];
          var paramString ="";
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
          timeDetailType+=$scope.ctrlSettings.viewMode;
@@ -160,10 +151,7 @@ console.log("Run ConsumptionCtrl.");
          };
         var table =  $scope.zpointTable;
 //console.log(table);
-        getIndicators(table+paramString);         
-         if ($scope.ctrlSettings.viewMode==""){
-             getSummary(table+"/summary"+paramString);
-         };
+        getIndicators(table, paramString);                  
      };
     $scope.getData();
     
@@ -180,13 +168,12 @@ console.log("Run ConsumptionCtrl.");
     };
     
     $(document).ready(function() {
-
-          $('#inputElConsDate').datepicker({
-              dateFormat: "dd.mm.yy",
-              firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-              dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-              monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-          });
+        $('#inputElConsDate').datepicker({
+          dateFormat: "dd.mm.yy",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });
     });
     
     $scope.$watch('indicatorDates', function (newDates, oldDates) {      
@@ -196,12 +183,12 @@ console.log("Run ConsumptionCtrl.");
         if(newDates===oldDates){
             return;
         };
-        $cookies.fromDate = moment(newDates.startDate).format('YYYY-MM-DD');
-        $cookies.toDate = moment(newDates.endDate).format('YYYY-MM-DD');
-        indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
-        indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
-        $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
-        $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');       
+        $cookies.fromDate = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);
+        $cookies.toDate = moment(newDates.endDate).format($scope.ctrlSettings.requestFormat);
+        indicatorSvc.setFromDate(moment(newDates.startDate).format($scope.ctrlSettings.requestFormat));
+        indicatorSvc.setToDate(moment(newDates.endDate).format($scope.ctrlSettings.requestFormat));
+        $rootScope.reportStart = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);
+        $rootScope.reportEnd = moment(newDates.endDate).format($scope.ctrlSettings.requestFormat);       
         $scope.getData("");
     }, false);    
 });

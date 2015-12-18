@@ -78,7 +78,7 @@
                 </div>    
             </div>
 
-            <div class="row" class="nmc-hide" ng-show="data.length ==0">
+            <div class="row" class="nmc-hide" ng-show="(data.length ==0)&&!ctrlSettings.loading">
                 <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
             </div>
             <div class="row" ng-show="data.length >0">

@@ -12,75 +12,75 @@ console.log("Run ElectricitySpecCtrl.");
         {
             header : "Дата",
             headerClass : "col-xs-2 col-md-2 nmc-text-align-center",
-            dataClass : "col-xs-2 col-md-2",
+            dataClass : "col-xs-2 col-md-2 nmc-text-align-right",
             fieldName: "dataDateString",
             type: "string",
             date: true
         }, 
         {
             header : "Ua, V",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "u1"
         },
         {
             header : "Ub, V",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "u2"
         },
         {
             header : "Uc, V",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "u3"
         },
         {
             header : "Ia, A",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "i1"
         },
         {
             header : "Ib, A",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "i2"
         },
         {
             header : "Ic, A",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "i3"
         },
         {
             header : "cos \u03C6a",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "phase1"
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
+            fieldName: "k1"
         },
         {
             header : "cos \u03C6b",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "phase2"
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
+            fieldName: "k2"
         },
         {
             header : "cos \u03C6c",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            fieldName: "phase3"
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
+            fieldName: "k3"
         },
         {
             header : "f, Hz",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "frec"
         },
         {
             header : "T, \u2103",
-            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data",
-            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data",
+            headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
+            dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
             fieldName: "temp"
         },
     ];

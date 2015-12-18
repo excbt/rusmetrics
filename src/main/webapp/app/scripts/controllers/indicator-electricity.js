@@ -69,6 +69,29 @@ console.log("run ElectricityCtrl");
             }else{
                 $rootScope.reportEnd = indicatorSvc.getToDate();
         };
+        //get date range settings
+        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
     };
     initCtrl();
+    
+    $(document).ready(function() {
+        $scope.oldMinWidth = $('.wrap > .container-fluid >.row').css("min-width");
+        $('.wrap > .container-fluid >.row').css("min-width", "1572px");
+    });
+    
+    $scope.$on('$destroy', function(){
+        $('.wrap > .container-fluid >.row').css("min-width", $scope.oldMinWidth);
+    });
+    
+    $scope.initCons = function(){
+        $('.wrap > .container-fluid >.row').css("min-width", "1572px");
+    };
+    
+    $scope.initProfile = function(){
+        $('.wrap > .container-fluid >.row').css("min-width", $scope.oldMinWidth);
+    };
+    
+    $scope.initTech = function(){
+        $('.wrap > .container-fluid >.row').css("min-width", $scope.oldMinWidth);
+    };
 });
