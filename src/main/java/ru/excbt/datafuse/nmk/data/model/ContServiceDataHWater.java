@@ -18,15 +18,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 @Entity
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime" })
-public class ContServiceDataHWater extends AbstractAuditableModel {
+public class ContServiceDataHWater extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
 	 * 
@@ -110,6 +109,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	@Column(name = "fail_time")
 	private BigDecimal failTime;
 
+	@Override
 	public Date getDataDate() {
 		return dataDate;
 	}
@@ -134,6 +134,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 		this.contZPoint = contZPoint;
 	}
 
+	@Override
 	public String getTimeDetailType() {
 		return timeDetailType;
 	}
@@ -302,17 +303,4 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 		this.failTime = failTime;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDataDateString() {
-
-		TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(this.timeDetailType);
-		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
-			return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_TRUNC);
-		}
-
-		return DateFormatUtils.formatDateTime(this.dataDate, DateFormatUtils.DATE_FORMAT_STR_FULL);
-	}
 }
