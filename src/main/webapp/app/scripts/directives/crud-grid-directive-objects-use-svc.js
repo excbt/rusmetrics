@@ -442,6 +442,7 @@ console.log("Objects directive.");
 //console.log(zPointsByObject[i]);                                
                                 zpoint.id = zPointsByObject[i].id;
                                 zpoint.zpointType = zPointsByObject[i].contServiceType.keyname;
+                                zpoint.zpointTypeCaption = zPointsByObject[i].contServiceType.caption;
                                 zpoint.isManualLoading = zPointsByObject[i].isManualLoading;
                                 zpoint.customServiceName = zPointsByObject[i].customServiceName;
 //                                zpoint.zpointName = zPointsByObject[i].contServiceType.caption || zPointsByObject[i].customServiceName;
@@ -733,6 +734,7 @@ console.log("Objects directive.");
                     zps.id = object.id;
                     zps.isManualLoading = object.isManualLoading;
                     zps.customServiceName = object.customServiceName;
+                    zps.zpointTypeCaption = object.zpointTypeCaption;
                     zps.zpointName = object.zpointName;
                     switch (object.zpointType){
                        case "heat" :  zps.zpointType="ТС"; break;

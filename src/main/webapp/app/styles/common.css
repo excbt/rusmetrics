@@ -300,6 +300,25 @@ body{
     height:52vh;
     min-height: 250px;
 }
+/*    Стиль для графиков электричества*/
+.nmc-electro-chart{
+    width: 750px;
+    height: 150px;
+}
+/*
+@media (max-width: 1009px){
+    .nmc-electro-chart{
+        width: 505px;
+    }
+}
+
+@media (min-width: 1010px){
+  .nmc-electro-chart{
+    width: 1010px;
+  }
+}
+*/
+
 
 /***********************
  * Элементы навигации 

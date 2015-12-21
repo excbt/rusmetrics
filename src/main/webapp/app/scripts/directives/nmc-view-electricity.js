@@ -129,8 +129,8 @@ console.log("onTableLoad");
                 // выводим график
                 var width = $(".nmc-el-view-main-div").width();
 //console.log(width);                
-                $("#"+$scope.type+"Chart-area").width(1110);
-                $("#"+$scope.type+"Chart-area").height(150);
+//                $("#"+$scope.type+"Chart-area").width(1010);
+//                $("#"+$scope.type+"Chart-area").height(150);
 
                 $.plot('#'+$scope.type+'Chart-area', data,{
                     series: {
@@ -140,7 +140,9 @@ console.log("onTableLoad");
                     legend: {
                         show: true,
                         labelFormatter: labelFormatter,
-                        position: "se"
+                        position: "se",
+                        margin: [-100, 0]
+//                        container: $("#"+$scope.type+"Legend-area")
                     },
                     xaxis:{
                         mode: "time"
