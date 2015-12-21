@@ -193,11 +193,6 @@ console.log("Run user settings controller.");
         result = !((($scope.data.currentUser.id==null)&&($scope.emptyString($scope.data.currentUser.password)))
             || ($scope.data.currentUser.password!=$scope.data.currentUser.passwordConfirm))
         ;
-        if (($scope.data.currentUser.id!=null)
-            &&((angular.isString($scope.data.currentUser.password)))
-            &&((angular.isUndefined($scope.data.currentUser.curpassword))||($scope.data.currentUser.curpassword==null)||($scope.data.currentUser.curpassword==""))){
-            result = false;
-        };
         return result;
     };
     

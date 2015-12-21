@@ -272,7 +272,7 @@ console.log("Load NoticeCtrl.");
                     oneNotice.imgSTPath = "images/es.png";
                     break;
                 case "el" : //oneNotice.noticeZpoint = "Элка"; 
-                    oneNotice.imgSTPath = "images/es.png";
+                    oneNotice.imgSTPath = "vendor_components/glyphicons_free/glyphicons/png/glyphicons-242-flash.png";
                     break;    
                 case null :// oneNotice.noticeZpoint = ""; 
                     oneNotice.imgSTPath = "null";

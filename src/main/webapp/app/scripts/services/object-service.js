@@ -247,38 +247,45 @@ console.log("Object Service. Run.");
         var sendDeviceToServer = function(device){
             //send to server
                 //create param string
-            var paramString = "";
+//            var paramString = "";
+            var params = {};
             if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
-                    paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
+//                paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
+                params.subscrDataSourceAddr = device.subscrDataSourceAddr;
             };
             if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-                if (paramString!=""){
-                    paramString+="&";
-                };
-                paramString = paramString+"dataSourceTable="+device.dataSourceTable;
+//                if (paramString!=""){
+//                    paramString+="&";
+//                };
+//                paramString = paramString+"dataSourceTable="+device.dataSourceTable;
+                params.dataSourceTable=device.dataSourceTable;
             };
             if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
-                if (paramString!=""){
-                    paramString+="&";
-                };
-                paramString = paramString+"dataSourceTable1h="+device.dataSourceTable1h;
+//                if (paramString!=""){
+//                    paramString+="&";
+//                };
+//                paramString = paramString+"dataSourceTable1h="+device.dataSourceTable1h;
+                params.dataSourceTable1h = device.dataSourceTable1h;
             };
             if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
-                if (paramString!=""){
-                    paramString+="&";
-                };
-                paramString = paramString+"dataSourceTable24h="+device.dataSourceTable24h;
+//                if (paramString!=""){
+//                    paramString+="&";
+//                };
+//                paramString = paramString+"dataSourceTable24h="+device.dataSourceTable24h;
+                params.dataSourceTable24h = device.dataSourceTable24h;
             };
             var targetUrl = getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
             if (angular.isDefined(device.id)&&(device.id !=null)){
                 targetUrl = targetUrl+"/"+device.id;
             };
                 //add url params
-            targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
-            if (paramString!=""){
-                paramString="&"+paramString;
-            };
-            targetUrl= targetUrl +paramString;
+//            targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
+            params.subscrDataSourceId=device.subscrDataSourceId;
+//            if (paramString!=""){
+//                paramString="&"+paramString;
+//            };
+//            targetUrl= targetUrl +paramString;
+            device.editDataSourceInfo = params;
             if (angular.isDefined(device.id)&&(device.id !=null)){
                 return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
             }else{

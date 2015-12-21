@@ -134,6 +134,16 @@ console.log("Run routeProviderConfig");
             }]
         }
       })
+      .when('/objects/indicator-electricity', {
+        templateUrl: 'views/indicator-electricity.html',
+        controller: 'ElectricityCtrl',
+        reloadOnSearch: false,
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
+      })
       .when('/settings/tariffs', {
         templateUrl: 'views/tariffs.html',
         controller: 'TariffsCtrl'

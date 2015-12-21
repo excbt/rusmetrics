@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDevicesCtrl', ['$scope','$http', 'objectSvc', 'notificationFactory', function($scope, $http, objectSvc, notificationFactory){
+.controller('MngmtDevicesCtrl', ['$scope','$http', 'objectSvc', 'notificationFactory', 'mainSvc', function($scope, $http, objectSvc, notificationFactory, mainSvc){
 console.log('Run devices management controller.');
     //settings
     $scope.ctrlSettings = {};
@@ -153,13 +153,6 @@ console.log('Run devices management controller.');
         console.log(e);
     };
     
-    function fixedEncodeURI (str) {
-        //return encodeURI(str).replace(/%5B/g, '[').replace(/%5D/g, ']');
-        return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
-            return '%' + c.charCodeAt(0).toString(16);
-          });
-    };
-    
     $scope.saveDevice = function(device){ 
         //check device data
         var checkDsourceFlag = true;
@@ -176,66 +169,79 @@ console.log('Run devices management controller.');
         };
 //console.log(device);        
         //send to server
+        objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
             //create param string
-        var paramString = "";
-        var params = {};
-        if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
-            paramString = paramString+"subscrDataSourceAddr="+fixedEncodeURI(device.subscrDataSourceAddr);
-            params.subscrDataSourceAddr = device.subscrDataSourceAddr;    
-        };
-        if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-            if (paramString!=""){
-                paramString+="&";
-            };
-            paramString = paramString+"dataSourceTable="+fixedEncodeURI(device.dataSourceTable);
-            params.dataSourceTable = device.dataSourceTable;
-        };
-        if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
-            if (paramString!=""){
-                paramString+="&";
-            };
-            paramString = paramString+"dataSourceTable1h="+fixedEncodeURI(device.dataSourceTable1h);
-            params.dataSourceTable1h = device.dataSourceTable1h;
-        };
-        if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
-            if (paramString!=""){
-                paramString+="&";
-            };
-            paramString = paramString+"dataSourceTable24h="+fixedEncodeURI(device.dataSourceTable24h);
-            params.dataSourceTable24h = device.dataSourceTable24h;
-        };
-        var targetUrl = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
-        if (angular.isDefined(device.id)&&(device.id !=null)){
-            targetUrl = targetUrl+"/"+device.id;
-        };
-        params.subscrDataSourceId=device.subscrDataSourceId;
+//        var paramString = "";
+//        var params = {};
+//        if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
+//            paramString = paramString+"subscrDataSourceAddr="+fixedEncodeURI(device.subscrDataSourceAddr);
+//            params.subscrDataSourceAddr = device.subscrDataSourceAddr;    
+//        };
+//        if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
+//            if (paramString!=""){
+//                paramString+="&";
+//            };
+//            paramString = paramString+"dataSourceTable="+fixedEncodeURI(device.dataSourceTable);
+//            params.dataSourceTable = device.dataSourceTable;
+//        };
+//        if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
+//            if (paramString!=""){
+//                paramString+="&";
+//            };
+//            paramString = paramString+"dataSourceTable1h="+fixedEncodeURI(device.dataSourceTable1h);
+//            params.dataSourceTable1h = device.dataSourceTable1h;
+//        };
+//        if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
+//            if (paramString!=""){
+//                paramString+="&";
+//            };
+//            paramString = paramString+"dataSourceTable24h="+fixedEncodeURI(device.dataSourceTable24h);
+//            params.dataSourceTable24h = device.dataSourceTable24h;
+//        };
+//        var targetUrl = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
+//        if (angular.isDefined(device.id)&&(device.id !=null)){
+//            targetUrl = targetUrl+"/"+device.id;
+//        };
+//        params.subscrDataSourceId=device.subscrDataSourceId;
             //add url params
         //targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
 //        if (paramString!=""){
 //            paramString="&"+paramString;
 //        };
 //        targetUrl= targetUrl+paramString;
-        device.editDataSourceInfo = params;
+//        device.editDataSourceInfo = params;
 //console.log(targetUrl);        
-        if (angular.isDefined(device.id)&&(device.id !=null)){
-            $http.put(targetUrl, device)
+//        if (angular.isDefined(device.id)&&(device.id !=null)){
+//            $http.put(targetUrl, device)
 //            $http({
 //                method: 'PUT',
 //                url: targetUrl,
 //                params: params,
 //                data: device
 //            })
-                .then(successCallback, errorCallback);
-        }else{
-            $http.post(targetUrl, device)
+//                .then(successCallback, errorCallback);
+//        }else{
+//            $http.post(targetUrl, device)
 //            $http({
 //                method: 'POST',
 //                url: targetUrl,
 //                params: params,
 //                data: device
 //            })
-                .then(successCallback, errorCallback);
-        };
+//                .then(successCallback, errorCallback);
+//        };
+    };
+    
+    var setConfirmCode = function(){
+        $scope.confirmCode = null;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;                    
+    };
+    
+    $scope.deleteObjectInit = function(device){
+        $scope.selectedItem(device);
+        setConfirmCode();
     };
     
     $scope.deleteObject = function(device){

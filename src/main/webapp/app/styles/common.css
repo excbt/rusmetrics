@@ -268,11 +268,18 @@ body{
 
     /* Разметка страницы Настройки */
 /* Стиль главных дивов разделов "Тарифы" и "Группы объектов"*/
-.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div{
+.nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div{
     overflow: auto;
     height:61vh;
     min-height: 290px;
 }
+
+.nmc-el-view-main-div-with-chart{
+    overflow: auto;
+    height:45vh;
+    min-height: 190px;
+}
+
 
 /*  Стиль главных дивов разделов "Отчеты" и "Контакты"*/
 .nmc-report-settings-main-div{
@@ -293,6 +300,25 @@ body{
     height:52vh;
     min-height: 250px;
 }
+/*    Стиль для графиков электричества*/
+.nmc-electro-chart{
+    width: 750px;
+    height: 150px;
+}
+/*
+@media (max-width: 1009px){
+    .nmc-electro-chart{
+        width: 505px;
+    }
+}
+
+@media (min-width: 1010px){
+  .nmc-electro-chart{
+    width: 1010px;
+  }
+}
+*/
+
 
 /***********************
  * Элементы навигации 
@@ -751,6 +777,11 @@ tr.nmc-main-table-header > th {
 .nmc-totals-indicator-highlight{
     background-color: aquamarine;
 }
+
+/* Подсветка показаний Итого для электричества*/
+.nmc-el-totals-indicator-highlight{
+    background-color: azure;
+}
 /* Подсветка действующего/активного прайса*/
 tr.nmc-active-price > td{
     background-color: bisque;
@@ -969,11 +1000,22 @@ tr.nmc-inactive-price > td{
     /* общее поле ввода*/
 .nmc-input-data{
     width: 150px;
+/*    display: inline;*/
+}
+.nmc-input-data-with-label{
+    width: 150px;
+    display: inline;
 }
     /* Поле ввода числовых данных*/
 .nmc-input-digital-data{
     width: 80px;
     display: inline;   
+}
+
+    /* Поле вывода числовых данных*/
+.nmc-view-digital-data{
+    width: 80px;
+    min-width: 60px;
 }
     /* Поле ввода числовых данных - укороченный вариант*/
 .nmc-input-digital-data-sm{
@@ -1597,6 +1639,9 @@ tr.nmc-inactive-price > td{
 
 .marginTopMinus79{
     margin-top: -79px;
+}
+.marginTopMinus57{
+    margin-top: -57px;
 }
 
 .margin10 {
