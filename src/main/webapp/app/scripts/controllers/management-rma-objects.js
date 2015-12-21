@@ -211,7 +211,7 @@ console.log('Run Object management controller.');
                         return;
                     };
                     var curIndex = -1;
-console.log($scope.currentObject); 
+//console.log($scope.currentObject); 
                     $scope.currentObject.zpoints.some(function(elem, index){
                         if (elem.id === $scope.zpointSettings.id){
                             curIndex = index;
@@ -226,24 +226,26 @@ console.log($scope.currentObject);
                                 repaintZpointTableFlag = true;
                             };
                             var objectIndex = -1;
-                            objectIndex = findObjectIndexInArray($scope.currentObject.id,$scope.objects);
+                            objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
+                            var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
                             if (objectIndex>-1){
-                                //update zpoint data in arrays
+                                //update zpoint data in arrays                             
                                 $scope.objects[objectIndex].zpoints[curIndex] = mappedZpoint;
-                                $scope.objectsOnPage[objectIndex].zpoints[curIndex] = mappedZpoint;
+                                $scope.objectsOnPage[objectOnPageIndex].zpoints[curIndex] = mappedZpoint;
                             };
                             //remake zpoint table
-                            if(($scope.objectsOnPage[objectIndex].showGroupDetails === true)){
-                                makeZpointTable($scope.objectsOnPage[objectIndex]);
+                            if(($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true)){
+                                makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };
                     }else{
                         var objectIndex = -1;
-                        objectIndex = findObjectIndexInArray($scope.currentObject.id,$scope.objects);                     
+                        objectIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objects);
+                        var objectOnPageIndex = findObjectIndexInArray($scope.currentObject.id, $scope.objectsOnPage);
                         if (objectIndex>-1){
                             //update zpoint data in arrays
-                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);
-                            if ($scope.objectsOnPage[objectIndex].showGroupDetails === true){
-                                makeZpointTable($scope.objectsOnPage[objectIndex]);
+                            $scope.objects[objectIndex].zpoints.push(mappedZpoint);                           
+                            if ($scope.objectsOnPage[objectOnPageIndex].showGroupDetails === true){
+                                makeZpointTable($scope.objectsOnPage[objectOnPageIndex]);
                             };                             
                         };
                     };
@@ -722,7 +724,7 @@ console.log($scope.currentObject);
                 
                 $scope.getZpointSettings = function(objId, zpointId){
                     $scope.selectedZpoint(objId, zpointId);          
-console.log($scope.currentZpoint); 
+//console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
                     zps.id = object.id;
@@ -863,11 +865,11 @@ console.log($scope.currentZpoint);
                 
                 // search objects
                 $scope.searchObjects = function(searchString){
-                    if (($scope.objects.length<=0)){
+                    if (($scope.objects.length <= 0)){
                         return;
                     };
                     
-                    if (angular.isUndefined(searchString) || (searchString==='')){                      
+                    if (angular.isUndefined(searchString) || (searchString === '')){                      
                         var tempArr = [];
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
@@ -883,6 +885,7 @@ console.log($scope.currentZpoint);
                         });
                         $scope.objectsOnPage = tempArr;
                     };
+//console.log($scope.objectsOnPage);                    
                 };
                 
                 $scope.$on('$destroy', function() {

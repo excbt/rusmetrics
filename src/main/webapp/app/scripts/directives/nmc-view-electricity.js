@@ -40,7 +40,9 @@ angular.module('portalNMC')
                     };                    
                 });
                 $scope.data = tmp;
-                $scope.runChart();
+//                if (angular.isArray($scope.data) && ($scope.data.length > 0)){
+                    $scope.runChart();
+//                };
             };
             
             var errorCallback = function(e){
