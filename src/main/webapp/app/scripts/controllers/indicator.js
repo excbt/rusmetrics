@@ -659,7 +659,7 @@ angular.module('portalNMC')
          
          $scope.zpointTable = "../api/subscr/"+$scope.contObject+"/service/"+timeDetailType+"/"+$scope.contZPoint+"/paged?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd+"&page="+(pageNumber-1)+"&size="+$scope.indicatorsPerPage+"&dataDateSort="+$scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
-console.log(table);        
+//console.log(table);        
         crudGridDataFactory(table).get(function (data) {
 //console.log(data);            
                 $scope.totalIndicators = data.totalElements;
@@ -798,7 +798,7 @@ console.log(table);
                 });
 
                 $scope.summary = angular.copy(data);
-console.log(data);            
+//console.log(data);            
                 if ($scope.summary.hasOwnProperty('diffs')){
                     prepareSummary($scope.summary.diffs);
 //                    $scope.intotalColumns.forEach(function(element){

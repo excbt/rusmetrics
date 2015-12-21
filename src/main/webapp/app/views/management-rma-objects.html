@@ -1160,7 +1160,10 @@
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
                 <div class="marginLeft15">
-                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+<!--                        <label class="nmc-form-label">Введите код подтверждения: {{firstNum}} + {{secondNum}} = </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>-->
+                    <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                    </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
                 </div>
 			</form>
 		</div>
@@ -1241,7 +1244,7 @@
                                         {{device.deviceModel.modelName}}
                                     </td>
                                     <td class="nmc-td-for-button">
-                                        <i class="btn glyphicon glyphicon-trash" ng-click="selectDevice(device)" data-target="#deleteDeviceModal" data-toggle="modal"></i>
+                                        <i class="btn glyphicon glyphicon-trash" ng-click="deleteDeviceInit(device)" data-target="#deleteDeviceModal" data-toggle="modal"></i>
                                     </td>
                                 </tr>
                             </tbody>    
@@ -1390,6 +1393,11 @@
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
 			</form>
 		</div>
 		<div class="modal-footer nmc-modal-footer">

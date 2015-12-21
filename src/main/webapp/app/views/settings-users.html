@@ -166,27 +166,17 @@
 -->
                             <tr>
                                 <td class="col-sm-3">
-                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                   <input ng-disabled="isROfield() || data.currentUser.isReadonly" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
                                 </td>
                                 <td class="col-sm-9">
-                                   <input ng-disabled="isROfield()" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">права "Только для чтения"
+                                   <input ng-disabled="isROfield() || data.currentUser.isAdmin" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">права "Только для чтения"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">
                                 <td colspan="2">
                                     <label class="nmc-form-label">Смена пароля:</label>
                                 </td>
-                            </tr>
-                            <tr ng-if="data.currentUser.id!=null">
-                                <td class="col-sm-3"><label for="inputCurPwd">Текущий пароль:</label>
-                                </td>
-                                <td class="col-sm-9 nmc-text-align-left">
-                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!checkPassword()}">
-                                        <input ng-disabled="isROfield()" class="form-control nmc-text-input-form" type="password" id="inputCurPwd" placeholder="Текущий пароль"  ng-model="data.currentUser.curpassword">
-                                    </div>
-                                </td>
-                            </tr>
-                            
+                            </tr>                            
                             <tr>
                                 <td class="col-sm-3">
                                     <span ng-if="data.currentUser.id==null">

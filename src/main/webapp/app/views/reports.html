@@ -26,12 +26,12 @@
 
                                     <td ng-class="column.class" style="padding:0;">
 
-                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
+                                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
 
                                             <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toggleShowGroupDetails(object);"></i>                                           
 
                                         </div>
-                                        <div class="col-md-11">
+                                        <div class="col-xs-11 col-md-11">
 <!--                                            <div class="col-md-5 noPadding">-->
                                                 <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
 <!--

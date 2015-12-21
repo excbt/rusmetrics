@@ -121,7 +121,7 @@
             <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
-                        <i title="Удалить источник данных" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(dataSource)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                        <i title="Удалить источник данных" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(dataSource)" data-target="#deleteObjectModal" data-toggle="modal"></i>
                     </div>
                 </div>
             </td>
@@ -270,6 +270,11 @@
 					<label
 						class="text-warning nmc-form-label"> ? </label>
 				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
 			</form>
 		</div>
 		<div class="modal-footer nmc-modal-footer">

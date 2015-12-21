@@ -10,10 +10,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 @Entity
 @Table(name = "v_cont_object_hwater_delta")
-public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> {
+public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> implements DataDateFormatter {
 
 	/**
 	 * 
@@ -22,38 +23,38 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> {
 
 	@Column(name = "cont_object_id")
 	private Long contObjectId;
-	
+
 	@Column(name = "cont_service_type")
 	private String contServiceType;
-	
+
 	@Column(name = "cont_zpoint_id")
 	private Long contZPointId;
-	
+
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "data_date")
 	private Date dataDate;
 
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
-	
+
 	@Column(name = "t_in")
 	private BigDecimal t_in;
-	
+
 	@Column(name = "t_out")
 	private BigDecimal t_out;
-	
+
 	@Column(name = "m_delta")
 	private BigDecimal m_delta;
-	
+
 	@Column(name = "v_delta")
 	private BigDecimal v_delta;
-	
+
 	@Column(name = "h_delta")
 	private BigDecimal h_delta;
-	
+
 	@Column(name = "work_time")
 	private BigDecimal workTime;
-	
+
 	@Column(name = "fail_time")
 	private BigDecimal failTime;
 
@@ -104,6 +105,5 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> {
 	public BigDecimal getFailTime() {
 		return failTime;
 	}
-	
-	
+
 }

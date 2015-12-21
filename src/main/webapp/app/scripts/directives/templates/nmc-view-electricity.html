@@ -1,0 +1,64 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-5 col-md-4 noPadding marginBottom10 marginTop5">
+            <label class="nmc-form-label">
+            Укажите дату                    
+            </label>
+            <input ng-attr-id={{"input"+type+"Date"}} class="form-control date-picker nmc-input-data-with-label nmc-date-input-form"
+        type="text" ng-model="dirSettings.dataDate" ng-change="refreshData()"/>
+            <button title="Обновить" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></button>
+<!--
+            <label>
+                <input ng-attr-id={{type+"Chart-view"}} ng-model="chartFlag" data-toggle="toggle" data-size="small" type="checkbox" class="marginRight2" style="vertical-align: middle; margin-right: 7px;">
+                Показать график
+            </label>
+-->
+        </div> 
+    </div>
+</div>
+<div class="container">
+    <div class="row" ng-show="chartFlag">
+        <div>
+            <div class="col-xs-11 col-md-11 marginBottom10 nmc-electro-chart" ng-attr-id={{type+"Chart-area"}}></div>
+<!--            <div class="col-xs-1 col-md-1" ng-attr-id={{type+"Legend-area"}}></div>-->
+        </div>
+    </div>
+    <div class="row">
+               <!--    Непрокручиваямая шапка -->
+        <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
+                <tr class="nmc-main-table-header">                    
+                    <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                        <div>
+                            {{column.header || column.fieldName}}
+                            <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                        </div>
+                    </th>
+                </tr>
+        </table>
+
+        <div ng-class="{'nmc-el-view-main-div': !chartFlag, 'nmc-el-view-main-div-with-chart': chartFlag}">
+            <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
+                <tr class="nmc-main-table-header nmc-hide">
+                    <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
+                        <div>
+                            {{column.header || column.fieldName}}
+                            <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                        </div>
+                    </th>
+                </tr>
+<!-- | orderBy:orderBy.field:!orderBy.asc-->
+                <tr ng-repeat="element in data track by $index">
+                    <td ng-repeat = "column in columns track by $index" ng-class="column.dataClass">
+                        {{element[column.fieldName]}} <span ng-show="isSystemuser()&&(column.date)">( id = {{element['id']}})</span>
+                    </td>
+
+                </tr>
+<!--
+                <tr class="nmc-hide">
+                    {{onTableLoad()}}
+                </tr>
+-->
+            </table>
+        </div> 
+    </div>
+</div>

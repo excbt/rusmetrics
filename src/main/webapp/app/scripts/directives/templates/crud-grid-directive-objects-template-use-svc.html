@@ -91,7 +91,7 @@
 
 <div>
 
-    <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+    <div id="divWithObjectListTable" class="nmc-table-with-fixed-header" ng-hide="loading">
         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
         <thead>
             <tr class="nmc-hide">
@@ -225,7 +225,7 @@
                                 <td>
                                   <label for="inputType">Тип</label>
                                 </td>
-                                <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">
+                                <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointTypeCaption">
                                     <div ng-show="zpointSettings.piped">
                                         <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
                                         <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
