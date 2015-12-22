@@ -1,6 +1,9 @@
 angular.module('portalNMC')
 .controller('ElectricityCtrl', function($scope, mainSvc, indicatorSvc, $location, $cookies, $rootScope, $timeout){
 console.log("run ElectricityCtrl"); 
+    //params for current page width
+    $scope.oldMinWidth = null;//save default width 
+    $scope.curMinWidth = "1572px";//set width for data table
                     // Проверка пользователя - системный/ не системный
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
@@ -76,7 +79,7 @@ console.log("run ElectricityCtrl");
     
     $(document).ready(function() {
         $scope.oldMinWidth = $('.wrap > .container-fluid >.row').css("min-width");
-        $('.wrap > .container-fluid >.row').css("min-width", "1572px");
+        $('.wrap > .container-fluid >.row').css("min-width", $scope.curMinWidth);
     });
     
     $scope.$on('$destroy', function(){
@@ -84,7 +87,7 @@ console.log("run ElectricityCtrl");
     });
     
     $scope.initCons = function(){
-        $('.wrap > .container-fluid >.row').css("min-width", "1572px");
+        $('.wrap > .container-fluid >.row').css("min-width", $scope.curMinWidth);
     };
     
     $scope.initProfile = function(){

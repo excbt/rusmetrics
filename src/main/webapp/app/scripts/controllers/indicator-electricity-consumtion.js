@@ -36,6 +36,7 @@ angular.module('portalNMC')
     $scope.ctrlSettings.viewMode = "";
     $scope.ctrlSettings.dataDate = moment().endOf('day').format($scope.ctrlSettings.userFormat);
     $scope.ctrlSettings.loading = true;
+    $scope.ctrlSettings.precision = 3; //precision for data view
     
     $scope.ctrlSettings.ctxId = "electricity_consumption_page";
     
@@ -103,13 +104,14 @@ angular.module('portalNMC')
                 tmp.forEach(function(el){
                     for(var i in $scope.columns){
                         if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
-                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
+                            
+                            el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
                         };
                     };                    
                 });
                 $scope.data = tmp;
                 $scope.ctrlSettings.loading = false;
-                if ($scope.ctrlSettings.viewMode==""&&$scope.data.length>0){
+                if ($scope.ctrlSettings.viewMode=="" && $scope.data.length > 0){
                     getSummary(table+"/summary"+paramString);
                 };
         }, function(e){
@@ -123,8 +125,8 @@ angular.module('portalNMC')
             var el = angular.copy(response.data.totals);
             if (mainSvc.checkUndefinedNull(el)){ return "Summary undefined or null."};          
             for(var i in $scope.columns){
-                if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
-                    el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
+                if ((el[$scope.columns[i].fieldName]!=null) && ($scope.columns[i].type !== "string")){
+                    el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
                 };
             };                    
             el.onlyCons = true;
@@ -138,6 +140,8 @@ angular.module('portalNMC')
      
      $scope.getData = function () {
          $scope.ctrlSettings.loading = true;
+         //check view mode: if integrators -> precision = 2, else = 3
+         ($scope.ctrlSettings.viewMode.indexOf("_abs") >= 0) ? $scope.ctrlSettings.precision = 2 : $scope.ctrlSettings.precision = 3;
          $scope.data = [];
          var paramString ="";
          var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
