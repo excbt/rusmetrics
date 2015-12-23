@@ -45,12 +45,14 @@ console.log("Run SettingsNoticeCtrl");
         {
             "name": "name",
             "header": "Тип",
-            "class": "col-xs-5 col-md-5 nmc-button-sort "
+            "headerClass": "col-xs-5 col-md-5 nmc-button-sort ",
+            "dataClass": "col-xs-5 col-md-5"
         },
         {
             "name": "comment",
             "header": "Комментарий",
-            "class": "col-xs-5 col-md-5"
+            "headerClass": "col-xs-5 col-md-5",
+            "dataClass": "col-xs-5 col-md-5"
         }
     ];
     

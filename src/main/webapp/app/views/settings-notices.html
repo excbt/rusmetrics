@@ -47,7 +47,7 @@
 
             </th>
 
-            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+            <th ng-repeat="column in columns" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
                 <div>
                     {{column.header || column.name}}
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.name}}'"></i>
@@ -63,7 +63,7 @@
 
             </th>
 
-            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+            <th ng-repeat="column in columns" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
                 <div>
                     {{column.header || column.name}}
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.name}}'"></i>
@@ -76,7 +76,7 @@
                 <i title="Настройки уведомлений" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectItem(noticeType)" data-target="#editNoticeModal" data-toggle="modal"></i>
                 <img ng-attr-title={{noticeType.title}} ng-class="noticeType.imgclass" ng-src="{{noticeType.imgpath}}">
             </td>
-            <td ng-repeat="column in columns" ng-class="column.class">
+            <td ng-repeat="column in columns" ng-class="column.dataClass">
                 {{noticeType[column.name]}}
             </td>
         </tr>
@@ -135,15 +135,15 @@
                                 <input ng-disabled="!contact.userEmail" type="checkbox"/>Эл. письмо
                                 </div>
                                 <span class="nmc-alert"
-                                      ng-show="!contact.userEmail"> <sup>Не задан электроный ящик</sup>
+                                      ng-show="!contact.userEmail"> <sup>Не указан электроный адрес</sup>
                                 </span>
                             </td>
                             <td class="col-md-1">
                                 <div>
-                                <input ng-disabled="!contact.userPhone" type="checkbox"/>Смс
+                                <input ng-disabled="!contact.userPhone" type="checkbox"/>SMS
                                 </div>
                                 <span class="nmc-alert"
-                                      ng-show="!contact.userPhone"> <sup>Не задан телефон</sup>
+                                      ng-show="!contact.userPhone"> <sup>Не указан телефон</sup>
                                 </span>
                             </td>
 

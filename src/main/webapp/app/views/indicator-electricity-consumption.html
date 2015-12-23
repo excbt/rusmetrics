@@ -86,6 +86,10 @@
     <!--            style="margin-bottom: -20px;"-->
                 <table class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
                     <tr ng-class="tableDef.headerClassTR">
+<!--
+                        <th>
+                        </th>
+-->
                         <th>
                         </th>
                         <th colspan="10" class="nmc-text-align-center">
@@ -98,6 +102,10 @@
                         </th>
                     </tr>
                     <tr ng-class="tableDef.headerClassTR">
+<!--
+                        <th>
+                        </th>
+-->
                         <th ng-repeat="column in tableDef.columns" 
                             ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
                             ng-class="column.headerClass">
@@ -108,6 +116,7 @@
                     </tr>
     <!--                style="opacity:0;"-->
                     <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" class="nmc-transparent">
+<!--                        <td></td>-->
                         <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
                             {{indicator[column.fieldName]}}
                             <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
@@ -123,6 +132,10 @@
                 <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus57" ng-class="tableDef.tableClass">
         <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                     <tr ng-class="tableDef.headerClassTR">
+<!--
+                        <th>
+                        </th>
+-->
                         <th>
                         </th>
                         <th colspan="10" class="nmc-text-align-center">
@@ -135,19 +148,29 @@
                         </th>
                     </tr>
                     <tr class="" ng-class="tableDef.headerClassTR">
+<!--
+                        <th>
+                        </th>
+-->
                         <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
                             {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
                         </th>
 
                     </tr>
                     <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="indicator.class || column.dataClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}" ng-hide="indicator.onlyCons&&(ctrlSettings.viewMode!='')">
+<!--                        <td>{{$index+1}}-->
+                        </td>
+                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="indicator.class || column.dataClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
                             {{indicator[column.fieldName]}}
-                            <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
-                          </td>
+                            <span ng-if="column.fieldName==='dataDateString'&&isSystemuser()">(id = {{indicator['id']}})</span>
+                        </td>
                     </tr>
-                    <tr class="nmc-hide">
-                        <td>{{onTableLoad()}}</td>
+<!--                    Итого-->
+                    <tr ng-hide="totals.onlyCons&&(ctrlSettings.viewMode!='')">
+<!--                        <td></td>-->
+                        <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="totals.class || column.dataClass" ng-attr-id="{{'totals_td_'+column.fieldName}}">
+                            {{totals[column.fieldName]}}
+                        </td>
                     </tr>
                 </table>
                 <div class="col-md-9">

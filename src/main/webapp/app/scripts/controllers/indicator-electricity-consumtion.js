@@ -3,6 +3,7 @@ angular.module('portalNMC')
 //console.log("Run ConsumptionCtrl.");
     
     $scope.data = [];
+    $scope.totals = [];
     $scope.indicatorsPerPage = 25; // this should match however many results your API puts on one page
     $scope.totalIndicators = $scope.data.length;
     $scope.pagination = {
@@ -103,7 +104,7 @@ angular.module('portalNMC')
 //console.log(response.data);    
                 tmp.forEach(function(el){
                     for(var i in $scope.columns){
-                        if ((el[$scope.columns[i].fieldName]!=null)&&($scope.columns[i].type !== "string")){
+                        if ((el[$scope.columns[i].fieldName] != null)&&($scope.columns[i].type !== "string")){
                             
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed($scope.ctrlSettings.precision);
                         };
@@ -132,7 +133,8 @@ angular.module('portalNMC')
             el.onlyCons = true;
             el.dataDateString = "Итого";
             el.class = "nmc-el-totals-indicator-highlight nmc-view-digital-data";
-            $scope.data.push(el);
+            $scope.totals = angular.copy(el);
+//console.log($scope.totals);            
         }, function(e){
             console.log(e);
         });
