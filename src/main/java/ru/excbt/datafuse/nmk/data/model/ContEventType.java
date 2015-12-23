@@ -5,20 +5,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
-import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
-import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "cont_event_type")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ContEventType extends AbstractPersistableEntity<Long> implements
-		DevModeObject, DisabledObject {
+public class ContEventType extends AbstractPersistableEntity<Long> implements DevModeObject, DisabledObject {
 
 	/**
 	 * 
@@ -69,6 +68,12 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
+
+	@Column(name = "is_sms_notification")
+	private Boolean isSmsNotification;
+
+	@Column(name = "sms_message_template")
+	private String smsMessageTemplate;
 
 	public String getKeyname() {
 		return keyname;
@@ -183,12 +188,29 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements
 		this.isDevMode = isDevMode;
 	}
 
+	@Override
 	public Boolean getIsDisabled() {
 		return isDisabled;
 	}
 
 	public void setIsDisabled(Boolean isDisabled) {
 		this.isDisabled = isDisabled;
+	}
+
+	public Boolean getIsSmsNotification() {
+		return isSmsNotification;
+	}
+
+	public void setIsSmsNotification(Boolean isSmsNotification) {
+		this.isSmsNotification = isSmsNotification;
+	}
+
+	public String getSmsMessageTemplate() {
+		return smsMessageTemplate;
+	}
+
+	public void setSmsMessageTemplate(String smsMessageTemplate) {
+		this.smsMessageTemplate = smsMessageTemplate;
 	}
 
 }
