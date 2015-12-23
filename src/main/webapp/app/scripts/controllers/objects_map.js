@@ -49,7 +49,7 @@ angular.module('portalNMC')
         mapCenter.lng = Number(objectSvc.getObjectSettings().mapCenterLng);
     };
     
-console.log(mapCenter);    
+//console.log(mapCenter);    
     angular.extend($scope, {
        mapCenter 
     });
@@ -147,7 +147,7 @@ console.log(mapCenter);
         var citiesPromise = objectSvc.getCitiesConsumingData($scope.mapSettings);
         citiesPromise.then(function(response){
                             $scope.cities = response.data;
-console.log($scope.cities);            
+//console.log($scope.cities);            
                             $scope.objectsOfCities = getObjectsDataForCities($scope.cities, $scope.objectsOfCities);     
                             if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){
                                 markersForObjects = $scope.setObjectsOnMap($scope.objectsOfCities, markersForObjects);
@@ -314,8 +314,8 @@ console.log($scope.cities);
     };
     
     var getObjectsConsumingForCity = function(city, settings){
-console.log("start comparing");   
-console.log(city);        
+//console.log("start comparing");   
+//console.log(city);        
         $scope.mapSettings.abortCompareFlag = false;
         $scope.markerSettings.cmpDataFlag=true;
         $scope.markerSettings.runFlag = true;
@@ -565,8 +565,8 @@ console.log(newMarker);
         marker.lat= city.cityGeoPosY;
         marker.getMessageScope = null;
         marker.getMessageScope=function(){
-            console.log("getMessageScope");                
-console.log(marker);        
+//console.log("getMessageScope");                
+//console.log(marker);        
             angular.extend($scope, {
                 markerSettings:{
                     cmpFlag: false,
@@ -587,7 +587,7 @@ console.log(marker);
         marker.compileMessage = true;
         marker.icon =  angular.copy(monitorMarker); //set current marker      
         marker.cityFiasUUID = city.cityFiasUUID;  
-console.log(marker);        
+//console.log(marker);        
         return marker;
     };
     
@@ -661,7 +661,7 @@ console.warn(elem);
             };
         }; 
         $scope.mapSettings.drawMarkersFlag = false;
-console.log(markerArray);        
+//console.log(markerArray);        
         return markerArray;
     };
     
@@ -874,8 +874,8 @@ console.log(markerArray);
         marker.lat= object.contObject.contObjectGeo.geoPosY;
         marker.getMessageScope = null;
         marker.getMessageScope=function () {
-console.log("getMessageScope object");
-console.log(marker);            
+//console.log("getMessageScope object");
+//console.log(marker);            
                 angular.extend($scope, {
                     markerSettings:{
                         cmpFlag: false,
@@ -1087,7 +1087,7 @@ console.warn(elem);
     };
 
     $scope.$watch('objectDates', function (newDates, oldDates) {                    
-console.log('Watch objectDates');    
+//console.log('Watch objectDates');    
         if (angular.isUndefined(oldDates)){
             return;
         };

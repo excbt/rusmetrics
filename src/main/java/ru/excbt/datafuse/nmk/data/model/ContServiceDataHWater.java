@@ -11,30 +11,26 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+
 @Entity
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({ "dataDate", "timeDetailType", "workTime", "failTime" })
-public class ContServiceDataHWater extends AbstractAuditableModel {
+public class ContServiceDataHWater extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -6897555657365451006L;
-
-	private static final String DATE_FORMAT_STR_FULL = "dd-MM-yyyy HH:mm";
-	private static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
 
 	@Column(name = "data_date")
 	private Date dataDate;
@@ -113,6 +109,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 	@Column(name = "fail_time")
 	private BigDecimal failTime;
 
+	@Override
 	public Date getDataDate() {
 		return dataDate;
 	}
@@ -137,6 +134,7 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 		this.contZPoint = contZPoint;
 	}
 
+	@Override
 	public String getTimeDetailType() {
 		return timeDetailType;
 	}
@@ -305,20 +303,4 @@ public class ContServiceDataHWater extends AbstractAuditableModel {
 		this.failTime = failTime;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public String getDataDateString() {
-
-		TimeDetailKey timeDetailKey = TimeDetailKey
-				.searchKeyname(this.timeDetailType);
-		if (timeDetailKey != null && timeDetailKey.isTruncDate()) {
-			return DateFormatUtils.formatDateTime(this.dataDate,
-					DATE_FORMAT_STR_TRUNC);
-		}
-
-		return DateFormatUtils.formatDateTime(this.dataDate,
-				DATE_FORMAT_STR_FULL);
-	}
 }

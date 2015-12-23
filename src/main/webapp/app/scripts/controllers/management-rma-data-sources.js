@@ -102,6 +102,18 @@ console.log('Run data sources management controller.');
         };
     };
     
+    var setConfirmCode = function(){
+        $scope.confirmCode = null;
+        var tmpCode = mainSvc.getConfirmCode();
+        $scope.confirmLabel = tmpCode.label;
+        $scope.sumNums = tmpCode.result;                    
+    };
+    
+    $scope.deleteObjectInit = function(dsourse){
+        $scope.selectedItem(dsourse);
+        setConfirmCode();
+    };
+    
     $scope.deleteObject = function(dsource){
         var targetUrl = $scope.ctrlSettings.datasourcesUrl+"/"+dsource.id;
         $http.delete(targetUrl).then(successCallback,errorCallback);

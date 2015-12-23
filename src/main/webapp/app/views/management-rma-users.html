@@ -161,10 +161,10 @@
 -->
                             <tr>
                                 <td class="col-sm-3">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
+                                   <input ng-disabled="data.currentUser.isReadonly" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isAdmin">Администратор
                                 </td>
                                 <td class="col-sm-9">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">Права "Только чтение"
+                                   <input ng-disabled="data.currentUser.isAdmin" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentUser.isReadonly">Права "Только чтение"
                                 </td>
                             </tr>
                             <tr ng-if="data.currentUser.id!=null">

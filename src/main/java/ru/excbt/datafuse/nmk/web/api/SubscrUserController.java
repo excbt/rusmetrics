@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -155,6 +156,11 @@ public class SubscrUserController extends SubscrApiController {
 
 		if (subscrUser.getLastName() == null || subscrUser.getLastName().length() == 0) {
 			return responseBadRequest(ApiResult.validationError("lastName is not valid"));
+		}
+
+		List<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
+		if (!checkUser.isEmpty()) {
+			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
 		subscrUser.setSubscriberId(rSubscriberId);
