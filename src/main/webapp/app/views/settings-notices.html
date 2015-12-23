@@ -73,7 +73,7 @@
 
         <tr ng-repeat="noticeType in noticeTypes | orderBy:ctrlSettings.orderBy.field:!ctrlSettings.orderBy.asc | filter: filter" >
             <td class="nmc-td-for-buttons">
-                <i title="Настройки уведомлений" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectItem(noticeType)" data-target="#editNoticeModal" data-toggle="modal"></i>
+                <i title="Настройки уведомлений" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="getNoticeTypeSettings(noticeType)"></i>
                 <img ng-attr-title={{noticeType.title}} ng-class="noticeType.imgclass" ng-src="{{noticeType.imgpath}}">
             </td>
             <td ng-repeat="column in columns" ng-class="column.dataClass">
@@ -124,7 +124,7 @@
                 <div class="row">
                     <div class="col-md-12 nmc-object-list-in-notices">
                     <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMargin nmc-main-table">
-                        <tr ng-repeat="contact in contacts">
+                        <tr ng-repeat="contact in currentNotice.contacts">
                             <td class="col-md-1">
                                 <div>{{contact.userName}}</div>
                                 <div><sup>{{contact.userPhone}}</sup></div>
@@ -132,15 +132,15 @@
                             </td>
                             <td class="col-md-1">
                                 <div>
-                                <input ng-disabled="!contact.userEmail" type="checkbox"/>Эл. письмо
+                                <input ng-disabled="!contact.userEmail" type="checkbox" ng-model="contact.isEmail"/>Эл. письмо
                                 </div>
                                 <span class="nmc-alert"
-                                      ng-show="!contact.userEmail"> <sup>Не указан электроный адрес</sup>
+                                      ng-show="!contact.userEmail"> <sup>Не указан электронный адрес</sup>
                                 </span>
                             </td>
                             <td class="col-md-1">
                                 <div>
-                                <input ng-disabled="!contact.userPhone" type="checkbox"/>SMS
+                                <input ng-disabled="!contact.userPhone" type="checkbox" ng-model="contact.isSms"/>SMS
                                 </div>
                                 <span class="nmc-alert"
                                       ng-show="!contact.userPhone"> <sup>Не указан телефон</sup>
@@ -159,7 +159,7 @@
                 <div class="row">
                     <div class="col-xs-offset-6 col-md-3">
                         <input type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
-                            ng-click="saveSettings(currentNotice);"
+                            ng-click="putNoticeTypeSettings(currentNotice);"
                             value="Сохранить" />
                     </div>
 

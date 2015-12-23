@@ -1,11 +1,12 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsNoticesCtrl', function($scope, $http, notificationFactory){
+.controller('SettingsNoticesCtrl', function($scope, $http, notificationFactory, mainSvc){
 console.log("Run SettingsNoticeCtrl");
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.ctxId = "settings_notices";
-    $scope.ctrlSettings.noticeTypesUrl = "../api/contEvent/types";
+    $scope.ctrlSettings.apiUrl = "../api/subscr/contEventType";
+    $scope.ctrlSettings.noticeTypesUrl = $scope.ctrlSettings.apiUrl+"/actions/available";
     $scope.ctrlSettings.contactsUrl = "../api/subscr/subscrAction/users";
     //the path template of notice icon
     $scope.ctrlSettings.imgPathTmpl = "images/notice-state-";
@@ -71,6 +72,39 @@ console.log("Run SettingsNoticeCtrl");
     
     $scope.noticeTypes = [];
     $scope.contacts = [];
+    
+    //callbacks
+    var errorCallback = function(e){
+        console.log(e);              
+        notificationFactory.errorInfo(e.statusText, e.data.description || e.data || e);
+    };
+    
+    var successGetNoticeTypeSettingsCallback = function(data){
+        //0)Перед этим методом я должен получить полный список контактов
+        //1)Получить настройки для типа уведомлений
+        var tmpTypeSettings = data;
+        //2)сопоставить 2 эти списка и расставить соответственно флаги
+        var tmpContacts = angular.copy($scope.contacts);
+        tmpContacts.forEach(function(contact){
+            var settingsLength = tmpTypeSettings.length;
+            for (var iCount = 0; iCount < settingsLength; iCount++){
+                if (contact.id == tmpTypeSettings[iCount].subscrActionUserId){
+                    contact.isSms = tmpTypeSettings[iCount].isSms;
+                    contact.isEmail = tmpTypeSettings[iCount].isEmail;
+                };
+            };
+        });
+        $scope.currentNotice.contacts = tmpContacts;
+        //3)вывести на экран 
+        $('#editNoticeModal').modal();
+//console.log($scope.currentNotice.contacts);        
+    };
+    
+    var putSuccessCallback = function(data){        
+        $('#editNoticeModal').modal('hide');
+        $scope.currentNotice = {};
+    };
+    
     //get all contacts
     $scope.getContacts = function(url){
         $http.get(url)
@@ -78,10 +112,7 @@ console.log("Run SettingsNoticeCtrl");
             $scope.contacts = angular.copy(data);
 //console.log($scope.contacts);            
         })
-        .error(function(e){
-            notificationFactory.errorInfo(e.statusText, e.data.description || e.data);
-            console.log(e);            
-        });
+        .error(errorCallback);
     };
     $scope.getContacts($scope.ctrlSettings.contactsUrl);
     
@@ -114,13 +145,30 @@ console.log("Run SettingsNoticeCtrl");
                 $scope.noticeTypes = tmp;
 //console.log(data);           
             })
-            .error(function(e){
-                notificationFactory.errorInfo(e.statusText, e.data.description || e.data);
-                console.log(e);
-            });
+            .error(errorCallback);
+    };
+    $scope.getNoticeTypes($scope.ctrlSettings.noticeTypesUrl);
+    
+    $scope.getNoticeTypeSettings = function(noticeType){
+        $scope.selectItem(noticeType);
+        var url = $scope.ctrlSettings.apiUrl + "/" + noticeType.id + "/actions";
+        $http.get(url).success(successGetNoticeTypeSettingsCallback).error(errorCallback);
     };
     
-    $scope.getNoticeTypes($scope.ctrlSettings.noticeTypesUrl);
+    $scope.putNoticeTypeSettings = function(noticeType){
+        var url = $scope.ctrlSettings.apiUrl + "/" + noticeType.id + "/actions";
+        var settings = [];
+        noticeType.contacts.forEach(function(contact){
+            if (!mainSvc.checkUndefinedNull(contact.isSms) || !mainSvc.checkUndefinedNull(contact.isEmail)){
+                settings.push({subscrActionUserId: contact.id,
+                   isSms: contact.isSms || false,
+                   isEmail: contact.isEmail || false});
+            };
+            
+        });
+//console.log(settings);        
+        $http.put(url, settings).success(putSuccessCallback).error(errorCallback);
+    };
     
     $scope.setOrderBy = function(column){
         $scope.ctrlSettings.orderBy.field = column;
@@ -129,5 +177,5 @@ console.log("Run SettingsNoticeCtrl");
     
     $scope.selectItem = function(item){
         $scope.currentNotice = angular.copy(item);
-    };
+    };    
 });
