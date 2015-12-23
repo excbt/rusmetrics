@@ -53,9 +53,11 @@ public class SubscrContEventTypeAction extends AbstractAuditableModel implements
 	private Boolean isSms;
 
 	@Version
+	@JsonIgnore
 	private int version;
 
 	@Column(name = "deleted")
+	@JsonIgnore
 	private int deleted;
 
 	public Subscriber getSubscriber() {
