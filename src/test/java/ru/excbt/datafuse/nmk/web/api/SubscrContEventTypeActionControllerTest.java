@@ -26,7 +26,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 
 	@Test
 	public void testAvailableContEventTypes() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contEventType/available"));
+		_testJsonGet(apiSubscrUrl("/contEventType/actions/available"));
 	}
 
 	@Test
