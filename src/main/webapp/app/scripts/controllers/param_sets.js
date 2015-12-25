@@ -118,7 +118,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);
     };
     
     $scope.deleteObject = function (object) {

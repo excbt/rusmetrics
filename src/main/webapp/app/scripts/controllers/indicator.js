@@ -489,13 +489,14 @@ angular.module('portalNMC')
          var contObject = $cookies.contObject;
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
         $scope.uploader = new FileUploader({
-            url: url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZPoint+"/service/"+timeDetailType+"/csv",
+            url: url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZPoint + "/service/" + timeDetailType + "/csv",
            
         });
         
         $scope.uploader.onErrorItem = function(fileItem, response, status, headers) {
             console.info('onErrorItem', status, response);
-            notificationFactory.errorInfo(response.resultCode, response.description);
+            errorCallback(response);
+            //notificationFactory.errorInfo(response.resultCode, response.description);
         };
         
         $scope.uploader.onSuccessItem = function(item, response, status, headers){
@@ -988,6 +989,17 @@ angular.module('portalNMC')
     $scope.uploadFile =function(){
         $scope.uploader.queue[$scope.uploader.queue.length-1].upload();
     };
+        
+    var errorCallback = function (e) {
+        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);       
+    };
     
         //delete indicator data for period
     $scope.deleteData = function(){
@@ -1006,9 +1018,7 @@ angular.module('portalNMC')
 //console.log("getData on success deleteData");            
                 $scope.getData(1);
             })
-            .error(function(err){
-                notificationFactory.errorInfo(err.title, err.description)
-            });
+            .error(errorCallback);
     };
         
     $scope.setOrderBy = function(field){

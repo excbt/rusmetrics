@@ -346,8 +346,14 @@ console.log('Run Object management controller.');
                 };
 
                 var errorCallback = function (e) {
-                    notificationFactory.errorInfo(e.statusText,e.data.description); 
+//                    notificationFactory.errorInfo(e.statusText,e.data.description); 
                     console.log(e);
+                    var errorCode = "-1";
+                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                        errorCode = e.resultCode || e.data.resultCode;
+                    };
+                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
                 };
 
                 $scope.addObject = function (url, obj) {                    
@@ -1057,9 +1063,9 @@ console.log('Run Object management controller.');
 //                                $('#contObjectDevicesModal').modal();
 //                            };
                         },
-                        function(error){
+                        errorCallback/*function(error){
                             notificationFactory.errorInfo(error.statusText,error.description);
-                        }
+                        }*/
                     );
                 };
                 
@@ -1094,10 +1100,10 @@ console.log('Run Object management controller.');
                             $scope.data.deviceModels = response.data;
             //console.log($scope.data.deviceModels);                
                         },
-                        function(error){
+                        errorCallback/*function(error){
                             console.log(error);
                             notificationFactory.errorInfo(error.statusText,error.description);
-                        }
+                        }*/
                     );
                 };
                 $scope.getDeviceModels();
@@ -1111,10 +1117,10 @@ console.log('Run Object management controller.');
                         $scope.data.dataSources = tmp;
             //console.log(tmp);            
                     },
-                          function(e){
+                          errorCallback/*function(e){
                         console.log(e);
                         notificationFactory.errorInfo(e.statusText,e.description);
-                    });
+                    }*/);
                 };
                 getDatasources(objectSvc.getDatasourcesUrl());
                 

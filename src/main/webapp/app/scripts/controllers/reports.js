@@ -104,7 +104,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description);       
+        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);       
     };
     
     $scope.getParamsets = function(table, type){
@@ -1004,25 +1011,46 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //        };
         //????
         //run report
-        var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/download";
+        var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
         $http.get(url, {responseType: 'arraybuffer'})
             .then(function(response) {        
                 var fileName = response.headers()['content-disposition'];           
-                fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);
-                var file = new Blob([response.data], { type: response.headers()['content-type'] });
+                fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
+                var file = new Blob([response.data], { type: response.headers()['content-type'] });          
             //fix for linux
-                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-                    fileName+=".xlsx";
+//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+//                    fileName += ".xlsx";
+//                };
+            //fix for zip archives
+//                if (file.type.indexOf('application/zip') > -1){
+//                    fileName += ".zip";
+//                };
+                if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
+                    fileName += ".xlsx";
+                }else 
+                if (file.type.indexOf('application/zip') > -1){
+                    fileName += ".zip";
+                } else
+                if (file.type.indexOf('application/pdf') > -1){
+                    fileName += ".pdf";
+                } else
+                if (file.type.indexOf('text/html') > -1){
+                    fileName += ".html";
                 };
-                saveAs(file,fileName);
-            }, function(e){
+//console.log(fileName);  
+//console.log(response.headers()['content-type']);              
+//console.log(file);
+//console.log(file.type);            
+//return;              
+                saveAs(file, fileName);
+            }, errorCallback /*function(e){
                 notificationFactory.errorInfo(e.statusText,e);
                 console.log(e);
-            })
-            .catch(function(e){
+            }*/)
+            .catch(errorCallback /*function(e){
                 notificationFactory.errorInfo(e.statusText,e.data.description);
                 console.log(e);
-            });    
+            }*/);    
     };
     
     $scope.previewReport = function(type, paramset){
@@ -1088,29 +1116,42 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
            //обрабатываем полученный результат запроса
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
             fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);//вытаскиваем непосредственно название файла.
-            var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт
-//console.log(fileName);  
-//console.log(response.headers()['content-type']);              
-//console.log(file);            
+            var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт        
             if (previewFlag){              
                 //если нажат предпросмотр, то
                 var url = window.URL.createObjectURL(file);//формируем url на сформированный файл
                 window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
                 //previewWin = window.URL.createObjectURL(file);
             }else{  
-                if ((navigator.userAgent.search(/Linux/)>1)&&(file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-                    fileName+=".xlsx";
+//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
+//                    fileName += ".xlsx";
+//                };
+                //create file extension
+                if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
+                    fileName += ".xlsx";
+                }else 
+                if (file.type.indexOf('application/zip') > -1){
+                    fileName += ".zip";
+                } else
+                if (file.type.indexOf('application/pdf') > -1){
+                    fileName += ".pdf";
+                } else
+                if (file.type.indexOf('text/html') > -1){
+                    fileName += ".html";
                 };
-                saveAs(file,fileName);//если нужен отчет, то сохраняем файл на диск клиента
+//console.log(fileName);  
+//console.log(response.headers()['content-type']);              
+//console.log(file);                    
+                saveAs(file, fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
-        }, function(e){
+        }, errorCallback/*function(e){
             notificationFactory.errorInfo(e.statusText,e);
             console.log(e);
-        })
-        .catch(function(e){
+        }*/)
+        .catch(errorCallback/*function(e){
             //если при запросе произошла ошибка, то выводим ее на экран во всплывающем окне
             notificationFactory.errorInfo(e.statusText,e);
             console.log(e);
-        });
+        }*/);
     };
 }]);
