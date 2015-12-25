@@ -134,7 +134,7 @@ console.log("Objects directive.");
 //                    makeObjectTable(tempArr, true);
                     $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                    if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
+                    if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null"){
                         var curObj = objectSvc.findObjectById(Number($cookies.contObject), $scope.objects);
                         if (curObj!=null){
                             var curObjIndex = $scope.objects.indexOf(curObj);                        
@@ -143,7 +143,7 @@ console.log("Objects directive.");
                                 var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex+1);
                                     //добавляем к выведимому на экран массиву новый блок элементов
                                 Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                                $scope.objectCtrlSettings.objectsOnPage = curObjIndex;
+                                $scope.objectCtrlSettings.objectsOnPage = curObjIndex+1;
                                 //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
                                 $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
                                 $timeout(function(){
