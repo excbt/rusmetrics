@@ -144,6 +144,9 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 		entity.setBody(fileBytes);
 		entity.setBodyFilename(file.getName());
 
+		entity.setBodyCompiled(null);
+		entity.setBodyCompiledFilename(null);
+
 		reportMasterTemplateBodyRepository.save(entity);
 
 		return true;
