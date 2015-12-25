@@ -21,7 +21,8 @@ public enum ReportTypeKey implements KeynameObject {
 	LOG_JOURNAL_REPORT("log_journal"), //
 	PARTNER_SERVICE_REPORT("partner_service"), //
 	ABONENT_SERVICE_REPORT("abonent_service"), //
-	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"); //
+	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
+	ELECTRIC_READINGS_REPORT("electric_readings");
 
 	private final String urlName;
 	private final String defaultFileName;

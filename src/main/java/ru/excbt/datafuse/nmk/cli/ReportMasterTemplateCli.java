@@ -154,6 +154,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		loadReportMasterTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT,
 				ReportConstants.Files.PARTNER_SERVICE_FILE_COMPILED, isCompiled);
+
+		loadReportMasterTemplate(ReportTypeKey.ELECTRIC_READINGS_REPORT,
+				ReportConstants.Files.ELECTRIC_READINGS_FILE_COMPILED,
+				isCompiled);
 	}
 
 	/**
@@ -176,6 +180,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.ABONENT_SERVICE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.RMA_ABONENT_SERVICE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_READINGS_REPORT);
 
 	}
 
