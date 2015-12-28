@@ -400,10 +400,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.availableObjectGroups = [];
     
     $scope.getAvailableObjects = function(paramsetId){      
-        var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
-        crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data; 
-            objectSvc.sortObjectsByFullName($scope.availableObjects);
+        var table=$scope.crudTableName + "/" + paramsetId + "/contObject/available";        
+        crudGridDataFactory(table).query(function(data){
+//console.log(data);            
+            $scope.availableObjects = angular.copy(data); 
+            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);
+//console.log($scope.availableObjects);                        
         });        
     };
 //    $scope.getAvailableObjects();

@@ -380,7 +380,7 @@ console.log($rootScope.userInfo);
         {
             "resultCode": "ERR_USER_ALREADY_EXISTS",
             "caption": "Пользователь уже существует",
-            "description": "Обратитесь к администратору системы."
+            "description": "Пользователь с таким логином уже существует. Проверьте правильность набора."
         }
     ];
     

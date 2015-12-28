@@ -2,7 +2,8 @@
 angular.module('portalNMC')
 .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
              function(crudGridDataFactory, $http, $cookies, $interval, $rootScope){
-console.log("Object Service. Run.");                 
+console.log("Object Service. Run."); 
+                 
         var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
@@ -171,21 +172,66 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
                  
+        var checkUndefinedNull = function(numvalue){
+            var result = false;
+            if ((angular.isUndefined(numvalue)) || (numvalue==null)){
+                result = true;
+            }
+            return result;
+        };
+                 
             // sort the object array by the fullname
         function sortObjectsByFullName(array){
+            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+                return false;
+            };
             array.sort(function(a, b){
-                if (a.fullName>b.fullName){
+                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
+                    return 0;
+                };
+                if (a.fullName > b.fullName){
                     return 1;
                 };
-                if (a.fullName<b.fullName){
+                if (a.fullName < b.fullName){
                     return -1;
                 };
                 return 0;
-            }); 
+            });
+        };
+                 
+                    // sort the object array by the fullname, where some objects do not have field "fullName"
+        function sortObjectsByFullNameEx(array){
+            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
+                return false;
+            };
+            var tmpArr = [];
+            var tmpBadArr = [];
+            array.forEach(function(elem){
+                if (!checkUndefinedNull(elem.fullName)){
+                    tmpArr.push(elem);
+                }else{
+                    tmpBadArr.push(elem);
+                };
+            });
+            if (tmpArr.length == 0) {return "No objects with fullName"};
+            tmpArr.sort(function(a, b){
+                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
+                    return 0;
+                };
+                if (a.fullName > b.fullName){
+                    return 1;
+                };
+                if (a.fullName < b.fullName){
+                    return -1;
+                };
+                return 0;
+            });
+            Array.prototype.push.apply(tmpBadArr, tmpArr);
+            return tmpBadArr;
         };
                  
         function sortObjectsByConObjectFullName(array){
-            if (angular.isUndefined(array)||(array == null)|| !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
                 return false;
             };           
             array.sort(function(a, b){
@@ -326,8 +372,9 @@ console.log("Object Service. Run.");
             putDeviceMetaData,
             rmaPromise,
             sendDeviceToServer,
-            setObjectSettings,
+            setObjectSettings,            
             sortObjectsByFullName,
+            sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName
             
         };
