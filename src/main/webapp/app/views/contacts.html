@@ -119,7 +119,9 @@
     						<div class="col-md-6">
     							<form>
 	    							<label for="inp_cnt_name">Имя:</label>
-    								<input ng-disabled="isROfield()" id="inp_cnt_name" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userName"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (!currentItem.userName || currentItem.userName == '')}">
+    								    <input ng-disabled="isROfield()" id="inp_cnt_name" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userName"/>
+                                    </div>
     								<br>
     								<label for="inp_cnt_tel">Телефон:</label>
     								<input ng-disabled="isROfield()" id="inp_cnt_tel" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userPhone"/>

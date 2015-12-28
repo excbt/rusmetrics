@@ -403,8 +403,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var table=$scope.crudTableName + "/" + paramsetId + "/contObject/available";        
         crudGridDataFactory(table).query(function(data){
 //console.log(data);            
-            $scope.availableObjects = angular.copy(data); 
-            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);
+            $scope.availableObjects = angular.copy(data);             
 //console.log($scope.availableObjects);                        
         });        
     };
@@ -499,6 +498,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             $scope.availableEntities = $scope.availableObjectGroups;//tmpArr;
         }else{
             $scope.headers.addObjects = "Доступные объекты";
+            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);
             $scope.availableEntities = $scope.availableObjects;
         };
     };

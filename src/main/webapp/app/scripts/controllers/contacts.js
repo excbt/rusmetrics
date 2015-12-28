@@ -61,6 +61,10 @@ app.controller(
 			
 			// Добавление контакта на сервер
 			$scope.addContact = function (){
+                if (!$scope.currentItem.userName || $scope.currentItem.userName == ''){
+                    notificationFactory.errorInfo("Ошибка", "Не задано имя контакта. Заполните поле 'Имя'.");
+                    return "Add / edit contact: no name";
+                };
 				// Собираем отмеченные чекбоксы в списке групп
 				var table_list = document.getElementById("table_lists_in_window");
 				$scope.cnt_lst = [];
