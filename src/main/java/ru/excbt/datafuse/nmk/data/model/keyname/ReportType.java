@@ -66,6 +66,9 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
+	@Column(name = "report_system")
+	private String reportSystem;
+
 	public String getCaption() {
 		return caption;
 	}
@@ -118,6 +121,10 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Override
 	public Boolean getIsDisabled() {
 		return isDisabled;
+	}
+
+	public String getReportSystem() {
+		return reportSystem;
 	}
 
 }
