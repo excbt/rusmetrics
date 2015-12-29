@@ -30,7 +30,14 @@ angular.module('portalNMC')
     };
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description);       
+//        notificationFactory.errorInfo(e.statusText,e.data.description);
+        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     function performObjectArray(){

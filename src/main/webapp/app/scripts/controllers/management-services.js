@@ -251,6 +251,17 @@ angular.module('portalNMC')
         return result;
     };
     
+    var errorCallback = function (e) {
+        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);       
+    };
+    
     $scope.savePackages = function(){
         var targetUrl = $scope.ctrlSettings.accountServicesUrl;
         var data = null;
@@ -261,10 +272,10 @@ angular.module('portalNMC')
         .then(function(response){
                 location.reload();
         },
-             function(e){
+             errorCallback/*function(e){
                 notificationFactory.errorInfo(e.statusText,e.data.description);
                 console.log(e);
-        });
+        }*/);
     };
     
     //toggle show/hide package consist

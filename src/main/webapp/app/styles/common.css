@@ -1196,20 +1196,28 @@ tr.nmc-inactive-price > td{
 /*.nmc-button-in-table-run, .nmc-button-in-table-run:hover, .nmc-button-in-table-run:focus {*/
 .nmc-button-in-table-run{
     color:black;
+/*    color:#D12619;*/
 }
 
 .nmc-button-in-table-run-green:hover{
     color: green;
 }
 
+.nmc-button-in-table-run-red,
 .nmc-button-in-table-run-red:hover{
-    color: red;
+    color: #E85918;
 }
 
 /* недоступная кнопка Запустить*/
 .nmc-button-in-table-run-disabled, .nmc-button-in-table-run-disabled:hover {
     color:rgba(0, 0, 0, 0.65);
 }
+
+.nmc-button-in-table-question{
+/*    color: red;*/
+    width: 24px;
+}
+
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/
 .nmc-btn-toolbar-in-table{
     padding-left:5px !important;

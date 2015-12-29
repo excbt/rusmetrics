@@ -76,7 +76,14 @@ console.log("Run SettingsNoticeCtrl");
     //callbacks
     var errorCallback = function(e){
         console.log(e);              
-        notificationFactory.errorInfo(e.statusText, e.data.description || e.data || e);
+//        notificationFactory.errorInfo(e.statusText, e.data.description || e.data || e);
+//        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     var successGetNoticeTypeSettingsCallback = function(data){
