@@ -426,10 +426,14 @@ public class ReportTemplateService implements SecuredRoles {
 			srcBody = reportMasterTemplateBody.getBody();
 			srcBodyFilename = reportMasterTemplateBody.getBodyFilename();
 		}
-		logger.info("MasterTemplateBody size length: {}", srcBody.length);
+
+		if (srcBody != null) {
+			logger.info("MasterTemplateBody size length: {}", srcBody.length);
+		}
+
 		logger.info("MasterTemplateBody file name  : {}", srcBodyFilename);
 
-		checkNotNull(srcBody);
+		//		checkNotNull(srcBody);
 
 		int resultIdx = 0;
 		for (ReportTemplate rt : updateCadidates) {

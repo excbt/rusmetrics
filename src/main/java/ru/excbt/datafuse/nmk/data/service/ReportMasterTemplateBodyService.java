@@ -109,10 +109,16 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 		return true;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN })
-	public boolean savePentahoReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource)
-			throws IOException {
+	/**
+	 * 
+	 * @param reportMasterTemplateBodyId
+	 * @param fileResource
+	 * @param isCompiled
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean savePentahoReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
+			boolean isCompiled) throws IOException {
 
 		String correctedFilename = FilenameUtils.removeExtension(fileResource) + ReportConstants.EXT_PRPT;
 
@@ -141,12 +147,14 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 		byte[] bb = entity.getBodyCompiled();
 		logger.info("Current Report Template Body size {}", bb != null ? bb.length : 0);
 
-		entity.setBody(fileBytes);
-		entity.setBodyFilename(file.getName());
+		if (isCompiled) {
+			entity.setBodyCompiled(fileBytes);
+			entity.setBodyCompiledFilename(file.getName());
 
-		entity.setBodyCompiled(null);
-		entity.setBodyCompiledFilename(null);
-
+		} else {
+			entity.setBody(fileBytes);
+			entity.setBodyFilename(file.getName());
+		}
 		reportMasterTemplateBodyRepository.save(entity);
 
 		return true;
