@@ -54,13 +54,9 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 	 * 
 	 * @param reportTypeKey
 	 * @param fileResourceString
-	 * @param isBodyCompiled
+	 * @param isCompiled
 	 * @throws IOException
 	 */
-	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey, String fileResourceString) throws IOException {
-		loadReportMasterTemplate(reportTypeKey, fileResourceString, false);
-	}
-
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey, String fileResourceString, boolean isCompiled)
 			throws IOException {
 
@@ -79,12 +75,12 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		boolean res = false;
 
 		if (reportTypeKey.getReportSystem() == ReportSystem.JASPER) {
-			res = reportMasterTemplateBodyService.saveJasperReportMasterTemplateBody(templateBody.getId(),
-					correctedFilename, isCompiled);
+			res = reportMasterTemplateBodyService.saveJasperReportMasterTemplateBody(templateBody.getId(), correctedFilename,
+					isCompiled);
 
 		} else if (reportTypeKey.getReportSystem() == ReportSystem.PENTAHO) {
 			res = reportMasterTemplateBodyService.savePentahoReportMasterTemplateBody(templateBody.getId(),
-					correctedFilename);
+					correctedFilename, isCompiled);
 
 		} else {
 			new OperationNotSupportedException();
@@ -151,7 +147,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.Files.PARTNER_SERVICE_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.ELECTRIC_READINGS_REPORT,
-				ReportConstants.Files.ELECTRIC_READINGS_FILE_COMPILED);
+				ReportConstants.Files.ELECTRIC_READINGS_FILE_COMPILED, isCompiled);
 	}
 
 	/**
