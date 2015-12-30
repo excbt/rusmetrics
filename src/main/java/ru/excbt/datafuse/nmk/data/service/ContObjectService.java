@@ -110,7 +110,12 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setOwnerContacts(contObject.getOwnerContacts());
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
-		currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
+
+		if (contObject.getTimezoneDefKeyname() != null) {
+			currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
+		} else {
+			currContObject.setTimezoneDef(null);
+		}
 
 		ContObjectFias currObjectFias = currContObject.getContObjectFias();
 
