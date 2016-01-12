@@ -63,7 +63,9 @@ public class ReportTypeService {
 	 * @return
 	 */
 	public List<ReportMetaParamSpecial> findReportMetaParamSpecialList(ReportTypeKey reportTypeKey) {
-		return reportMetaParamSpecialRepository.findByReportTypeKeyname(reportTypeKey.getKeyname());
+		List<ReportMetaParamSpecial> preResult = reportMetaParamSpecialRepository
+				.findByReportTypeKeyname(reportTypeKey.getKeyname());
+		return ObjectFilters.disabledFilter(preResult);
 	}
 
 	/**

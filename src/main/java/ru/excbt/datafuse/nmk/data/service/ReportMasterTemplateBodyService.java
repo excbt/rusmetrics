@@ -65,11 +65,62 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN })
-	public boolean saveReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
+	public boolean saveJasperReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
 			boolean isCompiled) throws IOException {
 
 		String correctedFilename = FilenameUtils.removeExtension(fileResource)
 				+ (isCompiled ? ReportConstants.EXT_JASPER : ReportConstants.EXT_JRXML);
+
+		File file = new File(correctedFilename);
+
+		if (!file.exists()) {
+			throw new FileNotFoundException(correctedFilename);
+		}
+
+		byte[] fileBytes = null;
+		InputStream is = new FileInputStream(file);
+		try {
+			fileBytes = IOUtils.toByteArray(is);
+		} finally {
+			is.close();
+		}
+
+		checkNotNull(fileBytes);
+
+		ReportMasterTemplateBody entity = reportMasterTemplateBodyRepository.findOne(reportMasterTemplateBodyId);
+		if (entity == null) {
+			return false;
+		}
+
+		logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
+		byte[] bb = entity.getBodyCompiled();
+		logger.info("Current Report Template Body size {}", bb != null ? bb.length : 0);
+
+		if (isCompiled) {
+			entity.setBodyCompiled(fileBytes);
+			entity.setBodyCompiledFilename(file.getName());
+
+		} else {
+			entity.setBody(fileBytes);
+			entity.setBodyFilename(file.getName());
+		}
+		reportMasterTemplateBodyRepository.save(entity);
+
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param reportMasterTemplateBodyId
+	 * @param fileResource
+	 * @param isCompiled
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean savePentahoReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
+			boolean isCompiled) throws IOException {
+
+		String correctedFilename = FilenameUtils.removeExtension(fileResource) + ReportConstants.EXT_PRPT;
 
 		File file = new File(correctedFilename);
 

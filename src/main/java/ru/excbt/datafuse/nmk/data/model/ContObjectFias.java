@@ -94,8 +94,16 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 		return fiasFullAddress;
 	}
 
+	public void setFiasFullAddress(String fiasFullAddress) {
+		this.fiasFullAddress = fiasFullAddress;
+	}
+
 	public String getGeoFullAddress() {
 		return geoFullAddress;
+	}
+
+	public void setGeoFullAddress(String geoFullAddress) {
+		this.geoFullAddress = geoFullAddress;
 	}
 
 	public static long getSerialversionuid() {
