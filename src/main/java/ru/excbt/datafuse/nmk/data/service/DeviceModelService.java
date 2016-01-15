@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
 
@@ -74,7 +75,7 @@ public class DeviceModelService {
 
 		List<DeviceModel> result = deviceModelRepository.findByExSystem(exSystem);
 
-		return result;
+		return ObjectFilters.deletedFilter(result);
 	}
 
 	/**
@@ -108,7 +109,8 @@ public class DeviceModelService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceModel> findAll() {
-		return Lists.newArrayList(deviceModelRepository.findAll());
+		List<DeviceModel> preResult = Lists.newArrayList(deviceModelRepository.findAll());
+		return ObjectFilters.deletedFilter(preResult);
 	}
 
 }
