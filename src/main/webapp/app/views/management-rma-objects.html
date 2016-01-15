@@ -843,9 +843,18 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3"><label for="inputAddress">Адрес</label>
+                                <td class="col-sm-3">
+                                    <label for="inputAddress">Адрес</label>
+
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                    <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
+                                        <small class="marginRight5"><input type="checkbox" checked/>Автоопределение адреса
+                                        </small>
+                                        <small><img src="../app/images/object-state-red.png" width="8" height="8" class="marginRight5"/> Гео координаты не определены
+                                        </small>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>

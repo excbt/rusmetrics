@@ -1428,13 +1428,29 @@ console.log('Run Object management controller.');
                         serviceUrl: "https://dadata.ru/api/v2",
                         token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
                         type: "ADDRESS",
-                        count: 5,
+                        count: 10,
                         /* Вызывается, когда пользователь выбирает одну из подсказок */
                         onSelect: function(suggestion) {
                             console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.$apply();
+                        },
+                         /* Вызывается, когда получен ответ от сервера */
+                        onSearchComplete: function(query, suggestions) {
+console.log(suggestions);
+                            if (angular.isArray(suggestions) && (suggestions.length > 0)){
+console.log("suggestions is array");                                
+                                $scope.currentSug = suggestions[0];
+                            };
+                            $scope.$apply();
                         }
+                    });
+                    $("#inputAddress").focusout(function(){
+                        if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+console.log($scope.currentSug);                            
+                            $scope.currentObject.fullAddress = $scope.currentSug.value;
+                            $scope.$apply();        
+                        };
                     });
                 });
 //            }]

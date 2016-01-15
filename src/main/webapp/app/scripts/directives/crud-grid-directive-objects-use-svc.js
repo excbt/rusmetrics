@@ -1160,6 +1160,19 @@ console.log("Objects directive.");
                             $scope.$apply();
                         };
                     });
+
+                    $("#inputAddress").suggestions({
+                        serviceUrl: "https://dadata.ru/api/v2",
+                        token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
+                        type: "ADDRESS",
+                        count: 5,
+                        /* Вызывается, когда пользователь выбирает одну из подсказок */
+                        onSelect: function(suggestion) {
+                            console.log(suggestion);
+                            $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.$apply();
+                        }
+                    });
                 });
                 
                 //checkers            
