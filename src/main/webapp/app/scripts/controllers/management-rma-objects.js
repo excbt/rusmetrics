@@ -360,6 +360,9 @@ console.log('Run Object management controller.');
                     if (angular.isDefined(obj.contManagementId)&& (obj.contManagementId!=null)){
                         url+="/?cmOrganizationId="+obj.contManagementId;                       
                     };
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        obj._daDataSraw = JSON.stringify($scope.currentSug);
+                    };
                     crudGridDataFactory(url).save(obj, successPostCallback, errorCallback);
                 };
 
@@ -395,6 +398,9 @@ console.log('Run Object management controller.');
                             /*id: object[$scope.extraProps.idColumnName],*/
                             cmOrganizationId: cmOrganizationId
                         };                        
+                    };
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        object._daDataSraw = JSON.stringify($scope.currentSug);
                     };
                     crudGridDataFactory(url).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
@@ -442,12 +448,12 @@ console.log('Run Object management controller.');
               
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);
-			        $scope.currentObject = curObject;
+			        $scope.currentObject = curObject;                    
 			    };
                 
                 $scope.selectedObject = function(objId){
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
-//console.log($scope.currentObject);                    
+console.log($scope.currentObject);                    
                     if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
                             $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                     };
@@ -1437,17 +1443,15 @@ console.log('Run Object management controller.');
                         },
                          /* Вызывается, когда получен ответ от сервера */
                         onSearchComplete: function(query, suggestions) {
-console.log(suggestions);
-                            if (angular.isArray(suggestions) && (suggestions.length > 0)){
-console.log("suggestions is array");                                
+                            $scope.currentSug = null;
+                            if (angular.isArray(suggestions) && (suggestions.length > 0)){                               
                                 $scope.currentSug = suggestions[0];
                             };
                             $scope.$apply();
                         }
                     });
                     $("#inputAddress").focusout(function(){
-                        if (!mainSvc.checkUndefinedNull($scope.currentSug)){
-console.log($scope.currentSug);                            
+                        if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
                             $scope.currentObject.fullAddress = $scope.currentSug.value;
                             $scope.$apply();        
                         };
