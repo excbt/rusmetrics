@@ -96,10 +96,11 @@ public class ContObjectDaDataService {
 		contObjectDaData.setDataFiasId(UUID.fromString(safeJsonRead(raw, "$.data.fias_id")));
 
 		String lat = safeJsonRead(raw, "$.data.geo_lat");
-		contObjectDaData.setDataGeoLat(new BigDecimal(lat));
-
 		String lon = safeJsonRead(raw, "$.data.geo_lon");
-		contObjectDaData.setDataGeoLon(new BigDecimal(lon));
+		if (lat != null || lon != null) {
+			contObjectDaData.setDataGeoLat(new BigDecimal(lat));
+			contObjectDaData.setDataGeoLon(new BigDecimal(lon));
+		}
 
 	}
 
