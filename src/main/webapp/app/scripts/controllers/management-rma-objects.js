@@ -360,6 +360,9 @@ console.log('Run Object management controller.');
                     if (angular.isDefined(obj.contManagementId)&& (obj.contManagementId!=null)){
                         url+="/?cmOrganizationId="+obj.contManagementId;                       
                     };
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        obj._daDataSraw = JSON.stringify($scope.currentSug);
+                    };
                     crudGridDataFactory(url).save(obj, successPostCallback, errorCallback);
                 };
 
@@ -389,12 +392,15 @@ console.log('Run Object management controller.');
                                 
                 $scope.updateObject = function (url, object) {
                     var params = { id: object[$scope.extraProps.idColumnName]};
-                    if (angular.isDefined(object.contManagementId)&& (object.contManagementId!=null)){
+                    if (angular.isDefined(object.contManagementId) && (object.contManagementId != null)){
                         var cmOrganizationId = object.contManagementId;
                         params = { 
-                            id: object[$scope.extraProps.idColumnName],
+                            /*id: object[$scope.extraProps.idColumnName],*/
                             cmOrganizationId: cmOrganizationId
                         };                        
+                    };
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        object._daDataSraw = JSON.stringify($scope.currentSug);
                     };
                     crudGridDataFactory(url).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
@@ -442,12 +448,12 @@ console.log('Run Object management controller.');
               
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);
-			        $scope.currentObject = curObject;
+			        $scope.currentObject = curObject;                    
 			    };
                 
                 $scope.selectedObject = function(objId){
                     $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
-//console.log($scope.currentObject);                    
+console.log($scope.currentObject);                    
                     if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
                             $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                     };
@@ -1424,6 +1430,32 @@ console.log('Run Object management controller.');
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
                     $('#inputEXCode').inputmask();
+                    $("#inputAddress").suggestions({
+                        serviceUrl: "https://dadata.ru/api/v2",
+                        token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
+                        type: "ADDRESS",
+                        count: 10,
+                        /* Вызывается, когда пользователь выбирает одну из подсказок */
+                        onSelect: function(suggestion) {
+                            console.log(suggestion);
+                            $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.$apply();
+                        },
+                         /* Вызывается, когда получен ответ от сервера */
+                        onSearchComplete: function(query, suggestions) {
+                            $scope.currentSug = null;
+                            if (angular.isArray(suggestions) && (suggestions.length > 0)){                               
+                                $scope.currentSug = suggestions[0];
+                            };
+                            $scope.$apply();
+                        }
+                    });
+                    $("#inputAddress").focusout(function(){
+                        if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
+                            $scope.currentObject.fullAddress = $scope.currentSug.value;
+                            $scope.$apply();        
+                        };
+                    });
                 });
 //            }]
 }]);
