@@ -136,6 +136,18 @@ public class ContObject extends AbstractAuditableModel
 	@Transient
 	private Boolean _haveSubscr;
 
+	@Transient
+	private String _daDataSraw;
+
+	@Column(name = "is_address_auto")
+	private Boolean isAddressAuto;
+
+	@Column(name = "is_valid_fias_uuid")
+	private Boolean isValidFiasUUID;
+
+	@Column(name = "is_valid_geo_pos")
+	private Boolean isValidGeoPos;
+
 	public String getName() {
 		return name;
 	}
@@ -353,6 +365,46 @@ public class ContObject extends AbstractAuditableModel
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String get_daDataSraw() {
+		return _daDataSraw;
+	}
+
+	/**
+	 * 
+	 * @param _daDataSraw
+	 */
+	public void set_daDataSraw(String _daDataSraw) {
+		this._daDataSraw = _daDataSraw;
+	}
+
+	public Boolean getIsAddressAuto() {
+		return isAddressAuto;
+	}
+
+	public void setIsAddressAuto(Boolean isAddressAuto) {
+		this.isAddressAuto = isAddressAuto;
+	}
+
+	public Boolean getIsValidFiasUUID() {
+		return isValidFiasUUID;
+	}
+
+	public void setIsValidFiasUUID(Boolean isValidFiasUUID) {
+		this.isValidFiasUUID = isValidFiasUUID;
+	}
+
+	public Boolean getIsValidGeoPos() {
+		return isValidGeoPos;
+	}
+
+	public void setIsValidGeoPos(Boolean isValidGeoPos) {
+		this.isValidGeoPos = isValidGeoPos;
 	}
 
 }

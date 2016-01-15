@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -38,6 +39,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObjectService.class);
 
+	private static final String GEO_POS_JSON_TEMPLATE = "{\"pos\": \"%s %s\"}";
+
 	@Autowired
 	private ContObjectRepository contObjectRepository;
 
@@ -49,6 +52,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContObjectFiasRepository contObjectFiasRepository;
+
+	@Autowired
+	private ContObjectDaDataService contObjectDaDataService;
 
 	@Autowired
 	private TimezoneDefService timezoneDefService;
@@ -110,30 +116,55 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		currContObject.setOwnerContacts(contObject.getOwnerContacts());
 		currContObject.setCwTemp(contObject.getCwTemp());
 		currContObject.setHeatArea(contObject.getHeatArea());
-		currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
 
-		ContObjectFias currObjectFias = currContObject.getContObjectFias();
-
-		if (currObjectFias == null) {
-			currObjectFias = createConfObjectFias(currContObject);
+		if (contObject.getTimezoneDefKeyname() != null) {
+			currContObject.setTimezoneDef(timezoneDefService.findOne(contObject.getTimezoneDefKeyname()));
 		} else {
-			currObjectFias.setFiasFullAddress(currContObject.getFullAddress());
-			currObjectFias.setGeoFullAddress(currContObject.getFullAddress());
-			currObjectFias.setIsGeoRefresh(true);
+			currContObject.setTimezoneDef(null);
 		}
-		contObjectFiasRepository.save(currObjectFias);
+
+		// Process ContObjectDaData
+		ContObjectDaData contObjectDaData = null;
+		if (contObject.get_daDataSraw() != null) {
+			contObjectDaData = contObjectDaDataService.processContObjectDaData(contObject);
+			contObject.setIsAddressAuto(true);
+		} else {
+			contObjectDaData = contObjectDaDataService.findByContObjectId(currContObject.getId());
+			contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getSraw() != null);
+		}
+
+		// Process ContObjectFias
+		ContObjectFias contObjectFias = currContObject.getContObjectFias();
+
+		if (contObjectFias == null) {
+			contObjectFias = createConfObjectFias(currContObject);
+		} else {
+			contObjectFias.setFiasFullAddress(currContObject.getFullAddress());
+			contObjectFias.setGeoFullAddress(currContObject.getFullAddress());
+			contObjectFias.setIsGeoRefresh(true);
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+		}
+
+		if (contObjectDaData != null) {
+			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setFiasUUID(contObjectDaData.getDataFiasId());
+			contObjectFias.setIsGeoRefresh(true);
+			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
+			if (dataJsonGeo != null) {
+				contObjectFias.setGeoJson2(dataJsonGeo);
+			}
+		}
+
+		contObjectFiasRepository.save(contObjectFias);
+
+		currContObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
+		currContObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
+		currContObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getSraw() != null);
 
 		ContObject resultContObject = contObjectRepository.save(currContObject);
 
-		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(currContObject.getId());
-		if (contObjectFiasList.size() == 0) {
-			contObjectFiasList.add(createConfObjectFias(currContObject));
-		} else {
-			contObjectFiasList.forEach(i -> {
-				i.setIsGeoRefresh(true);
-			});
-		}
-		contObjectFiasRepository.save(contObjectFiasList);
+		contObjectFiasSetRefreshFlag(currContObject);
 
 		ContManagement cm = currContObject.get_activeContManagement();
 		if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
@@ -169,13 +200,29 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setTimezoneDef(timezoneDef);
 		contObject.setIsManual(true);
 
-		ContObject resultContObject = contObjectRepository.save(contObject);
-
-		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
+		// Processing ContObjectDaData
+		ContObjectDaData contObjectDaData = null;
+		if (contObject.get_daDataSraw() != null) {
+			contObjectDaData = contObjectDaDataService.processContObjectDaData(contObject);
+		}
 
 		// Inserting ContObjectFias
-		ContObjectFias contObjectFias = createConfObjectFias(resultContObject);
+		ContObjectFias contObjectFias = createConfObjectFias(contObject);
+
+		if (contObjectDaData != null) {
+			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+		}
+
+		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
+		contObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
+		contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getSraw() != null);
+
+		ContObject resultContObject = contObjectRepository.save(contObject);
 		contObjectFiasRepository.save(contObjectFias);
+
+		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
@@ -326,6 +373,38 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObjectFias.setGeoFullAddress(contObject.getFullAddress());
 		contObjectFias.setIsGeoRefresh(true);
 		return contObjectFias;
+	}
+
+	/**
+	 * 
+	 * @param contObject
+	 */
+	private void contObjectFiasSetRefreshFlag(ContObject contObject) {
+		checkArgument(!contObject.isNew());
+
+		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObject.getId());
+		if (contObjectFiasList.size() == 0) {
+			contObjectFiasList.add(createConfObjectFias(contObject));
+		} else {
+			contObjectFiasList.forEach(i -> {
+				i.setIsGeoRefresh(true);
+			});
+		}
+		contObjectFiasRepository.save(contObjectFiasList);
+
+	}
+
+	/**
+	 * 
+	 * @param contObjectDaData
+	 * @return
+	 */
+	private String makeJsonGeoString(ContObjectDaData contObjectDaData) {
+		if (contObjectDaData.getDataGeoLat() == null || contObjectDaData.getDataGeoLon() == null) {
+			return null;
+		}
+		return String.format(GEO_POS_JSON_TEMPLATE, contObjectDaData.getDataGeoLon().toString(),
+				contObjectDaData.getDataGeoLat().toString());
 	}
 
 }

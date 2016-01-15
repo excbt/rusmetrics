@@ -3,6 +3,9 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
@@ -23,6 +28,8 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectControllerTest.class);
+
+	private final static String contObjectDaDataFilename = "metadata_json/contObjectDaData.json";
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -131,6 +138,39 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		ContObject testCO = contObjectService.findOne(20118693L);
 		assertNotNull(testCO);
 		return testCO;
+	}
+
+	@Test
+	public void testContObjectDaData() throws Exception {
+		Long id = 725L;
+
+		byte[] encoded = Files.readAllBytes(Paths.get(contObjectDaDataFilename));
+		String daDataJson = new String(encoded, StandardCharsets.UTF_8);
+		assertNotNull(daDataJson);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		Object json = mapper.readValue(daDataJson, Object.class);
+
+		logger.info("daDataJson: {}", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+
+		ContObject testCO = contObjectService.findOne(id);
+		String urlStr = "/api/subscr/contObjects/" + testCO.getId();
+
+		testCO.set_daDataSraw(daDataJson);
+
+		//		ContObjectDaData contObjectDaData = testCO.getContObjectDaData();
+		//
+		//		if (contObjectDaData == null) {
+		//			contObjectDaData = new ContObjectDaData();
+		//			testCO.setContObjectDaData(contObjectDaData);
+		//
+		//		}
+		//
+		//		contObjectDaData.setSraw(daDataJson);
+
+		_testJsonUpdate(urlStr, testCO);
+
 	}
 
 }
