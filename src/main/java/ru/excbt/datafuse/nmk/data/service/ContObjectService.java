@@ -152,15 +152,13 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObject.setFullAddress(contObjectDaData.getSvalue());
 		}
 
-		if (contObjectDaData != null && contObjectDaData.getIsValid()) {
+		if (contObjectDaData != null) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setFiasUUID(contObjectDaData.getDataFiasId());
-			contObjectFias.setIsGeoRefresh(true);
+			contObjectFias.setIsGeoRefresh(contObjectDaData.getSvalue() != null);
 			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
-			if (dataJsonGeo != null) {
-				contObjectFias.setGeoJson2(dataJsonGeo);
-			}
+			contObjectFias.setGeoJson2(dataJsonGeo);
 		}
 
 		contObjectFiasRepository.save(contObjectFias);
@@ -224,16 +222,14 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		// Inserting ContObjectFias
 		ContObjectFias contObjectFias = createConfObjectFias(contObject);
 
-		if (contObjectDaData != null && contObjectDaData.getIsValid()) {
+		if (contObjectDaData != null) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
 			contObject.setFullAddress(contObjectDaData.getSvalue());
-			contObjectFias.setIsGeoRefresh(true);
+			contObjectFias.setIsGeoRefresh(contObjectDaData.getSvalue() != null);
 			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
-			if (dataJsonGeo != null) {
-				contObjectFias.setGeoJson2(dataJsonGeo);
-			}
-			
+			contObjectFias.setGeoJson2(dataJsonGeo);
+
 		}
 
 		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
