@@ -360,6 +360,7 @@ console.log('Run Object management controller.');
                     if (angular.isDefined(obj.contManagementId)&& (obj.contManagementId!=null)){
                         url+="/?cmOrganizationId="+obj.contManagementId;                       
                     };
+                    obj._daDataSraw = null;
                     if (!mainSvc.checkUndefinedNull($scope.currentSug)){
                         obj._daDataSraw = JSON.stringify($scope.currentSug);
                     };
@@ -399,6 +400,7 @@ console.log('Run Object management controller.');
                             cmOrganizationId: cmOrganizationId
                         };                        
                     };
+                    object._daDataSraw = null;
                     if (!mainSvc.checkUndefinedNull($scope.currentSug)){
                         object._daDataSraw = JSON.stringify($scope.currentSug);
                     };
