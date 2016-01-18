@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +47,7 @@ public class ContObjectDaDataService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ContObjectDaData processContObjectDaData(ContObject contObject) {
+	public ContObjectDaData getContObjectDaData(ContObject contObject) {
 		ContObjectDaData result = null;
 		if (contObject.isNew()) {
 			result = new ContObjectDaData();
@@ -57,11 +59,21 @@ public class ContObjectDaDataService {
 				result.setContObject(contObject);
 			}
 		}
+		return result;
+	}
 
-		result.setSraw(contObject.get_daDataSraw());
-		parseSraw(result);
-
-		return contObjectDaDataRepository.save(result);
+	/**
+	 * 
+	 * @param contObject
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public ContObjectDaData processContObjectDaData(ContObjectDaData contObjectDaData) {
+		checkNotNull(contObjectDaData);
+		if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+			parseSraw(contObjectDaData);
+		}
+		return contObjectDaDataRepository.save(contObjectDaData);
 	}
 
 	/**
