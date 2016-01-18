@@ -124,14 +124,21 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		}
 
 		// Process ContObjectDaData
-		ContObjectDaData contObjectDaData = null;
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(currContObject);
+		checkNotNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
-			contObjectDaData = contObjectDaDataService.processContObjectDaData(contObject);
+			contObjectDaData.setSraw(contObject.get_daDataSraw());
+			contObjectDaData.setIsValid(true);
 			contObject.setIsAddressAuto(true);
 		} else {
 			contObjectDaData = contObjectDaDataService.findByContObjectId(currContObject.getId());
-			contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getSraw() != null);
+			contObjectDaData.setDataGeoLat(null);
+			contObjectDaData.setDataGeoLon(null);
+			contObjectDaData.setDataFiasId(null);
+			contObjectDaData.setIsValid(false);
 		}
+		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
+		contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getIsValid());
 
 		// Process ContObjectFias
 		ContObjectFias contObjectFias = currContObject.getContObjectFias();
@@ -145,7 +152,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObject.setFullAddress(contObjectDaData.getSvalue());
 		}
 
-		if (contObjectDaData != null) {
+		if (contObjectDaData != null && contObjectDaData.getIsValid()) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setFiasUUID(contObjectDaData.getDataFiasId());
@@ -201,23 +208,37 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsManual(true);
 
 		// Processing ContObjectDaData
-		ContObjectDaData contObjectDaData = null;
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getContObjectDaData(contObject);
+		checkNotNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
-			contObjectDaData = contObjectDaDataService.processContObjectDaData(contObject);
+			contObjectDaData.setSraw(contObject.get_daDataSraw());
+			contObjectDaData.setIsValid(true);
+		} else {
+			contObjectDaData.setDataGeoLat(null);
+			contObjectDaData.setDataGeoLon(null);
+			contObjectDaData.setDataFiasId(null);
+			contObjectDaData.setIsValid(false);
 		}
+		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
 
 		// Inserting ContObjectFias
 		ContObjectFias contObjectFias = createConfObjectFias(contObject);
 
-		if (contObjectDaData != null) {
+		if (contObjectDaData != null && contObjectDaData.getIsValid()) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
 			contObject.setFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setIsGeoRefresh(true);
+			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
+			if (dataJsonGeo != null) {
+				contObjectFias.setGeoJson2(dataJsonGeo);
+			}
+			
 		}
 
 		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
 		contObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
-		contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getSraw() != null);
+		contObject.setIsAddressAuto(contObjectDaData != null && contObjectDaData.getIsValid());
 
 		ContObject resultContObject = contObjectRepository.save(contObject);
 		contObjectFiasRepository.save(contObjectFias);
