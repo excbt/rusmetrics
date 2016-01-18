@@ -459,6 +459,7 @@ console.log($scope.currentObject);
                     if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
                             $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                     };
+                    checkGeo();
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){
@@ -1096,6 +1097,7 @@ console.log($scope.currentObject);
                 $scope.addObjectInit = function(){
 //console.log("addObjectInit");                    
                     $scope.currentObject = {};
+                    checkGeo();
                     $('#showObjOptionModal').modal();
                 };
                 
@@ -1428,6 +1430,19 @@ console.log($scope.currentObject);
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
+
+                var checkGeo = function(){
+                   $scope.currentObject.geoState = "red";
+                   $scope.currentObject.geoStateText = "Координаты не определены";
+// console.log($scope.currentObject.isValidGeoPos);
+console.log($scope.currentSug);
+// console.log($scope.currentSug.data.geo_lat);
+// console.log($scope.currentSug.data.geo_lon);                
+                   if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null){
+                        $scope.currentObject.geoState = "green";
+                        $scope.currentObject.geoStateText = "Координаты определены";
+                    }; 
+                };
                 
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
@@ -1441,22 +1456,30 @@ console.log($scope.currentObject);
                         onSelect: function(suggestion) {
                             console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.currentSug = suggestion;
+                            $scope.currentObject.isAddressAuto = true;
+                            checkGeo();
                             $scope.$apply();
                         },
                          /* Вызывается, когда получен ответ от сервера */
                         onSearchComplete: function(query, suggestions) {
-                            $scope.currentSug = null;
-                            if (angular.isArray(suggestions) && (suggestions.length > 0)){                               
-                                $scope.currentSug = suggestions[0];
-                            };
-                            $scope.$apply();
+                            // $scope.currentSug = null;
+                            // if (angular.isArray(suggestions) && (suggestions.length > 0)){                               
+                            //     $scope.currentSug = suggestions[0];
+                            // };
+                            // $scope.$apply();
                         }
                     });
-                    $("#inputAddress").focusout(function(){
-                        if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
-                            $scope.currentObject.fullAddress = $scope.currentSug.value;
-                            $scope.$apply();        
-                        };
+                    $("#inputAddress").change(function(){
+                        $scope.currentSug = null;
+                        $scope.currentObject.isAddressAuto = false;
+                        $scope.currentObject.isValidGeoPos = false;
+                        checkGeo();
+                        $scope.$apply();
+                        // if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
+                        //     $scope.currentObject.fullAddress = $scope.currentSug.value;
+                        //     $scope.$apply();        
+                        // };
                     });
                 });
 //            }]
