@@ -70,7 +70,9 @@ public class ContObjectDaDataService {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ContObjectDaData processContObjectDaData(ContObjectDaData contObjectDaData) {
 		checkNotNull(contObjectDaData);
-		parseSraw(contObjectDaData);
+		if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+			parseSraw(contObjectDaData);
+		}
 		return contObjectDaDataRepository.save(contObjectDaData);
 	}
 
