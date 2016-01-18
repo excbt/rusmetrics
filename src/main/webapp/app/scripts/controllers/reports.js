@@ -116,7 +116,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             tmp.forEach(function(el){
                 var currentSign = el.reportPeriod.sign;
                 if ((currentSign == null) || (typeof currentSign == 'undefined')){           
-                    var paramsetStartDateFormat = (new Date(object.paramsetStartDate));
+                    var paramsetStartDateFormat = (new Date(el.paramsetStartDate));
                     el.psStartDateFormatted = (el.paramsetStartDate!=null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
         //console.log(el.psStartDateFormatted);            
                     var paramsetEndDateFormat= (new Date(el.paramsetEndDate));
