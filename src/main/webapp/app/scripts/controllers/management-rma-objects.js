@@ -454,9 +454,9 @@ console.log('Run Object management controller.');
 			    };
                 
                 $scope.selectedObject = function(objId){
-                    $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                    $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
 console.log($scope.currentObject);                    
-                    if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
+                    if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement!=null)){
                             $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                     };
                     checkGeo();
