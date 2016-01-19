@@ -220,6 +220,18 @@
                                 <td colspan="2" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isDeviceObjectMetadata"/><label for="inputIDOM">Использовать метаданные прибора</label>
                                 </td>
                             </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy':false">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputVerificationDate">Дата очередной плановой поверки</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString">
+                                </td>
+                            </tr>
                         </table>
                     </div>    
                 </div>  

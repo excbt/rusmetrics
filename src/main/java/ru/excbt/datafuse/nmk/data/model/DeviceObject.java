@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -103,6 +107,13 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
+	
+	@Column(name = "verification_interval")
+	private BigDecimal verificationInterval;
+	
+	@Column(name = "verification_date")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date verificationDate;
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -238,6 +249,22 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setEditDataSourceInfo(DataSourceInfo dataSourceInfo) {
 		this.editDataSourceInfo = dataSourceInfo;
+	}
+
+	public BigDecimal getVerificationInterval() {
+		return verificationInterval;
+	}
+
+	public void setVerificationInterval(BigDecimal verificationInterval) {
+		this.verificationInterval = verificationInterval;
+	}
+
+	public Date getVerificationDate() {
+		return verificationDate;
+	}
+
+	public void setVerificationDate(Date verificationDate) {
+		this.verificationDate = verificationDate;
 	}
 
 }
