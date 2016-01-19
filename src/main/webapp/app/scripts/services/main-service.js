@@ -9,6 +9,7 @@ angular.module('portalNMC')
     mainSvcSettings.subscrUrl = "../api/subscr";
     mainSvcSettings.servicePermissionUrl = mainSvcSettings.subscrUrl+"/manage/service/permissions";
     mainSvcSettings.loadingServicePermissionFlag = false;
+    mainSvcSettings.serverTimeZone = 3;//server time zone at Hours
 //    mainSvcSettings.loadedServicePermission = null;
     
     var contextIds = [];
@@ -55,6 +56,13 @@ angular.module('portalNMC')
     };
     
     //methods for the work with the dates
+    var dateFormating = function(millisec, dateFormat){
+        var result ="";
+        var serverTimeZoneDifferent = Math.round(mainSvcSettings.serverTimeZone*3600.0*1000.0);
+        var tmpDate = (new Date(millisec + serverTimeZoneDifferent));
+        result = (tmpDate == null) ? "" : moment([tmpDate.getUTCFullYear(), tmpDate.getUTCMonth(), tmpDate.getUTCDate(), tmpDate.getUTCHours(), tmpDate.getUTCMinutes()]).format(dateFormat);
+        return result;//
+    };
         //get UTC time from the string with date
     var strDateToUTC = function(strWithDate, strFormat){       
         var stDate = (new Date(moment(strWithDate, strFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601      

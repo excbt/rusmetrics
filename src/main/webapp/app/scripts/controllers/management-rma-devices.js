@@ -6,6 +6,7 @@ console.log('Run devices management controller.');
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
     $scope.ctrlSettings.loading = true;
+    $scope.ctrlSettings.userDateFormat = "DD.MM.YYYY";
     //data
     $scope.data = {};
     $scope.data.dataSources = [];
@@ -43,6 +44,9 @@ console.log('Run devices management controller.');
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
                         elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
                         elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
+                    };
+                    if (!mainSvc.checkUndefinedNull(elem.verificationDate)){
+                        elem.verificationDateString = mainSvc.dateFormating(elem.verificationDate, $scope.ctrlSettings.userDateFormat);
                     };
                 });
                 sortDevicesByConObjectFullName(tmp);
@@ -173,6 +177,9 @@ console.log('Run devices management controller.');
         if (checkDsourceFlag === false){
             return;
         };
+        if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
+            device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
+        }
 //console.log(device);        
         //send to server
         objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
@@ -338,5 +345,25 @@ console.log('Run devices management controller.');
 //console.log($scope.data.vzletSystemList);        
     };
     $scope.getVzletSystemList();
+                    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true
+    };
     
+    $(document).ready(function(){
+        $('#inputVerificationInterval').inputmask();
+        $('#inputVerificationDate').datepicker({
+          dateFormat: "dd.mm.yy",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });
+    });
 }]);
