@@ -181,4 +181,16 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 		this.geoJson = geoJson;
 	}
 
+	public void setCityFiasUUID(UUID cityFiasUUID) {
+		this.cityFiasUUID = cityFiasUUID;
+	}
+
+	public void setShortAddress2(String shortAddress2) {
+		this.shortAddress2 = shortAddress2;
+	}
+
+	public void setShortAddress1(String shortAddress1) {
+		this.shortAddress1 = shortAddress1;
+	}
+
 }

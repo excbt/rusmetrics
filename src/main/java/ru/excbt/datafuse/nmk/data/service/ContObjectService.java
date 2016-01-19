@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -64,6 +65,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContManagementService contManagementService;
+
+	@Autowired
+	private FiasService fiasService;
 
 	/**
 	 * 
@@ -162,6 +166,17 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectFias.setGeoJson2(dataJsonGeo);
 		}
 
+		if (contObjectFias.getFiasUUID() != null) {
+			UUID cityUUID = fiasService.getCityUUID(contObjectFias.getFiasUUID());
+			if (cityUUID != null) {
+				contObjectFias.setCityFiasUUID(cityUUID);
+				String cityName = fiasService.getCityName(cityUUID);
+				contObjectFias.setShortAddress2(cityName);
+			}
+			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
+			contObjectFias.setShortAddress1(shortAddr);
+		}
+
 		contObjectFiasRepository.save(contObjectFias);
 
 		currContObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
@@ -227,11 +242,24 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		if (contObjectDaData != null) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
-			contObject.setFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setFiasUUID(contObjectDaData.getDataFiasId());
 			contObjectFias.setIsGeoRefresh(contObjectDaData.getSvalue() != null);
 			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
 			contObjectFias.setGeoJson2(dataJsonGeo);
 
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+
+		}
+
+		if (contObjectFias.getFiasUUID() != null) {
+			UUID cityUUID = fiasService.getCityUUID(contObjectFias.getFiasUUID());
+			if (cityUUID != null) {
+				contObjectFias.setCityFiasUUID(cityUUID);
+				String cityName = fiasService.getCityName(cityUUID);
+				contObjectFias.setShortAddress2(cityName);
+			}
+			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
+			contObjectFias.setShortAddress1(shortAddr);
 		}
 
 		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
