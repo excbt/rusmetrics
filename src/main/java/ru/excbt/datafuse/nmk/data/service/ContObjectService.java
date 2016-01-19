@@ -156,9 +156,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		} else {
 			contObjectFias.setFiasFullAddress(contObject.getFullAddress());
 			contObjectFias.setGeoFullAddress(contObject.getFullAddress());
-			contObjectFias.setGeoJson(null);
-			contObjectFias.setGeoJson2(null);
-			contObjectFias.setIsGeoRefresh(true);
 		}
 
 		if (contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
@@ -170,6 +167,14 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectFias.setGeoJson2(dataJsonGeo);
 		}
 
+		if (contObjectDaData == null || !Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+			contObjectFias.setFiasUUID(null);
+			contObjectFias.setCityFiasUUID(null);
+			contObjectFias.setGeoJson(null);
+			contObjectFias.setGeoJson2(null);
+			contObjectFias.setIsGeoRefresh(true);
+		}
+
 		if (contObjectFias.getFiasUUID() != null) {
 			UUID cityUUID = fiasService.getCityUUID(contObjectFias.getFiasUUID());
 			if (cityUUID != null) {
@@ -179,6 +184,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			}
 			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
 			contObjectFias.setShortAddress1(shortAddr);
+		} else {
+			contObjectFias.setShortAddress1(null);
+			contObjectFias.setShortAddress2(null);
 		}
 
 		contObjectFiasRepository.save(contObjectFias);
