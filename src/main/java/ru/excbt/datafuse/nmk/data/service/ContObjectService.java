@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -64,6 +65,9 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private ContManagementService contManagementService;
+
+	@Autowired
+	private FiasService fiasService;
 
 	/**
 	 * 
@@ -131,11 +135,15 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectDaData.setIsValid(true);
 			contObject.setIsAddressAuto(true);
 		} else {
-			contObjectDaData.setSraw(null);
-			contObjectDaData.setDataGeoLat(null);
-			contObjectDaData.setDataGeoLon(null);
-			contObjectDaData.setDataFiasId(null);
-			contObjectDaData.setIsValid(false);
+			if (contObject.getFullAddress() == null
+					|| !contObject.getFullAddress().equals(contObjectDaData.getSvalue())) {
+				contObjectDaData.setSraw(null);
+				contObjectDaData.setDataGeoLat(null);
+				contObjectDaData.setDataGeoLon(null);
+				contObjectDaData.setDataFiasId(null);
+				contObjectDaData.setIsValid(false);
+			}
+
 		}
 		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
@@ -148,9 +156,6 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		} else {
 			contObjectFias.setFiasFullAddress(contObject.getFullAddress());
 			contObjectFias.setGeoFullAddress(contObject.getFullAddress());
-			contObjectFias.setGeoJson(null);
-			contObjectFias.setGeoJson2(null);
-			contObjectFias.setIsGeoRefresh(true);
 		}
 
 		if (contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
@@ -160,6 +165,28 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectFias.setIsGeoRefresh(contObjectDaData.getSvalue() != null);
 			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
 			contObjectFias.setGeoJson2(dataJsonGeo);
+		}
+
+		if (contObjectDaData == null || !Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+			contObjectFias.setFiasUUID(null);
+			contObjectFias.setCityFiasUUID(null);
+			contObjectFias.setGeoJson(null);
+			contObjectFias.setGeoJson2(null);
+			contObjectFias.setIsGeoRefresh(true);
+		}
+
+		if (contObjectFias.getFiasUUID() != null) {
+			UUID cityUUID = fiasService.getCityUUID(contObjectFias.getFiasUUID());
+			if (cityUUID != null) {
+				contObjectFias.setCityFiasUUID(cityUUID);
+				String cityName = fiasService.getCityName(cityUUID);
+				contObjectFias.setShortAddress2(cityName);
+			}
+			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
+			contObjectFias.setShortAddress1(shortAddr);
+		} else {
+			contObjectFias.setShortAddress1(null);
+			contObjectFias.setShortAddress2(null);
 		}
 
 		contObjectFiasRepository.save(contObjectFias);
@@ -213,11 +240,14 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
 			contObjectDaData.setIsValid(true);
 		} else {
-			contObjectDaData.setSraw(null);
-			contObjectDaData.setDataGeoLat(null);
-			contObjectDaData.setDataGeoLon(null);
-			contObjectDaData.setDataFiasId(null);
-			contObjectDaData.setIsValid(false);
+			if (contObject.getFullAddress() == null
+					|| !contObject.getFullAddress().equals(contObjectDaData.getSvalue())) {
+				contObjectDaData.setSraw(null);
+				contObjectDaData.setDataGeoLat(null);
+				contObjectDaData.setDataGeoLon(null);
+				contObjectDaData.setDataFiasId(null);
+				contObjectDaData.setIsValid(false);
+			}
 		}
 		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
 
@@ -227,11 +257,24 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		if (contObjectDaData != null) {
 			contObjectFias.setFiasFullAddress(contObjectDaData.getSvalue());
 			contObjectFias.setGeoFullAddress(contObjectDaData.getSvalue());
-			contObject.setFullAddress(contObjectDaData.getSvalue());
+			contObjectFias.setFiasUUID(contObjectDaData.getDataFiasId());
 			contObjectFias.setIsGeoRefresh(contObjectDaData.getSvalue() != null);
 			String dataJsonGeo = makeJsonGeoString(contObjectDaData);
 			contObjectFias.setGeoJson2(dataJsonGeo);
 
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+
+		}
+
+		if (contObjectFias.getFiasUUID() != null) {
+			UUID cityUUID = fiasService.getCityUUID(contObjectFias.getFiasUUID());
+			if (cityUUID != null) {
+				contObjectFias.setCityFiasUUID(cityUUID);
+				String cityName = fiasService.getCityName(cityUUID);
+				contObjectFias.setShortAddress2(cityName);
+			}
+			String shortAddr = fiasService.getShortAddr(contObjectFias.getFiasUUID());
+			contObjectFias.setShortAddress1(shortAddr);
 		}
 
 		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
