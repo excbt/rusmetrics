@@ -7,6 +7,17 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
     $scope.ctrlSettings.selectedAll = false;
+
+        //html- с индикатором загрузки страницы
+    $scope.ctrlSettings.htmlLoading = '<head>' 
+                            + '<meta charset="utf-8">' 
+                            + '<link rel="stylesheet" href="http://www.rusmetrics.ru/public/bower_components/font-awesome/css/font-awesome.min.css"'
+                            + '</head>'
+                            + '<body>' 
+                            + '<div  ng-show="loading" class="nmc-loading">'
+                            + '<i class="fa fa-spinner fa-spin"></i> Загрузка ... '
+                            + '</div>'
+                            + '</body>';
     //report open modes
     $scope.ctrlSettings.openModes = {
         "create":{ "name": "create"
@@ -171,14 +182,17 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.checkAndRunParamset = function(type, object, previewFlag){
         var flag = $scope.checkRequiredFieldsOnSave();
-        if (flag===false){
+        if (flag === false){
             $('#messageForUserModal').modal();
         }else{
             var previewWin = null;
-            var previewFile = new Blob([""], {type : 'text/html'});//new Blob(["temp"], "temp");//null;
+            //индикация загрузки страницы предпросмотра
+            var htmlText = $scope.ctrlSettings.htmlLoading;
+            var previewFile = new Blob([htmlText], {type : 'text/html'});//new Blob(["temp"], "temp");//null;
             if(previewFlag){
                 //window.URL= window.URL || window.webkitURL;
                 var url = window.URL.createObjectURL(previewFile);//формируем url на сформированный файл
+
                 previewWin = window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
             };
             $scope.createReportWithParams(type, object, previewFlag, previewWin);
@@ -1058,8 +1072,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.previewReport = function(type, paramset){
         $scope.selectedItem(type, paramset);
         if (paramset.checkFlag){
-            var url ="../api/reportService"+type.suffix+"/"+paramset.id+"/preview";
-            window.open(url, "_blank");
+            var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/preview";
+            var prevWin = window.open("", "_blank");
+            prevWin.document.write($scope.ctrlSettings.htmlLoading);
+            prevWin.document.location.assign(url);            
         }else{
             $scope.showMessageForUserModalExFlag = true;
             $scope.messageForUser = paramset.messageForUser;
@@ -1097,13 +1113,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var fileExt = "";
         if (previewFlag){//проверяем флаг предпросмотра,
             //если флаг установлен, то
-            tmpParamset.outputFileType="HTML";//ставим формат выходного файла - HTML
-            tmpParamset.outputFileZipped=false;//ставим флаг -не архивировать полученный отчет
+            tmpParamset.outputFileType = "HTML";//ставим формат выходного файла - HTML
+            tmpParamset.outputFileZipped = false;//ставим флаг -не архивировать полученный отчет
             fileExt = "html";
         }else{
-            fileExt=tmpParamset.outputFileZipped?"zip":tmpParamset.outputFileType.toLowerCase();
+            fileExt = tmpParamset.outputFileZipped ? "zip" : tmpParamset.outputFileType.toLowerCase();
         }
-        var url ="../api/reportService"+type.suffix+"/"+tmpParamset.id+"/download";  //формируем url адрес запроса
+        var url = "../api/reportService" + type.suffix + "/" + tmpParamset.id + "/download";  //формируем url адрес запроса
         var responseType = "arraybuffer";//указываем тип ответа от сервера
         //делаем запрос на сервер
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
@@ -1117,7 +1133,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         .then(function(response) {
            //обрабатываем полученный результат запроса
             var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
-            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length-fileName.indexOf('=')-3);//вытаскиваем непосредственно название файла.
+            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);//вытаскиваем непосредственно название файла.
             var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт        
             if (previewFlag){              
                 //если нажат предпросмотр, то
