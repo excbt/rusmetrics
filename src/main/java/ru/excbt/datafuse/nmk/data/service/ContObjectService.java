@@ -135,11 +135,15 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectDaData.setIsValid(true);
 			contObject.setIsAddressAuto(true);
 		} else {
-			contObjectDaData.setSraw(null);
-			contObjectDaData.setDataGeoLat(null);
-			contObjectDaData.setDataGeoLon(null);
-			contObjectDaData.setDataFiasId(null);
-			contObjectDaData.setIsValid(false);
+			if (contObject.getFullAddress() == null
+					|| !contObject.getFullAddress().equals(contObjectDaData.getSvalue())) {
+				contObjectDaData.setSraw(null);
+				contObjectDaData.setDataGeoLat(null);
+				contObjectDaData.setDataGeoLon(null);
+				contObjectDaData.setDataFiasId(null);
+				contObjectDaData.setIsValid(false);
+			}
+
 		}
 		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
@@ -228,11 +232,14 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
 			contObjectDaData.setIsValid(true);
 		} else {
-			contObjectDaData.setSraw(null);
-			contObjectDaData.setDataGeoLat(null);
-			contObjectDaData.setDataGeoLon(null);
-			contObjectDaData.setDataFiasId(null);
-			contObjectDaData.setIsValid(false);
+			if (contObject.getFullAddress() == null
+					|| !contObject.getFullAddress().equals(contObjectDaData.getSvalue())) {
+				contObjectDaData.setSraw(null);
+				contObjectDaData.setDataGeoLat(null);
+				contObjectDaData.setDataGeoLon(null);
+				contObjectDaData.setDataFiasId(null);
+				contObjectDaData.setIsValid(false);
+			}
 		}
 		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
 
