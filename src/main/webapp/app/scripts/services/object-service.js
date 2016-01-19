@@ -152,6 +152,17 @@ console.log("Object Service. Run.");
         var getRmaObjectsData = function () {
            return $http.get(getRmaObjectsUrl());
         };
+
+                //get object
+        var getObject = function (objId) {
+//console.log("Get data from server");
+           if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};          
+           return $http.get(crudTableName + "/" +objId);
+        };
+        var getRmaObject = function (objId) {
+           if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"}; 
+           return $http.get(getRmaObjectsUrl() + "/" +objId);
+        };
          
                  //Get data for the setting period for the city by objectId
         var getObjectConsumingData = function(settings, objId){
@@ -347,6 +358,7 @@ console.log("Object Service. Run.");
             getCmOrganizations,
             getDatasourcesUrl,
             getDeviceModels,
+            getObject,
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,
@@ -356,6 +368,7 @@ console.log("Object Service. Run.");
             getObjectsUrl,
             getPromise,
             getRmaDeviceMetaData,
+            getRmaObject,
             getRmaObjectsData,
             getRmaObjectsUrl,
             getRmaPromise,
