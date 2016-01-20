@@ -67,12 +67,22 @@ public class ContObjectDaDataService {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+
 	public ContObjectDaData processContObjectDaData(ContObjectDaData contObjectDaData) {
 		checkNotNull(contObjectDaData);
 		if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
 			parseSraw(contObjectDaData);
 		}
+		return contObjectDaData;
+	}
+
+	/**
+	 * 
+	 * @param contObjectDaData
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public ContObjectDaData saveContObjectDaData(ContObjectDaData contObjectDaData) {
 		return contObjectDaDataRepository.save(contObjectDaData);
 	}
 

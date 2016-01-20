@@ -282,6 +282,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
 
 		ContObject resultContObject = contObjectRepository.save(contObject);
+		contObjectDaDataService.saveContObjectDaData(contObjectDaData);
 		contObjectFiasRepository.save(contObjectFias);
 
 		subscrContObjectService.createOne(resultContObject, subscriber, subscrBeginDate);
