@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExLabelObject;
@@ -21,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class DeviceModel extends AbstractAuditableModel
-		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject {
+		implements ExSystemObject, ExCodeObject, ExLabelObject, DevModeObject, DeletableObjectId {
 
 	/**
 	 * 
@@ -55,6 +56,9 @@ public class DeviceModel extends AbstractAuditableModel
 
 	@Column(name = "is_dev_mode")
 	private Boolean isDevMode;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getModelName() {
 		return modelName;
@@ -130,6 +134,16 @@ public class DeviceModel extends AbstractAuditableModel
 
 	public void setIsDevMode(Boolean isDevMode) {
 		this.isDevMode = isDevMode;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

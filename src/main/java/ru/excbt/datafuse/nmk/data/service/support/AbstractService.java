@@ -32,6 +32,19 @@ public abstract class AbstractService {
 
 	/**
 	 * 
+	 * @param entities
+	 * @return
+	 */
+	protected <T extends DeletableObject> Iterable<T> softDelete(Iterable<T> entities) {
+		checkNotNull(entities);
+		entities.forEach(i -> {
+			i.setDeleted(1);
+		});
+		return entities;
+	}
+
+	/**
+	 * 
 	 * @param organizationId
 	 * @return
 	 */

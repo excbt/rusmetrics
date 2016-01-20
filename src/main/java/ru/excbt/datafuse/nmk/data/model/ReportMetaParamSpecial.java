@@ -15,11 +15,12 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 @Entity
 @Table(name = "report_meta_param_special")
 @JsonInclude(Include.NON_NULL)
-public class ReportMetaParamSpecial extends AbstractAuditableModel {
+public class ReportMetaParamSpecial extends AbstractAuditableModel implements DisabledObject {
 
 	/**
 	 * 
@@ -98,6 +99,7 @@ public class ReportMetaParamSpecial extends AbstractAuditableModel {
 		return paramSpecialDefaultValue2;
 	}
 
+	@Override
 	public Boolean getIsDisabled() {
 		return isDisabled;
 	}

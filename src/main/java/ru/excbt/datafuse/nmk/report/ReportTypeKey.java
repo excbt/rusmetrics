@@ -21,14 +21,23 @@ public enum ReportTypeKey implements KeynameObject {
 	LOG_JOURNAL_REPORT("log_journal"), //
 	PARTNER_SERVICE_REPORT("partner_service"), //
 	ABONENT_SERVICE_REPORT("abonent_service"), //
-	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"); //
+	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
+	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO);
 
 	private final String urlName;
 	private final String defaultFileName;
+	private final ReportSystem reportSystem;
 
 	private ReportTypeKey(String urlName) {
 		this.urlName = urlName;
 		this.defaultFileName = urlName;
+		this.reportSystem = ReportSystem.JASPER;
+	}
+
+	private ReportTypeKey(String urlName, ReportSystem reportSystem) {
+		this.urlName = urlName;
+		this.defaultFileName = urlName;
+		this.reportSystem = reportSystem;
 	}
 
 	public String getUrlName() {
@@ -41,8 +50,8 @@ public enum ReportTypeKey implements KeynameObject {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
-				.filter((i) -> i.urlName.equals(urlName)).findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
+				.findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
@@ -54,5 +63,9 @@ public enum ReportTypeKey implements KeynameObject {
 	@Override
 	public String getKeyname() {
 		return this.name();
+	}
+
+	public ReportSystem getReportSystem() {
+		return reportSystem;
 	}
 }

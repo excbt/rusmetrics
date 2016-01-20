@@ -25,20 +25,18 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	 * @param isBodyCompiled
 	 * @throws IOException
 	 */
-	private void testLoadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString, boolean isBodyCompiled)
-			throws IOException {
+	private void testLoadReportMasterTemplate(ReportTypeKey reportTypeKey, String fileResourceString,
+			boolean isBodyCompiled) throws IOException {
 		ReportMasterTemplateBody templateBody = reportMasterTemplateBodyService
 				.selectReportMasterTemplate(reportTypeKey);
 		if (templateBody == null) {
-			templateBody = reportMasterTemplateBodyService
-					.createOne(reportTypeKey);
+			templateBody = reportMasterTemplateBodyService.createOne(reportTypeKey);
 			assertNotNull(templateBody);
 		}
 
 		boolean res = false;
-		res = reportMasterTemplateBodyService.saveReportMasterTemplateBody(
-				templateBody.getId(), fileResourceString, isBodyCompiled);
+		res = reportMasterTemplateBodyService.saveJasperReportMasterTemplateBody(templateBody.getId(),
+				fileResourceString, isBodyCompiled);
 
 		assertTrue(res);
 	}
@@ -48,11 +46,9 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testLoadCommerce_MasterReportTemplateCompiled()
-			throws IOException {
+	public void testLoadCommerce_MasterReportTemplateCompiled() throws IOException {
 
-		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Files.COMM_FILE_COMPILED,
+		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT, ReportConstants.Files.COMM_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
@@ -63,37 +59,32 @@ public class ReportMasterTemplateServiceTest extends JpaSupportTest {
 	@Test
 	public void testLoadCommerce_MasterReportTemplateJrxml() throws IOException {
 
-		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
-				ReportConstants.Files.COMM_FILE_JRXML,
+		testLoadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT, ReportConstants.Files.COMM_FILE_JRXML,
 				ReportConstants.IS_NOT_COMPILED);
 	}
 
 	@Test
 	public void testLoadEvent_MasterReportTemplate() throws Exception {
-		testLoadReportMasterTemplate(ReportTypeKey.EVENT_REPORT,
-				ReportConstants.Files.EVENT_FILE_COMPILED,
+		testLoadReportMasterTemplate(ReportTypeKey.EVENT_REPORT, ReportConstants.Files.EVENT_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadConsT1_MasterReportTemplate() throws Exception {
-		testLoadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT,
-				ReportConstants.Files.CONS_T1_FILE_COMPILED,
+		testLoadReportMasterTemplate(ReportTypeKey.CONS_T1_REPORT, ReportConstants.Files.CONS_T1_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadConsT2_MasterReportTemplate() throws Exception {
-		testLoadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				ReportConstants.Files.CONS_T2_FILE_COMPILED,
+		testLoadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT, ReportConstants.Files.CONS_T2_FILE_COMPILED,
 				ReportConstants.IS_COMPILED);
 	}
 
 	@Test
 	public void testLoadMetrological_MasterReportTemplate() throws Exception {
 		testLoadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
-				ReportConstants.Files.METROLOGICAL_FILE_COMPILED,
-				ReportConstants.IS_COMPILED);
+				ReportConstants.Files.METROLOGICAL_FILE_COMPILED, ReportConstants.IS_COMPILED);
 	}
 
 }

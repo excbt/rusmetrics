@@ -67,6 +67,11 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 	private String geoJson;
 
 	@JsonIgnore
+	@Column(name = "geo_json_2")
+	@Type(type = "StringJsonObject")
+	private String geoJson2;
+
+	@JsonIgnore
 	@Version
 	private int version;
 
@@ -158,6 +163,34 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 
 	public void setIsGeoRefresh(Boolean isGeoRefresh) {
 		this.isGeoRefresh = isGeoRefresh;
+	}
+
+	public String getGeoJson2() {
+		return geoJson2;
+	}
+
+	public void setGeoJson2(String geoJson2) {
+		this.geoJson2 = geoJson2;
+	}
+
+	public void setFiasUUID(UUID fiasUUID) {
+		this.fiasUUID = fiasUUID;
+	}
+
+	public void setGeoJson(String geoJson) {
+		this.geoJson = geoJson;
+	}
+
+	public void setCityFiasUUID(UUID cityFiasUUID) {
+		this.cityFiasUUID = cityFiasUUID;
+	}
+
+	public void setShortAddress2(String shortAddress2) {
+		this.shortAddress2 = shortAddress2;
+	}
+
+	public void setShortAddress1(String shortAddress1) {
+		this.shortAddress1 = shortAddress1;
 	}
 
 }

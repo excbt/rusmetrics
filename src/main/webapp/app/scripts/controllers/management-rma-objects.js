@@ -71,6 +71,7 @@ console.log('Run Object management controller.');
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
+                $scope.currentSug = null;
                 
                 function findObjectById(objId){
                     var obj = null;                 
@@ -300,6 +301,13 @@ console.log('Run Object management controller.');
                 var successCallbackUpdateObject = function(e){ 
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.currentObject._activeContManagement = e._activeContManagement;
+                    var objIndex = null;
+                    objIndex = findObjectIndexInArray(e.id, $scope.objects);
+                    if (objIndex != null) {$scope.objects[objIndex] = e};
+                    objIndex = null;
+                    objIndex = findObjectIndexInArray(e.id, $scope.objectsOnPage);
+                    if (objIndex != null) {$scope.objectsOnPage[objIndex] = e};
+                    $scope.currentObject = {};
                     successCallback(e, null);
                 };
                 
@@ -346,13 +354,23 @@ console.log('Run Object management controller.');
                 };
 
                 var errorCallback = function (e) {
-                    notificationFactory.errorInfo(e.statusText,e.data.description); 
+//                    notificationFactory.errorInfo(e.statusText,e.data.description); 
                     console.log(e);
+                    var errorCode = "-1";
+                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                        errorCode = e.resultCode || e.data.resultCode;
+                    };
+                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);
                 };
 
                 $scope.addObject = function (url, obj) {                    
                     if (angular.isDefined(obj.contManagementId)&& (obj.contManagementId!=null)){
                         url+="/?cmOrganizationId="+obj.contManagementId;                       
+                    };
+                    obj._daDataSraw = null;
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        obj._daDataSraw = JSON.stringify($scope.currentSug);
                     };
                     crudGridDataFactory(url).save(obj, successPostCallback, errorCallback);
                 };
@@ -383,12 +401,16 @@ console.log('Run Object management controller.');
                                 
                 $scope.updateObject = function (url, object) {
                     var params = { id: object[$scope.extraProps.idColumnName]};
-                    if (angular.isDefined(object.contManagementId)&& (object.contManagementId!=null)){
+                    if (angular.isDefined(object.contManagementId) && (object.contManagementId != null)){
                         var cmOrganizationId = object.contManagementId;
                         params = { 
-                            id: object[$scope.extraProps.idColumnName],
+                            /*id: object[$scope.extraProps.idColumnName],*/
                             cmOrganizationId: cmOrganizationId
                         };                        
+                    };
+                    object._daDataSraw = null;
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)){
+                        object._daDataSraw = JSON.stringify($scope.currentSug);
                     };
                     crudGridDataFactory(url).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
@@ -436,22 +458,30 @@ console.log('Run Object management controller.');
               
                 $scope.selectedItem = function (item) {
 			        var curObject = angular.copy(item);
-			        $scope.currentObject = curObject;
+			        $scope.currentObject = curObject;                    
 			    };
                 
                 $scope.selectedObject = function(objId){
-                    $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
-//console.log($scope.currentObject);                    
-                    if (angular.isDefined($scope.currentObject._activeContManagement)&&($scope.currentObject._activeContManagement!=null)){
-                            $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
-                    };
+                    objectSvc.getRmaObject(objId)
+                    .then(function(resp){
+                        $scope.currentObject = resp.data;
+                    
+                    // $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
+console.log($scope.currentObject);                    
+                        if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement!=null)){
+                                $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
+                        };
+                        checkGeo();
+                    }, function(error){
+                        console.log(error);
+                    });
                 };
                 
                 $scope.selectedZpoint = function(objId, zpointId){
-                    $scope.selectedObject(objId);
+                    $scope.selectedItem(objectSvc.findObjectById(objId, $scope.objects));
 //console.log($scope.currentObject);                     
                     var curZpoint = null;
-                    if (angular.isDefined($scope.currentObject.zpoints)&&angular.isArray($scope.currentObject.zpoints)){
+                    if (angular.isDefined($scope.currentObject.zpoints) && angular.isArray($scope.currentObject.zpoints)){
                         $scope.currentObject.zpoints.some(function(element){
                             if (element.id === zpointId){
                                 curZpoint = angular.copy(element);
@@ -724,7 +754,7 @@ console.log('Run Object management controller.');
                 
                 $scope.getZpointSettings = function(objId, zpointId){
                     $scope.selectedZpoint(objId, zpointId);          
-//console.log($scope.currentZpoint); 
+console.log($scope.currentZpoint); 
                     var object = angular.copy($scope.currentZpoint);
                     var zps = {};
                     zps.id = object.id;
@@ -876,10 +906,9 @@ console.log('Run Object management controller.');
                         $scope.objectsOnPage = tempArr;
                     }else{
 //                        $scope.objectsOnPage = $scope.objects;
-                        var tempArr = [];
-                        
-                        $scope.objects.forEach(function(elem){
-                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
+                        var tempArr = [];                        
+                        $scope.objects.forEach(function(elem){                
+                            if (angular.isDefined(elem.fullName) && elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
                                 tempArr.push(elem);
                             };
                         });
@@ -1057,9 +1086,9 @@ console.log('Run Object management controller.');
 //                                $('#contObjectDevicesModal').modal();
 //                            };
                         },
-                        function(error){
+                        errorCallback/*function(error){
                             notificationFactory.errorInfo(error.statusText,error.description);
-                        }
+                        }*/
                     );
                 };
                 
@@ -1082,6 +1111,7 @@ console.log('Run Object management controller.');
                 $scope.addObjectInit = function(){
 //console.log("addObjectInit");                    
                     $scope.currentObject = {};
+                    checkGeo();
                     $('#showObjOptionModal').modal();
                 };
                 
@@ -1094,10 +1124,10 @@ console.log('Run Object management controller.');
                             $scope.data.deviceModels = response.data;
             //console.log($scope.data.deviceModels);                
                         },
-                        function(error){
+                        errorCallback/*function(error){
                             console.log(error);
                             notificationFactory.errorInfo(error.statusText,error.description);
-                        }
+                        }*/
                     );
                 };
                 $scope.getDeviceModels();
@@ -1111,10 +1141,10 @@ console.log('Run Object management controller.');
                         $scope.data.dataSources = tmp;
             //console.log(tmp);            
                     },
-                          function(e){
+                          errorCallback/*function(e){
                         console.log(e);
                         notificationFactory.errorInfo(e.statusText,e.description);
-                    });
+                    }*/);
                 };
                 getDatasources(objectSvc.getDatasourcesUrl());
                 
@@ -1414,10 +1444,57 @@ console.log('Run Object management controller.');
                     };
                     return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
                 };
+
+                var checkGeo = function(){
+                   $scope.currentObject.geoState = "red";
+                   $scope.currentObject.geoStateText = "Не отображается на карте";
+// console.log($scope.currentObject.isValidGeoPos);
+// console.log($scope.currentSug);
+// console.log($scope.currentSug.data.geo_lat);
+// console.log($scope.currentSug.data.geo_lon);                
+                   if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null){
+                        $scope.currentObject.geoState = "green";
+                        $scope.currentObject.geoStateText = "Отображается на карте";
+                    }; 
+                };
                 
                 $(document).ready(function(){
                     $('#inputTSNumber').inputmask();
                     $('#inputEXCode').inputmask();
+                    $("#inputAddress").suggestions({
+                        serviceUrl: "https://dadata.ru/api/v2",
+                        token: "f9879c8518e9c9e794ff06a6e81eebff263f97d5",
+                        type: "ADDRESS",
+                        count: 10,
+                        /* Вызывается, когда пользователь выбирает одну из подсказок */
+                        onSelect: function(suggestion) {
+                            console.log(suggestion);
+                            $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.currentSug = suggestion;
+                            $scope.currentObject.isAddressAuto = true;
+                            checkGeo();
+                            $scope.$apply();
+                        },
+                         /* Вызывается, когда получен ответ от сервера */
+                        onSearchComplete: function(query, suggestions) {
+                            // $scope.currentSug = null;
+                            // if (angular.isArray(suggestions) && (suggestions.length > 0)){                               
+                            //     $scope.currentSug = suggestions[0];
+                            // };
+                            // $scope.$apply();
+                        }
+                    });
+                    $("#inputAddress").change(function(){
+                        $scope.currentSug = null;
+                        $scope.currentObject.isAddressAuto = false;
+                        $scope.currentObject.isValidGeoPos = false;
+                        checkGeo();
+                        $scope.$apply();
+                        // if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
+                        //     $scope.currentObject.fullAddress = $scope.currentSug.value;
+                        //     $scope.$apply();        
+                        // };
+                    });
                 });
 //            }]
 }]);

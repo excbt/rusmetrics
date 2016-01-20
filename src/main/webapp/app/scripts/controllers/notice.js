@@ -752,6 +752,17 @@ console.log("performObjectsFilter");
             };
         });       
     };
+    
+    var errorCallback = function (e) {
+        console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);       
+    };
     //set revision of selected notices
     $scope.revisionNotices = function(flagIsNew){
         var noticesIds = [];
@@ -772,9 +783,9 @@ console.log("performObjectsFilter");
             $scope.getResultsPage(1);
             notificationFactory.success();
         })
-        .catch(function(e){
+        .catch(errorCallback/*function(e){
             notificationFactory.errorInfo(e.statusText,e);
-        });
+        }*/);
     };
     //set revision of all notices 
     $scope.revisionAllNotices = function(flagIsNew){
@@ -801,9 +812,9 @@ console.log("performObjectsFilter");
             $scope.getResultsPage(1);
             notificationFactory.success();
         })
-        .catch(function(e){
+        .catch(errorCallback/*function(e){
             notificationFactory.errorInfo(e.statusText,e);
-        });
+        }*/);
     };
     
     //mark the notices on the current page as revision

@@ -6,6 +6,7 @@ console.log('Run devices management controller.');
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
     $scope.ctrlSettings.loading = true;
+    $scope.ctrlSettings.userDateFormat = "DD.MM.YYYY";
     //data
     $scope.data = {};
     $scope.data.dataSources = [];
@@ -43,6 +44,9 @@ console.log('Run devices management controller.');
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
                         elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
                         elem.dataSourceTable24h = elem.activeDataSource.dataSourceTable24h;
+                    };
+                    if (!mainSvc.checkUndefinedNull(elem.verificationDate)){
+                        elem.verificationDateString = mainSvc.dateFormating(elem.verificationDate, $scope.ctrlSettings.userDateFormat);
                     };
                 });
                 sortDevicesByConObjectFullName(tmp);
@@ -149,8 +153,14 @@ console.log('Run devices management controller.');
     };
     
     var errorCallback = function(e){
-        notificationFactory.errorInfo(e.statusText,e);       
+//        notificationFactory.errorInfo(e.statusText,e);       
         console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     $scope.saveDevice = function(device){ 
@@ -167,6 +177,9 @@ console.log('Run devices management controller.');
         if (checkDsourceFlag === false){
             return;
         };
+        if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
+            device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
+        }
 //console.log(device);        
         //send to server
         objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
@@ -247,17 +260,17 @@ console.log('Run devices management controller.');
     $scope.deleteObject = function(device){
 //console.log(device);        
         var targetUrl = objectSvc.getRmaObjectsUrl();
-        targetUrl = targetUrl+"/"+device.contObjectInfo.contObjectId+"/deviceObjects/"+device.id;
-        $http.delete(targetUrl).then(successCallback,errorCallback);
+        targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
+        $http.delete(targetUrl).then(successCallback, errorCallback);
     };
     
     // device metadata
         //check device: data source vzlet or not?
     $scope.vzletDevice = function(device){
         var result = false;
-        if(angular.isDefined(device.activeDataSource)&&(device.activeDataSource != null)){
-            if(angular.isDefined(device.activeDataSource.subscrDataSource)&&(device.activeDataSource.subscrDataSource!=null)){
-                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey=="VZLET"){
+        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
+            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
+                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "VZLET"){
                     result = true;
                 };
             };
@@ -267,16 +280,20 @@ console.log('Run devices management controller.');
     
     //get device meta data and show it
     $scope.getDeviceMetaData = function(device){
-        
+        if (mainSvc.checkUndefinedNull(device)){
+            var errorMsg = "getDeviceMetaData: Device undefined or null.";
+            console.log(errorMsg);
+            return errorMsg;
+        };
         objectSvc.getRmaDeviceMetaData(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
                 $scope.currentDevice =  device;                           
                 $('#metaDataEditorModal').modal();
             },
-            function(error){
+            errorCallback/*function(error){
                 notificationFactory.errorInfo(error.statusText,error.description);
-            }
+            }*/
         );
     };
 
@@ -302,10 +319,10 @@ console.log('Run devices management controller.');
                 $scope.currentDevice =  {};
                 $('#metaDataEditorModal').modal('hide');
             },
-            function(error){
+            errorCallback/*function(error){
                 console.log(error);                            
                 notificationFactory.errorInfo(error.statusText,error.description);
-            }
+            }*/
         );
     };
     
@@ -318,9 +335,9 @@ console.log('Run devices management controller.');
                 function(response){
                     $scope.data.vzletSystemList = response.data;                           
                 },
-                function(e){
+                errorCallback/*function(e){
                     notificationFactory.errorInfo(e.statusText,e.description);
-                }
+                }*/
             );
         }else{
             $scope.data.vzletSystemList =tmpSystemList;
@@ -328,5 +345,25 @@ console.log('Run devices management controller.');
 //console.log($scope.data.vzletSystemList);        
     };
     $scope.getVzletSystemList();
+                    //date picker
+    $scope.dateOptsParamsetRu ={
+        locale : {
+            daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
+            firstDay : 1,
+            monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
+                    'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь',
+                    'Октябрь', 'Ноябрь', 'Декабрь' ]
+        },
+        singleDatePicker: true
+    };
     
+    $(document).ready(function(){
+        $('#inputVerificationInterval').inputmask();
+        $('#inputVerificationDate').datepicker({
+          dateFormat: "dd.mm.yy",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });
+    });
 }]);

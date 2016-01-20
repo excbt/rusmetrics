@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -126,12 +127,13 @@ public class SubscrContObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		ApiAction action = new AbstractEntityApiAction<ContObject>(contObject) {
-			@Override
-			public void process() {
-				setResultEntity(contObjectService.updateOne(entity, cmOrganizationId));
+		ApiAction action = new EntityApiActionAdapter<ContObject>(contObject) {
 
+			@Override
+			public ContObject processAndReturnResult() {
+				return contObjectService.updateOne(entity, cmOrganizationId);
 			}
+
 		};
 
 		return WebApiHelper.processResponceApiActionUpdate(action);

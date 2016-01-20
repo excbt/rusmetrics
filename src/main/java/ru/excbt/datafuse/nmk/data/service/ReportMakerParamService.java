@@ -374,6 +374,10 @@ public class ReportMakerParamService {
 
 			ReportMetaParamSpecial metaParamSpecial = metaParamMap.get(paramV.getReportMetaParamSpecialId());
 
+			if (metaParamSpecial == null) {
+				continue;
+			}
+
 			checkNotNull(metaParamSpecial,
 					"MetaParamSpecial with id:" + paramV.getReportMetaParamSpecialId() + " is not found");
 

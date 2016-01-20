@@ -18,6 +18,7 @@
         <li role="presentation" class="active"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
 
     </ul>
 
@@ -118,7 +119,9 @@
     						<div class="col-md-6">
     							<form>
 	    							<label for="inp_cnt_name">Имя:</label>
-    								<input ng-disabled="isROfield()" id="inp_cnt_name" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userName"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': (!currentItem.userName || currentItem.userName == '')}">
+    								    <input ng-disabled="isROfield()" id="inp_cnt_name" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userName"/>
+                                    </div>
     								<br>
     								<label for="inp_cnt_tel">Телефон:</label>
     								<input ng-disabled="isROfield()" id="inp_cnt_tel" type="text" class="form-control nmc-text-input-form" ng-model="currentItem.userPhone"/>

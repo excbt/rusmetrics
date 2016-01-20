@@ -105,8 +105,14 @@ angular.module('portalNMC')
     };
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
+//        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
         console.log(e.data);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     var getModePrices = function(subscrId){
@@ -120,10 +126,10 @@ angular.module('portalNMC')
             $scope.data.prices = response.data;
 //console.log($scope.data.prices);            
         },
-              function(e){
+              errorCallback/*function(e){
             notificationFactory.errorInfo(e.status, e.data);
             console.log(e);
-        });
+        }*/);
     };
     
     $scope.cloneInit = function(pl){

@@ -1,0 +1,115 @@
+{
+
+                               "value": "Калужская обл, Малоярославецкий р-н, деревня Скрипорово, ул Ветровая, влд 1",
+
+                               "unrestricted_value": "Калужская обл, Малоярославецкий р-н, деревня Скрипорово, ул Ветровая, влд 1",
+
+                               "data": {
+
+                                               "qc_complete": null,
+
+                                               "qc_house": null,
+
+                                               "qc_geo": "3",
+
+                                               "postal_code": "249093",
+
+                                               "postal_box": null,
+
+                                               "country": "Россия",
+
+                                               "region_with_type": "Калужская обл",
+
+                                               "region_type": "обл",
+
+                                               "region_type_full": "область",
+
+                                               "region": "Калужская",
+
+                                               "area_with_type": "Малоярославецкий р-н",
+
+                                               "area_type": "р-н",
+
+                                               "area_type_full": "район",
+
+                                               "area": "Малоярославецкий",
+
+                                               "city_with_type": null,
+
+                                               "city_type": null,
+
+                                               "city_type_full": null,
+
+                                               "city": null,
+
+                                               "city_district": null,
+
+                                               "settlement_with_type": "деревня Скрипорово",
+
+                                               "settlement_type": "д",
+
+                                               "settlement_type_full": "деревня",
+
+                                               "settlement": "Скрипорово",
+
+                                               "street_with_type": "ул Ветровая",
+
+                                               "street_type": "ул",
+
+                                               "street_type_full": "улица",
+
+                                               "street": "Ветровая",
+
+                                               "house_type": "влд",
+
+                                               "house_type_full": "владение",
+
+                                               "house": "1",
+
+                                               "block_type": null,
+
+                                               "block_type_full": null,
+
+                                               "block": null,
+
+                                               "flat_area": null,
+
+                                               "square_meter_price": null,
+
+                                               "flat_price": null,
+
+                                               "flat_type": null,
+
+                                               "flat_type_full": null,
+
+                                               "flat": null,
+
+                                               "fias_id": "7eb7b141-2996-46b0-8b9d-0ee5a2ceac31",
+
+                                               "fias_level": "8",
+
+                                               "kladr_id": "4001500018800080001",
+
+                                               "tax_office": "4011",
+
+                                               "tax_office_legal": null,
+
+                                               "capital_marker": "0",
+
+                                               "okato": "29223832009",
+
+                                               "oktmo": "29623432136",
+
+                                               "timezone": null,
+
+                                               "geo_lat": "55.0484369",
+
+                                               "geo_lon": "36.4877106",
+
+                                               "unparsed_parts": null,
+
+                                               "qc": null
+
+                               }
+
+                }

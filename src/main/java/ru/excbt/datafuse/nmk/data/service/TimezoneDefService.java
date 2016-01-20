@@ -66,6 +66,9 @@ public class TimezoneDefService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public TimezoneDef findOne(String keyname) {
+		if (keyname == null) {
+			return null;
+		}
 		return timezoneDefRepository.findOne(keyname);
 	}
 
