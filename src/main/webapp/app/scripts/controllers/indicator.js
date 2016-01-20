@@ -755,6 +755,10 @@ angular.module('portalNMC')
                 };
 //return true;
             });
+            
+            //Если есть боковая полоса прокрутки, то нужно увеличить область таблицы на 15px;
+            var tableEl = document.getElementsByClassName("container-fluid nmc-indicator-table-without-fixed-header");
+console.log(tableEl);            
         };
         
                 //when document ready - set styles for score table.
