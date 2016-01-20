@@ -17,12 +17,19 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.repository.AuditUserRepository;
 
+/**
+ * Сервис для работы с аудитом пользователей
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.03.2015
+ *
+ */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class AuditUserService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AuditUserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuditUserService.class);
 
 	@Autowired
 	private AuditUserRepository auditUserRepository;
@@ -37,15 +44,12 @@ public class AuditUserService {
 	 */
 	public AuditUser findByUserName22(String userName) {
 
-		List<AuditUser> auditUsers = auditUserRepository
-				.findByUserName(userName);
+		List<AuditUser> auditUsers = auditUserRepository.findByUserName(userName);
 
 		if (auditUsers.size() == 1) {
 			return auditUsers.get(0);
 		} else if (auditUsers.size() > 0) {
-			logger.error(
-					"There is more than 1 AuditUser in system (user_name={})",
-					userName);
+			logger.error("There is more than 1 AuditUser in system (user_name={})", userName);
 		}
 		return null;
 	}
@@ -57,21 +61,16 @@ public class AuditUserService {
 	 */
 	public AuditUser findByUserName(String userName) {
 
-		Query query = em.createQuery(
-				"from AuditUser s where s.userName = :arg1", AuditUser.class);
+		Query query = em.createQuery("from AuditUser s where s.userName = :arg1", AuditUser.class);
 		query.setParameter("arg1", userName);
 		List<?> auditUsers = query.getResultList();
 
 		if (auditUsers.size() > 1) {
-			logger.error(
-					"There is more than 1 AuditUser in system (user_name={})",
-					userName);
-			throw new PersistenceException(String.format(
-					"Audit UserName %s is not UNIQE", userName));
+			logger.error("There is more than 1 AuditUser in system (user_name={})", userName);
+			throw new PersistenceException(String.format("Audit UserName %s is not UNIQE", userName));
 		} else if (auditUsers.size() == 0) {
 			logger.error("Audit UserName (user_name={}) is not FOUND", userName);
-			throw new PersistenceException(String.format(
-					"Audit UserName %s is not FOUND", userName));
+			throw new PersistenceException(String.format("Audit UserName %s is not FOUND", userName));
 		}
 
 		AuditUser result = (AuditUser) auditUsers.get(0);

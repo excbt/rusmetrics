@@ -15,6 +15,15 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
+/**
+ * Сервис для работы с типами событий ContEventType
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 30.06.2015
+ *
+ */
+
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventTypeService {
@@ -36,11 +45,9 @@ public class ContEventTypeService {
 	 * @return
 	 */
 	public List<ContEventType> selectBaseContEventTypes() {
-		List<ContEventType> result = contEventTypeRepository
-				.selectBaseEventTypes(Boolean.TRUE);
+		List<ContEventType> result = contEventTypeRepository.selectBaseEventTypes(Boolean.TRUE);
 
-		return ObjectFilters.devModeFilter(result.stream()).collect(
-				Collectors.toList());
+		return ObjectFilters.devModeFilter(result.stream()).collect(Collectors.toList());
 	}
 
 	/**
@@ -50,8 +57,7 @@ public class ContEventTypeService {
 	 */
 	public List<Long> selectContEventTypesPaired(List<Long> contEventTypeIds) {
 		checkNotNull(contEventTypeIds);
-		List<ContEventType> eventTypes = contEventTypeRepository
-				.selectContEventTypes(contEventTypeIds);
+		List<ContEventType> eventTypes = contEventTypeRepository.selectContEventTypes(contEventTypeIds);
 		List<Long> result = new ArrayList<>();
 		for (ContEventType item : eventTypes) {
 			result.add(item.getId());

@@ -18,6 +18,15 @@ import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
+/**
+ * Сервис для работы с событиями ContEvent у ContObject
+ * 
+ * @author A.Kovtonyuk 
+ * @version 1.0
+ * @since 01.04.2015
+ *
+ */
+
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventService {
