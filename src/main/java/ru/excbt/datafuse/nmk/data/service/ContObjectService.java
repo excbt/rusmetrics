@@ -146,6 +146,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 		}
 		contObjectDaData = contObjectDaDataService.processContObjectDaData(contObjectDaData);
+		contObjectDaData = contObjectDaDataService.saveContObjectDaData(contObjectDaData);
 		contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
 
 		// Process ContObjectFias
