@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -217,6 +218,18 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 
 	public void setDeviceTemp(BigDecimal deviceTemp) {
 		this.deviceTemp = deviceTemp;
+	}
+
+	public BigDecimal getI1_c() {
+		return this.i1 == null ? null : this.i1.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
+	}
+
+	public BigDecimal getI2_c() {
+		return this.i2 == null ? null : this.i2.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
+	}
+
+	public BigDecimal getI3_c() {
+		return this.i3 == null ? null : this.i3.divide(BigDecimal.valueOf(1000)).setScale(6, RoundingMode.CEILING);
 	}
 
 }
