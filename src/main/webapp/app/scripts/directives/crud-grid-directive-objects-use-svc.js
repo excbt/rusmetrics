@@ -21,7 +21,26 @@ angular.module('portalNMC')
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
                 
 console.log("Objects directive.");
-//var timeDirStart = (new Date()).getTime();           
+//var timeDirStart = (new Date()).getTime();
+                
+//                var elem = document.getElementById("divWithObjectListTable");//$("#divWithObjectListTable");
+//                elem.scrollTop = elem.scrollHeight;
+//                elem.focus();
+//console.log(elem);                
+//                for(var i in elem){
+//                    if( i.substr( 0, 2 ) == "on" )
+//                        elem[i] = function(event){
+//                            if (event.type.indexOf("mouse") == -1)
+//                                console.log(event);
+//                        };
+//                        console.log(i+", ");
+//	                   document.write( i+"<br>" );
+//
+//                };
+//                
+//                elem.onfocus = function(){
+//console.log("divWithObjectListTable focused");                    
+//                };
                 
                     //messages for user
                 $scope.messages = {};
@@ -960,28 +979,47 @@ console.log("Objects directive.");
                 
                 
                 //keydown listener for ctrl+end
-                window.onkeydown = function(e){   
-console.log("chet nazato");                    
-                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)){
-console.log("najat ctrl+end");                        
-                        $scope.loading =  true;    
-                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
+                window.onkeydown = function(e){
+console.log(e);                    
+                    if (e.keyCode == 34){
+                        $scope.addMoreObjects();
+                        $scope.$apply();
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;
+                        return;
+                    };
+                    if (e.keyCode == 33){
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop - $scope.objectCtrlSettings.objectsPerScroll*10;
+                        return;
+                    };
+                    if (e.ctrlKey && e.keyCode == 36){
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = 0;
+                        return;
+                    };
+                    if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){    
+//                        $scope.loading = true;    
+                        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
-                        $scope.objectCtrlSettings.isCtrlEnd = true;                        
+//                        $scope.objectCtrlSettings.isCtrlEnd = true;
+                        $scope.$apply();
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollHeight;
                     };
                 };
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
-                $scope.onTableLoad = function(){ 
-console.log("Run onTableLoad");                    
-                    if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
-                        var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
-                        window.scrollTo(0, Math.round(pageHeight));
-                        $scope.objectCtrlSettings.isCtrlEnd = false;
-                        $scope.loading =  false;
-                    };
-                };
+//                $scope.onTableLoad = function(){ 
+//console.log("Run onTableLoad");                    
+//                    if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
+//                        var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
+//                        window.scrollTo(0, Math.round(pageHeight));
+//                        $scope.objectCtrlSettings.isCtrlEnd = false;
+//                        $scope.loading =  false;
+//                    };
+//                };
                 
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){                 
@@ -995,7 +1033,7 @@ console.log("Run onTableLoad");
                         endIndex = $scope.objects.length;
                     };
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
+                    var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
