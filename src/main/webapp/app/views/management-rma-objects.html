@@ -153,7 +153,7 @@
                         <td ng-click="toggleShowGroupDetails(object.id)">
 <!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
                             <span ng-show="!object._haveSubscr">
-                                <i title="Объект не прикреплен ни к одному абоненту" class="glyphicon nmc-lock"></i>
+                                <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
                             </span>
                             {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
                         </td>
@@ -170,9 +170,11 @@
                 </table>
              </td>        
          </tr>
+<!--
         <tr class="nmc-hide">
             <td>{{onTableLoad()}}</td>
         </tr>
+-->
         </tbody>
     </table>
 <!--        </div>-->

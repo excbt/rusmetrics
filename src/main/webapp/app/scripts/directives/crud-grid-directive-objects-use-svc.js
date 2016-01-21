@@ -980,7 +980,7 @@ console.log("Objects directive.");
                 
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
-console.log(e);                    
+//console.log(e);                    
                     if (e.keyCode == 34){
                         $scope.addMoreObjects();
                         $scope.$apply();
