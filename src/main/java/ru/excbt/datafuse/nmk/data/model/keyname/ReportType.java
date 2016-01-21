@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
+import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
@@ -57,13 +58,16 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	private ReportMetaParamCommon reportMetaParamCommon;
 
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
-	private Collection<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
+	private List<ReportMetaParamSpecial> reportMetaParamSpecialList = new ArrayList<ReportMetaParamSpecial>();
 
 	@Column(name = "report_type_order")
 	private Integer reportTypeOrder;
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
+
+	@Column(name = "report_system")
+	private String reportSystem;
 
 	public String getCaption() {
 		return caption;
@@ -106,8 +110,8 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 		return reportMetaParamCommon;
 	}
 
-	public Collection<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
-		return reportMetaParamSpecialList;
+	public List<ReportMetaParamSpecial> getReportMetaParamSpecialList() {
+		return ObjectFilters.disabledFilter(reportMetaParamSpecialList);
 	}
 
 	public Integer getReportTypeOrder() {
@@ -117,6 +121,10 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Override
 	public Boolean getIsDisabled() {
 		return isDisabled;
+	}
+
+	public String getReportSystem() {
+		return reportSystem;
 	}
 
 }

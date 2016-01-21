@@ -33,8 +33,14 @@ app.controller(
 			 ****************************/
                 //Обработка error-ответа от сервера
             errorCallback = function(e){
-                console.log(e.data);
-				notificationFactory.errorInfo(e.statusText,e.description || e.data);
+                console.log(e);
+                var errorCode = "-1";
+                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                    errorCode = e.resultCode || e.data.resultCode;
+                };
+                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//				notificationFactory.errorInfo(e.statusText,e.description || e.data);
             };
 			// Получение списка рассылок
 			$scope.getReportShedules = function(){

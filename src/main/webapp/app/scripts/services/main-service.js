@@ -328,6 +328,84 @@ console.log($rootScope.userInfo);
     };
     //************************** end generation
     
+    
+    //***************** Server errors *************
+//  ERR_UNCKNOWN(false, "Unknown Error"),
+//	ERR_ACCESS_DENIED(false, "Access Denied"),
+//	ERR_UNPROCESSABLE_TRANSACTION(false, "Unprocessable Transaction"),
+//	ERR_DATABASE_ERROR(false, "Database Error"),
+//	ERR_BRM_VALIDATION(false, "Buisiness Rule Validation Error"),
+//	ERR_VALIDATION(false, "Data Validation Error"),
+//	ERR_INTERNAL(false, "Internal server error"),
+//	ERR_INVALID_STATE(false, "Invalid State Error"),
+//	ERR_USER_ALREADY_EXISTS(false, "User Already Exists");
+    var DEFAULT_ERROR_MESSAGE = {
+        "resultCode": "ERR_DEFAULT",
+        "caption": "Непредвиденная ситуация",
+        "description": "Обратитесь к администратору системы."
+    };
+    var serverErrors = [
+        {
+            "resultCode": "ERR_UNCKNOWN",
+            "caption": "Неизвестная ошибка",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_ACCESS_DENIED",
+            "caption": "Отказано в доступе",
+            "description": "У вас нет прав доступа. Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_UNPROCESSABLE_TRANSACTION",
+            "caption": "Невозможно выполнить транзакцию",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_DATABASE_ERROR",
+            "caption": "Ошибка базы данных",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_BRM_VALIDATION",
+            "caption": "Ошибка валидации бизнес-правил",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_VALIDATION",
+            "caption": "Ошибка валидации",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_INTERNAL",
+            "caption": "Внутренняя ошибка сервера",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_INVALID_STATE",
+            "caption": "Ошибка состояния",
+            "description": "Обратитесь к администратору системы."
+        },
+        {
+            "resultCode": "ERR_USER_ALREADY_EXISTS",
+            "caption": "Пользователь уже существует",
+            "description": "Пользователь с таким логином уже существует. Проверьте правильность набора."
+        }
+    ];
+    
+    var getServerErrorByResultCode = function(resultCode){        
+        var result = DEFAULT_ERROR_MESSAGE;
+        if (checkUndefinedEmptyNullValue(resultCode)){return result};
+        serverErrors.some(function(serror){
+            if (serror.resultCode == resultCode) {
+                result = serror; 
+                return true;
+            };
+        });
+        return result;
+    };
+    
+    //****************** end region "Server errors"
+    
     return {
         checkContext,
         checkNumericValue,
@@ -343,6 +421,7 @@ console.log($rootScope.userInfo);
         getMonitorMapSettings,
         getObjectMapSettings,
         getDateRangeOptions,
+        getServerErrorByResultCode,
         getUserServicesPermissions,
         isAdmin,
         isRma,

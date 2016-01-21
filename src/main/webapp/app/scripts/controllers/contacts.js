@@ -1,7 +1,7 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'ContactsCtrl',
-		function($scope, $http, mainSvc){			
+		function($scope, $http, mainSvc, notificationFactory){			
 			/*************************
 			 * Определяем переменные *
 			 *************************/
@@ -22,6 +22,16 @@ app.controller(
 			/****************************
 			 * Функции для работы с API *
 			 ****************************/
+            var errorCallback = function (e) {
+                console.log(e);
+                var errorCode = "-1";
+                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                    errorCode = e.resultCode || e.data.resultCode;
+                };
+                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+        //        notificationFactory.errorInfo(e.statusText,e.data.description);       
+            };
 			
 			// Получение контактов с сервера
 			$scope.getContacts = function (){
@@ -51,6 +61,10 @@ app.controller(
 			
 			// Добавление контакта на сервер
 			$scope.addContact = function (){
+                if (!$scope.currentItem.userName || $scope.currentItem.userName == ''){
+                    notificationFactory.errorInfo("Ошибка", "Не задано имя контакта. Заполните поле 'Имя'.");
+                    return "Add / edit contact: no name";
+                };
 				// Собираем отмеченные чекбоксы в списке групп
 				var table_list = document.getElementById("table_lists_in_window");
 				$scope.cnt_lst = [];
@@ -68,12 +82,7 @@ app.controller(
 						$scope.getContacts();
 						$('#edit_contact').modal('hide');
 					})
-					.error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not added to server!');
-					});
+					.error(errorCallback);
 				}
 				// Если не существует - делаем post
 				else {
@@ -83,12 +92,7 @@ app.controller(
 						$scope.getContacts();
 						$('#edit_contact').modal('hide');
 					})
-					.error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not added to server!');
-					});
+					.error(errorCallback);
 				}
 			}
 			
@@ -110,12 +114,7 @@ app.controller(
 						$scope.getLists();
 						$('#edit_list').modal('hide');
 					})
-					.error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not added to server!');
-					});
+					.error(errorCallback);
 				}
 				// Если не существует - делаем post
 				else {
@@ -125,12 +124,7 @@ app.controller(
 						$scope.getLists();
 						$('#edit_list').modal('hide');
 					})
-					.error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not added to server!');
-					});
+					.error(errorCallback);
 				}
 			}
 
@@ -145,12 +139,7 @@ app.controller(
                         $('#div_delete_contact').modal('hide');
 						$scope.getContacts();
 					}).
-					error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not deleted!');
-					});
+					error(errorCallback);
 			}
 			
 			// Удаление списка контактов
@@ -164,12 +153,7 @@ app.controller(
                         $('#div_delete_contact_list').modal('hide');
 						$scope.getLists();
 					})
-					.error(function(){
-						/*
-						 * Переделать на красный стикер в правом верхнем углу!
-						 */
-						alert('Not deleted!');
-					});
+					.error(errorCallback);
 			}
 			
 			// Получение списка связей контакт-группа
@@ -213,12 +197,7 @@ app.controller(
 								}
 							}
 						})
-						.error(function(){
-							/*
-							 * Переделать на красный стикер в правом верхнем углу!
-							 */
-							alert('Error in loading data!');
-						});
+						.error(errorCallback);
 				}
 				else {
 					if(type == 'contact'){

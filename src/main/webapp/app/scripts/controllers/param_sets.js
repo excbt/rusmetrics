@@ -118,7 +118,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//        notificationFactory.errorInfo(e.statusText,e.data.description);
     };
     
     $scope.deleteObject = function (object) {
@@ -603,8 +609,8 @@ console.log($scope.psEndDateFormatted);
     $scope.getAvailableObjects = function(paramsetId){      
         var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
-            $scope.availableObjects = data;
-            objectSvc.sortObjectsByFullName($scope.availableObjects); 
+            $scope.availableObjects = angular.copy(data);
+//            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects); 
         });        
     };
 //    $scope.getAvailableObjects();
@@ -641,8 +647,8 @@ console.log($scope.psEndDateFormatted);
     $scope.getAvailableObjectGroups();
     
     $scope.viewAvailableObjects = function(objectGroupFlag){
-        $scope.showAvailableObjects_flag=!$scope.showAvailableObjects_flag;
-        $scope.showAvailableObjectGroups_flag=objectGroupFlag;
+        $scope.showAvailableObjects_flag = !$scope.showAvailableObjects_flag;
+        $scope.showAvailableObjectGroups_flag = objectGroupFlag;
         if (objectGroupFlag){
             $scope.headers.addObjects = "Доступные группы объектов";
             //prepare the object goups to view in table
@@ -654,6 +660,7 @@ console.log($scope.psEndDateFormatted);
             $scope.availableEntities = $scope.availableObjectGroups;//tmpArr;
         }else{
             $scope.headers.addObjects = "Доступные объекты";
+            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);
             $scope.availableEntities = $scope.availableObjects;
         };
     };
@@ -754,7 +761,14 @@ console.log($scope.psEndDateFormatted);
     $scope.removeSelectedObject = function(object){
         $scope.availableObjects.push(object);
         $scope.selectedObjects.splice($scope.selectedObjects.indexOf(object), 1);
-        objectSvc.sortObjectsByFullName($scope.availableObjects);
+        $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);
+//console.log($scope.showAvailableObjectGroups_flag);        
+//        if ($scope.showAvailableObjectGroups_flag) {
+//            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects);            
+//        }else{
+//            $scope.availableEntities = angular.copy($scope.availableObjects);
+//            $scope.availableEntities = objectSvc.sortObjectsByFullNameEx($scope.availableEntities);
+//        };
     };
     
     $scope.selectAllAvailableEntities = function(){      
@@ -803,7 +817,7 @@ console.log($scope.psEndDateFormatted);
             };
         }
         $scope.availableObjects = tmpArray;
-        $scope.showAvailableObjects_flag=false;
+        $scope.showAvailableObjects_flag = false;
         objectSvc.sortObjectsByFullName($scope.selectedObjects);
     };
     

@@ -15,6 +15,14 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 
+/**
+ * Шаблон класса доступа к данным
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 17.12.2015
+ *
+ */
 public abstract class AbstractContServiceDataService {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractContServiceDataService.class);

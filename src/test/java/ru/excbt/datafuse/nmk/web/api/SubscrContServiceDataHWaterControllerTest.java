@@ -262,36 +262,4 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void testKupavna() throws Exception {
-		_testJsonGet(apiSubscrUrl(
-				"/20118666/service/1h/20118715/paged?beginDate=2015-09-22&endDate=2015-10-21&page=0&size=50"));
-	}
-	
-	/**
-	 * @author Artamonov
-	 * @throws Exception
-	 */
-	@Test
-	public void testKupavnaSummary() throws Exception {
-		_testJsonGet(apiSubscrUrl(
-				"/20118666/service/24h/20118715/summary?beginDate=2015-09-22&endDate=2015-10-21"));
-	}
-	
-	/**
-	 * @author Artamonov
-	 * @throws Exception
-	 */
-	@Test
-	public void testDemoKlin() throws Exception {
-		//Klin, Children hospital
-		//hw
-		_testJsonGet(apiSubscrUrl(
-				"/71840102/service/24h/71843425/summary?beginDate=2015-11-24&endDate=2015-11-26"));
-	}
-
 }

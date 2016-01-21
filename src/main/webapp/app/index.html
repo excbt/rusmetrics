@@ -12,7 +12,11 @@
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
-      
+    
+    <!-- dadata service: address help for user -->
+    <link href="https://dadata.ru/static/css/lib/suggestions-15.12.css" type="text/css" rel="stylesheet" />
+
+
     <link rel="icon" type="image/png" href="fv_1.png" />  
     <link rel="stylesheet" href="/public/bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
     <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" />
@@ -289,6 +293,12 @@
 <!--      <script src="/public/vendor_components/PickMeUp-master/js/jquery.pickmeup.min.js"></script>-->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
+
+      <!-- dadata service: address input help for user-->
+      <!--[if lt IE 10]>
+        <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js"></script>
+      <![endif]-->
+      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>
      
  		        
         <script src="scripts/app.js"></script>
@@ -323,6 +333,7 @@
       <script src="scripts/controllers/indicator-electricity-consumtion.js"></script>
       <script src="scripts/controllers/indicator-electricity-energy.js"></script>
       <script src="scripts/controllers/indicator-electricity-specifications.js"></script>
+      <script src="scripts/controllers/settings-notices.js"></script>
 <!--      <script src="scripts/controllers/test.js"></script>-->
       
       <!-- Directives -->
