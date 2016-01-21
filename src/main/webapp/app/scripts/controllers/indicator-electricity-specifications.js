@@ -39,19 +39,19 @@ console.log("Run ElectricitySpecCtrl.");
             header : "Ia, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
-            fieldName: "i1"
+            fieldName: "i1_c"
         },
         {
             header : "Ib, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
-            fieldName: "i2"
+            fieldName: "i2_c"
         },
         {
             header : "Ic, A",
             headerClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-view-digital-data nmc-text-align-right",
-            fieldName: "i3"
+            fieldName: "i3_c"
         },
         {
             header : "cos \u03C6a",
