@@ -1087,6 +1087,7 @@ tr.nmc-inactive-price > td{
 /* Кнопка "Обновить" на странице уведомлений*/
 .nmc-button-refresh{
     height: 26px;
+    padding-top: 3px;
 }
 
     /* Кнопка в правом верхнем углу заголовка рабочей области*/

@@ -21,7 +21,7 @@ angular.module('portalNMC')
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
                 
 console.log("Objects directive.");
-//var timeDirStart = (new Date()).getTime();
+//var timeDirStart = (new Date()).getTime();           
                 
                     //messages for user
                 $scope.messages = {};
@@ -331,7 +331,13 @@ console.log("Objects directive.");
                 };
 
                 var errorCallback = function (e) {
-                    notificationFactory.errorInfo(e.statusText,e.data.description);       
+                    console.log(e);
+                    var errorCode = "-1";
+                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                        errorCode = e.resultCode || e.data.resultCode;
+                    };
+                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);       
                 };
 
                 $scope.addObject = function () {
@@ -940,7 +946,7 @@ console.log("Objects directive.");
                         var tempArr = [];
                         
                         $scope.objects.forEach(function(elem){
-                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
+                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
                                 tempArr.push(elem);
                             };
                         });
@@ -954,21 +960,21 @@ console.log("Objects directive.");
                 
                 
                 //keydown listener for ctrl+end
-                window.onkeydown = function(e){                                          
+                window.onkeydown = function(e){   
+console.log("chet nazato");                    
                     if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)){
+console.log("najat ctrl+end");                        
                         $scope.loading =  true;    
                         var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
-                        
-                        $scope.objectCtrlSettings.isCtrlEnd = true;
-                        
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
+                        $scope.objectCtrlSettings.isCtrlEnd = true;                        
                     };
                 };
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
                 $scope.onTableLoad = function(){ 
-//console.log("Run onTableLoad");                    
+console.log("Run onTableLoad");                    
                     if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
                         var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
                         window.scrollTo(0, Math.round(pageHeight));
@@ -979,12 +985,12 @@ console.log("Objects directive.");
                 
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){                 
-                    if (($scope.objects.length<=0)){
+                    if (($scope.objects.length <= 0)){
                         return;
                     };
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
-                    var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
+                    var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
                     };
@@ -995,7 +1001,7 @@ console.log("Objects directive.");
                     if(endIndex >= ($scope.objects.length)){
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
                     }else{
-                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
                     };
                 };                                
                 
@@ -1023,18 +1029,18 @@ console.log("Objects directive.");
                     $scope.settedMode = mode;
                     //get the object ids array
                     var contObjectIds = [];
-                    if ($scope.objectCtrlSettings.allSelected===true){
+                    if ($scope.objectCtrlSettings.allSelected === true){
                         contObjectIds = $scope.objects.map(function(el){return el.id});
                     }else{
                         $scope.objectsOnPage.forEach(function(el){
-                            if(el.selected===true){
+                            if(el.selected === true){
                                 contObjectIds.push(el.id);
                             };
                         });
                     };
                     
                     //send data to server
-                    var url = objectSvc.getObjectsUrl()+"/settingModeType";
+                    var url = objectSvc.getObjectsUrl() + "/settingModeType";
                     $http({
                         url: url, 
                         method: "PUT",
@@ -1055,11 +1061,11 @@ console.log("Objects directive.");
                                 $scope.objectCtrlSettings.vzletSystemList = response.data;                           
                             },
                             function(e){
-                                notificationFactory.errorInfo(e.statusText,e.description);
+                                notificationFactory.errorInfo(e.statusText, e.description);
                             }
                         );
                     }else{
-                        $scope.objectCtrlSettings.vzletSystemList =tmpSystemList;
+                        $scope.objectCtrlSettings.vzletSystemList = tmpSystemList;
                     };
                 };
                 $scope.getVzletSystemList();
@@ -1172,7 +1178,7 @@ console.log("Objects directive.");
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.$apply();
                         }
-                    });
+                    });                    
                 });
                 
                 //checkers            

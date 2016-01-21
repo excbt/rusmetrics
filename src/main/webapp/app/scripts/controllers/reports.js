@@ -11,7 +11,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         //html- с индикатором загрузки страницы
     $scope.ctrlSettings.htmlLoading = '<head>' 
                             + '<meta charset="utf-8">' 
-                            + '<link rel="stylesheet" href="http://www.rusmetrics.ru/public/bower_components/font-awesome/css/font-awesome.min.css"'
+                            + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>'
                             + '</head>'
                             + '<body>' 
                             + '<div  ng-show="loading" class="nmc-loading">'
@@ -1074,7 +1074,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         if (paramset.checkFlag){
             var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/preview";
             var prevWin = window.open("", "_blank");
-            prevWin.document.write($scope.ctrlSettings.htmlLoading);
+            prevWin.document.write($scope.ctrlSettings.htmlLoading);      
             prevWin.document.location.assign(url);            
         }else{
             $scope.showMessageForUserModalExFlag = true;

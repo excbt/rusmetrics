@@ -200,10 +200,10 @@ console.log("Object Service. Run.");
                 if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
                     return 0;
                 };
-                if (a.fullName > b.fullName){
+                if (a.fullName.toUpperCase() > b.fullName.toUpperCase()){
                     return 1;
                 };
-                if (a.fullName < b.fullName){
+                if (a.fullName.toUpperCase() < b.fullName.toUpperCase()){
                     return -1;
                 };
                 return 0;
@@ -225,18 +225,19 @@ console.log("Object Service. Run.");
                 };
             });
             if (tmpArr.length == 0) {return "No objects with fullName"};
-            tmpArr.sort(function(a, b){
-                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
-                    return 0;
-                };
-                if (a.fullName > b.fullName){
-                    return 1;
-                };
-                if (a.fullName < b.fullName){
-                    return -1;
-                };
-                return 0;
-            });
+//            tmpArr.sort(function(a, b){
+//                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
+//                    return 0;
+//                };
+//                if (a.fullName > b.fullName){
+//                    return 1;
+//                };
+//                if (a.fullName < b.fullName){
+//                    return -1;
+//                };
+//                return 0;
+//            });
+            sortObjectsByFullName(tmpArr);
             Array.prototype.push.apply(tmpBadArr, tmpArr);
             return tmpBadArr;
         };
@@ -246,10 +247,13 @@ console.log("Object Service. Run.");
                 return false;
             };           
             array.sort(function(a, b){
-                if (a.contObject.fullName>b.contObject.fullName){
+                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.contObject.fullName) || checkUndefinedNull(b.contObject.fullName)){         
+                    return 0;
+                };
+                if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()){
                     return 1;
                 };
-                if (a.contObject.fullName<b.contObject.fullName){
+                if (a.contObject.fullName.toUpperCase() < b.contObject.fullName.toUpperCase()){
                     return -1;
                 };
                 return 0;
