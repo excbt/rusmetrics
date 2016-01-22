@@ -413,6 +413,7 @@ console.log($rootScope.userInfo);
         checkStrForDate,
         checkUndefinedEmptyNullValue,
         checkUndefinedNull,
+        dateFormating,
         getConfirmCode,
         getContextIds,
         getLoadingServicePermissionFlag,

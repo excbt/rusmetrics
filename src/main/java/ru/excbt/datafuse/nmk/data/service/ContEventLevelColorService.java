@@ -13,6 +13,15 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
+/**
+ * Сервис для кэширования уровня событий ContEventLevelColor
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 01.07.2015
+ *
+ */
+
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventLevelColorService {
@@ -27,8 +36,7 @@ public class ContEventLevelColorService {
 	 * @param colorKey
 	 * @return
 	 */
-	public ContEventLevelColor getEventColorCached(
-			ContEventLevelColorKey colorKey, boolean resetCache) {
+	public ContEventLevelColor getEventColorCached(ContEventLevelColorKey colorKey, boolean resetCache) {
 
 		ContEventLevelColor result = colorMap.get(colorKey);
 		if (result != null && resetCache == false) {
@@ -47,8 +55,7 @@ public class ContEventLevelColorService {
 	 * @param colorKey
 	 * @return
 	 */
-	public ContEventLevelColor getEventColorCached(
-			ContEventLevelColorKey colorKey) {
+	public ContEventLevelColor getEventColorCached(ContEventLevelColorKey colorKey) {
 		return getEventColorCached(colorKey, false);
 	}
 

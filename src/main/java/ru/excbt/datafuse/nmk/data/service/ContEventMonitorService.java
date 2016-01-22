@@ -25,6 +25,15 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorRepository;
 
+/**
+ * Сервис для работы с монитором событий
+ * 
+ * @author A.Kovtonyuk 
+ * @version 1.0
+ * @since 30.06.2015
+ *
+ */
+
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventMonitorService {
