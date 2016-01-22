@@ -69,9 +69,13 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
-            
-
-            <th class="col-md-3">
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Источник данных
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
+            <th class="col-md-1">
             </th>
         </tr>
 </table>
@@ -100,8 +104,14 @@
                     <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
                 </div>
             </th>
+            <th class="col-md-2" ng-click="setOrderBy(column.name)">
+                <div>
+                    Источник данных
+                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+                </div>
+            </th>
 
-            <th class="col-md-3">
+            <th class="col-md-1">
             </th>
         </tr>
 
@@ -134,9 +144,11 @@
                 <div><span ng-class="">{{device.number}}</span>
                 </div>
             </td>
-
-
-            <td class="col-md-3">
+            <td class="col-md-2">
+                <div><span ng-class="">{{device.activeDataSource.subscrDataSource['dataSourceName' || 'id'] }}</span>
+                </div>
+            </td>
+            <td class="col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
                         <i title="Удалить прибор" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(device)" data-target="#deleteObjectModal" data-toggle="modal"></i>

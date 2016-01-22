@@ -350,6 +350,7 @@ console.log('Run Object management controller.');
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     getObjectsData();
+                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
 //                    location.reload();
                 };
 
@@ -980,24 +981,24 @@ console.log($scope.currentZpoint);
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){
 //console.log("addMoreObjects. Run");
-                    if (($scope.objects.length<=0)){
+                    if (($scope.objects.length <= 0)){
                         return;
                     };
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
-                    var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
+                    var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
 //console.log($scope.objects.length);                    
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
                     };
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,endIndex);
+                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
                     }else{
-                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
                     };
                 };
                 

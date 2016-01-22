@@ -20,10 +20,10 @@ console.log('Run devices management controller.');
                 return false;
             };           
             array.sort(function(a, b){
-                if (a.contObjectInfo.fullName>b.contObjectInfo.fullName){
+                if (a.contObjectInfo.fullName.toUpperCase() > b.contObjectInfo.fullName.toUpperCase()){
                     return 1;
                 };
-                if (a.contObjectInfo.fullName<b.contObjectInfo.fullName){
+                if (a.contObjectInfo.fullName.toUpperCase() < b.contObjectInfo.fullName.toUpperCase()){
                     return -1;
                 };
                 return 0;
@@ -35,10 +35,10 @@ console.log('Run devices management controller.');
             function(response){
                 var tmp = response.data;
                 tmp.forEach(function(elem){
-                    if (angular.isDefined(elem.contObjectInfo)&&(elem.contObjectInfo!=null)){
+                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)){
                         elem.contObjectId = elem.contObjectInfo.contObjectId;
                     };
-                    if (angular.isDefined(elem.activeDataSource)&&(elem.activeDataSource!=null)){
+                    if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)){
                         elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
