@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtClientsCtrl', ['$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
+.controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
 console.log('Run Client management controller.');
     
     $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
@@ -10,7 +10,7 @@ console.log('Run Client management controller.');
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.rmaUrl = "../api/rma";
     $scope.ctrlSettings.clientsUrl = "../api/rma/subscribers";
-    $scope.ctrlSettings.orgUrl = $scope.ctrlSettings.clientsUrl+"/organizations";
+    $scope.ctrlSettings.orgUrl = $scope.ctrlSettings.clientsUrl + "/organizations";
     
     $scope.ctrlSettings.availableObjectsSuffix = "/availableContObjects";
     $scope.ctrlSettings.subscrObjectsSuffix = "/subscrContObjects";
@@ -120,6 +120,12 @@ console.log('Run Client management controller.');
         $('#showClientOptionModal').modal('hide');
         $('#showObjectListModal').modal('hide');
          getClients();
+    };
+    
+    var successCallbackSignObjects = function (e) {                    
+        notificationFactory.success();
+        $('#showObjectListModal').modal('hide');
+        $rootScope.$broadcast('objectSvc:requestReloadData');
     };
     
     var successPostCallback = function (e) {
@@ -426,9 +432,9 @@ console.log('Run Client management controller.');
             return elem.id;
         });
         if (($scope.data.currentClient.id != null) && (typeof $scope.data.currentClient.id != 'undefined')){
-            var table=$scope.ctrlSettings.rmaUrl+"/"+$scope.data.currentClient.id+$scope.ctrlSettings.subscrObjectsSuffix;
+            var table=$scope.ctrlSettings.rmaUrl + "/" + $scope.data.currentClient.id + $scope.ctrlSettings.subscrObjectsSuffix;
 //            crudGridDataFactory(table).update({}, tmp, successCallback, errorCallback);
-            $http.put(table, tmp).then(successCallback, errorCallback);
+            $http.put(table, tmp).then(successCallbackSignObjects, errorCallback);
         };
     };
     

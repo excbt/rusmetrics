@@ -1332,7 +1332,10 @@ console.log($scope.currentObject);
                 };
                 
                 //инициализируем переменные и интерфейсы для назначения объектов абонентам
-                $scope.setClientsInit = function(){
+                $scope.setClientsInit = function(object){
+                    if (!mainSvc.checkUndefinedNull(object)){
+                        object.selected = true;
+                    };
                     $scope.data.clientsOnPage = angular.copy($scope.data.clients);
                     $('#setClientModal').modal();
                 };
