@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model.filters;
+package ru.excbt.datafuse.nmk.data.filters;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

@@ -29,7 +29,7 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeasureUnits() {
 
-		List<MeasureUnit> resultList = deviceObjectMetadataService.getMeasureUnits();
+		List<MeasureUnit> resultList = deviceObjectMetadataService.selectMeasureUnits();
 
 		return responseOK(resultList);
 	}
