@@ -7,17 +7,19 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(name = "device_object_metadata")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class DeviceObjectMetadata extends AbstractAuditableModel {
+public class DeviceObjectMetadata extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -78,6 +80,7 @@ public class DeviceObjectMetadata extends AbstractAuditableModel {
 	@Version
 	private int version;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
@@ -225,10 +228,12 @@ public class DeviceObjectMetadata extends AbstractAuditableModel {
 		this.version = version;
 	}
 
+	@Override
 	public int getDeleted() {
 		return deleted;
 	}
 
+	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
 	}
