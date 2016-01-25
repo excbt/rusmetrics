@@ -148,7 +148,7 @@
                             <div class="btn-group">
                               <ul class="dropdown-menu">
                                   <li ng-repeat="device in object.devices">
-                                      <a href="" ng-click="getDeviceMetaData(object,device)">прибор Модель:{{device.deviceModel.modelName}} <span ng-if="device.number!=null">- №: </span> {{device.number}}</a>
+                                      <a href="" ng-click="getDeviceMetaDataVzlet(object,device)">прибор Модель:{{device.deviceModel.modelName}} <span ng-if="device.number!=null">- №: </span> {{device.number}}</a>
                                   </li>
                                   <li ng-show="object.devices.length==0" style="width:400px;">
                                       <span>

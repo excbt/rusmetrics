@@ -16,17 +16,26 @@ console.log("Object Service. Run.");
         var urlRefRange = urlSubscr + '/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
         var urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels';
-        var urlDeviceMetaData = '/metaVzlet';
-        var urlDeviceMetaDataSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
+        var urlDeviceMetaDataVzlet = '/metaVzlet';
+        var urlDeviceMetaDataSuffix = '/metadata';
+        var urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
         var urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo';  
         var urlTimezones = urlApi + '/timezoneDef/all';
         var urlRsoOrganizations = urlRmaContObjects + '/rsoOrganizations';
         var urlCmOrganizations = urlRmaContObjects + '/cmOrganizations';
         var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
+//                 /contObjects/deviceObjects/metadata/measureUnits
+        var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
+                 
+        var deviceMetadataMeasures = null;
 
         var objectSvcSettings = {};
         var getObjectSettings = function(){
             return objectSvcSettings;
+        };
+                 
+        var getDeviceMetadataMeasures = function(){
+            return deviceMetadataMeasures;
         };
         
         var setObjectSettings = function(objectSettings){
@@ -101,18 +110,38 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
                  
-        var getDeviceMetaData = function(obj, device){                     
-            var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaData;
+        var getDeviceMetaDataVzlet = function(obj, device){                     
+            var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
         };
-        var getRmaDeviceMetaData = function(objId, device){                     
-            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaData;
+        var getRmaDeviceMetaDataVzlet = function(objId, device){                     
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
         };
-        var putDeviceMetaData = function(device){                     
-            var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaData;
+        var putDeviceMetaDataVzlet = function(device){                     
+            var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             var result = $http.put(url, device.metaData);        
             return result;
+        };
+        
+                 //get device measures
+        var getRmaDeviceMetadataMeasures = function(){                     
+            var url = urlDeviceMetadataMeasures;
+            $http.get(url)
+                .then(function(resp){                
+                deviceMetadataMeasures = resp.data;
+//console.log(deviceMetadataMeasures);                
+                $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
+            },
+                     function(err){
+                console.log(err);
+            });
+        };
+        getRmaDeviceMetadataMeasures();
+                 
+        var getRmaDeviceMetadata = function(objId, devId){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
+            return $http.get(url);
         };
                  
         //get time zones
@@ -120,12 +149,12 @@ console.log("Object Service. Run.");
             return getData(urlTimezones);
         };
                  
-        var getDeviceMetaDataSystemList = function(){                     
-            return $http.get(urlDeviceMetaDataSystemList);
+        var getDeviceMetaDataVzletSystemList = function(){                     
+            return $http.get(urlDeviceMetaDataVzletSystemList);
         };
         var vzletSystemList = [];
         var getVzletSystemListFromServer = function(){
-            getDeviceMetaDataSystemList()
+            getDeviceMetaDataVzletSystemList()
             .then(
                 function(response){
                     vzletSystemList = response.data;
@@ -161,8 +190,7 @@ console.log("Object Service. Run.");
         var getObjectConsumingData = function(settings, objId){
             var url = urlCitiesData + "/" + objId + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
             return $http.get(url);
-        };
-                 
+        };                 
                 //get data for the setting period for one city
         var getCityConsumingData = function(cityFias, settings){
             var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;           
@@ -313,12 +341,14 @@ console.log("Object Service. Run.");
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,
-            getDeviceMetaData,
-            getDeviceMetaDataSystemList,
+            getRmaDeviceMetadata,
+            getDeviceMetadataMeasures,
+            getDeviceMetaDataVzlet,
+            getDeviceMetaDataVzletSystemList,
             getLoadingStatus,
             getObjectsUrl,
             getPromise,
-            getRmaDeviceMetaData,
+            getRmaDeviceMetaDataVzlet,
             getRmaObject,
             getRmaObjectsData,
             getRmaObjectsUrl,
@@ -333,7 +363,7 @@ console.log("Object Service. Run.");
             findObjectById,
             loading,
             promise,
-            putDeviceMetaData,
+            putDeviceMetaDataVzlet,
             rmaPromise,
             sendDeviceToServer,
             setObjectSettings,            
