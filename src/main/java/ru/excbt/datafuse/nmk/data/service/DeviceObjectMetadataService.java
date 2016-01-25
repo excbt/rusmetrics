@@ -3,11 +3,13 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с метаданными прибора
@@ -29,7 +32,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.MeasureUnitRepository;
  *
  */
 @Service
-public class DeviceObjectMetadataService {
+public class DeviceObjectMetadataService implements SecuredRoles {
 
 	private final static String DEVICE_METADATA_TYPE = "DEVICE";
 
@@ -61,6 +64,7 @@ public class DeviceObjectMetadataService {
 	public List<DeviceObjectMetadata> selectDeviceObjectMetadata(Long deviceObjectId) {
 		List<DeviceObjectMetadata> result = deviceObjectMetadataRepository.selectDeviceObjectMetadata(deviceObjectId,
 				DEVICE_METADATA_TYPE);
+		//result.sort((a, b) -> a.getId().compareTo(b.getId()));
 		return ObjectFilters.deletedFilter(result);
 	}
 
@@ -79,6 +83,7 @@ public class DeviceObjectMetadataService {
 	 * @param deviceObjectMetadataList
 	 * @return
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<DeviceObjectMetadata> updateDeviceObjectMetadata(Long deviceObjectId,
 			List<DeviceObjectMetadata> deviceObjectMetadataList) {
@@ -100,6 +105,55 @@ public class DeviceObjectMetadataService {
 
 		return Lists.newArrayList(deviceObjectMetadataRepository.save(deviceObjectMetadataList));
 
+	}
+
+	/**
+	 * 
+	 * @param srcDeviceObjectId
+	 * @param destDeviceObjectId
+	 * @return
+	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<DeviceObjectMetadata> copyDeviceObjectMetadata(Long srcDeviceObjectId, Long destDeviceObjectId) {
+		List<DeviceObjectMetadata> srcMetadata = selectDeviceObjectMetadata(srcDeviceObjectId);
+		List<DeviceObjectMetadata> newMetadata = new ArrayList<>();
+		srcMetadata.forEach(src -> {
+			DeviceObjectMetadata dst = new DeviceObjectMetadata();
+			dst.setDeviceMetadataType(src.getDeviceMetadataType());
+			dst.setDeviceObjectId(destDeviceObjectId);
+			dst.setContServiceType(src.getContServiceType());
+			dst.setSrcProp(src.getSrcProp());
+			dst.setDestProp(src.getDestProp());
+			dst.setIsIntegrator(src.getIsIntegrator());
+			dst.setSrcPropDivision(src.getSrcPropDivision());
+			dst.setDestPropCapacity(src.getDestPropCapacity());
+			dst.setSrcMeasureUnit(src.getSrcMeasureUnit());
+			dst.setDestMeasureUnit(src.getDestMeasureUnit());
+			dst.setMetaNumber(src.getMetaNumber());
+			dst.setMetaOrder(src.getMetaOrder());
+			//dst.setMetaDescription(src.getMetaDescription());
+			//dst.setMetaComment(src.getMetaComment());
+			dst.setPropVars(src.getPropVars());
+			dst.setPropFunc(src.getPropFunc());
+			dst.setDestDbType(src.getDestDbType());
+			dst.setVersion(src.getVersion());
+			dst.setDeleted(src.getDeleted());
+			newMetadata.add(dst);
+		});
+		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
+	}
+
+	/**
+	 * 
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public void deleteDeviceObjectMetadata(Long deviceObjectId) {
+		List<DeviceObjectMetadata> metadata = selectDeviceObjectMetadata(deviceObjectId);
+		deviceObjectMetadataRepository.delete(metadata);
 	}
 
 }

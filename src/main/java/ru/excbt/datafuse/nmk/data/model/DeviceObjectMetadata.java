@@ -26,13 +26,13 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	 */
 	private static final long serialVersionUID = 7749595409266133751L;
 
-	@Column(name = "device_metadata_type")
+	@Column(name = "device_metadata_type", updatable = false)
 	private String deviceMetadataType;
 
-	@Column(name = "device_object_id")
+	@Column(name = "device_object_id", updatable = false)
 	private Long deviceObjectId;
 
-	@Column(name = "cont_service_type")
+	@Column(name = "cont_service_type", updatable = false)
 	private String contServiceType;
 
 	@Column(name = "src_prop")
@@ -41,7 +41,7 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "dest_prop")
 	private String destProp;
 
-	@Column(name = "is_integrator")
+	@Column(name = "is_integrator", updatable = false)
 	private Boolean isIntegrator;
 
 	@Column(name = "src_prop_division")
@@ -56,25 +56,25 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "dest_measure_unit")
 	private String destMeasureUnit;
 
-	@Column(name = "meta_number")
+	@Column(name = "meta_number", updatable = false)
 	private Integer metaNumber;
 
-	@Column(name = "meta_order")
+	@Column(name = "meta_order", updatable = false)
 	private Integer metaOrder;
 
-	@Column(name = "meta_description")
+	@Column(name = "meta_description", updatable = false)
 	private String metaDescription;
 
 	@Column(name = "meta_comment")
 	private String metaComment;
 
-	@Column(name = "prop_vars")
+	@Column(name = "prop_vars", updatable = false)
 	private String propVars;
 
-	@Column(name = "prop_func")
+	@Column(name = "prop_func", updatable = false)
 	private String propFunc;
 
-	@Column(name = "dest_db_type")
+	@Column(name = "dest_db_type", updatable = false)
 	private String destDbType;
 
 	@Version

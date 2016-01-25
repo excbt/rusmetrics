@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -14,6 +15,8 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -69,7 +72,30 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 
 		List<DeviceObjectMetadata> resultList = deviceObjectMetadataService.selectDeviceObjectMetadata(deviceObjectId);
 
-		return ResponseEntity.ok(resultList);
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @param DeviceObjectMetadataList
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metadata",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateDeviceObjectMetadata(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId,
+			@RequestBody List<DeviceObjectMetadata> DeviceObjectMetadataList) {
+
+		ApiAction action = new EntityApiActionAdapter<List<DeviceObjectMetadata>>(DeviceObjectMetadataList) {
+
+			@Override
+			public List<DeviceObjectMetadata> processAndReturnResult() {
+				return deviceObjectMetadataService.updateDeviceObjectMetadata(deviceObjectId, entity);
+			}
+		};
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }
