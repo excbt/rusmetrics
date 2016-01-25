@@ -14,9 +14,24 @@ console.log('Run devices management controller.');
     $scope.data.devices = [];
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
+    $scope.data.metaData = {};
+    $scope.data.metaData.fields = [
+        {
+            name: "field1",
+            value: "ppz"
+        },
+        {
+            name: "field2",
+            value: "ppa"
+        },
+        {
+            name: "field3",
+            value: "Caramba"
+        }
+    ];
             //get devices
     function sortDevicesByConObjectFullName(array){
-            if (angular.isUndefined(array)||(array == null)|| !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array == null)|| !angular.isArray(array)){
                 return false;
             };           
             array.sort(function(a, b){
@@ -51,12 +66,11 @@ console.log('Run devices management controller.');
                 });
                 sortDevicesByConObjectFullName(tmp);
                 $scope.data.devices = tmp;
-                $scope.ctrlSettings.loading = false;
-//console.log(tmp);                
+                $scope.ctrlSettings.loading = false;                
             },
             function(error){
                 console.log(error.data);
-                notificationFactory.errorInfo(error.statusText,error.data.description || error.data);
+                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
             }
         );
     };
@@ -78,14 +92,12 @@ console.log('Run devices management controller.');
                 });
                 if (ndDeviceModelIndex != -1){
                     response.data.splice(ndDeviceModelIndex, 1);
-                    response.data.splice(0,0,ndDeviceModel);
+                    response.data.splice(0, 0, ndDeviceModel);
                 };
-                $scope.data.deviceModels = response.data;
-                
-//console.log($scope.data.deviceModels);                
+                $scope.data.deviceModels = response.data;               
             },
             function(error){
-                notificationFactory.errorInfo(error.statusText,error.description);
+                notificationFactory.errorInfo(error.statusText, error.description);
             }
         );
     };
@@ -97,8 +109,7 @@ console.log('Run devices management controller.');
         $http.get(targetUrl)
         .then(function(response){
             var tmp = response.data;      
-            $scope.data.dataSources = tmp;
-//console.log(tmp);            
+            $scope.data.dataSources = tmp;           
         },
               function(e){
             console.log(e);
@@ -108,7 +119,6 @@ console.log('Run devices management controller.');
     
                  //get Objects
     $scope.getObjects = function(){
-//        crudGridDataFactory($scope.objectsUrl).query(function(data){
         objectSvc.getRmaPromise().then(function(response){
             objectSvc.sortObjectsByFullName(response.data);
             $scope.data.objects = response.data;
@@ -126,7 +136,6 @@ console.log('Run devices management controller.');
     };
     $scope.editDevice = function(device){
         $scope.selectedItem(device);
-//        $scope.data.currentObject = angular.copy(dsource);
         $('#showDeviceModal').modal();
     };
     
@@ -152,8 +161,7 @@ console.log('Run devices management controller.');
         $scope.data.currentObject = {};
     };
     
-    var errorCallback = function(e){
-//        notificationFactory.errorInfo(e.statusText,e);       
+    var errorCallback = function(e){       
         console.log(e);
         var errorCode = "-1";
         if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
@@ -183,66 +191,6 @@ console.log('Run devices management controller.');
 //console.log(device);        
         //send to server
         objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
-            //create param string
-//        var paramString = "";
-//        var params = {};
-//        if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
-//            paramString = paramString+"subscrDataSourceAddr="+fixedEncodeURI(device.subscrDataSourceAddr);
-//            params.subscrDataSourceAddr = device.subscrDataSourceAddr;    
-//        };
-//        if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-//            if (paramString!=""){
-//                paramString+="&";
-//            };
-//            paramString = paramString+"dataSourceTable="+fixedEncodeURI(device.dataSourceTable);
-//            params.dataSourceTable = device.dataSourceTable;
-//        };
-//        if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
-//            if (paramString!=""){
-//                paramString+="&";
-//            };
-//            paramString = paramString+"dataSourceTable1h="+fixedEncodeURI(device.dataSourceTable1h);
-//            params.dataSourceTable1h = device.dataSourceTable1h;
-//        };
-//        if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
-//            if (paramString!=""){
-//                paramString+="&";
-//            };
-//            paramString = paramString+"dataSourceTable24h="+fixedEncodeURI(device.dataSourceTable24h);
-//            params.dataSourceTable24h = device.dataSourceTable24h;
-//        };
-//        var targetUrl = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
-//        if (angular.isDefined(device.id)&&(device.id !=null)){
-//            targetUrl = targetUrl+"/"+device.id;
-//        };
-//        params.subscrDataSourceId=device.subscrDataSourceId;
-            //add url params
-        //targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
-//        if (paramString!=""){
-//            paramString="&"+paramString;
-//        };
-//        targetUrl= targetUrl+paramString;
-//        device.editDataSourceInfo = params;
-//console.log(targetUrl);        
-//        if (angular.isDefined(device.id)&&(device.id !=null)){
-//            $http.put(targetUrl, device)
-//            $http({
-//                method: 'PUT',
-//                url: targetUrl,
-//                params: params,
-//                data: device
-//            })
-//                .then(successCallback, errorCallback);
-//        }else{
-//            $http.post(targetUrl, device)
-//            $http({
-//                method: 'POST',
-//                url: targetUrl,
-//                params: params,
-//                data: device
-//            })
-//                .then(successCallback, errorCallback);
-//        };
     };
     
     var setConfirmCode = function(){
@@ -257,8 +205,7 @@ console.log('Run devices management controller.');
         setConfirmCode();
     };
     
-    $scope.deleteObject = function(device){
-//console.log(device);        
+    $scope.deleteObject = function(device){       
         var targetUrl = objectSvc.getRmaObjectsUrl();
         targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
         $http.delete(targetUrl).then(successCallback, errorCallback);
@@ -288,65 +235,53 @@ console.log('Run devices management controller.');
         objectSvc.getRmaDeviceMetaData(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
-                $scope.currentDevice =  device;                           
+                $scope.currentDevice = device;                           
                 $('#metaDataEditorModal').modal();
             },
-            errorCallback/*function(error){
-                notificationFactory.errorInfo(error.statusText,error.description);
-            }*/
+            errorCallback
         );
     };
 
-    $scope.updateDeviceMetaData = function(device){
-//console.log(device);    
+    $scope.updateDeviceMetaData = function(device){   
         var method = "";
-        if(angular.isDefined(device.metaData.id)&&(device.metaData.id!==null)){
+        if(angular.isDefined(device.metaData.id) && (device.metaData.id !== null)){
             method = "PUT";
         }else{
             method = "POST";
         };
-//        var url = "../api/subscr/contObjects/"+device.contObject.id+"/deviceObjects/"+device.id+"/metaVzlet";
-        var url = objectSvc.getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects/"+device.id+"/metaVzlet";
+        var url = objectSvc.getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects/" + device.id + "/metaVzlet";
         $http({
             url: url,
             method: method,
             data: device.metaData
         })
-//                    $http.put(url, device.metaData)
-            .then(
-//                    objectSvc.putDeviceMetaData(device).then(
+        .then(
             function(response){
                 $scope.currentDevice =  {};
                 $('#metaDataEditorModal').modal('hide');
             },
-            errorCallback/*function(error){
-                console.log(error);                            
-                notificationFactory.errorInfo(error.statusText,error.description);
-            }*/
+            errorCallback
         );
     };
     
      //get the list of the systems for meta data editor
     $scope.getVzletSystemList = function(){
         var tmpSystemList = objectSvc.getVzletSystemList();
-        if (tmpSystemList.length===0){
+        if (tmpSystemList.length === 0){
             objectSvc.getDeviceMetaDataSystemList()
                 .then(
                 function(response){
                     $scope.data.vzletSystemList = response.data;                           
                 },
-                errorCallback/*function(e){
-                    notificationFactory.errorInfo(e.statusText,e.description);
-                }*/
+                errorCallback
             );
         }else{
-            $scope.data.vzletSystemList =tmpSystemList;
-        };
-//console.log($scope.data.vzletSystemList);        
+            $scope.data.vzletSystemList = tmpSystemList;
+        };       
     };
     $scope.getVzletSystemList();
                     //date picker
-    $scope.dateOptsParamsetRu ={
+    $scope.dateOptsParamsetRu = {
         locale : {
             daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
             firstDay : 1,

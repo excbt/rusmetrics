@@ -1455,7 +1455,7 @@
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
-                                <tr ng-repeat="client in data.clientsOnPage">
+                                <tr ng-repeat="client in data.clientsOnPage" ng-class="{'nmc-tr-odd':($index%2!==0)}">
                                     <td><input type="checkbox" ng-model="client.selected" class="nmc-checkbox-form"/>
                                         {{client.subscriberName}}
                                     </td>

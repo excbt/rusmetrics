@@ -166,7 +166,7 @@ console.log("Objects directive.");
                                 //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
                                 $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
                                 $timeout(function(){
-                                    var curObjElem = document.getElementById("obj"+$scope.objectCtrlSettings.tmpCurContObj);                     
+                                    var curObjElem = document.getElementById("obj" + $scope.objectCtrlSettings.tmpCurContObj);                    
                                     if (!mainSvc.checkUndefinedNull(curObjElem)){        
                                         curObjElem.scrollIntoView();
                                     };

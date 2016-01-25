@@ -126,7 +126,7 @@
                         </i>
                       <ul class="dropdown-menu">
                         <li><a href="" ng-click="editDevice(device)">Редактировать свойства прибора</a></li>
-<!--                        <li><a href="" ng-click="getDeviceMetaData(device)">Редактировать метаданные прибора</a></li>-->
+                        <li><a href="" ng-click="getDeviceMetaData(device)">Редактировать метаданные прибора</a></li>
      
                       </ul>
                     </div>
@@ -332,6 +332,59 @@
 
 <!--Meta data editor-->
 <div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="metaDataEditorLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="metaDataEditorLabel" class="nmc-h3">
+				Редактор метаданных прибора <span ng-if="currentDevice.number!=null">- №: </span> {{currentDevice.number}}
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr ng-repeat="field in data.metaData.fields">
+                                <td class="col-md-3"><label for="inputSystem1" >{{field.name}}</label>
+                                </td>
+                                <td class="col-md-9 nmc-text-align-left">
+                                    <input type="text" class="form-control nmc-text-input-form nmc-input-digital-data" ng-model="field.value"/> 
+                                </td>
+                            </tr>     
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="updateDeviceMetaData(currentDevice)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentDevice')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!--vzlet Meta data editor-->
+<div id="vzletMetaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="metaDataEditorLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">

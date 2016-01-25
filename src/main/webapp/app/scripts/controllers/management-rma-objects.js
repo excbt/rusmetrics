@@ -344,13 +344,20 @@ console.log('Run Object management controller.');
                 };
 
 
-                var successPostCallback = function (e) {
-                    
+                var successPostCallback = function (e) {                  
                     successCallback(e, null);
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     getObjectsData();
                     $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                    $timeout(function(){
+                        var curObjElem = document.getElementById("obj" + e.id);
+console.log(e.id);                        
+console.log(curObjElem);                        
+                        if (!mainSvc.checkUndefinedNull(curObjElem)){        
+                            curObjElem.scrollIntoView();
+                        };
+                    }, 100);
 //                    location.reload();
                 };
 
@@ -389,7 +396,7 @@ console.log('Run Object management controller.');
 //console.log(obj);                    
                     if (angular.isDefined(obj) && (angular.isDefined(obj.id)) && (obj.id != null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
-                    }else if (angular.isDefined(obj.deleteObjects) && (obj.deleteObjects != null)&&angular.isArray(obj.deleteObjects)){
+                    }else if (angular.isDefined(obj.deleteObjects) && (obj.deleteObjects != null) && angular.isArray(obj.deleteObjects)){
                         crudGridDataFactory(url).delete({ contObjectIds: obj.deleteObjectIds }, successDeleteObjectsCallback, errorCallback);
                     };
                 };
