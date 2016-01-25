@@ -3,12 +3,16 @@ package ru.excbt.datafuse.nmk.data.model.keyname;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "measure_unit")
-public class MeasureUnit extends AbstractKeynameEntity {
+public class MeasureUnit extends AbstractKeynameEntity implements DeletableObject {
 
 	/**
 	 * 
@@ -20,15 +24,22 @@ public class MeasureUnit extends AbstractKeynameEntity {
 
 	@Column(name = "measure_unit_name")
 	private String unitName;
-	
+
 	@Column(name = "measure_unit_comment")
 	private String unitComment;
 
-	@Column(name = "measure_unit_description")	
+	@Column(name = "measure_unit_description")
 	private String unitDescription;
 
-	@Column(name = "measure_category")	
+	@Column(name = "measure_category")
 	private String measureCategory;
+
+	@Version
+	@JsonIgnore
+	private int version;
+
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getCaption() {
 		return caption;
@@ -69,5 +80,15 @@ public class MeasureUnit extends AbstractKeynameEntity {
 	public void setMeasureCategory(String measureCategory) {
 		this.measureCategory = measureCategory;
 	}
-	
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
 }
