@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
+import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -21,6 +23,9 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 	@Autowired
 	private DeviceObjectMetadataService deviceObjectMetadataService;
 
+	@Autowired
+	private ContServiceTypeService contServiceTypeService;
+
 	/**
 	 * 
 	 * @return
@@ -30,6 +35,19 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 	public ResponseEntity<?> getMeasureUnits() {
 
 		List<MeasureUnit> resultList = deviceObjectMetadataService.selectMeasureUnits();
+
+		return responseOK(resultList);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/deviceObjects/metadata/contServiceTypes", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContServiceType() {
+
+		List<ContServiceType> resultList = contServiceTypeService.selectContServiceType();
 
 		return responseOK(resultList);
 	}

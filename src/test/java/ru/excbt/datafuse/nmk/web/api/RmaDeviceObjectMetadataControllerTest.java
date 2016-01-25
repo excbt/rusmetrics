@@ -9,8 +9,8 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	private final static long DEV_RMA_DEVICE_OBJECT_ID = 737;
 	private final static long DEV_RMA_CONT_OBJECT_ID = 725;
 
-	private final static long DEV_DEVICE_OBJECT_ID = 63028149;
-	private final static long DEV_CONT_OBJECT_ID = 63030238;
+	private final static long DEV_DEVICE_OBJECT_ID = 65836845;
+	private final static long DEV_CONT_OBJECT_ID = 725;
 
 	/**
 	 * 
@@ -19,6 +19,15 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	@Test
 	public void testMeasureUnitGet() throws Exception {
 		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testContServiceTypesGet() throws Exception {
+		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
 	}
 
 	/**
