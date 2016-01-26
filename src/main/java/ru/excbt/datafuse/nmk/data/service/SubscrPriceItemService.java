@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemValue;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
-import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemValueRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;

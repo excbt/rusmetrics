@@ -32,12 +32,11 @@ import ru.excbt.datafuse.raw.data.service.DeviceObjectDataJsonService;
 
 public class MetadataCli extends AbstractDBToolCli {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(MetadataCli.class);
+	private static final Logger logger = LoggerFactory.getLogger(MetadataCli.class);
 
 	//private final static long[] DEVICE_OBJECTS = { 22, 23, 408, 273, 270, 279,
 	//		537 };
-	 private final static long[] DEVICE_OBJECTS = { 22 };
+	private final static long[] DEVICE_OBJECTS = { 22 };
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
@@ -66,8 +65,7 @@ public class MetadataCli extends AbstractDBToolCli {
 
 		if (result) {
 			System.out.println(StringUtils.repeat('=', 100));
-			System.out.println("All Objects with ids: "
-					+ Arrays.toString(DEVICE_OBJECTS) + " PASSED");
+			System.out.println("All Objects with ids: " + Arrays.toString(DEVICE_OBJECTS) + " PASSED");
 			System.out.println(StringUtils.repeat('=', 100));
 		} else {
 			System.err.println(StringUtils.repeat('=', 100));
@@ -86,12 +84,10 @@ public class MetadataCli extends AbstractDBToolCli {
 		if (vzletSystem.getId() == 0) {
 			return true;
 		}
-		logger.info("deviceObjectId:{} VzletSystem1: id={}; service_type:{}",
-				deviceObjectId, vzletSystem.getId(),
+		logger.info("deviceObjectId:{} VzletSystem1: id={}; service_type:{}", deviceObjectId, vzletSystem.getId(),
 				vzletSystem.getContServiceTypeKey());
 
-		return readDeviceObjectModel(deviceObjectId, vzletSystem.getId()
-				.intValue());
+		return readDeviceObjectModel(deviceObjectId, vzletSystem.getId().intValue());
 		//
 	}
 
@@ -103,27 +99,22 @@ public class MetadataCli extends AbstractDBToolCli {
 
 		boolean result = true;
 
-		List<DeviceObjectMetaVzlet> metaList = deviceObjectService
-				.findDeviceObjectMetaVzlet(deviceObjectId);
+		List<DeviceObjectMetaVzlet> metaList = deviceObjectService.findDeviceObjectMetaVzlet(deviceObjectId);
 
 		checkState(metaList.size() > 0);
 
 		for (DeviceObjectMetaVzlet meta : metaList) {
 
-			logger.info("VzletTableDay: {}, VzletTableHour: {}",
-					meta.getVzletTableDay(), meta.getVzletTableHour());
+			logger.info("VzletTableDay: {}, VzletTableHour: {}", meta.getVzletTableDay(), meta.getVzletTableHour());
 
 			if (meta.getVzletSystem1() != null) {
-				result = result
-						& checkSystem(deviceObjectId, meta.getVzletSystem1());
+				result = result & checkSystem(deviceObjectId, meta.getVzletSystem1());
 			}
 			if (meta.getVzletSystem2() != null) {
-				result = result
-						& checkSystem(deviceObjectId, meta.getVzletSystem2());
+				result = result & checkSystem(deviceObjectId, meta.getVzletSystem2());
 			}
 			if (meta.getVzletSystem3() != null) {
-				result = result
-						& checkSystem(deviceObjectId, meta.getVzletSystem3());
+				result = result & checkSystem(deviceObjectId, meta.getVzletSystem3());
 			}
 
 		}
@@ -138,30 +129,25 @@ public class MetadataCli extends AbstractDBToolCli {
 
 		DeviceModel model = deviceObject.getDeviceModel();
 
-		logger.info("DeviceObjectModel: {}. ExSystem:{}. ExLabel:{} ",
-				model.getModelName(), model.getExSystem(), model.getExLabel());
+		logger.info("DeviceObjectModel: {}. ExSystem:{}. ExLabel:{} ", model.getModelName(), model.getExSystem(),
+				model.getExLabel());
 
 		logger.info("deviceModelId: {}", model.getId());
 
-		List<DeviceMetadata> deviceMetadataList = deviceMetadataService
-				.findDeviceMetadata(model.getId());
+		List<DeviceMetadata> deviceMetadataList = deviceMetadataService.selectDeviceMetadata(model.getId(), "VZL");
 
 		List<MetadataInfo> resultMetadataList = JsonMetadataParser
-				.processPropsVars(
-						Collections.unmodifiableList(deviceMetadataList),
-						propVar);
+				.processPropsVars(Collections.unmodifiableList(deviceMetadataList), propVar);
 
 		// checkState(deviceMetadataList.size() == resultMetadataList.size());
 
-		DeviceObjectDataJson jsonData = readJsonData(deviceObject.getId(),
-				LocalDateTime.of(2011, 10, 1, 0, 0));
+		DeviceObjectDataJson jsonData = readJsonData(deviceObject.getId(), LocalDateTime.of(2011, 10, 1, 0, 0));
 		checkNotNull(jsonData);
 
 		logger.info(jsonData.getDataJson());
 		try {
-			List<MetadataFieldValue> fieldValues = JsonMetadataParser
-					.processJsonFieldValues(jsonData.getDataJson(),
-							resultMetadataList);
+			List<MetadataFieldValue> fieldValues = JsonMetadataParser.processJsonFieldValues(jsonData.getDataJson(),
+					resultMetadataList);
 			fieldValues.stream().forEach((val) -> logger.info("{}", val));
 
 			checkState(resultMetadataList.size() == fieldValues.size());
@@ -178,14 +164,12 @@ public class MetadataCli extends AbstractDBToolCli {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	private DeviceObjectDataJson readJsonData(Long deviceObjectId,
-			LocalDateTime localDate) {
+	private DeviceObjectDataJson readJsonData(Long deviceObjectId, LocalDateTime localDate) {
 		checkNotNull(localDate);
 		logger.info("Date: {}", localDate);
 
-		List<DeviceObjectDataJson> jsonList = deviceObjectDataJsonService
-				.selectDeviceObjectDataJson(deviceObjectId,
-						TimeDetailKey.TYPE_24H, localDate, PAGE_LIMIT_1);
+		List<DeviceObjectDataJson> jsonList = deviceObjectDataJsonService.selectDeviceObjectDataJson(deviceObjectId,
+				TimeDetailKey.TYPE_24H, localDate, PAGE_LIMIT_1);
 
 		checkState(!jsonList.isEmpty());
 

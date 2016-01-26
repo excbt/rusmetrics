@@ -8,20 +8,20 @@ public interface MetadataInfo extends MetadataProps {
 
 	public String getPropFunc();
 
-	public Boolean get_integrator();
+	public Boolean getIsIntegrator();
 
 	public BigDecimal getSrcPropDivision();
 
 	public BigDecimal getDestPropCapacity();
 
-	public String getDestDbType();	
-	
-	public String getSrcMeasureUnitKey();
+	public String getDestDbType();
 
-	public String getDestMeasureUnitKey();
+	public String getSrcMeasureUnit();
+
+	public String getDestMeasureUnit();
 
 	public Integer getMetaNumber();
 
 	public Integer getMetaOrder();
-	
+
 }

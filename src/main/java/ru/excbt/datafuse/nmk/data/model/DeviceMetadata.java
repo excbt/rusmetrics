@@ -9,13 +9,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.metadata.MetadataInfo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name="device_metadata")
+@Table(name = "device_metadata")
 public class DeviceMetadata extends AbstractPersistableEntity<Long> implements MetadataInfo {
 
 	/**
@@ -26,25 +26,22 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "device_model_id")
 	@JsonIgnore
-	private DeviceModel deviceModel;	
-	
+	private DeviceModel deviceModel;
+
+	@Column(name = "device_model_id", insertable = false, updatable = false)
+	private Long deviceModelId;
+
 	@Column(name = "device_metadata_type")
-	private String deviceMetadataTypeKey;
-	
+	private String deviceMetadataType;
+
 	@Column(name = "src_prop")
 	private String srcProp;
 
 	@Column(name = "dest_prop")
 	private String destProp;
 
-	@Column(name = "prop_vars")
-	private String propVars;
-
-	@Column(name = "prop_func")
-	private String propFunc;
-
 	@Column(name = "is_integrator")
-	private Boolean _integrator;
+	private Boolean isIntegrator;
 
 	@Column(name = "src_prop_division")
 	private BigDecimal srcPropDivision;
@@ -53,10 +50,10 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	private BigDecimal destPropCapacity;
 
 	@Column(name = "src_measure_unit")
-	private String srcMeasureUnitKey;
+	private String srcMeasureUnit;
 
 	@Column(name = "dest_measure_unit")
-	private String destMeasureUnitKey;
+	private String destMeasureUnit;
 
 	@Column(name = "meta_number")
 	private Integer metaNumber;
@@ -70,9 +67,15 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	@Column(name = "meta_comment")
 	private String metaComment;
 
+	@Column(name = "prop_vars")
+	private String propVars;
+
+	@Column(name = "prop_func")
+	private String propFunc;
+
 	@Column(name = "dest_db_type")
-	private String destDbType;	
-	
+	private String destDbType;
+
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
 	}
@@ -81,19 +84,27 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 		this.deviceModel = deviceModel;
 	}
 
-	public String getDeviceMetadataTypeKey() {
-		return deviceMetadataTypeKey;
+	public Long getDeviceModelId() {
+		return deviceModelId;
 	}
 
-	public void setDeviceMetadataTypeKey(String deviceMetadataTypeKey) {
-		this.deviceMetadataTypeKey = deviceMetadataTypeKey;
+	public void setDeviceModelId(Long deviceModelId) {
+		this.deviceModelId = deviceModelId;
+	}
+
+	public String getDeviceMetadataType() {
+		return deviceMetadataType;
+	}
+
+	public void setDeviceMetadataType(String deviceMetadataType) {
+		this.deviceMetadataType = deviceMetadataType;
 	}
 
 	@Override
 	public String getSrcProp() {
 		return srcProp;
 	}
-	
+
 	@Override
 	public void setSrcProp(String srcProp) {
 		this.srcProp = srcProp;
@@ -110,30 +121,12 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	}
 
 	@Override
-	public String getPropVars() {
-		return propVars;
+	public Boolean getIsIntegrator() {
+		return isIntegrator;
 	}
 
-	public void setPropVars(String propVars) {
-		this.propVars = propVars;
-	}
-
-	@Override
-	public String getPropFunc() {
-		return propFunc;
-	}
-
-	public void setPropFunc(String propFunc) {
-		this.propFunc = propFunc;
-	}
-
-	@Override
-	public Boolean get_integrator() {
-		return _integrator;
-	}
-
-	public void set_integrator(Boolean _integrator) {
-		this._integrator = _integrator;
+	public void setIsIntegrator(Boolean isIntegrator) {
+		this.isIntegrator = isIntegrator;
 	}
 
 	@Override
@@ -155,21 +148,21 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	}
 
 	@Override
-	public String getSrcMeasureUnitKey() {
-		return srcMeasureUnitKey;
+	public String getSrcMeasureUnit() {
+		return srcMeasureUnit;
 	}
 
-	public void setSrcMeasureUnitKey(String srcMeasureUnitKey) {
-		this.srcMeasureUnitKey = srcMeasureUnitKey;
+	public void setSrcMeasureUnit(String srcMeasureUnit) {
+		this.srcMeasureUnit = srcMeasureUnit;
 	}
 
 	@Override
-	public String getDestMeasureUnitKey() {
-		return destMeasureUnitKey;
+	public String getDestMeasureUnit() {
+		return destMeasureUnit;
 	}
 
-	public void setDestMeasureUnitKey(String destMeasureUnitKey) {
-		this.destMeasureUnitKey = destMeasureUnitKey;
+	public void setDestMeasureUnit(String destMeasureUnit) {
+		this.destMeasureUnit = destMeasureUnit;
 	}
 
 	@Override
@@ -207,6 +200,24 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	}
 
 	@Override
+	public String getPropVars() {
+		return propVars;
+	}
+
+	public void setPropVars(String propVars) {
+		this.propVars = propVars;
+	}
+
+	@Override
+	public String getPropFunc() {
+		return propFunc;
+	}
+
+	public void setPropFunc(String propFunc) {
+		this.propFunc = propFunc;
+	}
+
+	@Override
 	public String getDestDbType() {
 		return destDbType;
 	}
@@ -214,6 +225,5 @@ public class DeviceMetadata extends AbstractPersistableEntity<Long> implements M
 	public void setDestDbType(String destDbType) {
 		this.destDbType = destDbType;
 	}
-	
-	
+
 }

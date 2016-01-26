@@ -18,23 +18,22 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 
 	private String propFunc;
 
-	private Boolean _integrator;
+	private Boolean isIntegrator;
 
 	private BigDecimal srcPropDivision;
 
 	private BigDecimal destPropCapacity;
 
-	
-	private String srcMeasureUnitKey;
+	private String srcMeasureUnit;
 
-	private String destMeasureUnitKey;
+	private String destMeasureUnit;
 
 	private Integer metaNumber;
 
 	private Integer metaOrder;
 
-	private String destDbType;	
-	
+	private String destDbType;
+
 	public MetadataInfoHolder() {
 
 	}
@@ -44,11 +43,11 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 		this.destProp = metadataInfo.getDestProp();
 		this.propVars = metadataInfo.getPropVars();
 		this.propFunc = metadataInfo.getPropFunc();
-		this._integrator = metadataInfo.get_integrator();
+		this.isIntegrator = metadataInfo.getIsIntegrator();
 		this.srcPropDivision = metadataInfo.getSrcPropDivision();
 		this.destPropCapacity = metadataInfo.getDestPropCapacity();
-		this.srcMeasureUnitKey = metadataInfo.getSrcMeasureUnitKey();
-		this.destMeasureUnitKey = metadataInfo.getDestMeasureUnitKey();
+		this.srcMeasureUnit = metadataInfo.getSrcMeasureUnit();
+		this.destMeasureUnit = metadataInfo.getDestMeasureUnit();
 		this.metaNumber = metadataInfo.getMetaNumber();
 		this.metaOrder = metadataInfo.getMetaOrder();
 		this.destDbType = metadataInfo.getDestDbType();
@@ -93,12 +92,12 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 	}
 
 	@Override
-	public Boolean get_integrator() {
-		return _integrator;
+	public Boolean getIsIntegrator() {
+		return isIntegrator;
 	}
 
-	public void set_integrator(Boolean _integrator) {
-		this._integrator = _integrator;
+	public void setIsIntegrator(Boolean isIntegrator) {
+		this.isIntegrator = isIntegrator;
 	}
 
 	@Override
@@ -120,21 +119,21 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 	}
 
 	@Override
-	public String getSrcMeasureUnitKey() {
-		return srcMeasureUnitKey;
+	public String getSrcMeasureUnit() {
+		return srcMeasureUnit;
 	}
 
-	public void setSrcMeasureUnitKey(String srcMeasureUnitKey) {
-		this.srcMeasureUnitKey = srcMeasureUnitKey;
+	public void setSrcMeasureUnit(String srcMeasureUnit) {
+		this.srcMeasureUnit = srcMeasureUnit;
 	}
 
 	@Override
-	public String getDestMeasureUnitKey() {
-		return destMeasureUnitKey;
+	public String getDestMeasureUnit() {
+		return destMeasureUnit;
 	}
 
-	public void setDestMeasureUnitKey(String destMeasureUnitKey) {
-		this.destMeasureUnitKey = destMeasureUnitKey;
+	public void setDestMeasureUnit(String destMeasureUnit) {
+		this.destMeasureUnit = destMeasureUnit;
 	}
 
 	@Override
@@ -154,7 +153,7 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 	public void setMetaOrder(Integer metaOrder) {
 		this.metaOrder = metaOrder;
 	}
-	
+
 	@Override
 	public String getDestDbType() {
 		return destDbType;
@@ -163,6 +162,4 @@ public class MetadataInfoHolder implements MetadataInfo, Serializable {
 	public void setDestDbType(String destDbType) {
 		this.destDbType = destDbType;
 	}
-	
-
 }

@@ -5,19 +5,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
-import ru.excbt.datafuse.nmk.data.model.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class DeviceModelService {
+public class DeviceModelService implements SecuredRoles {
 
 	@Autowired
 	private DeviceModelRepository deviceModelRepository;
@@ -42,6 +44,7 @@ public class DeviceModelService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public DeviceModel save(DeviceModel entity) {
 		return deviceModelRepository.save(entity);
@@ -51,6 +54,7 @@ public class DeviceModelService {
 	 * 
 	 * @param entity
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void delete(DeviceModel entity) {
 		deviceModelRepository.delete(entity);
@@ -60,6 +64,7 @@ public class DeviceModelService {
 	 * 
 	 * @param id
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void delete(Long id) {
 		deviceModelRepository.delete(id);

@@ -107,6 +107,13 @@ public class JsonMetadataParser {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param propFunc
+	 * @param arg1
+	 * @param arg2
+	 * @return
+	 */
 	private static BigDecimal processFunction(String propFunc, BigDecimal arg1, BigDecimal arg2) {
 		checkNotNull(propFunc);
 		checkNotNull(arg1);
@@ -142,15 +149,15 @@ public class JsonMetadataParser {
 		StringBuilder sumArgs = new StringBuilder();
 
 		for (JsonNode node : nodes) {
-			if (node.isNumber() || node.isBigDecimal() || node.isBigInteger() || node.isInt() || node.isDouble()) {
-				BigDecimal val = node.decimalValue();
+			BigDecimal val = null;
+			try {
+				val = node.decimalValue();
 				result = processFunction(propFunc, result, val);
 				sumArgs.append(val);
 				sumArgs.append(',');
-			} else {
-				logger.warn("Node: {} is not NUMBER", node.asText());
+			} catch (Exception e) {
+				logger.warn("Node: {} is not NUMBER. Type: {}", node.asText(), node.getNodeType());
 			}
-
 		}
 		if (sumArgs.length() > 0) {
 			sumArgs.deleteCharAt(sumArgs.length() - 1);
