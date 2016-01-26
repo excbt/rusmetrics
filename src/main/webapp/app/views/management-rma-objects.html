@@ -133,7 +133,8 @@
                                 <li><a href="" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal">{{messages.viewProps}}</a></li>
 <!--                                  data-target="#showZpointOptionModal" data-toggle="modal"-->
                                 <li><a href="" ng-click="addZpoint(object)" data-target="#showZpointOptionModal" data-toggle="modal">{{messages.addZpoint}}</a></li>
-                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>
+<!--                                <li><a href="" ng-click="getDevices(object, true)">{{messages.viewDevices}}</a></li>-->
+                                <li><a href="" ng-click="setClientsInit(object)">{{messages.signClientsObjects}}</a></li>
                                 <li role="separator" class="divider"></li>
                                 <li><a href="" ng-click="deleteObjectInit(object)" data-target="#deleteObjectModal" data-toggle="modal">{{messages.deleteObject}}</a></li>  
                               </ul>
@@ -153,7 +154,7 @@
                         <td ng-click="toggleShowGroupDetails(object.id)">
 <!--                            <span ng-show="!object._haveSubscr"><i title="Объект не прикреплен ни к одному абоненту." class="glyphicon glyphicon-lock paddingRight10"></i></span>-->
                             <span ng-show="!object._haveSubscr">
-                                <i title="Объект не прикреплен ни к одному абоненту" class="glyphicon nmc-lock"></i>
+                                <i title="Объект не прикреплен ни к одному абоненту. Объект не будет отображаться в списке меню 'Объекты'" class="glyphicon nmc-lock"></i>
                             </span>
                             {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
                         </td>
@@ -170,9 +171,11 @@
                 </table>
              </td>        
          </tr>
+<!--
         <tr class="nmc-hide">
             <td>{{onTableLoad()}}</td>
         </tr>
+-->
         </tbody>
     </table>
 <!--        </div>-->
@@ -1452,7 +1455,7 @@
                     <div id="divWithObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
                         <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
                             <tbody>
-                                <tr ng-repeat="client in data.clientsOnPage">
+                                <tr ng-repeat="client in data.clientsOnPage" ng-class="{'nmc-tr-odd':($index%2!==0)}">
                                     <td><input type="checkbox" ng-model="client.selected" class="nmc-checkbox-form"/>
                                         {{client.subscriberName}}
                                     </td>

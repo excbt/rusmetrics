@@ -549,35 +549,24 @@ console.log("performObjectsFilter");
     $scope.showNoticeDetail = function(object){
         $scope.selectedItem(object);
         $('#showNoticeModal').modal();
+    };  
+    
+    var successCallbackGetObjects = function(response){
+        $scope.objects = response.data;
+        objectSvc.sortObjectsByFullName($scope.objects);
+        if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
+            $scope.$broadcast('notices:getNoticeTypes');   
+        }else{
+            $scope.$broadcast('notices:getZpointList');   
+        };
     };
-    
-        // sort the object array by the fullname
-//    function sortObjectsByFullName(array){
-//        array.sort(function(a, b){
-//            if (a.fullName>b.fullName){
-//                return 1;
-//            };
-//            if (a.fullName<b.fullName){
-//                return -1;
-//            };
-//            return 0;
-//        }); 
-//    };    
-    
              //get Objects
     $scope.getObjects = function(){
 //        crudGridDataFactory($scope.objectsUrl).query(function(data){
-        objectSvc.promise.then(function(response){
-            $scope.objects = response.data;
-            objectSvc.sortObjectsByFullName($scope.objects);
-            if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
-                $scope.$broadcast('notices:getNoticeTypes');   
-            }else{
-                $scope.$broadcast('notices:getZpointList');   
-            };
-//console.log("getObjects");            
-//            $scope.getResultsPage(1);
-        });
+        if (mainSvc.isRma()){
+            objectSvc.rmaPromise.then(successCallbackGetObjects);
+        }else
+            objectSvc.promise.then(successCallbackGetObjects);
     };
     
     $scope.getObjects();
@@ -604,25 +593,6 @@ console.log("performObjectsFilter");
             element.selected = $scope.allSelected;
         });
     };
-    
-//    $scope.$watch('r_e_p_o_r_t_S_t_a_r_t123', function (newDates, oldDates) {
-//console.log("watch notice");        
-//console.log(newDates); 
-//console.log(oldDates);
-//        if (angular.isUndefined(oldDates)){
-//            return;
-//        };
-//        if(oldDates === newDates){
-//            return;
-//        };
-//console.log("oldDates !== newDates");        
-//        if ((!angular.isDefined($scope.objects))||($scope.objects.length == 0)){
-//console.log("if = true");            
-//            $scope.getObjects();                              
-//        }else{
-//            $scope.getResultsPage(1);
-//        };
-//    }, false);
     
     $scope.getNoticeTypes = function(url){
        $http.get(url)
@@ -673,19 +643,19 @@ console.log("performObjectsFilter");
     
     //notice type filters
     $scope.noticeFilterCritical = function(notice){
-        if (notice.isCriticalEvent===true){
+        if (notice.isCriticalEvent === true){
             return notice
         };
     };
     
     $scope.noticeFilterNoCritical = function(notice){
-        if (notice.isCriticalEvent===false){
+        if (notice.isCriticalEvent === false){
             return notice
         };
     };
     
     $scope.noticeFilterUndefinedCritical = function(notice){
-        if (!(notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+        if (!(notice.hasOwnProperty('isCriticalEvent')) || (notice.isCriticalEvent == null)){
             return notice
         };
     };
@@ -694,13 +664,13 @@ console.log("performObjectsFilter");
     $scope.selectAllCritical = function(){       
         if ($scope.states.tempCriticalTypes_flag){               
             $scope.typesInWindow.forEach(function(notice){        
-                if (notice.isCriticalEvent===true){
+                if (notice.isCriticalEvent === true){
                     notice.selected = true;
                 };
             });
         }else{                               
             $scope.typesInWindow.forEach(function(notice){        
-                if (notice.isCriticalEvent===true){
+                if (notice.isCriticalEvent === true){
                     notice.selected = false;
                 };
             });
@@ -710,13 +680,13 @@ console.log("performObjectsFilter");
     $scope.selectAllNoCritical = function(){       
         if ($scope.states.tempNoCriticalTypes_flag){               
             $scope.typesInWindow.forEach(function(notice){        
-                if ((notice.isCriticalEvent===false)||(!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                if ((notice.isCriticalEvent === false) || (!notice.hasOwnProperty('isCriticalEvent')) || (notice.isCriticalEvent == null)){
                     notice.selected = true;
                 };
             });
         }else{                               
             $scope.typesInWindow.forEach(function(notice){        
-                if ((notice.isCriticalEvent===false)||(!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                if ((notice.isCriticalEvent === false) || (!notice.hasOwnProperty('isCriticalEvent')) || (notice.isCriticalEvent == null)){
                     notice.selected = false;
                 };
             });
@@ -726,13 +696,13 @@ console.log("performObjectsFilter");
     $scope.selectAllUndefinedCritical = function(){       
         if ($scope.states.tempUndefinedCriticalTypes_flag){               
             $scope.typesInWindow.forEach(function(notice){        
-                if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                if ((!notice.hasOwnProperty('isCriticalEvent')) || (notice.isCriticalEvent == null)){
                     notice.selected = true;
                 };
             });
         }else{                               
             $scope.typesInWindow.forEach(function(notice){        
-                if ((!notice.hasOwnProperty('isCriticalEvent'))||(notice.isCriticalEvent==null)){
+                if ((!notice.hasOwnProperty('isCriticalEvent')) || (notice.isCriticalEvent == null)){
                     notice.selected = false;
                 };
             });
@@ -743,7 +713,7 @@ console.log("performObjectsFilter");
 //*****************************************************************************************    
     //get notice id array
     function getNoticesIds(notices, noticesIds){       
-        if ((!notices.hasOwnProperty('length'))||(notices.length==0)||(typeof noticesIds == 'undefined')){
+        if ((!notices.hasOwnProperty('length')) || (notices.length == 0) || (typeof noticesIds == 'undefined')){
             return;
         };
         notices.forEach(function(el){
@@ -768,7 +738,7 @@ console.log("performObjectsFilter");
         var noticesIds = [];
         var url = $scope.crudTableName+"/revision";
         getNoticesIds($scope.notices, noticesIds);   
-        if ((typeof noticesIds == 'undefined')||(!noticesIds.hasOwnProperty('length'))|| (noticesIds.length==0)){
+        if ((typeof noticesIds == 'undefined') || (!noticesIds.hasOwnProperty('length')) || (noticesIds.length == 0)){
             return;
         };
 
@@ -790,7 +760,7 @@ console.log("performObjectsFilter");
     //set revision of all notices 
     $scope.revisionAllNotices = function(flagIsNew){
 //        var noticesIds = [];
-        var url = $scope.crudTableName+"/revision/all";
+        var url = $scope.crudTableName + "/revision/all";
 //        getNoticesIds($scope.notices, noticesIds);   
 //        if ((typeof noticesIds == 'undefined')||(!noticesIds.hasOwnProperty('length'))|| (noticesIds.length==0)){
 //            return;
@@ -827,10 +797,10 @@ console.log("performObjectsFilter");
     
     //Confirm the selected action
     $scope.confirmAction = function(){
-        if ($scope.confirmationText===$scope.messages.markOnPageAsRevision){
+        if ($scope.confirmationText === $scope.messages.markOnPageAsRevision){
             $scope.revisionNoticesOnPage();
         };
-        if ($scope.confirmationText===$scope.messages.markAllAsRevision){
+        if ($scope.confirmationText === $scope.messages.markAllAsRevision){
             $scope.revisionAllNotices(false);
         };
     };
@@ -852,9 +822,9 @@ console.log("Clear Object filters.");
         $scope.groups.forEach(function(el){
             el.selected = false;
         });
-        $scope.selectedObjects_list='Нет';
-        $scope.selectedObjects=[];
-        $scope.selectedGroups=[];
+        $scope.selectedObjects_list = 'Нет';
+        $scope.selectedObjects = [];
+        $scope.selectedGroups = [];
 //        $scope.getResultsPage(1);
     };
     
@@ -866,8 +836,8 @@ console.log("Clear Type filters.");
         $scope.noticeTypes.forEach(function(el){
             el.selected = false;
         });
-        $scope.selectedNoticeTypes_list='Нет';
-        $scope.selectedNoticeTypes=[];
+        $scope.selectedNoticeTypes_list = 'Нет';
+        $scope.selectedNoticeTypes = [];
 
 //        $scope.getResultsPage(1);
     };
@@ -877,16 +847,16 @@ console.log("Clear Type filters.");
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+            if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
 //console.log(elDOM) ;                       
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)){
                 return;
             }; 
 //console.log("noHide") ;             
-            $('#'+element.permissionTagId).removeClass('nmc-hide');
+            $('#' + element.permissionTagId).removeClass('nmc-hide');
         });
         if (ctxFlag == false){
             window.location.assign('#/');
@@ -917,15 +887,15 @@ console.log("Clear Type filters.");
         var noticeCountEveryType = [];
 //        get notice types.
         for (var i = 0; i< $scope.notices.length; i++){
-            if (noticeTypes.length>0){
+            if (noticeTypes.length > 0){
                 var flag = false;
                 for (var j = 0; j<noticeTypes.length; j++){
 //console.log("noticeType = "+noticeTypes[j]);
 //console.log("$scope.notices =");
 //console.log($scope.notices[i]);                    
-                    if(noticeTypes[j]===$scope.notices[i].noticeType){
-                        noticeCountEveryType[j] +=1;
-                        flag =true;
+                    if(noticeTypes[j] === $scope.notices[i].noticeType){
+                        noticeCountEveryType[j] += 1;
+                        flag = true;
                         continue;
                     };
                 };

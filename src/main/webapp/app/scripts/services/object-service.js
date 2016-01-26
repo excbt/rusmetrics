@@ -7,33 +7,40 @@ console.log("Object Service. Run.");
         var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
         }];
         var loading = true;
-        var urlApi ='../api';
-        var urlSubscr = urlApi+'/subscr';
-        var urlRma = urlApi+'/rma';
-        var urlDatasources = urlRma+'/dataSources';
-        var crudTableName = urlSubscr+'/contObjects';
-        var urlRmaContObjects = urlRma+'/contObjects';                 
-        var urlRefRange = urlSubscr+'/contObjects/';
+        var urlApi = '../api';
+        var urlSubscr = urlApi + '/subscr';
+        var urlRma = urlApi + '/rma';
+        var urlDatasources = urlRma + '/dataSources';
+        var crudTableName = urlSubscr + '/contObjects';
+        var urlRmaContObjects = urlRma + '/contObjects';                 
+        var urlRefRange = urlSubscr + '/contObjects/';
         var urlDeviceObjects = '/deviceObjects';
-        var urlDeviceModels = urlRma+urlDeviceObjects+'/deviceModels';
-        var urlDeviceMetaData = '/metaVzlet';
-        var urlDeviceMetaDataSystemList = urlSubscr+'/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaData+'/system';
-        var urlCitiesData = urlSubscr+'/service/hwater/contObjects/serviceTypeInfo';  
-        var urlTimezones = urlApi+'/timezoneDef/all';
-        var urlRsoOrganizations = urlRmaContObjects+'/rsoOrganizations';
-        var urlCmOrganizations = urlRmaContObjects+'/cmOrganizations';
-        var urlServiceTypes = urlRmaContObjects+'/contServiceTypes';//'resource/serviceTypes.json';
-        
-        
+        var urlDeviceModels = urlRma+urlDeviceObjects + '/deviceModels';
+        var urlDeviceMetaDataVzlet = '/metaVzlet';
+        var urlDeviceMetaDataSuffix = '/metadata';
+        var urlDeviceMetaDataVzletSystemList = urlSubscr + '/deviceObjects/metaVzlet/system';//urlDeviceObjects+urlDeviceMetaDataVzlet+'/system';
+        var urlCitiesData = urlSubscr + '/service/hwater/contObjects/serviceTypeInfo';  
+        var urlTimezones = urlApi + '/timezoneDef/all';
+        var urlRsoOrganizations = urlRmaContObjects + '/rsoOrganizations';
+        var urlCmOrganizations = urlRmaContObjects + '/cmOrganizations';
+        var urlServiceTypes = urlRmaContObjects + '/contServiceTypes';//'resource/serviceTypes.json';
+//                 /contObjects/deviceObjects/metadata/measureUnits
+        var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
+                 
+        var deviceMetadataMeasures = null;
+
         var objectSvcSettings = {};
         var getObjectSettings = function(){
             return objectSvcSettings;
         };
+                 
+        var getDeviceMetadataMeasures = function(){
+            return deviceMetadataMeasures;
+        };
         
         var setObjectSettings = function(objectSettings){
-//            monitorSvcSettings = monitorSettings;
             for (var key in objectSettings){
-                objectSvcSettings[key]=objectSettings[key];
+                objectSvcSettings[key] = objectSettings[key];
             };
         };
         
@@ -86,16 +93,16 @@ console.log("Object Service. Run.");
         var zPointsByObject = [];
         var getZpointsDataByObject = function(obj, mode){ 
             obj.zpoints = [];
-            var table = crudTableName+"/"+obj.id+"/contZPoints"+mode;//Ex";
+            var table = crudTableName + "/" + obj.id + "/contZPoints" + mode;//Ex";
             return $http.get(table);
         };         
         
         var getDevicesByObject = function(obj){
-            var url = crudTableName+"/"+obj.id+urlDeviceObjects;
+            var url = crudTableName + "/" + obj.id + urlDeviceObjects;
             return $http.get(url);
         };
         var getAllDevices = function(){
-            var url = urlRmaContObjects+urlDeviceObjects;
+            var url = urlRmaContObjects + urlDeviceObjects;
             return $http.get(url);
         };
         var getDeviceModels = function(){
@@ -103,19 +110,38 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
                  
-        var getDeviceMetaData = function(obj, device){                     
-            var url = crudTableName+"/"+obj.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
+        var getDeviceMetaDataVzlet = function(obj, device){                     
+            var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
         };
-        var getRmaDeviceMetaData = function(objId, device){                     
-            var url = urlRmaContObjects+"/"+objId+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
+        var getRmaDeviceMetaDataVzlet = function(objId, device){                     
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
         };
-        var putDeviceMetaData = function(device){                     
-            var url = crudTableName+"/"+device.contObject.id+urlDeviceObjects+"/"+device.id+urlDeviceMetaData;
-            var result = $http.put(url, device.metaData);
-//console.log(result);            
+        var putDeviceMetaDataVzlet = function(device){                     
+            var url = crudTableName + "/" + device.contObject.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
+            var result = $http.put(url, device.metaData);        
             return result;
+        };
+        
+                 //get device measures
+        var getRmaDeviceMetadataMeasures = function(){                     
+            var url = urlDeviceMetadataMeasures;
+            $http.get(url)
+                .then(function(resp){                
+                deviceMetadataMeasures = resp.data;
+//console.log(deviceMetadataMeasures);                
+                $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
+            },
+                     function(err){
+                console.log(err);
+            });
+        };
+        getRmaDeviceMetadataMeasures();
+                 
+        var getRmaDeviceMetadata = function(objId, devId){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + urlDeviceMetaDataSuffix;
+            return $http.get(url);
         };
                  
         //get time zones
@@ -123,12 +149,12 @@ console.log("Object Service. Run.");
             return getData(urlTimezones);
         };
                  
-        var getDeviceMetaDataSystemList = function(){                     
-            return $http.get(urlDeviceMetaDataSystemList);
+        var getDeviceMetaDataVzletSystemList = function(){                     
+            return $http.get(urlDeviceMetaDataVzletSystemList);
         };
         var vzletSystemList = [];
         var getVzletSystemListFromServer = function(){
-            getDeviceMetaDataSystemList()
+            getDeviceMetaDataVzletSystemList()
             .then(
                 function(response){
                     vzletSystemList = response.data;
@@ -142,11 +168,9 @@ console.log("Object Service. Run.");
         var getVzletSystemList = function(){
             return vzletSystemList;
         };
-    
-        
+
         //get objects
-        var getObjectsData = function () {
-//console.log("Get data from server");            
+        var getObjectsData = function () {           
            return $http.get(crudTableName);//.then(function(res){console.log(res)});
         };
         var getRmaObjectsData = function () {
@@ -155,37 +179,32 @@ console.log("Object Service. Run.");
 
                 //get object
         var getObject = function (objId) {
-//console.log("Get data from server");
            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"};          
            return $http.get(crudTableName + "/" +objId);
         };
         var getRmaObject = function (objId) {
            if (angular.isUndefined(objId) || (objId == null)) {return "Object id is null or undefined"}; 
-           return $http.get(getRmaObjectsUrl() + "/" +objId);
-        };
-         
+           return $http.get(getRmaObjectsUrl() + "/" + objId);
+        }; 
                  //Get data for the setting period for the city by objectId
         var getObjectConsumingData = function(settings, objId){
-            var url=urlCitiesData+"/"+objId+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
+            var url = urlCitiesData + "/" + objId + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;
             return $http.get(url);
-        };
-                 
+        };                 
                 //get data for the setting period for one city
         var getCityConsumingData = function(cityFias, settings){
-            var url=urlCitiesData+"/city/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo+"&cityFias="+cityFias;
-//console.log(url);                        
+            var url = urlCitiesData + "/city/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo + "&cityFias=" + cityFias;           
             return $http.get(url);
         };         
                  //get data for the setting period for all cities
         var getCitiesConsumingData = function(settings){
-            var url=urlCitiesData+"/?dateFrom="+settings.dateFrom+"&dateTo="+settings.dateTo;
-//console.log(url);            
+            var url = urlCitiesData + "/?dateFrom=" + settings.dateFrom + "&dateTo=" + settings.dateTo;          
             return $http.get(url);
         };
                  
         var checkUndefinedNull = function(numvalue){
             var result = false;
-            if ((angular.isUndefined(numvalue)) || (numvalue==null)){
+            if ((angular.isUndefined(numvalue)) || (numvalue == null)){
                 result = true;
             }
             return result;
@@ -200,16 +219,15 @@ console.log("Object Service. Run.");
                 if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
                     return 0;
                 };
-                if (a.fullName > b.fullName){
+                if (a.fullName.toUpperCase() > b.fullName.toUpperCase()){
                     return 1;
                 };
-                if (a.fullName < b.fullName){
+                if (a.fullName.toUpperCase() < b.fullName.toUpperCase()){
                     return -1;
                 };
                 return 0;
             });
-        };
-                 
+        };                 
                     // sort the object array by the fullname, where some objects do not have field "fullName"
         function sortObjectsByFullNameEx(array){
             if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
@@ -225,18 +243,7 @@ console.log("Object Service. Run.");
                 };
             });
             if (tmpArr.length == 0) {return "No objects with fullName"};
-            tmpArr.sort(function(a, b){
-                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.fullName) || checkUndefinedNull(b.fullName)){         
-                    return 0;
-                };
-                if (a.fullName > b.fullName){
-                    return 1;
-                };
-                if (a.fullName < b.fullName){
-                    return -1;
-                };
-                return 0;
-            });
+            sortObjectsByFullName(tmpArr);
             Array.prototype.push.apply(tmpBadArr, tmpArr);
             return tmpBadArr;
         };
@@ -246,10 +253,13 @@ console.log("Object Service. Run.");
                 return false;
             };           
             array.sort(function(a, b){
-                if (a.contObject.fullName>b.contObject.fullName){
+                if (checkUndefinedNull(a) || checkUndefinedNull(b) || checkUndefinedNull(a.contObject.fullName) || checkUndefinedNull(b.contObject.fullName)){         
+                    return 0;
+                };
+                if (a.contObject.fullName.toUpperCase() > b.contObject.fullName.toUpperCase()){
                     return 1;
                 };
-                if (a.contObject.fullName<b.contObject.fullName){
+                if (a.contObject.fullName.toUpperCase() < b.contObject.fullName.toUpperCase()){
                     return -1;
                 };
                 return 0;
@@ -288,47 +298,21 @@ console.log("Object Service. Run.");
         var getRmaPromise = function(){
             return rmaPromise;
         };
-//       $interval(function(){
-//           var time = (new Date()).toLocaleString();
-//           document.getElementById('timeOutput').innerHTML="Время: "+time;
-//console.log(time);           
-//       },10000);
-                 
-                 //if data loaded
-//        promise.then(function(response){
-//console.log("objectSvc:loaded");            
-//            loading = false;
-//            $rootScope.$broadcast('objectSvc:loaded');
-//        });
                  
         var sendDeviceToServer = function(device){
             //send to server
                 //create param string
-//            var paramString = "";
             var params = {};
             if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
-//                paramString = paramString+"subscrDataSourceAddr="+device.subscrDataSourceAddr;
                 params.subscrDataSourceAddr = device.subscrDataSourceAddr;
             };
             if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-//                if (paramString!=""){
-//                    paramString+="&";
-//                };
-//                paramString = paramString+"dataSourceTable="+device.dataSourceTable;
                 params.dataSourceTable=device.dataSourceTable;
             };
             if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
-//                if (paramString!=""){
-//                    paramString+="&";
-//                };
-//                paramString = paramString+"dataSourceTable1h="+device.dataSourceTable1h;
                 params.dataSourceTable1h = device.dataSourceTable1h;
             };
             if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
-//                if (paramString!=""){
-//                    paramString+="&";
-//                };
-//                paramString = paramString+"dataSourceTable24h="+device.dataSourceTable24h;
                 params.dataSourceTable24h = device.dataSourceTable24h;
             };
             var targetUrl = getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
@@ -336,14 +320,9 @@ console.log("Object Service. Run.");
                 targetUrl = targetUrl+"/"+device.id;
             };
                 //add url params
-//            targetUrl = targetUrl+"/?subscrDataSourceId="+device.subscrDataSourceId;
             params.subscrDataSourceId=device.subscrDataSourceId;
-//            if (paramString!=""){
-//                paramString="&"+paramString;
-//            };
-//            targetUrl= targetUrl +paramString;
             device.editDataSourceInfo = params;
-            if (angular.isDefined(device.id)&&(device.id !=null)){
+            if (angular.isDefined(device.id) && (device.id != null)){
                 return $http.put(targetUrl, device);//.then(successCallback,errorCallback);
             }else{
                 return $http.post(targetUrl, device);//.then(successCallback,errorCallback);
@@ -362,12 +341,14 @@ console.log("Object Service. Run.");
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,
-            getDeviceMetaData,
-            getDeviceMetaDataSystemList,
+            getRmaDeviceMetadata,
+            getDeviceMetadataMeasures,
+            getDeviceMetaDataVzlet,
+            getDeviceMetaDataVzletSystemList,
             getLoadingStatus,
             getObjectsUrl,
             getPromise,
-            getRmaDeviceMetaData,
+            getRmaDeviceMetaDataVzlet,
             getRmaObject,
             getRmaObjectsData,
             getRmaObjectsUrl,
@@ -382,7 +363,7 @@ console.log("Object Service. Run.");
             findObjectById,
             loading,
             promise,
-            putDeviceMetaData,
+            putDeviceMetaDataVzlet,
             rmaPromise,
             sendDeviceToServer,
             setObjectSettings,            

@@ -23,6 +23,25 @@ angular.module('portalNMC')
 console.log("Objects directive.");
 //var timeDirStart = (new Date()).getTime();
                 
+//                var elem = document.getElementById("divWithObjectListTable");//$("#divWithObjectListTable");
+//                elem.scrollTop = elem.scrollHeight;
+//                elem.focus();
+//console.log(elem);                
+//                for(var i in elem){
+//                    if( i.substr( 0, 2 ) == "on" )
+//                        elem[i] = function(event){
+//                            if (event.type.indexOf("mouse") == -1)
+//                                console.log(event);
+//                        };
+//                        console.log(i+", ");
+//	                   document.write( i+"<br>" );
+//
+//                };
+//                
+//                elem.onfocus = function(){
+//console.log("divWithObjectListTable focused");                    
+//                };
+                
                     //messages for user
                 $scope.messages = {};
                 $scope.messages.setSelectedInWinterMode = "Перевести выделенные объекты на зимний режим";
@@ -147,7 +166,7 @@ console.log("Objects directive.");
                                 //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
                                 $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
                                 $timeout(function(){
-                                    var curObjElem = document.getElementById("obj"+$scope.objectCtrlSettings.tmpCurContObj);                     
+                                    var curObjElem = document.getElementById("obj" + $scope.objectCtrlSettings.tmpCurContObj);                    
                                     if (!mainSvc.checkUndefinedNull(curObjElem)){        
                                         curObjElem.scrollIntoView();
                                     };
@@ -331,7 +350,13 @@ console.log("Objects directive.");
                 };
 
                 var errorCallback = function (e) {
-                    notificationFactory.errorInfo(e.statusText,e.data.description);       
+                    console.log(e);
+                    var errorCode = "-1";
+                    if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                        errorCode = e.resultCode || e.data.resultCode;
+                    };
+                    var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                    notificationFactory.errorInfo(errorObj.caption, errorObj.description);       
                 };
 
                 $scope.addObject = function () {
@@ -940,7 +965,7 @@ console.log("Objects directive.");
                         var tempArr = [];
                         
                         $scope.objects.forEach(function(elem){
-                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase())!=-1){
+                            if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
                                 tempArr.push(elem);
                             };
                         });
@@ -954,48 +979,67 @@ console.log("Objects directive.");
                 
                 
                 //keydown listener for ctrl+end
-                window.onkeydown = function(e){                                          
-                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)){
-                        $scope.loading =  true;    
-                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
+                window.onkeydown = function(e){
+//console.log(e);                    
+                    if (e.keyCode == 34){
+                        $scope.addMoreObjects();
+                        $scope.$apply();
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;
+                        return;
+                    };
+                    if (e.keyCode == 33){
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop - $scope.objectCtrlSettings.objectsPerScroll*10;
+                        return;
+                    };
+                    if (e.ctrlKey && e.keyCode == 36){
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = 0;
+                        return;
+                    };
+                    if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){    
+//                        $scope.loading = true;    
+                        var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objects.length;
-                        
-                        $scope.objectCtrlSettings.isCtrlEnd = true;
-                        
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;                        
+//                        $scope.objectCtrlSettings.isCtrlEnd = true;
+                        $scope.$apply();
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollHeight;
                     };
                 };
                 
                 //function set cursor to the bottom of the object table, when ctrl+end pressed
-                $scope.onTableLoad = function(){ 
+//                $scope.onTableLoad = function(){ 
 //console.log("Run onTableLoad");                    
-                    if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
-                        var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
-                        window.scrollTo(0, Math.round(pageHeight));
-                        $scope.objectCtrlSettings.isCtrlEnd = false;
-                        $scope.loading =  false;
-                    };
-                };
+//                    if (($scope.objectCtrlSettings.isCtrlEnd === true)) {                    
+//                        var pageHeight = (document.body.scrollHeight > document.body.offsetHeight) ? document.body.scrollHeight : document.body.offsetHeight;                      
+//                        window.scrollTo(0, Math.round(pageHeight));
+//                        $scope.objectCtrlSettings.isCtrlEnd = false;
+//                        $scope.loading =  false;
+//                    };
+//                };
                 
                 //function add more objects for table on user screen
                 $scope.addMoreObjects = function(){                 
-                    if (($scope.objects.length<=0)){
+                    if (($scope.objects.length <= 0)){
                         return;
                     };
                     
                     //set end of object array - определяем конечный индекс объекта, который будет выведен при текущем скролинге
-                    var endIndex = $scope.objectCtrlSettings.objectsOnPage+$scope.objectCtrlSettings.objectsPerScroll;
+                    var endIndex = $scope.objectCtrlSettings.objectsOnPage + $scope.objectCtrlSettings.objectsPerScroll;
                     if((endIndex >= $scope.objects.length)){
                         endIndex = $scope.objects.length;
                     };
                     //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
-                    var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
+                    var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, endIndex);
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
                     if(endIndex >= ($scope.objects.length)){
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
                     }else{
-                        $scope.objectCtrlSettings.objectsOnPage+=$scope.objectCtrlSettings.objectsPerScroll;
+                        $scope.objectCtrlSettings.objectsOnPage += $scope.objectCtrlSettings.objectsPerScroll;
                     };
                 };                                
                 
@@ -1023,18 +1067,18 @@ console.log("Objects directive.");
                     $scope.settedMode = mode;
                     //get the object ids array
                     var contObjectIds = [];
-                    if ($scope.objectCtrlSettings.allSelected===true){
+                    if ($scope.objectCtrlSettings.allSelected === true){
                         contObjectIds = $scope.objects.map(function(el){return el.id});
                     }else{
                         $scope.objectsOnPage.forEach(function(el){
-                            if(el.selected===true){
+                            if(el.selected === true){
                                 contObjectIds.push(el.id);
                             };
                         });
                     };
                     
                     //send data to server
-                    var url = objectSvc.getObjectsUrl()+"/settingModeType";
+                    var url = objectSvc.getObjectsUrl() + "/settingModeType";
                     $http({
                         url: url, 
                         method: "PUT",
@@ -1049,17 +1093,17 @@ console.log("Objects directive.");
                 $scope.getVzletSystemList = function(){
                     var tmpSystemList = objectSvc.getVzletSystemList();
                     if (tmpSystemList.length===0){
-                        objectSvc.getDeviceMetaDataSystemList()
+                        objectSvc.getDeviceMetaDataVzletSystemList()
                             .then(
                             function(response){
                                 $scope.objectCtrlSettings.vzletSystemList = response.data;                           
                             },
                             function(e){
-                                notificationFactory.errorInfo(e.statusText,e.description);
+                                notificationFactory.errorInfo(e.statusText, e.description);
                             }
                         );
                     }else{
-                        $scope.objectCtrlSettings.vzletSystemList =tmpSystemList;
+                        $scope.objectCtrlSettings.vzletSystemList = tmpSystemList;
                     };
                 };
                 $scope.getVzletSystemList();
@@ -1083,8 +1127,8 @@ console.log("Objects directive.");
                 };
                 
                     //get device meta data and show it
-                $scope.getDeviceMetaData = function(obj, device){
-                    objectSvc.getDeviceMetaData(obj, device).then(
+                $scope.getDeviceMetaDataVzlet = function(obj, device){
+                    objectSvc.getDeviceMetaDataVzlet(obj, device).then(
                         function(response){                           
                             device.metaData = response.data; 
                             $scope.currentDevice =  device;                           
@@ -1172,7 +1216,7 @@ console.log("Objects directive.");
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.$apply();
                         }
-                    });
+                    });                    
                 });
                 
                 //checkers            

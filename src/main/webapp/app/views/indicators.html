@@ -63,7 +63,7 @@
                         </div>
                 </div>
                 <div class="col-md-1 noPadding nmc-div-refresh">
-                    <button title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></button>
+                    <p title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></p>
                 </div>
                 <div class="col-md-4">    
 
@@ -172,7 +172,7 @@
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
                     </td>
                     <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
-                        <span ng-if="summary.diffs[column.name]!='-'">
+                        <span ng-if="summary.diffs[column.name] != '-' && column.name != 'm_delta' && column.name != 'v_delta'">
                              <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i title="Показать детали по интеграторам" class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
                         </span>    
 
