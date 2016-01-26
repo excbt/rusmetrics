@@ -65,6 +65,19 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	/**
 	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<MeasureUnit> selectMeasureUnitsSame(String measureUnit) {
+
+		List<MeasureUnit> resultList = measureUnitRepository.selectMeasureUnitsSame(measureUnit);
+
+		return ObjectFilters.deletedFilter(resultList);
+
+	}
+
+	/**
+	 * 
 	 * @param deviceObjectId
 	 * @return
 	 */

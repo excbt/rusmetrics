@@ -38,6 +38,7 @@ public class MeasureUnit extends AbstractKeynameEntity implements DeletableObjec
 	@JsonIgnore
 	private int version;
 
+	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
 
