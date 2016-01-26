@@ -12,7 +12,7 @@ public interface DeviceObjectMetadataRepository extends CrudRepository<DeviceObj
 
 	@Query("SELECT m FROM DeviceObjectMetadata m "
 			+ " WHERE m.deviceObjectId = :deviceObjectId AND m.deviceMetadataType = :deviceMetadataType "
-			+ " ORDER BY m.metaOrder ")
+			+ " ORDER BY m.metaNumber NULLS FIRST, m.metaOrder ")
 	public List<DeviceObjectMetadata> selectDeviceObjectMetadata(@Param("deviceObjectId") Long deviceObjectId,
 			@Param("deviceMetadataType") String deviceMetadataType);
 

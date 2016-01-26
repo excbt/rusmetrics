@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 
-	private final static long TEST_DEVICE_OBJECT_ID = 63028149;
+	private final static long TEST_DEVICE_OBJECT_ID = 65836845;
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -40,7 +40,7 @@ public class DeviceObjectDataSourceServiceTest extends ManualJpaConfigTest {
 		assertNotNull(deviceObject);
 		SubscrDataSource subscrDataSource = subscrDataSourceService
 				.selectByKeyname(currentSubscriberService.getSubscriberId(), "DEVICE_DEFAULT");// DEVICE_DEFAULT
-																								// DEVICE_OPTION
+																																							// DEVICE_OPTION
 		assertNotNull(subscrDataSource);
 
 		DeviceObjectDataSource deviceObjectDataSource = new DeviceObjectDataSource();

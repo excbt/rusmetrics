@@ -15,8 +15,7 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceMetadataRepository;
 @Service
 public class DeviceMetadataService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(DeviceMetadataService.class);
+	private static final Logger logger = LoggerFactory.getLogger(DeviceMetadataService.class);
 
 	@Autowired
 	private DeviceMetadataRepository deviceMetadataRepository;
@@ -26,8 +25,8 @@ public class DeviceMetadataService {
 	 * @param deviceModelId
 	 * @return
 	 */
-	@Transactional (value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceMetadata> findDeviceMetadata(Long deviceModelId) {
-		return deviceMetadataRepository.findByDeviceModelIdOrderByMetaOrderAsc(deviceModelId);
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<DeviceMetadata> selectDeviceMetadata(Long deviceModelId, String deviceMeatdataType) {
+		return deviceMetadataRepository.selectDeviceMetadata(deviceModelId, deviceMeatdataType);
 	}
 }

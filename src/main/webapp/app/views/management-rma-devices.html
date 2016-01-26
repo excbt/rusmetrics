@@ -22,11 +22,6 @@
     <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
 </div>
 <div ng-show="!ctrlSettings.loading">
-<!--
-<div class="btn-toolbar marginBottom10">
-    
-</div>
--->
 <div class="row nmc-main-workspace-header">
     <div class="col-md-3 marginBottom10">
         <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
@@ -37,11 +32,6 @@
         <input title="Введите текст для поиска приборов" type="text" class="form-control nmc-text-input-form" ng-model="filter">
     </div>
     <div class="col-md-offset-2 col-md-2">
-<!--
-            <label class="nmc-form-label">Всего:</label>
-             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
-            <span id="timeOutput"></span>
--->
     </div>
 </div>
 
@@ -121,17 +111,6 @@
                     <div class="btn-group">
                         <i title="Редактировать свойства прибора" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editDevice(device)"></i>
                     </div>
-<!--
-                    <div ng-if="directDevice(device)" class="btn-group">
-                        <i title="Действия над прибором" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
-                        </i>
-                      <ul class="dropdown-menu">
-                        <li><a href="" ng-click="editDevice(device)">Редактировать свойства прибора</a></li>
-                        <li><a href="" ng-click="getDeviceMetadata(device.contObjectId, device)">Редактировать метаданные прибора</a></li>
-     
-                      </ul>
-                    </div>
--->
                 </div>
             </td>
 
@@ -179,20 +158,20 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">s/n</label>
                                 </td>
-                                <td colspan="2" class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Модель</label>
                                 </td>
-                                <td colspan="2" class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels">
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels">
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td><label for="inputComment" >Объект</label>
                                 </td>
-                                <td colspan="2" class="nmc-text-align-left">
+                                <td class="nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.contObjectId==null}">
                                         <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects">
                                         </select>
@@ -206,55 +185,46 @@
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.subscrDataSourceId==null}">
                                         <select class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
                                         </select>                                        
-                                    </div>
-                                    
-                                </td>
-                                <td class="nmc-td-for-button">
-                                    <div ng-show="data.currentObject.activeDataSource.subscrDataSource.dataSourceTypeKey == 'DEVICE'" class="btn-group">
-                                        <i 
-                                           class="btn btn-block btn-xs" 
-                                           title="Редактировать метаданные" 
-                                           ng-click="getDeviceMetadata(data.currentObject.contObjectId, data.currentObject)">
-                                            <img height="12" width="12" src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png"/>
-                                        </i>
-                                    </div>
+                                    </div>                                    
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
                                 <td><label for="inputDescription" >Адрес прибора</label>
                                 </td>
-                                <td colspan="2" class="nmc-text-align-left">
+                                <td class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="data.currentObject.subscrDataSourceAddr"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
                                 <td><label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
-                                <td colspan="2" class="nmc-text-align-left">
+                                <td class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="data.currentObject.dataSourceTable1h"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
                                 <td><label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
-                                <td colspan="2" class="nmc-text-align-left">
+                                <td class="nmc-text-align-left">
                                     <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h"/>
                                 </td>
                             </tr>
+<!--
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
-                                <td colspan="3" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isDeviceObjectMetadata"/><label for="inputIDOM">Использовать метаданные прибора</label>
+                                <td colspan="2" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isDeviceObjectMetadata"/><label for="inputIDOM">Использовать метаданные прибора</label>
                                 </td>
                             </tr>
+-->
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                 </td>
-                                <td colspan="2" class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationDate">Дата очередной плановой поверки</label>
                                 </td>
-                                <td colspan="2" class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString">
                                 </td>
                             </tr>
                         </table>
@@ -273,7 +243,6 @@
                                    ng-show="data.currentObject.activeDataSource.subscrDataSource.dataSourceTypeKey == 'DEVICE'"
                                    title="Редактировать метаданные" 
                                    ng-click="getDeviceMetadata(data.currentObject.contObjectId, data.currentObject)">
-<!--                                    <img height="12" width="12" src="vendor_components/glyphicons_free/glyphicons/png/glyphicons-140-adjust-alt.png"/>-->
                                     Редактор метаданных
                                 </button>
                             </div>
@@ -403,7 +372,7 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-xs-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								
+								ng-click = "updateDeviceMetaData(data.currentObject)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
@@ -438,25 +407,6 @@
                 <div class="row">
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-<!--
-                            <tr>
-                                <td colspan="2" class="col-sm-12"><label for="input1hTable">Таблица часовых данных</label>
-                                <input class="form-control nmc-text-input-form" type="text" id="input1hTbale" placeholder="Таблица часовых данных" ng-model="currentDevice.metaData.vzletTableHour">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" class="col-sm-12"><label for="input24hTable">Таблица суточных данных</label>
-                                <input class="form-control nmc-text-input-form" type="text" id="input24hTable" placeholder="Таблица суточных данных" ng-model="currentDevice.metaData.vzletTableDay">
-                                </td>
-                            </tr>
--->
-<!--
-                            <tr>
-                                <td colspan="2">
-                                    <hr class="nmc-hr-in-modal">
-                                </td>
-                            </tr>
--->
                             <tr>
                                 <td colspan="2"><label class="nmc-form-label">Схема подключения точек учета (укажите тип теплосистем):</label>
                                 </td>

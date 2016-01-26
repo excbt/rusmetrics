@@ -244,7 +244,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "measure_unit";
+		String tableName = "device_metadata";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("public", tableName);
 		assertTrue(entityColumns.size() > 0);
