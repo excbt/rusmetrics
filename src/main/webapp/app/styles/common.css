@@ -670,7 +670,7 @@ tr.nmc-main-table-header > th {
 
     /* Шапка вложенной таблицы*/
 .nmc-child-table-header{
-     background-color: #646263; /*background color*/
+     background-color: #646263 !important; /*background color*/
      color: #FFFFFF;
 }
 
@@ -1385,7 +1385,8 @@ tr.nmc-inactive-price > td{
 }
 
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
-.nmc-object-list-in-notices{
+    /* Настройка списка мета свойств у прибора*/
+.nmc-object-list-in-notices, .nmc-metadata-list-in-devices{
     overflow-y: auto;
     max-height: 520px;
 }

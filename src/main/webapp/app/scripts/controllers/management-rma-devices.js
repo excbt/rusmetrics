@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDevicesCtrl', ['$scope','$http', 'objectSvc', 'notificationFactory', 'mainSvc', function($scope, $http, objectSvc, notificationFactory, mainSvc){
+.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, mainSvc){
 console.log('Run devices management controller.');
     //settings
     $scope.ctrlSettings = {};
@@ -27,6 +27,31 @@ console.log('Run devices management controller.');
         {
             name: "field3",
             value: "Caramba"
+        }
+    ];
+    $scope.data.metadataSchema = [
+//        {
+//            header: '№ п.п.',
+//            headClass : 'nmc-td-for-button',
+//            name: 'metaOrder',
+//            type: 'label'
+//        },
+        {
+            header: 'Поле источник',
+            headClass : 'col-xs-2 col-md-2',
+            name: 'srcProp',
+            type: 'input/text'
+        },{
+            header: 'Поле приемник',
+            headClass : 'col-xs-2 col-md-2',
+            name: 'destProp',
+            type: 'input/text'
+        },{
+            header: 'Единици измерения',
+            headClass : 'col-xs-1 col-md-1',
+            name: 'srcMeasureUnit',
+            type: 'select',
+            disabled: true
         }
     ];
             //get devices
@@ -211,7 +236,21 @@ console.log('Run devices management controller.');
         $http.delete(targetUrl).then(successCallback, errorCallback);
     };
     
-    // device metadata
+    // device metadata 
+    $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();
+    $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function(){
+        $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();       
+    });
+    
+    $scope.getDeviceMetadata = function(objId, device){        
+        objectSvc.getRmaDeviceMetadata(objId, device.id)
+        .then(function(resp){
+            device.metadata = resp.data;
+            $scope.selectedItem(device);           
+            $('#metaDataEditorModal').modal();
+        }, errorCallback);
+    };
+    
         //check device: data source vzlet or not?
     $scope.vzletDevice = function(device){
         var result = false;
@@ -225,24 +264,36 @@ console.log('Run devices management controller.');
         return result;
     };
     
+    $scope.directDevice = function(device){
+        var result = false;
+        if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
+            if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
+                if (device.activeDataSource.subscrDataSource.dataSourceTypeKey == "DEVICE"){
+                    result = true;
+                };
+            };
+        };
+        return result;
+    };
+    
     //get device meta data and show it
-    $scope.getDeviceMetaData = function(device){
+    $scope.getDeviceMetaDataVzlet = function(device){
         if (mainSvc.checkUndefinedNull(device)){
-            var errorMsg = "getDeviceMetaData: Device undefined or null.";
+            var errorMsg = "getDeviceMetaDataVzlet: Device undefined or null.";
             console.log(errorMsg);
             return errorMsg;
         };
-        objectSvc.getRmaDeviceMetaData(device.contObjectInfo.contObjectId, device).then(
+        objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
                 $scope.currentDevice = device;                           
-                $('#metaDataEditorModal').modal();
+                $('#vzletMetaDataEditorModal').modal();
             },
             errorCallback
         );
     };
 
-    $scope.updateDeviceMetaData = function(device){   
+    $scope.updateDeviceMetaDataVzlet = function(device){   
         var method = "";
         if(angular.isDefined(device.metaData.id) && (device.metaData.id !== null)){
             method = "PUT";
@@ -258,7 +309,7 @@ console.log('Run devices management controller.');
         .then(
             function(response){
                 $scope.currentDevice =  {};
-                $('#metaDataEditorModal').modal('hide');
+                $('#valetMetaDataEditorModal').modal('hide');
             },
             errorCallback
         );
@@ -268,7 +319,7 @@ console.log('Run devices management controller.');
     $scope.getVzletSystemList = function(){
         var tmpSystemList = objectSvc.getVzletSystemList();
         if (tmpSystemList.length === 0){
-            objectSvc.getDeviceMetaDataSystemList()
+            objectSvc.getDeviceMetaDataVzletSystemList()
                 .then(
                 function(response){
                     $scope.data.vzletSystemList = response.data;                           
@@ -290,6 +341,10 @@ console.log('Run devices management controller.');
                     'Октябрь', 'Ноябрь', 'Декабрь' ]
         },
         singleDatePicker: true
+    };
+    
+    $scope.isSystemuser = function(){
+        return mainSvc.isSystemuser();
     };
     
     $(document).ready(function(){

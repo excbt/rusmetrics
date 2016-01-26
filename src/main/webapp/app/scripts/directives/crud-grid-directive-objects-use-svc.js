@@ -1093,7 +1093,7 @@ console.log("Objects directive.");
                 $scope.getVzletSystemList = function(){
                     var tmpSystemList = objectSvc.getVzletSystemList();
                     if (tmpSystemList.length===0){
-                        objectSvc.getDeviceMetaDataSystemList()
+                        objectSvc.getDeviceMetaDataVzletSystemList()
                             .then(
                             function(response){
                                 $scope.objectCtrlSettings.vzletSystemList = response.data;                           
@@ -1127,8 +1127,8 @@ console.log("Objects directive.");
                 };
                 
                     //get device meta data and show it
-                $scope.getDeviceMetaData = function(obj, device){
-                    objectSvc.getDeviceMetaData(obj, device).then(
+                $scope.getDeviceMetaDataVzlet = function(obj, device){
+                    objectSvc.getDeviceMetaDataVzlet(obj, device).then(
                         function(response){                           
                             device.metaData = response.data; 
                             $scope.currentDevice =  device;                           
