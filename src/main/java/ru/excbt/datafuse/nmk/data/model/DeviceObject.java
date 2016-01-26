@@ -107,13 +107,16 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	@Column(name = "is_manual")
 	private Boolean isManual;
-	
+
 	@Column(name = "verification_interval")
 	private BigDecimal verificationInterval;
-	
+
 	@Column(name = "verification_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date verificationDate;
+
+	@Column(name = "meta_version")
+	private Integer metaVersion = 1;
 
 	public DeviceModel getDeviceModel() {
 		return deviceModel;
@@ -265,6 +268,14 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 
 	public void setVerificationDate(Date verificationDate) {
 		this.verificationDate = verificationDate;
+	}
+
+	public Integer getMetaVersion() {
+		return metaVersion;
+	}
+
+	public void setMetaVersion(Integer metaVersion) {
+		this.metaVersion = metaVersion;
 	}
 
 }

@@ -84,6 +84,9 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "meta_version")
+	private Integer metaVersion = 1;
+
 	public String getDeviceMetadataType() {
 		return deviceMetadataType;
 	}
@@ -236,6 +239,14 @@ public class DeviceObjectMetadata extends AbstractAuditableModel implements Dele
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Integer getMetaVersion() {
+		return metaVersion;
+	}
+
+	public void setMetaVersion(Integer metaVersion) {
+		this.metaVersion = metaVersion;
 	}
 
 }
