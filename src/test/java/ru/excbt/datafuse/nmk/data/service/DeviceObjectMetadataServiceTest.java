@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
+import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 
 public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 
@@ -56,6 +58,16 @@ public class DeviceObjectMetadataServiceTest extends JpaSupportTest {
 	@Ignore
 	public void testDelete() throws Exception {
 		deviceObjectMetadataService.deleteDeviceObjectMetadata(3L);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testSameMeasureUnits() throws Exception {
+		List<MeasureUnit> measureUnits = deviceObjectMetadataService.selectMeasureUnitsSame("P_MPA");
+		assertTrue(measureUnits.size() > 0);
 	}
 
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
@@ -35,9 +36,15 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects/metadata/measureUnits", method = RequestMethod.GET,
 			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getMeasureUnits() {
+	public ResponseEntity<?> getMeasureUnits(
+			@RequestParam(value = "measureUnit", required = false) String measureUnit) {
 
-		List<MeasureUnit> resultList = deviceObjectMetadataService.selectMeasureUnits();
+		List<MeasureUnit> resultList = null;
+		if (measureUnit != null) {
+			resultList = deviceObjectMetadataService.selectMeasureUnitsSame(measureUnit);
+		} else {
+			resultList = deviceObjectMetadataService.selectMeasureUnits();
+		}
 
 		return responseOK(resultList);
 	}

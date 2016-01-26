@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 
@@ -28,6 +29,19 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	@Test
 	public void testMeasureUnitGet() throws Exception {
 		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMeasureUnitSameGet() throws Exception {
+		RequestExtraInitializer param = (builder) -> {
+			builder.param("measureUnit", "p_mpa");
+		};
+
+		_testGet(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"), param);
 	}
 
 	/**

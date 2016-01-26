@@ -60,6 +60,9 @@ public class DeviceModel extends AbstractAuditableModel
 	@Column(name = "deleted")
 	private int deleted;
 
+	@Column(name = "meta_version")
+	private Integer metaVersion = 1;
+
 	public String getModelName() {
 		return modelName;
 	}
@@ -144,6 +147,14 @@ public class DeviceModel extends AbstractAuditableModel
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public Integer getMetaVersion() {
+		return metaVersion;
+	}
+
+	public void setMetaVersion(Integer metaVersion) {
+		this.metaVersion = metaVersion;
 	}
 
 }
