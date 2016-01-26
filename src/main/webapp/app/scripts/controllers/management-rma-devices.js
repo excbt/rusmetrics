@@ -14,28 +14,8 @@ console.log('Run devices management controller.');
     $scope.data.devices = [];
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
-    $scope.data.metaData = {};
-    $scope.data.metaData.fields = [
-        {
-            name: "field1",
-            value: "ppz"
-        },
-        {
-            name: "field2",
-            value: "ppa"
-        },
-        {
-            name: "field3",
-            value: "Caramba"
-        }
-    ];
+
     $scope.data.metadataSchema = [
-//        {
-//            header: '№ п.п.',
-//            headClass : 'nmc-td-for-button',
-//            name: 'metaOrder',
-//            type: 'label'
-//        },
         {
             header: 'Поле источник',
             headClass : 'col-xs-2 col-md-2',
@@ -251,6 +231,24 @@ console.log('Run devices management controller.');
         }, errorCallback);
     };
     
+    $scope.updateDeviceMetaData = function(device){       
+        var method = "PUT";
+        var url = objectSvc.getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects/" + device.id + "/metadata";
+        $http({
+            url: url,
+            method: method,
+            data: device.metadata
+        })
+        .then(
+            function(response){
+                $scope.currentObject =  {};
+                $('#metaDataEditorModal').modal('hide');
+                notificationFactory.success();
+            },
+            errorCallback
+        );
+    };
+    
         //check device: data source vzlet or not?
     $scope.vzletDevice = function(device){
         var result = false;
@@ -309,11 +307,13 @@ console.log('Run devices management controller.');
         .then(
             function(response){
                 $scope.currentDevice =  {};
-                $('#valetMetaDataEditorModal').modal('hide');
+                $('#vzletMetaDataEditorModal').modal('hide');
             },
             errorCallback
         );
     };
+    
+    
     
      //get the list of the systems for meta data editor
     $scope.getVzletSystemList = function(){
