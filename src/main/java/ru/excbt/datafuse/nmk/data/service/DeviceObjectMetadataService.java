@@ -17,6 +17,8 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataRepository;
@@ -41,6 +43,12 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	@Autowired
 	private DeviceObjectMetadataRepository deviceObjectMetadataRepository;
+
+	@Autowired
+	private DeviceMetadataService deviceMetadataService;
+
+	@Autowired
+	private DeviceObjectService deviceObjectService;
 
 	/**
 	 * 
@@ -154,6 +162,65 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	public void deleteDeviceObjectMetadata(Long deviceObjectId) {
 		List<DeviceObjectMetadata> metadata = selectDeviceObjectMetadata(deviceObjectId);
 		deviceObjectMetadataRepository.delete(metadata);
+	}
+
+	/**
+	 * 
+	 * @param srcDeviceModelId
+	 * @param destDeviceObjectId
+	 * @return
+	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<DeviceObjectMetadata> copyDeviceModelMetadata(Long deviceModelId, Long destDeviceObjectId) {
+
+		checkNotNull(deviceModelId, "deviceModelId is null");
+
+		DeviceObject deviceObject = deviceObjectService.findOne(destDeviceObjectId);
+		if (deviceObject == null) {
+			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", destDeviceObjectId));
+		}
+
+		if (!deviceModelId.equals(deviceObject.getDeviceModelId())) {
+			throw new PersistenceException(String.format(
+					"DeviceObject (id=%d) has different model. "
+							+ "Actual DeviceModel (id=%d), Expected DeviceModel(id=%d)",
+					destDeviceObjectId, deviceObject.getDeviceModelId(), deviceModelId));
+		}
+
+		List<DeviceObjectMetadata> newMetadata = new ArrayList<>();
+		List<DeviceMetadata> srcDeviceMetadata = deviceMetadataService.selectDeviceMetadata(deviceModelId,
+				DEVICE_METADATA_TYPE);
+
+		if (srcDeviceMetadata.isEmpty()) {
+			throw new PersistenceException(
+					String.format("DeviceMetadata for DeviceModel (id=%d) is not found", deviceModelId));
+		}
+
+		srcDeviceMetadata.forEach(src -> {
+			DeviceObjectMetadata dst = new DeviceObjectMetadata();
+
+			dst.setDeviceMetadataType(src.getDeviceMetadataType());
+			dst.setDeviceObjectId(destDeviceObjectId);
+			dst.setSrcProp(src.getSrcProp());
+			dst.setDestProp(src.getDestProp());
+			dst.setIsIntegrator(src.getIsIntegrator());
+			dst.setSrcPropDivision(src.getSrcPropDivision());
+			dst.setDestPropCapacity(src.getDestPropCapacity());
+			dst.setSrcMeasureUnit(src.getSrcMeasureUnit());
+			dst.setDestMeasureUnit(src.getDestMeasureUnit());
+			dst.setMetaNumber(src.getMetaNumber());
+			dst.setMetaOrder(src.getMetaOrder());
+			dst.setMetaDescription(src.getMetaDescription());
+			dst.setMetaComment(src.getMetaComment());
+			dst.setPropVars(src.getPropVars());
+			dst.setPropFunc(src.getPropFunc());
+			dst.setDestDbType(src.getDestDbType());
+
+			newMetadata.add(dst);
+		});
+
+		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
 	}
 
 }

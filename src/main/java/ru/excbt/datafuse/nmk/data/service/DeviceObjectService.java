@@ -209,7 +209,9 @@ public class DeviceObjectService implements SecuredRoles {
 		// deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
 		// deviceObject.set
 		DeviceObject result = deviceObjectRepository.save(deviceObject);
-		result.loadLazyProps();
+		if (result != null) {
+			result.loadLazyProps();
+		}
 		return result;
 	}
 
@@ -221,7 +223,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObject findOne(long id) {
 		DeviceObject result = deviceObjectRepository.findOne(id);
-		result.loadLazyProps();
+		if (result != null) {
+			result.loadLazyProps();
+		}
 		return result;
 	}
 
