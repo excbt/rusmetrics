@@ -138,6 +138,7 @@ console.log('Run devices management controller.');
     
     $scope.addDevice = function(){
         $scope.data.currentObject = {};
+        $scope.data.currentObject.isManual = true;
         $('#showDeviceModal').modal();
     };
     $scope.editDevice = function(device){
@@ -180,11 +181,11 @@ console.log('Run devices management controller.');
     $scope.saveDevice = function(device){ 
         //check device data
         var checkDsourceFlag = true;
-        if (device.contObjectId==null){
+        if (device.contObjectId == null){
             notificationFactory.errorInfo("Ошибка","Не задан объект учета");
             checkDsourceFlag = false;
         };
-        if (device.subscrDataSourceId==null){
+        if (device.subscrDataSourceId == null && device.isManual){
             notificationFactory.errorInfo("Ошибка","Не задан источник данных");
             checkDsourceFlag = false;
         };
@@ -354,6 +355,10 @@ console.log('Run devices management controller.');
     
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
+    };
+    
+    $scope.isDeviceDisabled = function(device){
+        return !device.isManual;
     };
     
     $(document).ready(function(){

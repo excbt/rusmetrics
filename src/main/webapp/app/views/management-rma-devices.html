@@ -107,10 +107,33 @@
 
         <tr ng-repeat="device in data.devices | filter: filter" >
             <td class="nmc-td-for-button">
+<!--
                 <div class="btn-toolbar">
                     <div class="btn-group">
                         <i title="Редактировать свойства прибора" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editDevice(device)"></i>
                     </div>
+                </div>
+-->
+                <div class="btn-group">
+                  <i title="Действия над прибором" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                    </i>
+                  <ul class="dropdown-menu">
+                    <li>
+                        <a href="" ng-click="editDevice(device)">
+                            Редактировать свойства прибора
+                        </a>
+                    </li>
+                    <li ng-if = "isDirectDevice(device)">
+                        <a href="" ng-click="getDeviceMetadata(device.contObjectId, device)">
+                            Редактировать метаданные
+                        </a>
+                    </li>
+                    <li>
+                        <a href="" ng-click="selectedItem(device)" data-target="#sheduleEditorModal" data-toggle="modal">
+                            Расписание опроса прибора
+                        </a>
+                    </li>
+                  </ul>
                 </div>
             </td>
 
@@ -158,13 +181,13 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputMode">s/n</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-text-input-form" type="text" id="inputSn" placeholder="Серийный номер"  ng-model="data.currentObject.number" ng-disabled="isDeviceDisabled(data.currentObject);">
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputName">Модель</label>
                                 </td>
-                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels">
+                                <td class="nmc-text-align-left col-sm-9"><select class="form-control nmc-select-form" id="inputType" ng-model="data.currentObject.deviceModelId" ng-options="model.id as (model.caption || model.modelName) for model in data.deviceModels" ng-disabled="isDeviceDisabled(data.currentObject);">
                                     </select>
                                 </td>
                             </tr>
@@ -173,7 +196,7 @@
                                 </td>
                                 <td class="nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.contObjectId==null}">
-                                        <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects">
+                                        <select class="form-control nmc-select-form" id="inputContObject" ng-model="data.currentObject.contObjectId" ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects" ng-disabled="isDeviceDisabled(data.currentObject);">
                                         </select>
                                     </div>
                                 </td>
@@ -182,9 +205,10 @@
                                 <td><label for="inputDescription" >Источник данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.subscrDataSourceId==null}">
-                                        <select class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
-                                        </select>                                        
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
+                                        <select ng-if = "!isDeviceDisabled(data.currentObject)" class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
+                                        </select>
+                                        <input ng-if = "isDeviceDisabled(data.currentObject)" class="form-control nmc-text-input-form" type="text" value="Первичная загрузка - ВЗЛЕТ / ЛЕРС" disabled/>
                                     </div>                                    
                                 </td>
                             </tr>
@@ -192,21 +216,21 @@
                                 <td><label for="inputDescription" >Адрес прибора</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="data.currentObject.subscrDataSourceAddr"/>
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="data.currentObject.subscrDataSourceAddr" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
                                 <td><label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="data.currentObject.dataSourceTable1h"/>
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="data.currentObject.dataSourceTable1h" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
                                 <td><label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h"/>
+                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
 <!--
@@ -218,13 +242,13 @@
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control nmc-input-data nmc-text-input-form" type="text" id="inputVerificationInterval"  ng-model="data.currentObject.verificationInterval" data-inputmask="'alias': 'numeric', 'greedy': false" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationDate">Дата очередной плановой поверки</label>
                                 </td>
-                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString">
+                                <td class="col-sm-9 nmc-text-align-left"><input class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form" type="text" id="inputVerificationDate" ng-model="data.currentObject.verificationDateString" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                         </table>
@@ -250,6 +274,7 @@
                         <div class="col-xs-offset-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="saveDevice(data.currentObject)"
+                                ng-disabled="isDeviceDisabled(data.currentObject);"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-xs-3 col-md-3 noMargin noPadding">
@@ -378,6 +403,129 @@
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
 							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#data.currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="messageForUserLabel" tabindex="-1">
+
+	<div class="modal-dialog modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="messageForUserLabel" class="nmc-h3">
+				Внимание! 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+			<form name="moveForm" novalidate>
+                <pre class="nmc-textfield">
+                    {{messageForUser}}  
+                </pre>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-4 col-md-5">
+							<button ng-show="showMessageForUserModalExFlag" 
+                                    class="btn btn-xs btn-default btn-block nmc-ok-button" 
+                                    data-dismiss="modal" 
+                                    data-target="#main_properties" 
+                                    data-toggle="tab"
+								ng-click="saveDevice(data.currentObject)">
+								Продолжить
+							</button>
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
+								ng-click="exit('#data.currentObject');">
+								Отмена
+							</button>                            
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!--shedule editor-->
+<div id="sheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="sheduleEditorLabel" tabindex="-1">
+	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-narrow-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="sheduleEditorLabel" class="nmc-h3">
+				Расписание опроса прибора <span ng-if="data.currentObject.number!=null">- №: </span> {{data.currentObject.number}}
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td colspan="2"><input type="checkbox" class="nmc-checkbox-form" ng-model="autoShed"/>Автоматический опрос
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-8"><label for="inputIntervalShd" >Интервал</label>
+                                </td>
+                                <td class="col-md-4 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" ng-disabled="autoShed"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-md-8"><label for="inputAttemptsNumberShd" >Количество попыток</label>
+                                </td>
+                                <td class="col-md-4 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" ng-disabled="autoShed"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-8">
+                                    <label for="inputIntervalBetweenAttemptsShd"> Интервал между попытками 
+                                    </label>                                    
+                                </td>
+                                <td class="col-sm-4 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" ng-disabled="autoShed"/>
+                                </td>
+                            </tr>                                   
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-3 col-xs-5 col-md-5">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentDevice')">
 								Отменить
 							</button>
 						</div>
