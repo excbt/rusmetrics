@@ -31,7 +31,7 @@ console.log('Run devices management controller.');
             headClass : 'col-xs-1 col-md-1',
             name: 'srcMeasureUnit',
             type: 'select',
-            disabled: true
+            disabled: false
         }
     ];
             //get devices
@@ -133,6 +133,7 @@ console.log('Run devices management controller.');
     
     $scope.selectedItem = function(item){
         $scope.data.currentObject = angular.copy(item);
+        $scope.data.currentObject.beginDeviceModelId = $scope.data.currentObject.deviceModelId;
     };
     
     $scope.addDevice = function(){
@@ -193,9 +194,19 @@ console.log('Run devices management controller.');
         if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
             device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
         }
-//console.log(device);        
+//console.log(device);
+        var userDecision =  false;
+        if (!mainSvc.checkUndefinedNull(device.id) && $scope.isDirectDevice(device) && (device.beginDeviceModelId != device.deviceModelId))
+            //прибор не новый, идет прямая загрузка с прибора и модель была изменена
+        {
+            //выдать предупреждение о том, что модель была изменена и мета данные будут стерты
+            userDecision = confirm("Модель прибора была изменена. Метаданные прибора будут перезаписаны метаданными текущей модели. Продолжить?");
+            if (!userDecision){
+                return "Save operation is canceled by user.";
+            };
+        }
         //send to server
-        objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
+        objectSvc.sendDeviceToServer(device).then(successCallback, errorCallback);
     };
     
     var setConfirmCode = function(){
@@ -217,7 +228,7 @@ console.log('Run devices management controller.');
     };
     
     // device metadata 
-    $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();
+    $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();   
     $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function(){
         $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();       
     });
@@ -262,7 +273,7 @@ console.log('Run devices management controller.');
         return result;
     };
     
-    $scope.directDevice = function(device){
+    $scope.isDirectDevice = function(device){
         var result = false;
         if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
             if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
@@ -312,9 +323,7 @@ console.log('Run devices management controller.');
             errorCallback
         );
     };
-    
-    
-    
+
      //get the list of the systems for meta data editor
     $scope.getVzletSystemList = function(){
         var tmpSystemList = objectSvc.getVzletSystemList();

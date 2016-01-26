@@ -240,7 +240,7 @@
                             <div class="btn-group">
                                 <button 
                                    type="button" class="btn btn-xs nmc-add-button-in-modal" 
-                                   ng-show="data.currentObject.activeDataSource.subscrDataSource.dataSourceTypeKey == 'DEVICE'"
+                                   ng-show="isDirectDevice(data.currentObject) && (data.currentObject.beginDeviceModelId == data.currentObject.deviceModelId)"
                                    title="Редактировать метаданные" 
                                    ng-click="getDeviceMetadata(data.currentObject.contObjectId, data.currentObject)">
                                     Редактор метаданных
@@ -351,7 +351,7 @@
                                             <input type="text" class="form-control nmc-text-input-form" ng-model="field[column.name]" ng-disabled="column.disabled">
                                         </span>
                                         <span ng-switch-when="select">
-                                            <select class="form-control nmc-select-form" ng-model="field[column.name]" ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures" ng-disabled="column.disabled">
+                                            <select class="form-control nmc-select-form" ng-model="field[column.name]" ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" ng-disabled="column.disabled">
                                             </select>
                                         </span>
                                         <span ng-switch-default>

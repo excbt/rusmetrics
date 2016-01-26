@@ -27,7 +27,7 @@ console.log("Object Service. Run.");
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
                  
-        var deviceMetadataMeasures = null;
+        var deviceMetadataMeasures = {};
 
         var objectSvcSettings = {};
         var getObjectSettings = function(){
@@ -125,11 +125,25 @@ console.log("Object Service. Run.");
         };
         
                  //get device measures
+        var getRmaDeviceMetadataMeasureUnit = function(measU, dmm){
+            var url = urlDeviceMetadataMeasures + "?measureUnit=" + dmm.all[measU].keyname;
+            $http.get(url)
+            .then(function(resp){
+                dmm[dmm.all[measU].keyname] = resp.data;
+            }, 
+                 function(error){
+                console.log(error);
+            });
+        };         
+        
         var getRmaDeviceMetadataMeasures = function(){                     
             var url = urlDeviceMetadataMeasures;
             $http.get(url)
                 .then(function(resp){                
-                deviceMetadataMeasures = resp.data;
+                deviceMetadataMeasures.all = resp.data;
+                for (var measU in deviceMetadataMeasures.all){
+                    getRmaDeviceMetadataMeasureUnit(measU, deviceMetadataMeasures);
+                };
 //console.log(deviceMetadataMeasures);                
                 $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
             },
@@ -315,8 +329,8 @@ console.log("Object Service. Run.");
             if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
                 params.dataSourceTable24h = device.dataSourceTable24h;
             };
-            var targetUrl = getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
-            if (angular.isDefined(device.id)&&(device.id !=null)){
+            var targetUrl = getRmaObjectsUrl() + "/"+device.contObjectId+"/deviceObjects";
+            if (angular.isDefined(device.id)&&(device.id != null)){
                 targetUrl = targetUrl+"/"+device.id;
             };
                 //add url params
