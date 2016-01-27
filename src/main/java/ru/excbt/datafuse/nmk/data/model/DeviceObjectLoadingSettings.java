@@ -37,8 +37,8 @@ public class DeviceObjectLoadingSettings extends AbstractAuditableModel {
 	@Column(name = "loading_interval")
 	private String loadingInterval;
 
-	@Column(name = "loading_attepts")
-	private Integer loadingAttepts;
+	@Column(name = "loading_attempts")
+	private Integer loadingAttempts;
 
 	@Column(name = "loading_retry_interval")
 	private String loadingRetryInterval;
@@ -74,12 +74,12 @@ public class DeviceObjectLoadingSettings extends AbstractAuditableModel {
 		this.loadingInterval = loadingInterval;
 	}
 
-	public Integer getLoadingAttepts() {
-		return loadingAttepts;
+	public Integer getLoadingAttempts() {
+		return loadingAttempts;
 	}
 
-	public void setLoadingAttepts(Integer loadingAttepts) {
-		this.loadingAttepts = loadingAttepts;
+	public void setLoadingAttempts(Integer loadingAttempts) {
+		this.loadingAttempts = loadingAttempts;
 	}
 
 	public String getLoadingRetryInterval() {
