@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
@@ -24,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
@@ -63,6 +65,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrDataSourceService subscrDataSourceService;
+
+	@Autowired
+	protected DeviceMetadataService deviceMetadataService;
 
 	/**
 	 * 
@@ -333,6 +338,21 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		DeviceObjectLoadingLog result = deviceObjectLoadingLogService.getDeviceObjectLoadingLog(deviceObject);
 
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param deviceModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels/{deviceModelId}/metadata", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceModelMetadata(@PathVariable("deviceModelId") Long deviceModelId) {
+
+		List<DeviceMetadata> metadata = deviceMetadataService.selectDeviceMetadata(deviceModelId,
+				DeviceMetadataService.DEVICE_METADATA_TYPE);
+
+		return ResponseEntity.ok(!metadata.isEmpty());
 	}
 
 }

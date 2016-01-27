@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,9 +14,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingSettingsRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class DeviceObjectLoadingSettingsService {
+public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 
 	@Autowired
 	private DeviceObjectLoadingSettingsRepository deviceObjectLoadingSettingsRepository;
@@ -35,6 +37,7 @@ public class DeviceObjectLoadingSettingsService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public DeviceObjectLoadingSettings saveOne(DeviceObjectLoadingSettings entity) {
 		checkNotNull(entity.getDeviceObject());

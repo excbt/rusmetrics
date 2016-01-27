@@ -17,6 +17,8 @@ public class DeviceMetadataService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceMetadataService.class);
 
+	public final static String DEVICE_METADATA_TYPE = "DEVICE";
+
 	@Autowired
 	private DeviceMetadataRepository deviceMetadataRepository;
 
