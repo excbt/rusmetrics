@@ -346,6 +346,7 @@
 <div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="metaDataEditorLabel" tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
+        <ng-form name = "metadataForm">
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="metaDataEditorLabel" class="nmc-h3">
@@ -355,21 +356,35 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-devices nmc-modal-panel-with-table" style="">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-devices nmc-modal-panel-with-table" style=""> 
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr class="nmc-child-table-header">
-                                <th ng-repeat="column in data.metadataSchema" ng-class="column.headClass">
+                                <th ng-repeat="column in data.metadataSchema" 
+                                    ng-class="column.headClass">
                                     {{column.header}}
                                 </th>
                             </tr>     
                             <tr ng-repeat="field in data.currentObject.metadata">
-                                <td ng-repeat="column in data.metadataSchema" ng-class="column.dataClass || column.headClass">
+                                <td ng-repeat="column in data.metadataSchema" 
+                                    ng-class="column.dataClass || column.headClass">
                                     <span ng-switch on="column.type">
-                                        <span ng-switch-when="input/text">
-                                            <input type="text" class="form-control nmc-text-input-form" ng-model="field[column.name]" ng-disabled="column.disabled">
+                                        <span ng-switch-when="input/text" 
+                                              class="form-group" 
+                                              ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
+                                            <input ng-attr-name = {{"inputField"+field.id+column.name}} 
+                                                   type="text" 
+                                                   class="form-control nmc-text-input-form" 
+                                                   ng-model="field[column.name]" 
+                                                   ng-disabled="column.disabled" 
+                                                   required/>
                                         </span>
-                                        <span ng-switch-when="select">
-                                            <select class="form-control nmc-select-form" ng-model="field[column.name]" ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" ng-disabled="column.disabled">
+                                        <span ng-switch-when="select" 
+                                              class="form-group" 
+                                              ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
+                                            <select class="form-control nmc-select-form"
+                                                    ng-model="field[column.name]" 
+                                                    ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
+                                                    ng-disabled="column.disabled">
                                             </select>
                                         </span>
                                         <span ng-switch-default>
@@ -379,22 +394,23 @@
                                     
                                 </td>
                             </tr>     
-                        </table>
+                        </table>                        
                     </div>    
                 </div>  
             </div>        
 		</div>
 		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid  ">
-
+				<div class="container-fluid">
 					<div class="row">
                         <div class="col-xs-offset-6 col-xs-3 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click = "updateDeviceMetaData(data.currentObject)"
+                                ng-disabled="metadataForm.$invalid"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
+                                    data-dismiss="modal"
 								ng-click="exit('#data.currentObject')">
 								Отменить
 							</button>
@@ -402,11 +418,7 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
+        </ng-form>
 	</div>
 </div>
 
@@ -452,11 +464,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
@@ -491,7 +498,7 @@
                                         <input id="intervalShd"
                                                class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                type="text" 
-                                               ng-disabled="data.currentScheduler.autoShed"                                                
+                                               ng-disabled="!data.currentScheduler.autoShed"                                                
                                                ng-model="data.currentScheduler.intervalShd"/> чч:мм
 <!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
                                     </span>
@@ -506,7 +513,7 @@
                                         <input id = "inputAttemptsNumberShd" 
                                                class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
                                                type="text" 
-                                               ng-disabled="data.currentScheduler.autoShed"
+                                               ng-disabled="!data.currentScheduler.autoShed"
                                                data-inputmask="'alias':'numeric', 'greedy': false"
                                                ng-model="data.currentScheduler.attemptsNumberShd"/>
                                     </span>
@@ -522,7 +529,7 @@
                                         <input id="inputIntervalBetweenAttemptsShd"
                                                class="form-control nmc-text-input-form nmc-input-digital-data" 
                                                type="text" 
-                                               ng-disabled="data.currentScheduler.autoShed"                                                
+                                               ng-disabled="!data.currentScheduler.autoShed"                                                
                                                ng-model="data.currentScheduler.attemptsIntervalShd"/> чч:мм
 <!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
                                     </span>
@@ -551,11 +558,6 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
 
@@ -639,10 +641,5 @@
 					</div>
 				</div>		
 		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
 	</div>
 </div>
