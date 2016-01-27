@@ -11,6 +11,7 @@ import org.springframework.transaction.TransactionSystemException;
 public enum ApiResultCode {
 	OK(true, "OK"),
 	ERR_UNCKNOWN(false, "Unknown Error"),
+	ERR_BAD_REQUEST(false, "Bad Request"),
 	ERR_ACCESS_DENIED(false, "Access Denied"),
 	ERR_UNPROCESSABLE_TRANSACTION(false, "Unprocessable Transaction"),
 	ERR_DATABASE_ERROR(false, "Database Error"),
