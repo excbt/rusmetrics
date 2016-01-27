@@ -22,13 +22,16 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
 @Controller
 @RequestMapping(value = "/api/rma")
@@ -198,16 +201,16 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setIsActive(true);
 		}
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<DeviceObject, Long>(deviceObject, request) {
-			@Override
-			public void process() {
-				DeviceObject result = deviceObjectService.saveOne(entity, deviceObjectDataSource);
-				setResultEntity(result);
-			}
+		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObject, Long>(deviceObject, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public DeviceObject processAndReturnResult() {
+				return deviceObjectService.saveOne(entity, deviceObjectDataSource);
 			}
 		};
 
@@ -255,6 +258,49 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		List<DeviceObject> deviceObjects = deviceObjectService
 				.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 		return responseOK(ObjectFilters.deletedFilter(deviceObjects));
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @param requestEntity
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> putDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId,
+			@RequestBody DeviceObjectLoadingSettings requestEntity) {
+
+		checkNotNull(contObjectId);
+		checkNotNull(deviceObjectId);
+
+		if (!canAccessContObject(contObjectId)) {
+			return responseForbidden();
+		}
+
+		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		if (deviceObject == null) {
+			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
+		}
+
+		if (!requestEntity.isNew() && !deviceObjectId.equals(requestEntity.getDeviceObjectId())) {
+			return responseBadRequest(
+					ApiResult.badRequest("Wrong deviceObjectId (%d) in deviceObjectLoadingSettings ", deviceObjectId));
+		}
+
+		requestEntity.setDeviceObject(deviceObject);
+
+		ApiAction action = new EntityApiActionAdapter<DeviceObjectLoadingSettings>(requestEntity) {
+
+			@Override
+			public DeviceObjectLoadingSettings processAndReturnResult() {
+				return deviceObjectLoadingSettingsService.saveOne(requestEntity);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }

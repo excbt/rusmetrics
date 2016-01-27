@@ -1,0 +1,74 @@
+package ru.excbt.datafuse.nmk.data.service;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingSettingsRepository;
+
+@Service
+public class DeviceObjectLoadingSettingsService {
+
+	@Autowired
+	private DeviceObjectLoadingSettingsRepository deviceObjectLoadingSettingsRepository;
+
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectLoadingSettings findOne(Long id) {
+		return deviceObjectLoadingSettingsRepository.findOne(id);
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public DeviceObjectLoadingSettings saveOne(DeviceObjectLoadingSettings entity) {
+		checkNotNull(entity.getDeviceObject());
+		checkArgument(!entity.getDeviceObject().isNew());
+		if (!entity.isNew()) {
+			checkArgument(entity.getDeviceObject().getId().equals(entity.getDeviceObjectId()));
+		}
+		entity.setDeviceObjectId(entity.getDeviceObject().getId());
+		return deviceObjectLoadingSettingsRepository.save(entity);
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectLoadingSettings getDeviceObjectLoadingSettings(DeviceObject entity) {
+		if (entity.isNew()) {
+			DeviceObjectLoadingSettings result = new DeviceObjectLoadingSettings();
+			result.setDeviceObject(entity);
+			result.setDeviceObjectId(entity.getId());
+			return result;
+		}
+
+		List<DeviceObjectLoadingSettings> resultList = deviceObjectLoadingSettingsRepository
+				.findByDeviceObjectId(entity.getId());
+		if (resultList.isEmpty()) {
+			DeviceObjectLoadingSettings result = new DeviceObjectLoadingSettings();
+			result.setDeviceObject(entity);
+			result.setDeviceObjectId(entity.getId());
+			return result;
+		}
+		return resultList.get(0);
+	}
+
+}

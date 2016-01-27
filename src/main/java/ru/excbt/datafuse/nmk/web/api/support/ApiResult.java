@@ -79,6 +79,24 @@ public class ApiResult {
 	/**
 	 * 
 	 * @param description
+	 * @return
+	 */
+	public static ApiResult badRequest(String description) {
+		return build(ApiResultCode.ERR_BAD_REQUEST, description);
+	}
+
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
+	public static ApiResult badRequest(String description, Object... args) {
+		return build(ApiResultCode.ERR_BAD_REQUEST, String.format(description, args));
+	}
+
+	/**
+	 * 
+	 * @param description
 	 * @param args
 	 * @return
 	 */

@@ -601,6 +601,16 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @return
+	 */
+	protected String apiRmaUrl(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/rma" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
 	 * @param id
 	 * @return
 	 */

@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
+import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
@@ -23,6 +25,9 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
+
+	@Autowired
+	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
 	/**
 	 * 
@@ -130,6 +135,39 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testAllDeviceObjectsGet() throws Exception {
 		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectsLoadingSettingsGet() throws Exception {
+		_testJsonGet(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectsLoadingLogGet() throws Exception {
+		_testJsonGet(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingLog", 725, 3));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectsLoadingSettingsPut() throws Exception {
+		DeviceObject deviceObject = deviceObjectService.findOne(3);
+		DeviceObjectLoadingSettings settings = deviceObjectLoadingSettingsService
+				.getDeviceObjectLoadingSettings(deviceObject);
+		settings.setLoadingAttepts(10);
+		settings.setLoadingInterval("12:00");
+		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
+		_testJsonUpdate(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
 	}
 
 }
