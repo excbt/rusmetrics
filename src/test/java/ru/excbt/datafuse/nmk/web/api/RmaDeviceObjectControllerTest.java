@@ -164,7 +164,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		DeviceObject deviceObject = deviceObjectService.findOne(3);
 		DeviceObjectLoadingSettings settings = deviceObjectLoadingSettingsService
 				.getDeviceObjectLoadingSettings(deviceObject);
-		settings.setLoadingAttepts(10);
+		settings.setLoadingAttempts(10);
 		settings.setLoadingInterval("12:00");
 		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
 		_testJsonUpdate(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
