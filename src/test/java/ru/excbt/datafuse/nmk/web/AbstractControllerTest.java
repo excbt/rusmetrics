@@ -568,6 +568,17 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param args
+	 * @return
+	 */
+	protected String apiSubscrUrl(String url, Object... args) {
+		checkNotNull(url);
+		return "/api/subscr" + String.format(url, args);
+	}
+
+	/**
+	 * 
+	 * @param url
 	 * @return
 	 */
 	protected String apiSubscrUrl(String url, Long id) {

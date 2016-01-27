@@ -39,11 +39,11 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectController.class);
 
-	private class DataSourceTableHolder {
-		String dataSourceTable;
-		String dataSourceTable1h;
-		String dataSourceTable24h;
-	}
+	//	private class DataSourceTableHolder {
+	//		String dataSourceTable;
+	//		String dataSourceTable1h;
+	//		String dataSourceTable24h;
+	//	}
 
 	/**
 	 * 

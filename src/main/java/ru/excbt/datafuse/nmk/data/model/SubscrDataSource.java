@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -80,6 +81,9 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 
 	@Column(name = "db_password")
 	private String dbPassword;
+
+	@Transient
+	private Boolean _isAnotherSubscriber;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -209,6 +213,14 @@ public class SubscrDataSource extends AbstractAuditableModel implements Deletabl
 
 	public void setDbPassword(String dbPassword) {
 		this.dbPassword = dbPassword;
+	}
+
+	public Boolean get_isAnotherSubscriber() {
+		return _isAnotherSubscriber;
+	}
+
+	public void set_isAnotherSubscriber(Boolean _isAnotherSubscriber) {
+		this._isAnotherSubscriber = _isAnotherSubscriber;
 	}
 
 }
