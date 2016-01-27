@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
@@ -43,6 +44,12 @@ public class DeviceObjectService implements SecuredRoles {
 
 	@Autowired
 	private DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
+
+	@Autowired
+	private DeviceObjectMetadataService deviceObjectMetadataService;
+
+	@Autowired
+	private DeviceMetadataService deviceMetadataService;
 
 	// public DeviceObject loadLazyDeviceObject(DeviceObject deviceObject) {
 	// if (deviceObject != null && deviceObject.getContObject() != null) {
@@ -259,6 +266,9 @@ public class DeviceObjectService implements SecuredRoles {
 		// Set manual flag
 		deviceObject.setIsManual(true);
 
+		DeviceObject oldDeviceObject = deviceObject.isNew() ? null
+				: deviceObjectRepository.findOne(deviceObject.getId());
+
 		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {
 			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
@@ -270,6 +280,28 @@ public class DeviceObjectService implements SecuredRoles {
 			if (ExSystemKey.VZLET.getKeyname()
 					.equals(resultDataSource.getSubscrDataSource().getDataSourceType().getKeyname())) {
 
+			}
+
+		}
+
+		// Проверяем источник данных для прямой загрузки 
+		if (deviceObjectDataSource != null && deviceObjectDataSource.getSubscrDataSource() != null
+				&& "DEVICE".equals(deviceObjectDataSource.getSubscrDataSource().getDataSourceTypeKey())) {
+
+			if (oldDeviceObject == null
+					|| !oldDeviceObject.getDeviceModelId().equals(deviceObject.getDeviceModelId())) {
+				List<DeviceMetadata> deviceMetadataList = deviceMetadataService.selectDeviceMetadata(
+						deviceObject.getDeviceModelId(), DeviceMetadataService.DEVICE_METADATA_TYPE);
+				// Если изменилась модель, а новых типовых метаданных нет, то бросаем exception
+				if (deviceMetadataList.size() == 0) {
+					throw new PersistenceException(String.format("DeviceMetadata for DeviceModel (id=%d) is not found",
+							deviceObject.getDeviceModelId()));
+				}
+
+				// Удаляем текущие метаданные
+				deviceObjectMetadataService.deleteDeviceObjectMetadata(deviceObject.getId());
+				// Заполняем типовые метаданные
+				deviceObjectMetadataService.copyDeviceMetadata(deviceObject.getDeviceModelId(), deviceObject.getId());
 			}
 
 		}

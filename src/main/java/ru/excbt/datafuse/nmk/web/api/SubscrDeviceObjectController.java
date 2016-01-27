@@ -16,14 +16,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.VzletSystem;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.DeviceMetadataService;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
@@ -63,6 +66,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 
 	@Autowired
 	protected SubscrDataSourceService subscrDataSourceService;
+
+	@Autowired
+	protected DeviceMetadataService deviceMetadataService;
 
 	/**
 	 * 
@@ -333,6 +339,55 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		DeviceObjectLoadingLog result = deviceObjectLoadingLogService.getDeviceObjectLoadingLog(deviceObject);
 
 		return responseOK(result);
+	}
+
+	/**
+	 * 
+	 * @param deviceModelId
+	 * @return
+	 */
+	@RequestMapping(value = "/deviceObjects/deviceModels/{deviceModelId}/metadata", method = RequestMethod.GET,
+			produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceModelMetadata(@PathVariable("deviceModelId") Long deviceModelId) {
+
+		List<DeviceMetadata> metadata = deviceMetadataService.selectDeviceMetadata(deviceModelId,
+				DeviceMetadataService.DEVICE_METADATA_TYPE);
+
+		return ResponseEntity.ok(!metadata.isEmpty());
+	}
+
+	/**
+	 * 
+	 * @param contObjectId
+	 * @param deviceObjectId
+	 * @return
+	 */
+	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getDeviceObjectSubscrDataSource(@PathVariable("contObjectId") Long contObjectId,
+			@PathVariable("deviceObjectId") Long deviceObjectId) {
+
+		if (!canAccessContObject(contObjectId)) {
+			responseForbidden();
+		}
+
+		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		if (deviceObject == null) {
+			return responseBadRequest();
+		}
+
+		List<SubscrDataSource> result = subscrDataSourceService.selectBySubscriber(getCurrentSubscriberId());
+		if (deviceObject.getActiveDataSource() != null && !result.stream()
+				.anyMatch(i -> i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSourceId()))) {
+			Long subscrDataSourceId = deviceObject.getActiveDataSource().getSubscrDataSourceId();
+			SubscrDataSource extraDataSurce = subscrDataSourceService.findOne(subscrDataSourceId);
+			if (extraDataSurce != null) {
+				extraDataSurce.set_isAnotherSubscriber(true);
+				result.add(0, extraDataSurce);
+			}
+		}
+
+		return responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 }

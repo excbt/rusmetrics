@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class DeviceObjectMetadataService implements SecuredRoles {
 
-	private final static String DEVICE_METADATA_TYPE = "DEVICE";
+	public final static String DEVICE_METADATA_TYPE = DeviceMetadataService.DEVICE_METADATA_TYPE;
 
 	@Autowired
 	private MeasureUnitRepository measureUnitRepository;
@@ -158,8 +158,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 			dst.setPropVars(src.getPropVars());
 			dst.setPropFunc(src.getPropFunc());
 			dst.setDestDbType(src.getDestDbType());
-			dst.setVersion(src.getVersion());
-			dst.setDeleted(src.getDeleted());
+			dst.setMetaVersion(src.getMetaVersion());
 			newMetadata.add(dst);
 		});
 		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
@@ -185,7 +184,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<DeviceObjectMetadata> copyDeviceModelMetadata(Long deviceModelId, Long destDeviceObjectId) {
+	public List<DeviceObjectMetadata> copyDeviceMetadata(Long deviceModelId, Long destDeviceObjectId) {
 
 		checkNotNull(deviceModelId, "deviceModelId is null");
 
@@ -229,6 +228,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 			dst.setPropVars(src.getPropVars());
 			dst.setPropFunc(src.getPropFunc());
 			dst.setDestDbType(src.getDestDbType());
+			dst.setMetaVersion(src.getMetaVersion());
 
 			newMetadata.add(dst);
 		});

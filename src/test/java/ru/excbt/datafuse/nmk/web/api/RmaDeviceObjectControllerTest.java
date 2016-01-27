@@ -170,4 +170,14 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonUpdate(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectDataSourceGet() throws Exception {
+		//65836845
+		_testJsonGet(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+	}
+
 }

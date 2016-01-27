@@ -104,4 +104,23 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels"));
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceModelMetadataGet() throws Exception {
+		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels/29779958/metadata"));
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testDeviceObjectDataSourceGet() throws Exception {
+		//65836845
+		_testJsonGet(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+	}
+
 }

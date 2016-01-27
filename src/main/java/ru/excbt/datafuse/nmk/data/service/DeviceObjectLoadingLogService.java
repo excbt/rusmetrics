@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,10 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingLogRepository;
+import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class DeviceObjectLoadingLogService {
+public class DeviceObjectLoadingLogService implements SecuredRoles {
 
 	@Autowired
 	private DeviceObjectLoadingLogRepository deviceObjectLoadingLogRepository;
@@ -32,6 +34,7 @@ public class DeviceObjectLoadingLogService {
 	 * @param entity
 	 * @return
 	 */
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public DeviceObjectLoadingLog saveOne(DeviceObjectLoadingLog entity) {
 		return deviceObjectLoadingLogRepository.save(entity);

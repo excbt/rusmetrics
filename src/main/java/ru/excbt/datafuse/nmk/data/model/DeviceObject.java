@@ -72,16 +72,13 @@ public class DeviceObject extends AbstractAuditableModel implements ExSystemObje
 	@Column(name = "device_object_number")
 	private String number;
 
-	@Column(name = "ex_code")
-	@JsonIgnore
+	@Column(name = "ex_code", updatable = false)
 	private String exCode;
 
-	@Column(name = "ex_label")
-	@JsonIgnore
+	@Column(name = "ex_label", updatable = false)
 	private String exLabel;
 
-	@Column(name = "ex_system")
-	@JsonIgnore
+	@Column(name = "ex_system", updatable = false)
 	private String exSystemKeyname;
 
 	@ManyToOne(fetch = FetchType.LAZY)
