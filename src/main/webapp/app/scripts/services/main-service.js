@@ -265,10 +265,9 @@ console.log($rootScope.userInfo);
     
     var checkUndefinedEmptyNullValue = function(numvalue){                    
         var result = false;
-        if ((angular.isUndefined(numvalue)) || (numvalue==null) || (numvalue === "")){
+        if ((angular.isUndefined(numvalue)) || (numvalue == null) || (numvalue === "")){
             result = true;
-            return result;
-        }
+        };
         return result;
     };
 
@@ -295,7 +294,7 @@ console.log($rootScope.userInfo);
             //if numvalue is not number -> return false
             return result;
         };
-        result = parseInt(numvalue)>=0?true:false;
+        result = parseInt(numvalue) >= 0 ? true : false;
         return result;
     };
     
@@ -305,6 +304,12 @@ console.log($rootScope.userInfo);
             result = true;
         }
         return result;
+    };
+    var checkHHmm = function(hhmmValue){
+        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
+            return true;
+        };
+        return false;
     };
     
     ///////////////// end checkers
@@ -408,6 +413,7 @@ console.log($rootScope.userInfo);
     
     return {
         checkContext,
+        checkHHmm,
         checkNumericValue,
         checkPositiveNumberValue,
         checkStrForDate,

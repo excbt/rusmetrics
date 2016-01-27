@@ -10,7 +10,6 @@
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
-
     </ul>
 
     <div class="tab-content">
@@ -105,7 +104,7 @@
             </th>
         </tr>
 
-        <tr ng-repeat="device in data.devices | filter: filter" >
+        <tr ng-repeat="device in data.devices | filter: filter" ng-dblclick="editDevice(device)">
             <td class="nmc-td-for-button">
 <!--
                 <div class="btn-toolbar">
@@ -233,12 +232,6 @@
                                     <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h" ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
-<!--
-                            <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
-                                <td colspan="2" ><input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentObject.isDeviceObjectMetadata"/><label for="inputIDOM">Использовать метаданные прибора</label>
-                                </td>
-                            </tr>
--->
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                 </td>
@@ -483,30 +476,56 @@
                     <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
-                                <td colspan="2"><input type="checkbox" class="nmc-checkbox-form" ng-model="autoShed"/>Автоматический опрос
+                                <td colspan="2">
+                                    <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentScheduler.autoShed"/>
+                                    <label class="nmc-form-label">
+                                        Автоматический опрос
+                                    </label>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-md-8"><label for="inputIntervalShd" >Интервал</label>
+                                <td class="col-xs-6 col-md-6"><label for="intervalShd" class="nmc-form-label">Интервал</label>
                                 </td>
-                                <td class="col-md-4 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" ng-disabled="autoShed"/>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" ng-class="{'has-error':!checkHHmm(data.currentScheduler.intervalShd)}">
+                                        <input id="intervalShd"
+                                               class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                               type="text" 
+                                               ng-disabled="data.currentScheduler.autoShed"                                                
+                                               ng-model="data.currentScheduler.intervalShd"/> чч:мм
+<!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-md-8"><label for="inputAttemptsNumberShd" >Количество попыток</label>
+                                <td class="col-xs-6 col-md-6"><label for="inputAttemptsNumberShd" class="nmc-form-label">Количество попыток</label>
                                 </td>
-                                <td class="col-md-4 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" ng-disabled="autoShed"/>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" 
+                                          ng-class="{'has-error':!checkPositiveNumberValue(data.currentScheduler.attemptsNumberShd)}">
+                                        <input id = "inputAttemptsNumberShd" 
+                                               class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                               type="text" 
+                                               ng-disabled="data.currentScheduler.autoShed"
+                                               data-inputmask="'alias':'numeric', 'greedy': false"
+                                               ng-model="data.currentScheduler.attemptsNumberShd"/>
+                                    </span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-8">
-                                    <label for="inputIntervalBetweenAttemptsShd"> Интервал между попытками 
+                                <td class="col-xs-6 col-md-6">
+                                    <label for="inputIntervalBetweenAttemptsShd" class="nmc-form-label"> Интервал между попытками 
                                     </label>                                    
                                 </td>
-                                <td class="col-sm-4 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" ng-disabled="autoShed"/>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" ng-class="{'has-error':!checkHHmm(data.currentScheduler.attemptsIntervalShd)}">
+                                        <input id="inputIntervalBetweenAttemptsShd"
+                                               class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                               type="text" 
+                                               ng-disabled="data.currentScheduler.autoShed"                                                
+                                               ng-model="data.currentScheduler.attemptsIntervalShd"/> чч:мм
+<!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
+                                    </span>
                                 </td>
                             </tr>                                   
                         </table>
@@ -520,7 +539,7 @@
 					<div class="row">
                         <div class="col-xs-offset-3 col-xs-5 col-md-5">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-								
+								ng-disabled="!checkScheduler(data.currentScheduler)"
 								value="Сохранить" />
 						</div>
 						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">

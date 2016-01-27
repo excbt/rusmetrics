@@ -14,6 +14,7 @@ console.log('Run devices management controller.');
     $scope.data.devices = [];
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
+    $scope.data.currentScheduler = {};
 
     $scope.data.metadataSchema = [
         {
@@ -352,13 +353,33 @@ console.log('Run devices management controller.');
         },
         singleDatePicker: true
     };
-    
+    //checkers
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
     };
     
     $scope.isDeviceDisabled = function(device){
         return !device.isManual;
+    };
+    
+    $scope.checkHHmm = function(hhmmValue){
+        if (mainSvc.checkUndefinedEmptyNullValue(hhmmValue)){
+            return true;
+        };
+        return mainSvc.checkHHmm(hhmmValue);
+    };
+    
+    $scope.checkPositiveNumberValue = function(numvalue){
+        if (mainSvc.checkUndefinedEmptyNullValue(numvalue)){
+            return true;
+        };
+        return mainSvc.checkPositiveNumberValue(numvalue);
+    };
+    
+    $scope.checkScheduler = function(scheduler){
+        return $scope.checkHHmm(scheduler.intervalShd)
+            && $scope.checkHHmm(scheduler.attemptsIntervalShd)
+            && $scope.checkPositiveNumberValue(scheduler.attemptsNumberShd)
     };
     
     $(document).ready(function(){
@@ -369,5 +390,6 @@ console.log('Run devices management controller.');
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
           monthNames: $scope.dateOptsParamsetRu.locale.monthNames
         });
+        $('#inputAttemptsNumberShd').inputmask();
     });
 }]);
