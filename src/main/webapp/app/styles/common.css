@@ -1341,6 +1341,13 @@ tr.nmc-inactive-price > td{
     height: 30px;
     padding-top: 7px;
 }
+
+/* Заголовок модального окна для настройки расписания прибора*/
+.nmc-modal-header-scheduler {
+    background-color: #225685;
+    color: #FFFFFF;
+    padding: 7px;
+}
  
 /* Футер */
 .nmc-modal-footer {
