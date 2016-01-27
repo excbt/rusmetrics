@@ -110,6 +110,17 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
                  
+        var getDeviceSchedulerSettings = function(objId, devId){
+//            /contObjects/%d/deviceObjects/%d/loadingSettings
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            return $http.get(url);            
+        };
+                 
+        var putDeviceSchedulerSettings = function(objId, devId, scheduler){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            return $http.put(url, scheduler);            
+        };
+                 
         var getDeviceMetaDataVzlet = function(obj, device){                     
             var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
@@ -351,6 +362,7 @@ console.log("Object Service. Run.");
             getCmOrganizations,
             getDatasourcesUrl,
             getDeviceModels,
+            getDeviceSchedulerSettings,
             getObject,
             getObjectConsumingData,
             getObjectSettings,
@@ -378,6 +390,7 @@ console.log("Object Service. Run.");
             loading,
             promise,
             putDeviceMetaDataVzlet,
+            putDeviceSchedulerSettings,
             rmaPromise,
             sendDeviceToServer,
             setObjectSettings,            

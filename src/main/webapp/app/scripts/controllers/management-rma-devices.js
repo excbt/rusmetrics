@@ -82,6 +82,25 @@ console.log('Run devices management controller.');
     };
     $scope.getDevices();
     
+    //get device scheduler
+    $scope.getDeviceSchedulerSettings = function(objId, device){
+        objectSvc.getDeviceSchedulerSettings(objId, device.id).then(
+            function(resp){
+                $scope.data.currentScheduler = resp.data;
+                $scope.selectedItem(device);
+                $('#sheduleEditorModal').modal();
+            },
+            function(error){
+                console.log(error.data);
+                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
+            }
+        );
+    };
+    //save scheduler settings
+    $scope.saveScheduler = function(objId, device, scheduler){
+        objectSvc.putDeviceSchedulerSettings(objId, device.id, scheduler).then(successCallback, errorCallback);
+    };
+    
                 //get device models
     $scope.getDeviceModels = function(){
         objectSvc.getDeviceModels().then(
@@ -166,7 +185,9 @@ console.log('Run devices management controller.');
         $scope.getDevices();
         $('#showDeviceModal').modal('hide');
         $('#deleteObjectModal').modal('hide');
+        $('#sheduleEditorModal').modal('hide');
         $scope.data.currentObject = {};
+        $scope.data.currentScheduler = {};
     };
     
     var errorCallback = function(e){       
@@ -363,23 +384,17 @@ console.log('Run devices management controller.');
     };
     
     $scope.checkHHmm = function(hhmmValue){
-        if (mainSvc.checkUndefinedEmptyNullValue(hhmmValue)){
-            return true;
-        };
         return mainSvc.checkHHmm(hhmmValue);
     };
     
     $scope.checkPositiveNumberValue = function(numvalue){
-        if (mainSvc.checkUndefinedEmptyNullValue(numvalue)){
-            return true;
-        };
         return mainSvc.checkPositiveNumberValue(numvalue);
     };
     
     $scope.checkScheduler = function(scheduler){
-        return $scope.checkHHmm(scheduler.intervalShd)
-            && $scope.checkHHmm(scheduler.attemptsIntervalShd)
-            && $scope.checkPositiveNumberValue(scheduler.attemptsNumberShd)
+        return $scope.checkHHmm(scheduler.loadingInterval)
+            && $scope.checkHHmm(scheduler.loadingRetryInterval)
+            && $scope.checkPositiveNumberValue(scheduler.loadingAttempts)
     };
     
     $(document).ready(function(){
