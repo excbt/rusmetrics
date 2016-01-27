@@ -121,6 +121,11 @@ console.log("Object Service. Run.");
             return $http.put(url, scheduler);            
         };
                  
+        var getDeviceDatasources = function(objId, devId){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource";
+            return $http.get(url);            
+        };
+                 
         var getDeviceMetaDataVzlet = function(obj, device){                     
             var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
@@ -368,6 +373,7 @@ console.log("Object Service. Run.");
             getObjectSettings,
             getDevicesByObject,
             getRmaDeviceMetadata,
+            getDeviceDatasources,
             getDeviceMetadataMeasures,
             getDeviceMetaDataVzlet,
             getDeviceMetaDataVzletSystemList,

@@ -204,32 +204,66 @@
                                 <td><label for="inputDescription" >Источник данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
-                                        <select ng-if = "!isDeviceDisabled(data.currentObject)" class="form-control nmc-select-form" id="inputDataSource" ng-model="data.currentObject.subscrDataSourceId" ng-options="source.id as (source.dataSourceName || source.id) for source in data.dataSources" ng-change="deviceDatasourceChange()">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
+                                        <select ng-show = "!isDeviceDisabled(data.currentObject)" 
+                                                class="form-control nmc-select-form"
+                                                ng-class="{'nmc-bg-distinguish': source._isAnotherSubscriber}"
+                                                id="inputDataSource" 
+                                                ng-model="data.currentObject.subscrDataSourceId" 
+                                                ng-options="source.id as source.dataSourceName for source in data.dataSources" 
+                                                ng-change="deviceDatasourceChange()">
                                         </select>
-                                        <input ng-if = "isDeviceDisabled(data.currentObject)" class="form-control nmc-text-input-form" type="text" value="Первичная загрузка - ВЗЛЕТ / ЛЕРС" disabled/>
+                                        <span ng-if = "isDeviceDisabled(data.currentObject)">
+                                            Первичная загрузка - 
+                                            <span ng-switch on="data.currentObject.exSystemKeyname">
+                                                <span ng-switch-when = 'LERS'>
+                                                    ЛЕРС
+                                                </span>
+                                                <span ng-switch-when = 'VZLET'>
+                                                    ВЗЛЕТ
+                                                </span>
+                                            </span>
+                                        </span>
                                     </div>                                    
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
-                                <td><label for="inputDescription" >Адрес прибора</label>
+                                <td>
+                                    <label for="inputDescription" >Адрес прибора</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputAddr" placeholder="" ng-model="data.currentObject.subscrDataSourceAddr" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputAddr" 
+                                           placeholder="" 
+                                           ng-model="data.currentObject.subscrDataSourceAddr" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
-                                <td><label for="inputDescription" >Таблица часовых данных</label>
+                                <td>
+                                    <label for="inputDescription" >Таблица часовых данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable1h" placeholder="" ng-model="data.currentObject.dataSourceTable1h" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputTable1h" 
+                                           placeholder="" 
+                                           ng-model="data.currentObject.dataSourceTable1h" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
-                                <td><label for="inputDescription" >Таблица суточных данных</label>
+                                <td>
+                                    <label for="inputDescription" >Таблица суточных данных</label>
                                 </td>
                                 <td class="nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="inputTable24h" placeholder="" ng-model="data.currentObject.dataSourceTable24h" ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputTable24h" 
+                                           placeholder="" 
+                                           ng-model="data.currentObject.dataSourceTable24h" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
                             <tr>
