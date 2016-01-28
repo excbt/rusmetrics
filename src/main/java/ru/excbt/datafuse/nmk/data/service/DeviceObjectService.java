@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
@@ -50,6 +51,9 @@ public class DeviceObjectService implements SecuredRoles {
 
 	@Autowired
 	private DeviceMetadataService deviceMetadataService;
+
+	@Autowired
+	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
 	/**
 	 * 
@@ -222,6 +226,8 @@ public class DeviceObjectService implements SecuredRoles {
 		DeviceObject oldDeviceObject = deviceObject.isNew() ? null
 				: deviceObjectRepository.findOne(deviceObject.getId());
 
+		boolean isNew = deviceObject.isNew();
+
 		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {
 			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
@@ -257,6 +263,21 @@ public class DeviceObjectService implements SecuredRoles {
 				deviceObjectMetadataService.copyDeviceMetadata(deviceObject.getDeviceModelId(), deviceObject.getId());
 			}
 
+		}
+
+		// DeviceObjectLoadingSettings create new
+		if (isNew) {
+			DeviceObjectLoadingSettings deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+					.newDefaultDeviceObjectLoadingSettings(savedDeviceObject);
+			deviceObjectLoadingSettingsService.saveOne(deviceObjectLoadingSettings);
+		} else {
+			DeviceObjectLoadingSettings deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+					.getDeviceObjectLoadingSettings(savedDeviceObject);
+			if (deviceObjectLoadingSettings.isNew()) {
+				deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+						.newDefaultDeviceObjectLoadingSettings(savedDeviceObject);
+				deviceObjectLoadingSettingsService.saveOne(deviceObjectLoadingSettings);
+			}
 		}
 
 		DeviceObject result = findOne(savedDeviceObject.getId());
