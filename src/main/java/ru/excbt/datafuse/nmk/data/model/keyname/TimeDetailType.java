@@ -6,18 +6,16 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAuditDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
+import ru.excbt.datafuse.nmk.data.domain.RowAuditDate;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "time_detail_type")
-public class TimeDetailType extends AbstractKeynameEntity {
+public class TimeDetailType extends AbstractKeynameEntity implements DeletableObject {
 
-	
-		
 	/**
 	 * 
 	 */
@@ -31,14 +29,16 @@ public class TimeDetailType extends AbstractKeynameEntity {
 
 	@Column(name = "time_detail_type_comment")
 	private String comment;
-	
+
 	@Version
-	private int version;	
-	
+	private int version;
+
 	@Embedded
 	@JsonIgnore
 	private RowAuditDate rowAudit;
 
+	@Column(name = "deleted")
+	private int deleted;
 
 	public String getCaption() {
 		return caption;
@@ -80,6 +80,14 @@ public class TimeDetailType extends AbstractKeynameEntity {
 		this.rowAudit = rowAudit;
 	}
 
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
 
-	
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
+	}
+
 }
