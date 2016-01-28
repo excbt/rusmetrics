@@ -51,15 +51,6 @@ public class DeviceObjectService implements SecuredRoles {
 	@Autowired
 	private DeviceMetadataService deviceMetadataService;
 
-	// public DeviceObject loadLazyDeviceObject(DeviceObject deviceObject) {
-	// if (deviceObject != null && deviceObject.getContObject() != null) {
-	// deviceObject.getContObject().getId();
-	// deviceObject.getContObjectInfo().getName();
-	// }
-	// deviceObject.getActiveDataSource();
-	// return deviceObject;
-	// }
-
 	/**
 	 * 
 	 * @return
@@ -182,44 +173,6 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
 		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
-	}
-
-	/**
-	 * 
-	 * @param deviceObject
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Deprecated
-	public DeviceObject createOne(DeviceObject deviceObject) {
-		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
-		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
-		return deviceObjectRepository.save(deviceObject);
-	}
-
-	/**
-	 * 
-	 * @param deviceObject
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Deprecated
-	public DeviceObject updateOne(DeviceObject deviceObject) {
-		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
-		checkNotNull(deviceObject.getContObject(), "ContObject is null");
-		// deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
-		// deviceObject.set
-		DeviceObject result = deviceObjectRepository.save(deviceObject);
-		if (result != null) {
-			result.loadLazyProps();
-		}
-		return result;
 	}
 
 	/**
