@@ -74,4 +74,19 @@ public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 		return resultList.get(0);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	public DeviceObjectLoadingSettings newDefaultDeviceObjectLoadingSettings(DeviceObject deviceObject) {
+		checkNotNull(deviceObject);
+		DeviceObjectLoadingSettings result = new DeviceObjectLoadingSettings();
+		result.setDeviceObject(deviceObject);
+		result.setDeviceObjectId(deviceObject.getId());
+		result.setIsLoadingAuto(true);
+		result.setLoadingAttempts(1);
+		result.setLoadingInterval("01:00");
+		return result;
+	}
+
 }

@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
@@ -51,14 +52,8 @@ public class DeviceObjectService implements SecuredRoles {
 	@Autowired
 	private DeviceMetadataService deviceMetadataService;
 
-	// public DeviceObject loadLazyDeviceObject(DeviceObject deviceObject) {
-	// if (deviceObject != null && deviceObject.getContObject() != null) {
-	// deviceObject.getContObject().getId();
-	// deviceObject.getContObjectInfo().getName();
-	// }
-	// deviceObject.getActiveDataSource();
-	// return deviceObject;
-	// }
+	@Autowired
+	private DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
 	/**
 	 * 
@@ -186,44 +181,6 @@ public class DeviceObjectService implements SecuredRoles {
 
 	/**
 	 * 
-	 * @param deviceObject
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Deprecated
-	public DeviceObject createOne(DeviceObject deviceObject) {
-		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
-		deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
-		return deviceObjectRepository.save(deviceObject);
-	}
-
-	/**
-	 * 
-	 * @param deviceObject
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Deprecated
-	public DeviceObject updateOne(DeviceObject deviceObject) {
-		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
-		checkArgument(deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId(), "Device Model Id is NULL");
-		checkNotNull(deviceObject.getContObject(), "ContObject is null");
-		// deviceObject.setExSystemKeyname(ExSystemKey.MANUAL.getKeyname());
-		// deviceObject.set
-		DeviceObject result = deviceObjectRepository.save(deviceObject);
-		if (result != null) {
-			result.loadLazyProps();
-		}
-		return result;
-	}
-
-	/**
-	 * 
 	 * @param id
 	 * @return
 	 */
@@ -269,6 +226,8 @@ public class DeviceObjectService implements SecuredRoles {
 		DeviceObject oldDeviceObject = deviceObject.isNew() ? null
 				: deviceObjectRepository.findOne(deviceObject.getId());
 
+		boolean isNew = deviceObject.isNew();
+
 		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
 		if (deviceObjectDataSource != null) {
 			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
@@ -304,6 +263,21 @@ public class DeviceObjectService implements SecuredRoles {
 				deviceObjectMetadataService.copyDeviceMetadata(deviceObject.getDeviceModelId(), deviceObject.getId());
 			}
 
+		}
+
+		// DeviceObjectLoadingSettings create new
+		if (isNew) {
+			DeviceObjectLoadingSettings deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+					.newDefaultDeviceObjectLoadingSettings(savedDeviceObject);
+			deviceObjectLoadingSettingsService.saveOne(deviceObjectLoadingSettings);
+		} else {
+			DeviceObjectLoadingSettings deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+					.getDeviceObjectLoadingSettings(savedDeviceObject);
+			if (deviceObjectLoadingSettings.isNew()) {
+				deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
+						.newDefaultDeviceObjectLoadingSettings(savedDeviceObject);
+				deviceObjectLoadingSettingsService.saveOne(deviceObjectLoadingSettings);
+			}
 		}
 
 		DeviceObject result = findOne(savedDeviceObject.getId());
