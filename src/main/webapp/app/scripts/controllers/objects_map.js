@@ -28,8 +28,8 @@ angular.module('portalNMC')
     
     //cities positions
     $scope.izhevsk = {
-        lat: 56.85,
-        lng: 53.216667,
+        lng: 56.85,
+        lat: 53.216667,
         zoom: 8
     };
     var mapCenter = $scope.izhevsk; //center of map
