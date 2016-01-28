@@ -290,7 +290,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 result.oneDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].oneDateValue);
                 result.startDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].startDateValue);
                 result.endDateValueFormatted=(reportParamset.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(reportParamset.paramSpecialList[elementIndex].endDateValue);
-                result.directoryValue = Number(reportParamset.paramSpecialList[elementIndex].directoryValue) || null;
+                result.directoryValue = (reportParamset.paramSpecialList[elementIndex].directoryValue) || null;
                 result.version = reportParamset.paramSpecialList[elementIndex].version || null;
             }else{
                 result.id = null;
@@ -320,70 +320,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.selectedItem(parentObject, object);
 //console.log($scope.currentReportType);        
         $scope.currentParamSpecialList = prepareParamSpecialList($scope.currentReportType, object);
-//            $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
-//            var result = {};
-//            result.paramSpecialCaption = element.paramSpecialCaption;
-//            result.reportMetaParamSpecialId = element.id;
-//            result.paramSpecialRequired = element.paramSpecialRequired;
-//            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
-//            if (isParamSpecialTypeDirectory(element))
-//            {
-//                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-//                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
-//                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-//                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-//                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
-//            };
-//            //Ищем значение этого параметра в массиве параметров варианта отчета
-//            if (object.paramSpecialList.length==0){
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//                result.directoryValue = null;
-//                return result;
-//            }
-//            var elementIndex = -1;
-//            object.paramSpecialList.some(function(el,index,array){
-//                if (el.reportMetaParamSpecialId === element.id){
-//                    elementIndex = index;
-//                    return true;
-//                }else{
-//                    return false;
-//                }
-//            });
-//            if (elementIndex!=-1){
-//                result.id = object.paramSpecialList[elementIndex].id || null;
-//                result.textValue = object.paramSpecialList[elementIndex].textValue || null;
-//                result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
-//                result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
-//                result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
-//                result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
-//                result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
-//                result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
-//                result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
-//                result.directoryValue = Number(object.paramSpecialList[elementIndex].directoryValue) || null;
-//                result.version = object.paramSpecialList[elementIndex].version || null;
-//            }else{
-//                result.id = null;
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.directoryValue = null;
-//                
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//            }
-//            return result;
-//            
-//        });
+
         $scope.currentObject.showParamsBeforeRunReport = !$scope.currentObject.allRequiredParamsPassed;
 //console.log($scope.currentObject.allRequiredParamsPassed);         
         $scope.editParamset_flag = true;

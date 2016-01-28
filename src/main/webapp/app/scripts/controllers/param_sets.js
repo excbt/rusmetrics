@@ -199,7 +199,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             $scope.currentParamSpecialList.forEach(function(element){
                 element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
                 element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
-                element.endDateValue = (element.endDateValueFormatted==null) ? null : element.endDateValueFormatted.getTime();
+                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
             });
         };
         //set the list of the special params
@@ -430,7 +430,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         return result;
     };
     
-    var prepareParamSpecialList = function(paramsetObj, paramsetType){
+    var prepareParamSpecialList = function(paramsetObj, paramsetType){       
             var result = paramsetType.reportMetaParamSpecialList.map(function(element){
                 var result = {};
                 result.paramSpecialCaption = element.paramSpecialCaption;
@@ -474,10 +474,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
-                    result.oneDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(object.paramSpecialList[elementIndex].oneDateValue);
+                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(object.paramSpecialList[elementIndex].oneDateValue);
                     result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
                     result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
-                    result.directoryValue = Number(paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
+                    result.directoryValue = (paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
                     result.version = paramsetObj.paramSpecialList[elementIndex].version || null;
                 }else{
                     result.id = null;
@@ -490,10 +490,10 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                     result.startDateValueFormatted = null;
                     result.endDateValueFormatted = null;
                     result.directoryValue = null;
-                }
+                }              
                 return result;
 
-            });
+            });       
         return result;
     };
     
@@ -501,69 +501,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
         $scope.currentParamSpecialList = prepareParamSpecialList(object, $scope.currentReportType);        
-//        $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
-//            var result = {};
-//            result.paramSpecialCaption = element.paramSpecialCaption;
-//            result.reportMetaParamSpecialId = element.id;
-//            result.paramSpecialRequired = element.paramSpecialRequired;
-//            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
-//            if (isParamSpecialTypeDirectory(element))
-//            {
-//                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-//                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
-//                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-//                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-//                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
-//            };
-//            //Ищем значение этого параметра в массиве параметров варианта отчета
-//            if (object.paramSpecialList.length==0){
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//                result.directoryValue = null;
-//                return result;
-//            }
-//            var elementIndex = -1;
-//            object.paramSpecialList.some(function(el,index,array){
-//                if (el.reportMetaParamSpecialId === element.id){
-//                    elementIndex = index;
-//                    return true;
-//                }else{
-//                    return false;
-//                }
-//            });
-//            if (elementIndex!=-1){
-//                result.id = object.paramSpecialList[elementIndex].id || null;
-//                result.textValue = object.paramSpecialList[elementIndex].textValue || null;
-//                result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
-//                result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
-//                result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
-//                result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
-//                result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
-//                result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
-//                result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
-//                result.directoryValue = Number(object.paramSpecialList[elementIndex].directoryValue) || null;                
-//                result.version = object.paramSpecialList[elementIndex].version || null;
-//            }else{
-//                result.id = null;
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//                result.directoryValue = null;
-//            }
-//            return result;
-//            
-//        });
+        
         $scope.currentObject.showParamsBeforeRunReport = !$scope.currentObject.allRequiredParamsPassed;
 //console.log($scope.currentObject.allRequiredParamsPassed);   
         $scope.createParamset_flag = false;
@@ -599,7 +537,7 @@ console.log($scope.psEndDateFormatted);
         $scope.showAvailableObjects_flag = false;
 //        $('#main_properties_tab').addClass("active");
 //        $('#set_of_objects_tab').removeClass("active");
-//        $('#createParamsetModal').modal();
+//        $('#createParamsetModal').modal();       
         activateMainPropertiesTab();
     };
     
