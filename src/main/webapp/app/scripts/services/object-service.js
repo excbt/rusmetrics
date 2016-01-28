@@ -27,7 +27,7 @@ console.log("Object Service. Run.");
 //                 /contObjects/deviceObjects/metadata/measureUnits
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
                  
-        var deviceMetadataMeasures = null;
+        var deviceMetadataMeasures = {};
 
         var objectSvcSettings = {};
         var getObjectSettings = function(){
@@ -110,6 +110,22 @@ console.log("Object Service. Run.");
             return $http.get(url);
         };
                  
+        var getDeviceSchedulerSettings = function(objId, devId){
+//            /contObjects/%d/deviceObjects/%d/loadingSettings
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            return $http.get(url);            
+        };
+                 
+        var putDeviceSchedulerSettings = function(objId, devId, scheduler){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/loadingSettings";
+            return $http.put(url, scheduler);            
+        };
+                 
+        var getDeviceDatasources = function(objId, devId){
+            var url = urlRmaContObjects + "/" + objId + urlDeviceObjects + "/" + devId + "/subscrDataSource";
+            return $http.get(url);            
+        };
+                 
         var getDeviceMetaDataVzlet = function(obj, device){                     
             var url = crudTableName + "/" + obj.id + urlDeviceObjects + "/" + device.id + urlDeviceMetaDataVzlet;
             return $http.get(url);
@@ -125,11 +141,25 @@ console.log("Object Service. Run.");
         };
         
                  //get device measures
+        var getRmaDeviceMetadataMeasureUnit = function(measU, dmm){
+            var url = urlDeviceMetadataMeasures + "?measureUnit=" + dmm.all[measU].keyname;
+            $http.get(url)
+            .then(function(resp){
+                dmm[dmm.all[measU].keyname] = resp.data;
+            }, 
+                 function(error){
+                console.log(error);
+            });
+        };         
+        
         var getRmaDeviceMetadataMeasures = function(){                     
             var url = urlDeviceMetadataMeasures;
             $http.get(url)
                 .then(function(resp){                
-                deviceMetadataMeasures = resp.data;
+                deviceMetadataMeasures.all = resp.data;
+                for (var measU in deviceMetadataMeasures.all){
+                    getRmaDeviceMetadataMeasureUnit(measU, deviceMetadataMeasures);
+                };
 //console.log(deviceMetadataMeasures);                
                 $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
             },
@@ -315,8 +345,8 @@ console.log("Object Service. Run.");
             if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
                 params.dataSourceTable24h = device.dataSourceTable24h;
             };
-            var targetUrl = getRmaObjectsUrl()+"/"+device.contObjectId+"/deviceObjects";
-            if (angular.isDefined(device.id)&&(device.id !=null)){
+            var targetUrl = getRmaObjectsUrl() + "/"+device.contObjectId+"/deviceObjects";
+            if (angular.isDefined(device.id)&&(device.id != null)){
                 targetUrl = targetUrl+"/"+device.id;
             };
                 //add url params
@@ -337,11 +367,13 @@ console.log("Object Service. Run.");
             getCmOrganizations,
             getDatasourcesUrl,
             getDeviceModels,
+            getDeviceSchedulerSettings,
             getObject,
             getObjectConsumingData,
             getObjectSettings,
             getDevicesByObject,
             getRmaDeviceMetadata,
+            getDeviceDatasources,
             getDeviceMetadataMeasures,
             getDeviceMetaDataVzlet,
             getDeviceMetaDataVzletSystemList,
@@ -364,6 +396,7 @@ console.log("Object Service. Run.");
             loading,
             promise,
             putDeviceMetaDataVzlet,
+            putDeviceSchedulerSettings,
             rmaPromise,
             sendDeviceToServer,
             setObjectSettings,            

@@ -1246,14 +1246,7 @@ console.log("Objects directive.");
                 };
                 
                 $scope.checkPositiveNumberValue = function(numvalue){                    
-                    var result = true;
-                    result = $scope.checkNumericValue(numvalue)
-                    if (!result){
-                        //if numvalue is not number -> return false
-                        return result;
-                    }
-                    result = parseInt(numvalue)>=0?true:false;
-                    return result;
+                    return mainSvc.checkPositiveNumberValue(numvalue);
                 };
                 
                 $scope.checkNumericInterval = function(leftBorder, rightBorder){  
@@ -1270,11 +1263,7 @@ console.log("Objects directive.");
                 };
                 
                 $scope.checkHHmm = function(hhmmValue){
-//console.log(hhmmValue);                    
-                    if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
-                        return true;
-                    };
-                    return false;
+                    return mainSvc.checkHHmm(hhmmValue);
                 };
                 
                 $scope.checkZpointSettingsFrom = function(zpointSettings){              

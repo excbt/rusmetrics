@@ -1,6 +1,6 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, mainSvc){
+.controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc){
 console.log('Run devices management controller.');
     //settings
     $scope.ctrlSettings = {};
@@ -14,28 +14,9 @@ console.log('Run devices management controller.');
     $scope.data.devices = [];
     $scope.data.deviceModels = [];
     $scope.data.currentObject = {};
-    $scope.data.metaData = {};
-    $scope.data.metaData.fields = [
-        {
-            name: "field1",
-            value: "ppz"
-        },
-        {
-            name: "field2",
-            value: "ppa"
-        },
-        {
-            name: "field3",
-            value: "Caramba"
-        }
-    ];
+    $scope.data.currentScheduler = {};
+
     $scope.data.metadataSchema = [
-//        {
-//            header: '№ п.п.',
-//            headClass : 'nmc-td-for-button',
-//            name: 'metaOrder',
-//            type: 'label'
-//        },
         {
             header: 'Поле источник',
             headClass : 'col-xs-2 col-md-2',
@@ -51,7 +32,7 @@ console.log('Run devices management controller.');
             headClass : 'col-xs-1 col-md-1',
             name: 'srcMeasureUnit',
             type: 'select',
-            disabled: true
+            disabled: false
         }
     ];
             //get devices
@@ -79,7 +60,7 @@ console.log('Run devices management controller.');
                         elem.contObjectId = elem.contObjectInfo.contObjectId;
                     };
                     if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)){
-                        elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
+                        elem.subscrDataSourceId = Number(elem.activeDataSource.subscrDataSource.id);
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
                         elem.subscrDataSourceAddr = elem.activeDataSource.subscrDataSourceAddr;
                         elem.dataSourceTable1h = elem.activeDataSource.dataSourceTable1h;
@@ -100,6 +81,25 @@ console.log('Run devices management controller.');
         );
     };
     $scope.getDevices();
+    
+    //get device scheduler
+    $scope.getDeviceSchedulerSettings = function(objId, device){
+        objectSvc.getDeviceSchedulerSettings(objId, device.id).then(
+            function(resp){
+                $scope.data.currentScheduler = resp.data;
+                $scope.selectedItem(device);
+                $('#sheduleEditorModal').modal();
+            },
+            function(error){
+                console.log(error.data);
+                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
+            }
+        );
+    };
+    //save scheduler settings
+    $scope.saveScheduler = function(objId, device, scheduler){
+        objectSvc.putDeviceSchedulerSettings(objId, device.id, scheduler).then(successCallback, errorCallback);
+    };
     
                 //get device models
     $scope.getDeviceModels = function(){
@@ -153,15 +153,32 @@ console.log('Run devices management controller.');
     
     $scope.selectedItem = function(item){
         $scope.data.currentObject = angular.copy(item);
+        $scope.data.currentObject.beginDeviceModelId = $scope.data.currentObject.deviceModelId;
     };
     
     $scope.addDevice = function(){
         $scope.data.currentObject = {};
+        $scope.data.currentObject.id = null;
+        $scope.data.currentObject.isManual = true;
+        getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };
     $scope.editDevice = function(device){
-        $scope.selectedItem(device);
-        $('#showDeviceModal').modal();
+        $scope.selectedItem(device);        
+        objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
+            function(resp){
+                $scope.data.dataSources = angular.copy(resp.data);
+//                for(var i = 0; i<$scope.data.dataSources.length; i++){
+//                    var elem = $scope.data.dataSources[i];
+//                    if (mainSvc.checkUndefinedNull(elem.dataSourceName)){                      
+//                        elem.dataSourceName = String(elem.id);                         
+//                    };
+//                };
+                $('#showDeviceModal').modal();
+            },
+            errorCallback
+        );
+        
     };
     
     $scope.deviceDatasourceChange = function(){
@@ -183,7 +200,9 @@ console.log('Run devices management controller.');
         $scope.getDevices();
         $('#showDeviceModal').modal('hide');
         $('#deleteObjectModal').modal('hide');
+        $('#sheduleEditorModal').modal('hide');
         $scope.data.currentObject = {};
+        $scope.data.currentScheduler = {};
     };
     
     var errorCallback = function(e){       
@@ -199,11 +218,11 @@ console.log('Run devices management controller.');
     $scope.saveDevice = function(device){ 
         //check device data
         var checkDsourceFlag = true;
-        if (device.contObjectId==null){
+        if (device.contObjectId == null){
             notificationFactory.errorInfo("Ошибка","Не задан объект учета");
             checkDsourceFlag = false;
         };
-        if (device.subscrDataSourceId==null){
+        if (device.id == null && device.subscrDataSourceId == null && device.isManual){
             notificationFactory.errorInfo("Ошибка","Не задан источник данных");
             checkDsourceFlag = false;
         };
@@ -213,9 +232,19 @@ console.log('Run devices management controller.');
         if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
             device.verificationDate = mainSvc.strDateToUTC(device.verificationDateString, $scope.ctrlSettings.userDateFormat);
         }
-//console.log(device);        
+//console.log(device);
+        var userDecision =  false;
+        if (!mainSvc.checkUndefinedNull(device.id) && $scope.isDirectDevice(device) && (device.beginDeviceModelId != device.deviceModelId))
+            //прибор не новый, идет прямая загрузка с прибора и модель была изменена
+        {
+            //выдать предупреждение о том, что модель была изменена и мета данные будут стерты
+            userDecision = confirm("Модель прибора была изменена. Метаданные прибора будут перезаписаны метаданными текущей модели. Продолжить?");
+            if (!userDecision){
+                return "Save operation is canceled by user.";
+            };
+        }
         //send to server
-        objectSvc.sendDeviceToServer(device).then(successCallback,errorCallback);
+        objectSvc.sendDeviceToServer(device).then(successCallback, errorCallback);
     };
     
     var setConfirmCode = function(){
@@ -237,7 +266,7 @@ console.log('Run devices management controller.');
     };
     
     // device metadata 
-    $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();
+    $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();   
     $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function(){
         $scope.data.deviceMetadataMeasures = objectSvc.getDeviceMetadataMeasures();       
     });
@@ -249,6 +278,24 @@ console.log('Run devices management controller.');
             $scope.selectedItem(device);           
             $('#metaDataEditorModal').modal();
         }, errorCallback);
+    };
+    
+    $scope.updateDeviceMetaData = function(device){       
+        var method = "PUT";
+        var url = objectSvc.getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects/" + device.id + "/metadata";
+        $http({
+            url: url,
+            method: method,
+            data: device.metadata
+        })
+        .then(
+            function(response){
+                $scope.currentObject =  {};
+                $('#metaDataEditorModal').modal('hide');
+                notificationFactory.success();
+            },
+            errorCallback
+        );
     };
     
         //check device: data source vzlet or not?
@@ -264,7 +311,7 @@ console.log('Run devices management controller.');
         return result;
     };
     
-    $scope.directDevice = function(device){
+    $scope.isDirectDevice = function(device){
         var result = false;
         if(angular.isDefined(device.activeDataSource) && (device.activeDataSource != null)){
             if(angular.isDefined(device.activeDataSource.subscrDataSource) && (device.activeDataSource.subscrDataSource != null)){
@@ -309,12 +356,12 @@ console.log('Run devices management controller.');
         .then(
             function(response){
                 $scope.currentDevice =  {};
-                $('#valetMetaDataEditorModal').modal('hide');
+                $('#vzletMetaDataEditorModal').modal('hide');
             },
             errorCallback
         );
     };
-    
+
      //get the list of the systems for meta data editor
     $scope.getVzletSystemList = function(){
         var tmpSystemList = objectSvc.getVzletSystemList();
@@ -342,9 +389,29 @@ console.log('Run devices management controller.');
         },
         singleDatePicker: true
     };
-    
+    //checkers
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
+    };
+    
+    $scope.isDeviceDisabled = function(device){
+//console.log(device);        
+//        return !device.isManual;
+        return device.exSystemKeyname == 'VZLET' || device.exSystemKeyname == 'LERS';
+    };
+    
+    $scope.checkHHmm = function(hhmmValue){
+        return mainSvc.checkHHmm(hhmmValue);
+    };
+    
+    $scope.checkPositiveNumberValue = function(numvalue){
+        return mainSvc.checkPositiveNumberValue(numvalue);
+    };
+    
+    $scope.checkScheduler = function(scheduler){
+        return $scope.checkHHmm(scheduler.loadingInterval)
+            && $scope.checkHHmm(scheduler.loadingRetryInterval)
+            && $scope.checkPositiveNumberValue(scheduler.loadingAttempts)
     };
     
     $(document).ready(function(){
@@ -355,5 +422,6 @@ console.log('Run devices management controller.');
           dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
           monthNames: $scope.dateOptsParamsetRu.locale.monthNames
         });
+        $('#inputAttemptsNumberShd').inputmask();
     });
 }]);
