@@ -35,6 +35,14 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRe
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис по работе с объектом учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 05.02.2015
+ *
+ */
 @Service
 public class ContObjectService extends AbstractService implements SecuredRoles {
 

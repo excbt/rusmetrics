@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с ролями абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.03.2015
+ *
+ */
 @Service
 public class SubscrRoleService {
 

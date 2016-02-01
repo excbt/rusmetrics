@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.repository.ReferencePeriodRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с эталонным интервалом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.06.2015
+ *
+ */
 @Service
 public class ReferencePeriodService implements SecuredRoles {
 
@@ -32,10 +40,8 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReferencePeriod> findReferencePeriod(long subscriberId,
-			long contZPointId) {
-		return referencePeriodRepository.findBySubscriberIdAndContZPointId(
-				subscriberId, contZPointId);
+	public List<ReferencePeriod> findReferencePeriod(long subscriberId, long contZPointId) {
+		return referencePeriodRepository.findBySubscriberIdAndContZPointId(subscriberId, contZPointId);
 	}
 
 	/**
@@ -44,10 +50,8 @@ public class ReferencePeriodService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReferencePeriod> selectLastReferencePeriod(long subscriberId,
-			long contZPointId) {
-		return referencePeriodRepository.selectLastReferencePeriod(
-				subscriberId, contZPointId, PAGE_LIMIT_1);
+	public List<ReferencePeriod> selectLastReferencePeriod(long subscriberId, long contZPointId) {
+		return referencePeriodRepository.selectLastReferencePeriod(subscriberId, contZPointId, PAGE_LIMIT_1);
 	}
 
 	/**
@@ -81,14 +85,12 @@ public class ReferencePeriodService implements SecuredRoles {
 		}
 
 		if (!Boolean.TRUE.equals(referencePeriod.getIsAuto())) {
-			referencePeriodRepository
-					.setManualIsActiveFalse(referencePeriod.getSubscriber()
-							.getId(), referencePeriod.getContZPointId());
+			referencePeriodRepository.setManualIsActiveFalse(referencePeriod.getSubscriber().getId(),
+					referencePeriod.getContZPointId());
 			referencePeriod.setIsActive(true);
 		}
 
-		ReferencePeriod result = referencePeriodRepository
-				.save(referencePeriod);
+		ReferencePeriod result = referencePeriodRepository.save(referencePeriod);
 
 		return result;
 	}
@@ -114,8 +116,7 @@ public class ReferencePeriodService implements SecuredRoles {
 			referencePeriod.setIsActive(false);
 		}
 
-		ReferencePeriod result = referencePeriodRepository
-				.save(referencePeriod);
+		ReferencePeriod result = referencePeriodRepository.save(referencePeriod);
 
 		return result;
 	}
@@ -145,9 +146,7 @@ public class ReferencePeriodService implements SecuredRoles {
 		if (referencePeriodRepository.exists(referencePeriodId)) {
 			referencePeriodRepository.delete(referencePeriodId);
 		} else {
-			throw new PersistenceException(String.format(
-					"ReperencePeriod with id=%d is not found",
-					referencePeriodId));
+			throw new PersistenceException(String.format("ReperencePeriod with id=%d is not found", referencePeriodId));
 		}
 	}
 

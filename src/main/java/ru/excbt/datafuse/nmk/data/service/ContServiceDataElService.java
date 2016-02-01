@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 
+/**
+ * Сервис по работе с данными по электроснабжению
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 @Service
 public class ContServiceDataElService extends AbstractContServiceDataService {
 

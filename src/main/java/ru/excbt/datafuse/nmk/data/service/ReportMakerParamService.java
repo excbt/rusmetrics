@@ -27,6 +27,14 @@ import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
+/**
+ * Сервис для работы с параметрами отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.06.2015
+ *
+ */
 @Service
 public class ReportMakerParamService {
 

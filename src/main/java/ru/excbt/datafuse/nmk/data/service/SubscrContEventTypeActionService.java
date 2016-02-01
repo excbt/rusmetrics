@@ -19,6 +19,14 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeActionRepository;
 
+/**
+ * Сервис для работы с действиями для типа уведомлений
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.12.2015
+ *
+ */
 @Service
 public class SubscrContEventTypeActionService {
 

@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimezoneDefRepository;
 
+/**
+ * Сервис для работы с временными зонами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.07.2015
+ *
+ */
 @Service
 public class TimezoneDefService {
 

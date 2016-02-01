@@ -13,6 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 
+/**
+ * Сервис для работы с ФИАС
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.01.2016
+ *
+ */
 @Service
 public class FiasService {
 

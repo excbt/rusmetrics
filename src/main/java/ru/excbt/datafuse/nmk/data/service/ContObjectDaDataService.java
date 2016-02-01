@@ -19,6 +19,14 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectDaDataRepository;
 
+/**
+ * Сервис по работе с ФИАС и гео координатами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.01.2016
+ *
+ */
 @Service
 public class ContObjectDaDataService {
 

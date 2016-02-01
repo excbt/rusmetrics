@@ -24,6 +24,14 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsAddrRepositor
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
+/**
+ * Сервис для работы с настройкой смс уведомлений для событий
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Service
 public class SubscrContEventTypeSmsService extends AbstractService {
 
