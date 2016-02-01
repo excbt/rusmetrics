@@ -29,9 +29,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
-// TODO Rename to /api/rma
-//@Controller
-//@RequestMapping(value = "/api/subscr")
+/**
+ * Класс для доступа к источника данных
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 public class SubscrDataSourceController extends SubscrApiController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDataSourceController.class);

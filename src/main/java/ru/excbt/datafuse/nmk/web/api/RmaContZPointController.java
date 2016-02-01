@@ -26,6 +26,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
+/**
+ * Контроллер для работы с точками учета для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaContZPointController extends SubscrContZPointController {

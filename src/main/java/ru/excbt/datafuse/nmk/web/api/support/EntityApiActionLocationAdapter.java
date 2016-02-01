@@ -6,6 +6,16 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Адаптер для EntityApiActionAdapter
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.10.2015
+ * 
+ * @param <T>
+ * @param <K>
+ */
 public abstract class EntityApiActionLocationAdapter<T, K> extends EntityApiActionAdapter<T>
 		implements ApiActionLocation {
 

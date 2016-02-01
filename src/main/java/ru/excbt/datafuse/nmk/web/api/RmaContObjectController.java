@@ -25,7 +25,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
-// TODO make RMA actions
+/**
+ * Контроллер для работы с объектами учета для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaContObjectController extends SubscrContObjectController {

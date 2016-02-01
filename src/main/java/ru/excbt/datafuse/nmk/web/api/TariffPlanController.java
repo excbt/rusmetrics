@@ -36,6 +36,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с тарифными планами для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.04.2015
+ *
+ */
 @RestController
 @RequestMapping(value = "/api/subscr/tariff")
 public class TariffPlanController extends SubscrApiController {

@@ -24,6 +24,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с настройками смс уведомлений
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.12.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/subscr/contEventSms")
 public class SubscrContEventTypeSmsController extends SubscrApiController {

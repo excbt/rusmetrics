@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с контейнерами учета для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.02.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContEventController extends SubscrApiController {

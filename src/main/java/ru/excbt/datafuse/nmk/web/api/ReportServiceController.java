@@ -39,6 +39,14 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
+/**
+ * Контроллер для работы с отчетами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController extends WebApiController {

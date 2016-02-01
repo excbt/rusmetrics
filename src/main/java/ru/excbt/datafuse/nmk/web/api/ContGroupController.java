@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с группой объектов учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.05.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/contGroup")
 public class ContGroupController extends SubscrApiController {

@@ -34,6 +34,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с шаблонами отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
 public class ReportTemplateController extends SubscrApiController {
