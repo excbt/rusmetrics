@@ -4,6 +4,7 @@
 log/*
 logs/*
 out/*
+docs/*
 
 ### Eclipse ###
 *.pydevproject
