@@ -5,6 +5,14 @@ import java.util.stream.Stream;
 
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Типы отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.07.2015
+ *
+ */
 public enum ReportTypeKey implements KeynameObject {
 	COMMERCE_REPORT("commerce"), // CONS_REPORT,
 	EVENT_REPORT("event"), //

@@ -16,6 +16,14 @@ import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Класс для работы с разрешениями абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.09.2015
+ *
+ */
 public class SubscrServicePermissionFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServicePermissionFilter.class);

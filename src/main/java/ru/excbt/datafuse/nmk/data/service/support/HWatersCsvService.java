@@ -11,47 +11,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
-import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
+import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
+
+/**
+ * Класс для работы с экспортом данных данных по воде
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.07.2015
+ *
+ */
 @Service
 public class HWatersCsvService {
 
 	public static final MediaType MEDIA_TYPE_CSV = MediaType.valueOf("text/csv");
-	
+
 	@Autowired
 	public TimeZoneService timeZoneService;
-	
+
 	/**
 	 * 
 	 * @param contServiceDataHWaterList
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public byte[] writeHWaterDataToCsv(
-			List<ContServiceDataHWater> contServiceDataHWaterList)
+	public byte[] writeHWaterDataToCsv(List<ContServiceDataHWater> contServiceDataHWaterList)
 			throws JsonProcessingException {
 		checkNotNull(contServiceDataHWaterList);
 
 		CsvMapper mapper = new CsvMapper();
 
-		mapper.addMixInAnnotations(ContServiceDataHWater.class,
-				ContServiceDataHWater_CsvFormat.class);
+		mapper.addMixInAnnotations(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
 
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
 
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
-				.withHeader();
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class).withHeader();
 
-		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(
-				contServiceDataHWaterList);
+		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(contServiceDataHWaterList);
 
 		return byteArray;
 	}
@@ -62,24 +66,20 @@ public class HWatersCsvService {
 	 * @return
 	 * @throws JsonProcessingException
 	 */
-	public byte[] writeHWaterDataToCsvAbs(
-			List<ContServiceDataHWaterAbs_Csv> contServiceDataHWaterList)
-					throws JsonProcessingException {
+	public byte[] writeHWaterDataToCsvAbs(List<ContServiceDataHWaterAbs_Csv> contServiceDataHWaterList)
+			throws JsonProcessingException {
 		checkNotNull(contServiceDataHWaterList);
-		
+
 		CsvMapper mapper = new CsvMapper();
-		
-		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class,
-				ContServiceDataHWater_CsvFormat.class);
-		
+
+		mapper.addMixInAnnotations(ContServiceDataHWaterAbs_Csv.class, ContServiceDataHWater_CsvFormat.class);
+
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-		
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class)
-				.withHeader();
-		
-		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(
-				contServiceDataHWaterList);
-		
+
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWaterAbs_Csv.class).withHeader();
+
+		byte[] byteArray = mapper.writer(schema).writeValueAsBytes(contServiceDataHWaterList);
+
 		return byteArray;
 	}
 
@@ -90,18 +90,14 @@ public class HWatersCsvService {
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
-	public List<ContServiceDataHWater> parseHWaterDataCsv(
-			InputStream inputStream) throws JsonProcessingException,
-			IOException {
+	public List<ContServiceDataHWater> parseHWaterDataCsv(InputStream inputStream)
+			throws JsonProcessingException, IOException {
 
 		CsvMapper mapper = new CsvMapper();
-		mapper.addMixInAnnotations(ContServiceDataHWater.class,
-				ContServiceDataHWater_CsvFormat.class);
+		mapper.addMixInAnnotations(ContServiceDataHWater.class, ContServiceDataHWater_CsvFormat.class);
 		mapper.setTimeZone(timeZoneService.getDefaultTimeZone());
-		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class)
-				.withHeader();
-		ObjectReader reader = mapper.reader(ContServiceDataHWater.class).with(
-				schema);
+		CsvSchema schema = mapper.schemaFor(ContServiceDataHWater.class).withHeader();
+		ObjectReader reader = mapper.reader(ContServiceDataHWater.class).with(schema);
 
 		MappingIterator<ContServiceDataHWater> iterator = null;
 		List<ContServiceDataHWater> parsedData = new ArrayList<>();
@@ -112,6 +108,6 @@ public class HWatersCsvService {
 			parsedData.add(d);
 		}
 		return parsedData;
-	}	
-	
+	}
+
 }

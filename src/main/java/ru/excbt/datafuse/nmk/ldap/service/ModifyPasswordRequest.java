@@ -26,17 +26,19 @@ import javax.naming.ldap.ExtendedRequest;
 import javax.naming.ldap.ExtendedResponse;
 
 /**
- * A class conforming to the ExtendedRequest that implements the Modify Password
- * extended operation.
+ * Класс для работы с LDAP
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.08.2015
  *
- * @see javax.naming.ldap.ExtendedRequest
  */
 public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5594042500276868788L;
-	
+
 	/**
 	 * Creates a new <code>ModifyPasswordRequest</code> instance.
 	 *
@@ -49,8 +51,7 @@ public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 	 * @exception SizeLimitExceededException
 	 *                when the dn or password is too long
 	 */
-	public ModifyPasswordRequest(String dn, String password)
-			throws NullPointerException, SizeLimitExceededException {
+	public ModifyPasswordRequest(String dn, String password) throws NullPointerException, SizeLimitExceededException {
 		if (dn == null) {
 			throw new NullPointerException("dn cannot be null");
 		}
@@ -68,8 +69,7 @@ public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 		}
 
 		if (dnlen > 0xFF) {
-			throw new SizeLimitExceededException(
-					"dn cannot be larger then 255 characters");
+			throw new SizeLimitExceededException("dn cannot be larger then 255 characters");
 		}
 
 		if (passlen <= 0) {
@@ -77,14 +77,12 @@ public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 		}
 
 		if (passlen > 0xFF) {
-			throw new SizeLimitExceededException(
-					"password cannot be larger then 255 characters");
+			throw new SizeLimitExceededException("password cannot be larger then 255 characters");
 		}
 
 		if (totallen > 0xFF) {
 			throw new SizeLimitExceededException(
-					"the lengh of the dn + the lengh of the password cannot"
-							+ " exceed 251 characters");
+					"the lengh of the dn + the lengh of the password cannot" + " exceed 251 characters");
 		}
 
 		mDn = dn;
@@ -155,8 +153,7 @@ public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 	 *         response.
 	 */
 	@Override
-	public ExtendedResponse createExtendedResponse(String id, byte[] berValue,
-			int offset, int length) {
+	public ExtendedResponse createExtendedResponse(String id, byte[] berValue, int offset, int length) {
 		return null;
 	}
 

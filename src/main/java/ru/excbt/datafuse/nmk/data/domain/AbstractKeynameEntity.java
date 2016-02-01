@@ -8,6 +8,14 @@ import javax.persistence.MappedSuperclass;
 
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Базовый класс для справочников
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 @MappedSuperclass
 public abstract class AbstractKeynameEntity implements Serializable, KeynameObject {
 
@@ -16,22 +24,18 @@ public abstract class AbstractKeynameEntity implements Serializable, KeynameObje
 	 */
 	private static final long serialVersionUID = -4290975733365393813L;
 
-	
 	@Id
 	@Column(name = "keyname")
 	private String keyname;
-
 
 	@Override
 	public String getKeyname() {
 		return keyname;
 	}
 
-
 	public void setKeyname(String keyname) {
 		this.keyname = keyname;
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -40,7 +44,6 @@ public abstract class AbstractKeynameEntity implements Serializable, KeynameObje
 		result = prime * result + ((keyname == null) ? 0 : keyname.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -59,5 +62,4 @@ public abstract class AbstractKeynameEntity implements Serializable, KeynameObje
 		return true;
 	}
 
-	
 }

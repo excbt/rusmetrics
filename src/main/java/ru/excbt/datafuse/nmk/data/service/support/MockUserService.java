@@ -10,11 +10,18 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
 
+/**
+ * Класс "заглушка" для работы с пользователем
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Service
 public class MockUserService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(MockUserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(MockUserService.class);
 
 	private Long mockUserId = null;
 

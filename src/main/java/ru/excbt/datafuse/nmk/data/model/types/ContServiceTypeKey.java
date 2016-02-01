@@ -5,10 +5,17 @@ import java.util.stream.Stream;
 
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Тип данных: Тип сервиса системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 03.08.2015
+ *
+ */
 public enum ContServiceTypeKey implements KeynameObject {
 
-	CW(MeasureUnit.V_M3), EL, ENV, GAS, HEAT(MeasureUnit.W_GCAL), HW(
-			MeasureUnit.V_M3);
+	CW(MeasureUnit.V_M3), EL, ENV, GAS, HEAT(MeasureUnit.W_GCAL), HW(MeasureUnit.V_M3);
 
 	private final MeasureUnit measureUnit;
 
@@ -35,8 +42,7 @@ public enum ContServiceTypeKey implements KeynameObject {
 	 */
 	public static ContServiceTypeKey searchKeyname(String keyname) {
 
-		Optional<ContServiceTypeKey> opt = Stream
-				.of(ContServiceTypeKey.values())
+		Optional<ContServiceTypeKey> opt = Stream.of(ContServiceTypeKey.values())
 				.filter((i) -> i.getKeyname().equals(keyname)).findFirst();
 
 		return opt.isPresent() ? opt.get() : null;

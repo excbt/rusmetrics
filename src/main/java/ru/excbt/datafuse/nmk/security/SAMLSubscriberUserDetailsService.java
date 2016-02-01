@@ -22,6 +22,14 @@ import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
+/**
+ * Сервис для работы по протоколу SAML
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 05.08.2015
+ *
+ */
 @Service
 public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
 
