@@ -15,21 +15,19 @@
 
 <div class="nmc-report-main-div">
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
-
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in objects" ng-click="" ng-dblclick="">
 <!--                        <td style="padding:0;">-->
                             <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
-
                                 <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
-
                                     <td ng-class="column.class" style="padding:0;">
-
                                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
-
-                                            <i title="Раскрыть/скрыть список вариантов отчетов" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toggleShowGroupDetails(object);"></i>                                           
-
+                                            <i title="Раскрыть/скрыть список вариантов отчетов" 
+                                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click="showObjectDetails(object); toggleShowGroupDetails(object);">
+                                            </i>                                           
                                         </div>
                                         <div class="col-xs-11 col-md-11">
 <!--                                            <div class="col-md-5 noPadding">-->

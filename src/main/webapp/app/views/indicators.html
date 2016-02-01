@@ -14,13 +14,33 @@
     <div class="pull-right">
         <div class="btn-group nmc-line-right" ng-hide="!isManualLoading">
             <span ng-if="isSystemuser()">
-                <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download" ng-click="saveIndicatorsToFile('/noAbs')"></i>
+                <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" 
+                   ng-disabled="data.length==0" 
+                   class="btn glyphicon glyphicon-download" 
+                   ng-click="saveIndicatorsToFile('/noAbs')">
+                </i>
             </span>    
-            <i title="Загрузить показания из CSV файла" class="btn glyphicon glyphicon-download-alt gly-rotate-180" ng-click="uploader.clearQueue()" data-target="#upLoadFileModal" data-toggle="modal"></i>
-            <i title="Удалить показания" ng-disabled="data.length==0" class="btn glyphicon glyphicon-trash nmc-button-trash" ng-click="" data-target="#deleteIndicatorsModal" data-toggle="modal"></i>
+            <i title="Загрузить показания из CSV файла" 
+               class="btn glyphicon glyphicon-download-alt gly-rotate-180" 
+               ng-click="uploader.clearQueue()" 
+               data-target="#upLoadFileModal" 
+               data-toggle="modal">
+            </i>
+            <i title="Удалить показания" 
+               ng-disabled="data.length==0" 
+               class="btn glyphicon glyphicon-trash nmc-button-trash" 
+               ng-click="" 
+               data-target="#deleteIndicatorsModal" 
+               data-toggle="modal">
+            </i>
         </div>  
         <div class="btn-group">
-            <i id="indicator_download_button" title="Сохранить показания в CSV файл" ng-disabled="data.length==0" class="btn glyphicon glyphicon-download-alt nmc-hide" ng-click="saveIndicatorsToFile('')"></i>
+            <i id="indicator_download_button" 
+               title="Сохранить показания в CSV файл" 
+               ng-disabled="data.length==0" 
+               class="btn glyphicon glyphicon-download-alt nmc-hide" 
+               ng-click="saveIndicatorsToFile('')">
+            </i>
         </div>    
     </div>
 </div>  
@@ -59,6 +79,7 @@
                             <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="changeTimeDetailType()">
                                 <option selected value="24h">Суточные</option>
                                 <option value="1h">Часовые</option>
+                                <option value="1h_abs">Интеграторы</option>
                             </select>
                         </div>
                 </div>
@@ -87,23 +108,37 @@
             </div>    
         </div>
 
-        <div class="row" class="nmc-hide" ng-show="data.length ==0">
+        <div class="row" 
+             class="nmc-hide" 
+             ng-show="data.length ==0">
             <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
         </div>
         <div class="row" ng-show="data.length >0">
     <!--        Непрокручиваемая шапка таблицы показаний-->
 <!--            style="margin-bottom: -20px;"-->
-            <table class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
+            <table class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" 
+                   ng-class="tableDef.tableClass" >
                 <tr ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns"  ng-attr-id="{{'indicators_head_'+column.fieldName}}" ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
+                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType"  
+                        ng-attr-id="{{'indicators_head_'+column.fieldName}}" 
+                        ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}" 
+                        ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
                         {{column.header}}
-                        <i class="nmc-button-sort glyphicon" ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" ng-click="setOrderBy(column.fieldName)"></i>
+                        <i class="nmc-button-sort glyphicon" 
+                           ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                           ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" 
+                           ng-click="setOrderBy(column.fieldName)">
+                        </i>
                         <span ng-if="column.dataType==='temperature'">,&deg;C</span>
                     </th>
                 </tr>
 <!--                style="opacity:0;"-->
-                <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" class="nmc-transparent">
-                    <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
+                <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
+                    class="nmc-transparent">
+                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
+                        class="nmc-text-align-right" 
+                        ng-class="column.headerClass" 
+                        ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
                         {{indicator[column.fieldName]}}
                         <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
                     </td>
@@ -115,18 +150,26 @@
     <div class="container-fluid nmc-indicator-table-without-fixed-header">
         <div class="row" ng-show="data.length >0">
 <!--            style="margin-top: -79px;"-->
-            <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" ng-class="tableDef.tableClass">
+            <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus79" 
+                   ng-class="tableDef.tableClass">
     <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
                 <tr class="" ng-class="tableDef.headerClassTR">
-                    <th ng-repeat="column in tableDef.columns" ng-class="column.headerClass" ng-attr-id="{{'indicators_th_'+column.fieldName}}">
-                        {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
+                    <th ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
+                        ng-class="column.headerClass" 
+                        ng-attr-id="{{'indicators_th_' + column.fieldName}}">
+                        {{column.header}}<span ng-if="column.dataType === 'temperature'">,&deg;C</span>
                     </th>
 
                 </tr>
-                <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" total-items="totalIndicators" current-page="pagination.current">
-                    <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="column.headerClass" ng-attr-id="{{'indicators_td_'+column.fieldName}}">
+                <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
+                    total-items="totalIndicators" 
+                    current-page="pagination.current">
+                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType" 
+                        class="nmc-text-align-right" 
+                        ng-class="column.headerClass" 
+                        ng-attr-id="{{'indicators_td_'+column.fieldName}}">
                         {{indicator[column.fieldName]}}
-                        <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
+                        <span ng-if="column.fieldName === 'dataDate' && isSystemuser()">(id = {{indicator['id']}})</span>
                     </td>
                 </tr>
                 <tr class="nmc-hide">
@@ -138,32 +181,52 @@
             </div>
         </div>    
     <!--    In total-->
-        <div class="row" ng-show="data.length >0">
+        <div class="row" ng-show="data.length > 0 && timeDetailType != '1h_abs'">
             <table class="nmc-table-nowrap-data nmc-main-table crud-grid table table-lighter table-bordered table-condensed table-hover">
                 <tr class="nmc-main-table-header">
-                    <th id="totals_th_head" class="col-md-3" ng-style="{'min-width': totals_th_head_style+'px'}">
+                    <th id="totals_th_head" 
+                        class="col-md-3" 
+                        ng-style="{'min-width': totals_th_head_style+'px'}">
                     </th>
-                    <th ng-repeat="column in intotalColumns" ng-class="column.class" ng-attr-id="{{'totals_th_'+column.name}}" ng-style="{'min-width': column.ngstyle+'px'}">
-                        {{column.header}}<span ng-if="column.dataType==='temperature'">,&deg;C</span>
-                            <img ng-class="column.imgclass" ng-src="{{column.imgpath}}" ng-attr-title="{{column.title}}"/>
+                    <th ng-repeat="column in intotalColumns" 
+                        ng-class="column.class" 
+                        ng-attr-id="{{'totals_th_'+column.name}}" 
+                        ng-style="{'min-width': column.ngstyle+'px'}">
+                        {{column.header}}<span ng-if="column.dataType === 'temperature'">,&deg;C</span>
+                            <img ng-class="column.imgclass" 
+                                 ng-src="{{column.imgpath}}"
+                                 ng-attr-title="{{column.title}}"/>
                     </th>
                 </tr>
                 <tr>
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Среднее значение:</td>
-                    <td ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-class="{'nmc-text-align-right':summary.average[column.name]!='-','nmc-text-align-center':summary.average[column.name]==='-'}" ng-style="{'min-width': column.ngstyle+'px'}">
+                    <td ng-repeat="column in intotalColumns" 
+                        class="nmc-text-align-right" 
+                        ng-class="{'nmc-text-align-right':summary.average[column.name]!='-','nmc-text-align-center':summary.average[column.name]==='-'}" 
+                        ng-style="{'min-width': column.ngstyle+'px'}">
                         {{summary.average[column.name]}}
                     </td>
                 </tr> 
                 <tr>
-                    <td class="col-md-3 nmc-totals-indicator-highlight" ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
-                    <td ng-repeat="column in intotalColumns" class="nmc-text-align-right nmc-totals-indicator-highlight" ng-class="{'nmc-text-align-right':summary.totals[column.name]!='-','nmc-text-align-center':summary.totals[column.name]==='-'}" ng-style="{'min-width': column.ngstyle+'px'}">
+                    <td class="col-md-3 nmc-totals-indicator-highlight" 
+                        ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
+                    <td ng-repeat="column in intotalColumns" 
+                        class="nmc-text-align-right nmc-totals-indicator-highlight" 
+                        ng-class="{'nmc-text-align-right': summary.totals[column.name] != '-', 'nmc-text-align-center': summary.totals[column.name] === '-'}" 
+                        ng-style="{'min-width': column.ngstyle + 'px'}">
                         {{summary.totals[column.name]}}
                     </td>
                 </tr> 
                 <tr>
-                    <td class="col-md-3 nmc-totals-indicator-highlight" ng-style="{width: totals_th_head_style+'px'}"><span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
+                    <td class="col-md-3 nmc-totals-indicator-highlight" 
+                        ng-style="{width: totals_th_head_style+'px'}">
+                        <span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
                     </td>
-                    <td  ng-repeat="column in intotalColumns" ng-attr-id="{{'total'+column.name}}" class="nmc-text-align-right nmc-totals-indicator-highlight" ng-class="{'nmc-text-align-right':summary.diffs[column.name]!='-','nmc-text-align-center':summary.diffs[column.name]==='-'}" ng-style="{width: column.ngstyle+'px'}">
+                    <td  ng-repeat="column in intotalColumns" 
+                        ng-attr-id="{{'total'+column.name}}" 
+                        class="nmc-text-align-right nmc-totals-indicator-highlight" 
+                        ng-class="{'nmc-text-align-right': summary.diffs[column.name] != '-', 'nmc-text-align-center': summary.diffs[column.name] === '-'}" 
+                        ng-style="{width: column.ngstyle + 'px'}">
     <!--                    ng-attr-title="{{setTitle(column.name)}} "-->
                         {{summary.diffs[column.name]}}
                     </td>
@@ -171,9 +234,16 @@
                 <tr>
                     <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
                     </td>
-                    <td  ng-repeat="column in intotalColumns" class="nmc-text-align-right" ng-style="{width: column.ngstyle+'px', border: 0}">
+                    <td  ng-repeat="column in intotalColumns" 
+                        class="nmc-text-align-right" 
+                        ng-style="{width: column.ngstyle+'px', border: 0}">
                         <span ng-if="summary.diffs[column.name] != '-' && column.name != 'm_delta' && column.name != 'v_delta'">
-                             <p ng-attr-id="{{'diffBtn'+column.name}}" class="btn btn-xs" ><i title="Показать детали по интеграторам" class="glyphicon glyphicon-eject gly-rotate-180"></i> </p>
+                             <p ng-attr-id="{{'diffBtn'+column.name}}" 
+                                class="btn btn-xs" >
+                                 <i title="Показать детали по интеграторам" 
+                                    class="glyphicon glyphicon-eject gly-rotate-180">
+                                 </i> 
+                            </p>
                         </span>    
 
                     </td>

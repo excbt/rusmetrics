@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','crudGridDataFactory','notificationFactory','objectSvc', 'mainSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
@@ -13,15 +13,17 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
     $scope.columns = [
-        {"name":"reportType","header":"Тип отчета", "class":"col-md-11"}
+        {"name": "reportType", "header": "Тип отчета", "class": "col-md-11"}
     ];
     $scope.paramsetColumns = [
-        {"name":"name","header":"Наименование", "class":"col-md-3"}
-        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-3"}
-        ,{"name":"period","header":"Период", "class":"col-md-2"}
-        ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
+        {"name": "name", "header": "Наименование", "class": "col-md-3"}
+        ,{"name": "reportTemplateName", "header": "Шаблон", "class": "col-md-3"}
+        ,{"name": "period", "header": "Период", "class": "col-md-2"}
+        ,{"name": "fileType", "header": "Тип файла", "class": "col-md-1"}
     ];
-    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
+    $scope.extraProps = {"idColumnName": "id", 
+                       "defaultOrderBy" : "name", 
+                       "deleteConfirmationProp": "name"};    
     
     $scope.createParamset_flag = false;
     $scope.editParamset_flag = false;
@@ -60,11 +62,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 //console.log(data);
             var newObjects = [];
             var newObject = {};
-            for (var i = 0; i<data.length; i++){
+            for (var i = 0; i < data.length; i++){
                 if (!data[i]._enabled){
                     continue;
                 };
-                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
+                if ((!$scope.isSystemuser() && data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
@@ -74,7 +76,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length>0?true:false);
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);
                 
                 newObjects.push(newObject);
             };        
@@ -128,7 +130,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     };
     
     $scope.deleteObject = function (object) {
-        var table = $scope.crudTableName +"/archive"+ $scope.currentReportType.suffix;
+        var table = $scope.crudTableName + "/archive" + $scope.currentReportType.suffix;
 //console.log(table);        
 //console.log(object[$scope.extraProps.idColumnName]);        
         crudGridDataFactory(table).delete({ id: object[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
@@ -145,8 +147,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     $scope.getActive = function(){
         
         if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.objects.length; i++){
-            $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+        for (var i = 0; i < $scope.objects.length; i++){
+            $scope.getParamsets($scope.crudTableName + $scope.objects[i].suffix, $scope.objects[i]);
         };
     };
     
@@ -154,12 +156,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     
     $scope.getArchive = function(){
         if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.objects.length; i++){
-            $scope.getParamsets($scope.crudTableName+"/archive"+$scope.objects[i].suffix, $scope.objects[i]);
+        for (var i = 0; i < $scope.objects.length; i++){
+            $scope.getParamsets($scope.crudTableName + "/archive" + $scope.objects[i].suffix, $scope.objects[i]);
         };        
     };
-    
-    
+
     $scope.toogleShowGroupDetails = function(curObject){//switch option: current goup details
         curObject.showGroupDetails = !curObject.showGroupDetails;
     };
@@ -172,7 +173,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
         var activeStartDate = new Date(curObject.activeStartDate);
 //console.log(curObject);        
-        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(),activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
+        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
         
         $scope.getTemplates();       
     };
@@ -196,9 +197,9 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         //perform Special paramset props
         if(angular.isArray($scope.currentParamSpecialList)){
             $scope.currentParamSpecialList.forEach(function(element){
-                element.oneDateValue = (element.oneDateValueFormatted==null)?null:element.oneDateValueFormatted.getTime();
-                element.startDateValue = (element.startDateValueFormatted==null)?null:element.startDateValueFormatted.getTime();
-                element.endDateValue = (element.endDateValueFormatted==null)?null:element.endDateValueFormatted.getTime();
+                element.oneDateValue = (element.oneDateValueFormatted == null) ? null : element.oneDateValueFormatted.getTime();
+                element.startDateValue = (element.startDateValueFormatted == null) ? null : element.startDateValueFormatted.getTime();
+                element.endDateValue = (element.endDateValueFormatted == null) ? null : element.endDateValueFormatted.getTime();
             });
         };
         //set the list of the special params
@@ -219,7 +220,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 //console.log(UTCastdt);        
 //console.log($scope.activeStartDateFormatted);            
 //console.log(mainSvc.checkStrForDate($scope.activeStartDateFormatted));            
-        object.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted))?null:UTCastdt; 
+        object.activeStartDate = (!mainSvc.checkStrForDate($scope.activeStartDateFormatted)) ? null : UTCastdt; 
         
         
         //set the param, which define - available auto/manual start report.
@@ -229,13 +230,13 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
             //perform start interval           
             var stDate = (new Date(moment($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601             
             var UTCstdt = Date.UTC(stDate.getFullYear(), stDate.getMonth(), stDate.getDate());              
-            object.paramsetStartDate = (!isNaN(UTCstdt)) ?new Date(UTCstdt) : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
+            object.paramsetStartDate = (!isNaN(UTCstdt)) ? new Date(UTCstdt) : null;//(new Date($scope.paramsetStartDateFormat)) /*(new Date($rootScope.reportStart))*/ || null;
             
             //perform end interval
             var endDate = (new Date(moment($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601                        
             var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate()); 
             
-            object.paramsetEndDate = (!isNaN(UTCenddt)) ?new Date(UTCenddt) : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
+            object.paramsetEndDate = (!isNaN(UTCenddt)) ? new Date(UTCenddt) : null;//(new Date($scope.paramsetEndDateFormat)) /*(new Date($rootScope.reportEnd))*/ || null;
         }else{
             object.paramsetStartDate = null;
             object.paramsetEndDate = null;
@@ -248,18 +249,18 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 //            object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();
 //            var astDate = (new Date($scope.activeStartDateFormatted)); 
 
-            table = $scope.crudTableName+"/createByTemplate/"+$scope.archiveParamset.id;  
+            table = $scope.crudTableName + "/createByTemplate/" + $scope.archiveParamset.id;  
 //console.log("$scope.createByTemplate_flag"); 
 //console.log(tmp);            
             crudGridDataFactory(table).save({contObjectIds: tmp}, object, successCallback, errorCallback);
             return;
         };
-        table=$scope.crudTableName+$scope.currentReportType.suffix;
+        table = $scope.crudTableName + $scope.currentReportType.suffix;
 //console.log($scope.createParamset_flag);        
         if ($scope.createParamset_flag){            
             object._active = true;
             
-            crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id, contObjectIds: tmp},object, successCallback, errorCallback);
+            crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id, contObjectIds: tmp}, object, successCallback, errorCallback);
         };
         if ($scope.editParamset_flag){       
             crudGridDataFactory(table).update({reportParamsetId: object.id, contObjectIds: tmp}, object, successCallback, errorCallback);
@@ -274,7 +275,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     };
     
     $scope.moveToArchive = function(object){
-        var table = $scope.crudTableName+"/archive/move"  
+        var table = $scope.crudTableName + "/archive/move";  
         $scope.toArchive(table, object.id).update({}, object, successCallback, errorCallback);
     };
     
@@ -366,19 +367,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
                 result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
                 result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
                 result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);
+                result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
+                $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);
             };
-            result.textValue=null;
-            result.numericValue=null;
-            result.oneDateValue=null;
+            result.textValue = null;
+            result.numericValue = null;
+            result.oneDateValue = null;
             
-            result.startDateValue=null;
-            result.endDateValue=null;
-            result.oneDateValueFormatted=null;
-            result.startDateValueFormatted=null;
-            result.endDateValueFormatted=null;
-            result.directoryValue=null;
+            result.startDateValue = null;
+            result.endDateValue = null;
+            result.oneDateValueFormatted = null;
+            result.startDateValueFormatted = null;
+            result.endDateValueFormatted = null;
+            result.directoryValue = null;
             return result;
         });
 //        $scope.paramsetStartDateFormat = (new Date());        
@@ -386,7 +387,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         $scope.psStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);//(new Date());        
         $scope.psEndDateFormatted= moment().format($scope.ctrlSettings.dateFormat);//(new Date());        
 //        $scope.paramsetEndDateFormat.setDate($scope.paramsetStartDateFormat.getDate()+1);
-        $scope.set_of_objects_flag=false;
+        $scope.set_of_objects_flag = false;
         $scope.showAvailableObjects_flag = false;
        
         $scope.createByTemplate_flag = false;
@@ -418,18 +419,18 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
     
     //Проверка параметра - ссылочный параметр или нет
     function isParamSpecialTypeDirectory(element){
-        var result=  (element.paramSpecialType.specialTypeDirectoryUrl!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryUrl!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryKey!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryKey!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryCaption!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryCaption!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryValue!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
+        var result = (element.paramSpecialType.specialTypeDirectoryUrl != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryUrl != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryKey != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryKey != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryCaption != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryCaption != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryValue != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryValue != 'undefined');       
         return result;
     };
     
-    var prepareParamSpecialList = function(paramsetObj, paramsetType){
+    var prepareParamSpecialList = function(paramsetObj, paramsetType){       
             var result = paramsetType.reportMetaParamSpecialList.map(function(element){
                 var result = {};
                 result.paramSpecialCaption = element.paramSpecialCaption;
@@ -438,27 +439,27 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
                 result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
                 if (isParamSpecialTypeDirectory(element))
                 {
-                    result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-                    result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                    result.specialTypeDirectoryUrl = element.paramSpecialType.specialTypeDirectoryUrl;
+                    result.specialTypeDirectoryKey = element.paramSpecialType.specialTypeDirectoryKey;
                     result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-                    result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-                    $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
+                    result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
+                    $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);                
                 };
                 //Ищем значение этого параметра в массиве параметров варианта отчета
-                if (paramsetObj.paramSpecialList.length==0){
+                if (paramsetObj.paramSpecialList.length == 0){
                     result.textValue = null;
                     result.numericValue = null;
                     result.oneDateValue = null;
                     result.startDateValue = null;
                     result.endDateValue = null;
-                    result.oneDateValueFormatted=null;
-                    result.startDateValueFormatted=null;
-                    result.endDateValueFormatted=null;
+                    result.oneDateValueFormatted = null;
+                    result.startDateValueFormatted = null;
+                    result.endDateValueFormatted = null;
                     result.directoryValue = null;
                     return result;
                 }
                 var elementIndex = -1;
-                paramsetObj.paramSpecialList.some(function(el,index,array){
+                paramsetObj.paramSpecialList.some(function(el, index, array){
                     if (el.reportMetaParamSpecialId === element.id){
                         elementIndex = index;
                         return true;
@@ -466,17 +467,17 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
                         return false;
                     }
                 });
-                if (elementIndex!=-1){
+                if (elementIndex != -1){
                     result.id = paramsetObj.paramSpecialList[elementIndex].id || null;
                     result.textValue = paramsetObj.paramSpecialList[elementIndex].textValue || null;
                     result.numericValue = paramsetObj.paramSpecialList[elementIndex].numericValue || null;
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
                     result.endDateValue = paramsetObj.paramSpecialList[elementIndex].endDateValue || null;
-                    result.oneDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
-                    result.startDateValueFormatted=(angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null :new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
-                    result.endDateValueFormatted=(paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
-                    result.directoryValue = Number(paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
+                    result.oneDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].oneDateValue == null) ? null : new Date(object.paramSpecialList[elementIndex].oneDateValue);
+                    result.startDateValueFormatted = (angular.isUndefined(paramsetObj.paramSpecialList[elementIndex].startDateValue) || (paramsetObj.paramSpecialList[elementIndex].startDateValue == null)) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].startDateValue);
+                    result.endDateValueFormatted = (paramsetObj.paramSpecialList[elementIndex].endDateValue == null) ? null : new Date(paramsetObj.paramSpecialList[elementIndex].endDateValue);
+                    result.directoryValue = (paramsetObj.paramSpecialList[elementIndex].directoryValue) || null;                
                     result.version = paramsetObj.paramSpecialList[elementIndex].version || null;
                 }else{
                     result.id = null;
@@ -485,84 +486,22 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
                     result.oneDateValue = null;
                     result.startDateValue = null;
                     result.endDateValue = null;
-                    result.oneDateValueFormatted=null;
-                    result.startDateValueFormatted=null;
-                    result.endDateValueFormatted=null;
+                    result.oneDateValueFormatted = null;
+                    result.startDateValueFormatted = null;
+                    result.endDateValueFormatted = null;
                     result.directoryValue = null;
-                }
+                }              
                 return result;
 
-            });
+            });       
         return result;
     };
     
-    $scope.editParamSet =function(parentObject,object){
+    $scope.editParamSet =function(parentObject, object){
 //        $scope.setCurrentReportType(parentObject);     
         $scope.selectedItem(parentObject, object);
         $scope.currentParamSpecialList = prepareParamSpecialList(object, $scope.currentReportType);        
-//        $scope.currentParamSpecialList = $scope.currentReportType.reportMetaParamSpecialList.map(function(element){
-//            var result = {};
-//            result.paramSpecialCaption = element.paramSpecialCaption;
-//            result.reportMetaParamSpecialId = element.id;
-//            result.paramSpecialRequired = element.paramSpecialRequired;
-//            result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
-//            if (isParamSpecialTypeDirectory(element))
-//            {
-//                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-//                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
-//                result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-//                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
-//                $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
-//            };
-//            //Ищем значение этого параметра в массиве параметров варианта отчета
-//            if (object.paramSpecialList.length==0){
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//                result.directoryValue = null;
-//                return result;
-//            }
-//            var elementIndex = -1;
-//            object.paramSpecialList.some(function(el,index,array){
-//                if (el.reportMetaParamSpecialId === element.id){
-//                    elementIndex = index;
-//                    return true;
-//                }else{
-//                    return false;
-//                }
-//            });
-//            if (elementIndex!=-1){
-//                result.id = object.paramSpecialList[elementIndex].id || null;
-//                result.textValue = object.paramSpecialList[elementIndex].textValue || null;
-//                result.numericValue = object.paramSpecialList[elementIndex].numericValue || null;
-//                result.oneDateValue = object.paramSpecialList[elementIndex].oneDateValue || null;
-//                result.startDateValue = object.paramSpecialList[elementIndex].startDateValue || null;
-//                result.endDateValue = object.paramSpecialList[elementIndex].endDateValue || null;
-//                result.oneDateValueFormatted=(object.paramSpecialList[elementIndex].oneDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].oneDateValue);
-//                result.startDateValueFormatted=(object.paramSpecialList[elementIndex].startDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].startDateValue);
-//                result.endDateValueFormatted=(object.paramSpecialList[elementIndex].endDateValue == null) ? null :new Date(object.paramSpecialList[elementIndex].endDateValue);
-//                result.directoryValue = Number(object.paramSpecialList[elementIndex].directoryValue) || null;                
-//                result.version = object.paramSpecialList[elementIndex].version || null;
-//            }else{
-//                result.id = null;
-//                result.textValue = null;
-//                result.numericValue = null;
-//                result.oneDateValue = null;
-//                result.startDateValue = null;
-//                result.endDateValue = null;
-//                result.oneDateValueFormatted=null;
-//                result.startDateValueFormatted=null;
-//                result.endDateValueFormatted=null;
-//                result.directoryValue = null;
-//            }
-//            return result;
-//            
-//        });
+        
         $scope.currentObject.showParamsBeforeRunReport = !$scope.currentObject.allRequiredParamsPassed;
 //console.log($scope.currentObject.allRequiredParamsPassed);   
         $scope.createParamset_flag = false;
@@ -574,7 +513,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
         $scope.currentSign = object.reportPeriod.sign;
         if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
             $scope.paramsetStartDateFormat = (new Date(object.paramsetStartDate));            
-            $scope.psStartDateFormatted =((object.paramsetStartDate!=null))?moment([$scope.paramsetStartDateFormat.getUTCFullYear(), $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+            $scope.psStartDateFormatted = ((object.paramsetStartDate != null)) ? moment([$scope.paramsetStartDateFormat.getUTCFullYear(),  $scope.paramsetStartDateFormat.getUTCMonth(), $scope.paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
 //console.log($scope.psStartDateFormatted);   
             
 //            $scope.paramsetStartDateFormatted ={
@@ -583,8 +522,8 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http','cr
 //            };
 //console.log($scope.paramsetStartDateFormatted.startDate);             
             
-            $scope.paramsetEndDateFormat= (new Date(object.paramsetEndDate));
-            $scope.psEndDateFormatted =(object.paramsetEndDate!=null)?moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat):"";
+            $scope.paramsetEndDateFormat = (new Date(object.paramsetEndDate));
+            $scope.psEndDateFormatted = (object.paramsetEndDate != null) ? moment([$scope.paramsetEndDateFormat.getUTCFullYear(), $scope.paramsetEndDateFormat.getUTCMonth(), $scope.paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
 console.log($scope.psEndDateFormatted); 
             
 //            $scope.paramsetEndDateFormatted ={
@@ -594,11 +533,11 @@ console.log($scope.psEndDateFormatted);
 //console.log($scope.paramsetEndDateFormatted.startDate); 
         }
     //settings for activate tab "Main options", when edit window opened.
-        $scope.set_of_objects_flag=false;
+        $scope.set_of_objects_flag = false;
         $scope.showAvailableObjects_flag = false;
 //        $('#main_properties_tab').addClass("active");
 //        $('#set_of_objects_tab').removeClass("active");
-//        $('#createParamsetModal').modal();
+//        $('#createParamsetModal').modal();       
         activateMainPropertiesTab();
     };
     
@@ -607,7 +546,7 @@ console.log($scope.psEndDateFormatted);
     $scope.selectedObjects = [];
     
     $scope.getAvailableObjects = function(paramsetId){      
-        var table=$scope.crudTableName+"/"+paramsetId+"/contObject/available";        
+        var table = $scope.crudTableName + "/" + paramsetId + "/contObject/available";        
         crudGridDataFactory(table).query(function(data){           
             $scope.availableObjects = angular.copy(data);
 //            $scope.availableObjects = objectSvc.sortObjectsByFullNameEx($scope.availableObjects); 
@@ -615,7 +554,7 @@ console.log($scope.psEndDateFormatted);
     };
 //    $scope.getAvailableObjects();
     $scope.getSelectedObjects = function(paramsetId){
-        var table=$scope.crudTableName+"/"+paramsetId+"/contObject";
+        var table = $scope.crudTableName + "/" + paramsetId + "/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
             objectSvc.sortObjectsByFullName($scope.selectedObjects);
@@ -627,11 +566,10 @@ console.log($scope.psEndDateFormatted);
     };
     
     $scope.getGroupObjects = function(group){
-        var url = $scope.groupUrl+"/"+group.id+"/contObject";
+        var url = $scope.groupUrl + "/" + group.id + "/contObject";
         crudGridDataFactory(url).query(function(data){           
             group.objects = data;     
-        });
-        
+        });        
     };    
     
     $scope.getAvailableObjectGroups = function(){         
@@ -678,9 +616,9 @@ console.log($scope.psEndDateFormatted);
     
     $scope.deleteDoublesObjects = function(targetArray){
         var arrLength = targetArray.length;
-        while (arrLength>=2){
+        while (arrLength >= 2){
             arrLength--;                                               
-            if (targetArray[arrLength].fullName===targetArray[arrLength-1].fullName){                   
+            if (targetArray[arrLength].fullName === targetArray[arrLength - 1].fullName){                   
                 targetArray.splice(arrLength, 1);
             };
         }; 
@@ -689,8 +627,8 @@ console.log($scope.psEndDateFormatted);
     $scope.addUniqueObjectsFromGroupsToSelectedObjects = function(arrFrom, arrTo){
         for (var j=0; j < arrFrom.length; j++){
             var uniqueFlag = true;
-            for (var i = 0; i<arrTo.length; i++){
-                if(arrFrom[j].fullName===arrTo[i].fullName){
+            for (var i = 0; i < arrTo.length; i++){
+                if(arrFrom[j].fullName === arrTo[i].fullName){
                     uniqueFlag = false;
                     break;
                 };
@@ -705,13 +643,13 @@ console.log($scope.psEndDateFormatted);
     $scope.removeGroupObjectsFromAvailableObjects = function(objectsFromGroup, availableObjects){
         for (var j=0; j < objectsFromGroup.length; j++){
             var elementIndex = -1;
-            for (var i = 0; i<availableObjects.length; i++){
-                if(objectsFromGroup[j].fullName===availableObjects[i].fullName){
+            for (var i = 0; i < availableObjects.length; i++){
+                if(objectsFromGroup[j].fullName === availableObjects[i].fullName){
                     elementIndex = i;
                     break;
                 };
             };
-            if (elementIndex>=0){
+            if (elementIndex >= 0){
                 availableObjects.splice(elementIndex,1);
             };
         }; 
@@ -732,11 +670,11 @@ console.log($scope.psEndDateFormatted);
             resultArr = arr1;
         };
        
-        for (var i=0; i<arr1.length;i++){
+        for (var i = 0; i < arr1.length; i++){
             if (arr1[i].id == $scope.currentObjectId) {               
                 el = angular.copy(arr1[i]);
                 el.selected = false;
-                arr1.splice(i,1);
+                arr1.splice(i, 1);
                 break;
             };
         }
@@ -793,7 +731,7 @@ console.log($scope.psEndDateFormatted);
             $scope.removeGroupObjectsFromAvailableObjects(totalGroupObjects, $scope.availableObjects);   
         };
         var tmpArray = angular.copy($scope.availableObjects);
-        for(var i =0; i<$scope.availableObjects.length; i++){
+        for(var i = 0; i < $scope.availableObjects.length; i++){
             var curObject = $scope.availableObjects[i];
 
             if (curObject.selected){
@@ -831,7 +769,7 @@ console.log($scope.psEndDateFormatted);
     //templates
     $scope.templatesForCurrentParaset = [];
     $scope.getTemplates = function(){        
-       var table = "../api/reportTemplate"+$scope.currentReportType.suffix; 
+       var table = "../api/reportTemplate" + $scope.currentReportType.suffix; 
         crudGridDataFactory(table).query(function(data){
             $scope.templatesForCurrentParaset = data;
             //if create new paraset
@@ -848,12 +786,12 @@ console.log($scope.psEndDateFormatted);
     
     $scope.$watch('currentObject.reportPeriodKey', function (newKey) {
         //отслеживаем изменение периода у варианта отчета
-        for (var i = 0; i<$scope.reportPeriods.length;i++){
+        for (var i = 0; i < $scope.reportPeriods.length; i++){
             if (newKey == $scope.reportPeriods[i].keyname){
                 $scope.currentSign = $scope.reportPeriods[i].sign;
                 if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){           
                     $scope.paramsetStartDateFormat = ($scope.currentObject.paramsetStartDate == null) ? null : (new Date($scope.currentObject.paramsetStartDate));
-                    $scope.paramsetEndDateFormat= ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
+                    $scope.paramsetEndDateFormat = ($scope.currentObject.paramsetEndDate == null) ? null : (new Date($scope.currentObject.paramsetEndDate));
                 }
             };
         };
@@ -870,7 +808,7 @@ console.log($scope.psEndDateFormatted);
     
     
     //date picker
-    $scope.dateOptsParamsetRu ={
+    $scope.dateOptsParamsetRu = {
         locale : {
             daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
             firstDay : 1,
@@ -907,14 +845,14 @@ console.log($scope.psEndDateFormatted);
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+            if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)){
                 return;
             };              
-            $('#'+element.permissionTagId).removeClass('nmc-hide');
+            $('#' + element.permissionTagId).removeClass('nmc-hide');
         });
 //        if (ctxFlag == false){
 //            window.location.assign('#/');
@@ -926,7 +864,6 @@ console.log($scope.psEndDateFormatted);
         setVisibles($scope.ctrlSettings.ctxId);
     });
 
-    
     //checkers
         //check date interval
     $scope.checkDateInterval = function(left, right){  
@@ -936,19 +873,19 @@ console.log($scope.psEndDateFormatted);
         if (!mainSvc.checkStrForDate(right)){
             return false;
         };        
-        if ((left==null)|| (right==null)||(left=="")||(right=="")){return false;};
+        if ((left == null) || (right == null) || (left == "") || (right == "")){return false;};
         var startDate = mainSvc.strDateToUTC(left, $scope.ctrlSettings.dateFormat);
-        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var sd = (startDate != null) ? (new Date(startDate)) : null;         
         var endDate = mainSvc.strDateToUTC(right, $scope.ctrlSettings.dateFormat);
-        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+        var ed = (endDate != null) ? (new Date(endDate)) : null;                
 //        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
-        if ((sd==null)|| (ed==null)){return false;};               
-        return ed>=sd;
+        if ((sd == null) || (ed == null)){return false;};               
+        return ed >= sd;
     };
         //check fields
     $scope.checkRequiredFields = function(){
         var result;
-        if (!($scope.currentObject.hasOwnProperty('reportPeriodKey'))||!($scope.currentObject.hasOwnProperty('reportTemplate'))){
+        if (!($scope.currentObject.hasOwnProperty('reportPeriodKey')) || !($scope.currentObject.hasOwnProperty('reportTemplate'))){
 //            $scope.currentObject.showParamsBeforeRunReport = true;
             return false;
         };  
@@ -956,17 +893,17 @@ console.log($scope.psEndDateFormatted);
             //default value    
         var intervalValidate_flag = true; 
             //if the paramset use interval
-        if ($scope.currentSign==null){
+        if ($scope.currentSign == null){
                 //check interval
             var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
             var startDate = new Date(startDateMillisec);
             var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
             var endDate = new Date(endDateMillisec);
-            intervalValidate_flag = (!isNaN(startDate.getTime()))||(!isNaN(endDate.getTime()))||$scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
+            intervalValidate_flag = (!isNaN(startDate.getTime())) || (!isNaN(endDate.getTime())) || $scope.checkDateInterval($scope.psStartDateFormatted, $scope.psEndDateFormatted);
         };
         
-        result = !((($scope.currentObject.reportPeriodKey==null) ||   
-        ($scope.currentObject.reportTemplate.id==null)))
+        result = !((($scope.currentObject.reportPeriodKey == null) ||   
+        ($scope.currentObject.reportTemplate.id == null)))
         &&intervalValidate_flag;
 //        $scope.currentObject.allRequiredParamsPassed = !result;      
         return result;
@@ -980,9 +917,9 @@ console.log($scope.psEndDateFormatted);
         };
         var result = false;
 //console.log($scope.currentReportType);        
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1))
         {
-            $scope.currentObject.outputFileZipped =  true;
+            $scope.currentObject.outputFileZipped = true;
             result= true;
         };
         return result;
@@ -992,21 +929,21 @@ console.log($scope.psEndDateFormatted);
         if (!$scope.currentReportType.hasOwnProperty('reportMetaParamCommon')){
             return true;
         };
-        var result= true;
+        var result = true;
         $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
         //Check common params before save
             //file ext
-        if (angular.isUndefined($scope.currentObject.outputFileType)||($scope.currentObject.outputFileType===null)||($scope.currentObject.outputFileType==="")){
-            $scope.messageForUser += "Основные свойства: "+"\n";
-            $scope.messageForUser += "\u2022"+" Не задан тип файла"+"\n";
-            result= false;
+        if (angular.isUndefined($scope.currentObject.outputFileType) || ($scope.currentObject.outputFileType === null)||($scope.currentObject.outputFileType === "")){
+            $scope.messageForUser += "Основные свойства: " + "\n";
+            $scope.messageForUser += "\u2022"+" Не задан тип файла" + "\n";
+            result = false;
         };
             //one date - for future
 //        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
         
             //start date
             //if the paramset use a date interval
-        if ($scope.currentSign==null){
+        if ($scope.currentSign == null){
 //            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted==null)
 //            {
 //                $scope.messageForUser += "- Не задано начало периода"+"\n";
@@ -1015,11 +952,11 @@ console.log($scope.psEndDateFormatted);
             var startDate = new Date(startDateMillisec);
             var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
             var endDate = new Date(endDateMillisec); 
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime()) || (!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
             {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
-                result= false;
+                if (result){ $scope.messageForUser += "Основные свойства: " + "\n";};
+                $scope.messageForUser += "\u2022" + " Некорректно задано начало периода" + "\n";
+                result = false;
             };
                         //end date
 //            if ($scope.currentReportType.reportMetaParamCommon.endDateRequired && $scope.paramsetEndDateFormat==null)
@@ -1027,45 +964,45 @@ console.log($scope.psEndDateFormatted);
 //            {
 //                $scope.messageForUser += "- Не задан конец периода"+"\n";
 //            };
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime()) ||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
             {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
-                result= false;
+                if (result){ $scope.messageForUser += "Основные свойства: " + "\n";};
+                $scope.messageForUser += "\u2022" + " Некорректно задан конец периода" + "\n";
+                result = false;
             };
             
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime()) && !isNaN(startDate.getTime()) && (startDateMillisec>endDateMillisec))    
             {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
-                result= false;
+                if (result){ $scope.messageForUser += "Основные свойства: " + "\n";};
+                $scope.messageForUser += "\u2022" + " Некорректно заданы границы периода" + "\n";
+                result = false;
             };
         }
 
                     //Count of objects
-        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && $scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
+        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length == 0) && $scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
         {
-            $scope.messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
+            $scope.messageForUser += "\u2022" + " Должен быть выбран хотя бы один объект" + "\n";
+            result = false;
+        };
+        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length == 0) && !$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
+        {
+            $scope.messageForUser += "\u2022" + " Необходимо выбрать один объект" + "\n";
             result= false;
         };
-        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && !$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
-        {
-            $scope.messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
-            result= false;
-        };
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length<=0))
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length <= 0))
         {
             $scope.messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
-            result= false;
+            result = false;
         };
         
-        if (!$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length>1) &&  $scope.currentReportType.reportMetaParamCommon.oneContObjectRequired)
+        if (!$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length > 1) &&  $scope.currentReportType.reportMetaParamCommon.oneContObjectRequired)
         {
-            $scope.messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
+            $scope.messageForUser += "\u2022" + " Нельзя выбрать более одного объекта" + "\n";
             result= false;
         };
         
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length > 1))
         {
             $scope.currentObject.outputFileZipped =  true;
         };
@@ -1081,22 +1018,22 @@ console.log($scope.psEndDateFormatted);
                                                      || element.directoryValue)
                    )
                 {
-                    if (specListFlag){$scope.messageForUser += "Дополнительные свойства: "+"\n";};
-                    $scope.messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
-                    result= false;
+                    if (specListFlag){ $scope.messageForUser += "Дополнительные свойства: " + "\n";};
+                    $scope.messageForUser += "\u2022" + " Не задан параметр \"" + element.paramSpecialCaption + "\" \n";
+                    result = false;
                     specListFlag = false;
                 }
             });
         };
-        if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){
+        if($scope.messageForUser != "Не все параметры варианта отчета заданы:\n"){
 //            $scope.messageForUser = "Внимание!!! \n"+$scope.messageForUser;
             $scope.messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
 //            $scope.messageForUser+=" Этот вариант отчета нельзя запустить без уточнения, а также его нельзя использовать в рассылке. Продолжить?";
 //            alert($scope.messageForUser);
 //            $('#messageForUserModal').modal();
-            result= false;
+            result = false;
         };
-        result =result && $scope.checkRequiredFields();  
+        result = result && $scope.checkRequiredFields();  
         if (!result){            
             $scope.currentObject.showParamsBeforeRunReport = true;
         };
