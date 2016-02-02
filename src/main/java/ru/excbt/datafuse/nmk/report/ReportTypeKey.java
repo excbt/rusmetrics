@@ -9,7 +9,7 @@ public enum ReportTypeKey implements KeynameObject {
 	COMMERCE_REPORT("commerce"), // CONS_REPORT,
 	EVENT_REPORT("event"), //
 	CONS_T1_REPORT("cons_t1"), //
-	CONS_T2_REPORT("cons_t2"), //
+	CONS_T2_REPORT("cons_t2"), // // deprecated
 	METROLOGICAL_REPORT("metrological"), //
 	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
 	CONSUMPTION_REPORT("consumption"), // // deprecated
@@ -22,7 +22,8 @@ public enum ReportTypeKey implements KeynameObject {
 	PARTNER_SERVICE_REPORT("partner_service"), //
 	ABONENT_SERVICE_REPORT("abonent_service"), //
 	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
-	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO);
+	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO), //
+	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO);
 
 	private final String urlName;
 	private final String defaultFileName;
@@ -50,8 +51,8 @@ public enum ReportTypeKey implements KeynameObject {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
-				.findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
+				.filter((i) -> i.urlName.equals(urlName)).findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
