@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 
+/**
+ * Repository для ReportTemplate
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 public interface ReportTemplateRepository extends CrudRepository<ReportTemplate, Long> {
 
 	/**

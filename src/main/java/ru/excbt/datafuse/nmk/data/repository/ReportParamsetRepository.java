@@ -9,9 +9,17 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 
+/**
+ * Repository для ReportParamset
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 public interface ReportParamsetRepository extends CrudRepository<ReportParamset, Long> {
 
-	public List<ReportParamset> findByReportTemplateId(long reportTemplateId);
+	public List<ReportParamset> findByReportTemplateId(Long reportTemplateId);
 
 	@Query("SELECT rp FROM ReportParamset rp " + "WHERE rp.reportTemplate.id = :reportTemplateId AND "
 			+ "rp._active = :isActive " + "ORDER BY rp.activeStartDate, rp.name")

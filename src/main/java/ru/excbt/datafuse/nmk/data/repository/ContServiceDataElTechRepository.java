@@ -11,6 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
 
+/**
+ * Repository для ContServiceDataElTech
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 public interface ContServiceDataElTechRepository extends CrudRepository<ContServiceDataElTech, Long> {
 
 	/**

@@ -11,6 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
 
+/**
+ * Repository для ContServiceDataElProfile
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.15.2015
+ *
+ */
 public interface ContServiceDataElProfileRepository extends CrudRepository<ContServiceDataElProfile, Long> {
 	/**
 	 * 

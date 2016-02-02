@@ -8,7 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
 /**
- * Компонент для аудита сущьностей
+ * Компонент для аудита сущностей
  * 
  * @author A.Kovtonyuk
  * @version 1.0

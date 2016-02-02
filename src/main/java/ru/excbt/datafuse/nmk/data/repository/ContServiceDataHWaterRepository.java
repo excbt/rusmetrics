@@ -11,6 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 
+/**
+ * Repository для ContServiceDataHWater
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long> {
 
 	@Query("SELECT d FROM ContServiceDataHWater d "
@@ -119,7 +127,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate DESC ")
 	public List<ContServiceDataHWater> selectLastDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
-	
+
 	/**
 	 * @author Artamonov
 	 * @param contZPointId
