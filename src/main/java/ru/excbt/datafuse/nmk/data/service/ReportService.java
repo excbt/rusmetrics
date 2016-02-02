@@ -451,6 +451,10 @@ public class ReportService {
 			result = ReportType.RPT_ELECTRIC_READINGS;
 			break;
 		}
+		case HW_QUALITY_REPORT: {
+			result = ReportType.RPT_HW_QUALITY;
+			break;
+		}
 		default: {
 			break;
 		}
