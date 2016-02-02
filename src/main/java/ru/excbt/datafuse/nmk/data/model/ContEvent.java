@@ -12,13 +12,21 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+
+/**
+ * События контейнера
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Entity
 @Table(name = "cont_event")
 @JsonInclude(Include.NON_NULL)

@@ -14,6 +14,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.metadata.MetadataInfo;
 
+/**
+ * Метаданные прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.05.2015
+ *
+ */
 @Entity
 @Table(name = "device_metadata")
 public class DeviceMetadata extends AbstractPersistableEntity<Long> implements MetadataInfo {

@@ -6,6 +6,14 @@ import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Тип тарифа
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 06.04.2015
+ *
+ */
 @Entity
 @Table(name = "tariff_type")
 public class TariffType extends AbstractAuditableModel {
@@ -29,7 +37,7 @@ public class TariffType extends AbstractAuditableModel {
 
 	@Column(name = "tariff_type_order")
 	private int tariffTypeOrder;
-	
+
 	public String getTariffTypeName() {
 		return tariffTypeName;
 	}
@@ -69,5 +77,5 @@ public class TariffType extends AbstractAuditableModel {
 	public void setTariffTypeOrder(int tariffTypeOrder) {
 		this.tariffTypeOrder = tariffTypeOrder;
 	}
-	
+
 }

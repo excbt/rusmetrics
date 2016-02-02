@@ -8,11 +8,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContGroupType;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/**
+ * Группы объектов учета
+ * 
+ * @author S.Kuzovoy
+ * @version 1.0
+ * @since 27.05.2015
+ *
+ */
 @Entity
 @Table(name = "cont_group")
 public class ContGroup extends AbstractAuditableModel {

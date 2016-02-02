@@ -12,6 +12,14 @@ import javax.persistence.TemporalType;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
+/**
+ * Расширенные данные HWater
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 03.08.2015
+ *
+ */
 @Entity
 @Table(name = "v_cont_object_hwater_delta")
 public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> implements DataDateFormatter {
@@ -70,10 +78,12 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> imple
 		return contZPointId;
 	}
 
+	@Override
 	public Date getDataDate() {
 		return dataDate;
 	}
 
+	@Override
 	public String getTimeDetailType() {
 		return timeDetailType;
 	}

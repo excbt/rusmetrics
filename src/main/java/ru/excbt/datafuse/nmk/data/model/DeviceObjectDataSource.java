@@ -13,6 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 
+/**
+ * Источник данных прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 @Entity
 @Table(name = "device_object_data_source")
 public class DeviceObjectDataSource extends AbstractAuditableModel implements ActiveObject {

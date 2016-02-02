@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 /**
  * Контроллер для работы с группой объектов учета
  * 
- * @author A.Kovtonyuk
+ * @author S.Kuzovoy
  * @version 1.0
  * @since 29.05.2015
  *

@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
 /**
- * Набор фильтров для работы с сущьностями системы
+ * Набор фильтров для работы с сущностями системы
  * 
  * @author A.Kovtonyuk
  * @version 1.0

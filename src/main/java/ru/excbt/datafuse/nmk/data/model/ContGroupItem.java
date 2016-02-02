@@ -10,6 +10,14 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Элементы группы
+ * 
+ * @author S.Kuzovoy
+ * @version 1.0
+ * @since 27.05.2015
+ *
+ */
 @Entity
 @Table(name = "cont_group_item")
 public class ContGroupItem extends AbstractAuditableModel {

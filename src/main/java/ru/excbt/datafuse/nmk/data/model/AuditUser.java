@@ -12,6 +12,14 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
+/**
+ * Пользователь для аудита
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.03.2015
+ *
+ */
 @Entity
 @Table(name = "audit_user")
 public class AuditUser implements Serializable {

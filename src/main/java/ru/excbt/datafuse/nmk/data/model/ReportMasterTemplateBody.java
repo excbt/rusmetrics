@@ -11,6 +11,14 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Главный шаблон отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.04.2015
+ *
+ */
 @Entity
 @Table(name = "report_master_template_body")
 @DynamicUpdate

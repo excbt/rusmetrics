@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant.TariffOptionKey;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TariffOption;
 
+/**
+ * Тарифный план
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 06.04.2015
+ *
+ */
 @Entity
 @Table(name = "tariff_plan")
 public class TariffPlan extends AbstractAuditableModel {

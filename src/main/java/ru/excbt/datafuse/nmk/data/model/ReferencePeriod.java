@@ -12,11 +12,19 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Эталонный интервал
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.06.2015
+ *
+ */
 @Entity
 @Table(name = "reference_period")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -70,7 +78,7 @@ public class ReferencePeriod extends AbstractAuditableModel {
 
 	@Column(name = "is_active")
 	private Boolean isActive;
-	
+
 	@Version
 	private int version;
 

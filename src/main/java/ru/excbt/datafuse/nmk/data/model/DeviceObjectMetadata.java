@@ -15,6 +15,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
+/**
+ * Метаданные прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.01.2016
+ *
+ */
 @Entity
 @Table(name = "device_object_metadata")
 @JsonIgnoreProperties(ignoreUnknown = true)

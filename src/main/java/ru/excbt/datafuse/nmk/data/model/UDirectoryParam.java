@@ -8,35 +8,43 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Параметры универсального справочника
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.03.2015
+ *
+ */
 @Entity
-@Table(name="u_directory_param")
-@JsonIgnoreProperties (ignoreUnknown = true)
+@Table(name = "u_directory_param")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UDirectoryParam extends AbstractAuditableModel {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3859570295447832844L;
 
 	@Version
-    @Column
-    private int version;
+	@Column
+	private int version;
 
-    @ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "directory_id")	
-    @JsonIgnore
-	private UDirectory directory;    
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "directory_id")
+	@JsonIgnore
+	private UDirectory directory;
 
-    @Column(name="param_type")
-    private String paramType;
+	@Column(name = "param_type")
+	private String paramType;
 
-    @Column(name="param_name")
-    private String paramName;
+	@Column(name = "param_name")
+	private String paramName;
 
 	public int getVersion() {
 		return version;
@@ -69,5 +77,5 @@ public class UDirectoryParam extends AbstractAuditableModel {
 	public void setParamName(String paramName) {
 		this.paramName = paramName;
 	}
-    
+
 }
