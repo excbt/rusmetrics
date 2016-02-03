@@ -22,7 +22,7 @@ public class ReportConstants {
 		public static final String COMM_FILE_JRXML = "jasper_reports/nmk_com_report.jrxml";
 		public static final String EVENT_FILE_COMPILED = "jasper_reports/nmk_event_report.jasper";
 		public static final String CONS_T1_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_1.jasper";
-		public static final String CONS_T2_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_2.jasper";
+		public static final String CONS_T2_FILE_COMPILED = "jasper_reports/nmk_consolidated_report_2.jasper"; // deprecated
 		public static final String METROLOGICAL_FILE_COMPILED = "jasper_reports/nmk_metrological_rep.jasper";
 		public static final String CONSUMPTION_FILE_COMPILED = "jasper_reports/nmk_consumption_report.jasper"; // deprecated
 		public static final String CONSUMPTION_HISTORY_FILE_COMPILED = "jasper_reports/nmk_consumption_history_report.jasper"; // deprecated
@@ -36,6 +36,7 @@ public class ReportConstants {
 		public static final String CONSUMPTION_ETALON_FILE_COMPILED = "jasper_reports/nmk_consumption_etalon_report.jasper";
 		public static final String RMA_ABONENT_SERVICE_FILE_COMPILED = "jasper_reports/nmk_abonent_service_rep.jasper";
 		public static final String ELECTRIC_READINGS_FILE_COMPILED = "jasper_reports/nmk_electric_readings_report.prpt";
+		public static final String HW_QUALITY_FILE_COMPILED = "jasper_reports/nmk_hw_quality_report.prpt";
 
 		private Files() {
 
