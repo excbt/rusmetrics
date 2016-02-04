@@ -592,9 +592,19 @@ console.log("Monitor Controller.");
     }); 
 
     window.onkeydown = function(e){
+        if (e.keyCode == 38){                        
+            var elem = document.getElementById("divWithMonitorTable");
+            elem.scrollTop = elem.scrollTop - 20;                        
+            return;
+        };
+        if (e.keyCode == 40){
+            var elem = document.getElementById("divWithMonitorTable");
+            elem.scrollTop = elem.scrollTop + 20;                        
+            return;
+        };
         if (e.keyCode == 34){
-            $scope.addMoreObjectsForMonitor();
-            $scope.$apply();
+//            $scope.addMoreObjectsForMonitor();
+//            $scope.$apply();
             var elem = document.getElementById("divWithMonitorTable");
             elem.scrollTop = elem.scrollTop + $scope.monitorSettings.objectsPerScroll*10;                        
             return;

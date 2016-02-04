@@ -981,9 +981,19 @@ console.log("Objects directive.");
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
 //console.log(e);                    
+                    if (e.keyCode == 38){                        
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop - 20;                        
+                        return;
+                    };
+                    if (e.keyCode == 40){
+                        var elem = document.getElementById("divWithObjectListTable");
+                        elem.scrollTop = elem.scrollTop + 20;                        
+                        return;
+                    };
                     if (e.keyCode == 34){
-                        $scope.addMoreObjects();
-                        $scope.$apply();
+//                        $scope.addMoreObjects();
+//                        $scope.$apply();
                         var elem = document.getElementById("divWithObjectListTable");
                         elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;
                         return;
