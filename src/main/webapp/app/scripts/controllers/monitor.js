@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc){
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc', '$timeout', function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc, $timeout){
          
 console.log("Monitor Controller.");      
     //object url
@@ -611,8 +611,8 @@ console.log("Monitor Controller.");
         };
         if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){             
             if ($scope.monitorSettings.objectsOnPage < $scope.objects.length){                            
-                $scope.loading = true;    
-                $timeout(function(){$scope.loading = false;}, $scope.objects.length);
+                $scope.monitorSettings.loadingFlag = true;    
+                $timeout(function(){$scope.monitorSettings.loadingFlag = false;}, $scope.objects.length);
             };
             var tempArr = $scope.objects.slice($scope.monitorSettings.objectsOnPage, $scope.objects.length);
             tempArr.forEach(function(element){
