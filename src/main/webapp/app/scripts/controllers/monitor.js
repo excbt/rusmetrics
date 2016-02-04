@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc',function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc){
+  .controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$interval', '$cookies', '$location', 'monitorSvc','mainSvc', '$timeout', function($rootScope, $http, $scope, $compile, $interval, $cookies, $location, monitorSvc, mainSvc, $timeout){
          
 console.log("Monitor Controller.");      
     //object url
@@ -592,44 +592,46 @@ console.log("Monitor Controller.");
     }); 
 
     window.onkeydown = function(e){
-    //console.log("Window key down");                                            
-        if ((e.ctrlKey && e.keyCode == 35) && ($scope.monitorSettings.objectsOnPage<$scope.objects.length)){
-//            console.log("Ctrl + End");
-//                $scope.loading =  true;    
-//            console.log($scope.loading);                        
-            //                        $scope.$apply();
-                var tempArr =  $scope.objects.slice($scope.monitorSettings.objectsOnPage,$scope.objects.length);
-                tempArr.forEach(function(element){
-//                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
-                            monitorSvc.getMonitorEventsByObject(element);
-//                        }else if((element.statusColor === "YELLOW")){
-//console.log(element);                
-//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-//                            $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
-//                        };
-                    
-                });
-                Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                $scope.monitorSettings.objectsOnPage+=$scope.objects.length;
-
-                $scope.monitorSettings.isCtrlEnd = true;
-
-            //                        $scope.objectsOnPage = $scope.objects;
+        if (e.keyCode == 34){
+            $scope.addMoreObjectsForMonitor();
+            $scope.$apply();
+            var elem = document.getElementById("divWithMonitorTable");
+            elem.scrollTop = elem.scrollTop + $scope.monitorSettings.objectsPerScroll*10;                        
+            return;
+        };
+        if (e.keyCode == 33){
+            var elem = document.getElementById("divWithMonitorTable");
+            elem.scrollTop = elem.scrollTop - $scope.monitorSettings.objectsPerScroll*10;
+            return;
+        };
+        if (e.ctrlKey && e.keyCode == 36){
+            var elem = document.getElementById("divWithMonitorTable");             
+            elem.scrollTop = 0;
+            return;
+        };
+        if ((e.ctrlKey && e.keyCode == 35) /*&& ($scope.objectCtrlSettings.objectsOnPage < $scope.objects.length)*/){             
+            if ($scope.monitorSettings.objectsOnPage < $scope.objects.length){                            
+                $scope.monitorSettings.loadingFlag = true;    
+                $timeout(function(){$scope.monitorSettings.loadingFlag = false;}, $scope.objects.length);
             };
-    };
-                
-    $scope.onTableLoad = function(){
-//                    var time = new Date();
-//console.log("On table load");                                        
-//console.log(time.toLocaleString());                    
+            var tempArr = $scope.objects.slice($scope.monitorSettings.objectsOnPage, $scope.objects.length);
+            tempArr.forEach(function(element){
+                if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE")){
+                    monitorSvc.getMonitorEventsByObject(element);
+                }else if((element.statusColor === "YELLOW")){  
+                    element.monitorEvents = "На объекте нет нештатных ситуаций";
+                    $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":element});
+                };
+            });
+            Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+            $scope.monitorSettings.objectsOnPage += $scope.objects.length;                        
+            $scope.$apply();
+            var elem = document.getElementById("divWithMonitorTable");          
+            elem.scrollTop = elem.scrollHeight;                                            
 
-        if ($scope.monitorSettings.isCtrlEnd === true){                    
-            var pageHeight = (document.body.scrollHeight>document.body.offsetHeight)?document.body.scrollHeight:document.body.offsetHeight;
-            window.scrollTo(0, Math.round(pageHeight));
-            $scope.monitorSettings.isCtrlEnd = false;
-//            $scope.loading =  false;
         };
     };
+                
     
     //watch for the change of the refresh period
     $scope.$watch('monitorSettings.refreshPeriod', function (newPeriod, oldPeriod) {

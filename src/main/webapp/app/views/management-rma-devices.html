@@ -148,7 +148,19 @@
                 </div>
             </td>
             <td class="col-md-2">
-                <div><span ng-class="">{{device.activeDataSource.subscrDataSource['dataSourceName' || 'id'] }}</span>
+                <div>
+                    <span ng-if = "!isDeviceDisabled(device)" ng-class="">{{device.activeDataSource.subscrDataSource['dataSourceName' || 'id'] }}</span>
+                    <span ng-if = "isDeviceDisabled(device)">
+                        Первичная загрузка - 
+                        <span ng-switch on="device.exSystemKeyname">
+                            <span ng-switch-when = 'LERS'>
+                                ЛЕРС
+                            </span>
+                            <span ng-switch-when = 'VZLET'>
+                                ВЗЛЕТ
+                            </span>
+                        </span>
+                    </span>
                 </div>
             </td>
             <td class="col-md-1">
