@@ -85,7 +85,7 @@ console.log('Run Object management controller.');
                 };
                 
 //console.log(objectSvc.promise);
-                var getObjectsData = function(){
+                var getObjectsData = function(objId){
 //console.log("getObjectsData");                    
                     objectSvc.getRmaPromise().then(function(response){
                         var tempArr = response.data;
@@ -104,6 +104,17 @@ console.log('Run Object management controller.');
                             $cookies.contObject = null;          
                         };
                         $rootScope.$broadcast('objectSvc:loaded');
+//                        if (!mainSvc.checkUndefinedNull(objId)){
+//                            $timeout(function(){
+//                                var curObjElem = document.getElementById("obj" + objId);
+//console.log($scope.objects.length);                                
+//        console.log(objId);                        
+//        console.log(curObjElem);                        
+//                                if (!mainSvc.checkUndefinedNull(curObjElem)){        
+//                                    curObjElem.scrollIntoView();
+//                                }
+//                            }, $scope.objects.length);
+//                        };
                     });
                 };
                 getObjectsData();
@@ -348,16 +359,16 @@ console.log('Run Object management controller.');
                     successCallback(e, null);
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
-                    getObjectsData();
+                    getObjectsData(e.id);
                     $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-                    $timeout(function(){
-                        var curObjElem = document.getElementById("obj" + e.id);
-console.log(e.id);                        
-console.log(curObjElem);                        
-                        if (!mainSvc.checkUndefinedNull(curObjElem)){        
-                            curObjElem.scrollIntoView();
-                        };
-                    }, 100);
+//                    $timeout(function(){
+//                        var curObjElem = document.getElementById("obj" + e.id);
+//console.log(e.id);                        
+//console.log(curObjElem);                        
+//                        if (!mainSvc.checkUndefinedNull(curObjElem)){        
+//                            curObjElem.scrollIntoView();
+//                        };
+//                    }, 100);
 //                    location.reload();
                 };
 
@@ -932,6 +943,7 @@ console.log($scope.currentObject);
                 
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
+//console.log(e);                    
 //                    if ((e.ctrlKey && e.keyCode == 35) && ($scope.objectCtrlSettings.objectsOnPage<$scope.objects.length)){
 //                        $scope.loading =  true;    
 //                        var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage,$scope.objects.length);
@@ -941,9 +953,20 @@ console.log($scope.currentObject);
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
 //                        
 //                    };
+                    
+                    if (e.keyCode == 38){                        
+                        var elem = document.getElementById("divWithObjectTable");
+                        elem.scrollTop = elem.scrollTop - 20;                        
+                        return;
+                    };
+                    if (e.keyCode == 40){
+                        var elem = document.getElementById("divWithObjectTable");
+                        elem.scrollTop = elem.scrollTop + 20;                        
+                        return;
+                    };
                     if (e.keyCode == 34){
-                        $scope.addMoreObjects();
-                        $scope.$apply();
+//                        $scope.addMoreObjects();
+//                        $scope.$apply();
                         var elem = document.getElementById("divWithObjectTable");
                         elem.scrollTop = elem.scrollTop + $scope.objectCtrlSettings.objectsPerScroll*10;                        
                         return;
@@ -1009,12 +1032,14 @@ console.log($scope.currentObject);
                     };
                 };
                 
-                $("#divWithObjectTable").scroll(function(){                    
+                var tableScrolling = function(){                    
                     if (angular.isUndefined($scope.filter) || ($scope.filter == '')){
                         $scope.addMoreObjects();
                         $scope.$apply();
                     };
-                });               
+                };
+                
+                $("#divWithObjectTable").scroll(tableScrolling);               
                 
                 // Проверка пользователя - системный/ не системный
                 $scope.isSystemuser = function(){
