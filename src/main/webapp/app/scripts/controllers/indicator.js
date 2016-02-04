@@ -52,99 +52,6 @@ angular.module('portalNMC')
     var CRIT_IMG_PATH = "images/divergenceIndicatorCrit.png";
     var EMPTY_IMG_PATH = "images/plug.png";    
         //Определеяю названия колонок
-    var listColumns = {
-            "dataDate":{
-                header : "Дата",
-                headerClass : "col-md-2",
-                dataClass : "col-md-2"
-            }, 
-            "workTime":{
-                header : "Время наработки, час",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }, 
-            "h_delta":{
-                header : "ГКал отопления",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }, 
-          "m_in":{
-                header : "Масса подачи, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }, 
-            "m_out":{
-                header : "Масса обратки, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }, 
-            "t_in":{
-                header : "Температура подачи, град C",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }, 
-            "t_out":{
-                header : "Температура обратки, град C",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            } , 
-            "t_cold":{
-                header : "Температура холодной воды, град C",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            } ,
-            "t_outdoor":{
-                header : "Температура окружающей среды, град C",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "m_delta":{
-                header : "Разница масс воды, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "v_in":{
-                header : "Объем подачи, м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "v_out":{
-                header : "Объем обратки, м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "v_delta":{
-                header : "Разница объемов (потребление), м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "h_in":{
-                header : "Входящие ГКал",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "h_out":{
-                header : "ГКал на выходе",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "p_in":{
-                header : "Давление на подаче, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "p_out":{
-                header : "Давление на обратке, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            },
-            "p_delta":{
-                header : "Разность давлений, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1"
-            }
-        }
-        ;
         
       $scope.intotalColumns = [
             {
@@ -309,162 +216,231 @@ angular.module('portalNMC')
             }];
 
           
-//    $scope.intotalColumns = [
-//        {"name": "m_in",
-//         "header":"Масса подачи",
-//         "class":"col-md-1",
-//         "imgpath" : "",
-//         "imgclass": ""
-//         ,"title":""
-//        },
-//        {"name": "m_out",
-//         "header":"Масса обратки",
-//         "class":"col-md-1"
-//         ,"imgpath" : ""
-//         ,"imgclass": ""
-//         ,"title":""
-//        },
-//        {"name": "v_in",
-//         "header":"Объем подачи",
-//         "class":"col-md-1"
-//         ,"imgpath" : ""
-//         ,"imgclass": ""
-//         ,"title":""
-//        },
-//        {"name": "v_out",
-//         "header":"Объем обратки",
-//         "class":"col-md-1"
-//         ,"imgpath" : ""
-//         ,"imgclass": ""
-//         ,"title":""
-//        },
-//        {"name": "h_delta",
-//         "header":"ГКал отопления",
-//         "class":"col-md-1"
-//         ,"imgpath" : ""
-//         ,"imgclass": ""
-//         ,"title":""
-//        }
-//    ];    
+    $scope.integratorColumns = [
+        {
+            header : "Дата",
+            headerClass : "col-md-2",
+            dataClass : "col-md-2",
+            fieldName: "dataDate"
+        }, 
+        {
+            header : "Время наработки, час",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "workTime"
+        },
+        {
+            header : "Потребление тепла, ГКал",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "h_delta"
+        }, 
+        {
+            header : "Масса подачи, т",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "m_in"
+        }, 
+        {
+            header : "Масса обратки, т",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "m_out"
+        },
+        {
+            header : "Объем подачи, м3",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "v_in"
+        },
+        {
+            header : "Объем обратки, м3",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "v_out"
+        },
+        {
+            header : "ГКал на входе",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "h_in"
+        },
+        {
+            header : "ГКал на выходе",
+            headerClass : "col-md-1",
+            dataClass : "col-md-1",
+            fieldName: "h_out"
+        }
+    ];
     
-    $scope.tableDef = {
-        tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
-        hideHeader : false,
-        headerClassTR : "nmc-main-table-header",
-        columns : [{
+    $scope.indicatorColumns = [{
                 header : "Дата",
                 headerClass : "col-md-2",
                 dataClass : "col-md-2",
-                fieldName: "dataDate"
+                fieldName: "dataDate",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             }, 
             {
                 header : "Время наработки, час",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "workTime"
+                fieldName: "workTime",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             }, 
             {
                 header : "Потребление тепла, ГКал",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "h_delta"
+                fieldName: "h_delta",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             }, 
             {
                 header : "Масса подачи, т",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "m_in"
+                fieldName: "m_in",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             }, 
             {
                 header : "Масса обратки, т",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "m_out"
+                fieldName: "m_out",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             },
             {
                 header : "Разность масс, т",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "m_delta"
+                fieldName: "m_delta",
+                "1h": "1h",
+                "24h" : "24h"
             },
             {
                 header : "Темп. подачи",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_in"
-                ,dataType: "temperature"                
+                ,dataType: "temperature",
+                "1h": "1h",
+                "24h" : "24h"               
             }, 
             {
                 header : "Темп. обратки",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_out"
-                ,dataType: "temperature"                
+                ,dataType: "temperature",
+                "1h": "1h",
+                "24h" : "24h"                
             } , 
             {
                 header : "Темп. ХВС",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_cold"
-                ,dataType: "temperature"                
+                ,dataType: "temperature",
+                "1h": "1h",
+                "24h" : "24h"               
             } ,
             {
                 header : "Темп. окр. среды",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
                 fieldName: "t_outdoor"
-                ,dataType: "temperature"                
+                ,dataType: "temperature",
+                "1h": "1h",
+                "24h" : "24h"                
             },
 
             {
                 header : "Объем подачи, м3",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "v_in"
+                fieldName: "v_in",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             },
             {
                 header : "Объем обратки, м3",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "v_out"
+                fieldName: "v_out",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             },
             {
                 header : "Разность объемов, м3",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "v_delta"
+                fieldName: "v_delta",
+                "1h": "1h",
+                "24h" : "24h"
             },
             {
                 header : "ГКал на входе",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "h_in"
+                fieldName: "h_in",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             },
             {
                 header : "ГКал на выходе",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "h_out"
+                fieldName: "h_out",
+                "1h": "1h",
+                "24h" : "24h",
+                "1h_abs" : "1h_abs"
             },
             {
                 header : "Давление на подаче, Мпа",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "p_in"
+                fieldName: "p_in",
+                "1h": "1h",
+                "24h" : "24h"
             },
             {
                 header : "Давление на обратке, Мпа",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "p_out"
+                fieldName: "p_out",
+                "1h": "1h",
+                "24h" : "24h"
             },
             {
                 header : "Разность давлений, Мпа",
                 headerClass : "col-md-1",
                 dataClass : "col-md-1",
-                fieldName: "p_delta"
-            }]
+                fieldName: "p_delta",
+                "1h": "1h",
+                "24h" : "24h"
+            }
+    ];
+    
+    $scope.tableDef = {
+        tableClass : "crud-grid table table-lighter table-bordered table-condensed table-hover",
+        hideHeader : false,
+        headerClassTR : "nmc-main-table-header-indicator",
+        columns : $scope.indicatorColumns
     };
+//    if ($scope.timeDetailType == "1h_abs")
+//        $scope.tableDef.columns = $scope.inte;
     
     $scope.summary = {};        
     $scope.totalIndicators = 0;
@@ -926,7 +902,7 @@ angular.module('portalNMC')
                         return;
                     };
                     element.imgpath = EMPTY_IMG_PATH;
-                    element.imgclass= "";
+                    element.imgclass = "";
                     element.title = "";   
                 });
 //console.log(data);            
@@ -950,11 +926,11 @@ angular.module('portalNMC')
         
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("Date-range-settings indicatorDates");        
-        if ($location.path()!=="/objects/indicators"){
+        if ($location.path() !== "/objects/indicators"){
             return;
         };
 //console.log("Date-range-settings indicatorDates1");  
-        if(newDates===oldDates){
+        if(newDates === oldDates){
             return;
         };
         $cookies.fromDate = moment(newDates.startDate).format('YYYY-MM-DD');
@@ -986,7 +962,7 @@ angular.module('portalNMC')
         var contZPoint = $scope.contZPoint || $cookies.contZPoint;
         var contObject = $scope.contObject || $cookies.contObject;
         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
-        var url = "../api/subscr/"+contObject+"/service/"+timeDetailType+"/"+contZPoint+"/csv"+exForUrl+"?beginDate="+$rootScope.reportStart+"&endDate="+$rootScope.reportEnd;
+        var url = "../api/subscr/" + contObject + "/service/" + timeDetailType + "/" + contZPoint + "/csv" + exForUrl + "?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
         window.open(url);
     };
         //Upload file with the indicator data to the server
@@ -1012,11 +988,11 @@ angular.module('portalNMC')
         var timeDetailType = "24h";
         var fromDate = $rootScope.startDateToDel;
         var toDate = $rootScope.endDateToDel;
-        var url = "../api/subscr/contObjects/"+contObject+"/contZPoints/"+contZpoint+"/service/"+timeDetailType+"/csv"+"?beginDate="+fromDate+"&endDate="+toDate;
+        var url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZpoint + "/service/" + timeDetailType + "/csv" + "?beginDate=" + fromDate + "&endDate=" + toDate;
         $http.delete(url)
             .success(function(data){       
                 notificationFactory.success();
-                $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/"+ data.filename;
+                $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/" + data.filename;
                 $scope.fileWithDeleteData = data.filename;
                 $scope.showLinkToFileFlag = true;
 //console.log("getData on success deleteData");            
@@ -1036,10 +1012,15 @@ angular.module('portalNMC')
     
     //check indicators for data (проверка: есть данные для отображения или нет)
     $scope.isHaveData = function(){
-        if (angular.isUndefined($scope.data)||($scope.data.length == 0)){
+        if (angular.isUndefined($scope.data) || ($scope.data.length == 0)){
             return false;
         };
         return true;
+    };
+        
+    $scope.isTDTabs = function(tdt){
+console.log(tdt == "1h_abs");        
+        return (tdt == "1h_abs");
     };
         
         //control visibles
@@ -1047,12 +1028,12 @@ angular.module('portalNMC')
         var ctxFlag = false;
         var tmp = mainSvc.getContextIds();
         tmp.forEach(function(element){
-            if(element.permissionTagId.localeCompare(ctxId)==0){
+            if(element.permissionTagId.localeCompare(ctxId) == 0){
                 ctxFlag = true;
             };
             var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
 //console.log(elDOM);            
-            if (angular.isUndefined(elDOM)||(elDOM==null)){
+            if (angular.isUndefined(elDOM) || (elDOM == null)){
                 return;
             };              
             $('#'+element.permissionTagId).removeClass('nmc-hide');

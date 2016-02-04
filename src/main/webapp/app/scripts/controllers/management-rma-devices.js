@@ -163,17 +163,12 @@ console.log('Run devices management controller.');
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };
+    
     $scope.editDevice = function(device){
         $scope.selectedItem(device);        
         objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
             function(resp){
                 $scope.data.dataSources = angular.copy(resp.data);
-//                for(var i = 0; i<$scope.data.dataSources.length; i++){
-//                    var elem = $scope.data.dataSources[i];
-//                    if (mainSvc.checkUndefinedNull(elem.dataSourceName)){                      
-//                        elem.dataSourceName = String(elem.id);                         
-//                    };
-//                };
                 $('#showDeviceModal').modal();
             },
             errorCallback

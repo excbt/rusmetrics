@@ -601,6 +601,12 @@ tr.nmc-main-table-header > th {
      background-color: #646263; /*background color*/
      color: #FFFFFF;
 }
+/*  Заголовок таблицы индикаторов*/
+tr.nmc-main-table-header-indicator > th {
+    background-color: #646263; /*background color*/
+    color: #FFFFFF;
+    height: 79px;
+}
     /*Скрываем текст у колнки    */
         /*значение color тут должен быть равно background-color из tr.nmc-main-table-header > th*/
 .nmc-th-invisible {
@@ -1657,6 +1663,9 @@ tr.nmc-inactive-price > td{
 
 .marginTopMinus79{
     margin-top: -79px;
+}
+.marginTopMinus45{
+    margin-top: -45px;
 }
 .marginTopMinus57{
     margin-top: -57px;
