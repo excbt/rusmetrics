@@ -104,17 +104,10 @@ console.log('Run Object management controller.');
                             $cookies.contObject = null;          
                         };
                         $rootScope.$broadcast('objectSvc:loaded');
-//                        if (!mainSvc.checkUndefinedNull(objId)){
-//                            $timeout(function(){
-//                                var curObjElem = document.getElementById("obj" + objId);
-//console.log($scope.objects.length);                                
-//        console.log(objId);                        
-//        console.log(curObjElem);                        
-//                                if (!mainSvc.checkUndefinedNull(curObjElem)){        
-//                                    curObjElem.scrollIntoView();
-//                                }
-//                            }, $scope.objects.length);
-//                        };
+                        
+                        if (!mainSvc.checkUndefinedNull(objId)){
+                            moveToObject(objId);
+                        };
                     });
                 };
                 getObjectsData();
@@ -293,6 +286,31 @@ console.log('Run Object management controller.');
                             };
                         });
                     return result;
+                };
+                // *** Переместить курсор на указанный объект
+                var moveToObject = function(objId){
+                    if (mainSvc.checkUndefinedNull(objId)){
+                        return "moveToObject: object id is undefined or null.";
+                    };
+                    var curObj = objectSvc.findObjectById(Number(objId), $scope.objects);
+                    if (curObj != null){
+                        var curObjIndex = $scope.objects.indexOf(curObj);                        
+                        if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage){
+                            //вырезаем из массива объектов элементы с текущей позиции, на которой остановились в прошлый раз, по вычесленный конечный индекс
+                            var tempArr =  $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, curObjIndex + 1);
+                                //добавляем к выведимому на экран массиву новый блок элементов
+                            Array.prototype.push.apply($scope.objectsOnPage, tempArr);
+                            $scope.objectCtrlSettings.objectsOnPage = curObjIndex + 1;
+                        };
+                        if (!mainSvc.checkUndefinedNull(objId)){
+                            $timeout(function(){
+                                var curObjElem = document.getElementById("obj" + objId);                     
+                                if (!mainSvc.checkUndefinedNull(curObjElem)){        
+                                    curObjElem.scrollIntoView();
+                                }
+                            }, 50);
+                        };
+                    }
                 };
                 
                 var deleteObjectFromArray = function(objId, targetArr){
