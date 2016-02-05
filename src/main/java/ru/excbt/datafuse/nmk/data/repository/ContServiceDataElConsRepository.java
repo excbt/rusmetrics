@@ -71,4 +71,37 @@ public interface ContServiceDataElConsRepository extends CrudRepository<ContServ
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT 1 FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId ")
+	public List<Long> selectExistsAnyDataByZPoint(@Param("contZPointId") long contZPointId, Pageable pageable);
+
+	/**
+	 * No needed change order by.
+	 * 
+	 * @param contZPointId
+	 * @param fromDateTime
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND "
+			+ " d.dataDate >= :fromDateTime" + " ORDER BY d.dataDate desc")
+	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("fromDateTime") Date fromDateTime, Pageable pageable);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId "
+			+ " ORDER BY d.dataDate desc")
+	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			Pageable pageable);
+
 }
