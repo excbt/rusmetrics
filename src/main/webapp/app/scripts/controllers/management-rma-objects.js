@@ -93,21 +93,27 @@ console.log('Run Object management controller.');
                         $scope.objects = response.data;
                         //sort by name
                         objectSvc.sortObjectsByFullName($scope.objects);
-
-                        $scope.objectsWithoutFilter = $scope.objects;
-                        tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
-                        $scope.objectsOnPage = tempArr;
-                        $scope.loading = false;  
-                        //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                        if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
-                            $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                            $cookies.contObject = null;          
-                        };
-                        $rootScope.$broadcast('objectSvc:loaded');
                         
-                        if (!mainSvc.checkUndefinedNull(objId)){
-                            moveToObject(objId);
+                        if (angular.isUndefined($scope.filter) || ($scope.filter === "")){
+
+                            $scope.objectsWithoutFilter = $scope.objects;
+                            $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+                            tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
+                            $scope.objectsOnPage = tempArr;                            
+                            //if we have the contObject id in cookies, then draw the Zpoint table for this object.
+                            if (angular.isDefined($cookies.contObject) && $cookies.contObject!=="null"){
+                                $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                                $cookies.contObject = null;          
+                            };
+                            $rootScope.$broadcast('objectSvc:loaded');
+
+                            if (!mainSvc.checkUndefinedNull(objId)){
+                                moveToObject(objId);
+                            };
+                        } else {
+                            $scope.searchObjects($scope.filter);
                         };
+                        $scope.loading = false;  
                     });
                 };
                 getObjectsData();
@@ -378,7 +384,8 @@ console.log('Run Object management controller.');
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     getObjectsData(e.id);
-                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+//                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
+//                    $scope.searchObjects($scope.filter);                        
 //                    $timeout(function(){
 //                        var curObjElem = document.getElementById("obj" + e.id);
 //console.log(e.id);                        
