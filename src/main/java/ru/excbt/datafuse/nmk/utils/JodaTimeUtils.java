@@ -5,6 +5,14 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
 
+/**
+ * Утилиты для работы с JODA Time
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.05.2015
+ *
+ */
 public class JodaTimeUtils {
 
 	/**
@@ -16,8 +24,8 @@ public class JodaTimeUtils {
 		if (dateTime == null) {
 			return null;
 		}
-		LocalDateTime result = dateTime.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
+		LocalDateTime result = dateTime.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+				.withMillisOfSecond(999);
 
 		return result;
 	}
@@ -31,8 +39,8 @@ public class JodaTimeUtils {
 		if (dateTime == null) {
 			return null;
 		}
-		DateTime result = dateTime.withHourOfDay(23).withMinuteOfHour(59)
-				.withSecondOfMinute(59).withMillisOfSecond(999);
+		DateTime result = dateTime.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+				.withMillisOfSecond(999);
 
 		return result;
 	}

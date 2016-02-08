@@ -26,6 +26,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с узлами универрсального справочника
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.03.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryNodeController extends SubscrApiController {

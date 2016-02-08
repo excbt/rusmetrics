@@ -19,6 +19,14 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с настройками точки учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 01.04.2015
+ *
+ */
 @Service
 public class ContZPointSettingModeService implements SecuredRoles {
 

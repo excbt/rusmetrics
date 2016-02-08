@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 
+/**
+ * Repository для SubscrContObject
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 public interface SubscrContObjectRepository extends CrudRepository<SubscrContObject, Long> {
 
 	/**

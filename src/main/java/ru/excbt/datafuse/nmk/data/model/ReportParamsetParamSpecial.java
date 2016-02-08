@@ -17,13 +17,21 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Вариант отчета. Специальные параметры
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 09.06.2015
+ *
+ */
 @Entity
 @Table(name = "report_paramset_param_special")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -74,8 +82,7 @@ public class ReportParamsetParamSpecial extends AbstractAuditableModel {
 	//
 	// ************************************************************************
 
-	public static ReportParamsetParamSpecial newInstance(
-			ReportMetaParamSpecial reportMetaParamSpecial) {
+	public static ReportParamsetParamSpecial newInstance(ReportMetaParamSpecial reportMetaParamSpecial) {
 		checkNotNull(reportMetaParamSpecial);
 		ReportParamsetParamSpecial result = new ReportParamsetParamSpecial();
 		result.setReportMetaParamSpecialId(reportMetaParamSpecial.getId());

@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -6,7 +6,14 @@ import org.joda.time.LocalDateTime;
 
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
-
+/**
+ * Утилиты для работы набором параметров отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.04.2015
+ *
+ */
 public class ReportParamsetUtils {
 
 	/**
@@ -15,8 +22,7 @@ public class ReportParamsetUtils {
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getStartDate(LocalDateTime reportDate,
-			ReportPeriodKey reportPeriodKey) {
+	public static LocalDateTime getStartDate(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
@@ -34,8 +40,7 @@ public class ReportParamsetUtils {
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.minusMonths(1).withDayOfMonth(1)
-					.withMillisOfDay(0);
+			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case INTERVAL: {
@@ -56,8 +61,7 @@ public class ReportParamsetUtils {
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getEndDate(LocalDateTime reportDate,
-			ReportPeriodKey reportPeriodKey) {
+	public static LocalDateTime getEndDate(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
@@ -71,14 +75,12 @@ public class ReportParamsetUtils {
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withMillisOfDay(0).plusMonths(1).withDayOfMonth(1)
-					.minusDays(1);
+			result = reportDate.withMillisOfDay(0).plusMonths(1).withDayOfMonth(1).minusDays(1);
 			;
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.withMillisOfDay(0).withDayOfMonth(1)
-					.minusDays(1);
+			result = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1);
 
 			break;
 		}
@@ -93,15 +95,14 @@ public class ReportParamsetUtils {
 
 		return result;
 	}
-	
+
 	/**
 	 * 
 	 * @param reportDate
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getStartDateTime(LocalDateTime reportDate,
-			ReportPeriodKey reportPeriodKey) {
+	public static LocalDateTime getStartDateTime(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
@@ -119,8 +120,7 @@ public class ReportParamsetUtils {
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.minusMonths(1).withDayOfMonth(1)
-					.withMillisOfDay(0);
+			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case INTERVAL: {
@@ -141,33 +141,29 @@ public class ReportParamsetUtils {
 	 * @param reportPeriodKey
 	 * @return
 	 */
-	public static LocalDateTime getEndDateTime(LocalDateTime reportDate,
-			ReportPeriodKey reportPeriodKey) {
+	public static LocalDateTime getEndDateTime(LocalDateTime reportDate, ReportPeriodKey reportPeriodKey) {
 		checkNotNull(reportDate);
 		checkNotNull(reportPeriodKey);
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999);
+			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999);
 			break;
 		}
 		case YESTERDAY: {
-			result = reportDate.minusDays(1).withHourOfDay(23)
-					.withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999);
+			result = reportDate.minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+					.withMillisOfSecond(999);
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999).plusMonths(1).withDayOfMonth(1)
-					.minusDays(1);
+			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+					.plusMonths(1).withDayOfMonth(1).minusDays(1);
 			;
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59)
-					.withSecondOfMinute(59).withMillisOfSecond(999).withDayOfMonth(1)
-					.minusDays(1);
+			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+					.withDayOfMonth(1).minusDays(1);
 
 			break;
 		}
@@ -181,6 +177,6 @@ public class ReportParamsetUtils {
 		}
 
 		return result;
-	}	
-	
+	}
+
 }

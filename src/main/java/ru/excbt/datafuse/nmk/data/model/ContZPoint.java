@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
+/**
+ * Подписка контейнера на ресурсные системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 @Entity
 @Table(name = "cont_zpoint")
 @JsonIgnoreProperties(ignoreUnknown = true)

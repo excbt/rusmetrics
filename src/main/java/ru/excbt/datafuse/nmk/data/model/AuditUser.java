@@ -10,9 +10,16 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
+/**
+ * Пользователь для аудита
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.03.2015
+ *
+ */
 @Entity
 @Table(name = "audit_user")
 public class AuditUser implements Serializable {
@@ -34,7 +41,7 @@ public class AuditUser implements Serializable {
 
 	@Column(name = "is_system")
 	private Boolean isSystem;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -59,9 +66,6 @@ public class AuditUser implements Serializable {
 		this.version = version;
 	}
 
-
-
-
 	public AuditUser() {
 
 	}
@@ -73,15 +77,6 @@ public class AuditUser implements Serializable {
 		this.version = srcObject.version;
 		this.id = srcObject.id;
 		this.isSystem = srcObject.isSystem;
-	}
-
-	public AuditUser(AuditUserPrincipal srcObject) {
-		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
-
-		this.userName = srcObject.getUserName();
-		this.version = srcObject.getVersion();
-		this.id = srcObject.getId();
-		this.isSystem = srcObject.getIsSystem();
 	}
 
 	public AuditUser(SubscriberUserDetails srcObject) {

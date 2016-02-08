@@ -16,6 +16,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
+/**
+ * Электричество - потребление
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 @Entity
 @Table(name = "cont_service_data_el_cons")
 public class ContServiceDataElCons extends AbstractAuditableModel implements DataDateFormatter {

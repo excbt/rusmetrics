@@ -2,6 +2,14 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import java.math.BigDecimal;
 
+/**
+ * Класс для работы полями БД
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 03.08.2015
+ *
+ */
 public class DBRowUtils {
 
 	private DBRowUtils() {

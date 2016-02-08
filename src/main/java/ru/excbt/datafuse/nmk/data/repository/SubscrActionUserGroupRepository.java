@@ -10,8 +10,15 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUserGroup;
 
-public interface SubscrActionUserGroupRepository extends
-		CrudRepository<SubscrActionUserGroup, Long> {
+/**
+ * Repository для SubscrActionUserGroup
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.05.2015
+ *
+ */
+public interface SubscrActionUserGroupRepository extends CrudRepository<SubscrActionUserGroup, Long> {
 
 	/**
 	 * 
@@ -21,8 +28,7 @@ public interface SubscrActionUserGroupRepository extends
 	 */
 	@Query("SELECT ug.subscrActionUser FROM SubscrActionUserGroup ug "
 			+ " WHERE ug.subscrActionGroup.id = :subscrActionGroupId")
-	public List<SubscrActionUser> selectUsersByGroup(
-			@Param("subscrActionGroupId") long subscrActionGroupId);
+	public List<SubscrActionUser> selectUsersByGroup(@Param("subscrActionGroupId") long subscrActionGroupId);
 
 	/**
 	 * 
@@ -32,8 +38,7 @@ public interface SubscrActionUserGroupRepository extends
 	 */
 	@Query("SELECT ug.subscrActionUser.id FROM SubscrActionUserGroup ug "
 			+ " WHERE ug.subscrActionGroup.id = :subscrActionGroupId")
-	public List<Long> selectUserIdsByGroup(
-			@Param("subscrActionGroupId") long subscrActionGroupId);
+	public List<Long> selectUserIdsByGroup(@Param("subscrActionGroupId") long subscrActionGroupId);
 
 	/**
 	 * 
@@ -43,8 +48,7 @@ public interface SubscrActionUserGroupRepository extends
 	 */
 	@Query("SELECT ug.subscrActionGroup FROM SubscrActionUserGroup ug "
 			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId")
-	public List<SubscrActionGroup> selectGroupsByUser(
-			@Param("subscrActionUserId") long subscrActionUserId);
+	public List<SubscrActionGroup> selectGroupsByUser(@Param("subscrActionUserId") long subscrActionUserId);
 
 	/**
 	 * 
@@ -54,8 +58,7 @@ public interface SubscrActionUserGroupRepository extends
 	 */
 	@Query("SELECT ug.subscrActionGroup.id FROM SubscrActionUserGroup ug "
 			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId")
-	public List<Long> selectGroupIdsByUser(
-			@Param("subscrActionUserId") long subscrActionUserId);
+	public List<Long> selectGroupIdsByUser(@Param("subscrActionUserId") long subscrActionUserId);
 
 	/**
 	 * 
@@ -63,11 +66,9 @@ public interface SubscrActionUserGroupRepository extends
 	 * @param subscrActionUserId
 	 * @return
 	 */
-	@Query("SELECT ug.id FROM SubscrActionUserGroup ug "
-			+ " WHERE ug.subscrActionUser.id = :subscrActionUserId AND "
+	@Query("SELECT ug.id FROM SubscrActionUserGroup ug " + " WHERE ug.subscrActionUser.id = :subscrActionUserId AND "
 			+ " ug.subscrActionGroup.id = :subscrActionGroupId")
-	public List<Long> selectSubscrActionUserGroupIds(
-			@Param("subscrActionUserId") long subscrActionUserId,
+	public List<Long> selectSubscrActionUserGroupIds(@Param("subscrActionUserId") long subscrActionUserId,
 			@Param("subscrActionGroupId") long subscrActionGroupId);
 
 }

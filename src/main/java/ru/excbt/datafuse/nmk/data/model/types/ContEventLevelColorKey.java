@@ -3,13 +3,21 @@ package ru.excbt.datafuse.nmk.data.model.types;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 
-public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
+/**
+ * Тип данных: цвет уровня событий
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.06.2015
+ *
+ */
+public enum ContEventLevelColorKey implements KeynameObject,StatusColorObject {
 	GREEN(100), YELLOW(80), ORANGE(50), RED(0);
 
 	private final String keyname;
 
 	private final int colorRank;
-	
+
 	private ContEventLevelColorKey(int colorRank) {
 		this.keyname = this.name().toUpperCase();
 		this.colorRank = colorRank;
@@ -44,8 +52,7 @@ public enum ContEventLevelColorKey implements KeynameObject, StatusColorObject {
 	 * @param keynameObject
 	 * @return
 	 */
-	public static ContEventLevelColorKey findByKeyname(
-			KeynameObject keynameObject) {
+	public static ContEventLevelColorKey findByKeyname(KeynameObject keynameObject) {
 		if (keynameObject == null) {
 			return null;
 		}

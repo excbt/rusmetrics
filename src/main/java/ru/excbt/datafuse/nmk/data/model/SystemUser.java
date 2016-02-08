@@ -11,34 +11,42 @@ import javax.persistence.Version;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
+/**
+ * Системный пользователь
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.03.2015
+ *
+ */
 @Entity
-@Table(name="system_user")
+@Table(name = "system_user")
 public class SystemUser extends AbstractAuditableModel implements SubscriberUser {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8167917557955085535L;
-	
+
 	@Column(name = "user_name")
 	private String userName;
-	
+
 	@Column(name = "first_name")
 	private String firstName;
-	
+
 	@Column(name = "last_name")
 	private String lastName;
-	
-	@Column(name = "password")
-	private String password;	
-	
-    @Version
-    private int version;
 
-	@OneToOne (fetch = FetchType.EAGER)
-	@JoinColumn(name="subscriber_id")
-	private Subscriber subscriber; 
-    
+	@Column(name = "password")
+	private String password;
+
+	@Version
+	private int version;
+
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "subscriber_id")
+	private Subscriber subscriber;
+
 	@Override
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -51,7 +59,7 @@ public class SystemUser extends AbstractAuditableModel implements SubscriberUser
 	public int getVersion() {
 		return version;
 	}
-	
+
 	public void setVersion(final int version) {
 		this.version = version;
 	}

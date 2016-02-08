@@ -26,6 +26,14 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с абонентами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.03.2015
+ *
+ */
 @Service
 public class SubscriberService extends AbstractService implements SecuredRoles {
 

@@ -10,6 +10,14 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 
+/**
+ * Класс "заглушка" для работы с абонентом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.05.2015
+ *
+ */
 @Service
 public class MockSubscriberService {
 

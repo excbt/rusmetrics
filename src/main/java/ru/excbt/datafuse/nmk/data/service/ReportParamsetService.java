@@ -35,6 +35,14 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с набором параметров отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.04.2015
+ *
+ */
 @Service
 public class ReportParamsetService implements SecuredRoles {
 

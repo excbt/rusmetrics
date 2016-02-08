@@ -9,16 +9,22 @@ import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 import ru.excbt.datafuse.nmk.data.model.FullUserInfo;
-import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.repository.FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.service.AuditUserService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
+/**
+ * Класс для работы с текущим пользователем
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.03.2015
+ *
+ */
 @Service
 public class CurrentUserService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(CurrentUserService.class);
+	private static final Logger logger = LoggerFactory.getLogger(CurrentUserService.class);
 
 	@Autowired
 	private AuditUserService auditUserService;
@@ -46,40 +52,6 @@ public class CurrentUserService {
 	 * 
 	 * @return
 	 */
-	@Deprecated
-	protected AuditUser getCurrentAuditUserOld() {
-		AuditUserPrincipal userPrincipal = getCurrentAuditUserPrincipal();
-		if (userPrincipal == null) {
-			return getMockAuditUser();
-		}
-		return new AuditUser(userPrincipal);
-
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	protected AuditUserPrincipal getCurrentAuditUserPrincipal() {
-		Authentication auth = getContextAuth();
-		if (auth == null) {
-			return null;
-		}
-
-		AuditUserPrincipal userPrincipal = null;
-		if (auth.getPrincipal() instanceof AuditUserPrincipal) {
-			userPrincipal = (AuditUserPrincipal) auth.getPrincipal();
-		} else {
-			return null;
-		}
-		return userPrincipal;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
 	public SubscriberUserDetails getCurrentUserDetails() {
 		Authentication auth = getContextAuth();
 		if (auth == null) {
@@ -91,8 +63,7 @@ public class CurrentUserService {
 		if (auth.getPrincipal() instanceof SubscriberUserDetails) {
 			result = (SubscriberUserDetails) auth.getPrincipal();
 		} else {
-			logger.error(
-					"Principal is not of type SubscriberUserDetails. Actual type: {}",
+			logger.error("Principal is not of type SubscriberUserDetails. Actual type: {}",
 					auth.getPrincipal().getClass().getName());
 			logger.error("Token Principal: {}", auth.getPrincipal().toString());
 		}
@@ -142,7 +113,7 @@ public class CurrentUserService {
 		}
 		return info.is_system();
 	}
-	
+
 	/**
 	 * 
 	 * @return

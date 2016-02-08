@@ -7,10 +7,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Кросс пользователи - группы рассылок для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.05.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_action_user_group")
 public class SubscrActionUserGroup extends AbstractAuditableModel {
@@ -67,6 +75,5 @@ public class SubscrActionUserGroup extends AbstractAuditableModel {
 	public void setSubscrActionUserId(Long subscrActionUserId) {
 		this.subscrActionUserId = subscrActionUserId;
 	}
-
 
 }

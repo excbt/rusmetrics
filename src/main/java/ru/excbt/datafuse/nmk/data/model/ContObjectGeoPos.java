@@ -15,6 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+/**
+ * Данные по координатам для объекта учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.07.2015
+ *
+ */
 @Entity
 @Table(name = "v_cont_object_geo_pos_xy")
 @JsonInclude(Include.NON_NULL)

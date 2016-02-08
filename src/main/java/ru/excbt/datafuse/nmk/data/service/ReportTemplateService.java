@@ -28,6 +28,14 @@ import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с шаблонами отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Service
 public class ReportTemplateService implements SecuredRoles {
 

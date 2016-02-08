@@ -22,6 +22,14 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с источниками данных абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 @Service
 public class SubscrDataSourceService implements SecuredRoles {
 

@@ -10,6 +10,14 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Работа с JSON
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.05.2015
+ *
+ */
 public class JsonCleaner {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -26,8 +34,7 @@ public class JsonCleaner {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String cleanJsonStringValues(String inputJson, String[] cleanString)
-			throws IOException {
+	public static String cleanJsonStringValues(String inputJson, String[] cleanString) throws IOException {
 
 		if (inputJson == null) {
 			return null;
@@ -73,8 +80,7 @@ public class JsonCleaner {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String cleanJsonStringValue(String inputJson, String cleanArg)
-			throws IOException {
+	public static String cleanJsonStringValue(String inputJson, String cleanArg) throws IOException {
 		return cleanJsonStringValues(inputJson, new String[] { cleanArg });
 	}
 

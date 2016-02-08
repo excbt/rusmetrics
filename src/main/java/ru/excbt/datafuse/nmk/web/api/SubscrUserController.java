@@ -31,6 +31,14 @@ import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с пользователями абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.10.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/subscr")
 public class SubscrUserController extends SubscrApiController {

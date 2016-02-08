@@ -7,6 +7,14 @@ import java.io.Serializable;
 
 import org.apache.commons.io.FilenameUtils;
 
+/**
+ * Работа с файлом MD5
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 21.07.2015
+ *
+ */
 public class FileInfoMD5 implements Serializable {
 
 	/**

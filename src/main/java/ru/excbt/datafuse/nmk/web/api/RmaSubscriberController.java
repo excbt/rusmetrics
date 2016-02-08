@@ -28,6 +28,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
+/**
+ * Контроллер для работы абонентами для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.10.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/rma")
 public class RmaSubscriberController extends SubscriberController {

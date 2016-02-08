@@ -33,6 +33,14 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.nmk.reports.ColumnElement;
 import ru.excbt.nmk.reports.ReportConvert;
 
+/**
+ * Сервис для работы с конструктором отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.04.2015
+ *
+ */
 @Service
 public class ReportWizardService implements SecuredRoles {
 

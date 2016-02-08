@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
+/**
+ * Набор фильтров для работы с сущностями системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.09.2015
+ *
+ */
 public class ObjectFilters {
 
 	public static final Predicate<? super DeletableObject> NO_DELETED_OBJECT_PREDICATE = (i) -> i.getDeleted() == 0;

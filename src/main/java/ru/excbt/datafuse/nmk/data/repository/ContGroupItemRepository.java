@@ -9,6 +9,14 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 
+/**
+ * Repository для ContGroupItem
+ * 
+ * @author S. Kuzovoy
+ * @version 1.0
+ * @since 25.05.2015
+ *
+ */
 public interface ContGroupItemRepository extends CrudRepository<ContGroupItem, Long> {
 
 	@Query("SELECT sco.contObject FROM SubscrContObject sco WHERE sco.contObjectId IN "

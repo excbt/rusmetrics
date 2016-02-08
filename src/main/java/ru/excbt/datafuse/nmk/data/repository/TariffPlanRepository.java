@@ -10,6 +10,14 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 
+/**
+ * Repository для TariffPlan
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.04.2015
+ *
+ */
 public interface TariffPlanRepository extends CrudRepository<TariffPlan, Long> {
 
 	/**

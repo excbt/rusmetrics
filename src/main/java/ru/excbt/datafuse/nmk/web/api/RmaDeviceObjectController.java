@@ -33,17 +33,19 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
+/**
+ * Контроллер для работы с приборами для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectController.class);
-
-	//	private class DataSourceTableHolder {
-	//		String dataSourceTable;
-	//		String dataSourceTable1h;
-	//		String dataSourceTable24h;
-	//	}
 
 	/**
 	 * 
@@ -57,14 +59,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("deviceObjectId") Long deviceObjectId,
-			/*			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
-						@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
-						@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
-						@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
-						@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
-			*/
-			@RequestBody DeviceObject deviceObject) {
+			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
 
 		checkNotNull(deviceObject);
 		checkArgument(!deviceObject.isNew());
@@ -117,22 +112,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.POST,
 			produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
-			/*
-			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
-			@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
-			@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
-			@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
-			@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
-			*/
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
-
-		/*
-		 * TODO check DataSourceTableHolder
-		 */
-		//		DataSourceTableHolder tableHolder = new DataSourceTableHolder();
-		//		tableHolder.dataSourceTable = dataSourceTable;
-		//		tableHolder.dataSourceTable1h = dataSourceTable1h;
-		//		tableHolder.dataSourceTable24h = dataSourceTable24h;
 
 		return createDeviceObjectInternal(contObjectId, deviceObject, request);
 
@@ -149,19 +129,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceObject(
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
-			/*
-			@RequestParam(value = "subscrDataSourceId", required = false) Long subscrDataSourceId,
-			@RequestParam(value = "subscrDataSourceAddr", required = false) String subscrDataSourceAddr,
-			@RequestParam(value = "dataSourceTable", required = false) String dataSourceTable,
-			@RequestParam(value = "dataSourceTable1h", required = false) String dataSourceTable1h,
-			@RequestParam(value = "dataSourceTable24h", required = false) String dataSourceTable24h,
-			*/
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
-
-		//		DataSourceTableHolder tableHolder = new DataSourceTableHolder();
-		//		tableHolder.dataSourceTable = dataSourceTable;
-		//		tableHolder.dataSourceTable1h = dataSourceTable1h;
-		//		tableHolder.dataSourceTable24h = dataSourceTable24h;
 
 		return createDeviceObjectInternal(contObjectId, deviceObject, request);
 	}
@@ -175,11 +143,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	 * @param request
 	 * @return
 	 */
-	private ResponseEntity<?> createDeviceObjectInternal(Long contObjectId,
-			/*Long subscrDataSourceId,
-			String subscrDataSourceAddr, 
-			DataSourceTableHolder tableHolder,*/
-			DeviceObject deviceObject, HttpServletRequest request) {
+	private ResponseEntity<?> createDeviceObjectInternal(Long contObjectId, DeviceObject deviceObject,
+			HttpServletRequest request) {
 		checkNotNull(deviceObject);
 		checkArgument(deviceObject.isNew());
 		checkNotNull(deviceObject.getDeviceModelId());

@@ -10,22 +10,25 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 
-public interface ReferencePeriodRepository extends
-		PagingAndSortingRepository<ReferencePeriod, Long> {
+/**
+ * Repository для ReferencePeriod
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.06.2015
+ *
+ */
+public interface ReferencePeriodRepository extends PagingAndSortingRepository<ReferencePeriod, Long> {
 
-	public List<ReferencePeriod> findBySubscriberIdAndContZPointId(
-			long subscriberId, long contZPointId);
+	public List<ReferencePeriod> findBySubscriberIdAndContZPointId(long subscriberId, long contZPointId);
 
 	@Query("SELECT rp FROM ReferencePeriod rp "
-			+ " WHERE rp.contZPoint.id = :contZPointId AND rp.subscriber.id = :subscriberId "
-			+ " ORDER BY rp.id desc")
-	public List<ReferencePeriod> selectLastReferencePeriod(
-			@Param("subscriberId") long subscriberId,
+			+ " WHERE rp.contZPoint.id = :contZPointId AND rp.subscriber.id = :subscriberId " + " ORDER BY rp.id desc")
+	public List<ReferencePeriod> selectLastReferencePeriod(@Param("subscriberId") long subscriberId,
 			@Param("contZPointId") long contZPointId, Pageable pageable);
 
 	@Modifying
 	@Query("UPDATE ReferencePeriod rp SET rp.isActive = false WHERE rp.isAuto=false AND rp.contZPoint.id = :contZPointId AND rp.subscriber.id = :subscriberId ")
-	int setManualIsActiveFalse(@Param("subscriberId") long subscriberId,
-			@Param("contZPointId") long contZPointId);
+	int setManualIsActiveFalse(@Param("subscriberId") long subscriberId, @Param("contZPointId") long contZPointId);
 
 }

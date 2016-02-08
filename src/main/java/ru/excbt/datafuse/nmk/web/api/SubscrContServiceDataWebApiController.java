@@ -20,6 +20,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
 
+/**
+ * Базовый класс для доступа к данным для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 public class SubscrContServiceDataWebApiController extends WebApiController {
 
 	@Autowired

@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 
+/**
+ * Repository для ContEventMonitor
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.06.2015
+ *
+ */
 public interface ContEventMonitorRepository extends JpaRepository<ContEventMonitor, Long> {
 
 	/**

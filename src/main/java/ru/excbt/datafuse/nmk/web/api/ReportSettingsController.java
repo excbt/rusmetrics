@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с настройками отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/reportSettings")
 public class ReportSettingsController extends SubscrApiController {

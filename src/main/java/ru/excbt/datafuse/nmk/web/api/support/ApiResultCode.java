@@ -8,6 +8,14 @@ import javax.persistence.PersistenceException;
 
 import org.springframework.transaction.TransactionSystemException;
 
+/**
+ * Коды результатов выполнения запроса
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.05.2015
+ *
+ */
 public enum ApiResultCode {
 	OK(true, "OK"),
 	ERR_UNCKNOWN(false, "Unknown Error"),

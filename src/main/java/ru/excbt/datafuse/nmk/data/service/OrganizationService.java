@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 
+/**
+ * Сервис для работы с организациями
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 @Service
 public class OrganizationService {
 

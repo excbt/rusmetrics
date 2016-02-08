@@ -8,10 +8,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Пользователи абонента для группы рассылок
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.04.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_action_user")
 public class SubscrActionUser extends AbstractAuditableModel {
@@ -100,6 +108,4 @@ public class SubscrActionUser extends AbstractAuditableModel {
 		this.version = version;
 	}
 
-	
 }
-

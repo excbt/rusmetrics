@@ -17,6 +17,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
+/**
+ * Утилита для выполнения запросов контроллеров
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.05.2015
+ *
+ */
 public class WebApiHelper {
 
 	private static final Logger logger = LoggerFactory.getLogger(WebApiHelper.class);

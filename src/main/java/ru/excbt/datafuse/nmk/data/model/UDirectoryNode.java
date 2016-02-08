@@ -14,11 +14,19 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Узлы универсального справочника
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.03.2015
+ *
+ */
 @Entity
 @Table(name = "u_directory_node")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -42,7 +50,7 @@ public class UDirectoryNode extends AbstractAuditableModel {
 	private String nodeComment;
 
 	//@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.PERSIST})
-	@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+	@OneToMany(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@JoinColumn(name = "parent_id")
 	@OrderColumn(name = "id")
 	private Collection<UDirectoryNode> childNodes = new ArrayList<>();
@@ -52,7 +60,6 @@ public class UDirectoryNode extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-	
 
 	/**
 	 * 
@@ -65,7 +72,6 @@ public class UDirectoryNode extends AbstractAuditableModel {
 		return result;
 	}
 
-	
 	public String getNodeName() {
 		return nodeName;
 	}
@@ -98,7 +104,6 @@ public class UDirectoryNode extends AbstractAuditableModel {
 		this.nodeComment = nodeComment;
 	}
 
-
 	@Transient
 	@JsonIgnore
 	public boolean isRoot() {
@@ -121,11 +126,9 @@ public class UDirectoryNode extends AbstractAuditableModel {
 		this.parentId = parentId;
 	}
 
-
 	public int getVersion() {
 		return version;
 	}
-
 
 	public void setVersion(int version) {
 		this.version = version;

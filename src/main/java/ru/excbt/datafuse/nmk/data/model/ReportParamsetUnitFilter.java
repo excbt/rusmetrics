@@ -12,6 +12,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 
+/**
+ * Фильтр объектов для отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.11.2015
+ *
+ */
 @Entity
 @Table(name = "v_report_paramset_unit_filter")
 public class ReportParamsetUnitFilter extends AbstractPersistableEntity<Long> {

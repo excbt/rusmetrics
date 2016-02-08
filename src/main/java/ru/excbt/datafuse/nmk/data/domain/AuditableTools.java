@@ -6,6 +6,14 @@ import org.springframework.data.domain.Auditable;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 
+/**
+ * Инструменты для работы с полями аудита
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.04.2015
+ *
+ */
 public class AuditableTools {
 	private AuditableTools() {
 	}
@@ -15,8 +23,7 @@ public class AuditableTools {
 	 * @param src
 	 * @param dest
 	 */
-	public static void copyAuditableProps(Auditable<AuditUser, ?> src,
-			Auditable<AuditUser, ?> dest) {
+	public static void copyAuditableProps(Auditable<AuditUser, ?> src, Auditable<AuditUser, ?> dest) {
 
 		checkNotNull(src);
 		checkNotNull(dest);

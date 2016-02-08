@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 
+/**
+ * Repository для DeviceMetadata
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.05.2015
+ *
+ */
 public interface DeviceMetadataRepository extends CrudRepository<DeviceMetadata, Long> {
 
 	@Query("SELECT dm FROM DeviceMetadata dm WHERE dm.deviceModelId = :deviceModelId "

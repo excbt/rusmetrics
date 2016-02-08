@@ -1,5 +1,14 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
+/**
+ * Расширенный класс для работы action с сущностью
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.05.2015
+ * 
+ * @param <T>
+ */
 public abstract class AbstractEntityApiAction<T> extends AbstractApiAction {
 
 	protected final T entity;

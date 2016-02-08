@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
+/**
+ * Источник данных абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_data_source")
 @JsonIgnoreProperties(ignoreUnknown = true)
