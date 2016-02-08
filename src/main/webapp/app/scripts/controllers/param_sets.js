@@ -180,7 +180,11 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     
     $scope.checkAndSaveParamset = function(object){
 //console.log($scope.currentParamSpecialList);        
-//return;        
+//return;
+        if (!object.name || object.name == ''){
+            notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
+            return "Add / edit paramset: no name";
+        };
         var flag = $scope.checkRequiredFieldsOnSave();
         if (flag===false){
             $('#messageForUserModal').modal();

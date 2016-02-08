@@ -465,12 +465,14 @@
                                             <label for="inputName" class="nmc-form-label">Наименование</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-                                            <input class="form-control nmc-text-input-form" 
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (!currentObject.name || currentObject.name == '')}">
+                                                <input class="form-control nmc-text-input-form" 
                                                    id="inputName" 
                                                    type=text 
                                                    placeholder="Наименование варианта" 
                                                    ng-model="currentObject.name" 
                                                    ng-disabled="isDisabled()">
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
