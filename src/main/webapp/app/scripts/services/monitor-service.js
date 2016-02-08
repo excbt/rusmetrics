@@ -116,15 +116,16 @@ console.log("MonitorSvc. Get objects");
                     objectsMonitorSvc = data;
 //    console.log(data);            
                     //sort objects by name
-                    objectsMonitorSvc.sort(function(a, b){
-                        if (a.contObject.fullName>b.contObject.fullName){
-                            return 1;
-                        };
-                        if (a.contObject.fullName<b.contObject.fullName){
-                            return -1;
-                        };
-                        return 0;
-                    });  
+                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
+//                    objectsMonitorSvc.sort(function(a, b){
+//                        if (a.contObject.fullName>b.contObject.fullName){
+//                            return 1;
+//                        };
+//                        if (a.contObject.fullName<b.contObject.fullName){
+//                            return -1;
+//                        };
+//                        return 0;
+//                    });  
                     //get the list of the events, which set the object color
 //                    objectsMonitorSvc.forEach(function(element){
 //                        if ((element.statusColor === "RED") ||(element.statusColor === "ORANGE") ){

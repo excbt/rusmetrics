@@ -157,11 +157,13 @@ body{
 
 .wrap > .container-fluid {
     padding-top: 50px;
-    min-width: 1320px;
+/*    min-width: 1320px;*/
+    min-width: 1572px;
 }
 
 .wrap > .container-fluid >.row {
-    min-width: 1320px;
+/*    min-width: 1320px;*/
+    min-width: 1572px;
 }
 
 .wrap > .container {

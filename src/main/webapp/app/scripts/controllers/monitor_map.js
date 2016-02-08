@@ -17,7 +17,8 @@ angular.module('portalNMC')
     var markersOnMap = new Array();
     
     $scope.objects = monitorSvc.getAllMonitorObjects();//[];
-    objectSvc.sortObjectsByFullName($scope.objects);
+//    objectSvc.sortObjectsByFullName($scope.objects);
+//console.log($scope.objects);    
     $scope.cities = monitorSvc.getAllMonitorCities();
     
     if (angular.isDefined(monitorSvc.getMonitorSettings().mapZoomDetail)){
@@ -451,7 +452,7 @@ console.warn(elem);
     $scope.$on('monitorObjects:updated',function(){
 //console.log('monitorObjects:updated');        
         $scope.objects = monitorSvc.getAllMonitorObjects();
-        objectSvc.sortObjectsByFullName($scope.objects);
+//        objectSvc.sortObjectsByFullName($scope.objects);
         $scope.cities = monitorSvc.getAllMonitorCities();
         //markers = [];
         if ($scope.mapCenter.zoom > $scope.mapSettings.zoomBound){

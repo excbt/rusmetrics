@@ -57,7 +57,7 @@ angular.module('portalNMC')
             {
                 header : "Потребление тепла, ГКал",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
                 name: "h_delta",
                 "imgpath" : "",
                 "imgclass": "",
@@ -66,7 +66,7 @@ angular.module('portalNMC')
             {
                 header : "Масса подачи, т",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
                 name: "m_in",
                 "imgpath" : "",
                 "imgclass": "",
@@ -75,7 +75,7 @@ angular.module('portalNMC')
             {
                 header : "Масса обратки, т",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
                 name: "m_out",
                 "imgpath" : "",
                 "imgclass": "",
@@ -84,7 +84,7 @@ angular.module('portalNMC')
             {
                 header : "Разница масс воды, т",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "m_delta",
                 "imgpath" : "",
@@ -94,7 +94,7 @@ angular.module('portalNMC')
             {
                 header : "Темп. подачи",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "t_in",
                 "imgpath" : "",
@@ -105,7 +105,7 @@ angular.module('portalNMC')
             {
                 header : "Темп. обратки",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "t_out",
                 "imgpath" : "",
@@ -116,7 +116,7 @@ angular.module('portalNMC')
             {
                 header : "Темп. ХВС",
 //                header : "",
-                class : "col-md-1",    
+                class : "col-xs-1 col-md-1",    
 //                class : "col-md-1 nmc-th-invisible",
                 name: "t_cold",
                 "imgpath" : "",
@@ -127,7 +127,7 @@ angular.module('portalNMC')
             {
                 header : "Темп. окр. среды",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "t_outdoor",
                 "imgpath" : "",
@@ -138,7 +138,7 @@ angular.module('portalNMC')
             {
                 header : "Объем подачи, м3",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
                 name: "v_in",
                 "imgpath" : "",
                 "imgclass": "",
@@ -147,7 +147,7 @@ angular.module('portalNMC')
             {
                 header : "Объем обратки, м3",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
                 name: "v_out",
                 "imgpath" : "",
                 "imgclass": "",
@@ -157,7 +157,7 @@ angular.module('portalNMC')
                 header : "Разница объемов, м3",
 //                header : "",
                 
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "v_delta",
                 "imgpath" : "",
@@ -167,7 +167,7 @@ angular.module('portalNMC')
             {
                 header : "ГКал на входе",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "h_in",
                 "imgpath" : "",
@@ -177,7 +177,7 @@ angular.module('portalNMC')
             {
                 header : "ГКал на выходе",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "h_out",
                 "imgpath" : "",
@@ -187,7 +187,7 @@ angular.module('portalNMC')
             {
                 header : "Давление на подаче, Мпа",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "p_in",
                 "imgpath" : "",
@@ -197,7 +197,7 @@ angular.module('portalNMC')
             {
                 header : "Давление на обратке, Мпа",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "p_out",
                 "imgpath" : "",
@@ -207,7 +207,7 @@ angular.module('portalNMC')
             {
                 header : "Разность давлений, Мпа",
 //                header : "",
-                class : "col-md-1",
+                class : "col-xs-1 col-md-1",
 //                class : "col-md-1 nmc-th-invisible",
                 name: "p_delta",
                 "imgpath" : "",
@@ -219,64 +219,64 @@ angular.module('portalNMC')
     $scope.integratorColumns = [
         {
             header : "Дата",
-            headerClass : "col-md-2",
-            dataClass : "col-md-2",
+            headerClass : "col-xs-2 col-md-2",
+            dataClass : "col-xs-2 col-md-2",
             fieldName: "dataDate"
         }, 
         {
             header : "Время наработки, час",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "workTime"
         },
         {
             header : "Потребление тепла, ГКал",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "h_delta"
         }, 
         {
             header : "Масса подачи, т",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "m_in"
         }, 
         {
             header : "Масса обратки, т",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "m_out"
         },
         {
             header : "Объем подачи, м3",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "v_in"
         },
         {
             header : "Объем обратки, м3",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "v_out"
         },
         {
             header : "ГКал на входе",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "h_in"
         },
         {
             header : "ГКал на выходе",
-            headerClass : "col-md-1",
-            dataClass : "col-md-1",
+            headerClass : "col-xs-1 col-md-1",
+            dataClass : "col-xs-1 col-md-1",
             fieldName: "h_out"
         }
     ];
     
     $scope.indicatorColumns = [{
                 header : "Дата",
-                headerClass : "col-md-2",
-                dataClass : "col-md-2",
+                headerClass : "col-xs-2 col-md-2",
+                dataClass : "col-xs-2 col-md-2",
                 fieldName: "dataDate",
                 "1h": "1h",
                 "24h" : "24h",
@@ -284,8 +284,8 @@ angular.module('portalNMC')
             }, 
             {
                 header : "Время наработки, час",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "workTime",
                 "1h": "1h",
                 "24h" : "24h",
@@ -293,8 +293,8 @@ angular.module('portalNMC')
             }, 
             {
                 header : "Потребление тепла, ГКал",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "h_delta",
                 "1h": "1h",
                 "24h" : "24h",
@@ -302,8 +302,8 @@ angular.module('portalNMC')
             }, 
             {
                 header : "Масса подачи, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "m_in",
                 "1h": "1h",
                 "24h" : "24h",
@@ -311,8 +311,8 @@ angular.module('portalNMC')
             }, 
             {
                 header : "Масса обратки, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "m_out",
                 "1h": "1h",
                 "24h" : "24h",
@@ -320,16 +320,16 @@ angular.module('portalNMC')
             },
             {
                 header : "Разность масс, т",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "m_delta",
                 "1h": "1h",
                 "24h" : "24h"
             },
             {
                 header : "Темп. подачи",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "t_in"
                 ,dataType: "temperature",
                 "1h": "1h",
@@ -337,8 +337,8 @@ angular.module('portalNMC')
             }, 
             {
                 header : "Темп. обратки",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "t_out"
                 ,dataType: "temperature",
                 "1h": "1h",
@@ -346,8 +346,8 @@ angular.module('portalNMC')
             } , 
             {
                 header : "Темп. ХВС",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "t_cold"
                 ,dataType: "temperature",
                 "1h": "1h",
@@ -355,8 +355,8 @@ angular.module('portalNMC')
             } ,
             {
                 header : "Темп. окр. среды",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "t_outdoor"
                 ,dataType: "temperature",
                 "1h": "1h",
@@ -365,8 +365,8 @@ angular.module('portalNMC')
 
             {
                 header : "Объем подачи, м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "v_in",
                 "1h": "1h",
                 "24h" : "24h",
@@ -374,8 +374,8 @@ angular.module('portalNMC')
             },
             {
                 header : "Объем обратки, м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "v_out",
                 "1h": "1h",
                 "24h" : "24h",
@@ -383,16 +383,16 @@ angular.module('portalNMC')
             },
             {
                 header : "Разность объемов, м3",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "v_delta",
                 "1h": "1h",
                 "24h" : "24h"
             },
             {
                 header : "ГКал на входе",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "h_in",
                 "1h": "1h",
                 "24h" : "24h",
@@ -400,8 +400,8 @@ angular.module('portalNMC')
             },
             {
                 header : "ГКал на выходе",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "h_out",
                 "1h": "1h",
                 "24h" : "24h",
@@ -409,24 +409,24 @@ angular.module('portalNMC')
             },
             {
                 header : "Давление на подаче, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_in",
                 "1h": "1h",
                 "24h" : "24h"
             },
             {
                 header : "Давление на обратке, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_out",
                 "1h": "1h",
                 "24h" : "24h"
             },
             {
                 header : "Разность давлений, Мпа",
-                headerClass : "col-md-1",
-                dataClass : "col-md-1",
+                headerClass : "col-xs-1 col-md-1",
+                dataClass : "col-xs-1 col-md-1",
                 fieldName: "p_delta",
                 "1h": "1h",
                 "24h" : "24h"
@@ -680,6 +680,16 @@ angular.module('portalNMC')
         });
          
         $scope.setScoreStyles = function(){
+            //ровняем таблицу, если появляются полосы прокрутки
+            var tableHeader = document.getElementById("indicatorTableHeader");
+            var tableDiv = document.getElementById("divIndicatorTable");
+            if (!mainSvc.checkUndefinedNull(tableDiv)){
+                if (tableDiv.offsetWidth > tableDiv.clientWidth){
+                    tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
+                }else{
+                    tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
+                };
+            };
 //console.log("Run setScoreStyles");            
             //set styles for score/integrators
 //            $scope.tableDef.columns.forEach(function(element){
