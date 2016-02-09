@@ -11,6 +11,7 @@ package ru.excbt.datafuse.nmk.data.model;
 public class DBMetadata {
 
 	public static final String DB_SCHEME = "";
+	public static final String SCHEME_PORTAL = "portal";
 
 	private DBMetadata() {
 
