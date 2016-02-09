@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-11-03T15:47:05 -->
+<!-- 2016-02-09T11:43:09 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_etalon_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
@@ -55,8 +55,7 @@
 			<defaultValueExpression><![CDATA[new String("{18811504, 18811505, 18811506, 18811507, 18811508, 18811509, 18811510, 18811511, 18811512, 18811513, 18811514, 18811515, 18811516, 18811517, 18811518, 18811519, 18811520, 18811521, 18811522, 18811523, 18811524, 18811525, 18811526, 18811527, 18811528, 18811529, 18811530, 18811531, 18811532, 18811533, 18811534, 18811535, 18811536, 18811537}")]]></defaultValueExpression>
 		</parameter>
 		<queryString>
-			<![CDATA[select *
-from reports.get_data_consumption_etalon($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
+			<![CDATA[select * from reports.get_data_consumption_etalon($P{org_id}, $P{cont_ids}, $P{begin_date}, $P{end_date})]]>
 		</queryString>
 		<field name="cont_address" class="java.lang.String"/>
 		<field name="cont_object_id" class="java.lang.Long"/>
@@ -105,7 +104,7 @@ where
 				<textElement>
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + new SimpleDateFormat("MMMM yyyy").format($P{begin_date}) + "-" + new SimpleDateFormat("MMMM yyyy").format($P{end_date}) + " года"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + new SimpleDateFormat("MM.yyyy").format($P{begin_date}) + " - " + new SimpleDateFormat("MM.yyyy").format($P{end_date})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="35" width="420" height="20" uuid="6ce14c80-38ad-4c45-b555-8a9a543c6a3e">
