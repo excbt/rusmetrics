@@ -583,7 +583,7 @@ console.log($scope.currentObject);
                     };
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
-                    
+                    result.isDroolsDisable = zpoint.isDroolsDisable;
                     return result;
                 };
                 
@@ -829,6 +829,7 @@ console.log($scope.currentObject);
                     zps.zpointRSO = object.zpointRSO;
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
+                    zps.isDroolsDisable = object.isDroolsDisable;
                     zps.winter = {};
                     zps.summer = {};
                     $scope.zpointSettings = zps;
