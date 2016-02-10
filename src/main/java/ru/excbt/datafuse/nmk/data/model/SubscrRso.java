@@ -10,6 +10,14 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * РСО для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.10.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_rso")
 public class SubscrRso extends AbstractAuditableModel {

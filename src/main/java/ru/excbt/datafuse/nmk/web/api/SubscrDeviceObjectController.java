@@ -40,6 +40,14 @@ import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с приборами для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 20.07.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrDeviceObjectController extends SubscrApiController {

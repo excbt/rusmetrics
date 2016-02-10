@@ -20,6 +20,14 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
+/**
+ * Учет показаний ГВС и Теплоснабжения
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 @Entity
 @Table(name = "cont_service_data_hwater")
 @JsonInclude(Include.NON_NULL)

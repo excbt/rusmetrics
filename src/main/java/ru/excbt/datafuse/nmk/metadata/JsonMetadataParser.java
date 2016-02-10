@@ -20,6 +20,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Класс для работы с метаданными прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.05.2015
+ *
+ */
 public class JsonMetadataParser {
 
 	private static final Logger logger = LoggerFactory.getLogger(JsonMetadataParser.class);

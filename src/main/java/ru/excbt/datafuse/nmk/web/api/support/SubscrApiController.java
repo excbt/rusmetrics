@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 import ru.excbt.datafuse.nmk.web.api.WebApiController;
 
+/**
+ * Базовый класс для контроллера с абонентом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 20.07.2015
+ *
+ */
 public class SubscrApiController extends WebApiController {
 
 	@Autowired

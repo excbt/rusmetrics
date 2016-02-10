@@ -19,6 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Доступ к услугам абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.09.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_service_access")
 @JsonIgnoreProperties(ignoreUnknown = true)

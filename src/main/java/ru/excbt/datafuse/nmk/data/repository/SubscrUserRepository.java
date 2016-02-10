@@ -9,6 +9,14 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 
+/**
+ * Repository для SubscrUser
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
 
 	public List<SubscrUser> findByUserNameIgnoreCase(String userName);

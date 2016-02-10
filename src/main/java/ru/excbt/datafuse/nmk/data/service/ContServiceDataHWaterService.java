@@ -46,6 +46,14 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+/**
+ * Сервис по работе с данными по горячей воде
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 @Service
 public class ContServiceDataHWaterService implements SecuredRoles {
 

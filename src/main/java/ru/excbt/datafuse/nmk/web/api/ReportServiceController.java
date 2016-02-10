@@ -39,6 +39,14 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 
+/**
+ * Контроллер для работы с отчетами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/reportService")
 public class ReportServiceController extends WebApiController {
@@ -342,84 +350,6 @@ public class ReportServiceController extends WebApiController {
 		return processDownloadInputStream(is, mediaType, byteArray.length, outputFilename, makeAttach);
 
 	}
-
-	/**
-	 * 
-	 * @param reportParamsetId
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	// private ResponseEntity<byte[]> processDowndloadRequestReportFix(
-	// ReportMakerParam reportMakerParam, ReportMaker reportMaker,
-	// HttpServletRequest request) throws IOException {
-	//
-	// checkNotNull(reportMakerParam);
-	// checkNotNull(reportMaker);
-	// checkNotNull(reportMaker.defaultFileName());
-	//
-	// byte[] result = new byte[0];
-	//
-	// String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
-	// .writeValueAsString(reportMakerParam);
-	//
-	// logger.debug("ReportMakerParam JSON: {}", paramJson);
-	//
-	// if (!reportMakerParam.isParamsetValid()
-	// || !reportMakerParam.isSubscriberValid()) {
-	// return ResponseEntity.badRequest().body(result);
-	// }
-	//
-	// boolean checkParamsCommon = reportMakerParamService
-	// .isAllCommonRequiredParamsExists(reportMakerParam);
-	// boolean checParamsSpecial = reportMakerParamService
-	// .isAllSpecialRequiredParamsExists(reportMakerParam);
-	//
-	// if (!checkParamsCommon || !checParamsSpecial) {
-	// return ResponseEntity.badRequest().body(result);
-	// }
-	//
-	// byte[] byteArray = null;
-	// // XXX Time Zone Service
-	// try (ByteArrayOutputStream memoryOutputStream = new
-	// ByteArrayOutputStream()) {
-	// reportMaker.makeReport(reportMakerParam,
-	// currentSubscriberService.getSubscriberCurrentTime_Joda(),
-	// memoryOutputStream);
-	// byteArray = memoryOutputStream.toByteArray();
-	// }
-	//
-	// if (byteArray == null || byteArray.length == 0) {
-	// return ResponseEntity.status(
-	// HttpServletResponse.SC_INTERNAL_SERVER_ERROR).body(result);
-	// }
-	//
-	// // set content attributes for the response
-	// HttpHeaders headers = new HttpHeaders();
-	// headers.setContentType(MediaType.valueOf(reportMakerParam.getMimeType()));
-	// headers.setContentLength(byteArray.length);
-	//
-	// String outputFilename = reportMakerParam.getReportParamset()
-	// .getOutputFileNameTemplate();
-	// if (outputFilename == null) {
-	// outputFilename = reportMaker.defaultFileName();
-	// }
-	//
-	// if (!reportMakerParam.isPreviewMode()) {
-	// // set headers for the response
-	// String headerKey = "Content-Disposition";
-	// String headerValue = String.format("attachment; filename=\"%s\"",
-	// outputFilename + reportMakerParam.getExt());
-	// headers.set(headerKey, headerValue);
-	// }
-	//
-	// logger.debug("Report Result file size: {} bytes", byteArray.length);
-	//
-	// result = byteArray;
-	//
-	// return new ResponseEntity<byte[]>(result, headers, HttpStatus.OK);
-	//
-	// }
 
 	/**
 	 * 

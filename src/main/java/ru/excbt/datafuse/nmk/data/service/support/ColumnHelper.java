@@ -8,6 +8,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Класс для работы с запросами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 17.12.2015
+ *
+ */
 public class ColumnHelper {
 	private final String[] columns;
 	private final String operator;

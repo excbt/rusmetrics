@@ -21,14 +21,22 @@ import javax.persistence.Version;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+/**
+ * Вариант отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
 @Table(name = "report_paramset")
 @SQLDelete(sql = "UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
@@ -281,8 +289,7 @@ public class ReportParamset extends AbstractAuditableModel {
 		return paramSpecialList;
 	}
 
-	public void setParamSpecialList(
-			Collection<ReportParamsetParamSpecial> paramSpecialList) {
+	public void setParamSpecialList(Collection<ReportParamsetParamSpecial> paramSpecialList) {
 		this.paramSpecialList = paramSpecialList;
 	}
 

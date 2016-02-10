@@ -28,6 +28,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с эталонным периодом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.06.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class ReferencePeriodController extends SubscrApiController {

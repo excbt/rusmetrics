@@ -13,6 +13,14 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
+/**
+ * Тип событий контейнера
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.02.2015
+ *
+ */
 @Entity
 @Table(name = "cont_event_type")
 @JsonInclude(Include.NON_NULL)

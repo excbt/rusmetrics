@@ -6,6 +6,16 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * Расширенный класс для работы action с сущностью при POST
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.05.2015
+ * 
+ * @param <T>
+ * @param <K>
+ */
 @Deprecated
 public abstract class AbstractEntityApiActionLocation<T, K> extends AbstractEntityApiAction<T>
 		implements ApiActionLocation {

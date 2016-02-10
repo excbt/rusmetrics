@@ -11,6 +11,14 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServiceItemRepository;
 
+/**
+ * Сервис для работы с типами услуг абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 @Service
 public class SubscrServiceItemService {
 

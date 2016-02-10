@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceListRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с прайс листами абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 11.11.2015
+ *
+ */
 @Service
 public class SubscrPriceListService implements SecuredRoles {
 

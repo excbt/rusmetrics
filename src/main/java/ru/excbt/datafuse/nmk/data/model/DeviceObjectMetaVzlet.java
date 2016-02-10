@@ -9,10 +9,18 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Метаданные прибора для системы Взлет
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.05.2015
+ *
+ */
 @Entity
 @Table(name = "device_object_meta_vzlet")
 public class DeviceObjectMetaVzlet extends AbstractAuditableModel {

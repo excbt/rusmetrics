@@ -16,6 +16,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
+/**
+ * Настройка адресов абонента для СМС сообщения
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.12.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_cont_event_type_sms_addr")
 @JsonIgnoreProperties(ignoreUnknown = true)

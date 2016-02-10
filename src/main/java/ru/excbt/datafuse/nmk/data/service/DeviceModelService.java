@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с моделями прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.02.2015
+ *
+ */
 @Service
 public class DeviceModelService implements SecuredRoles {
 

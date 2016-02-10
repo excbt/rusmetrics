@@ -8,6 +8,14 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.service.TimezoneDefService;
 
+/**
+ * Класс для работы с часовыми поясами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.07.2015
+ *
+ */
 @Service
 public class TimeZoneService {
 
@@ -30,10 +38,8 @@ public class TimeZoneService {
 			result = defaultTimezoneCanonicalId;
 
 			if (result == null) {
-				TimezoneDef defaultTimezoneDef = timezoneDefService
-						.getDefaultTimezoneDef();
-				defaultTimezoneCanonicalId = result = defaultTimezoneDef
-						.getCononicalId();
+				TimezoneDef defaultTimezoneDef = timezoneDefService.getDefaultTimezoneDef();
+				defaultTimezoneCanonicalId = result = defaultTimezoneDef.getCononicalId();
 			}
 		}
 

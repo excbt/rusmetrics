@@ -14,8 +14,16 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Задание на создание отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
-@Table(name="report_task")
+@Table(name = "report_task")
 public class ReportTask extends AbstractAuditableModel {
 
 	/**
@@ -28,11 +36,11 @@ public class ReportTask extends AbstractAuditableModel {
 	private Subscriber subscriber;
 
 	@Column(name = "task_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date taskDate;
-	
+
 	@Column(name = "report_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,22 +50,22 @@ public class ReportTask extends AbstractAuditableModel {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_paramset_id")
 	private ReportParamset reportParamset;
-	
-	@Column(name="is_complete")
+
+	@Column(name = "is_complete")
 	private boolean _complete;
-	
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_shedule_id")
 	private ReportShedule reportShedule;
 
 	@Column(name = "report_data_begin_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportDataBeginDate;
 
 	@Column(name = "report_data_end_date")
-	@Temporal (TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date reportDataEndDate;
-	
+
 	@Version
 	private int version;
 
@@ -140,5 +148,5 @@ public class ReportTask extends AbstractAuditableModel {
 	public void setVersion(int version) {
 		this.version = version;
 	}
-	
+
 }

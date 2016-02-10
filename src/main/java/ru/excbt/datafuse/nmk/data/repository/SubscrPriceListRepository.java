@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 
+/**
+ * Repository для SubscrPriceList
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 11.11.2015
+ *
+ */
 public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceList, Long> {
 
 	/**
@@ -18,7 +26,6 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.priceListLevel = :priceListLevel"
 			+ " ORDER BY pl.priceListKeyname NULLS LAST, pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
 			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
-	//+ " ORDER BY pl.priceListLevel, pl.priceListKeyname, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectByLevel(@Param("priceListLevel") Integer priceListLevel);
 
 	/**
@@ -29,7 +36,6 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.rmaSubscriberId = :rmaSubscriberId "
 			+ " ORDER BY pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
 			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
-	//+ " ORDER BY pl.priceListLevel, pl.isDraft DESC, pl.isActive NULLS FIRST, pl.isMaster, pl.isArchive, pl.planBeginDate DESC, pl.priceListName ")
 	public List<SubscrPriceList> selectByRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
@@ -40,7 +46,6 @@ public interface SubscrPriceListRepository extends CrudRepository<SubscrPriceLis
 	@Query("SELECT pl FROM SubscrPriceList pl WHERE pl.subscriberId = :subscriberId "
 			+ " ORDER BY pl.priceListLevel, pl.isMaster DESC, pl.isArchive, pl.isDraft DESC, pl.isActive, "
 			+ " COALESCE(pl.factBeginDate, pl.planBeginDate) DESC, pl.priceListName ")
-	//+ " ORDER BY pl.priceListLevel, pl.isMaster, pl.isArchive, pl.isDraft DESC, pl.isActive, pl.factBeginDate DESC")
 	public List<SubscrPriceList> selectBySubscriber(@Param("subscriberId") Long subscriberId);
 
 	/**

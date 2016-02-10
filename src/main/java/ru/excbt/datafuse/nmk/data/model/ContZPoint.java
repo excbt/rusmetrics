@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
+/**
+ * Подписка контейнера на ресурсные системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 @Entity
 @Table(name = "cont_zpoint")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -111,6 +119,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	@Column(name = "cont_zpoint_comment")
 	private String contZPointComment;
+
+	@Column(name = "is_drools_disable")
+	private Boolean isDroolsDisable;
 
 	@Transient
 	private Long _activeDeviceObjectId;
@@ -302,6 +313,14 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 
 	public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
 		this._activeDeviceObjectId = _activeDeviceObjectId;
+	}
+
+	public Boolean getIsDroolsDisable() {
+		return isDroolsDisable;
+	}
+
+	public void setIsDroolsDisable(Boolean isDroolsDisable) {
+		this.isDroolsDisable = isDroolsDisable;
 	}
 
 }

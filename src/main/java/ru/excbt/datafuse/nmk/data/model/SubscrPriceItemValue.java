@@ -15,6 +15,14 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * История значений цен
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 17.11.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_price_item_value")
 public class SubscrPriceItemValue extends AbstractAuditableModel {

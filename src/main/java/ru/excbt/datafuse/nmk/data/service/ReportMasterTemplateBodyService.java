@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с главным шаблоном отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.04.2015
+ *
+ */
 @Service
 public class ReportMasterTemplateBodyService implements SecuredRoles {
 

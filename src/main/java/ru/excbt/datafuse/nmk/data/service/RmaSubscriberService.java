@@ -17,6 +17,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 
+/**
+ * Сервис для работы с Абонентами РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.11.2015
+ *
+ */
 @Service
 public class RmaSubscriberService extends SubscriberService {
 

@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -34,18 +35,36 @@ import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+/**
+ * Сервис для работы с точками учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 @Service
 public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointService.class);
 
 	private final static boolean CONT_ZPOINT_EX_OPTIMIZE = false;
+	private final static String[] CONT_SERVICE_HWATER = new String[] { ContServiceTypeKey.HEAT.getKeyname(),
+			ContServiceTypeKey.HW.getKeyname(), ContServiceTypeKey.CW.getKeyname() };
+
+	private final static String[] CONT_SERVICE_EL = new String[] { ContServiceTypeKey.EL.getKeyname() };
+
+	private final static List<String> CONT_SERVICE_HWATER_LIST = Arrays.asList(CONT_SERVICE_HWATER);
+	private final static List<String> CONT_SERVICE_EL_LIST = Arrays.asList(CONT_SERVICE_EL);
 
 	@Autowired
 	private ContZPointRepository contZPointRepository;
 
 	@Autowired
 	private ContServiceDataHWaterService contServiceDataHWaterService;
+
+	@Autowired
+	private ContServiceDataElService contServiceDataElService;
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -105,14 +124,41 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
 		List<ContZPointEx> result = new ArrayList<>();
 
+		List<ContZPointEx> resultHWater = processContZPointHwater(zPoints);
+		List<ContZPointEx> resultEl = processContZPointEl(zPoints);
+
+		result.addAll(resultHWater);
+		result.addAll(resultEl);
+
+		result.forEach(i -> {
+			i.getObject().getDeviceObjects().forEach(j -> {
+				j.loadLazyProps();
+			});
+		});
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param zPointList
+	 * @return
+	 */
+	private List<ContZPointEx> processContZPointHwater(List<ContZPoint> zPointList) {
+		List<ContZPointEx> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zPoints) {
+		for (ContZPoint zp : zPointList) {
+
+			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
 
 			if (CONT_ZPOINT_EX_OPTIMIZE) {
 
 				Boolean existsData = null;
 				existsData = contServiceDataHWaterService.selectExistsAnyData(zp.getId());
+
 				result.add(new ContZPointEx(zp, existsData));
 
 			} else {
@@ -126,13 +172,42 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 			}
 
 		}
+		return result;
+	}
 
-		result.forEach(i -> {
-			i.getObject().getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
-		});
+	/**
+	 * 
+	 * @param zPointList
+	 * @return
+	 */
+	private List<ContZPointEx> processContZPointEl(List<ContZPoint> zPointList) {
+		List<ContZPointEx> result = new ArrayList<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
 
+		for (ContZPoint zp : zPointList) {
+
+			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
+
+			if (CONT_ZPOINT_EX_OPTIMIZE) {
+
+				Boolean existsData = null;
+				existsData = contServiceDataElService.selectExistsAnyConsData(zp.getId());
+
+				result.add(new ContZPointEx(zp, existsData));
+
+			} else {
+
+				Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+
+				Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+
+				minCheck.check(startDay);
+				result.add(new ContZPointEx(zp, zPointLastDate));
+			}
+
+		}
 		return result;
 	}
 

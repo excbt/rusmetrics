@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с тарифными планами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.04.2015
+ *
+ */
 @Service
 public class TariffPlanService implements SecuredRoles {
 

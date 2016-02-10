@@ -6,6 +6,14 @@ import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+/**
+ * Утилиты для работы с правами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 05.08.2015
+ *
+ */
 public class AdminUtils {
 
 	private AdminUtils() {

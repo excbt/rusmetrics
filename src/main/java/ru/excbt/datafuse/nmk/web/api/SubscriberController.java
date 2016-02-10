@@ -7,6 +7,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с абонентами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 01.10.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/subscr")
 public class SubscriberController extends SubscrApiController {

@@ -4,29 +4,34 @@ import java.io.Serializable;
 
 import ru.excbt.nmk.reports.ColumnElement;
 
+/**
+ * Колонка конструктора отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.04.2015
+ *
+ */
 public class ReportColumn implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1645430436067608438L;
-	
-	
+
 	private int systemNumber;
 	private int columnNumber;
 	private String columnHeader;
-	
+
 	public ReportColumn() {
-		
+
 	}
-	
+
 	public ReportColumn(ColumnElement srcColumnElement) {
 		this.systemNumber = srcColumnElement.nSystem;
 		this.columnNumber = srcColumnElement.n;
 		this.columnHeader = srcColumnElement.name;
 	}
-
-
 
 	public int getColumnNumber() {
 		return columnNumber;

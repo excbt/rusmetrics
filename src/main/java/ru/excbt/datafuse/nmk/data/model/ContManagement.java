@@ -20,6 +20,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Объект учета и управляющая огранизация
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 @Entity
 @Table(name = "cont_management")
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -10,6 +10,14 @@ import javax.persistence.Version;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Связь Абонент-Универсальный справочник
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.10.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_directory")
 public class SubscrDirectory extends AbstractAuditableModel {

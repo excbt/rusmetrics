@@ -27,6 +27,14 @@ import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 
+/**
+ * Класс для работы с LDAP
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.08.2015
+ *
+ */
 @Service
 public class LdapService {
 

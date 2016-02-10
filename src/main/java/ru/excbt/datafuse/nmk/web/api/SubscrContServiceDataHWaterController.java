@@ -69,6 +69,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
+/**
+ * Контроллер для работы с данными по теплоснабжению для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.03.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContServiceDataHWaterController extends SubscrApiController {
@@ -274,7 +282,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 			return responseBadRequest(
 					ApiResult.validationError("Invalid parameters beginDateS: %s, endDateS:%s", beginDateS, endDateS));
 		}
-		
+
 		TimeDetailKey timeDetail = TimeDetailKey.searchKeyname(timeDetailType);
 		if (timeDetail == null) {
 			return responseBadRequest(
@@ -282,7 +290,7 @@ public class SubscrContServiceDataHWaterController extends SubscrApiController {
 		}
 
 		LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
-		
+
 		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 
 		ContServiceDataHWaterTotals totals = contServiceDataHWaterService.selectContZPoint_Totals(contZPointId,

@@ -17,6 +17,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
+/**
+ * Общие параметры для типа отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 08.06.2015
+ *
+ */
 @Entity
 @Table(name = "report_meta_param_common")
 @JsonInclude(Include.NON_NULL)

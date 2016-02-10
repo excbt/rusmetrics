@@ -10,6 +10,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
 
+/**
+ * Сервис для работы с системными пользователями
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 @Service
 public class SystemUserService {
 
@@ -21,10 +29,9 @@ public class SystemUserService {
 	 * @param userName
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public SystemUser findByUsername(final String userName) {
-		List<SystemUser> resultList = systemUserRepository
-				.findByUserName(userName);
+		List<SystemUser> resultList = systemUserRepository.findByUserName(userName);
 		if (resultList.size() == 1) {
 			return resultList.get(0);
 		}

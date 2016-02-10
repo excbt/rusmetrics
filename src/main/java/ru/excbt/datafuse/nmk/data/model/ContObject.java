@@ -35,6 +35,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ManualObject;
 
+/**
+ * Контейнер учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.02.2015
+ *
+ */
 @Entity
 @Table(name = "cont_object")
 @DynamicUpdate

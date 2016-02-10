@@ -10,6 +10,14 @@ import javax.persistence.TemporalType;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 
+/**
+ * История входов пользователей в систему
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.10.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_user_login_log")
 public class SubscrUserLoginLog extends AbstractPersistableEntity<Long> {

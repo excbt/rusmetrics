@@ -12,6 +12,14 @@ import javax.persistence.Table;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
+/**
+ * Тепло системы Взлет
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Entity
 @Table(name = "vzlet_system")
 public class VzletSystem implements Serializable {
@@ -24,7 +32,7 @@ public class VzletSystem implements Serializable {
 	@Id
 	@Column(name = "id")
 	private Long id;
-	
+
 	@Column(name = "system_name")
 	private String systemName;
 
@@ -99,5 +107,5 @@ public class VzletSystem implements Serializable {
 	public void setContServiceTypeKey(String contServiceTypeKey) {
 		this.contServiceTypeKey = contServiceTypeKey;
 	}
-	
+
 }

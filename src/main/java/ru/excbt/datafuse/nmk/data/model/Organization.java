@@ -15,6 +15,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Организация
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 @Entity
 @Table(name = "organization")
 @JsonInclude(Include.NON_NULL)

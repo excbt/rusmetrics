@@ -6,6 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
 
+/**
+ * Контроллер для замера отклика системы по уведомлениям
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 03.11.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/benchmark/contEvent")
 public class BenchmarkContEventNotificationController extends SubscrContEventNotificationController {

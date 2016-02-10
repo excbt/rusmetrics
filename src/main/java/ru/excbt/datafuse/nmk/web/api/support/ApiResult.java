@@ -2,6 +2,14 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Результат REST запроса
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.05.2015
+ *
+ */
 public class ApiResult {
 
 	private final ApiResultCode resultCode;
@@ -36,7 +44,7 @@ public class ApiResult {
 	 */
 	public static ApiResult build(ApiResultCode code) {
 		checkNotNull(code);
-		return new ApiResult(code, code.getDescription());
+		return new ApiResult(code, null);
 	}
 
 	/**
@@ -110,7 +118,7 @@ public class ApiResult {
 	 * @return
 	 */
 	public static ApiResult error(Exception e) {
-		return build(ApiResultCode.describeException(e));
+		return build(ApiResultCode.describeException(e), e.getMessage());
 	}
 
 	/**

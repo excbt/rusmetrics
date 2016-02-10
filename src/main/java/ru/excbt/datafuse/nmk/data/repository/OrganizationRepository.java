@@ -7,6 +7,14 @@ import org.springframework.data.repository.CrudRepository;
 
 import ru.excbt.datafuse.nmk.data.model.Organization;
 
+/**
+ * Repository для Organization
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 public interface OrganizationRepository extends CrudRepository<Organization, Long> {
 
 	@Query("SELECT o FROM Organization o WHERE o.flagRso = true ORDER BY o.organizationFullName")

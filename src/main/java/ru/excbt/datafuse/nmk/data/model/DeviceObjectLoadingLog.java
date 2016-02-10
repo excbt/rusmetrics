@@ -15,6 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Данные о последней загрузки данных с прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.01.2016
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "device_object_loading_log")

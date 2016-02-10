@@ -37,6 +37,14 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
+/**
+ * Контроллер для работы с прайс листами для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 11.11.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaPriceListController extends SubscrPriceListController {

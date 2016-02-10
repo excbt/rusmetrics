@@ -21,6 +21,14 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Пакет услуг абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_service_pack")
 @JsonInclude(Include.NON_NULL)

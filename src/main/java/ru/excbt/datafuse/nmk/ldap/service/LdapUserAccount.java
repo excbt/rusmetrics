@@ -3,6 +3,14 @@ package ru.excbt.datafuse.nmk.ldap.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * Класс для работы с пользователем LDAP
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.10.2015
+ *
+ */
 public final class LdapUserAccount {
 
 	public final static String[] OBJECT_CLASS = new String[] { "top", "person", "organizationalPerson", "inetOrgPerson",
