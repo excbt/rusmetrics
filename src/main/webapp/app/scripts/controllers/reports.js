@@ -62,6 +62,26 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+    
+    $scope.categories = [
+        {
+            name: "Аналитические",
+            prefix: "А",
+            class: "active",
+            reportTypes: []
+        },
+        {
+            name: "Оперативные",
+            prefix: "Э",
+            reportTypes: []
+        },
+        {
+            name: "Служебные",
+            prefix: "C",
+            reportTypes: []
+        }
+    ];
+    
     //report types
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
@@ -86,6 +106,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length>0?true:false);
+                
+                for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
+                    if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
+                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
+                        $scope.categories[categoryCounter].reportTypes.push(newObject);                     
+                        continue;
+                    };
+                };
                 
                 newObjects.push(newObject);
             };        
@@ -1108,5 +1136,22 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             notificationFactory.errorInfo(e.statusText,e);
             console.log(e);
         }*/);
+    };
+
+        //work with tabs
+    $scope.setActiveTab = function(tabId){
+        var tab = document.getElementById('rep_a_teplo_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('rep_a_electro_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('rep_a_gas_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById(tabId);     
+        tab.classList.add("active");
+        
+    };
+    
+    $scope.selectedCategory = function(cat){
+        $scope.curCategory = angular.copy(cat);
     };
 }]);

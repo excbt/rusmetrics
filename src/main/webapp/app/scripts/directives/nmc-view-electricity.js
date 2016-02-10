@@ -9,7 +9,7 @@ angular.module('portalNMC')
             chartFlag: "=chart"
         },
         templateUrl: 'scripts/directives/templates/nmc-view-electricity.html',
-        controller: function($scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout){            
+        controller: function($scope, $element, $attrs, $http, notificationFactory, mainSvc, $timeout, $window){            
             
             $scope.dirSettings = {};
             $scope.dirSettings.userFormat = "DD.MM.YYYY"; //date format
@@ -87,11 +87,6 @@ angular.module('portalNMC')
             
             $scope.refreshData();
             
-            $scope.onTableLoad= function(){
-console.log("onTableLoad");                
-                               
-            };
-            
             //set setting for input date and chart controls toggle
             $timeout(function(){
                 $('#input'+$scope.type+'Date').datepicker({
@@ -161,7 +156,7 @@ console.log("onTableLoad");
             };
             function labelFormatter(label, series) {
                 return "<div style='font-size:8pt; text-align:center; padding:2px; color:black;'>" + label +"</div>";
-            }
+            };
         }
     };
 });

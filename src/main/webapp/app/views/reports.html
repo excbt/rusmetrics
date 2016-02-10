@@ -12,11 +12,82 @@
     <h2 class="noMargin nmc-h2">Отчеты</h2>
     <hr>
 </div>
+<!-- Навигационная полоса по категориям отчетов-->
+<div role="tabpanel" class="nmc-main-tab-panel" ng-init="curCategory=categories[0]">    
+                <ul class="nav nav-tabs marginBottom5" role="tablist">
+<!--
+                    <li id="rep_a_teplo_sys" role="presentation" class="active">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="rep_teplo_reports" 
+                           data-target="#rep_teplo_reports" 
+                           role="tab" 
+                           data-toggle="tab"
+                           ng-click="curCategory=categories[0]"> 
+                            Аналитические 
+                        </a>
+                    </li>
+                    <li id="rep_a_electro_sys" role="presentation">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="rep_electro_reports" 
+                           role="tab" 
+                           data-target="#rep_electro_reports" 
+                           data-toggle="tab"
+                           ng-click="curCategory=categories[1]"> 
+                            Оперативные 
+                        </a>
+                    </li>
+                    <li id="rep_a_gas_sys" role="presentation">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="rep_gas_reports" 
+                           data-target="#rep_gas_reports" 
+                           role="tab" 
+                           data-toggle="tab"
+                           ng-click="curCategory=categories[2]"> 
+                            Служебные 
+                        </a>
+                    </li>            
+-->
+                    <li ng-repeat="category in categories" role="presentation" ng-class="category.class">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="rep_teplo_reports" 
+                           data-target="#rep_teplo_reports" 
+                           role="tab" 
+                           data-toggle="tab"
+                           ng-click="selectedCategory(category)"> 
+                            {{category.name}} 
+                        </a>
+                    </li>
+                    <div class="col-xs-9 col-md-9">
+                        <select class="form-control nmc-input-data nmc-select-form">
+                                <option selected value="all">Все отчеты</option>
+                                <option value="teplo">Теплосистемы</option>
+                                <option value="electro">Электричество</option>
+                                <option value="gas">Газ</option>
+                            </select>
+                    </div>
+                </ul>
+    <div class="tab-content">
+                    <div role="tabpanel" 
+                         class="tab-pane fade in active nmc-report-main-div" 
+                         id="rep_teplo_reports">
 
-<div class="nmc-report-main-div">
+<!--
+                    </div>
+                </div>
+-->
+
+<div class="nmc-report-main-div_close">
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="">
+                    <tr ng-repeat="object in curCategory.reportTypes" ng-click="" ng-dblclick="">
 <!--                        <td style="padding:0;">-->
                             <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
@@ -150,7 +221,9 @@
                     </tr>
                 </table>          
 </div>
-
+        </div> <!-- tabpanel -->
+    </div> <!-- tabcontent -->
+    </div>
 <div id="editParamsetModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="editParamsetLabel" tabindex="-1">
     

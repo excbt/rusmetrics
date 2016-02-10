@@ -60,12 +60,75 @@
         </ul>
         <div class="tab-content">
 <!--            Активные варианты-->
-            <div role="tabpanel" class="tab-pane fade in active nmc-report-settings-main-div" id="active_paramsets">
+            <div role="tabpanel" class="tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
+                  <!-- Навигационная полоса по категориям отчетов-->
+<!--
+                <ul class="nav nav-tabs nav-justified marginBottom5" role="tablist">
+                    <li id="a_teplo_sys" role="presentation" class="active">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="teplo_reports" 
+                           data-target="#teplo_reports" 
+                           role="tab" 
+                           data-toggle="tab"
+                           ng-mouseover="setActiveTab('a_teplo_sys')"> 
+                            Теплосистемные 
+                        </a>
+                    </li>
+                    <li id="a_electro_sys" role="presentation">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="electro_reports" 
+                           role="tab" 
+                           data-target="#electro_reports" 
+                           data-toggle="tab"
+                           ng-mouseover="setActiveTab('a_electro_sys')"> 
+                            Электрические 
+                        </a>
+                    </li>
+                    <li id="a_gas_sys" role="presentation">
+                        <a 
+                           class="nmc-main-tab-button" 
+                           href="" 
+                           aria-controls="gas_reports" 
+                           data-target="#gas_reports" 
+                           role="tab" 
+                           data-toggle="tab"
+                           ng-mouseover="setActiveTab('a_gas_sys')"> 
+                            Газовые 
+                        </a>
+                    </li>            
+                </ul>
+-->
+<!--
+                <div class="tab-content">
+                    <div role="tabpanel" 
+                         class="tab-pane fade in active nmc-report-settings-main-div" 
+                         id="teplo_reports">
+-->
+<!--
+                    </div>
+                </div>
+-->
+                <div class="container-fluid" ng-repeat="category in categories">
+                    <div class="row well padding5 marginBottom5">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
+                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class="col-xs-11 col-md-11">
+                            <label>{{category.name}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show="category.reportTypesViewFlag" class="marginLeft15">
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
@@ -73,18 +136,18 @@
 
                                     <td ng-class="column.class">
 
-                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
+                                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
 
                                             <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
 
                                         </div>
-                                        <div class="col-md-5">
+                                        <div class="col-xs-5 col-md-5">
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
-                                        <div class="col-md-2">
+                                        <div class="col-xs-2 col-md-2">
                                              <button ng-disabled="isROfield()" title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addParamSet(object)" data-target="#main_properties" data-toggle="tab">Добавить</button>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-xs-4 col-md-4">
                                             
                                         </div>
                                     </td>
@@ -154,7 +217,13 @@
 
                         </td>
                     </tr>
-                </table>                
+                </table>
+                        </div> <!-- reportTypeViewFlag -->
+                    </div> <!-- ng-repeat -->
+<!--
+                    </div>
+                    </div>
+-->
 <!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table - active               -->
             </div>
 <!--            Архивные шаблоны-->

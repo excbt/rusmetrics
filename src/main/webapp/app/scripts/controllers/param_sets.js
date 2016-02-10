@@ -49,6 +49,24 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     $scope.objects = [];
     $scope.availableObjectGroups = [];
     
+    $scope.categories = [
+        {
+            name: "Аналитические",
+            prefix: "А",
+            reportTypes: []
+        },
+        {
+            name: "Оперативные",
+            prefix: "Э",
+            reportTypes: []
+        },
+        {
+            name: "Служебные",
+            prefix: "C",
+            reportTypes: []
+        }
+    ];
+    
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();
     };
@@ -72,12 +90,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
+
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);
-                
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);            
+                for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
+                    if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
+                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
+                        $scope.categories[categoryCounter].reportTypes.push(newObject);                                             
+                        continue;
+                    };
+                };
                 newObjects.push(newObject);
             };        
             $scope.objects = newObjects; 
@@ -212,7 +237,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         //get the id's array of the selected objects - server expect array of object ids      
         var tmp = $scope.selectedObjects.map(function(elem){      
             return elem.id;
-        });        
+        });   
         //
 //        object.activeStartDate = ($scope.activeStartDateFormat==null)?null:$scope.activeStartDateFormat.getTime();    
         //var astDate = (new Date(moment($scope.activeStartDateFormatted, $scope.ctrlSettings.dateFormat).format("YYYY-MM-DD"))); //reformat date string to ISO 8601
@@ -266,7 +291,14 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             
             crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id, contObjectIds: tmp}, object, successCallback, errorCallback);
         };
-        if ($scope.editParamset_flag){       
+        if ($scope.editParamset_flag){
+//console.log(tmp);
+//            $http({
+//                url: table + "/" + object.id,
+//                method: 'PUT',
+//                params: {reportParamsetId: object.id, contObjectIds: []},
+//                data: object
+//            }).then(successCallback, errorCallback);
             crudGridDataFactory(table).update({reportParamsetId: object.id, contObjectIds: tmp}, object, successCallback, errorCallback);
         };
     };
@@ -1055,6 +1087,19 @@ console.log($scope.psEndDateFormatted);
 
     $scope.isROfield = function(){
         return ($scope.isReadonly());
+    };
+    
+    //work with tabs
+    $scope.setActiveTab = function(tabId){
+        var tab = document.getElementById('a_teplo_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('a_electro_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('a_gas_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById(tabId);     
+        tab.classList.add("active");
+        
     };
 
 }]);
