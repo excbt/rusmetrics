@@ -2,7 +2,7 @@
 var app = angular.module('portalNMC');
 
 app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'mainSvc', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory, mainSvc){
-    
+    $rootScope.ctxId = "report_settings_page";
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format

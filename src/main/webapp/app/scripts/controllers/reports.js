@@ -2,6 +2,7 @@
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout){
     
+    $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
         //ctrl settings
     $scope.ctrlSettings = {};

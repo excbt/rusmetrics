@@ -1,7 +1,8 @@
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc){
-console.log('Run devices management controller.');
+//console.log('Run devices management controller.');
+    $rootScope.ctxId = "management_rma_devices_page";
     //settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();

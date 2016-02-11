@@ -1,6 +1,6 @@
 angular.module('portalNMC')
 .controller('MonitorMapCtrl', function($rootScope, $scope, $compile, $cookies, $http, monitorSvc, objectSvc, mainSvc, $timeout){
-    
+    $rootScope.ctxId = "monitor_map_page";
     $scope.mapSettings = {};
     $scope.mapSettings.zoomBound = 9; //zoom>zoomBound - view objects on map; zoom<zoomBound - view cities on map
     $scope.mapSettings.loadingFlag = monitorSvc.getLoadingStatus();

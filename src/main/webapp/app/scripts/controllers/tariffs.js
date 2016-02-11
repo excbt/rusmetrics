@@ -1,6 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 app.controller('TariffsCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+    $rootScope.ctxId = "tariffs_page";
     //set default values
     //ctrl settings
     $scope.ctrlSettings = {};

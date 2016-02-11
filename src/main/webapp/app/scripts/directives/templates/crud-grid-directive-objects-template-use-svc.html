@@ -138,7 +138,7 @@
         <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
-                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}" oncontextmenu="$('.dropdown-toggle').dropdown(); return false">
         
                         <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page">
 <!--                            <span>{{$index}}</span>-->
@@ -1094,4 +1094,17 @@
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
 	</div>
+</div>
+
+<!--Context menu-->
+<div class="dropdown">
+
+    <a id="objectContextMenu" class="dropdown-toggle" data-toggle="dropdown" href="#">Menu</a>
+    <ul id="objectContextMenuUl" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+        <li><a tabindex="-1" href="#">Действие</a></li>
+        <li><a tabindex="-1" href="#">Другое действие</a></li>
+        <li><a tabindex="-1" href="#">Еще ссылка</a></li>
+        <li class="divider"></li>
+        <li><a tabindex="-1" href="#">Доп. ссылка</a></li>
+    </ul>
 </div>

@@ -667,7 +667,7 @@
                                         </td>
 
                                     </tr>
-                                    <tr>
+                                    <tr ng-if="currentObject.activeEndDate">
                                         <td class="col-sm-3">
                                             <label for="inputValue" 
                                                    class="nmc-form-label">Дата отправки в архив:</label>
@@ -687,6 +687,13 @@
                                                    type=checkbox 
                                                    ng-model="currentObject.outputFileZipped" 
                                                    class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3">
+                                            <input type=checkbox 
+                                                   ng-model="currentObject.isObjectContextMenu" 
+                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта.
                                         </td>
                                     </tr> 
 

@@ -146,7 +146,11 @@ console.log("setDefaultMenuState");
       //check user
     $scope.isRma = function(){
         return mainSvc.isRma();
-    };  
+    };
+      
+    $scope.getCtx = function(){
+      return $rootScope.ctxId;
+    };
       
   }]);
 

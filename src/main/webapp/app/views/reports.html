@@ -65,9 +65,9 @@
                             {{category.name}} 
                         </a>
                     </li>
-                    <div class="col-xs-9 col-md-9">
-                        <select class="form-control nmc-input-data nmc-select-form">
-                                <option selected value="all">Все отчеты</option>
+                    <div class="col-xs-3 col-md-3">
+                        <select class="form-control nmc-input-data-energy-types nmc-select-form">
+                                <option selected value="all">По всем энергоресурсам</option>
                                 <option value="teplo">Теплосистемы</option>
                                 <option value="electro">Электричество</option>
                                 <option value="gas">Газ</option>
@@ -434,8 +434,7 @@
                                     <tr>
                                         <td colspan="2" class="col-sm-3"><input ng-disabled="checkOutputFileZipped()" type=checkbox ng-model="currentObject.outputFileZipped" class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
                                         </td>
-                                    </tr> 
-
+                                    </tr>
                                 </table>
 
                             </div> 

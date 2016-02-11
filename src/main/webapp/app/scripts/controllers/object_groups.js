@@ -1,5 +1,6 @@
 angular.module('portalNMC')
-.controller('ObjectGroupsCtrl', ['$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+.controller('ObjectGroupsCtrl', ['$rootScope', '$scope', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($rootScope, $scope, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+    $rootScope.ctxId = "object_groups_page";
     //controller settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.selectedAll = false;

@@ -2,8 +2,8 @@
 angular.module('portalNMC')
 .controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout',
             function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout) {
-                
-console.log('Run Object management controller.');  
+                $rootScope.ctxId = "management_rma_objects_page";
+//console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
                 
                     //messages for user

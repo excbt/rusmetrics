@@ -1006,6 +1006,10 @@ tr.nmc-inactive-price > td{
 
 /* Классы для задания размеров полей*/
     /* общее поле ввода*/
+.nmc-input-data-energy-types{
+    width: 200px;
+/*    display: inline;*/
+}
 .nmc-input-data{
     width: 150px;
 /*    display: inline;*/

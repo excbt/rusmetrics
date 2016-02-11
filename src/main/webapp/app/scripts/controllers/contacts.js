@@ -1,7 +1,8 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'ContactsCtrl',
-		function($scope, $http, mainSvc, notificationFactory){			
+		function($rootScope, $scope, $http, mainSvc, notificationFactory){
+            $rootScope.ctxId = "contacts_page";
 			/*************************
 			 * Определяем переменные *
 			 *************************/
