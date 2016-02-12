@@ -4,10 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
@@ -15,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_type_cont_service")
 @JsonIgnoreProperties(value = { "reportType", "reportTypeKeyname" })
+@JsonInclude(Include.NON_NULL)
 public class ReportTypeContService extends AbstractAuditableModel {
 
 	/**
@@ -22,7 +25,7 @@ public class ReportTypeContService extends AbstractAuditableModel {
 	 */
 	private static final long serialVersionUID = 6199350882623823558L;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "report_type", insertable = false, updatable = false)
 	private ReportType reportType;
 

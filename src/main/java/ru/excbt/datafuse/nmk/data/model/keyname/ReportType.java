@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
-import ru.excbt.datafuse.nmk.data.model.ReportTypeContService;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
@@ -71,8 +69,8 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Column(name = "report_system")
 	private String reportSystem;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
-	private List<ReportTypeContService> reportTypeContServiceList = new ArrayList<ReportTypeContService>();
+	//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	//private List<ReportTypeContService> reportTypeContServiceList = new ArrayList<ReportTypeContService>();
 
 	@Column(name = "report_category")
 	private String reportCategory;
@@ -135,9 +133,9 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 		return reportSystem;
 	}
 
-	public List<ReportTypeContService> getReportTypeContServiceList() {
-		return Collections.unmodifiableList(reportTypeContServiceList);
-	}
+	//	public List<ReportTypeContService> getReportTypeContServiceList() {
+	//		return reportTypeContServiceList;
+	//	}
 
 	public String getReportCategory() {
 		return reportCategory;
