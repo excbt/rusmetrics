@@ -69,6 +69,12 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 	@Column(name = "report_system")
 	private String reportSystem;
 
+	//	@OneToMany(fetch = FetchType.EAGER, mappedBy = "reportType")
+	//private List<ReportTypeContService> reportTypeContServiceList = new ArrayList<ReportTypeContService>();
+
+	@Column(name = "report_category")
+	private String reportCategory;
+
 	public String getCaption() {
 		return caption;
 	}
@@ -125,6 +131,14 @@ public class ReportType extends AbstractKeynameEntity implements DevModeObject, 
 
 	public String getReportSystem() {
 		return reportSystem;
+	}
+
+	//	public List<ReportTypeContService> getReportTypeContServiceList() {
+	//		return reportTypeContServiceList;
+	//	}
+
+	public String getReportCategory() {
+		return reportCategory;
 	}
 
 }
