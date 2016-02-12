@@ -67,7 +67,7 @@
                                       </ul>
                                     </div>
                                 </th>
-                                <th class="nmc-td-for-button"></th>
+                                <th class="nmc-td-for-buttons"></th>
                                 <th>Название объекта
                                     <div class="btn-group pull-right" style="vertical-align: initial;">
 
@@ -112,7 +112,7 @@
                                       </ul>
                                     </div>
                                 </th>
-                                <th class="nmc-td-for-button"></th>
+                                <th class="nmc-td-for-buttons"></th>
                                 <th>Название объекта
                                     
                                     <div class="btn-group pull-right" style="vertical-align: initial;">
@@ -122,7 +122,9 @@
                                       </p>
                                       <ul class="dropdown-menu">
                                         <li>
-                                            <a href="" ng-click="objectCtrlSettings.extendedInterfaceFlag=!objectCtrlSettings.extendedInterfaceFlag">Включить/выключить расширенный интерфейс</a>
+                                            <a href="" 
+                                               ng-click="objectCtrlSettings.extendedInterfaceFlag = !objectCtrlSettings.extendedInterfaceFlag"> Включить/выключить расширенный интерфейс
+                                            </a>
                                         </li>
                                       </ul>
                                     </div>
@@ -138,13 +140,13 @@
         <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
             <td>
                 <table>
-                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}" oncontextmenu="$('.dropdown-toggle').dropdown(); return false">
+                    <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
         
                         <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page">
 <!--                            <span>{{$index}}</span>-->
                             <input type="checkbox" ng-model="object.selected" class="marginRight2" style="vertical-align: middle; margin-right: 7px;"/>
                             <img class="marginRight2" height="12" width="12" ng-src="{{object.imgsrc}}" ng-attr-title="{{object.currentSettingModeTitle}}">
-                            <i title="Редактировать свойства объекта" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>
+<!--                            <i title="Редактировать свойства объекта" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedObject(object.id)" data-target="#showObjOptionModal" data-toggle="modal"></i>-->
                             <div class="btn-group">
                               <ul class="dropdown-menu">
                                   <li ng-repeat="device in object.devices">
@@ -157,17 +159,91 @@
                                   </li>
                               </ul>
                             </div>
-
                         </td>
-        
-                        <td class="nmc-td-for-button"> 
-<!--                            {{$index}}-->
-                            <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i>
-                            
+                        <td class="nmc-td-for-buttons">
+                            <div class="btn-group">
+                              <i title="Действия над объектом" 
+                                 type="button" 
+                                 class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                                 data-toggle="dropdown" 
+                                 aria-haspopup="true" 
+                                 aria-expanded="false" 
+                                 ng-click="" 
+                                 style="font-size: .9em;">
+                                </i>
+                              <ul class="dropdown-menu">
+                                <li class="menu-item" role="presentation">
+                                    <img class="marginLeft4" 
+                                         height="12" 
+                                         width="12" 
+                                         ng-src="{{object.imgsrc}}" 
+                                         ng-attr-title="{{object.currentSettingModeTitle}}"/>
+                                    <a href=""
+                                       class="nmc-menu-item-change-obj-mode"
+                                       ng-click="selectedObject(object.id)" 
+                                       data-target="#showObjOptionModal" 
+                                       data-toggle="modal">
+                                        Свойства объекта
+                                    </a>
+                                </li>
+<!--
+                                <li class="menu-item" role="presentation">
+                                    <img class="marginLeft4" 
+                                         height="12" 
+                                         width="12" 
+                                         ng-src="{{object.imgsrc}}" 
+                                         ng-attr-title="{{object.currentSettingModeTitle}}"/>
+                                    <a href="" 
+                                       class="nmc-menu-item-change-obj-mode" 
+                                       data-toggle="dropdown" 
+                                       aria-haspopup="true" 
+                                       aria-expanded="false"  
+                                       ng-click="">
+                                        Изменить режим
+                                    </a>
+                                </li>
+-->
+                                <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                    <a href="" 
+                                       class="" 
+                                       data-toggle="dropdown" 
+                                       aria-haspopup="true" 
+                                       aria-expanded="false"  
+                                       ng-mouseover="getReportTypes(object)">
+                                        Отчеты
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="menu-item dropdown dropdown-submenu" ng-repeat="reportType in object.reportTypes">
+<!--                                            ng-if="report.allRequiredParamsPassed"-->
+                                            <a href=""
+                                               class="" 
+                                               data-toggle="dropdown" 
+                                               aria-haspopup="true" 
+                                               aria-expanded="false"
+                                               ng-mouseover="getReports(reportType)">
+                                                {{reportType.name}}
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li ng-repeat="report in reportType.reports">
+                                                    <a ng-if="report.allRequiredParamsPassed"
+                                                       ng-click="reportCreate(reportType, report)">
+                                                        {{report.name}}
+                                                    </a>
+                                                </li>                                                
+                                            </ul>
+                                        </li>                                        
+                                    </ul>
+                                </li>
+                              </ul>
+                            </div>
+                            <i title="Показать/Скрыть точки учета" 
+                               ng-attr-id={{"btnDetail"+object.id}} 
+                               class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"
+                               ng-click="toggleShowGroupDetails(object.id)">
+                            </i>                            
                         </td>
-
-                        <td ng-click="toggleShowGroupDetails(object.id)">{{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
-
+                        <td ng-click="toggleShowGroupDetails(object.id)">
+                            {{object.fullName}}<span ng-show="isSystemuser()">(id = {{object.id}})</span>
                         </td>
                     </tr>
                     <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
@@ -1094,17 +1170,4 @@
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
 	</div>
-</div>
-
-<!--Context menu-->
-<div class="dropdown">
-
-    <a id="objectContextMenu" class="dropdown-toggle" data-toggle="dropdown" href="#">Menu</a>
-    <ul id="objectContextMenuUl" class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-        <li><a tabindex="-1" href="#">Действие</a></li>
-        <li><a tabindex="-1" href="#">Другое действие</a></li>
-        <li><a tabindex="-1" href="#">Еще ссылка</a></li>
-        <li class="divider"></li>
-        <li><a tabindex="-1" href="#">Доп. ссылка</a></li>
-    </ul>
 </div>

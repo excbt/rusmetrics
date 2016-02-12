@@ -44,13 +44,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.currentObject = {};
     $scope.objects = [];
     $scope.columns = [
-        {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
+        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
     ];
     $scope.paramsetColumns = [
-        {"name":"name","header":"Наименование", "class":"col-md-3"}
-        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-3"}
-        ,{"name":"period","header":"Период", "class":"col-md-2"}
-        ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
+        {"name":"name", "header":"Наименование", "class":"col-xs-3 col-md-3"}
+        ,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}
+        ,{"name":"period", "header":"Период", "class":"col-xs-2 col-md-2"}
+        ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
     ];
     $scope.groupUrl = "../api/contGroup";
     $scope.crudTableName = "../api/reportParamset"; 
@@ -135,8 +135,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getReportPeriods();
     
     $scope.oldColumns = [
-        {"name":"name", "header":"Название варианта", "class":"col-md-5"}
-        ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
+        {"name":"name", "header":"Название варианта", "class":"col-xs-5 col-md-5"}
+        ,{"name":"activeStartDate", "header":"Действует с", "class":"col-xs-2 col-md-2"}
     ];
 
     var successCallback = function (e) {

@@ -663,6 +663,61 @@ console.log("Objects directive.");
                     });
                 };
                 
+                
+                $scope.exampleReportType = "electric_readings";
+                var successGetReports = function(resp){
+                    
+                };
+                //report types
+                $scope.getReportTypes = function(obj){
+                    var table = "../api/reportSettings/reportType";
+                    crudGridDataFactory(table).query(function(data){
+                        obj.reportTypes = data;        
+                        $scope.getActive(obj.reportTypes);
+                    });
+                };
+                
+                $scope.getActive = function(reportTypes){
+                    if ((reportTypes == []) || (typeof reportTypes.suffix == 'undefined')){return;};
+                    for (var i=0; i<reportTypes.length; i++){
+                        $scope.getReports(reportTypes[i]);
+                    };
+                };
+
+                $scope.getReports = function(rtype){
+                    var reportUrl = "../api/reportParamset";
+                    $http.get(reportUrl+rtype.suffix)
+                        .then(function(resp){
+                        rtype.reports = resp.data;                       
+                    }, 
+                              errorCallback);
+                };
+                
+                $scope.reportCreate = function(type, paramset){
+                    //run report
+                    var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
+                    $http.get(url, {responseType: 'arraybuffer'})
+                        .then(function(response) {        
+                            var fileName = response.headers()['content-disposition'];           
+                            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
+                            var file = new Blob([response.data], { type: response.headers()['content-type'] });          
+                            if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
+                                fileName += ".xlsx";
+                            }else 
+                            if (file.type.indexOf('application/zip') > -1){
+                                fileName += ".zip";
+                            } else
+                            if (file.type.indexOf('application/pdf') > -1){
+                                fileName += ".pdf";
+                            } else
+                            if (file.type.indexOf('text/html') > -1){
+                                fileName += ".html";
+                            };            
+                            saveAs(file, fileName);
+                        }, errorCallback);
+                          
+                };
+
                 // Прорисовываем эталонный интервал в таблице
                 function viewRefRangeInTable(zpoint){
                     //Получаем столбец с эталонным интервалом для заданной точки учета
@@ -1226,7 +1281,31 @@ console.log("Objects directive.");
                             $scope.currentObject.fullAddress = suggestion.value;
                             $scope.$apply();
                         }
-                    });                    
+                    });
+                    
+                                    //drop menu
+//                    $('ul.dropdown-menu[data-toggle=dropdown]').on('click', function(event) {
+//console.log("ul.dropdown-menu[data-toggle=dropdown] click");                        
+//                        // Avoid following the href location when clicking
+//                        event.preventDefault(); 
+//                        // Avoid having the menu to close when clicking
+//                        event.stopPropagation(); 
+//                        // If a menu is already open we close it
+//                        //$('ul.dropdown-menu [data-toggle=dropdown]').parent().removeClass('open');
+//                        // opening the one you clicked on
+//                        $(this).parent().addClass('open');
+//
+//                        var menu = $(this).parent().find("ul");
+//                        var menupos = menu.offset();
+//
+//                        if ((menupos.left + menu.width()) + 30 > $(window).width()) {
+//                            var newpos = - menu.width();      
+//                        } else {
+//                            var newpos = $(this).parent().width();
+//                        }
+//                        menu.css({ left:newpos });
+//console.log(menu);                        
+//                    });
                 });
                 
                 //checkers            
@@ -1325,6 +1404,7 @@ console.log("Objects directive.");
                 $scope.isROfield = function(){
                     return ($scope.isReadonly() || !$scope.isAdmin());
                 };
+
                 
             }]
     };
