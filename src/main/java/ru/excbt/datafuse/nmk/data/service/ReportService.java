@@ -43,6 +43,7 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.nmk.reports.NmkReport;
 import ru.excbt.nmk.reports.NmkReport.FileType;
 import ru.excbt.nmk.reports.NmkReport.ReportType;
@@ -277,8 +278,8 @@ public class ReportService {
 								+ "ParamsetStartDate and ParamsetEndDate is not set correctly. " + "ReportPeriodKey=%s",
 						reportParamset.getId(), ReportPeriodKey.INTERVAL));
 			}
-			dtStart = new LocalDateTime(reportParamset.getParamsetStartDate());
-			dtEnd = new LocalDateTime(reportParamset.getParamsetEndDate());
+			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
+			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
 
 		} else {
 			dtStart = ReportParamsetUtils.getStartDateTime(reportDate, reportParamset.getReportPeriodKey());

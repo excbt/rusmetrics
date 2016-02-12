@@ -34,6 +34,7 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
  * Сервис для работы с набором параметров отчета
@@ -143,6 +144,15 @@ public class ReportParamsetService implements SecuredRoles {
 
 		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
+		}
+
+		if (reportParamset.getParamsetStartDate() != null) {
+			reportParamset
+					.setParamsetStartDate(JodaTimeUtils.startOfDay(reportParamset.getParamsetStartDate()).toDate());
+		}
+
+		if (reportParamset.getParamsetEndDate() != null) {
+			reportParamset.setParamsetEndDate(JodaTimeUtils.endOfDay(reportParamset.getParamsetEndDate()).toDate());
 		}
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset);
