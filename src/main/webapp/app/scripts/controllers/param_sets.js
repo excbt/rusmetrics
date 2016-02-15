@@ -52,17 +52,20 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     
     $scope.categories = [
         {
-            name: "Аналитические",
+            name: "ANALITIC",
+            caption: "Аналитические",
             prefix: "А",
             reportTypes: []
         },
         {
-            name: "Оперативные",
+            name: "OPERATE",
+            caption: "Оперативные",
             prefix: "Э",
             reportTypes: []
         },
         {
-            name: "Служебные",
+            name: "SERVICE",
+            caption: "Служебные",
             prefix: "C",
             reportTypes: []
         }

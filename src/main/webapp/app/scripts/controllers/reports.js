@@ -100,14 +100,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                     continue;
                 };
                 newObject = {};
-                newObject.reportType = data[i].keyname;
+                newObject.reportType = data[i].keyname;        
                 newObject.reportTypeName = data[i].caption;
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length>0?true:false);
-                
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
                 for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
                     if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
                         newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
