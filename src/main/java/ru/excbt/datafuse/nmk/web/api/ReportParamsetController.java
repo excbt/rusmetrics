@@ -177,6 +177,7 @@ public class ReportParamsetController extends SubscrApiController {
 	public ResponseEntity<?> updateAnyOne(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) {
 
 		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
@@ -184,7 +185,10 @@ public class ReportParamsetController extends SubscrApiController {
 			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
 		}
 
-		return updateInternal(reportParamsetId, reportParamset, contObjectIds);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		return updateInternal(reportParamsetId, reportParamset, fixContObjectIds);
 	}
 
 	/**
