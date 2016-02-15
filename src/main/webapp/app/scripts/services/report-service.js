@@ -1,7 +1,7 @@
 'use strict';
 angular.module('portalNMC')
-.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope',
-function($http, $cookies, $interval, $rootScope){
+.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactory', 'mainSvc',
+function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     var reportTypesUrl = "../api/reportSettings/reportType";
     var reportPeriodsUrl = "../api/reportSettings/reportPeriod";
     var reportsBaseUrl = "../api/reportParamset"; 
@@ -46,22 +46,22 @@ function($http, $cookies, $interval, $rootScope){
                 if (!data[i]._enabled){
                     continue;
                 };
-                if ((! isSystemuser() && data[i].isDevMode)){
+                if ((! mainSvc.isSystemuser() && data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
-
+                newObject.reportCategory = data[i].reportCategory;
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);            
-                for (var categoryCounter = 0; categoryCounter <  categories.length; categoryCounter++){                         
-                    if (newObject.reportTypeName[0] ==  categories[categoryCounter].prefix){
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                 
+                for (var categoryCounter = 0; categoryCounter <  categories.length; categoryCounter++){                                          
+                    if (newObject.reportCategory.localeCompare(categories[categoryCounter].name) == 0){                        
                         newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
-                         categories[categoryCounter].reportTypes.push(newObject);                                             
+                        categories[categoryCounter].reportTypes.push(newObject);                                             
                         continue;
                     };
                 };
@@ -71,7 +71,7 @@ function($http, $cookies, $interval, $rootScope){
             $rootScope.$broadcast('reportSvc:reportTypesLoaded');
         });
     };
-    var loadReportTypes();
+    loadReportTypes();
     
     //report periods ( ** загрузка периодов отчетов)
     var reportPeriods = [];
@@ -87,7 +87,7 @@ function($http, $cookies, $interval, $rootScope){
     loadReportPeriods();
     
         //Загрузка вариантов отчетов
-    getParamsets = function(table, type){
+    var getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
             type.paramsets = data;
             type.paramsetsCount = data.length;
@@ -95,25 +95,41 @@ function($http, $cookies, $interval, $rootScope){
     };
     
  //get paramsets   
-    getActive = function(){        
-        if (( objects == []) || (typeof  objects[0].suffix == 'undefined')){return;};
-        for (var i = 0; i <  objects.length; i++){
-             getParamsets( crudTableName +  objects[i].suffix,  objects[i]);
+    var getActive = function(reportPeriods){        
+        if ((reportPeriods.length == 0)){return;};
+        for (var i = 0; i < reportPeriods.length; i++){
+            if (typeof reportPeriods[i].suffix != 'undefined'){
+                getParamsets(reportsBaseUrl + reportPeriods[i].suffix, reportPeriods[i]);
+            }
         };
     };
-    
-//     getActive();
-    
-     getArchive = function(){
-        if (( objects == []) || (typeof  objects[0].suffix == 'undefined')){return;};
-        for (var i = 0; i <  objects.length; i++){
-             getParamsets( crudTableName + "/archive" +  objects[i].suffix,  objects[i]);
+
+    var getArchive = function(reportPeriods){
+        if ((reportPeriods.length == 0)){return;};
+        for (var i = 0; i < reportPeriods.length; i++){
+            if (typeof reportPeriods[i].suffix != 'undefined'){
+                getParamsets(reportsBaseUrl + "/archive" + reportPeriods[i].suffix, reportPeriods[i]);
+            };
         };        
     };
+    
+    var getParamsetsForTypes = function(reportPeriods, mode){
+        if ((reportPeriods.length == 0)){return;};
+        for (var i = 0; i < reportPeriods.length; i++){
+            if (typeof reportPeriods[i].suffix != 'undefined'){
+                getParamsets(reportsBaseUrl + mode + reportPeriods[i].suffix, reportPeriods[i]);
+            };
+        };
+    };
         
-    var 
     //Периодическое обновление отчетов
+    ///???????
+    
+    
     return {
-        getCategories
+        getCategories,
+        getReportTypes,
+        getReportPeriods,
+        getParamsetsForTypes
     }
-};
+}]);

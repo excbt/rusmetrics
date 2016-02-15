@@ -170,7 +170,8 @@ angular.module('portalNMC')
         objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
             function(resp){
                 $scope.data.dataSources = angular.copy(resp.data);
-                $('#showDeviceModal').modal();
+                $scope.getDeviceMetaDataVzlet($scope.data.currentObject);
+                $('#showDeviceModal').modal();                
             },
             errorCallback
         );
@@ -329,8 +330,9 @@ angular.module('portalNMC')
         objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
-                $scope.currentDevice = device;                           
-                $('#vzletMetaDataEditorModal').modal();
+//console.log(device);                
+//                $scope.currentDevice = device;                           
+//                $('#vzletMetaDataEditorModal').modal();
             },
             errorCallback
         );

@@ -1,7 +1,7 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc' ,function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
+app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', function($scope, $rootScope, $resource, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc){
     $rootScope.ctxId = "param_sets_page";
     //ctrl settings
     $scope.ctrlSettings = {};
