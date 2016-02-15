@@ -327,7 +327,7 @@ public class ReportServiceController extends WebApiController {
 
 		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(reportMakerParam);
 
-		logger.debug("ReportMakerParam JSON: {}", paramJson);
+		logger.debug("Processing Report with params: {}", paramJson);
 
 		if (!reportMakerParam.isParamsetValid() || !reportMakerParam.isSubscriberValid()) {
 			return responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
@@ -448,6 +448,35 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
 		checkState(reportMaker != null, "reportTypeKey:" + reportTypeKey + " is not supported");
+
+		return processDowndloadAnyReport(reportMakerParam, reportMaker);
+
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/context/{contObjectId}", method = RequestMethod.GET)
+	public ResponseEntity<?> doDowndloadAnyReportContext(@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportParamsetId") long reportParamsetId, @PathVariable("contObjectId") long contObjectId,
+			HttpServletRequest request) throws IOException {
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+		}
+
+		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
+
+		Long[] contObjectIds = new Long[] { contObjectId };
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId,
+				contObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 

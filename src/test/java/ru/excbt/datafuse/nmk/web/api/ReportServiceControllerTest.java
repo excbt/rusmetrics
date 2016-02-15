@@ -173,6 +173,39 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
+	@Test
+	public void testCommerceDownloadContext() throws Exception {
+
+		long reportParamsetId = TEST_PARAMSET_COMMERCE;
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+
+		String urlStr = String.format("/api/reportService/commerce/%d/context/%d", reportParamsetId,
+				contObjectIds.get(0));
+
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions) throws Exception {
+
+				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
+
+				byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
+
+				logger.info("ResultBytes size:{}", resultBytes.length);
+
+				String filename = "./out/testCommerceDownloadPut" + reportMakerParam.getExt();
+
+				writeResultBytesToFile(filename, resultBytes);
+
+			}
+		};
+
+		_testGet(urlStr, null, tester);
+
+	}
+
 	/**
 	 * 
 	 * @throws Exception
