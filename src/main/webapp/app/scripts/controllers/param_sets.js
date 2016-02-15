@@ -296,14 +296,16 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             crudGridDataFactory(table).save({reportTemplateId: object.reportTemplate.id, contObjectIds: tmp}, object, successCallback, errorCallback);
         };
         if ($scope.editParamset_flag){
-//console.log(tmp);
-//            $http({
-//                url: table + "/" + object.id,
-//                method: 'PUT',
-//                params: {reportParamsetId: object.id, contObjectIds: []},
-//                data: object
-//            }).then(successCallback, errorCallback);
-            crudGridDataFactory(table).update({reportParamsetId: object.id, contObjectIds: tmp}, object, successCallback, errorCallback);
+            var clearContObjectIds = false; //the clear selected paramset objects flag           
+            if (mainSvc.checkUndefinedNull(tmp) || tmp.length == 0){                
+                clearContObjectIds = true;
+            };
+            crudGridDataFactory(table).update({reportParamsetId: object.id, 
+                                               contObjectIds: tmp, 
+                                               clearContObjectIds: clearContObjectIds}, 
+                                              object, 
+                                              successCallback, 
+                                              errorCallback);
         };
     };
     

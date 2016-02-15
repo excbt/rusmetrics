@@ -1088,10 +1088,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var responseType = "arraybuffer";//указываем тип ответа от сервера
         //делаем запрос на сервер
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
+        var clearContObjectIds = false; //the clear selected paramset objects flag           
+            if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
+                clearContObjectIds = true;
+        };
         $http({
             url: url, 
             method: "PUT",
-            params: { contObjectIds: objectIds },
+            params: { contObjectIds: objectIds, clearContObjectIds: clearContObjectIds},
             data: tmpParamset,
             responseType: responseType
         })
