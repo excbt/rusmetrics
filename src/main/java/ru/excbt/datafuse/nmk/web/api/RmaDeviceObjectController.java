@@ -98,7 +98,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
 			@Override
 			public void process() {
-				DeviceObject result = deviceObjectService.saveOne(entity, deviceObjectDataSource);
+				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
 				setResultEntity(result);
 			}
 		};
@@ -217,7 +217,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 			@Override
 			public DeviceObject processAndReturnResult() {
-				return deviceObjectService.saveOne(entity, deviceObjectDataSource);
+				return deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
 			}
 		};
 
@@ -245,9 +245,9 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			@Override
 			public void process() {
 				if (isPermanent) {
-					deviceObjectService.deleteOnePermanent(deviceObjectId);
+					deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
 				} else {
-					deviceObjectService.deleteOne(deviceObjectId);
+					deviceObjectService.deleteDeviceObject(deviceObjectId);
 				}
 
 			}
@@ -287,7 +287,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}

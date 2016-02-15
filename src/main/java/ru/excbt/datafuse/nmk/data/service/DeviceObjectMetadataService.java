@@ -188,7 +188,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 		checkNotNull(deviceModelId, "deviceModelId is null");
 
-		DeviceObject deviceObject = deviceObjectService.findOne(destDeviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(destDeviceObjectId);
 		if (deviceObject == null) {
 			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", destDeviceObjectId));
 		}
