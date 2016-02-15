@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
@@ -511,6 +512,16 @@ public class ReportParamsetController extends SubscrApiController {
 		}
 
 		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/menu/contextLaunch", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getReportParamset() {
+		List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getCurrentSubscriberId());
+		return responseOK(ObjectFilters.deletedFilter(xList));
 	}
 
 }

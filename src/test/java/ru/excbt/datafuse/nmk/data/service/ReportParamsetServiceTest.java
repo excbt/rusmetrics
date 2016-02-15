@@ -122,4 +122,13 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		reportParamsetService.updateUnitToParamset(TEMPLATE_PARAMSET_ID, objectIds);
 
 	}
+
+	@Test
+	public void testReportParamsetContextLaunch() throws Exception {
+		List<ReportParamset> result = reportParamsetService.selectReportParamsetContextLaunch(64166466L);
+		assertNotNull(result);
+		result.forEach(i -> {
+			logger.info("Found ReportParamset (id={}): {}", i.getId(), i.getName());
+		});
+	}
 }
