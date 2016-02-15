@@ -47,6 +47,19 @@ public class JodaTimeUtils {
 
 	/**
 	 * 
+	 * @param date
+	 * @return
+	 */
+	public static DateTime endOfDay(Date date) {
+		if (date == null) {
+			return null;
+		}
+
+		return endOfDay(new DateTime(date));
+	}
+
+	/**
+	 * 
 	 * @param dateTime
 	 * @return
 	 */
