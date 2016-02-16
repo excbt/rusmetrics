@@ -20,6 +20,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jayway.jsonpath.JsonPath;
+
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
@@ -33,13 +36,9 @@ import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.jayway.jsonpath.JsonPath;
-
 public class ReportSheduleControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportSheduleControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleControllerTest.class);
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
@@ -66,15 +65,13 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Test
 	public void testGetSheduleOne() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(
-						currentSubscriberService.getSubscriberId(),
-						LocalDateTime.now());
-		
+				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now());
+
 		if (reportSheduleList.size() == 0) {
 			logger.error("reportSheduleList is empty. Can't test testGetSheduleOne");
 			return;
-		}		
-		
+		}
+
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
 		String urlStr = "/api/reportShedule/" + rs.getId().toString();
@@ -84,9 +81,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Test
 	public void testUndateShedule() throws Exception {
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(
-						currentSubscriberService.getSubscriberId(),
-						LocalDateTime.now());
+				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now());
 
 		if (reportSheduleList.size() == 0) {
 			logger.error("reportSheduleList is empty. Can't test testUndateShedule");
@@ -103,15 +98,11 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		String jsonBody = OBJECT_MAPPER.writeValueAsString(rs);
 
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr)
-					.contentType(MediaType.APPLICATION_JSON)
-					.param("reportTemplateId",
-							rs.getReportTemplate().getId().toString())
-					.param("reportParamsetId",
-							rs.getReportParamset().getId().toString())
+			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
+					.param("reportTemplateId", rs.getReportTemplate().getId().toString())
+					.param("reportParamsetId", rs.getReportParamset().getId().toString())
 
-					.content(jsonBody).with(testSecurityContext())
-					.accept(MediaType.APPLICATION_JSON));
+					.content(jsonBody).with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 			resultActionsAll.andDo(MockMvcResultHandlers.print());
 
@@ -126,9 +117,8 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Test
 	public void testCreateShedule() throws Exception {
 
-		List<ReportTemplate> reportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true, currentSubscriberService.getSubscriberId());
+		List<ReportTemplate> reportTemplates = reportTemplateService.selectSubscriberReportTemplates(
+				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 
 		assertTrue(reportTemplates.size() > 0);
 
@@ -137,14 +127,13 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		logger.info("Found ReportTemplate (id={})", sReportTemplate.getId());
 
 		ReportParamset sReportParamset = null;
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportParamset(sReportTemplate.getId(), DateTime.now());
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportParamset(sReportTemplate.getId(),
+				DateTime.now());
 
 		if (reportParamsetList.size() == 0) {
-			sReportParamset = reportParamsetService.createReportParamsetMaster(
-					sReportTemplate.getId(), "Auto Genereate for TEST",
-					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
-					currentSubscriberService.getSubscriberId());
+			sReportParamset = reportParamsetService.createReportParamsetEx(sReportTemplate.getId(),
+					"Auto Genereate for TEST", ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
+					currentSubscriberService.getSubscriberId(), true);
 		} else {
 			sReportParamset = reportParamsetList.get(0);
 		}
@@ -163,19 +152,16 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 			fail();
 		}
 
-		ResultActions resultAction = mockMvc.perform(post(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
+		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("reportTemplateId", sReportTemplate.getId().toString())
-				.param("reportParamsetId", sReportParamset.getId().toString())
-				.content(jsonBody).with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+				.param("reportParamsetId", sReportParamset.getId().toString()).content(jsonBody)
+				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
 		resultAction.andExpect(status().isCreated());
 
-		String jsonContent = resultAction.andReturn().getResponse()
-				.getContentAsString();
+		String jsonContent = resultAction.andReturn().getResponse().getContentAsString();
 		Integer createdId = JsonPath.read(jsonContent, "$.id");
 		logger.info("createdId: {}", createdId);
 
