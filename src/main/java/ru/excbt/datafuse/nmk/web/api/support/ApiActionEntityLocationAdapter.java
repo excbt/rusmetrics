@@ -16,19 +16,24 @@ import javax.servlet.http.HttpServletRequest;
  * @param <T>
  * @param <K>
  */
-public abstract class EntityApiActionLocationAdapter<T, K> extends EntityApiActionAdapter<T>
+public abstract class ApiActionEntityLocationAdapter<T, K> extends EntityApiActionAdapter<T>
 		implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
-	public EntityApiActionLocationAdapter(T entity, HttpServletRequest request) {
+	public ApiActionEntityLocationAdapter(T entity, HttpServletRequest request) {
 		super(entity);
 		this.request = request;
 	}
 
-	public EntityApiActionLocationAdapter(HttpServletRequest request) {
+	public ApiActionEntityLocationAdapter(HttpServletRequest request) {
 		super(null);
 		this.request = request;
+	}
+
+	@Override
+	public final void process() {
+		super.process();
 	}
 
 	protected abstract K getLocationId();

@@ -40,7 +40,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -288,7 +288,7 @@ public class ReportParamsetController extends SubscrApiController {
 		} catch (JsonProcessingException e) {
 		}
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportParamset, Long>(reportParamset, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportParamset, Long>(reportParamset, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -337,7 +337,7 @@ public class ReportParamsetController extends SubscrApiController {
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportParamset, Long>(reportParamset, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportParamset, Long>(reportParamset, request) {
 
 			@Override
 			protected Long getLocationId() {

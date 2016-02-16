@@ -31,7 +31,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -243,7 +243,7 @@ public class ReportTemplateController extends SubscrApiController {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportTemplate, Long>(reportTemplate, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportTemplate, Long>(reportTemplate, request) {
 
 			@Override
 			protected Long getLocationId() {

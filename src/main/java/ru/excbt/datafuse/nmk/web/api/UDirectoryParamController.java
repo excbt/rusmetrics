@@ -24,9 +24,9 @@ import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -123,17 +123,16 @@ public class UDirectoryParamController extends SubscrApiController {
 
 		uDirectoryParam.setDirectory(directory);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectoryParam, Long>(uDirectoryParam,
-				request) {
-
-			@Override
-			public void process() {
-				setResultEntity(directoryParamService.save(entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<UDirectoryParam, Long>(uDirectoryParam, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public UDirectoryParam processAndReturnResult() {
+				return directoryParamService.save(entity);
 			}
 		};
 

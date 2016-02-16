@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с объектами учета для РМА
@@ -57,7 +57,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
 			public ContObject processAndReturnResult() {

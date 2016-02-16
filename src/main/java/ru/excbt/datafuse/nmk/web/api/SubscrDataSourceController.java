@@ -23,10 +23,10 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -75,18 +75,17 @@ public class SubscrDataSourceController extends SubscrApiController {
 
 		logger.trace("All Validation Passed");
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrDataSource, Long>(subscrDataSource,
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrDataSource, Long>(subscrDataSource,
 				request) {
-
-			@Override
-			public void process() {
-				SubscrDataSource result = subscrDataSourceService.createOne(entity);
-				setResultEntity(result);
-			}
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public SubscrDataSource processAndReturnResult() {
+				return subscrDataSourceService.createOne(entity);
 			}
 
 		};

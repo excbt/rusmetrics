@@ -30,10 +30,10 @@ import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -235,16 +235,16 @@ public class TariffPlanController extends SubscrApiController {
 
 		tariffPlan.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<TariffPlan, Long>(tariffPlan, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(tariffPlanService.createOne(entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<TariffPlan, Long>(tariffPlan, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public TariffPlan processAndReturnResult() {
+				return tariffPlanService.createOne(entity);
 			}
 
 		};

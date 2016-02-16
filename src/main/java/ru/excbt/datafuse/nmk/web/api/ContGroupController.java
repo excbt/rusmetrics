@@ -24,9 +24,9 @@ import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -98,17 +98,16 @@ public class ContGroupController extends SubscrApiController {
 		checkArgument(contGroup.isNew());
 		contGroup.setSubscriber(currentSubscriberService.getSubscriber());
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ContGroup, Long>(contGroup, request) {
-
-			@Override
-			public void process() {
-				ContGroup newObject = contGroupService.createOne(entity, contObjectIds);
-				setResultEntity(newObject);
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContGroup, Long>(contGroup, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public ContGroup processAndReturnResult() {
+				return contGroupService.createOne(entity, contObjectIds);
 			}
 
 		};

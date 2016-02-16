@@ -31,7 +31,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с приборами для РМА
@@ -173,7 +173,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setIsActive(true);
 		}
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObject, Long>(deviceObject, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
 
 			@Override
 			protected Long getLocationId() {

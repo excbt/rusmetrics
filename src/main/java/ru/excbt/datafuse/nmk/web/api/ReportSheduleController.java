@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с расписанием отчетов
@@ -138,7 +138,7 @@ public class ReportSheduleController extends WebApiController {
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportShedule, Long>(reportShedule, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportShedule, Long>(reportShedule, request) {
 
 			@Override
 			protected Long getLocationId() {

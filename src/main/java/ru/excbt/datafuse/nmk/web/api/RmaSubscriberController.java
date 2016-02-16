@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы абонентами для РМА
@@ -96,7 +96,7 @@ public class RmaSubscriberController extends SubscriberController {
 		checkNotNull(rSubscriber);
 		checkNotNull(rSubscriber.getOrganizationId());
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<Subscriber, Long>(rSubscriber, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<Subscriber, Long>(rSubscriber, request) {
 
 			@Override
 			protected Long getLocationId() {

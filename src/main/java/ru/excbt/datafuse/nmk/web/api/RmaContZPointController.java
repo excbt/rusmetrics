@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с точками учета для РМА
@@ -84,7 +84,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ContZPoint, Long>(contZPoint, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
 
 			@Override
 			public ContZPoint processAndReturnResult() {
