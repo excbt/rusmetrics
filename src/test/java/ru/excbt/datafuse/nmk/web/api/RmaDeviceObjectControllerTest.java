@@ -55,7 +55,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 			builder.param("dataSourceTable1h", "Table 1H:" + System.currentTimeMillis());
 			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
 		};
-		_testJsonUpdate(url, deviceObject, paramInit);
+		_testUpdateJson(url, deviceObject, paramInit);
 	}
 
 	/**
@@ -79,14 +79,14 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
 		};
-		Long deviceObjectId = _testJsonCreate(url, deviceObject, paramInit);
+		Long deviceObjectId = _testCreateJson(url, deviceObject, paramInit);
 
 		logger.info("TESTING GET");
 
 		String getUrl = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
 
-		_testJsonGet(getUrl);
+		_testGetJson(getUrl);
 
 		logger.info("TESTING DELETE");
 
@@ -95,7 +95,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		RequestExtraInitializer paramDel = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
-		_testJsonDelete(deleteUrl, paramDel);
+		_testDeleteJson(deleteUrl, paramDel);
 
 	}
 
@@ -117,14 +117,14 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
 		};
-		Long deviceObjectId = _testJsonCreate(url, deviceObject, paramInit);
+		Long deviceObjectId = _testCreateJson(url, deviceObject, paramInit);
 
 		String deleteUrl = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
 		RequestExtraInitializer paramDel = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
-		_testJsonDelete(deleteUrl, paramDel);
+		_testDeleteJson(deleteUrl, paramDel);
 
 	}
 
@@ -134,7 +134,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testAllDeviceObjectsGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects"));
+		_testGetJson(apiRmaUrl("/contObjects/deviceObjects"));
 	}
 
 	/**
@@ -143,7 +143,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceObjectsLoadingSettingsGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3));
+		_testGetJson(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3));
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceObjectsLoadingLogGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingLog", 725, 3));
+		_testGetJson(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingLog", 725, 3));
 	}
 
 	/**
@@ -167,7 +167,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 		settings.setLoadingAttempts(10);
 		settings.setLoadingInterval("12:00");
 		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
-		_testJsonUpdate(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
+		_testUpdateJson(apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
 	}
 
 	/**
@@ -177,7 +177,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjectDataSourceGet() throws Exception {
 		//65836845
-		_testJsonGet(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+		_testGetJson(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
 	}
 
 }

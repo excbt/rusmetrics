@@ -26,7 +26,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 
 	@Test
 	public void testAvailableContEventTypes() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contEventType/actions/available"));
+		_testGetJson(apiSubscrUrl("/contEventType/actions/available"));
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 
 		String url = String.format("/api/subscr/contEventType/%d/actions", contEventTypeId);
 
-		_testJsonUpdate(url, Arrays.asList(newUserAction, newUserAction2));
+		_testUpdateJson(url, Arrays.asList(newUserAction, newUserAction2));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 
 		String url = String.format("/api/subscr/contEventType/%d/actions", contEventTypeId);
 
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 }

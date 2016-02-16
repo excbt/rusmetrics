@@ -12,6 +12,6 @@ public class SubscrTimeDetailTypeControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testTimeDetailType1h24h() throws Exception {
-		_testJsonGet(apiSubscrUrl("/timeDetailType/1h24h"));
+		_testGetJson(apiSubscrUrl("/timeDetailType/1h24h"));
 	}
 }

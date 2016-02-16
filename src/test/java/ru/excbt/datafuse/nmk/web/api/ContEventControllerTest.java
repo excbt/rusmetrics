@@ -8,6 +8,6 @@ public class ContEventControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testEventTypes() throws Exception {
-		_testJsonGet("/api/contEvent/types");
+		_testGetJson("/api/contEvent/types");
 	}
 }

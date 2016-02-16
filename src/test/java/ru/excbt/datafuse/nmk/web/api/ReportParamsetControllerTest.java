@@ -50,12 +50,12 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testCommerceList() throws Exception {
-		_testJsonGet("/api/reportParamset/commerce");
+		_testGetJson("/api/reportParamset/commerce");
 	}
 
 	@Test
 	public void testCommerceGet() throws Exception {
-		_testJsonGet("/api/reportParamset/commerce/" + TEST_PARAMSET_COMMERCE);
+		_testGetJson("/api/reportParamset/commerce/" + TEST_PARAMSET_COMMERCE);
 	}
 
 	@Test
@@ -102,7 +102,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		String objString = OBJECT_MAPPER.writeValueAsString(reportParamset);
 		logger.info("objString: {}", objString);
 
-		Long createdId = _testJsonCreate(urlStr, reportParamset, extraInializer);
+		Long createdId = _testCreateJson(urlStr, reportParamset, extraInializer);
 
 		ReportParamset reportParamsetNew = reportParamsetService.findOne(createdId);
 
@@ -116,9 +116,9 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 			reportParamsetNew.getParamSpecialList().add(param2);
 		}
 
-		_testJsonUpdate(urlStr + "/" + createdId, reportParamsetNew);
+		_testUpdateJson(urlStr + "/" + createdId, reportParamsetNew);
 
-		_testJsonDelete(urlStr + "/" + createdId);
+		_testDeleteJson(urlStr + "/" + createdId);
 
 	}
 
@@ -146,7 +146,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testReportParamsetContextLaunch() throws Exception {
-		_testJsonGet("/api/reportParamset/menu/contextLaunch");
+		_testGetJson("/api/reportParamset/menu/contextLaunch");
 	}
 
 }

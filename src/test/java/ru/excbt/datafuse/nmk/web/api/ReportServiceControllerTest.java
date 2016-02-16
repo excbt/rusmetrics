@@ -96,7 +96,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_EVENT;
 		String urlStr = String.format("/api/reportService/event/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -109,7 +109,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_CONS_T1;
 		String urlStr = String.format("/api/reportService/cons_t1/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -122,7 +122,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_CONS_T2;
 		String urlStr = String.format("/api/reportService/cons_t2/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -169,7 +169,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -257,7 +257,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -292,7 +292,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -327,7 +327,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -358,7 +358,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
