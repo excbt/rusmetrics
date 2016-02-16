@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -151,7 +151,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") long directoryId,
 			@PathVariable("paramId") final long paramId) {
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

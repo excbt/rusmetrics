@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.TransactionSystemException;
 
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -102,7 +102,7 @@ public class WebApiHelper {
 
 		}
 
-		if (action.getResult() == null || action.getResult() == AbstractApiAction.EMPTY_RESULT) {
+		if (action.getResult() == null || action.getResult() == ApiActionAdapter.EMPTY_RESULT) {
 			return ResponseEntity.status(successStatus).build();
 		} else {
 			return ResponseEntity.status(successStatus).body(action.getResult());

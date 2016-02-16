@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -218,7 +218,7 @@ public class ReferencePeriodController extends SubscrApiController {
 			return checkResult;
 		}
 
-		final ApiAction action = new AbstractApiAction() {
+		final ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

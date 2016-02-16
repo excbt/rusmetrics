@@ -9,7 +9,7 @@ package ru.excbt.datafuse.nmk.web.api.support;
  * 
  * @param <T>
  */
-public abstract class AbstractEntityApiAction<T> extends AbstractApiAction {
+public abstract class AbstractEntityApiAction<T> extends ApiActionAdapter {
 
 	protected final T entity;
 	private T resultEntity;

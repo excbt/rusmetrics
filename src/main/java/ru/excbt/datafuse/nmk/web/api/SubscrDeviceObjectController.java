@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -233,7 +233,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

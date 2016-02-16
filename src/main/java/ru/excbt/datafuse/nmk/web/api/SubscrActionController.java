@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -159,7 +159,7 @@ public class SubscrActionController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneGroup(@PathVariable("id") final long id) {
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrActionGroupService.deleteOne(id);
@@ -274,7 +274,7 @@ public class SubscrActionController extends SubscrApiController {
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneUser(@PathVariable("id") long id) {
 		final long finalId = id;
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrActionUserService.deleteOne(finalId);

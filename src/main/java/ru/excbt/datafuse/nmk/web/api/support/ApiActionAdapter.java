@@ -1,13 +1,25 @@
 package ru.excbt.datafuse.nmk.web.api.support;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Адаптер для AbstractApiAction
+ * Базовый класс для работы с action
  * 
  * @author A.Kovtonyuk
  * @version 1.0
- * @since 13.10.2015
+ * @since 07.05.2015
  *
  */
-public abstract class ApiActionAdapter extends AbstractApiAction {
+public abstract class ApiActionAdapter implements ApiAction {
+
+	protected static final Logger logger = LoggerFactory.getLogger(ApiActionAdapter.class);
+
+	public static final Object EMPTY_RESULT = new Object();
+
+	@Override
+	public Object getResult() {
+		return null;
+	}
 
 }
