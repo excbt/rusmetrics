@@ -136,7 +136,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
-		resultAction.andExpect(status().isAccepted());
+		resultAction.andExpect(status().is2xxSuccessful());
 
 	}
 

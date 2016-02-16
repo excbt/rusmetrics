@@ -6,7 +6,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -14,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,11 +34,13 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -289,16 +288,16 @@ public class ReportParamsetController extends SubscrApiController {
 		} catch (JsonProcessingException e) {
 		}
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportParamset, Long>(reportParamset, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(reportParamsetService.createOne(reportParamset, contObjectIds));
-			}
+		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportParamset, Long>(reportParamset, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public ReportParamset processAndReturnResult() {
+				return reportParamsetService.createOne(reportParamset, contObjectIds);
 			}
 
 		};
@@ -338,25 +337,34 @@ public class ReportParamsetController extends SubscrApiController {
 		checkNotNull(reportParamset);
 		checkArgument(reportParamset.isNew());
 
-		ReportParamset resultEntity = null;
+		ApiActionLocation action = new EntityApiActionLocationAdapter<ReportParamset, Long>(reportParamset, request) {
 
-		try {
-			resultEntity = reportParamsetService.createByTemplate(srcId, reportParamset, contObjectIds,
-					currentSubscriberService.getSubscriber());
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during create entity by Reportparamset (id={}): {}", srcId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		}
+			@Override
+			protected Long getLocationId() {
+				return getResultEntity().getId();
+			}
 
-		String keyname = resultEntity.getReportTemplate().getReportTypeKeyname();
-		ReportTypeKey reportType = ReportTypeKey.valueOf(keyname);
+			@Override
+			public ReportParamset processAndReturnResult() {
+				return reportParamsetService.createByTemplate(srcId, reportParamset, contObjectIds,
+						currentSubscriberService.getSubscriber());
+			}
 
-		URI location = URI.create(
-				"/api/reportParamset" + ReportConstants.getReportTypeURL(reportType) + "/" + +resultEntity.getId());
+			@Override
+			public URI getLocation() {
+				checkNotNull(getResultEntity());
 
-		return ResponseEntity.created(location).body(resultEntity);
+				String keyname = getResultEntity().getReportTemplate().getReportTypeKeyname();
+				ReportTypeKey reportType = ReportTypeKey.valueOf(keyname);
+
+				return URI.create(
+						"/api/reportParamset" + ReportConstants.getReportTypeURL(reportType) + "/" + getLocationId());
+			}
+
+		};
+
+		return WebApiHelper.processResponceApiActionCreate(action);
+
 	}
 
 	/**
@@ -409,19 +417,29 @@ public class ReportParamsetController extends SubscrApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ReportParamsetUnit resultEntity = null;
+		ApiAction action = new EntityApiActionAdapter<ReportParamsetUnit>() {
 
-		try {
-			resultEntity = reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
-					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		}
+			@Override
+			public ReportParamsetUnit processAndReturnResult() {
+				return reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
+			}
+		};
 
-		return ResponseEntity.accepted().body(resultEntity);
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
+		//		ReportParamsetUnit resultEntity = null;
+		//
+		//		try {
+		//			resultEntity = reportParamsetService.addUnitToParamset(reportParamsetId, contObjectId);
+		//		} catch (AccessDeniedException e) {
+		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		//		} catch (TransactionSystemException | PersistenceException e) {
+		//			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+		//					reportParamsetId, e);
+		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+		//		}
+		//
+		//		return ResponseEntity.accepted().body(resultEntity);
 	}
 
 	/**
@@ -439,17 +457,28 @@ public class ReportParamsetController extends SubscrApiController {
 		checkNotNull(reportParamsetId);
 		checkNotNull(contObjectId);
 
-		try {
-			reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
-					reportParamsetId, contObjectId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		}
+		ApiAction action = new ApiActionAdapter() {
 
-		return ResponseEntity.ok().build();
+			@Override
+			public void process() {
+				reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
+
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionDelete(action);
+
+		//		try {
+		//			reportParamsetService.deleteUnitFromParamset(reportParamsetId, contObjectId);
+		//		} catch (AccessDeniedException e) {
+		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		//		} catch (TransactionSystemException | PersistenceException e) {
+		//			logger.error("Can't delete ReportParamsetUnit. (reportParamsetId={}, contObjectId={}) : {}",
+		//					reportParamsetId, contObjectId, e);
+		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+		//		}
+		//
+		//		return ResponseEntity.ok().build();
 	}
 
 	/**
@@ -501,17 +530,27 @@ public class ReportParamsetController extends SubscrApiController {
 			}
 		}
 
-		try {
-			reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
-		} catch (AccessDeniedException e) {
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-		} catch (TransactionSystemException | PersistenceException e) {
-			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
-					reportParamsetId, e);
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-		}
+		ApiAction action = new ApiActionAdapter() {
 
-		return ResponseEntity.accepted().build();
+			@Override
+			public void process() {
+				reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
+			}
+		};
+
+		return WebApiHelper.processResponceApiActionUpdate(action);
+
+		//		try {
+		//			reportParamsetService.updateUnitToParamset(reportParamsetId, contObjectIds);
+		//		} catch (AccessDeniedException e) {
+		//			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+		//		} catch (TransactionSystemException | PersistenceException e) {
+		//			logger.error("Error during create entity ReportParamsetUnit by ReportParamset (id={}): {}",
+		//					reportParamsetId, e);
+		//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+		//		}
+		//
+		//		return ResponseEntity.accepted().build();
 	}
 
 	/**

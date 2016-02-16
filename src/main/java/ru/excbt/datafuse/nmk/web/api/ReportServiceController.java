@@ -31,7 +31,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
-import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
@@ -60,9 +59,6 @@ public class ReportServiceController extends WebApiController {
 
 	@Autowired
 	private ReportMakerParamService reportMakerParamService;
-
-	@Autowired
-	private ReportParamsetService reportParamsetService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
