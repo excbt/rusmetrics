@@ -39,7 +39,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -417,7 +417,7 @@ public class ReportParamsetController extends SubscrApiController {
 			return ResponseEntity.badRequest().build();
 		}
 
-		ApiAction action = new EntityApiActionAdapter<ReportParamsetUnit>() {
+		ApiAction action = new ApiActionEntityAdapter<ReportParamsetUnit>() {
 
 			@Override
 			public ReportParamsetUnit processAndReturnResult() {

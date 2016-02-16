@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
@@ -128,7 +128,7 @@ public class RmaSubscriberController extends SubscriberController {
 		checkNotNull(rSubscriber);
 		checkNotNull(rSubscriber.getOrganizationId());
 
-		ApiAction action = new EntityApiActionAdapter<Subscriber>(rSubscriber) {
+		ApiAction action = new ApiActionEntityAdapter<Subscriber>(rSubscriber) {
 
 			@Override
 			public Subscriber processAndReturnResult() {

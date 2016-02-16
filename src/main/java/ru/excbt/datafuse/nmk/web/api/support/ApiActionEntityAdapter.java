@@ -9,13 +9,13 @@ package ru.excbt.datafuse.nmk.web.api.support;
  * 
  * @param <T>
  */
-public abstract class EntityApiActionAdapter<T> extends AbstractEntityApiAction<T> {
+public abstract class ApiActionEntityAdapter<T> extends AbstractEntityApiAction<T> {
 
-	public EntityApiActionAdapter(T entity) {
+	public ApiActionEntityAdapter(T entity) {
 		super(entity);
 	}
 
-	public EntityApiActionAdapter() {
+	public ApiActionEntityAdapter() {
 		super();
 	}
 

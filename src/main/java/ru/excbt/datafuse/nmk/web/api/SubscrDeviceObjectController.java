@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
@@ -207,7 +207,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
-		ApiAction action = new EntityApiActionAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
+		ApiAction action = new ApiActionEntityAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
 
 			@Override
 			public DeviceObjectMetaVzlet processAndReturnResult() {

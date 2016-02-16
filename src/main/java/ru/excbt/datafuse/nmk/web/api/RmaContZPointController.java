@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
@@ -60,7 +60,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new EntityApiActionAdapter<ContZPoint>(contZPoint) {
+		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
 			@Override
 			public ContZPoint processAndReturnResult() {
 				return contZPointService.updateOne(entity);

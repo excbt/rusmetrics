@@ -30,7 +30,7 @@ import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
@@ -264,7 +264,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		requestEntity.setDeviceObject(deviceObject);
 
-		ApiAction action = new EntityApiActionAdapter<DeviceObjectLoadingSettings>(requestEntity) {
+		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
 
 			@Override
 			public DeviceObjectLoadingSettings processAndReturnResult() {

@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
@@ -189,7 +189,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate subscrBeginDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
 
-		ApiAction action = new EntityApiActionAdapter<List<ContObject>>() {
+		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {

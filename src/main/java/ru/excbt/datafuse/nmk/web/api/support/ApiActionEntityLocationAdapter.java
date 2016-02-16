@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
  * @param <T>
  * @param <K>
  */
-public abstract class ApiActionEntityLocationAdapter<T, K> extends EntityApiActionAdapter<T>
+public abstract class ApiActionEntityLocationAdapter<T, K> extends ApiActionEntityAdapter<T>
 		implements ApiActionLocation {
 
 	private HttpServletRequest request;

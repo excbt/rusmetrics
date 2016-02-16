@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeActionService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -74,7 +74,7 @@ public class SubscrContEventTypeActionController extends SubscrApiController {
 
 		ContEventType contEventType = checkContEventType.get();
 
-		ApiAction action = new EntityApiActionAdapter<List<SubscrContEventTypeAction>>() {
+		ApiAction action = new ApiActionEntityAdapter<List<SubscrContEventTypeAction>>() {
 
 			@Override
 			public List<SubscrContEventTypeAction> processAndReturnResult() {
