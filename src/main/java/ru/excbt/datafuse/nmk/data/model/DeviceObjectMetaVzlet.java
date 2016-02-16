@@ -13,14 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
-/**
- * Метаданные прибора для системы Взлет
- * 
- * @author A.Kovtonyuk
- * @version 1.0
- * @since 28.05.2015
- *
- */
 @Entity
 @Table(name = "device_object_meta_vzlet")
 public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
@@ -31,11 +23,11 @@ public class DeviceObjectMetaVzlet extends AbstractAuditableModel {
 	private static final long serialVersionUID = 2778200912535462611L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id", insertable = false, updatable = false)
+	@JoinColumn(name = "device_object_id")
 	@JsonIgnore
 	private DeviceObject deviceObject;
 
-	@Column(name = "device_object_id")
+	@Column(name = "device_object_id", insertable = false, updatable = false)
 	@JsonIgnore
 	private Long deviceObjectId;
 

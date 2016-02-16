@@ -158,7 +158,9 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+
+		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
 		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObjectMetaVzlet, Long>(
 				deviceObjectMetaVzlet, request) {
@@ -202,7 +204,8 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
 		ApiAction action = new EntityApiActionAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
 
@@ -285,7 +288,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 
 		if (deviceObject == null) {
 			return responseNoContent();
@@ -313,7 +316,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -339,7 +342,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -379,7 +382,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest();
 		}

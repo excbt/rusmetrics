@@ -36,7 +36,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	@Ignore
 	public void testDeviceObjectUpdate() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
 		String url = apiRmaUrl(
@@ -66,7 +66,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Ignore
 	public void testDeviceObjectCreateDelete() throws Exception {
 
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
 		deviceObject.setId(null);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
@@ -107,7 +107,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	@Ignore
 	public void testDeviceObjectAllCreateDelete() throws Exception {
 
-		DeviceObject deviceObject = deviceObjectService.findOne(DEV_RMA_DEVICE_OBJECT_ID);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(DEV_RMA_DEVICE_OBJECT_ID);
 		deviceObject.setId(null);
 		deviceObject.setContObject(null);
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
@@ -161,7 +161,7 @@ public class RmaDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceObjectsLoadingSettingsPut() throws Exception {
-		DeviceObject deviceObject = deviceObjectService.findOne(3);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(3);
 		DeviceObjectLoadingSettings settings = deviceObjectLoadingSettingsService
 				.getDeviceObjectLoadingSettings(deviceObject);
 		settings.setLoadingAttempts(10);
