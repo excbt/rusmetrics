@@ -167,6 +167,7 @@ public class ReportServiceController extends WebApiController {
 	public ResponseEntity<?> doPutDowndloadAnyReport(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -187,7 +188,11 @@ public class ReportServiceController extends WebApiController {
 
 		setupReportParamset(reportParamset);
 
-		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset, contObjectIds);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset,
+				fixContObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 
@@ -206,6 +211,7 @@ public class ReportServiceController extends WebApiController {
 			produces = "application/zip")
 	public ResponseEntity<?> doDowndloadReportPutZip(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -213,7 +219,10 @@ public class ReportServiceController extends WebApiController {
 
 		reportParamset.setOutputFileZipped(true);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
 
 	}
 
@@ -229,6 +238,7 @@ public class ReportServiceController extends WebApiController {
 	@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
 	public ResponseEntity<?> doDowndloadReportPutPdf(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -237,7 +247,10 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
 
 	}
 
@@ -253,6 +266,7 @@ public class ReportServiceController extends WebApiController {
 	@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
 	public ResponseEntity<?> doDowndloadReportPutXlsx(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -261,7 +275,10 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.XLSX);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
 
 	}
 
@@ -277,6 +294,7 @@ public class ReportServiceController extends WebApiController {
 	@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
 	public ResponseEntity<?> doDowndloadReportPutHtml(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
+			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
 			@RequestBody ReportParamset reportParamset) throws IOException {
 
 		checkNotNull(reportParamsetId);
@@ -285,7 +303,10 @@ public class ReportServiceController extends WebApiController {
 		reportParamset.setOutputFileZipped(false);
 		reportParamset.setOutputFileType(ReportOutputFileType.HTML);
 
-		return procedDownloadAllReports(reportParamsetId, contObjectIds, reportParamset);
+		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
+				? new Long[] {} : contObjectIds;
+
+		return procedDownloadAllReports(reportParamsetId, fixContObjectIds, reportParamset);
 
 	}
 
@@ -306,7 +327,7 @@ public class ReportServiceController extends WebApiController {
 
 		String paramJson = OBJECT_MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(reportMakerParam);
 
-		logger.debug("ReportMakerParam JSON: {}", paramJson);
+		logger.debug("Processing Report with params: {}", paramJson);
 
 		if (!reportMakerParam.isParamsetValid() || !reportMakerParam.isSubscriberValid()) {
 			return responseBadRequest(ApiResult.validationError("Report Maker Param is not valid"));
@@ -427,6 +448,35 @@ public class ReportServiceController extends WebApiController {
 		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
 
 		checkState(reportMaker != null, "reportTypeKey:" + reportTypeKey + " is not supported");
+
+		return processDowndloadAnyReport(reportMakerParam, reportMaker);
+
+	}
+
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/context/{contObjectId}", method = RequestMethod.GET)
+	public ResponseEntity<?> doDowndloadAnyReportContext(@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportParamsetId") long reportParamsetId, @PathVariable("contObjectId") long contObjectId,
+			HttpServletRequest request) throws IOException {
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+		}
+
+		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
+
+		Long[] contObjectIds = new Long[] { contObjectId };
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId,
+				contObjectIds);
 
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 

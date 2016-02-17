@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
@@ -42,7 +43,7 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 @SQLDelete(sql = "UPDATE report_paramset SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReportParamset extends AbstractAuditableModel {
+public class ReportParamset extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
 	 * 
@@ -123,8 +124,17 @@ public class ReportParamset extends AbstractAuditableModel {
 	@Column(name = "output_file_zipped")
 	private Boolean outputFileZipped;
 
+	//	@Column(name = "output_file_template")
+	//	private Boolean outputFileTemplate;
+
 	@Version
 	private int version;
+
+	@Column(name = "deleted")
+	private int deleted;
+
+	@Column(name = "is_context_launch")
+	private Boolean isContextLaunch;
 
 	@OneToMany(mappedBy = "reportParamset", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Collection<ReportParamsetParamSpecial> paramSpecialList = new ArrayList<ReportParamsetParamSpecial>();
@@ -315,6 +325,16 @@ public class ReportParamset extends AbstractAuditableModel {
 
 	public void setOutputFileZipped(Boolean outputFileZipped) {
 		this.outputFileZipped = outputFileZipped;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

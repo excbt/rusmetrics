@@ -84,9 +84,9 @@ public class ReportMakerParamService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIdList) {
+	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds) {
 		ReportParamset reportParamset = reportParamsetService.findOne(reportParamsetId);
-		return newReportMakerParam(reportParamset, contObjectIdList, false);
+		return newReportMakerParam(reportParamset, contObjectIds, false);
 	}
 
 	/**

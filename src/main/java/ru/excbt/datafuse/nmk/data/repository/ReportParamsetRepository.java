@@ -66,4 +66,15 @@ public interface ReportParamsetRepository extends CrudRepository<ReportParamset,
 	@Query("SELECT rt.id FROM ReportParamset rt WHERE rt.subscriber IS NULL ")
 	public List<Long> selectCommonParamsetIds();
 
+	/**
+	 * 
+	 * @param reportType
+	 * @param currentDate
+	 * @return
+	 */
+	@Query("SELECT rp FROM ReportParamset rp LEFT JOIN FETCH rp.reportTemplate rt LEFT JOIN rt.reportType rtype "
+			+ " WHERE rp.subscriber.id = :subscriberId AND rp._active = true AND rp.isContextLaunch = true "
+			+ " ORDER BY rtype.reportTypeOrder, rp.name NULLS LAST, rp.name")
+	public List<ReportParamset> selectReportParamsetContextLaunch(@Param("subscriberId") Long subscriberId);
+
 }

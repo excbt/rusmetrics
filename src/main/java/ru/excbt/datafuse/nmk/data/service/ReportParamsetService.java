@@ -643,4 +643,16 @@ public class ReportParamsetService implements SecuredRoles {
 
 	}
 
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportParamset> selectReportParamsetContextLaunch(Long subscriberId) {
+		List<ReportParamset> result = reportParamsetRepository.selectReportParamsetContextLaunch(subscriberId);
+		result.forEach((s) -> s.getParamSpecialList().size());
+		return result;
+	}
+
 }
