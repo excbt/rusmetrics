@@ -696,6 +696,10 @@ console.log("Objects directive.");
                 $scope.getReports();
                 
                 $scope.reportCreate = function(paramset){
+console.log(paramset);                    
+                    if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+                        return "Entity is category";//exit function
+                    };
                     //run report
                     var url = "../api/reportService" + paramset.reportTemplate.reportType.suffix + "/" + paramset.id + "/download";
                     $http.get(url, {responseType: 'arraybuffer'})

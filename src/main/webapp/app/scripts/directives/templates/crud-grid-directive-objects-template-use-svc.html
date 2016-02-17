@@ -220,6 +220,7 @@
                                                data-toggle="dropdown" 
                                                aria-haspopup="true" 
                                                aria-expanded="false"
+                                               ng-click="reportCreate(reportEntity)"
                                                >
                                                 <i ng-if="!reportEntity.reports"
                                                     class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
@@ -232,10 +233,11 @@
                                                 <li ng-repeat="report in reportEntity.reports">
                                                     
                                                     <a
-                                                       class="">
+                                                       class=""
+                                                       ng-click="reportCreate(report)">
                                                         <i  class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
                                                            ng-class="{'nmc-button-in-table-run-green':report.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!report.allRequiredParamsPassed}"
-                                                           ng-click="createReport(report)">
+                                                           >
                                                         </i>
                                                         {{report.name || 'Без названия'}}
                                                     </a>
