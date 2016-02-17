@@ -439,7 +439,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initDeviceObject(ContZPoint contZPoint) {
-		DeviceObject deviceObject = deviceObjectService.findOne(contZPoint.get_activeDeviceObjectId());
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(contZPoint.get_activeDeviceObjectId());
 
 		if (deviceObject == null) {
 			throw new PersistenceException(

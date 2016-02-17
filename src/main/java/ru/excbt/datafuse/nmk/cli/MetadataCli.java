@@ -125,7 +125,7 @@ public class MetadataCli extends AbstractDBToolCli {
 	private boolean readDeviceObjectModel(long deviceObjectId, int propVar) {
 		boolean result = true;
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 
 		DeviceModel model = deviceObject.getDeviceModel();
 

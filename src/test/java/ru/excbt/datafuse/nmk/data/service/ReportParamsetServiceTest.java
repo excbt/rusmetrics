@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,13 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
-public class ReportParamsetServiceTest extends JpaSupportTest {
+public class ReportParamsetServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetServiceTest.class);
 
@@ -131,4 +134,53 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 			logger.info("Found ReportParamset (id={}): {}", i.getId(), i.getName());
 		});
 	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	@Ignore
+	public void testReportParamsetCreateDefault() throws Exception {
+
+		Subscriber subscriber = subscriberService.findOne(EXCBT_RMA_SUBSCRIBER_ID);
+
+		logger.info("Creating ReportParamset for {}", subscriber.getId());
+
+		List<ReportParamset> createdReportParamsets = reportParamsetService.createDefaultReportParamsets(subscriber);
+
+		assertTrue(!createdReportParamsets.isEmpty());
+
+		createdReportParamsets.forEach(i -> {
+			logger.info("Created ReportParamset: {}. ReportType: {}", i.getId(),
+					i.getReportTemplate().getReportTypeKeyname());
+
+		});
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	@Ignore
+	public void testReportParamsetSubscribersCreateDefault() throws Exception {
+
+		List<Subscriber> subscribers = subscriberService.findAllSubscribers();
+
+		subscribers.forEach(s -> {
+			logger.info("Creating ReportParamset for {}", s.getId());
+
+			List<ReportParamset> createdReportParamsets = reportParamsetService.createDefaultReportParamsets(s);
+
+			createdReportParamsets.forEach(i -> {
+				logger.info("Created ReportParamset: {}. ReportType: {}", i.getId(),
+						i.getReportTemplate().getReportTypeKeyname());
+
+			});
+		});
+
+	}
+
 }

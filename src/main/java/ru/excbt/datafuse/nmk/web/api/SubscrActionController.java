@@ -23,11 +23,11 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -133,16 +133,16 @@ public class SubscrActionController extends SubscrApiController {
 
 		final Long[] actionIds = subscrUserIds;
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<SubscrActionGroup, Long>(entity, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(subscrActionGroupService.createOne(entity, actionIds));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrActionGroup, Long>(entity, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public SubscrActionGroup processAndReturnResult() {
+				return subscrActionGroupService.createOne(entity, actionIds);
 			}
 
 		};
@@ -159,7 +159,7 @@ public class SubscrActionController extends SubscrApiController {
 	 */
 	@RequestMapping(value = "/groups/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneGroup(@PathVariable("id") final long id) {
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrActionGroupService.deleteOne(id);
@@ -247,16 +247,16 @@ public class SubscrActionController extends SubscrApiController {
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
-		ApiActionLocation userAction = new AbstractEntityApiActionLocation<SubscrActionUser, Long>(entity, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(subscrActionUserService.createOne(entity, actionGroupIds));
-			}
+		ApiActionLocation userAction = new ApiActionEntityLocationAdapter<SubscrActionUser, Long>(entity, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public SubscrActionUser processAndReturnResult() {
+				return subscrActionUserService.createOne(entity, actionGroupIds);
 			}
 
 		};
@@ -274,7 +274,7 @@ public class SubscrActionController extends SubscrApiController {
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneUser(@PathVariable("id") long id) {
 		final long finalId = id;
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrActionUserService.deleteOne(finalId);

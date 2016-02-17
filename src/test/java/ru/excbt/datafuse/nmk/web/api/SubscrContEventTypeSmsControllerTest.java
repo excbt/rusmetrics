@@ -23,13 +23,13 @@ public class SubscrContEventTypeSmsControllerTest extends SubscrControllerTest {
 	@Test
 	@Ignore
 	public void testAvailableContEventTypes() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contEventSms/availableContEventTypes"));
+		_testGetJson(apiSubscrUrl("/contEventSms/availableContEventTypes"));
 	}
 
 	@Test
 	@Ignore
 	public void testGetContEventTypes() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contEventSms/contEventTypes"));
+		_testGetJson(apiSubscrUrl("/contEventSms/contEventTypes"));
 	}
 
 	@Test
@@ -47,6 +47,6 @@ public class SubscrContEventTypeSmsControllerTest extends SubscrControllerTest {
 			builder.param("contEventTypeId", contEventTypeId.toString());
 		};
 
-		_testJsonCreate(apiSubscrUrl("/contEventSms/contEventTypes"), Arrays.asList(smsAddr), params);
+		_testCreateJson(apiSubscrUrl("/contEventSms/contEventTypes"), Arrays.asList(smsAddr), params);
 	}
 }

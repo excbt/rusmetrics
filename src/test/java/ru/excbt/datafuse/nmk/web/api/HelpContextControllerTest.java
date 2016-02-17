@@ -23,11 +23,11 @@ public class HelpContextControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testSetup() throws Exception {
-		_testJsonGet("/api/help/setup/home01");
+		_testGetSuccessful("/api/help/setup/home01");
 	}
 
 	@Test
 	public void testHelpInfo() throws Exception {
-		_testJsonGet("/api/help/info/home01");
+		_testGetJson("/api/help/info/home01");
 	}
 }

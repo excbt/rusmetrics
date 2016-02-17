@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -250,6 +252,15 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
 		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<Subscriber> findAllSubscribers() {
+		return Lists.newArrayList(subscriberRepository.findAll());
 	}
 
 }

@@ -105,7 +105,7 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testAAA() throws Exception {
-		_testJsonGet("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
+		_testGetJson("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
 		
 	}
 	

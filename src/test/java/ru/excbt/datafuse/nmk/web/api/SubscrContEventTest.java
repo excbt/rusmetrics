@@ -18,7 +18,7 @@ public class SubscrContEventTest extends AnyControllerTest {
 	@Test
 	@Ignore
 	public void testSubscrContObjectEvents() throws Exception {
-		_testJsonGet("/api/subscr/contObjects/events");
+		_testGetJson("/api/subscr/contObjects/events");
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class SubscrContEventTest extends AnyControllerTest {
 	@Test
 	@Ignore
 	public void testSubscrContObjectEventsPaged() throws Exception {
-		_testJsonGet("/api/subscr/contObjects/eventsFilterPaged?page=0&size=20");
+		_testGetJson("/api/subscr/contObjects/eventsFilterPaged?page=0&size=20");
 	}
 
 }

@@ -155,7 +155,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	@Test
 	public void testGetAvailableFiles() throws Exception {
 		String url = apiSubscrUrl("/service/out/csv");
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 
 		String url = apiSubscrUrl("/service/out/csv/" + filename);
 
-		_testJsonGetNoJsonCheck(url);
+		_testGetSuccessful(url);
 	}
 
 	/**

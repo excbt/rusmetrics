@@ -48,22 +48,22 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testOption() throws Exception {
-		_testJsonGet("/api/subscr/tariff/option");
+		_testGetJson("/api/subscr/tariff/option");
 	}
 
 	@Test
 	public void testType() throws Exception {
-		_testJsonGet("/api/subscr/tariff/type");
+		_testGetJson("/api/subscr/tariff/type");
 	}
 
 	@Test
 	public void testRso() throws Exception {
-		_testJsonGet("/api/subscr/tariff/rso");
+		_testGetJson("/api/subscr/tariff/rso");
 	}
 
 	@Test
 	public void testDefault() throws Exception {
-		_testJsonGet("/api/subscr/tariff/default");
+		_testGetJson("/api/subscr/tariff/default");
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testAvailableContObjects() throws Exception {
-		_testJsonGet("/api/subscr/tariff/1/contObject/available");
+		_testGetJson("/api/subscr/tariff/1/contObject/available");
 	}
 
 }

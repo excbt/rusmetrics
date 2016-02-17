@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -85,7 +85,7 @@ public class SubscrContEventTypeSmsController extends SubscrApiController {
 
 		ContEventType contEventType = checkContEventType.get();
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<SubscrContEventTypeSms, Long>(request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrContEventTypeSms, Long>(request) {
 
 			@Override
 			protected Long getLocationId() {

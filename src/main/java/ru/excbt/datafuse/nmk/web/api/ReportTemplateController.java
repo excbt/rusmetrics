@@ -25,13 +25,13 @@ import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -160,7 +160,7 @@ public class ReportTemplateController extends SubscrApiController {
 	 */
 	private ResponseEntity<?> deleteInternal(final long reportTemplateId) {
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				reportTemplateService.deleteOne(reportTemplateId);
@@ -243,18 +243,16 @@ public class ReportTemplateController extends SubscrApiController {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportTemplate, Long>(reportTemplate, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(reportTemplateService.createByTemplate(srcId, entity,
-						currentSubscriberService.getSubscriber()));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportTemplate, Long>(reportTemplate, request) {
 
 			@Override
 			protected Long getLocationId() {
-				checkNotNull(getResultEntity());
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public ReportTemplate processAndReturnResult() {
+				return reportTemplateService.createByTemplate(srcId, entity, currentSubscriberService.getSubscriber());
 			}
 
 			@Override
@@ -265,7 +263,6 @@ public class ReportTemplateController extends SubscrApiController {
 						+ ReportConstants.getReportTypeURL(getResultEntity().getReportTypeKeyname()) + "/"
 						+ getLocationId());
 			}
-
 		};
 
 		return WebApiHelper.processResponceApiActionCreate(action);

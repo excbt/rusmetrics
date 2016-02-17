@@ -7,24 +7,33 @@ import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Расширенный класс для работы action с сущностью при POST
+ * Адаптер для EntityApiActionAdapter
  * 
  * @author A.Kovtonyuk
  * @version 1.0
- * @since 15.05.2015
+ * @since 13.10.2015
  * 
  * @param <T>
  * @param <K>
  */
-@Deprecated
-public abstract class AbstractEntityApiActionLocation<T, K> extends AbstractEntityApiAction<T>
+public abstract class ApiActionEntityLocationAdapter<T, K> extends ApiActionEntityAdapter<T>
 		implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
-	public AbstractEntityApiActionLocation(T entity, HttpServletRequest request) {
+	public ApiActionEntityLocationAdapter(T entity, HttpServletRequest request) {
 		super(entity);
 		this.request = request;
+	}
+
+	public ApiActionEntityLocationAdapter(HttpServletRequest request) {
+		super(null);
+		this.request = request;
+	}
+
+	@Override
+	public final void process() {
+		super.process();
 	}
 
 	protected abstract K getLocationId();

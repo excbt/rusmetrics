@@ -25,13 +25,13 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.support.DataSourceInfo;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с приборами для РМА
@@ -93,7 +93,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		ApiAction action = new AbstractEntityApiAction<DeviceObject>(deviceObject) {
 			@Override
 			public void process() {
-				DeviceObject result = deviceObjectService.saveOne(entity, deviceObjectDataSource);
+				DeviceObject result = deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
 				setResultEntity(result);
 			}
 		};
@@ -173,7 +173,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			deviceObjectDataSource.setIsActive(true);
 		}
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObject, Long>(deviceObject, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObject, Long>(deviceObject, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -182,7 +182,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 			@Override
 			public DeviceObject processAndReturnResult() {
-				return deviceObjectService.saveOne(entity, deviceObjectDataSource);
+				return deviceObjectService.saveDeviceObject(entity, deviceObjectDataSource);
 			}
 		};
 
@@ -205,14 +205,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
 				if (isPermanent) {
-					deviceObjectService.deleteOnePermanent(deviceObjectId);
+					deviceObjectService.deleteDeviceObjectPermanent(deviceObjectId);
 				} else {
-					deviceObjectService.deleteOne(deviceObjectId);
+					deviceObjectService.deleteDeviceObject(deviceObjectId);
 				}
 
 			}
@@ -252,7 +252,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -264,7 +264,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		requestEntity.setDeviceObject(deviceObject);
 
-		ApiAction action = new EntityApiActionAdapter<DeviceObjectLoadingSettings>(requestEntity) {
+		ApiAction action = new ApiActionEntityAdapter<DeviceObjectLoadingSettings>(requestEntity) {
 
 			@Override
 			public DeviceObjectLoadingSettings processAndReturnResult() {

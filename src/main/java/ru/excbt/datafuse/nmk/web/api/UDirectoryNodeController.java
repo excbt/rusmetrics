@@ -21,9 +21,9 @@ import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -117,17 +117,17 @@ public class UDirectoryNodeController extends SubscrApiController {
 		checkNotNull(uDirectoryNode, "UDirectoryNode is empty");
 		checkArgument(directoryId > 0, "directoryId is not set");
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectoryNode, Long>(uDirectoryNode, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<UDirectoryNode, Long>(uDirectoryNode, request) {
 
 			@Override
 			protected Long getLocationId() {
 
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public UDirectoryNode processAndReturnResult() {
+				return directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId);
 			}
 		};
 

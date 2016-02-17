@@ -30,12 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 
 /**
  * Контроллер для работы с прайс листами для РМА
@@ -222,7 +222,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return responseBadRequest(ApiResult.validationError("Only draft price list accepted"));
 		}
 
-		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>(priceList) {
+		ApiAction action = new ApiActionEntityAdapter<SubscrPriceList>(priceList) {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
@@ -292,7 +292,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		checkNotNull(subscriberId);
 		checkNotNull(srcPriceListId);
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<SubscrPriceList, Long>(reques) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrPriceList, Long>(reques) {
 
 			@Override
 			protected Long getLocationId() {
@@ -376,7 +376,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		LocalDate startDate = currentSubscriberService.getSubscriberCurrentTime_Joda().toLocalDate();
 
-		ApiAction action = new EntityApiActionAdapter<SubscrPriceList>() {
+		ApiAction action = new ApiActionEntityAdapter<SubscrPriceList>() {
 
 			@Override
 			public SubscrPriceList processAndReturnResult() {
@@ -445,7 +445,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		LocalDate localDate = getCurrentSubscriberLocalDate();
 
-		ApiAction action = new EntityApiActionAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
+		ApiAction action = new ApiActionEntityAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
 
 			@Override
 			public List<SubscrPriceItemVO> processAndReturnResult() {

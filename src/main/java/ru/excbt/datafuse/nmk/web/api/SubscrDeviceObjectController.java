@@ -32,12 +32,12 @@ import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingLogService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 /**
@@ -158,9 +158,11 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<DeviceObjectMetaVzlet, Long>(
+		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
+
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<DeviceObjectMetaVzlet, Long>(
 				deviceObjectMetaVzlet, request) {
 
 			@Override
@@ -202,9 +204,10 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		deviceObjectMetaVzlet.setDeviceObjectId(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
+		deviceObjectMetaVzlet.setDeviceObject(deviceObject);
 
-		ApiAction action = new EntityApiActionAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
+		ApiAction action = new ApiActionEntityAdapter<DeviceObjectMetaVzlet>(deviceObjectMetaVzlet) {
 
 			@Override
 			public DeviceObjectMetaVzlet processAndReturnResult() {
@@ -230,7 +233,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
@@ -285,7 +288,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 
 		if (deviceObject == null) {
 			return responseNoContent();
@@ -313,7 +316,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -339,7 +342,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			return responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
@@ -379,7 +382,7 @@ public class SubscrDeviceObjectController extends SubscrApiController {
 			responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.findOne(deviceObjectId);
+		DeviceObject deviceObject = deviceObjectService.findDeviceObject(deviceObjectId);
 		if (deviceObject == null) {
 			return responseBadRequest();
 		}

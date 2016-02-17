@@ -23,13 +23,12 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
 /**
  * Контроллер для работы с расписанием отчетов
@@ -47,9 +46,6 @@ public class ReportSheduleController extends WebApiController {
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
-
-	@Autowired
-	private ReportTemplateService reportTemplateService;
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
@@ -99,7 +95,7 @@ public class ReportSheduleController extends WebApiController {
 	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportShedule(@PathVariable(value = "reportSheduleId") final Long reportSheduleId) {
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				reportSheduleService.deleteOne(reportSheduleId);
@@ -142,16 +138,16 @@ public class ReportSheduleController extends WebApiController {
 		reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 		reportShedule.setReportParamset(checkParamset);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReportShedule, Long>(reportShedule, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(reportSheduleService.createOne(entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReportShedule, Long>(reportShedule, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public ReportShedule processAndReturnResult() {
+				return reportSheduleService.createOne(entity);
 			}
 		};
 

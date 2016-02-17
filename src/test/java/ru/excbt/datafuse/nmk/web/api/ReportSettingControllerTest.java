@@ -17,22 +17,22 @@ public class ReportSettingControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testGetReportTypes() throws Exception {
-		_testJsonGet("/api/reportSettings/reportType");
+		_testGetJson("/api/reportSettings/reportType");
 	}
 
 	@Test
 	public void testGetReportPeriod() throws Exception {
-		_testJsonGet("/api/reportSettings/reportPeriod");
+		_testGetJson("/api/reportSettings/reportPeriod");
 	}
 
 	@Test
 	public void testGetReportSheduleType() throws Exception {
-		_testJsonGet("/api/reportSettings/reportSheduleType");
+		_testGetJson("/api/reportSettings/reportSheduleType");
 	}
 
 	@Test
 	public void testGetReportActionType() throws Exception {
-		_testJsonGet("/api/reportSettings/reportActionType");
+		_testGetJson("/api/reportSettings/reportActionType");
 	}
 
 	

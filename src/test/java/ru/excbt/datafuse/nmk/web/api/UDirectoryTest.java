@@ -40,13 +40,13 @@ public class UDirectoryTest extends AnyControllerTest {
 
 	@Test
 	public void testDirectoryGetAll() throws Exception {
-		_testJsonGet(String.format(DIRECTORY_URL_API));
+		_testGetJson(String.format(DIRECTORY_URL_API));
 	}
 
 	@Test
 	public void testParamsGetOne() throws Exception {
 		String urlStr = String.format(DIRECTORY_URL_API + "/%d", TEST_DIRECTORY_ID);
-		_testJsonGet(urlStr);
+		_testGetJson(urlStr);
 	}
 
 	@Test
@@ -99,7 +99,7 @@ public class UDirectoryTest extends AnyControllerTest {
 
 		String urlStrDelete = String.format(DIRECTORY_URL_API + "/%d", createdId);
 
-		_testJsonDelete(urlStrDelete);
+		_testDeleteJson(urlStrDelete);
 
 	}
 

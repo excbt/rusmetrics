@@ -202,7 +202,8 @@ public class ReportTemplateService implements SecuredRoles {
 	/**
 	 * 
 	 * @param reportType
-	 * @param currentDate
+	 * @param isActive
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -211,6 +212,21 @@ public class ReportTemplateService implements SecuredRoles {
 
 		List<ReportTemplate> result = reportTemplateRepository.selectSubscriberTemplates(reportType.getKeyname(),
 				isActive, subscriberId);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportType
+	 * @param isActive
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportTemplate> selectCommonReportTemplates(ReportTypeKey reportTypeKey, boolean isActive) {
+
+		List<ReportTemplate> result = reportTemplateRepository.selectCommonTemplates(reportTypeKey.getKeyname(),
+				isActive);
 
 		return result;
 	}
