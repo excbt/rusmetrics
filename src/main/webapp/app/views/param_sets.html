@@ -63,56 +63,6 @@
             <div role="tabpanel" class="tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id="active_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
                   <!-- Навигационная полоса по категориям отчетов-->
-<!--
-                <ul class="nav nav-tabs nav-justified marginBottom5" role="tablist">
-                    <li id="a_teplo_sys" role="presentation" class="active">
-                        <a 
-                           class="nmc-main-tab-button" 
-                           href="" 
-                           aria-controls="teplo_reports" 
-                           data-target="#teplo_reports" 
-                           role="tab" 
-                           data-toggle="tab"
-                           ng-mouseover="setActiveTab('a_teplo_sys')"> 
-                            Теплосистемные 
-                        </a>
-                    </li>
-                    <li id="a_electro_sys" role="presentation">
-                        <a 
-                           class="nmc-main-tab-button" 
-                           href="" 
-                           aria-controls="electro_reports" 
-                           role="tab" 
-                           data-target="#electro_reports" 
-                           data-toggle="tab"
-                           ng-mouseover="setActiveTab('a_electro_sys')"> 
-                            Электрические 
-                        </a>
-                    </li>
-                    <li id="a_gas_sys" role="presentation">
-                        <a 
-                           class="nmc-main-tab-button" 
-                           href="" 
-                           aria-controls="gas_reports" 
-                           data-target="#gas_reports" 
-                           role="tab" 
-                           data-toggle="tab"
-                           ng-mouseover="setActiveTab('a_gas_sys')"> 
-                            Газовые 
-                        </a>
-                    </li>            
-                </ul>
--->
-<!--
-                <div class="tab-content">
-                    <div role="tabpanel" 
-                         class="tab-pane fade in active nmc-report-settings-main-div" 
-                         id="teplo_reports">
--->
-<!--
-                    </div>
-                </div>
--->
                 <div class="container-fluid" ng-repeat="category in categories">
                     <div class="row well padding5 marginBottom5">
                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
@@ -138,14 +88,24 @@
 
                                         <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
 
-                                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
+                                            <i title="Скрыть / Показать" 
+                                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);">
+                                            </i>
 
                                         </div>
                                         <div class="col-xs-5 col-md-5">
                                             <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
-                                             <button ng-disabled="isROfield()" title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addParamSet(object)" data-target="#main_properties" data-toggle="tab">Добавить</button>
+                                            <button ng-disabled="isROfield()" 
+                                                     title="Добавить" 
+                                                     class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" 
+                                                     ng-click="addParamSet(object)" 
+                                                     data-target="#main_properties" 
+                                                     data-toggle="tab">Добавить
+                                            </button>
                                         </div>
                                         <div class="col-xs-4 col-md-4">
                                             
@@ -156,13 +116,16 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" 
+                                       class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" 
+                                       ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
     <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
                                             <th></th>
-                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" 
+                                                ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
                                             </th>
                                             <th class="nmc-td-for-button"></th>
@@ -172,18 +135,36 @@
                                         </tr>
                                     </thead>
 
-                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="getIndicators(oldObject)">
+                                     <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" 
+                                         ng-click="" 
+                                         ng-dblclick="getIndicators(oldObject)">
 
                                          <td class="nmc-td-for-buttons">
-                                             <i title="Редактировать" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
-                                                           
-                                            <i ng-disabled="isROfield()" title="В архив" class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#moveToArchiveModal" data-toggle="modal"></i>
+                                             <i title="Редактировать" 
+                                                class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                                                ng-click="editParamSet(object,oldObject);" 
+                                                data-target="#main_properties" 
+                                                data-toggle="tab">
+                                             </i>                                                           
+                                            <i ng-disabled="isROfield()" 
+                                               title="В архив" 
+                                               class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" 
+                                               ng-click="selectedItem(object, oldObject)" 
+                                               data-target="#moveToArchiveModal" 
+                                               data-toggle="modal">
+                                             </i>
                                          </td>
                                          <td class="nmc-text-align-center">
-                                             <span ng-show="oldObject.allRequiredParamsPassed"><i title="Корректно заполненн" class="glyphicon glyphicon-thumbs-up"></i></span>
+                                             <span ng-show="oldObject.allRequiredParamsPassed">
+                                                 <i title="Корректно заполненн" 
+                                                    class="glyphicon glyphicon-thumbs-up">
+                                                 </i>
+                                             </span>
                                          </td>
                                          <td >
-                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span></span>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} 
+                                                 <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                             </span>
                                          </td>
                                          <td>
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
@@ -192,21 +173,24 @@
                                              <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
                                          </td>
                                          <td>
-                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">
+                                                 {{oldObject.outputFileType || "не задан"}}
+                                             </span>
                                          </td>
                                          <td class="nmc-text-align-center">
-                                             <span ng-show="oldObject.outputFileType=='ZIP'||oldObject.outputFileZipped"><i title="Архивировать" class="fa fa-cube"></i></span>
+                                             <span ng-show="oldObject.outputFileType=='ZIP'||oldObject.outputFileZipped">
+                                                 <i title="Архивировать" class="fa fa-cube">
+                                                 </i>
+                                             </span>
                                          </td>
                                          <td>
-                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeStartDate | date:'dd.MM.yyyy'}}</span>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">
+                                                 {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
+                                             </span>
                                          </td>
-
                                      </tr>
                                     </table>         
-
                                 </tr>
-
-
                             </table>  
 
                     </td>     
@@ -229,10 +213,22 @@
 <!--            Архивные шаблоны-->
              <div role="tabpanel" class="tab-pane fade nmc-report-settings-main-div" id="arhive_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
+                                 <div class="container-fluid" ng-repeat="category in categories">
+                    <div class="row well padding5 marginBottom5">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
+                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class="col-xs-11 col-md-11">
+                            <label>{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show="category.reportTypesViewFlag" class="marginLeft15">
                 <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
@@ -307,7 +303,9 @@
 
                         </td>
                     </tr>
-                </table>            
+                </table>
+                </div> <!-- reportTypeViewFlag -->
+            </div> <!-- ng-repeat -->
 <!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table Archive               -->                 
             </div>
             
@@ -516,7 +514,8 @@
 
                                     <tr>
                                         <td class="col-sm-3">
-                                            <label for="inputType" class="nmc-form-label">Шаблон отчета</label>
+                                            <label for="inputType" 
+                                                   class="nmc-form-label">Шаблон отчета</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" 
@@ -534,7 +533,8 @@
                                             <label for="inputName" class="nmc-form-label">Наименование</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
-                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (!currentObject.name || currentObject.name == '')}">
+                                            <div class="form-group noMarginBottom" 
+                                                 ng-class="{'has-error': (!currentObject.name || currentObject.name == '')}">
                                                 <input class="form-control nmc-text-input-form" 
                                                    id="inputName" 
                                                    type=text 
@@ -545,7 +545,8 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><label for="inputDescription" class="nmc-form-label">Описание</label>
+                                        <td><label for="inputDescription" 
+                                                   class="nmc-form-label">Описание</label>
                                         </td>
                                         <td class="nmc-text-align-left">
                                             <textarea class="form-control nmc-textarea-form" 
@@ -558,7 +559,8 @@
                                     </tr>
                                     <tr>
                                         <td class="col-sm-3">
-                                            <label for="inputPeriod" class="nmc-form-label">Период</label>
+                                            <label for="inputPeriod" 
+                                                   class="nmc-form-label">Период</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left">
                                             <div class="form-group noMarginBottom" 
@@ -692,7 +694,7 @@
                                     <tr>
                                         <td colspan="2" class="col-sm-3">
                                             <input type=checkbox 
-                                                   ng-model="currentObject.isObjectContextMenu" 
+                                                   ng-model="currentObject.isContextLaunch" 
                                                    class="nmc-checkbox-form" >Разрешить вызов из меню объекта.
                                         </td>
                                     </tr> 
@@ -875,7 +877,10 @@
                                             <td>
                                                 {{object.fullName}}
                                             </td>
-                                            <td><button ng-disabled="isDisabled()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+                                            <td><button ng-disabled="isDisabled()" 
+                                                        class="btn btn-xs nmc-remove-button" 
+                                                        ng-click="removeSelectedObject(object)">
+                                                </button>
                                             </td>
                                         </tr>
                                     </table>
@@ -956,13 +961,13 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="col-xs-offset-6 col-md-3">
+						<div class="col-xs-offset-6 col-xs-3 col-md-3">
 							<input ng-disabled="isDisabled()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
 								ng-click="moveToArchive(currentObject);"
 								value="Переместить" />
 						</div>
 
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+						<div class="pull-right col-xs-offset-2 col-xs-3 col-md-3 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
 								ng-click="exit('#moveToArchive');">
 								Отменить
@@ -978,7 +983,12 @@
 		</span>
 	</div>
 </div>
-
+<div nmc-view-message-for-user 
+     message-for-user="{{messageForUser}}" 
+     btn-click="saveParamset(currentObject)"
+     btn-caption="Продолжить">
+</div>
+<!--
 <div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="messageForUserLabel" tabindex="-1">
 
@@ -986,7 +996,7 @@
 
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <button type="button" class="close marginRight5 nmc-close-button" ng-click="alert('This is SPRAVKA!!!111')"><span aria-hidden="true">?</span></button>
+            <button type="button" class="close marginRight5 nmc-close-button"><span aria-hidden="true">?</span></button>
 			<h3 id="messageForUserLabel" class="nmc-h3">
 				Внимание! 
 			</h3>
@@ -994,7 +1004,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
 			<form name="moveForm" novalidate>
                 <pre class="nmc-textfield">
-                    {{messageForUser}}  
+                    {{'\n'+messageForUser}}  
                 </pre>
 			</form>
 		</div>
@@ -1003,10 +1013,13 @@
 
 					<div class="row">
 						<div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="isROfield()" type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+							<input ng-disabled="isROfield()" 
+                                   type="submit" 
+                                   class="btn btn-xs btn-primary btn-block nmc-ok-button"
 								ng-click="saveParamset(currentObject);"
 								value="Ок" 
-                                data-target="#main_properties" data-toggle="tab"    
+                                data-target="#main_properties" 
+                                   data-toggle="tab"    
                                    />
 						</div>
 
@@ -1025,4 +1038,4 @@
 			ng-show="errorIllegalAccess"> Request illegal access
 		</span>
 	</div>
-</div>
+</div>-->
