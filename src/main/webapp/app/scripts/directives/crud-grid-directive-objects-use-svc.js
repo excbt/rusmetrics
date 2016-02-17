@@ -17,8 +17,8 @@ angular.module('portalNMC')
         	//scope.crudTableName = scope.$eval($attrs.table);  
         	//console.log(scope.crudTableName);
         },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc) {
                 
 console.log("Objects directive.");
 //var timeDirStart = (new Date()).getTime();
@@ -81,6 +81,9 @@ console.log("Objects directive.");
                 //service permission settings
                 $scope.objectCtrlSettings.mapAccess = false;
                 $scope.objectCtrlSettings.mapCtxId = "object_map_2nd_menu_item";
+                
+                //report context launch setting
+                $scope.objectCtrlSettings.reportCountList = 6;//border report count: if the reports is more than this border that view two-level menu, else - one-level 
 
 //                $scope.objectCtrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
 //                $scope.objectCtrlSettings.mapAccess = mainSvc.checkContext($scope.objectCtrlSettings.mapCtxId);
@@ -663,39 +666,38 @@ console.log("Objects directive.");
                     });
                 };
                 
-                
-                $scope.exampleReportType = "electric_readings";
+                // ***************************************************************************************
+                //                          **  Работа с отчетами 
+                // ***************************************************************************************
+                //Получить категории
+                $scope.data.reportCategories = reportSvc.getCategories();
+                //получить доступные варианты отчетов
+                $scope.getReports = function(){
+                    reportSvc.loadReportsContextLaunch().then(successGetReports, errorCallback);
+                };
+                //Если вариантов отчетов больше $scope.objectCtrlSettings.reportCountList, то распределить варианты отчетов по категориям
                 var successGetReports = function(resp){
-                    
+                    $scope.data.reports = angular.copy(resp.data);
+                    if ($scope.data.reports.length > $scope.objectCtrlSettings.reportCountList){
+                        $scope.data.reportEntities = angular.copy($scope.data.reportCategories);
+                        $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
+                        $scope.data.reports.forEach(function(rep){
+                            for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){               
+                                if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){                                    
+                                    $scope.data.reportEntities[categoryCounter].reports.push(rep);
+                                    break;
+                                };
+                            };
+                        });
+                    }else{
+                        $scope.data.reportEntities = $scope.data.reports;
+                    };                    
                 };
-                //report types
-                $scope.getReportTypes = function(obj){
-                    var table = "../api/reportSettings/reportType";
-                    crudGridDataFactory(table).query(function(data){
-                        obj.reportTypes = data;        
-                        $scope.getActive(obj.reportTypes);
-                    });
-                };
+                $scope.getReports();
                 
-                $scope.getActive = function(reportTypes){
-                    if ((reportTypes == []) || (typeof reportTypes.suffix == 'undefined')){return;};
-                    for (var i=0; i<reportTypes.length; i++){
-                        $scope.getReports(reportTypes[i]);
-                    };
-                };
-
-                $scope.getReports = function(rtype){
-                    var reportUrl = "../api/reportParamset";
-                    $http.get(reportUrl+rtype.suffix)
-                        .then(function(resp){
-                        rtype.reports = resp.data;                       
-                    }, 
-                              errorCallback);
-                };
-                
-                $scope.reportCreate = function(type, paramset){
+                $scope.reportCreate = function(paramset){
                     //run report
-                    var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
+                    var url = "../api/reportService" + paramset.reportTemplate.reportType.suffix + "/" + paramset.id + "/download";
                     $http.get(url, {responseType: 'arraybuffer'})
                         .then(function(response) {        
                             var fileName = response.headers()['content-disposition'];           
@@ -717,6 +719,9 @@ console.log("Objects directive.");
                         }, errorCallback);
                           
                 };
+                // *******************************************************************************************
+                //          конец работе с отчетами
+                // *******************************************************************************************
 
                 // Прорисовываем эталонный интервал в таблице
                 function viewRefRangeInTable(zpoint){

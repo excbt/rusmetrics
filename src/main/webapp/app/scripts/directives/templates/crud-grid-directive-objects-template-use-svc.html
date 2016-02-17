@@ -209,25 +209,35 @@
                                        data-toggle="dropdown" 
                                        aria-haspopup="true" 
                                        aria-expanded="false"  
-                                       ng-mouseover="getReportTypes(object)">
+                                       >
                                         Отчеты
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="menu-item dropdown dropdown-submenu" ng-repeat="reportType in object.reportTypes">
-<!--                                            ng-if="report.allRequiredParamsPassed"-->
+                                        <li class="menu-item dropdown dropdown-submenu" ng-repeat="reportEntity in data.reportEntities">
+<!--                                            ng-if="report.allRequiredParamsPassed"-->                                            
                                             <a href=""
                                                class="" 
                                                data-toggle="dropdown" 
                                                aria-haspopup="true" 
                                                aria-expanded="false"
-                                               ng-mouseover="getReports(reportType)">
-                                                {{reportType.name}}
+                                               >
+                                                <i ng-if="!reportEntity.reports"
+                                                    class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
+                                                
+                                                    ng-class="{'nmc-button-in-table-run-green':reportEntity.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!reportEntity.allRequiredParamsPassed}">
+                                                </i>
+                                                {{reportEntity.caption || reportEntity.name || 'Без названия'}}
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li ng-repeat="report in reportType.reports">
-                                                    <a ng-if="report.allRequiredParamsPassed"
-                                                       ng-click="reportCreate(reportType, report)">
-                                                        {{report.name}}
+                                            <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" class="dropdown-menu">
+                                                <li ng-repeat="report in reportEntity.reports">
+                                                    
+                                                    <a
+                                                       class="">
+                                                        <i  class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
+                                                           ng-class="{'nmc-button-in-table-run-green':report.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!report.allRequiredParamsPassed}"
+                                                           ng-click="createReport(report)">
+                                                        </i>
+                                                        {{report.name || 'Без названия'}}
                                                     </a>
                                                 </li>                                                
                                             </ul>

@@ -5,7 +5,8 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     //url к данным
     var reportTypesUrl = "../api/reportSettings/reportType";
     var reportPeriodsUrl = "../api/reportSettings/reportPeriod";
-    var reportsBaseUrl = "../api/reportParamset"; 
+    var reportsBaseUrl = "../api/reportParamset";
+    var reportsContextLaunchUrl = reportsBaseUrl + "/menu/contextLaunch";
     //переменные сервиса
     
     var dateFormat = "DD.MM.YYYY"; //user date format
@@ -33,7 +34,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             name: "ANALITIC",
             caption: "Аналитические",
             prefix: "А",
-            reportTypes: []
+            reportTypes: []            
         },
         {
             name: "OPERATE",
@@ -126,6 +127,12 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
                 getParamsets(reportsBaseUrl + mode + reportTypes[i].suffix, reportTypes[i]);
             };
         };
+    };
+    
+    // ** Загрузка вариантов отчетов для контекстного меню объектов
+    var loadReportsContextLaunch = function(){
+        var url = reportsContextLaunchUrl;
+        return $http.get(url);
     };
         
     //Периодическое обновление отчетов
@@ -289,7 +296,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         getReportPeriods,
         getReportPeriodsIsLoaded,
         getReportTypes,
-        getReportTypesIsLoaded
-        
+        getReportTypesIsLoaded,
+        loadReportsContextLaunch
     }
 }]);
