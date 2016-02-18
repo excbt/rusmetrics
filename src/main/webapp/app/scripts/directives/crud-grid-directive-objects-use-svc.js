@@ -21,26 +21,6 @@ angular.module('portalNMC')
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc) {
                 
 console.log("Objects directive.");
-//var timeDirStart = (new Date()).getTime();
-                
-//                var elem = document.getElementById("divWithObjectListTable");//$("#divWithObjectListTable");
-//                elem.scrollTop = elem.scrollHeight;
-//                elem.focus();
-//console.log(elem);                
-//                for(var i in elem){
-//                    if( i.substr( 0, 2 ) == "on" )
-//                        elem[i] = function(event){
-//                            if (event.type.indexOf("mouse") == -1)
-//                                console.log(event);
-//                        };
-//                        console.log(i+", ");
-//	                   document.write( i+"<br>" );
-//
-//                };
-//                
-//                elem.onfocus = function(){
-//console.log("divWithObjectListTable focused");                    
-//                };
                 
                     //messages for user
                 $scope.messages = {};
@@ -51,7 +31,7 @@ console.log("Objects directive.");
                 $scope.messages.markAllOn = "Выбрать все";
                 $scope.messages.markAllOff = "Отменить все";
                 
-                    //monitor settings
+                    //object settings
                 $scope.objectCtrlSettings = {};
 //                $scope.monitorSettings.refreshPeriod = monitorSvc.monitorSvcSettings.refreshPeriod;//"180";
 //                $scope.monitorSettings.createRoundDiagram = false;
@@ -82,6 +62,8 @@ console.log("Objects directive.");
                 $scope.objectCtrlSettings.mapAccess = false;
                 $scope.objectCtrlSettings.mapCtxId = "object_map_2nd_menu_item";
                 
+                        //html- с индикатором загрузки страницы
+                $scope.objectCtrlSettings.htmlLoading = mainSvc.getHtmlLoading();
                 //report context launch setting
                 $scope.objectCtrlSettings.reportCountList = 6;//border report count: if the reports is more than this border that view two-level menu, else - one-level 
 
@@ -392,9 +374,10 @@ console.log("Objects directive.");
                     $scope.orderBy = { field: field, asc: asc };
                 };
               
-                $scope.selectedItem = function (item) {
+                $scope.selectedObjectBy = function (item) {
 			        var curObject = angular.copy(item);
 			        $scope.currentObject = curObject;
+                    objectSvc.setCurrentObject($scope.currentObject);
 			    };
                 
                 $scope.selectedObject = function(objId){
@@ -669,60 +652,143 @@ console.log("Objects directive.");
                 // ***************************************************************************************
                 //                          **  Работа с отчетами 
                 // ***************************************************************************************
-                //Получить категории
-                $scope.data.reportCategories = reportSvc.getCategories();
-                //получить доступные варианты отчетов
-                $scope.getReports = function(){
-                    reportSvc.loadReportsContextLaunch().then(successGetReports, errorCallback);
-                };
-                //Если вариантов отчетов больше $scope.objectCtrlSettings.reportCountList, то распределить варианты отчетов по категориям
-                var successGetReports = function(resp){
-                    $scope.data.reports = angular.copy(resp.data);
-                    if ($scope.data.reports.length > $scope.objectCtrlSettings.reportCountList){
-                        $scope.data.reportEntities = angular.copy($scope.data.reportCategories);
-                        $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
-                        $scope.data.reports.forEach(function(rep){
-                            for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){               
-                                if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){                                    
-                                    $scope.data.reportEntities[categoryCounter].reports.push(rep);
-                                    break;
-                                };
-                            };
-                        });
-                    }else{
-                        $scope.data.reportEntities = $scope.data.reports;
-                    };                    
-                };
-                $scope.getReports();
-                
-                $scope.reportCreate = function(paramset){
-console.log(paramset);                    
-                    if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
-                        return "Entity is category";//exit function
-                    };
-                    //run report
-                    var url = "../api/reportService" + paramset.reportTemplate.reportType.suffix + "/" + paramset.id + "/download";
-                    $http.get(url, {responseType: 'arraybuffer'})
-                        .then(function(response) {        
-                            var fileName = response.headers()['content-disposition'];           
-                            fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
-                            var file = new Blob([response.data], { type: response.headers()['content-type'] });          
-                            if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
-                                fileName += ".xlsx";
-                            }else 
-                            if (file.type.indexOf('application/zip') > -1){
-                                fileName += ".zip";
-                            } else
-                            if (file.type.indexOf('application/pdf') > -1){
-                                fileName += ".pdf";
-                            } else
-                            if (file.type.indexOf('text/html') > -1){
-                                fileName += ".html";
-                            };            
-                            saveAs(file, fileName);
-                        }, errorCallback);
-                          
-                };
+//                //Получить категории
+//                $scope.data.reportCategories = reportSvc.getCategories();
+//                //получить доступные варианты отчетов
+//                $scope.getReports = function(){
+//                    reportSvc.loadReportsContextLaunch().then(successGetReports, errorCallback);
+//                };
+//                //Если вариантов отчетов больше $scope.objectCtrlSettings.reportCountList, то распределить варианты отчетов по категориям
+//                var successGetReports = function(resp){
+//                    $scope.data.reports = angular.copy(resp.data);
+//                    if ($scope.data.reports.length > $scope.objectCtrlSettings.reportCountList){
+//                        $scope.data.reportEntities = angular.copy($scope.data.reportCategories);
+//                        $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
+//                        $scope.data.reports.forEach(function(rep){
+//                            for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){               
+//                                if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){                                    
+//                                    $scope.data.reportEntities[categoryCounter].reports.push(rep);
+//                                    break;
+//                                };
+//                            };
+//                        });
+//                    }else{
+//                        $scope.data.reportEntities = $scope.data.reports;
+//                    };                    
+//                };
+//                $scope.getReports();
+//                
+//                //check fields before save
+//                $scope.checkRequiredFieldsOnSave = function(){
+//                    $scope.currentObject.selectedObjects = $scope.selectedObjects;
+//                    $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+//                    var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
+//                    $scope.messageForUser = checkRes.message;
+//                    return checkRes.flag;
+//                };
+//                
+//                $scope.checkAndRunParamset = function(type, object, previewFlag){
+//                    var flag = $scope.checkRequiredFieldsOnSave();
+//                    if (flag === false){
+//                        $('#messageForUserModal').modal();
+//                    }else{
+//                        var previewWin = null;
+//                        //индикация загрузки страницы предпросмотра
+//                        var htmlText = $scope.objectCtrlSettings.htmlLoading;
+//                        var previewFile = new Blob([htmlText], {type : 'text/html'});//new Blob(["temp"], "temp");//null;
+//                        if(previewFlag){
+//                            //window.URL= window.URL || window.webkitURL;
+//                            var url = window.URL.createObjectURL(previewFile);//формируем url на сформированный файл
+//                            previewWin = window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
+//                        };
+//                        $scope.createReportWithParams(type, object, previewFlag, previewWin);
+//                    };
+//                };
+//                
+//                //Формируем отчет с заданными параметрами
+//                $scope.createReportWithParams = function(type // тип отчета
+//                                                        , paramset //вариант отчета
+//                                                        , previewFlag //флаг - формировать отчет или сделать предпросмотр
+//                                                        , previewWin //ссылка на превью окно
+//                                                        ){
+//                    var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
+//                    //формируем массив ИД объектов, для которых формируется отчет.          
+//                    var objectIds = $scope.selectedObjects.map(function(element){          
+//                        var result = element.id;
+//                        return result;
+//                    });      
+//                     //set the list of the special params - устанавливаем специальные параметры отчета
+//                    tmpParamset.paramSpecialList = $scope.currentParamSpecialList;
+//                    //Если вариант отчета создается за период, задаем начало и конец периода
+//                    if (($scope.currentSign == null) || (typeof $scope.currentSign == 'undefined')){
+//                        var startDate = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+//                        tmpParamset.paramsetStartDate = (startDate!=null)?(new Date(startDate)) : null;
+//                        var endDate = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+//                        tmpParamset.paramsetEndDate = (endDate!=null)?(new Date(endDate)) : null;
+//                    }else{
+//                        tmpParamset.paramsetStartDate = null;
+//                        tmpParamset.paramsetEndDate = null;
+//                    };
+//
+//            //console.log(paramset);        
+//                    var fileExt = "";
+//                    if (previewFlag){//проверяем флаг предпросмотра,
+//                        //если флаг установлен, то
+//                        tmpParamset.outputFileType = "HTML";//ставим формат выходного файла - HTML
+//                        tmpParamset.outputFileZipped = false;//ставим флаг -не архивировать полученный отчет
+//                        fileExt = "html";
+//                    }else{
+//                        fileExt = tmpParamset.outputFileZipped ? "zip" : tmpParamset.outputFileType.toLowerCase();
+//                    }
+//                    var url = "../api/reportService" + type.suffix + "/" + tmpParamset.id + "/download";  //формируем url адрес запроса
+//                    var responseType = "arraybuffer";//указываем тип ответа от сервера
+//                    //делаем запрос на сервер
+//                    var clearContObjectIds = false; //the clear selected paramset objects flag           
+//                        if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
+//                            clearContObjectIds = true;
+//                    };
+//                    $http({
+//                        url: url, 
+//                        method: "PUT",
+//                        params: { contObjectIds: objectIds, clearContObjectIds: clearContObjectIds},
+//                        data: tmpParamset,
+//                        responseType: responseType
+//                    })
+//                    .then(function(response) {
+//                       //обрабатываем полученный результат запроса
+//                        var fileName = response.headers()['content-disposition']; //читаем кусок заголовка, в котором пришло название файла
+//                        fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);//вытаскиваем непосредственно название файла.
+//                        var file = new Blob([response.data], { type: response.headers()['content-type']/* тип файла тоже приходит в заголовке ответа от сервера*/ });//формируем файл из полученного массива байт        
+//                        if (previewFlag){              
+//                            //если нажат предпросмотр, то
+//                            var url = window.URL.createObjectURL(file);//формируем url на сформированный файл
+//                            window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
+//                        }else{  
+//                            //create file extension
+//                            if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
+//                                fileName += ".xlsx";
+//                            }else 
+//                            if (file.type.indexOf('application/zip') > -1){
+//                                fileName += ".zip";
+//                            } else
+//                            if (file.type.indexOf('application/pdf') > -1){
+//                                fileName += ".pdf";
+//                            } else
+//                            if (file.type.indexOf('text/html') > -1){
+//                                fileName += ".html";
+//                            };                 
+//                            saveAs(file, fileName);//если нужен отчет, то сохраняем файл на диск клиента
+//                        };
+//                    }, errorCallback)
+//                };
+//                
+//                $scope.reportCreate = function(paramset){
+//                    if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+//                        return "Entity is category";//exit function
+//                    };
+//                    //run report
+//                    $scope.checkAndRunParamset(paramset.reportTemplate.reportType, paramset, false);                          
+//                };
                 // *******************************************************************************************
                 //          конец работе с отчетами
                 // *******************************************************************************************

@@ -42,10 +42,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
     
     $scope.currentObject = {};
-    $scope.objects = [];
-    $scope.columns = [
-        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
-    ];
+    $scope.reportObjects = [];
+//    $scope.columns = [
+//        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
+//    ];
     $scope.paramsetColumns = [
         {"name":"name", "header":"Наименование", "class":"col-xs-3 col-md-3"}
         ,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}
@@ -117,7 +117,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 
                 newObjects.push(newObject);
             };        
-            $scope.objects = newObjects;        
+            $scope.reportObjects = newObjects;        
             $scope.getActive();
         });
     };
@@ -186,9 +186,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
  //get templates   
     $scope.getActive = function(){
-        if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.objects.length; i++){
-            $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+        if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
+        for (var i=0; i<$scope.reportObjects.length; i++){
+            $scope.getParamsets($scope.crudTableName+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
 

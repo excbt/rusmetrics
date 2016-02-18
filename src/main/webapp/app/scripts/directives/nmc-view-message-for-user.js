@@ -7,7 +7,15 @@ angular.module('portalNMC')
         scope: {
             messageForUser: "@",
             btnClick: "&",
-            btnCaption: "@"
+            btnOkCaption: "@",
+            showOkButton: "@",
+            btnCancelCaption: "@",
+            showCancelButton: "@",
+        },
+        controller: function($scope){
+            $('#messageForUserModal').on('shown.bs.modal', function(){
+                console.log($scope.showOkButton);
+            });
         }
     }
 });

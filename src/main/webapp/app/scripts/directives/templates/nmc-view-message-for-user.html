@@ -34,23 +34,24 @@
 
 					<div class="row">
 						<div class="col-xs-offset-4 col-xs-5 col-md-5">
-							<input ng-disabled="isROfield()" 
+							<input ng-show="showOkButton=='true'"                                    
                                    type="submit" 
                                    class="btn btn-xs btn-primary btn-block nmc-ok-button"
                                    data-dismiss="modal" 
                                    data-target="#main_properties" 
                                    data-toggle="tab"
 								   ng-click="btnClick()"
-								   ng-value="btnCaption || 'Ок'" 
+								   ng-value="btnOkCaption || 'Ок'" 
                                    data-target="#main_properties" 
                                    data-toggle="tab"    
                                    />
 						</div>
 						<div class="pull-right col-xs-offset-2 col-xs-3 col-md-3 noPadding noMargin">
-							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" 
+							<button ng-show="showCancelButton=='true'"
+                                    class="btn btn-xs btn-default btn-block nmc-cancel-button" 
                                     data-dismiss="modal"
 								    ng-click="exit('#moveToArchive');">
-								Отменить
+								{{btnCancelCaption || 'Отменить'}}
 							</button>
 						</div>
 					</div>

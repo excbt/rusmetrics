@@ -10,18 +10,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.ctrlSettings.selectedAll = false;
 
         //html- с индикатором загрузки страницы
-    $scope.ctrlSettings.htmlLoading = '<head>' 
-                            + '<meta charset="utf-8">' 
-                            + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>'
-                            + '</head>'
-                            + '<body>' 
-                            + '<div  ng-show="loading" class="nmc-loading">'
-                            + '<i class="fa fa-spinner fa-spin"></i> Загрузка ... '
-                            + '</div>'
-                            + '</body>';
+    $scope.ctrlSettings.htmlLoading = mainSvc.getHtmlLoading();
     //report open modes
     $scope.ctrlSettings.openModes = {
-        "create":{ "name": "create"
+        "create":
+        { "name": "create",
+         "isContext": false
         }, 
         "edit":{ "name": "edit"
         }, 
@@ -42,10 +36,10 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
     
     $scope.currentObject = {};
-    $scope.objects = [];
-    $scope.columns = [
-        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
-    ];
+    $scope.reportObjects = [];
+//    $scope.columns = [
+//        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
+//    ];
     $scope.paramsetColumns = [
         {"name":"name", "header":"Наименование", "class":"col-xs-3 col-md-3"}
         ,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}
@@ -53,7 +47,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
     ];
     $scope.groupUrl = "../api/contGroup";
-    $scope.crudTableName = "../api/reportParamset"; 
+    $scope.paramsetsUrl = "../api/reportParamset"; 
     
         //Headers of modal window
     $scope.headers = {}
@@ -117,7 +111,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 
                 newObjects.push(newObject);
             };        
-            $scope.objects = newObjects;        
+            $scope.reportObjects = newObjects;        
             $scope.getActive();
         });
     };
@@ -186,18 +180,18 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
  //get templates   
     $scope.getActive = function(){
-        if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.objects.length; i++){
-            $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+        if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
+        for (var i=0; i<$scope.reportObjects.length; i++){
+            $scope.getParamsets($scope.paramsetsUrl+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
 
-    $scope.toggleShowGroupDetails = function(curObject){//switch option: current goup details     
+    $scope.toggleReportShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
 //console.log(curObject.paramsets);        
     };
     
-    $scope.selectedItem = function(parentItem, item){
+    $scope.selectedReport = function(parentItem, item){
         $scope.setCurrentReportType(parentItem);       
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
@@ -223,13 +217,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
                 previewWin = window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
             };
-            $scope.createReportWithParams(type, object, previewFlag, previewWin);
+            $scope.createReportWithParams(type, object, $scope.selectedObjects, previewFlag, previewWin);
         };
     };
     
     $scope.currentReportType = {};
     $scope.setCurrentReportType = function(object){
         $scope.currentReportType = object;
+console.log($scope.currentReportType);        
 //        $scope.currentReportType.reportType = object.reportType;
 //        $scope.currentReportType.reportTypeName=object.reportTypeName;
 //        $scope.currentReportType.suffix=object.suffix;
@@ -341,13 +336,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     
     
-    $scope.editParamSet =function(parentObject, object, mode){
+    $scope.editParamSet = function(parentObject, object, mode, isContext){
 //console.log(parentObject);        
 //console.log(object);
 //console.log(mode);        
         $scope.showMessageForUserModalExFlag = false;
 //        $scope.setCurrentReportType(parentObject);     
-        $scope.selectedItem(parentObject, object);
+        $scope.selectedReport(parentObject, object);
 //console.log($scope.currentReportType);        
         $scope.currentParamSpecialList = prepareParamSpecialList($scope.currentReportType, object);
 
@@ -372,7 +367,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //        $('#main_properties_tab').addClass("active");
 //        $('#set_of_objects_tab').removeClass("active");
 //        $('#createParamsetModal').modal();
-        $scope.getSelectedObjects(mode);
+        $scope.getSelectedObjects(mode, isContext);
     };
     
     //Account objects
@@ -381,7 +376,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.availableObjectGroups = [];
     
     $scope.getAvailableObjects = function(paramsetId){      
-        var table=$scope.crudTableName + "/" + paramsetId + "/contObject/available";        
+        var table=$scope.paramsetsUrl + "/" + paramsetId + "/contObject/available";        
         crudGridDataFactory(table).query(function(data){
 //console.log(data);            
             $scope.availableObjects = angular.copy(data);             
@@ -389,46 +384,35 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         });        
     };
 //    $scope.getAvailableObjects();
-    $scope.getSelectedObjects = function(mode){
-        var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
+    $scope.getSelectedObjects = function(mode, isContext){
+        var table = $scope.paramsetsUrl + "/" + $scope.currentObject.id + "/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            if (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)){
+                $scope.selectedObjects = [objectSvc.getCurrentObject()];
+            };      
             objectSvc.sortObjectsByFullName($scope.selectedObjects); 
 //console.log(mode);            
             switch (mode){
                 case $scope.ctrlSettings.openModes.edit :  activateMainPropertiesTab(); break;
-                case $scope.ctrlSettings.openModes.create :  
-                            var flag = $scope.checkRequiredFieldsOnSave();
-//                            $scope.currentReportType.paramsets.some(function(paramset){
-//                                if (paramset.id == $scope.currentObject.id){
-//                                    paramset.checkFlag = flag;
-//                                };
-//                            });
-                            if (flag===false){
-                               // activateMainPropertiesTab();
-                                $scope.showMessageForUserModalExFlag = true;
-                                $('#messageForUserModal').modal();
-                            }else{                                
-                                $scope.createReport($scope.currentReportType, $scope.currentObject);
-                            };
-                            break;    
+                case $scope.ctrlSettings.openModes.create :                                                           
+                    var flag = $scope.checkRequiredFieldsOnSave();
+                    if (flag === false){
+                        $scope.showMessageForUserModalExFlag = true;
+                        $('#messageForUserModal').modal();
+                    }else{                        
+                        $scope.createReport($scope.currentReportType, $scope.currentObject, isContext);
+                    };
+                    break;    
                  case $scope.ctrlSettings.openModes.preview :  
-                            var flag = $scope.checkRequiredFieldsOnSave();
-//                            $scope.ctrlSettings.currentReportPreviewEnabledFlag = flag;
-//                            $scope.currentReportType.paramsets.some(function(paramset){
-//                                if (paramset.id == $scope.currentObject.id){
-//                                    paramset.checkFlag = flag;
-//                                };
-//                            });
-                           // $scope.currentObject.previewFlag = true;
-                           // };
-                            break; 
+                    var flag = $scope.checkRequiredFieldsOnSave();
+                    break; 
             };
         });
     };
     
     $scope.getSelectedObjectsByParamset = function(type, paramset){
-        var table=$scope.crudTableName+"/"+paramset.id+"/contObject";
+        var table=$scope.paramsetsUrl+"/"+paramset.id+"/contObject";
         crudGridDataFactory(table).query(function(data){
             paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
@@ -988,32 +972,19 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //                "message": messageForUser};
 //    };
     
-    $scope.createReport = function(type, paramset){
-        //check report
-//        $scope.editParamSet(type, paramset, true);
-//        var flag = $scope.checkRequiredFieldsOnSave();
-//        if (flag===false){
-//           // activateMainPropertiesTab();
-//            $scope.showMessageForUserModalExFlag = true;
-//            $('#messageForUserModal').modal();
-//            return false;
-//        };
-        //????
+    $scope.createReport = function(type, paramset, isContext){
         //run report
-        var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
+        var url = "../api/reportService" + type.suffix + "/" + paramset.id;
+        if (!mainSvc.checkUndefinedNull(isContext) && (isContext == true) && !mainSvc.checkUndefinedNull(objectSvc.getCurrentObject())){
+            url += "/context" + "/" + objectSvc.getCurrentObject().id; 
+        }else{
+            url += "/download";
+        };
         $http.get(url, {responseType: 'arraybuffer'})
             .then(function(response) {        
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });          
-            //fix for linux
-//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-//                    fileName += ".xlsx";
-//                };
-            //fix for zip archives
-//                if (file.type.indexOf('application/zip') > -1){
-//                    fileName += ".zip";
-//                };
                 if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
                     fileName += ".xlsx";
                 }else 
@@ -1025,25 +996,15 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 } else
                 if (file.type.indexOf('text/html') > -1){
                     fileName += ".html";
-                };
-//console.log(fileName);  
-//console.log(response.headers()['content-type']);              
-//console.log(file);
-//console.log(file.type);            
-//return;              
+                };              
                 saveAs(file, fileName);
-            }, errorCallback /*function(e){
-                notificationFactory.errorInfo(e.statusText,e);
-                console.log(e);
-            }*/)
-            .catch(errorCallback /*function(e){
-                notificationFactory.errorInfo(e.statusText,e.data.description);
-                console.log(e);
-            }*/);    
+                $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
+            }, errorCallback)
+            .catch(errorCallback);    
     };
     
     $scope.previewReport = function(type, paramset){
-        $scope.selectedItem(type, paramset);
+        $scope.selectedReport(type, paramset);
         if (paramset.checkFlag){
             var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/preview";
             var prevWin = window.open("", "_blank");
@@ -1058,12 +1019,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     //Формируем отчет с заданными параметрами
     $scope.createReportWithParams = function(type // тип отчета
                                             , paramset //вариант отчета
+                                            , selectedObjects // массив объектов, для которых строится отчет
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             , previewWin //ссылка на превью окно
                                             ){
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
         //формируем массив ИД объектов, для которых формируется отчет.          
-        var objectIds = $scope.selectedObjects.map(function(element){          
+        var objectIds = selectedObjects.map(function(element){          
             var result = element.id;
             return result;
         });      
@@ -1118,9 +1080,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
                 //previewWin = window.URL.createObjectURL(file);
             }else{  
-//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-//                    fileName += ".xlsx";
-//                };
                 //create file extension
                 if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
                     fileName += ".xlsx";
@@ -1133,21 +1092,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 } else
                 if (file.type.indexOf('text/html') > -1){
                     fileName += ".html";
-                };
-//console.log(fileName);  
-//console.log(response.headers()['content-type']);              
-//console.log(file);                    
+                };                   
                 saveAs(file, fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
-        }, errorCallback/*function(e){
-            notificationFactory.errorInfo(e.statusText,e);
-            console.log(e);
-        }*/)
-        .catch(errorCallback/*function(e){
-            //если при запросе произошла ошибка, то выводим ее на экран во всплывающем окне
-            notificationFactory.errorInfo(e.statusText,e);
-            console.log(e);
-        }*/);
+            $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
+        }, errorCallback)
+        .catch(errorCallback);
     };
 
         //work with tabs
@@ -1166,4 +1116,44 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.selectedCategory = function(cat){
         $scope.curCategory = angular.copy(cat);
     };
+    
+    // *************************************************************************************
+    // Отчеты для контекстного меню объект
+    //**************************************************************************************
+    //report context launch setting
+    $scope.ctrlSettings.reportCountList = 6;//border report count: if the reports is more than this border that view two-level menu, else - one-level
+    $scope.data = {};
+    //получить доступные варианты отчетов
+    $scope.getContextReports = function(){
+        reportSvc.loadReportsContextLaunch().then(successGetContextReports, errorCallback);
+    };
+    //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
+    var successGetContextReports = function(resp){
+        var reports = angular.copy(resp.data);
+        if (reports.length > $scope.ctrlSettings.reportCountList){
+            $scope.data.reportEntities = angular.copy($scope.categories);
+            $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
+            reports.forEach(function(rep){
+                for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){               
+                    if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){
+                        $scope.data.reportEntities[categoryCounter].reports.push(rep);
+                        break;
+                    };
+                };
+            });
+        }else{
+            $scope.data.reportEntities = reports;
+        };                    
+    };
+    $scope.getContextReports();
+    $scope.createContextReport = function(paramset){
+        if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+            return "Entity is category";//exit function
+        };
+        //run report
+        $scope.ctrlSettings.openModes.create.isContext = true;//set context flag
+        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);                
+        $scope.editParamSet(paramset.reportTemplate.reportType, paramset, $scope.ctrlSettings.openModes.create, true)
+    };
+    // ************************************************************* контекстные отчеты ****************
 }]);
