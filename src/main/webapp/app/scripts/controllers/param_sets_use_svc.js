@@ -51,7 +51,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
     $scope.objects = [];
     $scope.availableObjectGroups = [];
     
-    $scope.categories = reportSvc.getCategories();
+    $scope.categories = reportSvc.getReportCategories();
     
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();

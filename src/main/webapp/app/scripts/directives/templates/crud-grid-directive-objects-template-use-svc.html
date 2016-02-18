@@ -167,36 +167,14 @@
                                 </i>
                               <ul class="dropdown-menu">
                                 <li class="menu-item" role="presentation">
-                                    <img class="marginLeft4" 
-                                         height="12" 
-                                         width="12" 
-                                         ng-src="{{object.imgsrc}}" 
-                                         ng-attr-title="{{object.currentSettingModeTitle}}"/>
                                     <a href=""
-                                       class="nmc-menu-item-change-obj-mode"
+                                       class=""
                                        ng-click="selectedObject(object.id)" 
                                        data-target="#showObjOptionModal" 
                                        data-toggle="modal">
-                                        Свойства объекта
+                                        Свойства объекта                                        
                                     </a>
                                 </li>
-<!--
-                                <li class="menu-item" role="presentation">
-                                    <img class="marginLeft4" 
-                                         height="12" 
-                                         width="12" 
-                                         ng-src="{{object.imgsrc}}" 
-                                         ng-attr-title="{{object.currentSettingModeTitle}}"/>
-                                    <a href="" 
-                                       class="nmc-menu-item-change-obj-mode" 
-                                       data-toggle="dropdown" 
-                                       aria-haspopup="true" 
-                                       aria-expanded="false"  
-                                       ng-click="">
-                                        Изменить режим
-                                    </a>
-                                </li>
--->
                                 <li class="menu-item dropdown dropdown-submenu" role="presentation">
                                     <a href="" 
                                        class="" 
@@ -207,33 +185,38 @@
                                         Отчеты
                                     </a>
                                     <ul class="dropdown-menu">
-                                        <li class="menu-item dropdown dropdown-submenu" ng-repeat="reportEntity in data.reportEntities">
+                                        <li class="menu-item dropdown" 
+                                            ng-repeat="reportEntity in data.reportEntities" 
+                                            ng-class="{'dropdown-submenu': reportEntity.reports}">
 <!--                                            ng-if="report.allRequiredParamsPassed"-->                                            
                                             <a href=""
-                                               class="" 
+                                               class="paddingRight30" 
                                                data-toggle="dropdown" 
                                                aria-haspopup="true" 
-                                               aria-expanded="false"
-                                               ng-click="createContextReport(reportEntity)"
-                                               >
-                                                <i ng-if="!reportEntity.reports"
-                                                    class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
-                                                
-                                                    ng-class="{'nmc-button-in-table-run-green':reportEntity.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!reportEntity.allRequiredParamsPassed}">
+                                               aria-expanded="false"                                               
+                                               >                    
+                                                <span title="Предварительный просмотр отчета" ng-click="previewContextReport(reportEntity)">
+                                                    {{reportEntity.caption || reportEntity.name || 'Без названия'}}
+                                                </span>
+                                                <i title="Сформировать отчет" ng-if="!reportEntity.reports"
+                                                    class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
+                                                    ng-click="createContextReport(reportEntity)"
+                                                    ng-class="{'nmc-button-in-table-run-green': reportEntity.allRequiredParamsPassed, 'nmc-button-in-table-run-red': !reportEntity.allRequiredParamsPassed}">
                                                 </i>
-                                                {{reportEntity.caption || reportEntity.name || 'Без названия'}}
                                             </a>
                                             <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" class="dropdown-menu">
                                                 <li ng-repeat="report in reportEntity.reports">
-                                                    
                                                     <a
-                                                       class=""
-                                                       ng-click="createContextReport(report)">
-                                                        <i  class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" 
+                                                       class="paddingRight30"
+                                                       > 
+                                                        <span title="Предварительный просмотр отчета" ng-click="previewContextReport(report)">
+                                                            {{report.name || 'Без названия'}}
+                                                        </span>
+                                                        <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
+                                                           ng-click="createContextReport(report)"
                                                            ng-class="{'nmc-button-in-table-run-green':report.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!report.allRequiredParamsPassed}"
                                                            >
                                                         </i>
-                                                        {{report.name || 'Без названия'}}
                                                     </a>
                                                 </li>                                                
                                             </ul>

@@ -1217,6 +1217,12 @@ tr.nmc-inactive-price > td{
 /*    color:#D12619;*/
 }
 
+.nmc-button-in-context-run{
+    color:#646263;
+    float: right;
+    margin-right: -20px;
+}
+
 .nmc-button-in-table-run-green:hover{
     color: green;
 }
@@ -1240,6 +1246,11 @@ tr.nmc-inactive-price > td{
 .nmc-btn-toolbar-in-table{
     padding-left:5px !important;
     width:50px !important;
+}
+
+.nmc-btn-toolbar-in-paramset-table{
+    padding-left:0px !important;
+    width:30px !important;
 }
 
 /* панель для кнопок в столбце таблице - 3 кнопки*/
@@ -1712,6 +1723,10 @@ tr.nmc-inactive-price > td{
     margin : 0;
 }
 
+.noMarginI {
+    margin : 0 !important;
+}
+
 .noPadding {
     padding : 0;
 }
@@ -1743,6 +1758,9 @@ tr.nmc-inactive-price > td{
     padding-bottom: 40px;
 }
 
+.paddingRight30 {
+    padding-right: 30px !important;
+}
 
 .paddingTop10 {
     padding-top: 10px;
@@ -1948,7 +1966,8 @@ input[type="checkbox"] {
     border-color:transparent;
     border-style:solid;
     border-width:5px 0 5px 5px;
-    border-left-color:#cccccc;
+/*    border-left-color:#cccccc;*/
+    border-left-color:#646263;
     margin-top:5px;
     margin-right:-10px;
 }

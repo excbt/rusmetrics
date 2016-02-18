@@ -29,18 +29,20 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     };
     //Получение отчетов
         //категории отчетов
-    var categories = [
-        {
-            name: "ANALITIC",
-            caption: "Аналитические",
-            prefix: "А",
-            reportTypes: []            
-        },
+    var reportCategories = [
         {
             name: "OPERATE",
             caption: "Оперативные",
             prefix: "Э",
+            class: "active",
             reportTypes: []
+        },
+        {
+            name: "ANALITIC",
+            caption: "Аналитические",
+            prefix: "А",
+            
+            reportTypes: []            
         },
         {
             name: "SERVICE",
@@ -50,8 +52,39 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         }
     ];
     
-    var getCategories = function(){
-        return categories;
+    var resourceCategories = [
+        {
+            name: "ALL",
+            caption: "По всем энергоресурсам",
+            isDefault: true,
+            isAll: true
+        },
+        {
+            name: "ELECTRICITY",
+            caption: "Электричество"
+        },
+        {
+            name: "WATER",
+            caption: "Отопление, ГВС, ХВС"
+        }
+    ];
+    
+    var getResourceCategories = function(){
+        return resourceCategories;
+    };
+    var getDefaultResourceCategory = function(){
+        var defResCat = null;
+        resourceCategories.some(function(resCat){
+            if (resCat.isDefault == true){
+                defResCat = resCat;
+                return true;
+            };
+        });
+        return defResCat;
+    };
+    
+    var getReportCategories = function(){
+        return reportCategories;
     };
         //загрузка типов отчетов
     var reportTypes = [];
@@ -62,6 +95,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
         setReportTypesIsLoaded(false);
         crudGridDataFactory(reportTypesUrl).query(function(data){
             reportTypes = data;
+            reportCategories.forEach(function(cat){cat.reportTypes = []});//reset category reportType array
 //console.log(data);
             var newObjects = [];
             var newObject = {};
@@ -76,15 +110,16 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
                 newObject.reportCategory = data[i].reportCategory;
+                newObject.resourceCategory = data[i].resourceCategory;
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                 
-                for (var categoryCounter = 0; categoryCounter <  categories.length; categoryCounter++){                                          
-                    if (newObject.reportCategory.localeCompare(categories[categoryCounter].name) == 0){                        
+                for (var categoryCounter = 0; categoryCounter < reportCategories.length; categoryCounter++){                                          
+                    if (newObject.reportCategory.localeCompare(reportCategories[categoryCounter].name) == 0){                        
                         newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
-                        categories[categoryCounter].reportTypes.push(newObject);                                             
+                        reportCategories[categoryCounter].reportTypes.push(newObject);                                             
                         continue;
                     };
                 };
@@ -139,6 +174,22 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     ///???????
     
     //Проверка отчета при сохранении / перед запуском
+    var checkDateInterval = function(left, right){     
+        if (!mainSvc.checkStrForDate(left)){
+            return false;
+        };
+        if (!mainSvc.checkStrForDate(right)){
+            return false;
+        };
+        if ((left==null)|| (right==null)||(left=="")||(right=="")){console.log("1");return false;};
+        var startDate = mainSvc.strDateToUTC(left, dateFormat);
+        var sd = (startDate!=null)?(new Date(startDate)) : null;         
+        var endDate = mainSvc.strDateToUTC(right, dateFormat);
+        var ed = (endDate!=null)?(new Date(endDate)) : null;                
+//        if ((isNaN(startDate.getTime()))|| (isNaN(endDate.getTime()))){return false;};       
+        if ((sd==null)|| (ed==null)){return false;};               
+        return ed>=sd;
+    };
         //for the paramset
     var checkPSRequiredFields = function(paramset, currentSign){
         var result;
@@ -157,7 +208,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             var endDate = new Date(endDateMillisec);            
             intervalValidate_flag = (!isNaN(startDate.getTime())) 
                 && (!isNaN(endDate.getTime())) 
-                && $scope.checkDateInterval(paramset.psStartDateFormatted, paramset.psEndDateFormatted);
+                && checkDateInterval(paramset.psStartDateFormatted, paramset.psEndDateFormatted);
         };        
         result = !(((paramset.reportPeriodKey == null) 
                     || (paramset.reportTemplate.id == null)))
@@ -291,12 +342,14 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
     
     return {
         checkPSRequiredFieldsOnSave,
-        getCategories,
+        getDefaultResourceCategory,
         getParamsetsForTypes,
+        getReportCategories,
         getReportPeriods,
         getReportPeriodsIsLoaded,
         getReportTypes,
         getReportTypesIsLoaded,
+        getResourceCategories,
         loadReportsContextLaunch
     }
 }]);

@@ -24,15 +24,17 @@
                            role="tab" 
                            data-toggle="tab"
                            ng-click="selectedCategory(category)"> 
-                            {{category.name}} 
+                            {{category.caption}} 
                         </a>
                     </li>
                     <div class="col-xs-3 col-md-3">
-                        <select class="form-control nmc-input-data-energy-types nmc-select-form">
+                        <select class="form-control nmc-input-data-energy-types nmc-select-form" ng-model="currentResourceCategory" ng-options="resCategory as resCategory.caption for resCategory in resourceCategories track by resCategory.name">
+<!--
                                 <option selected value="all">По всем энергоресурсам</option>
                                 <option value="teplo">Теплосистемы</option>
                                 <option value="electro">Электричество</option>
                                 <option value="gas">Газ</option>
+-->
                             </select>
                     </div>
                 </ul>
@@ -44,7 +46,7 @@
 <div class="nmc-report-main-div_close">
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in curCategory.reportTypes" ng-click="" ng-dblclick="">
+                    <tr ng-repeat="object in curCategory.reportTypes | resourceCategoryFilter: currentResourceCategory" ng-click="" ng-dblclick="">
 <!--                        <td style="padding:0;">-->
                             <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 

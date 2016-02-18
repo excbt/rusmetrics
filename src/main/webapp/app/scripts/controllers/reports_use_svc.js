@@ -1,5 +1,19 @@
 //reports controller
 var app = angular.module('portalNMC');
+app.filter('resourceCategoryFilter', function(){
+    return function(items, props){
+        if (props.isAll == true){
+            return items;
+        };
+        var filteredItems = [];      
+        items.forEach(function(item){
+            if (item.resourceCategory == props.name){
+                filteredItems.push(item);
+            };
+        });     
+        return filteredItems;
+    }
+});
 app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc){
     
     $rootScope.ctxId = "reports_page";
@@ -28,7 +42,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
 
-    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
+    $scope.extraProps = {"idColumnName": "id", "defaultOrderBy" : "name", "deleteConfirmationProp": "name"};    
     $scope.activeStartDateFormat = new Date();
     $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     
@@ -53,32 +67,45 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.headers = {}
     $scope.headers.addObjects = "Доступные объекты";//header of add objects window
     
+    //report context launch setting
+    $scope.ctrlSettings.reportCountList = 5;//border report count: if the reports is more than this border that view two-level menu, else - one-level
+    
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+        //get report categories
+    $scope.categories = reportSvc.getReportCategories();
+        //prepare resource categories
+    $scope.resourceCategories = reportSvc.getResourceCategories();
+    $scope.currentResourceCategory = reportSvc.getDefaultResourceCategory();
     
-    $scope.categories = [
-        {
-            name: "Аналитические",
-            prefix: "А",
-            class: "active",
-            reportTypes: []
-        },
-        {
-            name: "Оперативные",
-            prefix: "Э",
-            reportTypes: []
-        },
-        {
-            name: "Служебные",
-            prefix: "C",
-            reportTypes: []
-        }
-    ];
+     //get paramsets   
+//    $scope.getActive = function(){
+//        $scope.currentMode = "";//active paramsets
+//        if (reportSvc.getReportTypesIsLoaded()){
+//            //report types
+//            $scope.reportTypes = reportSvc.getReportTypes();
+//            reportSvc.getParamsetsForTypes($scope.reportTypes, $scope.currentMode);
+//        };
+//    };
+//    
+//    $scope.getActive();
+    
+    $scope.$on('reportSvc:reportTypesIsLoaded', function(){
+        //report types
+        $scope.reportObjects = reportSvc.getReportTypes();
+        $scope.getActive();
+//        reportSvc.getParamsetsForTypes($scope.reportTypes, $scope.currentMode);
+    });
+    
+    $scope.$on('reportSvc:reportPeriodsIsLoaded', function(){
+        //report types
+        $scope.reportPeriods = reportSvc.getReportPeriods();        
+    });
     
     //report types
-    $scope.reportTypes = [];
+//    $scope.reportTypes = [];
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
@@ -90,7 +117,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 if (!data[i]._enabled){
                     continue;
                 };
-                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
+                if ((!$scope.isSystemuser() && data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
@@ -99,10 +126,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
+                newObject.reportCategory = data[i].reportCategory;
                     //flag: the toggle visible flag for the special params page.
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
                 for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
-                    if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
+                    if (newObject.reportCategory.localeCompare($scope.categories[categoryCounter].name) == 0){    
                         newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
                         $scope.categories[categoryCounter].reportTypes.push(newObject);                     
                         continue;
@@ -115,17 +143,21 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             $scope.getActive();
         });
     };
-    $scope.getReportTypes();
+//    $scope.getReportTypes();
+
     
     //report periods
-    $scope.reportPeriods = [];
-    $scope.getReportPeriods = function(){
-        var table = "../api/reportSettings/reportPeriod";
-        crudGridDataFactory(table).query(function(data){
-            $scope.reportPeriods = data;
-        });
+    if (reportSvc.getReportPeriodsIsLoaded()){
+        $scope.reportPeriods = angular.copy(reportSvc.getReportPeriods());    
     };
-    $scope.getReportPeriods();
+//    $scope.reportPeriods = [];
+//    $scope.getReportPeriods = function(){
+//        var table = "../api/reportSettings/reportPeriod";
+//        crudGridDataFactory(table).query(function(data){
+//            $scope.reportPeriods = data;
+//        });
+//    };
+//    $scope.getReportPeriods();
     
     $scope.oldColumns = [
         {"name":"name", "header":"Название варианта", "class":"col-xs-5 col-md-5"}
@@ -185,6 +217,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             $scope.getParamsets($scope.paramsetsUrl+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
+    
+    if (reportSvc.getReportTypesIsLoaded()){
+            //report types
+        $scope.reportObjects = reportSvc.getReportTypes();
+        $scope.getActive();
+    };
 
     $scope.toggleReportShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
@@ -224,7 +262,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.currentReportType = {};
     $scope.setCurrentReportType = function(object){
         $scope.currentReportType = object;
-console.log($scope.currentReportType);        
+//console.log($scope.currentReportType);        
 //        $scope.currentReportType.reportType = object.reportType;
 //        $scope.currentReportType.reportTypeName=object.reportTypeName;
 //        $scope.currentReportType.suffix=object.suffix;
@@ -1120,8 +1158,7 @@ console.log($scope.currentReportType);
     // *************************************************************************************
     // Отчеты для контекстного меню объект
     //**************************************************************************************
-    //report context launch setting
-    $scope.ctrlSettings.reportCountList = 6;//border report count: if the reports is more than this border that view two-level menu, else - one-level
+    
     $scope.data = {};
     //получить доступные варианты отчетов
     $scope.getContextReports = function(){
@@ -1134,7 +1171,7 @@ console.log($scope.currentReportType);
             $scope.data.reportEntities = angular.copy($scope.categories);
             $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
             reports.forEach(function(rep){
-                for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){               
+                for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){
                     if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){
                         $scope.data.reportEntities[categoryCounter].reports.push(rep);
                         break;
@@ -1143,7 +1180,8 @@ console.log($scope.currentReportType);
             });
         }else{
             $scope.data.reportEntities = reports;
-        };                    
+        };
+//console.log($scope.data.reportEntities);        
     };
     $scope.getContextReports();
     $scope.createContextReport = function(paramset){
@@ -1154,6 +1192,21 @@ console.log($scope.currentReportType);
         $scope.ctrlSettings.openModes.create.isContext = true;//set context flag
         paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);                
         $scope.editParamSet(paramset.reportTemplate.reportType, paramset, $scope.ctrlSettings.openModes.create, true)
+    };    
+    
+    $scope.previewContextReport = function(paramset){
+console.log(paramset);        
+        if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+            return "Entity is category";//exit function
+        };
+        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT'){
+            notificationFactory.errorInfo("Внимание!", "Предварительный просмотр для коммерческих отчетов невозможен.");
+            return "Preview for the commercial reports is not available.";
+        };
+        //run preview report        
+        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);
+        $scope.selectedObjects = [objectSvc.getCurrentObject()];
+        $scope.checkAndRunParamset(paramset.reportTemplate.reportType, paramset, true)
     };
     // ************************************************************* контекстные отчеты ****************
 }]);

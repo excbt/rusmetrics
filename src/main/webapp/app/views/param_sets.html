@@ -64,13 +64,13 @@
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
                   <!-- Навигационная полоса по категориям отчетов-->
                 <div class="container-fluid" ng-repeat="category in categories">
-                    <div class="row well padding5 marginBottom5">
-                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
+                    <div class="row padding5" style="padding:0;">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
                             <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
                             </i>
                         </div>
-                        <div class="col-xs-11 col-md-11">
-                            <label>{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                        <div class="col-xs-11 col-md-11 noPadding">
+                            <label class="noMarginBottom marginTop5">{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
                             </label>
                         </div>
                     </div>
@@ -81,24 +81,35 @@
                     <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
                         <td style="padding:0;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
+<!--ng-class="{'nmc-tr-odd':($index%2===0)}"-->
+                                <tr >
 
-                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
+                                    <td style="padding:0;" ng-class="column.class">
 
-                                    <td ng-class="column.class">
-
-                                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
+                                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
 
                                             <i title="Скрыть / Показать" 
-                                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                                               class="btn btn-xs glyphicon noMarginI nmc-button-in-table" 
                                                ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
-                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);">
+                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"
+                                               style="padding-left:0">
                                             </i>
 
                                         </div>
-                                        <div class="col-xs-5 col-md-5">
-                                            <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+                                        <div class="col-xs-5 col-md-5 noPadding">
+                                            <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+                                            <a ng-disabled="isROfield()" 
+                                                     title="Добавить" 
+                                                     class="" 
+                                                     ng-click="addParamSet(object)" 
+                                                     data-target="#main_properties" 
+                                                     data-toggle="tab"
+                                               style="cursor: pointer"
+                                               >Добавить
+                                            </a>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
+<!--
                                             <button ng-disabled="isROfield()" 
                                                      title="Добавить" 
                                                      class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" 
@@ -106,6 +117,7 @@
                                                      data-target="#main_properties" 
                                                      data-toggle="tab">Добавить
                                             </button>
+-->
                                         </div>
                                         <div class="col-xs-4 col-md-4">
                                             
@@ -117,7 +129,7 @@
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
                                 <table id="dataParamsetsTabl" 
-                                       class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" 
+                                       class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" 
                                        ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
