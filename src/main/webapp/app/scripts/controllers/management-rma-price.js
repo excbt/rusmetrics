@@ -19,8 +19,9 @@ angular.module('portalNMC')
 });
 
 angular.module('portalNMC')
-.controller('MngmtPriceCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', '$log', function($scope, $http, mainSvc, notificationFactory, $log){
-    console.log("MngmtPriceCtrl run.");
+.controller('MngmtPriceCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', '$log', function($rootScope, $scope, $http, mainSvc, notificationFactory, $log){
+//    console.log("MngmtPriceCtrl run.");
+    $rootScope.ctxId = "management_rma_price_page";
     //messages & titles
     $scope.messages = {};
     $scope.messages.priceMenuItem1 = "Активировать";

@@ -21,6 +21,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 
+/**
+ * Шаблон отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
 @Table(name = "report_template")
 @SQLDelete(sql = "UPDATE report_template SET deleted = 1 WHERE id = ? and version = ?")

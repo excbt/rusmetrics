@@ -278,6 +278,32 @@
                                            ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                 </td>
                             </tr>
+                            <tr ng-if="data.currentObject.exSystemKeyname=='VZLET'">
+                                <td>
+                                    <label for="inputDescription" >Таблица часовых данных</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputTable1h" 
+                                           placeholder="" 
+                                           ng-model="data.currentObject.metaData.vzletTableHour" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                </td>
+                            </tr>
+                            <tr ng-if="data.currentObject.exSystemKeyname=='VZLET'">
+                                <td>
+                                    <label for="inputDescription" >Таблица суточных данных</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputTable1h" 
+                                           placeholder="" 
+                                           ng-model="data.currentObject.metaData.vzletTableDay" 
+                                           ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                </td>
+                            </tr>
                             <tr>
                                 <td class="col-sm-3"><label for="inputVerificationInterval">Межповерочный интервал (лет)</label>
                                 </td>

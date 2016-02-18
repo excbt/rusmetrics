@@ -9,6 +9,14 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
+/**
+ * Repository для Subscriber
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.03.2015
+ *
+ */
 public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 
 	/**

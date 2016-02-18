@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope){
+.controller('ElectricityConsumptionCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $window){
 //console.log("Run ConsumptionCtrl.");
     
     $scope.data = [];
@@ -173,15 +173,6 @@ angular.module('portalNMC')
         $scope.getData();
     };
     
-    $(document).ready(function() {
-        $('#inputElConsDate').datepicker({
-          dateFormat: "dd.mm.yy",
-          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
-          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
-          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
-        });
-    });
-    
     $scope.$watch('indicatorDates', function (newDates, oldDates) {      
         if ($location.path()!=="/objects/indicator-electricity"){
             return;
@@ -196,5 +187,46 @@ angular.module('portalNMC')
         $rootScope.reportStart = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);
         $rootScope.reportEnd = moment(newDates.endDate).format($scope.ctrlSettings.requestFormat);       
         $scope.getData();
-    }, false);    
+    }, false);
+    
+    //listen window resize
+//    var wind = angular.element($window);
+//    var windowResize = function(){
+//console.log("windowResize");        
+//        if (angular.isDefined($scope.setScoreStyles)){
+//            $scope.setScoreStyles();
+//        };
+//        $scope.$apply();
+//    };
+//    wind.bind('resize', windowResize); 
+//        
+//    $scope.$on('$destroy', function() {
+//        wind.unbind('resize', windowResize);
+//    });
+//    
+//    $scope.setScoreStyles = function(){
+//        //ровняем таблицу, если появляются полосы прокрутки
+//        var tableHeader = document.getElementById("indicatorConsTableHeader");
+//        var tableDiv = document.getElementById("divIndicatorConsTable");
+//        if (!mainSvc.checkUndefinedNull(tableDiv)){
+//            if (tableDiv.offsetWidth > tableDiv.clientWidth){
+//                tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
+//            }else{
+//                tableDiv.style.width = tableHeader.offsetWidth + 'px';                    
+//            };
+//        };
+//    };
+//    $scope.onTableLoad = function(){
+//console.log("OnTableLoad");        
+//        $scope.setScoreStyles();
+//    };
+    
+    $(document).ready(function() {
+        $('#inputElConsDate').datepicker({
+          dateFormat: "dd.mm.yy",
+          firstDay: $scope.dateOptsParamsetRu.locale.firstDay,
+          dayNamesMin: $scope.dateOptsParamsetRu.locale.daysOfWeek,
+          monthNames: $scope.dateOptsParamsetRu.locale.monthNames
+        });        
+    });
 });

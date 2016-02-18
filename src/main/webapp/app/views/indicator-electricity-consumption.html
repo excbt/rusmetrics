@@ -40,9 +40,9 @@
                         </div>
                         <div class="col-xs-8 col-md-8">
                             <select class="form-control nmc-input-data nmc-select-form" ng-model="timeDetailType" ng-change="changeTimeDetailType()">
-                                <option selected value="1mon">Помесячные</option>
-                                <option value="24h">Посуточные</option>
-                                <option value="1h">Почасовые</option>
+                                <option selected value="1mon">Ежемесячные</option>
+                                <option value="24h">Суточные</option>
+                                <option value="1h">Часовые</option>
                             </select>
                         </div>
                     </div>
@@ -78,13 +78,13 @@
                 </div>    
             </div>
 
-            <div class="row" class="nmc-hide" ng-show="(data.length ==0)&&!ctrlSettings.loading">
+            <div class="row" class="nmc-hide" ng-show="(data.length == 0) && !ctrlSettings.loading">
                 <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
             </div>
             <div class="row" ng-show="data.length >0">
         <!--        Непрокручиваемая шапка таблицы показаний-->
     <!--            style="margin-bottom: -20px;"-->
-                <table class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
+                <table id="indicatorConsTableHeader" class="nmc-table-nowrap-data1 nmc-main-table marginBottomMinus20" ng-class="tableDef.tableClass" >
                     <tr ng-class="tableDef.headerClassTR">
 <!--
                         <th>
@@ -126,7 +126,7 @@
         <!--        конец Шапки-->
             </div>
         </div>
-        <div class="container-fluid nmc-indicator-table-without-fixed-header">
+        <div id="divIndicatorConsTable" class="container-fluid nmc-indicator-table-without-fixed-header">
             <div class="row" ng-show="data.length >0">
     <!--            style="margin-top: -79px;"-->
                 <table class="nmc-table-nowrap-data nmc-main-table marginTopMinus57" ng-class="tableDef.tableClass">
@@ -171,6 +171,9 @@
                         <td ng-repeat="column in tableDef.columns" class="nmc-text-align-right" ng-class="totals.class || column.dataClass" ng-attr-id="{{'totals_td_'+column.fieldName}}">
                             {{totals[column.fieldName]}}
                         </td>
+                    </tr>
+                    <tr class="nmc-hide">
+                        <td>{{onTableLoad()}}</td>
                     </tr>
                 </table>
                 <div class="col-md-9">

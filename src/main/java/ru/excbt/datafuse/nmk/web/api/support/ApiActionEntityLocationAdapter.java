@@ -6,19 +6,34 @@ import java.net.URI;
 
 import javax.servlet.http.HttpServletRequest;
 
-public abstract class EntityApiActionLocationAdapter<T, K> extends EntityApiActionAdapter<T>
+/**
+ * Адаптер для EntityApiActionAdapter
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.10.2015
+ * 
+ * @param <T>
+ * @param <K>
+ */
+public abstract class ApiActionEntityLocationAdapter<T, K> extends ApiActionEntityAdapter<T>
 		implements ApiActionLocation {
 
 	private HttpServletRequest request;
 
-	public EntityApiActionLocationAdapter(T entity, HttpServletRequest request) {
+	public ApiActionEntityLocationAdapter(T entity, HttpServletRequest request) {
 		super(entity);
 		this.request = request;
 	}
 
-	public EntityApiActionLocationAdapter(HttpServletRequest request) {
+	public ApiActionEntityLocationAdapter(HttpServletRequest request) {
 		super(null);
 		this.request = request;
+	}
+
+	@Override
+	public final void process() {
+		super.process();
 	}
 
 	protected abstract K getLocationId();

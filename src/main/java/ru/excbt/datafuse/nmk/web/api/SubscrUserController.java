@@ -22,15 +22,23 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с пользователями абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.10.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/subscr")
 public class SubscrUserController extends SubscrApiController {
@@ -179,7 +187,7 @@ public class SubscrUserController extends SubscrApiController {
 			}
 		}
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<SubscrUser, Long>(subscrUser, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrUser, Long>(subscrUser, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -242,7 +250,7 @@ public class SubscrUserController extends SubscrApiController {
 			}
 		}
 
-		ApiAction action = new EntityApiActionAdapter<SubscrUser>(subscrUser) {
+		ApiAction action = new ApiActionEntityAdapter<SubscrUser>(subscrUser) {
 
 			@Override
 			public SubscrUser processAndReturnResult() {

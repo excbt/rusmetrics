@@ -16,6 +16,14 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingSettingsRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с настройками загрузки с прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.01.2016
+ *
+ */
 @Service
 public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 

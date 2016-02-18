@@ -1,7 +1,8 @@
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtDevicesCtrl', ['$rootScope', '$scope','$http', '$timeout', 'objectSvc', 'notificationFactory', 'mainSvc', function($rootScope, $scope, $http, $timeout, objectSvc, notificationFactory, mainSvc){
-console.log('Run devices management controller.');
+//console.log('Run devices management controller.');
+    $rootScope.ctxId = "management_rma_devices_page";
     //settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.datasourcesUrl = objectSvc.getDatasourcesUrl();
@@ -169,7 +170,8 @@ console.log('Run devices management controller.');
         objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
             function(resp){
                 $scope.data.dataSources = angular.copy(resp.data);
-                $('#showDeviceModal').modal();
+                $scope.getDeviceMetaDataVzlet($scope.data.currentObject);
+                $('#showDeviceModal').modal();                
             },
             errorCallback
         );
@@ -328,8 +330,9 @@ console.log('Run devices management controller.');
         objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
-                $scope.currentDevice = device;                           
-                $('#vzletMetaDataEditorModal').modal();
+//console.log(device);                
+//                $scope.currentDevice = device;                           
+//                $('#vzletMetaDataEditorModal').modal();
             },
             errorCallback
         );

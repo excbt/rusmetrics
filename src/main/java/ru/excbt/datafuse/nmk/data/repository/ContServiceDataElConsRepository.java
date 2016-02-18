@@ -11,6 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 
+/**
+ * Repository для ContServiceDataElCons
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 public interface ContServiceDataElConsRepository extends CrudRepository<ContServiceDataElCons, Long> {
 
 	/**
@@ -70,5 +78,38 @@ public interface ContServiceDataElConsRepository extends CrudRepository<ContServ
 			+ " AND time_detail_type IN (:timeDetailType) " + " ORDER BY d.dataDate DESC ")
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT 1 FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId ")
+	public List<Long> selectExistsAnyDataByZPoint(@Param("contZPointId") long contZPointId, Pageable pageable);
+
+	/**
+	 * No needed change order by.
+	 * 
+	 * @param contZPointId
+	 * @param fromDateTime
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND "
+			+ " d.dataDate >= :fromDateTime" + " ORDER BY d.dataDate desc")
+	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			@Param("fromDateTime") Date fromDateTime, Pageable pageable);
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param pageable
+	 * @return
+	 */
+	@Query("SELECT d FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId "
+			+ " ORDER BY d.dataDate desc")
+	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
+			Pageable pageable);
 
 }

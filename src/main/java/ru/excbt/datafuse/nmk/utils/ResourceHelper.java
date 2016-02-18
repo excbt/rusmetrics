@@ -3,6 +3,14 @@ package ru.excbt.datafuse.nmk.utils;
 import java.io.File;
 import java.net.URL;
 
+/**
+ * Работа с ресурсами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.04.2015
+ *
+ */
 public class ResourceHelper {
 	/**
 	 * 
@@ -10,8 +18,7 @@ public class ResourceHelper {
 	 * @return
 	 */
 	public static File findResource(String resourcePath) {
-		ClassLoader classLoader = Thread.currentThread()
-				.getContextClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
 		URL startDir = classLoader.getResource(".");
 		URL urlResource = classLoader.getResource(resourcePath);
@@ -24,5 +31,5 @@ public class ResourceHelper {
 		}
 
 		return f;
-	}	
+	}
 }

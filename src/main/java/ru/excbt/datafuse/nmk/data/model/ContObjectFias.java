@@ -19,6 +19,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
+/**
+ * Контейнер учета - Фиас и гео-информация
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 20.07.2015
+ *
+ */
 @Entity
 @Table(name = "cont_object_fias")
 @JsonInclude(Include.NON_NULL)

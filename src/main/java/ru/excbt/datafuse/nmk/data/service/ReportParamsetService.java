@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
@@ -34,11 +35,22 @@ import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+/**
+ * Сервис для работы с набором параметров отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.04.2015
+ *
+ */
 @Service
 public class ReportParamsetService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetService.class);
+
+	private static final String REPORT_AUTO_SUFFIX = "REPORT_AUTO_SUFFIX";
 
 	@Autowired
 	private ReportParamsetRepository reportParamsetRepository;
@@ -61,20 +73,27 @@ public class ReportParamsetService implements SecuredRoles {
 	@Autowired
 	private ReportMakerParamService reportMakerParamService;
 
+	@Autowired
+	private SystemParamService systemParamService;
+
+	@Autowired
+	private ReportTypeService reportTypeService;
+
 	/**
 	 * 
 	 * @param reportParamset
 	 * @return
 	 */
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	protected ReportParamset createOne(ReportParamset reportParamset) {
-		checkNotNull(reportParamset);
-		checkArgument(reportParamset.isNew());
-
-		ReportParamset result = reportParamsetRepository.save(reportParamset);
-
-		return result;
-	}
+	//	@Deprecated
+	//	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	//	protected ReportParamset createOne(ReportParamset reportParamset) {
+	//		checkNotNull(reportParamset);
+	//		checkArgument(reportParamset.isNew());
+	//
+	//		ReportParamset result = reportParamsetRepository.save(reportParamset);
+	//
+	//		return result;
+	//	}
 
 	/**
 	 * 
@@ -86,6 +105,7 @@ public class ReportParamsetService implements SecuredRoles {
 	public ReportParamset createOne(ReportParamset reportParamset, Long[] contObjectIds) {
 
 		checkNotNull(reportParamset);
+		checkArgument(reportParamset.isNew());
 
 		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
@@ -98,7 +118,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 		reportParamset.setAllRequiredParamsPassed(requiredPassed);
 
-		ReportParamset result = createOne(reportParamset);
+		ReportParamset result = reportParamsetRepository.save(reportParamset);
 
 		if (contObjectIds != null) {
 			updateUnitToParamset(result.getId(), contObjectIds);
@@ -135,6 +155,15 @@ public class ReportParamsetService implements SecuredRoles {
 
 		for (ReportParamsetParamSpecial param : reportParamset.getParamSpecialList()) {
 			param.setReportParamset(reportParamset);
+		}
+
+		if (reportParamset.getParamsetStartDate() != null) {
+			reportParamset
+					.setParamsetStartDate(JodaTimeUtils.startOfDay(reportParamset.getParamsetStartDate()).toDate());
+		}
+
+		if (reportParamset.getParamsetEndDate() != null) {
+			reportParamset.setParamsetEndDate(JodaTimeUtils.endOfDay(reportParamset.getParamsetEndDate()).toDate());
 		}
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamset);
@@ -456,53 +485,57 @@ public class ReportParamsetService implements SecuredRoles {
 	/**
 	 * 
 	 * @param reportParamsetId
-	 * @param objectId
+	 * @param unitId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkReportParamsetUnitObject(long reportParamsetId, long objectId) {
-		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId, objectId).size() > 0;
-	}
-
-	/**
-	 * 
-	 * @param srcReportParamsetId
-	 * @param dstReportParamsetId
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public void copyReportParamsetUnit222(long srcReportParamsetId, long dstReportParamsetId) {
-
-		List<?> checkList = reportParamsetUnitRepository.selectUnitIds(dstReportParamsetId);
-		if (checkList.size() > 0) {
-			throw new PersistenceException(
-					String.format("ReportParamsetUnit of ReportParamset(id=%d) already exists", dstReportParamsetId));
-		}
-
-		ReportParamset dstReportParamset = reportParamsetRepository.findOne(dstReportParamsetId);
-		checkNotNull(dstReportParamset);
-
-		List<Long> idsToCopy = reportParamsetUnitRepository.selectUnitIds(srcReportParamsetId);
-		for (Long id : idsToCopy) {
-			addUnitToParamset(dstReportParamset, id);
-		}
+	public boolean checkReportParamsetUnitObject(long reportParamsetId, long unitId) {
+		return reportParamsetUnitRepository.selectUnitIds(reportParamsetId, unitId).size() > 0;
 	}
 
 	/**
 	 * 
 	 * @param reportTemplateId
+	 * @param reportParamsetName
+	 * @param reportPeriod
+	 * @param reportOutputFileType
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public ReportParamset createReportParamsetMaster(long reportTemplateId, String reportParamsetName,
-			ReportPeriodKey reportPeriod, ReportOutputFileType reportOutputFileType, long subscriberId) {
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public ReportParamset createReportParamsetEx(long reportTemplateId, String reportParamsetName,
+			ReportPeriodKey reportPeriod, ReportOutputFileType reportOutputFileType, long subscriberId,
+			Boolean isAutoGenerated) {
 
 		ReportTemplate reportTemplate = reportTemplateService.findOne(reportTemplateId);
 		checkNotNull(reportTemplate, String.format("ReportTemplate (id=%d) not found", reportTemplateId));
 
 		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		checkNotNull(subscriber, String.format("Subscriber (id=%d) not found", subscriberId));
+
+		return createReportParamsetEx(reportTemplate, reportParamsetName, reportPeriod, reportOutputFileType,
+				subscriber, isAutoGenerated);
+
+	}
+
+	/**
+	 * 
+	 * @param reportTemplate
+	 * @param reportParamsetName
+	 * @param reportPeriod
+	 * @param reportOutputFileType
+	 * @param subscriber
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	public ReportParamset createReportParamsetEx(ReportTemplate reportTemplate, String reportParamsetName,
+			ReportPeriodKey reportPeriod, ReportOutputFileType reportOutputFileType, Subscriber subscriber,
+			Boolean isAutoGenerated) {
+
+		checkNotNull(reportTemplate);
+		checkNotNull(subscriber);
 
 		ReportParamset reportParamset = new ReportParamset();
 		reportParamset.setSubscriber(subscriber);
@@ -512,8 +545,9 @@ public class ReportParamsetService implements SecuredRoles {
 		reportParamset.setReportPeriodKey(reportPeriod);
 		reportParamset.setActiveStartDate(new Date());
 		reportParamset.set_active(true);
+		reportParamset.setIsAutoGenerated(isAutoGenerated);
 
-		ReportParamset result = createOne(reportParamset);
+		ReportParamset result = createOne(reportParamset, null);
 
 		result.getParamSpecialList().size();
 
@@ -623,6 +657,66 @@ public class ReportParamsetService implements SecuredRoles {
 
 		logger.info("Total Paramset processed {}. Passed {}", totalCounter, passedCounter);
 
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportParamset> selectReportParamsetContextLaunch(Long subscriberId) {
+		List<ReportParamset> result = reportParamsetRepository.selectReportParamsetContextLaunch(subscriberId);
+		result.forEach((s) -> s.getParamSpecialList().size());
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<ReportParamset> createDefaultReportParamsets(Subscriber subscriber) {
+
+		checkNotNull(subscriber);
+		checkArgument(!subscriber.isNew());
+
+		List<ReportParamset> resultList = new ArrayList<>();
+
+		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
+
+		for (ReportType rt : reportTypes) {
+			ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(rt.getKeyname());
+			if (reportTypeKey == null) {
+				continue;
+			}
+
+			List<ReportParamset> existingReportParamset = reportParamsetRepository
+					.selectSubscriberReportParamset(reportTypeKey.getKeyname(), true, subscriber.getId());
+
+			if (!existingReportParamset.isEmpty()) {
+				continue;
+			}
+
+			List<ReportTemplate> commonTemplates = reportTemplateService.selectCommonReportTemplates(reportTypeKey,
+					true);
+			if (commonTemplates.isEmpty()) {
+				continue;
+			}
+
+			String suffix = systemParamService.getParamValueAsString(REPORT_AUTO_SUFFIX);
+
+			String reportParamsetName = commonTemplates.get(0).getName() + " " + suffix;
+
+			ReportParamset reportParamset = createReportParamsetEx(commonTemplates.get(0), reportParamsetName,
+					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF, subscriber, true);
+
+			resultList.add(reportParamset);
+
+		}
+
+		return resultList;
 	}
 
 }

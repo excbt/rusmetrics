@@ -1,7 +1,8 @@
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtUsersCtrl', ['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', function ($scope, $rootScope, $resource, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc) {                
-console.log('Run user management controller.');
+//console.log('Run user management controller.');
+    $rootScope.ctxId = "management_rma_users_page";
     
     $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
         //controller settings

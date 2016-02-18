@@ -31,7 +31,7 @@ public class UDirectoryNodeTest extends AnyControllerTest {
 
 	@Test
 	public void testGetNodeDir() throws Exception {
-		_testJsonGet(String.format(UDirectoryTestConst.DIRECTORY_URL_API
+		_testGetJson(String.format(UDirectoryTestConst.DIRECTORY_URL_API
 				+ "/%d/node", UDirectoryTestConst.TEST_DIRECTORY_ID));
 	}
 

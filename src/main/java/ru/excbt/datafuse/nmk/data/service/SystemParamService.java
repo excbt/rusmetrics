@@ -11,6 +11,14 @@ import ru.excbt.datafuse.nmk.data.model.keyname.SystemParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SystemParamRepository;
 
+/**
+ * Сервис для работы с системными параметрами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 @Service
 public class SystemParamService {
 
@@ -28,8 +36,7 @@ public class SystemParamService {
 	public String getParamValueAsString(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {
-			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG,
-					keyname));
+			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG, keyname));
 		}
 		return sp.getParamValue();
 	}
@@ -43,8 +50,7 @@ public class SystemParamService {
 	public boolean getParamValueAsBoolean(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {
-			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG,
-					keyname));
+			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG, keyname));
 		}
 
 		if (ParamType.BOOLEAN.name().equals(sp.getParamType())) {
@@ -54,8 +60,7 @@ public class SystemParamService {
 			}
 		}
 
-		throw new PersistenceException(String.format(
-				"System Param with keyname(%s) is not BOOLEAN type", keyname));
+		throw new PersistenceException(String.format("System Param with keyname(%s) is not BOOLEAN type", keyname));
 	}
 
 }

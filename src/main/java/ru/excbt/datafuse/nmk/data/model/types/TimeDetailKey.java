@@ -7,6 +7,14 @@ import java.util.stream.Stream;
 
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
+/**
+ * Тип данных: детализация по времени
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 public enum TimeDetailKey implements KeynameObject {
 
 	TYPE_24H("24h", true, true),

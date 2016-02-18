@@ -1,6 +1,7 @@
 angular.module('portalNMC')
-.controller('SettingsUsersCtrl', ['$scope','$http', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($scope, $http, notificationFactory, crudGridDataFactory, mainSvc){
-console.log("Run user settings controller.");
+.controller('SettingsUsersCtrl', ['$rootScope','$scope','$http', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($rootScope, $scope, $http, notificationFactory, crudGridDataFactory, mainSvc){
+//console.log("Run user settings controller.");
+    $rootScope.ctxId = "settings_users_page";
     $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
         //controller settings
     $scope.ctrlSettings = {};

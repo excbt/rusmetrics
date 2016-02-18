@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-11-03T13:37:37 -->
+<!-- 2016-02-09T11:42:08 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_history_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
@@ -83,6 +83,9 @@
 		<parameterDescription><![CDATA[organization id]]></parameterDescription>
 		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="cont_ids" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("{20118663}")]]></defaultValueExpression>
+	</parameter>
 	<parameter name="rep_detail_type" class="java.lang.String">
 		<defaultValueExpression><![CDATA["month"]]></defaultValueExpression>
 	</parameter>
@@ -91,9 +94,6 @@
 	</parameter>
 	<parameter name="show_chart" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
-	</parameter>
-	<parameter name="cont_ids" class="java.lang.String">
-		<defaultValueExpression><![CDATA[new String("{20118663}")]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[select coalesce(o.organization_full_name, o.organization_name) as org_name,
@@ -116,7 +116,8 @@ where
 				<textElement>
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + new SimpleDateFormat("MMMM yyyy").format($P{begin_date}) + "-" + new SimpleDateFormat("MMMM yyyy").format($P{end_date}) + " года"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + ($P{begin_date}.getMonth() == $P{end_date}.getMonth() ? new SimpleDateFormat("MM/yyyy").format($P{begin_date}) :
+new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateFormat("MM/yyyy").format($P{end_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="35" width="420" height="20" uuid="6ce14c80-38ad-4c45-b555-8a9a543c6a3e">
@@ -205,7 +206,7 @@ where
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic"/>
 									</textElement>
-									<textFieldExpression><![CDATA[($P{rep_detail_type}.equals("month") ? new SimpleDateFormat("MMMM yy").format($F{d_date}) : new SimpleDateFormat("dd.MM.yy").format($F{d_date}))]]></textFieldExpression>
+									<textFieldExpression><![CDATA[($P{rep_detail_type}.equals("month") ? new SimpleDateFormat("MM.yy").format($F{d_date}) : new SimpleDateFormat("dd.MM.yy").format($F{d_date}))]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -476,7 +477,7 @@ where
 			</componentElement>
 			<lineChart>
 				<chart isShowLegend="true" evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="0" y="90" width="260" height="200" uuid="4c197db4-c8b5-42a6-8f05-fb4737457151">
+					<reportElement positionType="Float" x="0" y="90" width="260" height="200" uuid="dff0f367-af84-4980-a908-04d6e6d36283">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -492,7 +493,7 @@ where
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="3cae7be4-4451-4064-a2a7-1f8ea8079331">
+						<datasetRun subDataset="dt1" uuid="9415d38f-6d9a-4f11-8cb5-7607d41bc581">
 							<datasetParameter name="org_id">
 								<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -521,7 +522,7 @@ where
 					<categorySeries>
 						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталонное потребление, Гкал" : "")]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
-						<valueExpression><![CDATA[($P{show_etalon} ? $F{heat_etalon_h} : 0.0)]]></valueExpression>
+						<valueExpression><![CDATA[($P{show_etalon} ? $F{heat_etalon_h} : null)]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
 				<linePlot isShowShapes="false">
@@ -543,7 +544,7 @@ where
 			</lineChart>
 			<lineChart>
 				<chart isShowLegend="true" evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="283" y="90" width="260" height="200" uuid="94123010-6a05-408c-8d66-b3e174fbb36a">
+					<reportElement positionType="Float" x="283" y="90" width="260" height="200" uuid="4a696ffe-62f0-4e5f-bced-c58441de7a0b">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -559,7 +560,7 @@ where
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="51db20d2-483e-49ea-9847-67beafadb8fb">
+						<datasetRun subDataset="dt1" uuid="679aba9e-6834-4995-8f71-19de66b52ab4">
 							<datasetParameter name="org_id">
 								<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -588,7 +589,7 @@ where
 					<categorySeries>
 						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталонное потребление, м3" : "")]]></seriesExpression>
 						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
-						<valueExpression><![CDATA[($P{show_etalon} ? $F{hw_etalon_m} : 0.0)]]></valueExpression>
+						<valueExpression><![CDATA[($P{show_etalon} ? $F{hw_etalon_m} : null)]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
 				<linePlot isShowShapes="false">

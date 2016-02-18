@@ -28,8 +28,18 @@ console.log("Object Service. Run.");
         var urlDeviceMetadataMeasures = urlRmaContObjects + urlDeviceObjects + "/metadata/measureUnits";
                  
         var deviceMetadataMeasures = {};
+                 
+        var currentObject = null; //the current selected object at interface
 
         var objectSvcSettings = {};
+                 
+        var getCurrentObject = function(){
+            return currentObject;
+        };
+        var setCurrentObject = function(obj){
+            currentObject = obj;
+        };
+                 
         var getObjectSettings = function(){
             return objectSvcSettings;
         };
@@ -365,6 +375,7 @@ console.log("Object Service. Run.");
             getCityConsumingData,
             getCitiesConsumingData,
             getCmOrganizations,
+            getCurrentObject,
             getDatasourcesUrl,
             getDeviceModels,
             getDeviceSchedulerSettings,
@@ -399,7 +410,8 @@ console.log("Object Service. Run.");
             putDeviceSchedulerSettings,
             rmaPromise,
             sendDeviceToServer,
-            setObjectSettings,            
+            setObjectSettings,
+            setCurrentObject,
             sortObjectsByFullName,
             sortObjectsByFullNameEx,            
             sortObjectsByConObjectFullName

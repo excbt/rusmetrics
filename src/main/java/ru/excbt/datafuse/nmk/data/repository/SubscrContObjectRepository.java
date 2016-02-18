@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 
+/**
+ * Repository для SubscrContObject
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 public interface SubscrContObjectRepository extends CrudRepository<SubscrContObject, Long> {
 
 	/**
@@ -22,7 +30,7 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 	public List<SubscrContObject> findByContObjectId(Long contObjectId);
 
 	@Query("SELECT DISTINCT sco.contObjectId FROM SubscrContObject sco WHERE sco.subscriberId IN "
-			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId ) "
+			+ " (SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :subscriberId AND s.deleted = 0) "
 			+ " AND :subscrDate  >= sco.subscrBeginDate AND sco.subscrEndDate IS NULL AND sco.deleted = 0 ")
 	public List<Long> selectRmaSubscrContObjectIds(@Param("subscriberId") Long subscriberId,
 			@Param("subscrDate") Date subscrDate);

@@ -23,6 +23,14 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
+/**
+ * Пользователи абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_user")
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -9,13 +9,21 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Настройка параметров контроля точки учета: по режимам
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 01.04.2015
+ *
+ */
 @Entity
 @Table(name = "cont_zpoint_setting_mode")
 @JsonIgnoreProperties(ignoreUnknown = true)

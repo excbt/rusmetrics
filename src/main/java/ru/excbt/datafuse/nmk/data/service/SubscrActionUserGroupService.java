@@ -21,11 +21,18 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUserGroup;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionUserGroupRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с пользователями для заданий абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Service
 public class SubscrActionUserGroupService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrActionUserGroupService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrActionUserGroupService.class);
 
 	@Autowired
 	private SubscrActionUserGroupRepository subscrActionUserGroupRepository;
@@ -34,25 +41,22 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 * 
 	 * @param reportParamsetUnitId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void deleteUserGroup(final long subscrActionUserId,
-			final long subscrActionGroupId) {
+	public void deleteUserGroup(final long subscrActionUserId, final long subscrActionGroupId) {
 
-		List<Long> ids = subscrActionUserGroupRepository.selectSubscrActionUserGroupIds(
-				subscrActionUserId, subscrActionGroupId);
+		List<Long> ids = subscrActionUserGroupRepository.selectSubscrActionUserGroupIds(subscrActionUserId,
+				subscrActionGroupId);
 
 		if (ids.size() > 1) {
-			throw new PersistenceException(
-					String.format(
-							"Can't delete SubscrActionUserGroup. Too Many Rows. (subscrActionUserId=%d, subscrActionGroupId=%d)",
-							subscrActionUserId, subscrActionGroupId));
+			throw new PersistenceException(String.format(
+					"Can't delete SubscrActionUserGroup. Too Many Rows. (subscrActionUserId=%d, subscrActionGroupId=%d)",
+					subscrActionUserId, subscrActionGroupId));
 		}
 		if (ids.size() == 0) {
-			throw new PersistenceException(
-					String.format(
-							"Can't delete SubscrActionUserGroup. No data found. (subscrActionUserId=%d, subscrActionGroupId=%d)",
-							subscrActionUserId, subscrActionGroupId));
+			throw new PersistenceException(String.format(
+					"Can't delete SubscrActionUserGroup. No data found. (subscrActionUserId=%d, subscrActionGroupId=%d)",
+					subscrActionUserId, subscrActionGroupId));
 		}
 
 		subscrActionUserGroupRepository.delete(ids.get(0));
@@ -63,10 +67,9 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 * @param subscrActionUserId
 	 * @param subscrActionGroupId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public void addUserGroup(final long subscrActionUserId,
-			final long subscrActionGroupId) {
+	public void addUserGroup(final long subscrActionUserId, final long subscrActionGroupId) {
 		SubscrActionUserGroup item = new SubscrActionUserGroup();
 		item.setSubscrActionUserId(subscrActionUserId);
 		item.setSubscrActionGroupId(subscrActionGroupId);
@@ -79,7 +82,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 * @param userId
 	 * @param groupIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateUserToGroups(long userId, Long[] groupIds) {
 
@@ -87,21 +90,18 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 
 		List<Long> newGroupIdList = Arrays.asList(groupIds);
 
-		List<Long> currentGroupIds = subscrActionUserGroupRepository
-				.selectGroupIdsByUser(userId);
+		List<Long> currentGroupIds = subscrActionUserGroupRepository.selectGroupIdsByUser(userId);
 
 		for (Long currentId : currentGroupIds) {
 			if (!newGroupIdList.contains(currentId)) {
-				logger.trace("deleteUserGroup (userId:{}, groupId:{})", userId,
-						currentId);
+				logger.trace("deleteUserGroup (userId:{}, groupId:{})", userId, currentId);
 				deleteUserGroup(userId, currentId);
 			}
 		}
 
 		for (Long newId : newGroupIdList) {
 			if (!currentGroupIds.contains(newId)) {
-				logger.trace("addUserGroup (userId:{}, groupId:{})", userId,
-						newId);
+				logger.trace("addUserGroup (userId:{}, groupId:{})", userId, newId);
 				addUserGroup(userId, newId);
 			}
 		}
@@ -114,7 +114,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 * @param userId
 	 * @param groupIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateGroupToUsers(long groupId, Long[] userIds) {
 
@@ -122,21 +122,18 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 
 		List<Long> newUserIdList = Arrays.asList(userIds);
 
-		List<Long> currentUserIds = subscrActionUserGroupRepository
-				.selectUserIdsByGroup(groupId);
+		List<Long> currentUserIds = subscrActionUserGroupRepository.selectUserIdsByGroup(groupId);
 
 		for (Long currentId : currentUserIds) {
 			if (!newUserIdList.contains(currentId)) {
-				logger.trace("deleteUserGroup (userId:{}, groupId:{})",
-						currentId, groupId);
+				logger.trace("deleteUserGroup (userId:{}, groupId:{})", currentId, groupId);
 				deleteUserGroup(currentId, groupId);
 			}
 		}
 
 		for (Long newId : newUserIdList) {
 			if (!currentUserIds.contains(newId)) {
-				logger.trace("addUserGroup (userId:{}, groupId:{})", newId,
-						groupId);
+				logger.trace("addUserGroup (userId:{}, groupId:{})", newId, groupId);
 				addUserGroup(newId, groupId);
 			}
 		}
@@ -147,11 +144,10 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 * 
 	 * @param subscrActionUserId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByUser(long subscrActionUserId) {
-		List<Long> toDelGroupIdList = subscrActionUserGroupRepository
-				.selectGroupIdsByUser(subscrActionUserId);
+		List<Long> toDelGroupIdList = subscrActionUserGroupRepository.selectGroupIdsByUser(subscrActionUserId);
 		for (Long grpId : toDelGroupIdList) {
 			deleteUserGroup(subscrActionUserId, grpId);
 		}
@@ -164,8 +160,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByGroup(long subscrActionGroupId) {
-		List<Long> toDelUserIdList = subscrActionUserGroupRepository
-				.selectUserIdsByGroup(subscrActionGroupId);
+		List<Long> toDelUserIdList = subscrActionUserGroupRepository.selectUserIdsByGroup(subscrActionGroupId);
 		for (Long userId : toDelUserIdList) {
 			deleteUserGroup(userId, subscrActionGroupId);
 		}
@@ -179,8 +174,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrActionUser> selectUsersByGroup(long subscrActionGroupId) {
-		return subscrActionUserGroupRepository
-				.selectUsersByGroup(subscrActionGroupId);
+		return subscrActionUserGroupRepository.selectUsersByGroup(subscrActionGroupId);
 	}
 
 	/**
@@ -191,8 +185,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrActionGroup> selectGroupsByUser(long subscrActionUserId) {
-		return subscrActionUserGroupRepository
-				.selectGroupsByUser(subscrActionUserId);
+		return subscrActionUserGroupRepository.selectGroupsByUser(subscrActionUserId);
 	}
 
 }

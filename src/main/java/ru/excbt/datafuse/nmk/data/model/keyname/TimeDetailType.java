@@ -1,15 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-import ru.excbt.datafuse.nmk.data.domain.RowAuditDate;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
@@ -32,10 +28,6 @@ public class TimeDetailType extends AbstractKeynameEntity implements DeletableOb
 
 	@Version
 	private int version;
-
-	@Embedded
-	@JsonIgnore
-	private RowAuditDate rowAudit;
 
 	@Column(name = "deleted")
 	private int deleted;
@@ -70,14 +62,6 @@ public class TimeDetailType extends AbstractKeynameEntity implements DeletableOb
 
 	public void setVersion(int version) {
 		this.version = version;
-	}
-
-	public RowAuditDate getRowAudit() {
-		return rowAudit;
-	}
-
-	public void setRowAudit(RowAuditDate rowAudit) {
-		this.rowAudit = rowAudit;
 	}
 
 	@Override

@@ -2,8 +2,8 @@
 angular.module('portalNMC')
 .controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout',
             function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout) {
-                
-console.log('Run Object management controller.');  
+                $rootScope.ctxId = "management_rma_objects_page";
+//console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
                 
                     //messages for user
@@ -583,7 +583,7 @@ console.log($scope.currentObject);
                     };
                     result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
                     result.zpointLastDataDate  = zpoint.lastDataDate;  
-                    
+                    result.isDroolsDisable = zpoint.isDroolsDisable;
                     return result;
                 };
                 
@@ -829,6 +829,7 @@ console.log($scope.currentObject);
                     zps.zpointRSO = object.zpointRSO;
                     zps.checkoutTime = object.checkoutTime;
                     zps.checkoutDay = object.checkoutDay;
+                    zps.isDroolsDisable = object.isDroolsDisable;
                     zps.winter = {};
                     zps.summer = {};
                     $scope.zpointSettings = zps;

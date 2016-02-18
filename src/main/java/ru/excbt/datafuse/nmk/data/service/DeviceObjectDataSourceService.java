@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с источником данных для прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 @Service
 public class DeviceObjectDataSourceService implements SecuredRoles {
 

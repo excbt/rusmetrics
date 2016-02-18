@@ -13,6 +13,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePriceRepository;
 
+/**
+ * Сервис для работы с прайс листами абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 @Service
 public class SubscrServicePriceService {
 

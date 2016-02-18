@@ -13,6 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
+/**
+ * Прайс лист пакетов и услуг
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_service_price")
 public class SubscrServicePrice extends AbstractAuditableModel {

@@ -25,7 +25,7 @@
     </div>
     <div class="row">
                <!--    Непрокручиваямая шапка -->
-        <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
+        <table ng-attr-id={{"indicatorTableHeader"+type}} class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
                 <tr class="nmc-main-table-header">                    
                     <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
                         <div>
@@ -36,7 +36,7 @@
                 </tr>
         </table>
 
-        <div ng-class="{'nmc-el-view-main-div': !chartFlag, 'nmc-el-view-main-div-with-chart': chartFlag}">
+        <div ng-attr-id={{"divIndicatorTable"+type}} ng-class="{'nmc-el-view-main-div': !chartFlag, 'nmc-el-view-main-div-with-chart': chartFlag}">
             <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
                 <tr class="nmc-main-table-header nmc-hide">
                     <th ng-repeat="column in columns track by $index" ng-class="column.headerClass" ng-click="setOrderBy(column.name)">
@@ -53,11 +53,9 @@
                     </td>
 
                 </tr>
-<!--
                 <tr class="nmc-hide">
                     {{onTableLoad()}}
                 </tr>
--->
             </table>
         </div> 
     </div>

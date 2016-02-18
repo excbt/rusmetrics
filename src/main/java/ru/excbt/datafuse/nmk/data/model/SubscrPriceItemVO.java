@@ -10,6 +10,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Value Object для SubscrPriceItem
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 17.11.2015
+ *
+ */
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class SubscrPriceItemVO {

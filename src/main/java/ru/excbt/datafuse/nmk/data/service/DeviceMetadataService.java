@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.repository.DeviceMetadataRepository;
 
+/**
+ * Сервис для работ с метаданными прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.05.2015
+ *
+ */
 @Service
 public class DeviceMetadataService {
 

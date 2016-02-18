@@ -411,6 +411,25 @@ console.log($rootScope.userInfo);
     
     //****************** end region "Server errors"
     
+    //*******************************************************************************
+    //  Индиктор загрузки для отчетов
+    //*******************************************************************************
+    var htmlLoading = '<head>' 
+                    + '<meta charset="utf-8">' 
+                    + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>'
+                    + '</head>'
+                    + '<body>' 
+                    + '<div  ng-show="loading" class="nmc-loading">'
+                    + '<i class="fa fa-spinner fa-spin"></i> Загрузка ... '
+                    + '</div>'
+                    + '</body>';
+    var getHtmlLoading = function(){
+        return htmlLoading;
+    };
+    //*******************************************************************************
+    //
+    //*******************************************************************************
+    
     return {
         checkContext,
         checkHHmm,
@@ -422,6 +441,7 @@ console.log($rootScope.userInfo);
         dateFormating,
         getConfirmCode,
         getContextIds,
+        getHtmlLoading,
         getLoadingServicePermissionFlag,
         getLoadedServicePermission,
         getMonitorMapSettings,

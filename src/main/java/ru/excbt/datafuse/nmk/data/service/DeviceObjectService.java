@@ -19,12 +19,21 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
+import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с приборами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.05.2015
+ *
+ */
 @Service
 public class DeviceObjectService implements SecuredRoles {
 
@@ -94,7 +103,7 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteManualDeviceObject(Long deviceObjectId) {
-		DeviceObject deviceObject = findOne(deviceObjectId);
+		DeviceObject deviceObject = findDeviceObject(deviceObjectId);
 		if (ExSystemKey.MANUAL.isNotEquals(deviceObject.getExSystemKeyname())) {
 			throw new PersistenceException(
 					String.format("Delete DeviceObject(id=%d) with exSystem=%s is not supported ", deviceObjectId,
@@ -185,7 +194,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public DeviceObject findOne(long id) {
+	public DeviceObject findDeviceObject(long id) {
 		DeviceObject result = deviceObjectRepository.findOne(id);
 		if (result != null) {
 			result.loadLazyProps();
@@ -200,8 +209,8 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public DeviceObject saveOne(DeviceObject deviceObject) {
-		return saveOne(deviceObject, null);
+	public DeviceObject saveDeviceObject(DeviceObject deviceObject) {
+		return saveDeviceObject(deviceObject, null);
 	}
 
 	/**
@@ -212,7 +221,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public DeviceObject saveOne(DeviceObject deviceObject, DeviceObjectDataSource deviceObjectDataSource) {
+	public DeviceObject saveDeviceObject(DeviceObject deviceObject, DeviceObjectDataSource deviceObjectDataSource) {
 		// Checking
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
 		checkNotNull(deviceObject.getDeviceModel(), "Device Model is NULL");
@@ -245,7 +254,8 @@ public class DeviceObjectService implements SecuredRoles {
 
 		// Проверяем источник данных для прямой загрузки 
 		if (deviceObjectDataSource != null && deviceObjectDataSource.getSubscrDataSource() != null
-				&& "DEVICE".equals(deviceObjectDataSource.getSubscrDataSource().getDataSourceTypeKey())) {
+				&& DataSourceTypeKey.DEVICE
+						.equalsKeyname(deviceObjectDataSource.getSubscrDataSource().getDataSourceTypeKey())) {
 
 			if (oldDeviceObject == null
 					|| !oldDeviceObject.getDeviceModelId().equals(deviceObject.getDeviceModelId())) {
@@ -265,6 +275,12 @@ public class DeviceObjectService implements SecuredRoles {
 
 		}
 
+		if (deviceObjectDataSource != null && deviceObjectDataSource.getSubscrDataSource() != null
+				&& DataSourceTypeKey.VZLET
+						.equalsKeyname(deviceObjectDataSource.getSubscrDataSource().getDataSourceTypeKey())) {
+			deviceObjectMetaVzletInit(savedDeviceObject);
+		}
+
 		// DeviceObjectLoadingSettings create new
 		if (isNew) {
 			DeviceObjectLoadingSettings deviceObjectLoadingSettings = deviceObjectLoadingSettingsService
@@ -280,7 +296,7 @@ public class DeviceObjectService implements SecuredRoles {
 			}
 		}
 
-		DeviceObject result = findOne(savedDeviceObject.getId());
+		DeviceObject result = findDeviceObject(savedDeviceObject.getId());
 
 		return result;
 	}
@@ -291,7 +307,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public void deleteOne(Long deviceObjectId) {
+	public void deleteDeviceObject(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
 		if (deviceObject == null) {
@@ -307,7 +323,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public void deleteOnePermanent(Long deviceObjectId) {
+	public void deleteDeviceObjectPermanent(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
 		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
 		if (deviceObject == null) {
@@ -332,6 +348,29 @@ public class DeviceObjectService implements SecuredRoles {
 		result.forEach(i -> {
 			i.loadLazyProps();
 		});
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param entity
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public DeviceObjectMetaVzlet deviceObjectMetaVzletInit(DeviceObject entity) {
+		checkNotNull(entity);
+		List<DeviceObjectMetaVzlet> metaVzletList = deviceObjectMetaVzletRepository
+				.findByDeviceObjectId(entity.getId());
+		DeviceObjectMetaVzlet result;
+		if (metaVzletList.isEmpty()) {
+			result = new DeviceObjectMetaVzlet();
+			result.setDeviceObject(entity);
+			result = updateDeviceObjectMetaVzlet(result);
+		} else {
+			result = metaVzletList.get(0);
+		}
+
 		return result;
 	}
 

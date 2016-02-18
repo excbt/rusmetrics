@@ -10,6 +10,14 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 
+/**
+ * Repository для ReportParamsetUnit
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.04.2015
+ *
+ */
 public interface ReportParamsetUnitRepository extends CrudRepository<ReportParamsetUnit, Long> {
 
 	/**

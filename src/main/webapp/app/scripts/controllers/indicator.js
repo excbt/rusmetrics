@@ -1,6 +1,7 @@
 
 angular.module('portalNMC')
     .controller('IndicatorsCtrl', ['$scope','$rootScope', '$cookies', '$window', '$http', '$location', 'crudGridDataFactory', 'FileUploader', 'notificationFactory', 'indicatorSvc', 'mainSvc',function($scope, $rootScope, $cookies, $window, $http, $location, crudGridDataFactory, FileUploader, notificationFactory, indicatorSvc, mainSvc){
+        $rootScope.ctxId = "indicators_page";
         
 //console.log($rootScope.reportStart);
 //console.log($rootScope.reportEnd);        

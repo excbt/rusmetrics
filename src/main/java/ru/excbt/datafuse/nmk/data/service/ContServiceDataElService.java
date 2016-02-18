@@ -3,8 +3,10 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,16 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+/**
+ * Сервис по работе с данными по электроснабжению
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 15.12.2015
+ *
+ */
 @Service
 public class ContServiceDataElService extends AbstractContServiceDataService {
 
@@ -440,6 +451,47 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		return result;
 
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Boolean selectExistsAnyConsData(long contZPointId) {
+		checkArgument(contZPointId > 0);
+		List<Long> resultList = contServiceDataElConsRepository.selectExistsAnyDataByZPoint(contZPointId,
+				LIMIT1_PAGE_REQUEST);
+		return resultList.size() > 0;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @param fromDateTime
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Date selectLastConsDataDate(long contZPointId, Date fromDateTime) {
+		checkArgument(contZPointId > 0);
+
+		Date actialFromDate = fromDateTime;
+		if (actialFromDate == null) {
+			actialFromDate = JodaTimeUtils.startOfDay(DateTime.now().minusDays(3)).toDate();
+		} else {
+			logger.debug("MinCheck: {}", actialFromDate);
+		}
+
+		List<ContServiceDataElCons> resultList = contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId,
+				actialFromDate, LIMIT1_PAGE_REQUEST);
+
+		if (resultList.size() == 0) {
+			resultList = contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+		}
+
+		checkNotNull(resultList);
+		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
 	}
 
 }

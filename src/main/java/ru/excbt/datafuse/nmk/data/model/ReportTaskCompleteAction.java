@@ -8,10 +8,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Задание на рассылку отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
 @Table (name = "report_task_complete_action")
 public class ReportTaskCompleteAction extends AbstractAuditableModel {
@@ -22,19 +30,19 @@ public class ReportTaskCompleteAction extends AbstractAuditableModel {
 	private static final long serialVersionUID = -7012836234707188462L;
 
 	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinColumn(name = "report_task_id")
+	@JoinColumn (name = "report_task_id")
 	@JsonIgnore
 	private ReportTask reportTask;
-	
+
 	@Column (name = "report_action_type")
 	private String reportActionType;
 
 	@Column (name = "report_action_param")
 	private String reportActionParam;
-	
-	@Column(name = "is_complete")
+
+	@Column (name = "is_complete")
 	private boolean _complete;
-	
+
 	@Version
 	private int version;
 

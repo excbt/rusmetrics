@@ -238,7 +238,7 @@ app.config(function($logProvider){
     $logProvider.debugEnabled(true);
 });
 
-app.run(['objectSvc', 'monitorSvc', 'mainSvc', function(objectSvc, monitorSvc, mainSvc){
+app.run(['objectSvc', 'monitorSvc', 'mainSvc', 'reportSvc', function(objectSvc, monitorSvc, mainSvc, reportSvc){
 console.log("Run main, object and monitor services.");  
     var mainSvcInit = mainSvc.getUserServicesPermissions();
     var monitorSvcInit = monitorSvc.getAllMonitorObjects();

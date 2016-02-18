@@ -5,6 +5,14 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * Работа с колонками отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.07.2015
+ *
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportColumnSettings {
 
@@ -14,7 +22,6 @@ public class ReportColumnSettings {
 
 	private List<ReportColumn> ts2List = new ArrayList<>();
 
-	
 	public List<ReportColumn> getAllTsList() {
 		return allTsList;
 	}
@@ -38,5 +45,5 @@ public class ReportColumnSettings {
 	public void setTs2List(List<ReportColumn> ts2List) {
 		this.ts2List = ts2List;
 	}
-	
+
 }

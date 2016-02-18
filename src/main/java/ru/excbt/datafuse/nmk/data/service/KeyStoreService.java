@@ -10,13 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.KeyStore;
 import ru.excbt.datafuse.nmk.data.repository.keyname.KeyStoreRepository;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+/**
+ * Сервис для работы с параметрами системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.07.2015
+ *
+ */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class KeyStoreService {
@@ -58,8 +66,7 @@ public class KeyStoreService {
 				result = valueNode.asText();
 			}
 		} catch (IOException e) {
-			throw new PersistenceException(String.format(
-					"Can't parse KeyStore json for keyname:%s", keyname));
+			throw new PersistenceException(String.format("Can't parse KeyStore json for keyname:%s", keyname));
 		}
 
 		return result;

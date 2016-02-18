@@ -14,13 +14,21 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.DynamicUpdate;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Уведомления абонента по событиям
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.06.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_cont_event_notification")
 @JsonIgnoreProperties(ignoreUnknown = true)

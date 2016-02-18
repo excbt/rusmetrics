@@ -25,8 +25,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 public class ReportSheduleServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportSheduleServiceTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleServiceTest.class);
 
 	@Autowired
 	private ReportSheduleService reportSheduleService;
@@ -43,8 +42,7 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectShedule() {
 		List<ReportShedule> resultList = reportSheduleService
-				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now()
-						);
+				.selectReportShedule(currentSubscriberService.getSubscriberId(), LocalDateTime.now());
 
 		assertNotNull(resultList);
 	}
@@ -52,9 +50,8 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 	@Test
 	public void testAddNewSheduleClear() {
 
-		List<ReportTemplate> reportTemplates = reportTemplateService
-				.selectSubscriberReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true, currentSubscriberService.getSubscriberId());
+		List<ReportTemplate> reportTemplates = reportTemplateService.selectSubscriberReportTemplates(
+				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
 
 		assertTrue(reportTemplates.size() > 0);
 
@@ -63,14 +60,13 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 		logger.info("Found ReportTemplate (id={})", sReportTemplate.getId());
 
 		ReportParamset sReportParamset = null;
-		List<ReportParamset> reportParamsetList = reportParamsetService
-				.selectReportParamset(sReportTemplate.getId(), DateTime.now());
+		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportParamset(sReportTemplate.getId(),
+				DateTime.now());
 
 		if (reportParamsetList.size() == 0) {
-			sReportParamset = reportParamsetService.createReportParamsetMaster(
-					sReportTemplate.getId(), "Auto Genereate for TEST",
-					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
-					currentSubscriberService.getSubscriberId());
+			sReportParamset = reportParamsetService.createReportParamsetEx(sReportTemplate.getId(),
+					"Auto Genereate for TEST", ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF,
+					currentSubscriberService.getSubscriberId(), true);
 		} else {
 			sReportParamset = reportParamsetList.get(0);
 		}
@@ -85,7 +81,7 @@ public class ReportSheduleServiceTest extends JpaSupportTest {
 
 		ReportShedule result = reportSheduleService.createOne(reportShedule);
 		assertNotNull(result);
-		
+
 		reportSheduleService.deleteOne(result.getId());
 	}
 }

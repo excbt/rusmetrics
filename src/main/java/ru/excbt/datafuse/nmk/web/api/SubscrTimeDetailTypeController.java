@@ -13,6 +13,14 @@ import ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType;
 import ru.excbt.datafuse.nmk.data.service.TimeDetailTypeService;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с типами детализации по времени
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.01.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrTimeDetailTypeController extends SubscrApiController {

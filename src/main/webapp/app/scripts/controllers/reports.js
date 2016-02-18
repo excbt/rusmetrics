@@ -2,6 +2,7 @@
 var app = angular.module('portalNMC');
 app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout){
     
+    $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
         //ctrl settings
     $scope.ctrlSettings = {};
@@ -41,15 +42,15 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.fileTypes = ["PDF", "HTML", "XLSX"];
     
     $scope.currentObject = {};
-    $scope.objects = [];
-    $scope.columns = [
-        {"name":"reportTypeName","header":"Тип отчета", "class":"col-md-11"}
-    ];
+    $scope.reportObjects = [];
+//    $scope.columns = [
+//        {"name":"reportTypeName","header":"Тип отчета", "class":"col-xs-11 col-md-11"}
+//    ];
     $scope.paramsetColumns = [
-        {"name":"name","header":"Наименование", "class":"col-md-3"}
-        ,{"name":"reportTemplateName","header":"Шаблон", "class":"col-md-3"}
-        ,{"name":"period","header":"Период", "class":"col-md-2"}
-        ,{"name":"fileType","header":"Тип файла", "class":"col-md-1"}
+        {"name":"name", "header":"Наименование", "class":"col-xs-3 col-md-3"}
+        ,{"name":"reportTemplateName", "header":"Шаблон", "class":"col-xs-3 col-md-3"}
+        ,{"name":"period", "header":"Период", "class":"col-xs-2 col-md-2"}
+        ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
     ];
     $scope.groupUrl = "../api/contGroup";
     $scope.crudTableName = "../api/reportParamset"; 
@@ -62,6 +63,26 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+    
+    $scope.categories = [
+        {
+            name: "Аналитические",
+            prefix: "А",
+            class: "active",
+            reportTypes: []
+        },
+        {
+            name: "Оперативные",
+            prefix: "Э",
+            reportTypes: []
+        },
+        {
+            name: "Служебные",
+            prefix: "C",
+            reportTypes: []
+        }
+    ];
+    
     //report types
     $scope.reportTypes = [];
     $scope.getReportTypes = function(){
@@ -79,17 +100,24 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                     continue;
                 };
                 newObject = {};
-                newObject.reportType = data[i].keyname;
+                newObject.reportType = data[i].keyname;        
                 newObject.reportTypeName = data[i].caption;
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
                     //flag: the toggle visible flag for the special params page.
-                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length>0?true:false);
+                newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
+                for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
+                    if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
+                        newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
+                        $scope.categories[categoryCounter].reportTypes.push(newObject);                     
+                        continue;
+                    };
+                };
                 
                 newObjects.push(newObject);
             };        
-            $scope.objects = newObjects;        
+            $scope.reportObjects = newObjects;        
             $scope.getActive();
         });
     };
@@ -106,8 +134,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getReportPeriods();
     
     $scope.oldColumns = [
-        {"name":"name", "header":"Название варианта", "class":"col-md-5"}
-        ,{"name":"activeStartDate", "header":"Действует с", "class":"col-md-2"}
+        {"name":"name", "header":"Название варианта", "class":"col-xs-5 col-md-5"}
+        ,{"name":"activeStartDate", "header":"Действует с", "class":"col-xs-2 col-md-2"}
     ];
 
     var successCallback = function (e) {
@@ -158,9 +186,9 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
  //get templates   
     $scope.getActive = function(){
-        if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
-        for (var i=0; i<$scope.objects.length; i++){
-            $scope.getParamsets($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+        if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
+        for (var i=0; i<$scope.reportObjects.length; i++){
+            $scope.getParamsets($scope.crudTableName+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
 
@@ -1060,10 +1088,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         var responseType = "arraybuffer";//указываем тип ответа от сервера
         //делаем запрос на сервер
 //        $http.put(url, paramset, { contObjectIds: objectIds }, {responseType: responseType})
+        var clearContObjectIds = false; //the clear selected paramset objects flag           
+            if (mainSvc.checkUndefinedNull(objectIds) || objectIds.length == 0){                
+                clearContObjectIds = true;
+        };
         $http({
             url: url, 
             method: "PUT",
-            params: { contObjectIds: objectIds },
+            params: { contObjectIds: objectIds, clearContObjectIds: clearContObjectIds},
             data: tmpParamset,
             responseType: responseType
         })
@@ -1108,5 +1140,22 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             notificationFactory.errorInfo(e.statusText,e);
             console.log(e);
         }*/);
+    };
+
+        //work with tabs
+    $scope.setActiveTab = function(tabId){
+        var tab = document.getElementById('rep_a_teplo_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('rep_a_electro_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById('rep_a_gas_sys');     
+        tab.classList.remove("active");
+        var tab = document.getElementById(tabId);     
+        tab.classList.add("active");
+        
+    };
+    
+    $scope.selectedCategory = function(cat){
+        $scope.curCategory = angular.copy(cat);
     };
 }]);

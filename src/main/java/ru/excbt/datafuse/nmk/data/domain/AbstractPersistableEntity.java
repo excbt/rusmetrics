@@ -14,21 +14,23 @@ import org.springframework.data.domain.Persistable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
- * Inspired by org.springframework.data.jpa.domain.AbstractPersistable
+ * Базовый класс для хранимых сущностей
  * 
- *
+ * @version 1.0
+ * @since 12.03.2015
+ * 
  * @param <PK>
  */
 @MappedSuperclass
-public abstract class AbstractPersistableEntity <PK extends Serializable> implements Persistable<PK> {
-	
+public abstract class AbstractPersistableEntity<PK extends Serializable> implements Persistable<PK> {
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6201049315760221599L;
 
 	@Id
-	@SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id", allocationSize = 1)	
+	@SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "abstractEntity")
 	@Column
 	private PK id;
@@ -37,7 +39,7 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 	 * (non-Javadoc)
 	 * 
 	 * @see org.springframework.data.domain.Persistable#getId()
-	 */	
+	 */
 	@Override
 	public PK getId() {
 		return id;
@@ -46,8 +48,9 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 	/**
 	 * Sets the id of the entity.
 	 * 
-	 * @param id the id to set
-	 */	
+	 * @param id
+	 *            the id to set
+	 */
 	public void setId(final PK id) {
 		this.id = id;
 	}
@@ -67,7 +70,7 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 	 * (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#toString()
-	 */	
+	 */
 	@Override
 	public String toString() {
 		return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
@@ -98,6 +101,4 @@ public abstract class AbstractPersistableEntity <PK extends Serializable> implem
 		return true;
 	}
 
-	
-	
 }

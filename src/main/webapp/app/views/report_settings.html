@@ -58,7 +58,7 @@
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="">
+                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
@@ -151,7 +151,8 @@
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" ng-click="" ng-dblclick="showDetails(object)">
+<!--                     | orderBy:orderBy.field:!orderBy.asc | filter: filter-->
+                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="showDetails(object)">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
                                 <tr ng-class="{'nmc-tr-odd':($index%2===0)}">

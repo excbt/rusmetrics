@@ -4,7 +4,8 @@
 var app = angular.module('portalNMC');
 app.controller(
 		'DlvrCtrl',
-		function($scope, $http, notificationFactory, mainSvc){
+		function($rootScope, $scope, $http, notificationFactory, mainSvc){
+            $rootScope.ctxId = "delivery_page";
 			/************************************
 			 * Определяем глобальные переменные *
 			 ************************************/

@@ -29,9 +29,17 @@ import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с объектом учета для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.02.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContObjectController extends SubscrApiController {
@@ -127,7 +135,7 @@ public class SubscrContObjectController extends SubscrApiController {
 			return responseBadRequest();
 		}
 
-		ApiAction action = new EntityApiActionAdapter<ContObject>(contObject) {
+		ApiAction action = new ApiActionEntityAdapter<ContObject>(contObject) {
 
 			@Override
 			public ContObject processAndReturnResult() {

@@ -9,6 +9,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePrice;
 
+/**
+ * Repository для SubscrServicePrice
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 public interface SubscrServicePriceRepository extends CrudRepository<SubscrServicePrice, Long> {
 
 	public List<SubscrServicePrice> findByPackIdOrderByPriceBeginDateDescIdDesc(Long packId);

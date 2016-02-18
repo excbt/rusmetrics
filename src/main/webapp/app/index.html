@@ -118,7 +118,7 @@
                             <a title="Свзяаться с технической поддержкой" href="http://support.rusmetrics.ru/" target="_blank"><button class="btn btn-xs nmc-button-support"></button></a>
                                 </p>
                             <p>
-                            <a title="Справка" href="http://www.rusmetrics.ru/public/help/default.html" target="_blank"><button class="btn btn-xs nmc-button-help"></button></a>
+                            <a title="Справка" ng-href="{{'../api/help/anchor/'+getCtx()}}" target="_blank"><button class="btn btn-xs nmc-button-help"></button></a>
                                 </p>
                         </div>
                     </li>
@@ -299,11 +299,11 @@
       
     <script src="scripts/controllers/directory.js"></script>
     <script src="scripts/controllers/objects.js"></script>
-    <script src="scripts/controllers/reports.js"></script>
+    <script src="scripts/controllers/reports_use_svc.js"></script>
     <script src="scripts/controllers/indicator.js"></script>
       <script src="scripts/controllers/tariffs.js"></script>
       <script src="scripts/controllers/report_settings.js"></script>
-      <script src="scripts/controllers/param_sets.js"></script>
+      <script src="scripts/controllers/param_sets_use_svc.js"></script>
       <script src="scripts/controllers/user-info.js"></script>
       <script src="scripts/controllers/delivery.js"></script>
       <script src="scripts/controllers/contacts.js"></script>
@@ -334,6 +334,8 @@
       <script src="scripts/directives/crud-grid-directive-objects-use-svc.js"></script>
       <script src="scripts/directives/ng-right-click.js"></script>
       <script src="scripts/directives/nmc-view-electricity.js"></script>
+      <script src="scripts/directives/nmc-view-message-for-user.js"></script>
+      <script src="scripts/directives/nmc-paramset-modal.js"></script>
       
       <!-- Services -->
       <script src="scripts/services/notification-factory.js"></script>
@@ -341,52 +343,18 @@
       <script src="scripts/services/monitor-service.js"></script>
       <script src="scripts/services/indicator-service.js"></script>
       <script src="scripts/services/main-service.js"></script>
+      <script src="scripts/services/report-service.js"></script>
         <!-- endbuild -->
     
       <script src="scripts/controllers/data-range-settings.js"></script>
       
       <!-- Metrics -->
-      <!-- Google -->
-      <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-          ga('create', 'UA-73384264-2', 'auto');
-          ga('send', 'pageview');
-
-      </script>
-      
-      <!-- Yandex -->
-      <!-- Yandex.Metrika counter -->
-    <script type="text/javascript">
-        (function (d, w, c) {
-            (w[c] = w[c] || []).push(function() {
-                try {
-                    w.yaCounter35166690 = new Ya.Metrika({
-                        id:35166690,
-                        clickmap:true,
-                        trackLinks:true,
-                        accurateTrackBounce:true
-                    });
-                } catch(e) { }
-            });
-
-            var n = d.getElementsByTagName("script")[0],
-                s = d.createElement("script"),
-                f = function () { n.parentNode.insertBefore(s, n); };
-            s.type = "text/javascript";
-            s.async = true;
-            s.src = "https://mc.yandex.ru/metrika/watch.js";
-
-            if (w.opera == "[object Opera]") {
-                d.addEventListener("DOMContentLoaded", f, false);
-            } else { f(); }
-        })(document, window, "yandex_metrika_callbacks");
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/35166690" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
+      <script src="scripts/metrics.js"></script>
+      <noscript>
+          <div>
+              <img src="https://mc.yandex.ru/watch/35166690" style="position:absolute; left:-9999px;" alt="" />
+          </div>
+      </noscript>
 
 </body>
 </html>

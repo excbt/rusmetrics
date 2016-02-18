@@ -1,7 +1,8 @@
 'use strict';
 angular.module('portalNMC')
-.controller('SettingsNoticesCtrl', function($scope, $http, notificationFactory, mainSvc){
-console.log("Run SettingsNoticeCtrl");
+.controller('SettingsNoticesCtrl', function($rootScope, $scope, $http, notificationFactory, mainSvc){
+//console.log("Run SettingsNoticeCtrl");
+    $rootScope.ctxId = "settings_notices_page";
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.ctxId = "settings_notices";

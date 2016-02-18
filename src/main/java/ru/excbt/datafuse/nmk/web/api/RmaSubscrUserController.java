@@ -20,6 +20,14 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
+/**
+ * Контроллер для работы с пользователями абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.10.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/rma")
 public class RmaSubscrUserController extends SubscrUserController {

@@ -20,6 +20,14 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
+/**
+ * Абонент
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.03.2015
+ *
+ */
 @Entity
 @Table(name = "subscriber")
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -78,16 +86,16 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	@JsonIgnore
 	@Column(name = "rma_ldap_ou", insertable = false, updatable = false)
 	private String rmaLdapOu;
-	
+
 	@Column(name = "map_center_lat")
 	private BigDecimal mapCenterLat;
-	
+
 	@Column(name = "map_center_lng")
 	private BigDecimal mapCenterLng;
-	
+
 	@Column(name = "map_zoom")
 	private BigDecimal mapZoom;
-	
+
 	@Column(name = "map_zoom_detail")
 	private BigDecimal mapZoomDetail;
 
@@ -204,38 +212,37 @@ public class Subscriber extends AbstractAuditableModel implements DeletableObjec
 	public void setTimezoneDefKeyname(String timezoneDefKeyname) {
 		this.timezoneDefKeyname = timezoneDefKeyname;
 	}
-	
+
 	public BigDecimal getMapCenterLat() {
 		return mapCenterLat;
 	}
-	
+
 	public void setMapCenterLat(BigDecimal mapCenterLat) {
 		this.mapCenterLat = mapCenterLat;
 	}
-	
+
 	public BigDecimal getMapCenterLng() {
 		return mapCenterLng;
 	}
-	
+
 	public void setMapCenterLng(BigDecimal mapCenterLng) {
 		this.mapCenterLng = mapCenterLng;
 	}
-	
+
 	public BigDecimal getMapZoom() {
 		return mapZoom;
 	}
-	
+
 	public void setMapZoom(BigDecimal mapZoom) {
 		this.mapZoom = mapZoom;
 	}
-	
+
 	public BigDecimal getMapZoomDetail() {
 		return mapZoomDetail;
 	}
-	
+
 	public void setMapZoomDetail(BigDecimal mapZoomDetail) {
 		this.mapZoomDetail = mapZoomDetail;
 	}
-
 
 }

@@ -31,6 +31,14 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrServicePermissionRepository;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с доступом к услугам абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.09.2015
+ *
+ */
 @Service
 public class SubscrServiceAccessService implements SecuredRoles {
 

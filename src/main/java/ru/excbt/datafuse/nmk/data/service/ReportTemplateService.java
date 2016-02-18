@@ -28,6 +28,14 @@ import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с шаблонами отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Service
 public class ReportTemplateService implements SecuredRoles {
 
@@ -194,7 +202,8 @@ public class ReportTemplateService implements SecuredRoles {
 	/**
 	 * 
 	 * @param reportType
-	 * @param currentDate
+	 * @param isActive
+	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -203,6 +212,21 @@ public class ReportTemplateService implements SecuredRoles {
 
 		List<ReportTemplate> result = reportTemplateRepository.selectSubscriberTemplates(reportType.getKeyname(),
 				isActive, subscriberId);
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param reportType
+	 * @param isActive
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ReportTemplate> selectCommonReportTemplates(ReportTypeKey reportTypeKey, boolean isActive) {
+
+		List<ReportTemplate> result = reportTemplateRepository.selectCommonTemplates(reportTypeKey.getKeyname(),
+				isActive);
 
 		return result;
 	}

@@ -5,16 +5,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,12 +22,19 @@ import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 
+/**
+ * Контроллер для работы с настройками точки учета для абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 01.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrContZPointSettingModeController extends WebApiController {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrContZPointSettingModeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointSettingModeController.class);
 
 	@Autowired
 	private ContZPointSettingModeService contZPointSettingModeService;
@@ -46,9 +48,9 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	 * @param contZPointId
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> listAll(
-			@PathVariable("contObjectId") Long contObjectId,
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode",
+			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> listAll(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		logger.debug("Fire All");
@@ -63,8 +65,7 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 		// }
 
 		logger.debug("Fire Result List");
-		List<ContZPointSettingMode> resultList = contZPointSettingModeService
-				.findSettingByContZPointId(contZPointId);
+		List<ContZPointSettingMode> resultList = contZPointSettingModeService.findSettingByContZPointId(contZPointId);
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -76,11 +77,10 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 	 * @param settingMode
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode/{id}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateOne(
-			@PathVariable("contObjectId") long contObjectId,
-			@PathVariable("contZPointId") long contZPointId,
-			@PathVariable("id") long id,
+	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/settingMode/{id}",
+			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> updateOne(@PathVariable("contObjectId") long contObjectId,
+			@PathVariable("contZPointId") long contZPointId, @PathVariable("id") long id,
 			@RequestBody ContZPointSettingMode settingMode) {
 
 		checkArgument(contObjectId > 0);
@@ -92,35 +92,28 @@ public class SubscrContZPointSettingModeController extends WebApiController {
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 
 		if (contZPoint.getContObject().getId().longValue() != contObjectId) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("ContZPoint (id=%d) is not own to ContZObject(id=%d)",
-									contZPointId, contObjectId));
+			return ResponseEntity.badRequest().body(
+					String.format("ContZPoint (id=%d) is not own to ContZObject(id=%d)", contZPointId, contObjectId));
 		}
 
-		ContZPointSettingMode currentSetting = contZPointSettingModeService
-				.findOne(id);
+		ContZPointSettingMode currentSetting = contZPointSettingModeService.findOne(id);
 
 		if (currentSetting == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (currentSetting.getContZPoint().getId().longValue() != contZPoint
-				.getId().longValue()) {
+		if (currentSetting.getContZPoint().getId().longValue() != contZPoint.getId().longValue()) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		if (currentSetting.getId().longValue() != settingMode.getId()
-				.longValue()) {
+		if (currentSetting.getId().longValue() != settingMode.getId().longValue()) {
 			return ResponseEntity.badRequest().build();
 		}
 
 		settingMode.setContZPoint(contZPoint);
 		prepareAuditableProps(currentSetting, settingMode);
 
-		ApiAction action = new AbstractEntityApiAction<ContZPointSettingMode>(
-				settingMode) {
+		ApiAction action = new AbstractEntityApiAction<ContZPointSettingMode>(settingMode) {
 
 			@Override
 			public void process() {

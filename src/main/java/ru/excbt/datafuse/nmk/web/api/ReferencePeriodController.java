@@ -20,14 +20,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с эталонным периодом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.06.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class ReferencePeriodController extends SubscrApiController {
@@ -36,12 +44,6 @@ public class ReferencePeriodController extends SubscrApiController {
 
 	@Autowired
 	private ReferencePeriodService referencePeriodService;
-
-	// @Autowired
-	// private CurrentSubscriberService currentSubscriberService;
-
-	// @Autowired
-	// private SubscriberService subscriberService;
 
 	@Autowired
 	private ContZPointService contZPointService;
@@ -140,17 +142,16 @@ public class ReferencePeriodController extends SubscrApiController {
 		referencePeriod.setSubscriber(currentSubscriberService.getSubscriber());
 		referencePeriod.setContZPointId(contZPointId);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<ReferencePeriod, Long>(referencePeriod,
-				request) {
-
-			@Override
-			public void process() {
-				setResultEntity(referencePeriodService.createOne(entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ReferencePeriod, Long>(referencePeriod, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public ReferencePeriod processAndReturnResult() {
+				return referencePeriodService.createOne(entity);
 			}
 		};
 
@@ -217,7 +218,7 @@ public class ReferencePeriodController extends SubscrApiController {
 			return checkResult;
 		}
 
-		final ApiAction action = new AbstractApiAction() {
+		final ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

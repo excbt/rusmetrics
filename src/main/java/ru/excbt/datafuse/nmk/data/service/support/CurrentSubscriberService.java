@@ -14,11 +14,18 @@ import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.security.AuditUserPrincipal;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
+/**
+ * Класс для работы с текущим абонентом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.03.2015
+ *
+ */
 @Service
 public class CurrentSubscriberService {
 
@@ -67,34 +74,6 @@ public class CurrentSubscriberService {
 	 * 
 	 * @return
 	 */
-	protected long getSubscriberIdOld() {
-
-		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
-
-		if (userPrincipal == null) {
-			logger.warn("ATTENTION!!! userPrincipal is null. Using mockUserService");
-			return mockSubscriberService.getMockSubscriberId();
-		}
-
-		Long result = null;
-		Long subscriberId = userPrincipal.getSubscriberId();
-		if (subscriberId != null) {
-			result = userPrincipal.getSubscriberId();
-		} else {
-			logger.warn("ATTENTION!!! Property subscriberId of AuditUserPrincipal is null. Using mockUserService");
-			result = mockSubscriberService.getMockSubscriberId();
-		}
-
-		checkNotNull(result, "getSubscriberId() is NULL");
-
-		return result;
-
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
 	public Subscriber getSubscriber() {
 
 		SubscriberUserDetails userDetails = currentUserService.getCurrentUserDetails();
@@ -105,28 +84,6 @@ public class CurrentSubscriberService {
 		}
 
 		Long subscriberId = userDetails.getSubscriberId();
-		if (subscriberId == null) {
-			logger.warn("ATTENTION!!! Property subscriberId of AuditUserPrincipal is null. Using mockUserService");
-			return mockSubscriberService.getMockSubscriber();
-		}
-
-		return subscriberService.selectSubscriber(subscriberId);
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	protected Subscriber getSubscriberOld() {
-
-		AuditUserPrincipal userPrincipal = currentUserService.getCurrentAuditUserPrincipal();
-
-		if (userPrincipal == null) {
-			logger.warn("ATTENTION!!! AuditUserPrincipal is null. Using mockUserService");
-			return mockSubscriberService.getMockSubscriber();
-		}
-
-		Long subscriberId = userPrincipal.getSubscriberId();
 		if (subscriberId == null) {
 			logger.warn("ATTENTION!!! Property subscriberId of AuditUserPrincipal is null. Using mockUserService");
 			return mockSubscriberService.getMockSubscriber();

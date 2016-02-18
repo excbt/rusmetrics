@@ -17,8 +17,15 @@ import ru.excbt.datafuse.nmk.data.repository.ReportSheduleRepository;
 import ru.excbt.datafuse.nmk.report.ReportActionKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с расписаниями отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.04.2015
+ *
+ */
 @Service
-
 public class ReportSheduleService implements SecuredRoles {
 
 	@Autowired

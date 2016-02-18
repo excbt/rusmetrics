@@ -10,13 +10,21 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+
+/**
+ * Универсальный справочник
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.03.2015
+ *
+ */
 @Entity
-@Table(name="u_directory")
-public class UDirectory extends AbstractAuditableModel  {
+@Table(name = "u_directory")
+public class UDirectory extends AbstractAuditableModel {
 
 	/**
 	 * 
@@ -27,24 +35,22 @@ public class UDirectory extends AbstractAuditableModel  {
 	private String directoryName;
 
 	@Column(name = "directory_description")
-	private String directoryDescription;	
-	
+	private String directoryDescription;
+
 	@OneToOne //(fetch = FetchType.LAZY)
 	@JoinColumn(name = "directory_node_id")
 	@JsonIgnore
 	private UDirectoryNode directoryNode;
 
-	
-	@ManyToOne (fetch = FetchType.LAZY)
-	@JoinTable(name="subscr_directory",
-    joinColumns=@JoinColumn(name="directory_id"),
-    inverseJoinColumns=@JoinColumn(name="subscriber_id"))
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinTable(name = "subscr_directory", joinColumns = @JoinColumn(name = "directory_id") ,
+			inverseJoinColumns = @JoinColumn(name = "subscriber_id") )
 	@JsonIgnore
 	private Subscriber subscriber;
-	
+
 	@Version
 	private int version;
-	
+
 	public String getDirectoryName() {
 		return directoryName;
 	}
@@ -84,5 +90,5 @@ public class UDirectory extends AbstractAuditableModel  {
 	public void setSubscriber(Subscriber subscriber) {
 		this.subscriber = subscriber;
 	}
-	
+
 }

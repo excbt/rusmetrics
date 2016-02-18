@@ -36,12 +36,20 @@ import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с уведомлениями абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.06.2015
+ *
+ */
 @Controller
 @RequestMapping("/api/subscr/contEvent")
 public class SubscrContEventNotificationController extends SubscrApiController {
@@ -72,8 +80,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationsAll() {
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectAll(getCurrentSubscriberId(),
-				null, null);
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
+				.selectAll(getCurrentSubscriberId(), null, null);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
@@ -123,7 +131,8 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		}
 
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectByConditions(
-				getCurrentSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew, pageRequest);
+				getCurrentSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew,
+				pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
@@ -163,7 +172,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		checkNotNull(isNew);
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
@@ -188,7 +197,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		checkNotNull(isNew);
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrContEventNotifiicationService.updateNotificationIsNew(isNew, Arrays.asList(notificationIds),
@@ -239,7 +248,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		final LocalDatePeriod actionDP = requestDatePeriod;
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 			@Override
 			public void process() {
 				subscrContEventNotifiicationService.updateRevisionByConditions(getCurrentSubscriberId(), actionDP,

@@ -32,12 +32,11 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 public class ReportParamsetControllerTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetControllerTest.class);
 
 	private static final long TEST_REPORT_TEMPLATE_ID = 28181422;
 	private static final long TEMPLATE_PARAMSET_ID = 28344056;
-	
+
 	private final static long TEST_PARAMSET_COMMERCE = 28618264;
 
 	@Autowired
@@ -48,22 +47,21 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
-	
+
 	@Test
 	public void testCommerceList() throws Exception {
-		_testJsonGet("/api/reportParamset/commerce");
+		_testGetJson("/api/reportParamset/commerce");
 	}
 
 	@Test
 	public void testCommerceGet() throws Exception {
-		_testJsonGet("/api/reportParamset/commerce/" + TEST_PARAMSET_COMMERCE);
-	}	
-	
+		_testGetJson("/api/reportParamset/commerce/" + TEST_PARAMSET_COMMERCE);
+	}
+
 	@Test
 	public void testCommerceCreateUpdateDelete() throws Exception {
 		List<ReportTemplate> commTemplates = reportTemplateService
-				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT,
-						true);
+				.selectDefaultReportTemplates(ReportTypeKey.COMMERCE_REPORT, true);
 
 		assertTrue(commTemplates.size() > 0);
 
@@ -82,8 +80,7 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		assertTrue(metaParamSpecial.size() > 0);
 
 		{
-			ReportParamsetParamSpecial param = ReportParamsetParamSpecial
-					.newInstance(metaParamSpecial.get(0));
+			ReportParamsetParamSpecial param = ReportParamsetParamSpecial.newInstance(metaParamSpecial.get(0));
 			param.setReportParamset(reportParamset);
 			param.setTextValue("testValue");
 			assertTrue(param.isOneValueAssigned());
@@ -105,16 +102,13 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		String objString = OBJECT_MAPPER.writeValueAsString(reportParamset);
 		logger.info("objString: {}", objString);
 
-		Long createdId = _testJsonCreate(urlStr, reportParamset, extraInializer);
-
+		Long createdId = _testCreateJson(urlStr, reportParamset, extraInializer);
 
 		ReportParamset reportParamsetNew = reportParamsetService.findOne(createdId);
-		
-		
+
 		reportParamsetNew.getParamSpecialList().clear();
 		{
-			ReportParamsetParamSpecial param2 = ReportParamsetParamSpecial
-					.newInstance(metaParamSpecial.get(0));
+			ReportParamsetParamSpecial param2 = ReportParamsetParamSpecial.newInstance(metaParamSpecial.get(0));
 			param2.setReportParamset(reportParamset);
 			param2.setTextValue("testValue222");
 			assertTrue(param2.isOneValueAssigned());
@@ -122,9 +116,9 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 			reportParamsetNew.getParamSpecialList().add(param2);
 		}
 
-		_testJsonUpdate(urlStr + "/" + createdId, reportParamsetNew);
+		_testUpdateJson(urlStr + "/" + createdId, reportParamsetNew);
 
-		_testJsonDelete(urlStr + "/" + createdId);
+		_testDeleteJson(urlStr + "/" + createdId);
 
 	}
 
@@ -136,18 +130,23 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		logger.info("Array of {}", arrayToString(objectIds));
 
 		ResultActions resultAction = mockMvc
-				.perform(put(
-						String.format("/api/reportParamset/%d/contObjects",
-								TEMPLATE_PARAMSET_ID))
-						.contentType(MediaType.APPLICATION_JSON)
-						.param("contObjectIds", arrayToString(objectIds))
-						.with(testSecurityContext())
-						.accept(MediaType.APPLICATION_JSON));
+				.perform(put(String.format("/api/reportParamset/%d/contObjects", TEMPLATE_PARAMSET_ID))
+						.contentType(MediaType.APPLICATION_JSON).param("contObjectIds", arrayToString(objectIds))
+						.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
-		resultAction.andExpect(status().isAccepted());
+		resultAction.andExpect(status().is2xxSuccessful());
 
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testReportParamsetContextLaunch() throws Exception {
+		_testGetJson("/api/reportParamset/menu/contextLaunch");
 	}
 
 }
