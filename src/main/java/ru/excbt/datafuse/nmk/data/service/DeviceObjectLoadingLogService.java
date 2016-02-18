@@ -13,6 +13,14 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingLogRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с протоколированием загрузки с прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.01.2016
+ *
+ */
 @Service
 public class DeviceObjectLoadingLogService implements SecuredRoles {
 

@@ -10,6 +10,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
+/**
+ * Сервис для работы с работы с пользователями абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.10.2015
+ *
+ */
 @Service
 public class SecuritySubscrUserService {
 

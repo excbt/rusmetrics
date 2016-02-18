@@ -49,7 +49,7 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testRmaContObjectGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects"));
+		_testGetJson(apiRmaUrl("/contObjects"));
 	}
 
 	@Test
@@ -59,25 +59,25 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 		contObject.setTimezoneDefKeyname("MSK");
 		contObject.setName("Cont Object TEST");
 
-		Long contObjectId = _testJsonCreate(apiRmaUrl("/contObjects"), contObject);
+		Long contObjectId = _testCreateJson(apiRmaUrl("/contObjects"), contObject);
 
-		_testJsonGet(apiRmaUrl("/contObjects/" + contObjectId));
+		_testGetJson(apiRmaUrl("/contObjects/" + contObjectId));
 
 		contObject = contObjectService.findOne(contObjectId);
 		contObject.setCurrentSettingMode("summer");
-		_testJsonUpdate(apiRmaUrl("/contObjects/" + contObjectId), contObject);
+		_testUpdateJson(apiRmaUrl("/contObjects/" + contObjectId), contObject);
 
-		_testJsonDelete(apiRmaUrl("/contObjects/" + contObjectId));
+		_testDeleteJson(apiRmaUrl("/contObjects/" + contObjectId));
 	}
 
 	@Test
 	public void testAvailableContObjects() throws Exception {
-		_testJsonGet(apiRmaUrl("/64166467/availableContObjects"));
+		_testGetJson(apiRmaUrl("/64166467/availableContObjects"));
 	}
 
 	@Test
 	public void testSubscrContObjectsGet() throws Exception {
-		_testJsonGet(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)));
+		_testGetJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)));
 	}
 
 	@Test
@@ -94,8 +94,8 @@ public class RmaContObjectControllerTest extends RmaControllerTest {
 		}
 
 		addContObjects.addAll(currContObjects);
-		_testJsonUpdate(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), addContObjects);
-		_testJsonUpdate(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), currContObjects);
+		_testUpdateJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), addContObjects);
+		_testUpdateJson(apiRmaUrl(String.format("/%d/subscrContObjects", testSubscriberId)), currContObjects);
 	}
 
 }

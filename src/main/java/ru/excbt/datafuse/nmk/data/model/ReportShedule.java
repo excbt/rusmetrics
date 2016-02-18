@@ -17,20 +17,28 @@ import javax.persistence.Version;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportActionType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType;
 import ru.excbt.datafuse.nmk.report.ReportActionKey;
 import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
+/**
+ * Расписание создания и рассылки отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
 @Table(name = "report_shedule")
-@SQLDelete(sql="UPDATE report_shedule SET deleted = 1 WHERE id = ? and version = ?")
-@Where(clause="deleted <> 1")
-@JsonIgnoreProperties (ignoreUnknown = true)
+@SQLDelete(sql = "UPDATE report_shedule SET deleted = 1 WHERE id = ? and version = ?")
+@Where(clause = "deleted <> 1")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReportShedule extends AbstractAuditableModel {
 
 	/**
@@ -133,7 +141,7 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	@Column(name = "report_shedule_comment")
 	private String comment;
-	
+
 	@Column(name = "report_shedule_description")
 	private String description;
 
@@ -200,8 +208,7 @@ public class ReportShedule extends AbstractAuditableModel {
 		return reportSheduleTypeKey;
 	}
 
-	public void setReportSheduleTypeKey(
-			ReportSheduleTypeKey reportSheduleTypeKey) {
+	public void setReportSheduleTypeKey(ReportSheduleTypeKey reportSheduleTypeKey) {
 		this.reportSheduleTypeKey = reportSheduleTypeKey;
 	}
 
@@ -340,7 +347,7 @@ public class ReportShedule extends AbstractAuditableModel {
 	public void setSubscriberId(Long subscriberId) {
 		this.subscriberId = subscriberId;
 	}
-	
+
 	public String getComment() {
 		return comment;
 	}

@@ -17,7 +17,7 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 
 	@Test
 	public void testGetSubscrUsers() throws Exception {
-		_testJsonGet(apiSubscrUrl("/subscrUsers"));
+		_testGetJson(apiSubscrUrl("/subscrUsers"));
 	}
 
 	@Test
@@ -33,7 +33,7 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 			builder.param("newPassword", "secret");
 		};
 
-		Long subscrUserId = _testJsonCreate(apiSubscrUrl("/subscrUsers"), subscrUser, paramAdmin);
+		Long subscrUserId = _testCreateJson(apiSubscrUrl("/subscrUsers"), subscrUser, paramAdmin);
 		subscrUser = subscrUserService.findOne(subscrUserId);
 		assertNotNull(subscrUser);
 
@@ -45,12 +45,12 @@ public class SubscrUserControllerTest extends RmaControllerTest {
 			builder.param("newPassword", "secret2");
 		};
 
-		_testJsonUpdate(apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser, paramUpd);
+		_testUpdateJson(apiSubscrUrl("/subscrUsers", subscrUserId), subscrUser, paramUpd);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
 
-		_testJsonDelete(apiSubscrUrl("/subscrUsers", subscrUserId), param);
+		_testDeleteJson(apiSubscrUrl("/subscrUsers", subscrUserId), param);
 	}
 }

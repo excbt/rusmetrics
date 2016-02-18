@@ -51,6 +51,14 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 
+/**
+ * Сервис для работы с уведомлениями для абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.06.2015
+ *
+ */
 @Service
 public class SubscrContEventNotifiicationService {
 

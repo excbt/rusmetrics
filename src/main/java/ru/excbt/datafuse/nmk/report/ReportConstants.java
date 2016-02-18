@@ -1,5 +1,13 @@
 package ru.excbt.datafuse.nmk.report;
 
+/**
+ * Константы для работы с отчетами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 19.03.2015
+ *
+ */
 public class ReportConstants {
 
 	public final static String COMMERCIAL_REPORT_TEMPLATE_PATH = "COMMERCIAL_REPORT_TEMPLATE_PATH";

@@ -8,6 +8,6 @@ public class SubscriberControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testSubscriberContObjectCount() throws Exception {
-		_testJsonGet(apiSubscrUrl("/info/subscriberContObjectCount"));
+		_testGetJson(apiSubscrUrl("/info/subscriberContObjectCount"));
 	}
 }

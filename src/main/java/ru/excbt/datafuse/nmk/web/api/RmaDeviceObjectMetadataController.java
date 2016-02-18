@@ -17,9 +17,17 @@ import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с метаданными прибора для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 22.01.2016
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaDeviceObjectMetadataController extends SubscrApiController {
@@ -95,7 +103,7 @@ public class RmaDeviceObjectMetadataController extends SubscrApiController {
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody List<DeviceObjectMetadata> DeviceObjectMetadataList) {
 
-		ApiAction action = new EntityApiActionAdapter<List<DeviceObjectMetadata>>(DeviceObjectMetadataList) {
+		ApiAction action = new ApiActionEntityAdapter<List<DeviceObjectMetadata>>(DeviceObjectMetadataList) {
 
 			@Override
 			public List<DeviceObjectMetadata> processAndReturnResult() {

@@ -19,12 +19,19 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionGroupRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с привязкой заданий абонентов и пользователей
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.05.2015
+ *
+ */
 @Service
 public class SubscrActionGroupService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SubscrActionGroupService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(SubscrActionGroupService.class);
+
 	@Autowired
 	private SubscrActionGroupRepository subscrActionGroupRepository;
 
@@ -56,7 +63,7 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionGroup updateOne(SubscrActionGroup entity) {
 		checkArgument(!entity.isNew());
@@ -69,18 +76,16 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionGroup updateOne(SubscrActionGroup entity, Long[] userIds) {
 		checkArgument(!entity.isNew());
 		checkNotNull(entity.getSubscriber());
 
-		SubscrActionGroup resultEntity = subscrActionGroupRepository
-				.save(entity);
+		SubscrActionGroup resultEntity = subscrActionGroupRepository.save(entity);
 
 		if (userIds != null) {
-			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(),
-					userIds);
+			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(), userIds);
 		}
 
 		return resultEntity;
@@ -92,7 +97,7 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionGroup createOne(SubscrActionGroup entity) {
 		checkArgument(entity.isNew());
@@ -105,18 +110,16 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionGroup createOne(SubscrActionGroup entity, Long[] userIds) {
 		checkArgument(entity.isNew());
 		checkNotNull(entity.getSubscriber());
 
-		SubscrActionGroup resultEntity = subscrActionGroupRepository
-				.save(entity);
+		SubscrActionGroup resultEntity = subscrActionGroupRepository.save(entity);
 
 		if (userIds != null) {
-			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(),
-					userIds);
+			subscrActionUserGroupService.updateGroupToUsers(resultEntity.getId(), userIds);
 		}
 
 		return resultEntity;
@@ -127,7 +130,7 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(SubscrActionGroup entity) {
 		checkArgument(!entity.isNew());
@@ -139,16 +142,15 @@ public class SubscrActionGroupService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (subscrActionGroupRepository.exists(id)) {
 			subscrActionUserGroupService.deleteByGroup(id);
 			subscrActionGroupRepository.delete(id);
 		} else {
-			throw new PersistenceException(String.format(
-					"Object %s(id=%d) is not found",
-					SubscrActionGroup.class.getName(), id));
+			throw new PersistenceException(
+					String.format("Object %s(id=%d) is not found", SubscrActionGroup.class.getName(), id));
 		}
 
 	}

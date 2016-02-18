@@ -12,14 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 
+/**
+ * Repository для ContEvent
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 27.02.2015
+ *
+ */
 public interface ContEventRepository extends PagingAndSortingRepository<ContEvent, Long> {
 
 	public List<ContEvent> findByContObjectId(Long contObjectId, Pageable pageable);
 
-	// @Query("SELECT ce FROM ContEvent ce INNER JOIN ce.contObject c "
-	// +
-	// "WHERE c IN (SELECT co FROM Subscriber s INNER JOIN s.contObjects co
-	// WHERE s.id = :subscriberId)")
 	@Transactional(readOnly = true)
 	@Query("SELECT ce FROM ContEvent ce "
 			+ "WHERE ce.contObject IN (SELECT sco.contObject FROM SubscrContObject sco WHERE sco.subscriberId = :subscriberId) "

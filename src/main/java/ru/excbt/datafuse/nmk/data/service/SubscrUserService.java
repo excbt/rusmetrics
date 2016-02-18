@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с пользователями абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 26.02.2015
+ *
+ */
 @Service
 public class SubscrUserService extends AbstractService implements SecuredRoles {
 

@@ -26,7 +26,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourcesGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/dataSources"));
+		_testGetJson(apiRmaUrl("/dataSources"));
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	 */
 	@Test
 	public void testDataSourceTypesGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/dataSourceTypes"));
+		_testGetJson(apiRmaUrl("/dataSourceTypes"));
 	}
 
 	/**
@@ -47,13 +47,13 @@ public class RmaDataSourceControllerTest extends ManualControllerTest {
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
-		Long dataSourceId = _testJsonCreate(apiRmaUrl("/dataSources"), dataSource);
+		Long dataSourceId = _testCreateJson(apiRmaUrl("/dataSources"), dataSource);
 		assertNotNull(dataSourceId);
 
 		dataSource = subscrDataSourceService.findOne(dataSourceId);
 		dataSource.setDataSourceComment("DataSource CRUD test at " + System.currentTimeMillis());
-		_testJsonUpdate(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
-		_testJsonDelete(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
+		_testUpdateJson(apiRmaUrl("/dataSources/" + dataSource.getId().toString()), dataSource);
+		_testDeleteJson(apiRmaUrl("/dataSources/" + dataSourceId.toString()));
 	}
 
 }

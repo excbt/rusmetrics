@@ -42,17 +42,17 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testContObjectsGet() throws Exception {
-		_testJsonGet("/api/subscr/contObjects");
+		_testGetJson("/api/subscr/contObjects");
 	}
 
 	@Test
 	public void testCmOrganizatoinsGet() throws Exception {
-		_testJsonGet("/api/subscr/contObjects/cmOrganizations");
+		_testGetJson("/api/subscr/contObjects/cmOrganizations");
 	}
 
 	@Test
 	public void testOrganizatoinsGet() throws Exception {
-		_testJsonGet("/api/subscr/contObjects/organizations");
+		_testGetJson("/api/subscr/contObjects/organizations");
 	}
 
 	@Test
@@ -60,7 +60,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		ContObject testCO = findFirstContObject();
 
 		String url = String.format(apiSubscrUrl("/contObjects/%d/fias"), testCO.getId());
-		_testJsonGetSuccessfull(url);
+		_testGetSuccessful(url);
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 			builder.param("cmOrganizationId", testCO.get_activeContManagement().getOrganization().getId().toString());
 		};
 
-		_testJsonUpdate(urlStr, testCO, param);
+		_testUpdateJson(urlStr, testCO, param);
 
 		// String jsonBody = OBJECT_MAPPER.writeValueAsString(testCO);
 		//
@@ -100,7 +100,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testSettingModeTypeGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/contObjects/settingModeType"));
+		_testGetJson(apiSubscrUrl("/contObjects/settingModeType"));
 	}
 
 	@Test
@@ -121,7 +121,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 				builder.param("currentSettingMode", "summer");
 			}
 		};
-		_testJsonUpdate(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
+		_testUpdateJson(apiSubscrUrl("/contObjects/settingModeType"), null, extraInitializer);
 
 	}
 
@@ -169,7 +169,7 @@ public class SubscrContObjectControllerTest extends AnyControllerTest {
 		//
 		//		contObjectDaData.setSraw(daDataJson);
 
-		_testJsonUpdate(urlStr, testCO);
+		_testUpdateJson(urlStr, testCO);
 
 	}
 

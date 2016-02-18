@@ -11,6 +11,14 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+/**
+ * Полная информация о пользователе
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.04.2015
+ *
+ */
 @Entity
 @Table(name = "full_user_info")
 public class FullUserInfo implements Serializable {

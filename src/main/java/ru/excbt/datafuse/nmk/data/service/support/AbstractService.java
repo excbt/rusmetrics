@@ -11,6 +11,14 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 
+/**
+ * Базовый класс для сервисов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.10.2015
+ *
+ */
 public abstract class AbstractService {
 
 	@Autowired

@@ -21,13 +21,21 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы с универсальным справочником
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.03.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryController extends SubscrApiController {
@@ -121,16 +129,16 @@ public class UDirectoryController extends SubscrApiController {
 		checkNotNull(uDirectory);
 		checkArgument(uDirectory.getId() == null);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectory, Long>(uDirectory, request) {
-
-			@Override
-			public void process() {
-				setResultEntity(directoryService.save(getCurrentSubscriberId(), entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<UDirectory, Long>(uDirectory, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public UDirectory processAndReturnResult() {
+				return directoryService.save(getCurrentSubscriberId(), entity);
 			}
 		};
 
@@ -146,7 +154,7 @@ public class UDirectoryController extends SubscrApiController {
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") final long directoryId) {
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

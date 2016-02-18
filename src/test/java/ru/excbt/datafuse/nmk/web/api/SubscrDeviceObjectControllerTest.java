@@ -25,7 +25,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjectsGet() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", DEV_CONT_OBJECT));
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	public void testDeviceObjectMetaDataVzletGet() throws Exception {
 		String url = apiSubscrUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metaVzlet", DEV_CONT_OBJECT, DEV_DEVICE_OBJECT));
-		_testJsonGetNoJsonCheck(url);
+		_testGetSuccessful(url);
 	}
 
 	/**
@@ -54,15 +54,15 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		String url = apiSubscrUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metaVzlet", DEV_CONT_OBJECT, DEV_DEVICE_OBJECT));
 
-		Long metaId = _testJsonCreate(url, metaVzlet);
+		Long metaId = _testCreateJson(url, metaVzlet);
 
 		metaVzlet.setId(metaId);
 		metaVzlet.setVzletTableDay("Day YYY");
 		metaVzlet.setVzletTableHour("Hour YYY");
 
-		_testJsonUpdate(url, metaVzlet);
+		_testUpdateJson(url, metaVzlet);
 
-		_testJsonDelete(url);
+		_testDeleteJson(url);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjectsVzletSystemGet() throws Exception {
 		String url = apiSubscrUrl("/deviceObjects/metaVzlet/system");
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjects725Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects", 725));
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjects725_737Get() throws Exception {
 		String url = apiSubscrUrl(String.format("/contObjects/%d/deviceObjects/%d", 725, 737));
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceModelsGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels"));
+		_testGetJson(apiSubscrUrl("/deviceObjects/deviceModels"));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testDeviceModelMetadataGet() throws Exception {
-		_testJsonGet(apiSubscrUrl("/deviceObjects/deviceModels/29779958/metadata"));
+		_testGetJson(apiSubscrUrl("/deviceObjects/deviceModels/29779958/metadata"));
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 	@Test
 	public void testDeviceObjectDataSourceGet() throws Exception {
 		//65836845
-		_testJsonGet(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+		_testGetJson(apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
 	}
 
 }

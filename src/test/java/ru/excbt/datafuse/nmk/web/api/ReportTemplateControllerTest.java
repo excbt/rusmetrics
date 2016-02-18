@@ -35,32 +35,32 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testGetCommReportTemplates() throws Exception {
-		_testJsonGet("/api/reportTemplate/commerce");
+		_testGetJson("/api/reportTemplate/commerce");
 	}
 
 	@Test
 	public void testGetConsT1ReportTemplates() throws Exception {
-		_testJsonGet("/api/reportTemplate/cons_t1");
+		_testGetJson("/api/reportTemplate/cons_t1");
 	}
 
 	@Test
 	public void testGetConsT2ReportTemplates() throws Exception {
-		_testJsonGet("/api/reportTemplate/cons_t2");
+		_testGetJson("/api/reportTemplate/cons_t2");
 	}
 
 	@Test
 	public void testGetCommReportTemplatesArch() throws Exception {
-		_testJsonGet("/api/reportTemplate/archive/commerce");
+		_testGetJson("/api/reportTemplate/archive/commerce");
 	}
 
 	@Test
 	public void testGetConsT1ReportTemplatesArch() throws Exception {
-		_testJsonGet("/api/reportTemplate/archive/cons_t1");
+		_testGetJson("/api/reportTemplate/archive/cons_t1");
 	}
 
 	@Test
 	public void testGetConsT2ReportTemplatesArch() throws Exception {
-		_testJsonGet("/api/reportTemplate/archive/cons_t2");
+		_testGetJson("/api/reportTemplate/archive/cons_t2");
 	}
 
 	@Test
@@ -137,7 +137,7 @@ public class ReportTemplateControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testGetAvailableContbjects() throws Exception {
-		_testJsonGet("/api/reportParamset/0/contObject/available");
+		_testGetJson("/api/reportParamset/0/contObject/available");
 	}
 
 }

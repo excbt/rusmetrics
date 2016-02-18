@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 
+/**
+ * Repository для ContEventType
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 25.06.2015
+ *
+ */
 public interface ContEventTypeRepository extends CrudRepository<ContEventType, Long> {
 
 	@Query("SELECT t FROM ContEventType t " + " WHERE t.isBaseEvent = :isBaseEvent ORDER BY t.name")

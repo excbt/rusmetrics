@@ -40,9 +40,9 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 
 		String url = apiRmaUrl(String.format("/contObjects/%d/zpoints", MANUAL_CONT_OBJECT_ID));
 
-		Long contZPointId = _testJsonCreate(url, contZPoint);
+		Long contZPointId = _testCreateJson(url, contZPoint);
 
-		_testJsonGet(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
+		_testGetJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 
 		contZPoint = contZPointService.findOne(contZPointId);
 
@@ -56,21 +56,21 @@ public class RmaContZPointControllerTest extends AnyControllerTest {
 		contZPoint.setDeviceObjects(null);
 		contZPoint.set_activeDeviceObjectId(activeDeviceObjectId);
 		contZPoint.setExCode("ex_code111");
-		_testJsonUpdate(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
+		_testUpdateJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
 				contZPoint);
 
-		_testJsonDelete(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
+		_testDeleteJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 	}
 
 	@Test
 	@Ignore
 	public void testTemporaryGet() throws Exception {
-		_testJsonGet(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, 66183331L)));
+		_testGetJson(apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, 66183331L)));
 	}
 
 	@Test
 	public void testRsoOrganizations() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/rsoOrganizations"));
+		_testGetJson(apiRmaUrl("/contObjects/rsoOrganizations"));
 	}
 
 	private Long randomRsoOrganizationId() {

@@ -7,6 +7,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import ru.excbt.datafuse.nmk.data.model.AuditUser;
 
+/**
+ * Базовый класс модель данных с аудитом
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 06.04.2015
+ *
+ */
 @MappedSuperclass
 @EntityListeners({ AuditingEntityListener.class })
 public abstract class AbstractAuditableModel extends AbstractAuditableEntity<AuditUser, Long> {

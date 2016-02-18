@@ -26,6 +26,14 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetaVzletRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с приборами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.05.2015
+ *
+ */
 @Service
 public class DeviceObjectService implements SecuredRoles {
 

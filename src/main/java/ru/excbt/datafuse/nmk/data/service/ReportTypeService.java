@@ -18,6 +18,14 @@ import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
+/**
+ * Сервис для работы с типами отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.04.2015
+ *
+ */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ReportTypeService {

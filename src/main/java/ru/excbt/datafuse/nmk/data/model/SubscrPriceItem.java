@@ -18,6 +18,14 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
+/**
+ * Элементы прайс-листа
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.11.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_price_item", schema = DBMetadata.DB_SCHEME)
 @JsonInclude(Include.NON_NULL)

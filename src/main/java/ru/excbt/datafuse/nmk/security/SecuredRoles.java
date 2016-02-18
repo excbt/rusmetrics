@@ -1,5 +1,13 @@
 package ru.excbt.datafuse.nmk.security;
 
+/**
+ * Роли системы
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.03.2015
+ *
+ */
 public interface SecuredRoles {
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_SUBSCR_ADMIN = "ROLE_SUBSCR_ADMIN";

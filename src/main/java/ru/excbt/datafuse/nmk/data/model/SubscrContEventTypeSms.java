@@ -13,6 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
+/**
+ * Настройка СМС сообщения для абонента по типам событий
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.12.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_cont_event_type_sms")
 public class SubscrContEventTypeSms extends AbstractAuditableModel implements DeletableObjectId {

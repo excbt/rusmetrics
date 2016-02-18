@@ -12,6 +12,14 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 
+/**
+ * Информацией об абоненте для авторизации
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.07.2015
+ *
+ */
 public class SubscriberUserDetails extends User implements SubscriberUser {
 
 	/**

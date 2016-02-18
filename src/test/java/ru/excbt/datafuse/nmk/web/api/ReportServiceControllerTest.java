@@ -96,7 +96,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_EVENT;
 		String urlStr = String.format("/api/reportService/event/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -109,7 +109,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_CONS_T1;
 		String urlStr = String.format("/api/reportService/cons_t1/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -122,7 +122,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		long reportParamsetId = TEST_PARAMSET_CONS_T2;
 		String urlStr = String.format("/api/reportService/cons_t2/%d/preview", reportParamsetId);
 
-		_testHtmlGet(urlStr);
+		_testGetHtml(urlStr);
 
 	}
 
@@ -169,7 +169,40 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+
+	}
+
+	@Test
+	public void testCommerceDownloadContext() throws Exception {
+
+		long reportParamsetId = TEST_PARAMSET_COMMERCE;
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+
+		String urlStr = String.format("/api/reportService/commerce/%d/context/%d", reportParamsetId,
+				contObjectIds.get(0));
+
+		ResultActionsTester tester = new ResultActionsTester() {
+
+			@Override
+			public void testResultActions(ResultActions resultActions) throws Exception {
+
+				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
+
+				byte[] resultBytes = resultActions.andReturn().getResponse().getContentAsByteArray();
+
+				logger.info("ResultBytes size:{}", resultBytes.length);
+
+				String filename = "./out/testCommerceDownloadPut" + reportMakerParam.getExt();
+
+				writeResultBytesToFile(filename, resultBytes);
+
+			}
+		};
+
+		_testGet(urlStr, null, tester);
 
 	}
 
@@ -224,7 +257,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -259,7 +292,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -294,7 +327,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -325,7 +358,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 			}
 		};
 
-		_testJsonUpdate(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 

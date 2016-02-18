@@ -32,6 +32,14 @@ import ru.excbt.datafuse.nmk.data.model.types.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
+/**
+ * Сервис по работе с вычисляемыми данными по горячей воде
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 03.08.2015
+ *
+ */
 @Service
 @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContObjectHWaterDeltaService {

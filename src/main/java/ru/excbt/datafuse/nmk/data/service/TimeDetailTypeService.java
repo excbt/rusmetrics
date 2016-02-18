@@ -13,6 +13,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimeDetailTypeRepository;
 
+/**
+ * Сервис для работы с типами детализации
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.01.2015
+ *
+ */
 @Service
 public class TimeDetailTypeService {
 

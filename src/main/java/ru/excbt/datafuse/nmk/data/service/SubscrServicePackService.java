@@ -11,6 +11,14 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackRepository;
 
+/**
+ * Сервис для работы с пакетом услуг абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.09.2015
+ *
+ */
 @Service
 public class SubscrServicePackService {
 

@@ -19,6 +19,14 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для получения информации по системе
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 28.04.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/systemInfo")
 public class SystemInfoController extends SubscrApiController {

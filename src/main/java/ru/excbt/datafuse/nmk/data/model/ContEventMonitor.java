@@ -13,14 +13,22 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+
+/**
+ * Монитор событий
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.06.2015
+ *
+ */
 @Entity
 @Table(name = "cont_event_monitor")
 @JsonInclude(Include.NON_NULL)
@@ -135,8 +143,7 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 		return contEventLevelColorKey;
 	}
 
-	public void setContEventLevelColorKey(
-			ContEventLevelColorKey contEventLevelColorKey) {
+	public void setContEventLevelColorKey(ContEventLevelColorKey contEventLevelColorKey) {
 		this.contEventLevelColorKey = contEventLevelColorKey;
 	}
 

@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnitFilter;
 
+/**
+ * Repository для ReportParamsetUnitFilter
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.11.2015
+ *
+ */
 public interface ReportParamsetUnitFilterRepository extends JpaRepository<ReportParamsetUnitFilter, Long> {
 
 	/**

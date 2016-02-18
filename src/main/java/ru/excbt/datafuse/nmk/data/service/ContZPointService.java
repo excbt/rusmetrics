@@ -35,6 +35,14 @@ import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+/**
+ * Сервис для работы с точками учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.03.2015
+ *
+ */
 @Service
 public class ContZPointService extends AbstractService implements SecuredRoles {
 

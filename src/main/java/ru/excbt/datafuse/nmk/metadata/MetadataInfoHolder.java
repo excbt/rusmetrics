@@ -3,6 +3,14 @@ package ru.excbt.datafuse.nmk.metadata;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+/**
+ * Реализация объекта для записи метаданных
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 29.05.2015
+ *
+ */
 public class MetadataInfoHolder implements MetadataInfo, Serializable {
 
 	/**

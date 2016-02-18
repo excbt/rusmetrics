@@ -22,6 +22,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 
+/**
+ * Прайс лист абонента
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 10.11.2015
+ *
+ */
 @Entity
 @Table(name = "subscr_price_list", schema = DBMetadata.DB_SCHEME)
 @JsonInclude(Include.NON_NULL)

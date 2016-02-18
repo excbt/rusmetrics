@@ -23,12 +23,19 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * Файл шаблона отчета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since dd.mm.2015
+ *
+ */
 @Entity
 @Table(name = "report_template_body")
 @DynamicUpdate
 @EntityListeners({ AuditingEntityListener.class })
-public class ReportTemplateBody implements Serializable,
-		Auditable<AuditUser, Long> {
+public class ReportTemplateBody implements Serializable, Auditable<AuditUser, Long> {
 
 	/**
 	 * 
@@ -104,16 +111,14 @@ public class ReportTemplateBody implements Serializable,
 	}
 
 	public byte[] getBodyCompiled() {
-		return bodyCompiled == null ? null : Arrays.copyOf(bodyCompiled,
-				bodyCompiled.length);
+		return bodyCompiled == null ? null : Arrays.copyOf(bodyCompiled, bodyCompiled.length);
 	}
 
 	public void setBodyCompiled(byte[] bodyCompiled) {
 		if (bodyCompiled == null) {
 			this.bodyCompiled = null;
 		} else {
-			this.bodyCompiled = Arrays
-					.copyOf(bodyCompiled, bodyCompiled.length);
+			this.bodyCompiled = Arrays.copyOf(bodyCompiled, bodyCompiled.length);
 		}
 	}
 
@@ -180,7 +185,6 @@ public class ReportTemplateBody implements Serializable,
 
 	@Override
 	public void setLastModifiedDate(DateTime lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate == null ? null
-				: lastModifiedDate.toDate();
+		this.lastModifiedDate = lastModifiedDate == null ? null : lastModifiedDate.toDate();
 	}
 }

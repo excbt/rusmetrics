@@ -11,6 +11,14 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportPeriodRepository;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
+/**
+ * Сервис для работы с периодами отчетов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 14.04.2015
+ *
+ */
 @Service
 public class ReportPeriodService {
 
@@ -22,10 +30,9 @@ public class ReportPeriodService {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)	
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportPeriod findByKeyname(String keyname) {
-		List<ReportPeriod> resultList = reportPeriodRepository
-				.findByKeynameIgnoreCase(keyname);
+		List<ReportPeriod> resultList = reportPeriodRepository.findByKeynameIgnoreCase(keyname);
 		return resultList.size() == 1 ? resultList.get(0) : null;
 	}
 
@@ -36,8 +43,7 @@ public class ReportPeriodService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportPeriod findByKeyname(ReportPeriodKey key) {
-		List<ReportPeriod> resultList = reportPeriodRepository
-				.findByKeynameIgnoreCase(key.name());
+		List<ReportPeriod> resultList = reportPeriodRepository.findByKeynameIgnoreCase(key.name());
 		return resultList.size() == 1 ? resultList.get(0) : null;
 	}
 }

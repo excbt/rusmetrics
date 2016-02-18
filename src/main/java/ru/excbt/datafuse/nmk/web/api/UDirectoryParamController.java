@@ -22,13 +22,21 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
+/**
+ * Контроллер для работы параметрами унивесального справочника
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.03.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/u_directory")
 public class UDirectoryParamController extends SubscrApiController {
@@ -115,17 +123,16 @@ public class UDirectoryParamController extends SubscrApiController {
 
 		uDirectoryParam.setDirectory(directory);
 
-		ApiActionLocation action = new AbstractEntityApiActionLocation<UDirectoryParam, Long>(uDirectoryParam,
-				request) {
-
-			@Override
-			public void process() {
-				setResultEntity(directoryParamService.save(entity));
-			}
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<UDirectoryParam, Long>(uDirectoryParam, request) {
 
 			@Override
 			protected Long getLocationId() {
 				return getResultEntity().getId();
+			}
+
+			@Override
+			public UDirectoryParam processAndReturnResult() {
+				return directoryParamService.save(entity);
 			}
 		};
 
@@ -144,7 +151,7 @@ public class UDirectoryParamController extends SubscrApiController {
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") long directoryId,
 			@PathVariable("paramId") final long paramId) {
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {

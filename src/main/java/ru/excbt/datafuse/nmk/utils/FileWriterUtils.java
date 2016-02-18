@@ -15,10 +15,17 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Утилиты для записи файла
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.07.2015
+ *
+ */
 public class FileWriterUtils {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(FileWriterUtils.class);
+	private static final Logger logger = LoggerFactory.getLogger(FileWriterUtils.class);
 
 	/**
 	 * 
@@ -28,11 +35,11 @@ public class FileWriterUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String writeFile(InputStream uploadedInputStream,
-			String outputFilename, boolean writeMD5) throws IOException {
+	public static String writeFile(InputStream uploadedInputStream, String outputFilename, boolean writeMD5)
+			throws IOException {
 
 		File outputFile = new File(outputFilename);
-		
+
 		return writeFile(uploadedInputStream, outputFile, writeMD5);
 	}
 
@@ -44,8 +51,8 @@ public class FileWriterUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String writeFile(InputStream uploadedInputStream,
-			File outputFile, boolean writeMD5) throws IOException {
+	public static String writeFile(InputStream uploadedInputStream, File outputFile, boolean writeMD5)
+			throws IOException {
 
 		checkNotNull(outputFile);
 		File dir = outputFile.getParentFile();
@@ -65,17 +72,14 @@ public class FileWriterUtils {
 		}
 
 		if (writeMD5) {
-			String md5File = FilenameUtils.removeExtension(outputFile
-					.getAbsolutePath()) + ".md5";
+			String md5File = FilenameUtils.removeExtension(outputFile.getAbsolutePath()) + ".md5";
 
-			try (PrintStream out = new PrintStream(
-					new FileOutputStream(md5File))) {
+			try (PrintStream out = new PrintStream(new FileOutputStream(md5File))) {
 				out.print(digestMD5);
 			}
 		}
 
-		logger.info("Writed file: {}. Size:{} . MD5: {}",
-				outputFile.getAbsolutePath(), outputFile.length(), digestMD5);
+		logger.info("Writed file: {}. Size:{} . MD5: {}", outputFile.getAbsolutePath(), outputFile.length(), digestMD5);
 
 		return digestMD5;
 	}
@@ -87,8 +91,7 @@ public class FileWriterUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String writeFile(InputStream uploadedInputStream,
-			String outputFilename) throws IOException {
+	public static String writeFile(InputStream uploadedInputStream, String outputFilename) throws IOException {
 		return writeFile(uploadedInputStream, outputFilename, true);
 	}
 
@@ -99,8 +102,7 @@ public class FileWriterUtils {
 	 * @return
 	 * @throws IOException
 	 */
-	public static String writeFile(InputStream uploadedInputStream,
-			File outputFile) throws IOException {
+	public static String writeFile(InputStream uploadedInputStream, File outputFile) throws IOException {
 		return writeFile(uploadedInputStream, outputFile, true);
 	}
 

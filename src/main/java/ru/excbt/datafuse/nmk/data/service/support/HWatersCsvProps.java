@@ -7,6 +7,14 @@ import java.io.File;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.joda.time.DateTime;
 
+/**
+ * Класс для работы с каталогами CSV
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 16.07.2015
+ *
+ */
 public interface HWatersCsvProps {
 
 	public final static String HWATERS_CSV_IN = "app.hwaters.csv.in";
@@ -25,8 +33,7 @@ public interface HWatersCsvProps {
 	 * @param subscrUserId
 	 * @return
 	 */
-	public default String getSubscriberCsvFilename(Long subscriberId,
-			Long subscrUserId) {
+	public default String getSubscriberCsvFilename(Long subscriberId, Long subscrUserId) {
 
 		checkNotNull(subscriberId);
 

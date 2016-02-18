@@ -9,6 +9,9 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +20,21 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 
+/**
+ * Сервис для работы с Абонентами РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.11.2015
+ *
+ */
 @Service
 public class RmaSubscriberService extends SubscriberService {
+
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberService.class);
+
+	@Autowired
+	private ReportParamsetService reportParamsetService;
 
 	/**
 	 * 
@@ -55,6 +71,8 @@ public class RmaSubscriberService extends SubscriberService {
 		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
 
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
 
 		return resultSubscriber;
 	}

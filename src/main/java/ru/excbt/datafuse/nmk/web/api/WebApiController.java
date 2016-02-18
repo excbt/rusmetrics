@@ -23,14 +23,21 @@ import ru.excbt.datafuse.nmk.data.service.ReportService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 
+/**
+ * Базовый класс для контроллера
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 02.04.2015
+ *
+ */
 public class WebApiController {
 
 	public static final String APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8";
 
 	public static final int DEFAULT_PAGE_SIZE = 100;
 
-	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat
-			.forPattern(ReportService.DATE_TEMPLATE);
+	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(ReportService.DATE_TEMPLATE);
 
 	public final static String MIME_ZIP = "application/zip";
 	public final static String MIME_PDF = "application/pdf";
@@ -47,8 +54,7 @@ public class WebApiController {
 	 * @param currentEntity
 	 * @param newEntity
 	 */
-	protected void prepareAuditableProps(Auditable<AuditUser, ?> currentEntity,
-			Auditable<AuditUser, ?> newEntity) {
+	protected void prepareAuditableProps(Auditable<AuditUser, ?> currentEntity, Auditable<AuditUser, ?> newEntity) {
 		AuditableTools.copyAuditableProps(currentEntity, newEntity);
 	}
 
@@ -57,8 +63,7 @@ public class WebApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> responseForbidden() {
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-				ApiResult.build(ApiResultCode.ERR_ACCESS_DENIED));
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResult.build(ApiResultCode.ERR_ACCESS_DENIED));
 	}
 
 	/**
@@ -125,8 +130,7 @@ public class WebApiController {
 	 * @return
 	 */
 	protected ResponseEntity<?> responseInternalServerError(ApiResult apiResult) {
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-				apiResult);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResult);
 	}
 
 	/**
@@ -146,8 +150,8 @@ public class WebApiController {
 	 * @param filename
 	 * @return
 	 */
-	protected ResponseEntity<?> processDownloadInputStream(InputStream is,
-			MediaType mediaType, long contentLength, String filename) {
+	protected ResponseEntity<?> processDownloadInputStream(InputStream is, MediaType mediaType, long contentLength,
+			String filename) {
 		checkNotNull(is);
 
 		InputStreamResource isr = new InputStreamResource(is);
@@ -163,10 +167,10 @@ public class WebApiController {
 	 * @param makeAttach
 	 * @return
 	 */
-	protected ResponseEntity<?> processDownloadInputStream(InputStream is,
-			MediaType mediaType, long contentLength, String filename, boolean makeAttach) {
+	protected ResponseEntity<?> processDownloadInputStream(InputStream is, MediaType mediaType, long contentLength,
+			String filename, boolean makeAttach) {
 		checkNotNull(is);
-		
+
 		InputStreamResource isr = new InputStreamResource(is);
 		return processDownloadResource(isr, mediaType, contentLength, filename, makeAttach);
 	}
@@ -178,12 +182,10 @@ public class WebApiController {
 	 * @param file
 	 * @return
 	 */
-	protected ResponseEntity<?> processDownloadFile(File file,
-			MediaType mediaType) {
+	protected ResponseEntity<?> processDownloadFile(File file, MediaType mediaType) {
 		checkNotNull(file);
 		FileSystemResource fsr = new FileSystemResource(file);
-		return processDownloadResource(fsr, mediaType, file.length(),
-				file.getName());
+		return processDownloadResource(fsr, mediaType, file.length(), file.getName());
 	}
 
 	/**
@@ -194,9 +196,8 @@ public class WebApiController {
 	 * @param filename
 	 * @return
 	 */
-	protected ResponseEntity<?> processDownloadResource(Resource resource,
-			MediaType mediaType, long contentLength, String filename,
-			boolean makeAttach) {
+	protected ResponseEntity<?> processDownloadResource(Resource resource, MediaType mediaType, long contentLength,
+			String filename, boolean makeAttach) {
 
 		checkNotNull(resource);
 		checkNotNull(mediaType);
@@ -210,8 +211,7 @@ public class WebApiController {
 		if (makeAttach) {
 			// set headers for the response
 			String headerKey = "Content-Disposition";
-			String headerValue = String.format("attachment; filename=\"%s\"",
-					filename);
+			String headerValue = String.format("attachment; filename=\"%s\"", filename);
 			headers.set(headerKey, headerValue);
 		}
 
@@ -225,24 +225,19 @@ public class WebApiController {
 	 * @param dateToStr
 	 * @return
 	 */
-	protected ResponseEntity<?> checkDatePeriodArguments(
-			LocalDatePeriodParser datePeriodParser) {
+	protected ResponseEntity<?> checkDatePeriodArguments(LocalDatePeriodParser datePeriodParser) {
 		if (!datePeriodParser.isOk()) {
-			return ResponseEntity.badRequest().body(
-					String.format(
-							"Invalid parameters dateFrom:{} and dateTo:{}",
+			return ResponseEntity.badRequest()
+					.body(String.format("Invalid parameters dateFrom:{} and dateTo:{}",
 							datePeriodParser.getParserArguments().dateFromStr,
 							datePeriodParser.getParserArguments().dateToStr));
 		}
 
-		if (datePeriodParser.isOk()
-				&& datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
-			return ResponseEntity
-					.badRequest()
-					.body(String
-							.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
-									datePeriodParser.getParserArguments().dateFromStr,
-									datePeriodParser.getParserArguments().dateToStr));
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return ResponseEntity.badRequest()
+					.body(String.format("Invalid parameters dateFrom:{} is greater than dateTo:{}",
+							datePeriodParser.getParserArguments().dateFromStr,
+							datePeriodParser.getParserArguments().dateToStr));
 		}
 
 		return null;
@@ -256,10 +251,9 @@ public class WebApiController {
 	 * @param filename
 	 * @return
 	 */
-	protected ResponseEntity<?> processDownloadResource(Resource resource,
-			MediaType mediaType, long contentLength, String filename) {
+	protected ResponseEntity<?> processDownloadResource(Resource resource, MediaType mediaType, long contentLength,
+			String filename) {
 
-		return processDownloadResource(resource, mediaType, contentLength,
-				filename, true);
+		return processDownloadResource(resource, mediaType, contentLength, filename, true);
 	}
 }

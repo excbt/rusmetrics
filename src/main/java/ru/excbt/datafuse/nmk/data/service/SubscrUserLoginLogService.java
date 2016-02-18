@@ -13,6 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrUserLoginLog;
 
+/**
+ * Сервис для работы с протоколированием входа в систему
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 23.10.2015
+ *
+ */
 @Service
 public class SubscrUserLoginLogService {
 

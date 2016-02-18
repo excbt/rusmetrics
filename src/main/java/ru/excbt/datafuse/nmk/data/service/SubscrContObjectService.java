@@ -28,6 +28,14 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с привязкой абонентов и объекта учета
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Service
 public class SubscrContObjectService implements SecuredRoles {
 

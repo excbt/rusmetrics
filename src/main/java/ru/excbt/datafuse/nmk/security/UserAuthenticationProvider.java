@@ -25,6 +25,14 @@ import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 
+/**
+ * Компонент для авторизации
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.03.2015
+ *
+ */
 @Component("userAuthenticationProvider")
 public class UserAuthenticationProvider implements AuthenticationProvider {
 

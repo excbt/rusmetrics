@@ -28,7 +28,7 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testMeasureUnitGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
+		_testGetJson(apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testContServiceTypesGet() throws Exception {
-		_testJsonGet(apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
+		_testGetJson(apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 	public void testDeviceObjectMetadataGet() throws Exception {
 		String url = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
-		_testJsonGet(url);
+		_testGetJson(url);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class RmaDeviceObjectMetadataControllerTest extends AnyControllerTest {
 
 		String url = apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
-		_testJsonUpdate(url, metadata);
+		_testUpdateJson(url, metadata);
 	}
 
 }

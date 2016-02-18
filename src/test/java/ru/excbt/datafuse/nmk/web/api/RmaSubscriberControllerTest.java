@@ -20,7 +20,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testGetSubscribers() throws Exception {
-		_testJsonGet(apiRmaUrl("/subscribers"));
+		_testGetJson(apiRmaUrl("/subscribers"));
 	}
 
 	/**
@@ -29,7 +29,7 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testGetSubscriber() throws Exception {
-		_testJsonGet(apiRmaUrl("/subscribers", 64166467));
+		_testGetJson(apiRmaUrl("/subscribers", 64166467));
 	}
 
 	/**
@@ -43,18 +43,18 @@ public class RmaSubscriberControllerTest extends RmaControllerTest {
 		subscriber.setOrganizationId(EXCBT_ORGANIZATION_ID);
 		subscriber.setTimezoneDefKeyname(TimezoneDefKey.GMT_M3.getKeyname());
 
-		Long subscriberId = _testJsonCreate(apiRmaUrl("/subscribers"), subscriber);
+		Long subscriberId = _testCreateJson(apiRmaUrl("/subscribers"), subscriber);
 
 		subscriber = subscriberService.findOne(subscriberId);
 		subscriber.setComment("Updated By REST");
-		_testJsonUpdate(apiRmaUrl("/subscribers/", subscriberId), subscriber);
+		_testUpdateJson(apiRmaUrl("/subscribers/", subscriberId), subscriber);
 
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
 
-		_testJsonGet(apiRmaUrl("/subscribers/", subscriberId));
+		_testGetJson(apiRmaUrl("/subscribers/", subscriberId));
 
-		_testJsonDelete(apiRmaUrl("/subscribers/", subscriberId), param);
+		_testDeleteJson(apiRmaUrl("/subscribers/", subscriberId), param);
 	}
 }

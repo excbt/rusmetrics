@@ -17,6 +17,14 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionUserRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с пользователями заданий абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.05.2015
+ *
+ */
 @Service
 public class SubscrActionUserService implements SecuredRoles {
 
@@ -51,7 +59,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser updateOne(SubscrActionUser entity) {
 		checkNotNull(entity);
@@ -73,9 +81,9 @@ public class SubscrActionUserService implements SecuredRoles {
 		checkNotNull(entity.getSubscriber());
 
 		SubscrActionUser result = subscrActionUserRepository.save(entity);
-		
+
 		if (groupIds != null) {
-			subscrActionUserGroupService.updateUserToGroups(entity.getId(), groupIds);			
+			subscrActionUserGroupService.updateUserToGroups(entity.getId(), groupIds);
 		}
 
 		return result;
@@ -87,7 +95,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser createOne(SubscrActionUser entity) {
 		checkNotNull(entity);
@@ -101,7 +109,7 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public SubscrActionUser createOne(SubscrActionUser entity, Long[] groupIds) {
 		checkNotNull(entity);
@@ -110,7 +118,7 @@ public class SubscrActionUserService implements SecuredRoles {
 		SubscrActionUser user = subscrActionUserRepository.save(entity);
 
 		if (groupIds != null) {
-			subscrActionUserGroupService.updateUserToGroups(entity.getId(), groupIds);			
+			subscrActionUserGroupService.updateUserToGroups(entity.getId(), groupIds);
 		}
 
 		return user;
@@ -120,16 +128,15 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * 
 	 * @param id
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
 		if (subscrActionUserRepository.exists(id)) {
 			subscrActionUserGroupService.deleteByUser(id);
 			subscrActionUserRepository.delete(id);
 		} else {
-			throw new PersistenceException(String.format(
-					"Object %s(id=%d) is not found",
-					SubscrActionUser.class.getName(), id));
+			throw new PersistenceException(
+					String.format("Object %s(id=%d) is not found", SubscrActionUser.class.getName(), id));
 
 		}
 	}
@@ -138,12 +145,11 @@ public class SubscrActionUserService implements SecuredRoles {
 	 * 
 	 * @param entity
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)	
+	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(SubscrActionUser entity) {
 		checkNotNull(entity);
 		subscrActionUserRepository.delete(entity);
 	}
-
 
 }

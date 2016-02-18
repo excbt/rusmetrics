@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.service.TimezoneDefService;
 
+/**
+ * Контроллер для работы с часовыми поясами
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/timezoneDef")
 public class TimezoneDefController extends WebApiController {

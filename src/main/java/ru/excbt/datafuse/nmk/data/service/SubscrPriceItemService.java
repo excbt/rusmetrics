@@ -29,6 +29,14 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemValueRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с элементами прайс листов абонентов
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 17.11.2015
+ *
+ */
 @Service
 public class SubscrPriceItemService implements SecuredRoles {
 

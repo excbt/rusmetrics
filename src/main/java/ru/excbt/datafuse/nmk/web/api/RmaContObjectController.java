@@ -19,13 +19,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.EntityApiActionLocationAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 
-// TODO make RMA actions
+/**
+ * Контроллер для работы с объектами учета для РМА
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 12.10.2015
+ *
+ */
 @Controller
 @RequestMapping(value = "/api/rma")
 public class RmaContObjectController extends SubscrContObjectController {
@@ -50,7 +57,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiActionLocation action = new EntityApiActionLocationAdapter<ContObject, Long>(contObject, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObject, Long>(contObject, request) {
 
 			@Override
 			public ContObject processAndReturnResult() {
@@ -85,7 +92,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
@@ -113,7 +120,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
 
-		ApiAction action = new AbstractApiAction() {
+		ApiAction action = new ApiActionAdapter() {
 
 			@Override
 			public void process() {
@@ -182,7 +189,7 @@ public class RmaContObjectController extends SubscrContObjectController {
 
 		LocalDate subscrBeginDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
 
-		ApiAction action = new EntityApiActionAdapter<List<ContObject>>() {
+		ApiAction action = new ApiActionEntityAdapter<List<ContObject>>() {
 
 			@Override
 			public List<ContObject> processAndReturnResult() {

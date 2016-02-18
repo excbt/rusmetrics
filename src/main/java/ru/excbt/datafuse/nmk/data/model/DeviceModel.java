@@ -17,6 +17,14 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExLabelObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
+/**
+ * Модель прибора
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 24.02.2015
+ *
+ */
 @Entity
 @Table(name = "device_model")
 @JsonIgnoreProperties(ignoreUnknown = true)

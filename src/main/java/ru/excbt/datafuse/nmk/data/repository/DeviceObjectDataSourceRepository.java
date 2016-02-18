@@ -8,6 +8,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 
+/**
+ * Repository для DeviceObjectDataSource
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 07.10.2015
+ *
+ */
 public interface DeviceObjectDataSourceRepository extends CrudRepository<DeviceObjectDataSource, Long> {
 
 	@Query("SELECT ds FROM DeviceObjectDataSource ds WHERE ds.deviceObjectId = :deviceObjectId AND ds.isActive = true")

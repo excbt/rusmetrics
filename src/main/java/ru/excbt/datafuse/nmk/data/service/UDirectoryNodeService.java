@@ -19,6 +19,14 @@ import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
+/**
+ * Сервис для работы с узлами универсального справочника
+ * 
+ * @author A.Kovtonyuk
+ * @version 1.0
+ * @since 13.03.2015
+ *
+ */
 @Service
 public class UDirectoryNodeService implements SecuredRoles {
 
