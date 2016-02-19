@@ -15,22 +15,22 @@ angular.module('portalNMC')
         {
             "name": "userName",
             "caption": "Логин",
-            "class": "col-md-2"
+            "class": "col-xs-2 col-md-2"
         },
         {
             "name": "firstName",
             "caption": "Имя",
-            "class": "col-md-3"
+            "class": "col-xs-3 col-md-3"
         },
         {
             "name": "lastName",
             "caption": "Фамилия",
-            "class": "col-md-3"
+            "class": "col-xs-3 col-md-3"
         },
         {
             "name": "userComment",
             "caption": "Комментарий",
-            "class": "col-md-4"
+            "class": "col-xs-4 col-md-4"
         }
     ];
     //data
@@ -43,7 +43,7 @@ angular.module('portalNMC')
     
     //get users
     var getUsers = function(){
-        var targetUrl = $scope.ctrlSettings.subscrUrl+$scope.ctrlSettings.userUrlSuffix;
+        var targetUrl = $scope.ctrlSettings.subscrUrl + $scope.ctrlSettings.userUrlSuffix;
         $http.get(targetUrl)
         .then(function(response){
             response.data.forEach(function(elem){
@@ -120,8 +120,15 @@ angular.module('portalNMC')
     };
 
     var errorCallback = function (e) {
-        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
+//        notificationFactory.errorInfo(e.statusText,e.data.description || e.data); 
+//        console.log(e);
         console.log(e);
+        var errorCode = "-1";
+        if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+            errorCode = e.resultCode || e.data.resultCode;
+        };
+        var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+        notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
     $scope.sendUserToServer = function(obj){
