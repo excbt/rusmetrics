@@ -173,6 +173,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testCommerceDownloadContext() throws Exception {
 
@@ -203,6 +207,25 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		};
 
 		_testGet(urlStr, null, tester);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCommerceDownloadContextPreview() throws Exception {
+
+		long reportParamsetId = TEST_PARAMSET_COMMERCE;
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
+		List<Long> contObjectIds = reportMakerParam.getReportContObjectIds().subList(0, 1);
+
+		String urlStr = String.format("/api/reportService/commerce/%d/contextPreview/%d", reportParamsetId,
+				contObjectIds.get(0));
+
+		_testGetHtml(urlStr);
 
 	}
 
