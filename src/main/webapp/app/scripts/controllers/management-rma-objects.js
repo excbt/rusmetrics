@@ -218,7 +218,7 @@ angular.module('portalNMC')
                     notificationFactory.success();
                     $('#showZpointOptionModal').modal('hide');
                     if (mainSvc.checkUndefinedNull($scope.currentObject.zpoints) || !angular.isArray($scope.currentObject.zpoints)){
-                        $scope.zpointSettings = {};
+                        //$scope.zpointSettings = {};
                         return;
                     };
                     var curIndex = -1;
@@ -260,8 +260,7 @@ angular.module('portalNMC')
                             };                             
                         };
                     };
-                    $scope.zpointSettings = {};
-
+                    //$scope.zpointSettings = {};
                 };
                 
                 var successCallbackOnSetMode = function(e){
@@ -384,21 +383,9 @@ angular.module('portalNMC')
                     $rootScope.$broadcast('objectSvc:requestReloadData');
                     $scope.loading = true;
                     getObjectsData(e.id);
-//                    $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
-//                    $scope.searchObjects($scope.filter);                        
-//                    $timeout(function(){
-//                        var curObjElem = document.getElementById("obj" + e.id);
-//console.log(e.id);                        
-//console.log(curObjElem);                        
-//                        if (!mainSvc.checkUndefinedNull(curObjElem)){        
-//                            curObjElem.scrollIntoView();
-//                        };
-//                    }, 100);
-//                    location.reload();
                 };
 
-                var errorCallback = function (e) {
-//                    notificationFactory.errorInfo(e.statusText,e.data.description); 
+                var errorCallback = function (e) { 
                     console.log(e);
                     var errorCode = "-1";
                     if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
@@ -406,6 +393,9 @@ angular.module('portalNMC')
                     };
                     var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
                     notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+                    //zpoint settings saving flag reset
+                    $scope.zpointSettings.isSaving = false;
+                    $scope.currentObject.isSaving = false;
                 };
 
                 $scope.addObject = function (url, obj) {                    
@@ -427,9 +417,7 @@ angular.module('portalNMC')
                 };
                 
                 $scope.deleteObjects = function(obj){
-                    var url = objectSvc.getRmaObjectsUrl();
-//console.log(url);                    
-//console.log(obj);                    
+                    var url = objectSvc.getRmaObjectsUrl();                   
                     if (angular.isDefined(obj) && (angular.isDefined(obj.id)) && (obj.id != null)){
                         crudGridDataFactory(url).delete({ id: obj[$scope.extraProps.idColumnName] }, successDeleteCallback, errorCallback);
                     }else if (angular.isDefined(obj.deleteObjects) && (obj.deleteObjects != null) && angular.isArray(obj.deleteObjects)){
@@ -488,7 +476,9 @@ angular.module('portalNMC')
                 };
                 
                 $scope.sendObjectToServer = function(obj){
+                    obj.isSaving = true;
                     if(!checkObjectSettings(obj)){
+                        obj.isSaving = false;
                         return false;
                     };
                     var url = objectSvc.getRmaObjectsUrl();                    
@@ -496,7 +486,7 @@ angular.module('portalNMC')
                         $scope.updateObject(url, obj);
                     }else{
 //                        obj.timezoneDefKeyname = "MSK";
-                        $scope.addObject(url,obj);
+                        $scope.addObject(url, obj);
                     };
                 };
               
@@ -866,7 +856,7 @@ console.log($scope.currentObject);
                     notificationFactory.success();    
                     $('#showZpointOptionModal').modal('hide');
                     $('#showZpointExplParameters').modal('hide');
-                     $scope.zpointSettings = {};
+                   //  $scope.zpointSettings = {};
                 };
                 
                 //Save new Zpoint | Update the common zpoint setiing - for example, Name
@@ -901,8 +891,11 @@ console.log($scope.currentObject);
                 };
                 
                 $scope.updateZpointCommonSettings = function(){
+                    $scope.zpointSettings.isSaving = true;
 //console.log($scope.zpointSettings);
                     if (!checkZpointCommonSettings()){
+                        //zpoint settings saving flag reset
+                        $scope.zpointSettings.isSaving = false;
                         return false;
                     };
                     //prepare piped info
@@ -933,7 +926,8 @@ console.log($scope.currentObject);
                 };
                 
                 //Update the zpoint settings, which set the mode for Summer or Winter season
-                $scope.updateZpointModeSettings = function(){                   
+                $scope.updateZpointModeSettings = function(){ 
+                    $scope.zpointSettings.isSaving = true;
                     var tableSummer = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
                 };
@@ -1583,11 +1577,18 @@ console.log($scope.currentObject);
                         $scope.currentObject.isValidGeoPos = false;
                         checkGeo();
                         $scope.$apply();
-                        // if (!mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentObject.isAddressAuto){                           
-                        //     $scope.currentObject.fullAddress = $scope.currentSug.value;
-                        //     $scope.$apply();        
-                        // };
                     });
+                });
+                
+                $('#showZpointOptionModal').on('hidden.bs.modal', function(){
+                    $scope.zpointSettings = {};
+                });
+                $('#showZpointExplParameters').on('hidden.bs.modal', function(){
+                    $scope.zpointSettings = {};
+                });
+                
+                $('#showObjOptionModal').on('hidden.bs.modal', function(){
+                    $scope.currentObject.isSaving = false;
                 });
 //            }]
 }]);

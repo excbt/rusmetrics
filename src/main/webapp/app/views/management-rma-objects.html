@@ -304,7 +304,8 @@
                         <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
                                 ng-click="updateZpointCommonSettings()"
-								value="Сохранить" />
+								value="Сохранить" 
+                                   ng-disabled="zpointSettings.isSaving == true"/>
 <!--								ng-disabled="!checkZpointSettingsFrom(zpointSettings)" -->
 						</div> 
 						<div class=" pull-right col-xs-offset-2 col-md-3 noPadding noMargin nmc-cancel-button">
@@ -790,7 +791,7 @@
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
 							<input type="submit" class="btn btn-primary btn-block btn-xs"
-                                ng-disabled="!checkZpointSettingsFrom(zpointSettings)"   
+                                ng-disabled="!checkZpointSettingsFrom(zpointSettings) || zpointSettings.isSaving == true"   
 								ng-click="updateZpointModeSettings()"
 								value="Сохранить" />
 						</div>
@@ -924,7 +925,9 @@
 
 					<div class="row">
                         <div class="col-xs-offset-6 col-md-3">
-							<input ng-disabled="!checkObjectPropertiesForm(currentObject)" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || currentObject.isSaving == true" 
+                                   type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
 								ng-click="sendObjectToServer(currentObject)"
 								value="Сохранить" />
 						</div>

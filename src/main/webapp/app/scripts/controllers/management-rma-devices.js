@@ -99,6 +99,16 @@ angular.module('portalNMC')
     };
     //save scheduler settings
     $scope.saveScheduler = function(objId, device, scheduler){
+        if (mainSvc.checkUndefinedNull(objId)){
+            return "ObjId of scheduler is undefined or null.";
+        };
+        if (mainSvc.checkUndefinedNull(device) || mainSvc.checkUndefinedNull(device.id)){
+            return "Device of scheduler is empty.";
+        };
+        if (mainSvc.checkUndefinedNull(scheduler) || mainSvc.checkUndefinedNull(scheduler.id)){
+            return "Scheduler is empty.";
+        };
+        scheduler.isSaving = true;
         objectSvc.putDeviceSchedulerSettings(objId, device.id, scheduler).then(successCallback, errorCallback);
     };
     
@@ -210,9 +220,15 @@ angular.module('portalNMC')
         };
         var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+        // reset saving device flag
+        $scope.data.currentObject.isSaving = false;
+        //reset saving csheduler flag
+        $scope.data.currentScheduler.isSaving = false;
     };
     
-    $scope.saveDevice = function(device){ 
+    $scope.saveDevice = function(device){
+        //set device saving...
+        device.isSaving = true;
         //check device data
         var checkDsourceFlag = true;
         if (device.contObjectId == null){
@@ -223,7 +239,12 @@ angular.module('portalNMC')
             notificationFactory.errorInfo("Ошибка","Не задан источник данных");
             checkDsourceFlag = false;
         };
+        if (device.id == null && device.deviceModelId == null && device.isManual){
+            notificationFactory.errorInfo("Ошибка", "Не задана модель прибора");
+            checkDsourceFlag = false;
+        };
         if (checkDsourceFlag === false){
+            device.isSaving = false;
             return;
         };
         if (!mainSvc.checkUndefinedNull(device.verificationDateString) || (device.verificationDateString != "")){
@@ -237,6 +258,7 @@ angular.module('portalNMC')
             //выдать предупреждение о том, что модель была изменена и мета данные будут стерты
             userDecision = confirm("Модель прибора была изменена. Метаданные прибора будут перезаписаны метаданными текущей модели. Продолжить?");
             if (!userDecision){
+                device.isSaving = false;
                 return "Save operation is canceled by user.";
             };
         }
@@ -277,7 +299,8 @@ angular.module('portalNMC')
         }, errorCallback);
     };
     
-    $scope.updateDeviceMetaData = function(device){       
+    $scope.updateDeviceMetaData = function(device){
+        device.isSaving = true;
         var method = "PUT";
         var url = objectSvc.getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects/" + device.id + "/metadata";
         $http({
@@ -330,31 +353,6 @@ angular.module('portalNMC')
         objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
             function(response){                           
                 device.metaData = response.data; 
-//console.log(device);                
-//                $scope.currentDevice = device;                           
-//                $('#vzletMetaDataEditorModal').modal();
-            },
-            errorCallback
-        );
-    };
-
-    $scope.updateDeviceMetaDataVzlet = function(device){   
-        var method = "";
-        if(angular.isDefined(device.metaData.id) && (device.metaData.id !== null)){
-            method = "PUT";
-        }else{
-            method = "POST";
-        };
-        var url = objectSvc.getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects/" + device.id + "/metaVzlet";
-        $http({
-            url: url,
-            method: method,
-            data: device.metaData
-        })
-        .then(
-            function(response){
-                $scope.currentDevice =  {};
-                $('#vzletMetaDataEditorModal').modal('hide');
             },
             errorCallback
         );
@@ -393,6 +391,12 @@ angular.module('portalNMC')
     };
     
     $scope.isDeviceDisabled = function(device){
+//console.log(device);        
+//        return !device.isManual;
+        return device.exSystemKeyname == 'VZLET' || device.exSystemKeyname == 'LERS' || (device.isSaving == true);
+    };
+    
+    $scope.isDeviceProtoLoaded = function(device){
 //console.log(device);        
 //        return !device.isManual;
         return device.exSystemKeyname == 'VZLET' || device.exSystemKeyname == 'LERS';
