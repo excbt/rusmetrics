@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
@@ -135,7 +134,6 @@ public class ReportMakerParamService {
 			boolean previewMode) {
 
 		checkNotNull(reportParamset);
-		checkArgument(!reportParamset.isNew());
 
 		List<Long> resultContObjectIdList = Collections.emptyList();
 
