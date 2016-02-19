@@ -81,22 +81,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.currentResourceCategory = reportSvc.getDefaultResourceCategory();
     
      //get paramsets   
-//    $scope.getActive = function(){
-//        $scope.currentMode = "";//active paramsets
-//        if (reportSvc.getReportTypesIsLoaded()){
-//            //report types
-//            $scope.reportTypes = reportSvc.getReportTypes();
-//            reportSvc.getParamsetsForTypes($scope.reportTypes, $scope.currentMode);
-//        };
-//    };
-//    
-//    $scope.getActive();
     
     $scope.$on('reportSvc:reportTypesIsLoaded', function(){
         //report types
         $scope.reportObjects = reportSvc.getReportTypes();
         $scope.getActive();
-//        reportSvc.getParamsetsForTypes($scope.reportTypes, $scope.currentMode);
     });
     
     $scope.$on('reportSvc:reportPeriodsIsLoaded', function(){
@@ -181,7 +170,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
-//console.log(angular.copy(data)); 
             type.paramsetsCount = data.length;
             type.checkedParamsets = 0;
             var tmp = angular.copy(data);
@@ -189,23 +177,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 var currentSign = el.reportPeriod.sign;
                 if ((currentSign == null) || (typeof currentSign == 'undefined')){           
                     var paramsetStartDateFormat = (new Date(el.paramsetStartDate));
-                    el.psStartDateFormatted = (el.paramsetStartDate!=null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
-        //console.log(el.psStartDateFormatted);            
-                    var paramsetEndDateFormat= (new Date(el.paramsetEndDate));
-                    el.psEndDateFormatted = (el.paramsetEndDate!=null)? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
-        //console.log($scope.psEndDateFormatted);
+                    el.psStartDateFormatted = (el.paramsetStartDate != null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+                    var paramsetEndDateFormat = (new Date(el.paramsetEndDate));
+                    el.psEndDateFormatted = (el.paramsetEndDate != null) ? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
                 }
             //settings for activate tab "Main options", when edit window opened.
-                $scope.set_of_objects_flag=false;
+                $scope.set_of_objects_flag = false;
                 $scope.showAvailableObjects_flag = false;
-        //        $('#main_properties_tab').addClass("active");
-        //        $('#set_of_objects_tab').removeClass("active");
-        //        $('#createParamsetModal').modal();
                 $scope.getSelectedObjectsByParamset(type, el);
             });
-            type.paramsets = tmp;
-            
-            
+            type.paramsets = tmp;            
         });
     };
       
@@ -214,7 +195,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getActive = function(){
         if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
         for (var i=0; i<$scope.reportObjects.length; i++){
-            $scope.getParamsets($scope.paramsetsUrl+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
+            $scope.getParamsets($scope.paramsetsUrl + $scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
     
@@ -449,16 +430,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         });
     };
     
-    $scope.getSelectedObjectsByParamset = function(type, paramset){
-        var table=$scope.paramsetsUrl+"/"+paramset.id+"/contObject";
+    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){
+        var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
         crudGridDataFactory(table).query(function(data){
-            paramset.selectedObjects = data;
+            (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
-            type.checkedParamsets+=1;
+            type.checkedParamsets += 1;
         });
     };
     
@@ -790,6 +771,8 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
         //check fields before save
     $scope.checkRequiredFieldsOnSave = function(){
+        $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
+        $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
@@ -1041,10 +1024,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             .catch(errorCallback);    
     };
     
-    $scope.previewReport = function(type, paramset){
+    $scope.previewReport = function(type, paramset, isContext){
         $scope.selectedReport(type, paramset);
         if (paramset.checkFlag){
-            var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/preview";
+            var url = "../api/reportService" + type.suffix + "/" + paramset.id;
+            (!mainSvc.checkUndefinedNull(isContext) && isContext == true) ? url += "/contextPreview/" + objectSvc.getCurrentObject().id : url += "/preview";
             var prevWin = window.open("", "_blank");
             prevWin.document.write($scope.ctrlSettings.htmlLoading);      
             prevWin.document.location.assign(url);            
@@ -1181,6 +1165,21 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         }else{
             $scope.data.reportEntities = reports;
         };
+            // perform reports as common reports
+        var tmp = reports;
+        tmp.forEach(function(el){
+            var currentSign = el.reportPeriod.sign;
+            if ((currentSign == null) || (typeof currentSign == 'undefined')){           
+                var paramsetStartDateFormat = (new Date(el.paramsetStartDate));
+                el.psStartDateFormatted = (el.paramsetStartDate != null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+                var paramsetEndDateFormat = (new Date(el.paramsetEndDate));
+                el.psEndDateFormatted = (el.paramsetEndDate != null) ? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+            }
+        //settings for activate tab "Main options", when edit window opened.
+            $scope.set_of_objects_flag = false;
+            $scope.showAvailableObjects_flag = false;
+            $scope.getSelectedObjectsByParamset(el.reportTemplate.reportType, el, true);
+        });
 //console.log($scope.data.reportEntities);        
     };
     $scope.getContextReports();
@@ -1206,7 +1205,7 @@ console.log(paramset);
         //run preview report        
         paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);
         $scope.selectedObjects = [objectSvc.getCurrentObject()];
-        $scope.checkAndRunParamset(paramset.reportTemplate.reportType, paramset, true)
+        $scope.previewReport(paramset.reportTemplate.reportType, paramset, true)
     };
     // ************************************************************* контекстные отчеты ****************
 }]);

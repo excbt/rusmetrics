@@ -231,7 +231,7 @@ function($http, $cookies, $interval, $rootScope, crudGridDataFactory, mainSvc){
             result= false;
         };
             //start date
-            //if the paramset use a date interval
+            //if the paramset use a date interval       
         if (currentSign == null){
             var startDateMillisec = mainSvc.strDateToUTC(reportParamset.psStartDateFormatted, dateFormat);
             var startDate = new Date(startDateMillisec);

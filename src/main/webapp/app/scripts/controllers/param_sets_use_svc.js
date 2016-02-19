@@ -163,7 +163,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             return "Add / edit paramset: no name";
         };
         var flag = $scope.checkRequiredFieldsOnSave();
-        if (flag===false){
+        if (flag === false){
             $('#messageForUserModal').modal();
         }else{
             $scope.saveParamset(object);
@@ -916,6 +916,8 @@ console.log($scope.psEndDateFormatted);
     };
         //check fields before save
     $scope.checkRequiredFieldsOnSave = function(){
+        $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
+        $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
         $scope.currentObject.selectedObjects = $scope.selectedObjects;
         $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
         var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "create");

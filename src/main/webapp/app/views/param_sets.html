@@ -20,14 +20,6 @@
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
         <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
-<!--
-<input date-range-picker class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="testRen" options="dateOptsParamsetRu"/>
--->
-<!--
-<input id="inputSingleDate" class="form-control date-picker nmc-date-interval-form"
-                                type="text" ng-model="testRen"/>        
--->
     </ul>
 
     <div class="tab-content">
@@ -100,24 +92,15 @@
                                             <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                             <a ng-disabled="isROfield()" 
                                                      title="Добавить" 
-                                                     class="" 
+                                                     class="nmc-link-report-add" 
                                                      ng-click="addParamSet(object)" 
                                                      data-target="#main_properties" 
                                                      data-toggle="tab"
-                                               style="cursor: pointer"
+                                               
                                                >Добавить
                                             </a>
                                         </div>
                                         <div class="col-xs-2 col-md-2">
-<!--
-                                            <button ng-disabled="isROfield()" 
-                                                     title="Добавить" 
-                                                     class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" 
-                                                     ng-click="addParamSet(object)" 
-                                                     data-target="#main_properties" 
-                                                     data-toggle="tab">Добавить
-                                            </button>
--->
                                         </div>
                                         <div class="col-xs-4 col-md-4">
                                             
@@ -133,7 +116,6 @@
                                        ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
-    <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
                                             <th></th>
                                             <th ng-repeat="paramsetColumn in paramsetColumns" 
@@ -226,13 +208,14 @@
              <div role="tabpanel" class="tab-pane fade nmc-report-settings-main-div" id="arhive_paramsets">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
                                  <div class="container-fluid" ng-repeat="category in categories">
-                    <div class="row well padding5 marginBottom5">
-                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-table">
+                    <div class="row padding5" style="padding:0;">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table">
                             <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
                             </i>
                         </div>
-                        <div class="col-xs-11 col-md-11">
-                            <label>{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                        <div class="col-xs-11 col-md-11 noPadding">
+                            <label class="noMarginBottom marginTop5">
+                                {{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
                             </label>
                         </div>
                     </div>
@@ -241,20 +224,20 @@
 
                 <!--  Постороение таблицы с данными  -->
                     <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
-                        <td>
+                        <td style="padding:0px;">
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
-
-                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
-
-                                    <td ng-class="column.class">
-
-                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table">
-
-                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"></i>
+                                <tr>
+                                    <td style="padding:0px;" ng-class="column.class">
+                                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table">
+                                            <i class="btn btn-xs glyphicon noMarginI nmc-button-in-table" 
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object);"
+                                               style="padding-left:0px;">
+                                            </i>
 
                                         </div>
-                                        <div class="col-md-10">
-                                            <b>{{object.reportTypeName}}</b> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+                                        <div class="col-xs-10 col-md-10 noPadding">
+                                            <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
                                         </div>
 
                                     </td>
@@ -263,10 +246,9 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table" ng-show="object.showGroupDetails">
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
-    <!--                                            td for buttons-->
                                             <th class="nmc-td-for-buttons"></th>
                                             <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
                                                 {{paramsetColumn.header}}
@@ -647,12 +629,6 @@
                                                     ng-model="currentObject.outputFileType" 
                                                     ng-disabled="isDisabled()" 
                                                     ng-options="fileType for fileType in fileTypes"> 
-<!--
-                                                <option value="PDF" selected>PDF</option>
-                                                <option value="HTML">HTML</option>
-                                                <option value="XLSX">XLSX</option>
--->
-<!--                                                <option>ZIP</option>-->
                                             </select>
                                         </td>
                                     </tr>

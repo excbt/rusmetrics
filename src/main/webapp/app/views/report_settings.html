@@ -55,27 +55,45 @@
 <!--            Активные шаблоны-->
             <div role="tabpanel" class="tab-pane fade in active nmc-report-settings-main-div" id="active_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
+                                  <!-- Навигационная полоса по категориям отчетов-->
+                <div class="container-fluid" ng-repeat="category in categories">
+                    <div class="row padding5" style="padding:0;">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
+                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class="col-xs-11 col-md-11 noPadding">
+                            <label class="noMarginBottom marginTop5">{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show="category.reportTypesViewFlag" class="marginLeft15">
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="">
+                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
 
-                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
+                                <tr>
 
-                                    <td ng-class="column.class" >
+                                    <td style="padding:0px;" ng-class="column.class" >
 
-                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-paramset-table" style="">
 
-                                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                            <i title="Скрыть / Показать" 
+                                               class="btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"
+                                               style="padding-left:0px;">
+                                            </i>
 
                                         </div>
-                                        <div class="col-md-11">
-                                            <div class="col-md-5 noPadding"><b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                        <div class="col-md-11 noPadding">
+                                            <div class="col-md-5 noPadding"><label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                                <a ng-show="object.reportType=='COMMERCE_REPORT'" title="Добавить" class="nmc-link-report-add" ng-click="addTemplate(object)" >Добавить</a>
                                             </div>    
-                                            <div class="col-md-7" ng-show="object.reportType=='COMMERCE_REPORT'">
-                                                <button title="Добавить" class="btn btn-default btn-xs btn-primary nmc-add-button-in-table" ng-click="addTemplate(object)" >Добавить</button>
+                                            <div class="col-md-7" >                                                
                                             </div>
                                         </div>
 
@@ -142,26 +160,46 @@
 
                         </td>
                     </tr>
-                </table>                
+                </table>
+                    </div> <!-- reportTypeViewFlag -->
+                </div> <!-- ng-repeat -->
 <!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table - active               -->
             </div>
 <!--            Архивные шаблоны-->
              <div role="tabpanel" class="tab-pane fade nmc-report-settings-main-div" id="arhive_templates">
 <!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
+                                                   <!-- Навигационная полоса по категориям отчетов-->
+                <div class="container-fluid" ng-repeat="category in categories">
+                    <div class="row padding5" style="padding:0;">
+                        <div class="btn-toolbar col-xs-1 col-md-1 nmc-btn-toolbar-in-paramset-table noPadding">
+                            <i title="Скрыть / Показать" class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" ng-click="category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class="col-xs-11 col-md-11 noPadding">
+                            <label class="noMarginBottom marginTop5">{{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show="category.reportTypesViewFlag" class="marginLeft15">
                 <table id="datatabl" class="table table-condensed noMarginBottom nmc-table-container">
 
                 <!--  Постороение таблицы с данными  -->
 <!--                     | orderBy:orderBy.field:!orderBy.asc | filter: filter-->
-                    <tr ng-repeat="object in objects" ng-click="" ng-dblclick="showDetails(object)">
+                    <tr ng-repeat="object in category.reportTypes" ng-click="" ng-dblclick="showDetails(object)">
                         <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
-                                <tr ng-class="{'nmc-tr-odd':($index%2===0)}">
-                                    <td ng-class="column.class">
-                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-table" style="">
-                                            <i class="btn btn-xs glyphicon noMargin nmc-button-in-table" ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"></i>
+                                <tr>
+                                    <td style="padding:0px;" ng-class="column.class">
+                                        <div class="btn-toolbar col-md-1 nmc-btn-toolbar-in-paramset-table" style="">
+                                            <i class="btn btn-xs glyphicon noMarginI nmc-button-in-table" 
+                                               ng-class="{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click="showObjectDetails(object); toogleShowGroupDetails(object)"
+                                               style="padding-left:0px;"
+                                               >
+                                            </i>
                                         </div>
-                                        <div class="col-md-10">
-                                            <b>{{object.reportTypeName}}</b> <small>(шаблонов: {{object.templatesCount || 0}})</small>
+                                        <div class="col-md-10 noPadding">
+                                            <label class="noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(шаблонов: {{object.templatesCount || 0}})</small>
                                         </div>
 
 
@@ -171,7 +209,7 @@
                                 <tr>
 
                                     <!--          Внутренняя(раскрывающая) таблица с данными    -->
-                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header" ng-show="object.showGroupDetails">
+                                <table id="dataTemplatesTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table-without-header noMarginBottom" ng-show="object.showGroupDetails">
                                     <thead>
                                         <tr class="nmc-child-table-header">
                                             <th class="nmc-td-for-buttons">
@@ -216,7 +254,9 @@
 
                         </td>
                     </tr>
-                </table>            
+                </table>  
+                   </div> <!-- reportTypeViewFlag -->
+                </div> <!-- ng-repeat -->
 <!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table Archive               -->                 
             </div>
             

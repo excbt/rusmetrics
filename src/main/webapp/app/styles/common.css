@@ -1883,6 +1883,11 @@ tr.nmc-inactive-price > td{
     cursor: pointer;
 }
 
+/*    Стиль ссылки "Добавить" в настройках Вариантов отчетов и Шаблонах*/
+.nmc-link-report-add{
+    cursor: pointer;
+}
+
 /* Стиль оформления записи пакета услуг*/
 .nmc-service-package-caption{
     cursor: help;

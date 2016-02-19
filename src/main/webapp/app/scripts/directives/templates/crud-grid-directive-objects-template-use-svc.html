@@ -201,7 +201,7 @@
                                                 <i title="Сформировать отчет" ng-if="!reportEntity.reports"
                                                     class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
                                                     ng-click="createContextReport(reportEntity)"
-                                                    ng-class="{'nmc-button-in-table-run-green': reportEntity.allRequiredParamsPassed, 'nmc-button-in-table-run-red': !reportEntity.allRequiredParamsPassed}">
+                                                    ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
                                                 </i>
                                             </a>
                                             <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" class="dropdown-menu">
@@ -214,7 +214,7 @@
                                                         </span>
                                                         <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
                                                            ng-click="createContextReport(report)"
-                                                           ng-class="{'nmc-button-in-table-run-green':report.allRequiredParamsPassed, 'nmc-button-in-table-run-red':!report.allRequiredParamsPassed}"
+                                                           ng-class="{'nmc-button-in-table-run-green':report.checkFlag, 'nmc-button-in-table-run-red':!report.checkFlag}"
                                                            >
                                                         </i>
                                                     </a>
