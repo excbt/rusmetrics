@@ -1,8 +1,9 @@
 //ManagementServicesCtrl
 'use strict';
 angular.module('portalNMC')
-.controller('ManagementServicesCtrl', ['$scope', '$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
-    console.log("ManagementServicesCtrl run.");
+.controller('ManagementServicesCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'notificationFactory', function($rootScope, $scope, $http, mainSvc, notificationFactory){
+//    console.log("ManagementServicesCtrl run.");
+    $rootScope.ctxId = "management_services_page";
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format

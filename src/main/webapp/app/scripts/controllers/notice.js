@@ -3,7 +3,8 @@
 var app = angular.module('portalNMC');
 
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc){
-console.log("Load NoticeCtrl.");  
+//console.log("Load NoticeCtrl."); 
+    $rootScope.ctxId = "notice_page";
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";

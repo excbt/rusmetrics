@@ -1,6 +1,20 @@
 //reports controller
 var app = angular.module('portalNMC');
-app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout){
+app.filter('resourceCategoryFilter', function(){
+    return function(items, props){
+        if (props.isAll == true){
+            return items;
+        };
+        var filteredItems = [];      
+        items.forEach(function(item){
+            if (item.resourceCategory == props.name){
+                filteredItems.push(item);
+            };
+        });     
+        return filteredItems;
+    }
+});
+app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFactory', 'notificationFactory', 'objectSvc', 'mainSvc', '$timeout', 'reportSvc', function($scope, $rootScope, $http, crudGridDataFactory, notificationFactory, objectSvc, mainSvc, $timeout, reportSvc){
     
     $rootScope.ctxId = "reports_page";
 //console.log(navigator.userAgent);    
@@ -10,18 +24,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.ctrlSettings.selectedAll = false;
 
         //html- с индикатором загрузки страницы
-    $scope.ctrlSettings.htmlLoading = '<head>' 
-                            + '<meta charset="utf-8">' 
-                            + '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>'
-                            + '</head>'
-                            + '<body>' 
-                            + '<div  ng-show="loading" class="nmc-loading">'
-                            + '<i class="fa fa-spinner fa-spin"></i> Загрузка ... '
-                            + '</div>'
-                            + '</body>';
+    $scope.ctrlSettings.htmlLoading = mainSvc.getHtmlLoading();
     //report open modes
     $scope.ctrlSettings.openModes = {
-        "create":{ "name": "create"
+        "create":
+        { "name": "create",
+         "isContext": false
         }, 
         "edit":{ "name": "edit"
         }, 
@@ -34,7 +42,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.showAvailableObjects_flag = false; // флаг, устанавливающий видимость окна с доступными объектами
     $scope.currentSign = 9999;// устанавливаем начальное значение отличное от нулл и других возможных значение; нулл - будем отлавливать
 
-    $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
+    $scope.extraProps = {"idColumnName": "id", "defaultOrderBy" : "name", "deleteConfirmationProp": "name"};    
     $scope.activeStartDateFormat = new Date();
     $scope.activeStartDateFormatted = moment().format($scope.ctrlSettings.dateFormat);
     
@@ -53,38 +61,40 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         ,{"name":"fileType", "header":"Тип файла", "class":"col-xs-1 col-md-1"}
     ];
     $scope.groupUrl = "../api/contGroup";
-    $scope.crudTableName = "../api/reportParamset"; 
+    $scope.paramsetsUrl = "../api/reportParamset"; 
     
         //Headers of modal window
     $scope.headers = {}
     $scope.headers.addObjects = "Доступные объекты";//header of add objects window
     
+    //report context launch setting
+    $scope.ctrlSettings.reportCountList = 5;//border report count: if the reports is more than this border that view two-level menu, else - one-level
+    
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
+        //get report categories
+    $scope.categories = reportSvc.getReportCategories();
+        //prepare resource categories
+    $scope.resourceCategories = reportSvc.getResourceCategories();
+    $scope.currentResourceCategory = reportSvc.getDefaultResourceCategory();
     
-    $scope.categories = [
-        {
-            name: "Аналитические",
-            prefix: "А",
-            class: "active",
-            reportTypes: []
-        },
-        {
-            name: "Оперативные",
-            prefix: "Э",
-            reportTypes: []
-        },
-        {
-            name: "Служебные",
-            prefix: "C",
-            reportTypes: []
-        }
-    ];
+     //get paramsets   
+    
+    $scope.$on('reportSvc:reportTypesIsLoaded', function(){
+        //report types
+        $scope.reportObjects = reportSvc.getReportTypes();
+        $scope.getActive();
+    });
+    
+    $scope.$on('reportSvc:reportPeriodsIsLoaded', function(){
+        //report types
+        $scope.reportPeriods = reportSvc.getReportPeriods();        
+    });
     
     //report types
-    $scope.reportTypes = [];
+//    $scope.reportTypes = [];
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
@@ -96,7 +106,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 if (!data[i]._enabled){
                     continue;
                 };
-                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
+                if ((!$scope.isSystemuser() && data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
@@ -105,10 +115,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 newObject.suffix = data[i].suffix;
                 newObject.reportMetaParamSpecialList = data[i].reportMetaParamSpecialList;
                 newObject.reportMetaParamCommon = data[i].reportMetaParamCommon;
+                newObject.reportCategory = data[i].reportCategory;
                     //flag: the toggle visible flag for the special params page.
                 newObject.reportMetaParamSpecialList_flag = (data[i].reportMetaParamSpecialList.length > 0 ? true : false);                
                 for (var categoryCounter = 0; categoryCounter < $scope.categories.length; categoryCounter++){                         
-                    if (newObject.reportTypeName[0] == $scope.categories[categoryCounter].prefix){
+                    if (newObject.reportCategory.localeCompare($scope.categories[categoryCounter].name) == 0){    
                         newObject.reportTypeName = newObject.reportTypeName.slice(3, newObject.reportTypeName.length);
                         $scope.categories[categoryCounter].reportTypes.push(newObject);                     
                         continue;
@@ -121,17 +132,21 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             $scope.getActive();
         });
     };
-    $scope.getReportTypes();
+//    $scope.getReportTypes();
+
     
     //report periods
-    $scope.reportPeriods = [];
-    $scope.getReportPeriods = function(){
-        var table = "../api/reportSettings/reportPeriod";
-        crudGridDataFactory(table).query(function(data){
-            $scope.reportPeriods = data;
-        });
+    if (reportSvc.getReportPeriodsIsLoaded()){
+        $scope.reportPeriods = angular.copy(reportSvc.getReportPeriods());    
     };
-    $scope.getReportPeriods();
+//    $scope.reportPeriods = [];
+//    $scope.getReportPeriods = function(){
+//        var table = "../api/reportSettings/reportPeriod";
+//        crudGridDataFactory(table).query(function(data){
+//            $scope.reportPeriods = data;
+//        });
+//    };
+//    $scope.getReportPeriods();
     
     $scope.oldColumns = [
         {"name":"name", "header":"Название варианта", "class":"col-xs-5 col-md-5"}
@@ -155,7 +170,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
-//console.log(angular.copy(data)); 
             type.paramsetsCount = data.length;
             type.checkedParamsets = 0;
             var tmp = angular.copy(data);
@@ -163,23 +177,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 var currentSign = el.reportPeriod.sign;
                 if ((currentSign == null) || (typeof currentSign == 'undefined')){           
                     var paramsetStartDateFormat = (new Date(el.paramsetStartDate));
-                    el.psStartDateFormatted = (el.paramsetStartDate!=null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
-        //console.log(el.psStartDateFormatted);            
-                    var paramsetEndDateFormat= (new Date(el.paramsetEndDate));
-                    el.psEndDateFormatted = (el.paramsetEndDate!=null)? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
-        //console.log($scope.psEndDateFormatted);
+                    el.psStartDateFormatted = (el.paramsetStartDate != null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+                    var paramsetEndDateFormat = (new Date(el.paramsetEndDate));
+                    el.psEndDateFormatted = (el.paramsetEndDate != null) ? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
                 }
             //settings for activate tab "Main options", when edit window opened.
-                $scope.set_of_objects_flag=false;
+                $scope.set_of_objects_flag = false;
                 $scope.showAvailableObjects_flag = false;
-        //        $('#main_properties_tab').addClass("active");
-        //        $('#set_of_objects_tab').removeClass("active");
-        //        $('#createParamsetModal').modal();
                 $scope.getSelectedObjectsByParamset(type, el);
             });
-            type.paramsets = tmp;
-            
-            
+            type.paramsets = tmp;            
         });
     };
       
@@ -188,16 +195,22 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getActive = function(){
         if (($scope.reportObjects == []) || (typeof $scope.reportObjects[0].suffix == 'undefined')){return;};
         for (var i=0; i<$scope.reportObjects.length; i++){
-            $scope.getParamsets($scope.crudTableName+$scope.reportObjects[i].suffix, $scope.reportObjects[i]);
+            $scope.getParamsets($scope.paramsetsUrl + $scope.reportObjects[i].suffix, $scope.reportObjects[i]);
         };
     };
+    
+    if (reportSvc.getReportTypesIsLoaded()){
+            //report types
+        $scope.reportObjects = reportSvc.getReportTypes();
+        $scope.getActive();
+    };
 
-    $scope.toggleShowGroupDetails = function(curObject){//switch option: current goup details     
+    $scope.toggleReportShowGroupDetails = function(curObject){//switch option: current goup details     
          curObject.showGroupDetails = !curObject.showGroupDetails;
 //console.log(curObject.paramsets);        
     };
     
-    $scope.selectedItem = function(parentItem, item){
+    $scope.selectedReport = function(parentItem, item){
         $scope.setCurrentReportType(parentItem);       
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
@@ -223,13 +236,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 
                 previewWin = window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
             };
-            $scope.createReportWithParams(type, object, previewFlag, previewWin);
+            $scope.createReportWithParams(type, object, $scope.selectedObjects, previewFlag, previewWin);
         };
     };
     
     $scope.currentReportType = {};
     $scope.setCurrentReportType = function(object){
         $scope.currentReportType = object;
+//console.log($scope.currentReportType);        
 //        $scope.currentReportType.reportType = object.reportType;
 //        $scope.currentReportType.reportTypeName=object.reportTypeName;
 //        $scope.currentReportType.suffix=object.suffix;
@@ -341,11 +355,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     
     
     
-    $scope.editParamSet =function(parentObject, object, mode){
+    $scope.editParamSet = function(parentObject, object, mode, isContext){
 //console.log(parentObject);        
+//console.log(object);
+//console.log(mode);        
         $scope.showMessageForUserModalExFlag = false;
 //        $scope.setCurrentReportType(parentObject);     
-        $scope.selectedItem(parentObject, object);
+        $scope.selectedReport(parentObject, object);
 //console.log($scope.currentReportType);        
         $scope.currentParamSpecialList = prepareParamSpecialList($scope.currentReportType, object);
 
@@ -370,7 +386,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
 //        $('#main_properties_tab').addClass("active");
 //        $('#set_of_objects_tab').removeClass("active");
 //        $('#createParamsetModal').modal();
-        $scope.getSelectedObjects(mode);
+        $scope.getSelectedObjects(mode, isContext);
     };
     
     //Account objects
@@ -379,7 +395,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.availableObjectGroups = [];
     
     $scope.getAvailableObjects = function(paramsetId){      
-        var table=$scope.crudTableName + "/" + paramsetId + "/contObject/available";        
+        var table=$scope.paramsetsUrl + "/" + paramsetId + "/contObject/available";        
         crudGridDataFactory(table).query(function(data){
 //console.log(data);            
             $scope.availableObjects = angular.copy(data);             
@@ -387,54 +403,43 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         });        
     };
 //    $scope.getAvailableObjects();
-    $scope.getSelectedObjects = function(mode){
-        var table=$scope.crudTableName+"/"+$scope.currentObject.id+"/contObject";
+    $scope.getSelectedObjects = function(mode, isContext){
+        var table = $scope.paramsetsUrl + "/" + $scope.currentObject.id + "/contObject";
         crudGridDataFactory(table).query(function(data){
             $scope.selectedObjects = data;
+            if (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)){
+                $scope.selectedObjects = [objectSvc.getCurrentObject()];
+            };      
             objectSvc.sortObjectsByFullName($scope.selectedObjects); 
 //console.log(mode);            
             switch (mode){
                 case $scope.ctrlSettings.openModes.edit :  activateMainPropertiesTab(); break;
-                case $scope.ctrlSettings.openModes.create :  
-                            var flag = $scope.checkRequiredFieldsOnSave();
-//                            $scope.currentReportType.paramsets.some(function(paramset){
-//                                if (paramset.id == $scope.currentObject.id){
-//                                    paramset.checkFlag = flag;
-//                                };
-//                            });
-                            if (flag===false){
-                               // activateMainPropertiesTab();
-                                $scope.showMessageForUserModalExFlag = true;
-                                $('#messageForUserModal').modal();
-                            }else{                                
-                                $scope.createReport($scope.currentReportType, $scope.currentObject);
-                            };
-                            break;    
+                case $scope.ctrlSettings.openModes.create :                                                           
+                    var flag = $scope.checkRequiredFieldsOnSave();
+                    if (flag === false){
+                        $scope.showMessageForUserModalExFlag = true;
+                        $('#messageForUserModal').modal();
+                    }else{                        
+                        $scope.createReport($scope.currentReportType, $scope.currentObject, isContext);
+                    };
+                    break;    
                  case $scope.ctrlSettings.openModes.preview :  
-                            var flag = $scope.checkRequiredFieldsOnSave();
-//                            $scope.ctrlSettings.currentReportPreviewEnabledFlag = flag;
-//                            $scope.currentReportType.paramsets.some(function(paramset){
-//                                if (paramset.id == $scope.currentObject.id){
-//                                    paramset.checkFlag = flag;
-//                                };
-//                            });
-                           // $scope.currentObject.previewFlag = true;
-                           // };
-                            break; 
+                    var flag = $scope.checkRequiredFieldsOnSave();
+                    break; 
             };
         });
     };
     
-    $scope.getSelectedObjectsByParamset = function(type, paramset){
-        var table=$scope.crudTableName+"/"+paramset.id+"/contObject";
+    $scope.getSelectedObjectsByParamset = function(type, paramset, isContext){
+        var table = $scope.paramsetsUrl + "/" + paramset.id + "/contObject";
         crudGridDataFactory(table).query(function(data){
-            paramset.selectedObjects = data;
+            (!mainSvc.checkUndefinedNull(isContext) && (isContext == true)) ? paramset.selectedObjects = [objectSvc.getCurrentObject()] : paramset.selectedObjects = data;
             objectSvc.sortObjectsByFullName(paramset.selectedObjects);
             paramset.currentParamSpecialList = prepareParamSpecialList(type, paramset);
-            var tmpCheck = $scope.checkPSRequiredFieldsOnSave(type, paramset);
+            var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
-            type.checkedParamsets+=1;
+            type.checkedParamsets += 1;
         });
     };
     
@@ -766,246 +771,241 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
         //check fields before save
     $scope.checkRequiredFieldsOnSave = function(){
-//console.log($scope.currentReportType.reportTypeName);        
-        if (!$scope.currentReportType.hasOwnProperty('reportMetaParamCommon')){
-            return true;
-        };
-        var result= true;
-        $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
-        //Check common params before save
-            //file ext
-        if (angular.isUndefined($scope.currentObject.outputFileType)||($scope.currentObject.outputFileType===null)||($scope.currentObject.outputFileType==="")){
-            $scope.messageForUser += "Основные свойства: "+"\n";
-            $scope.messageForUser += "\u2022"+" Не задан тип файла"+"\n";
-            result= false;
-        };
+        $scope.currentObject.psStartDateFormatted = $scope.psStartDateFormatted;
+        $scope.currentObject.psEndDateFormatted = $scope.psEndDateFormatted;
+        $scope.currentObject.selectedObjects = $scope.selectedObjects;
+        $scope.currentObject.currentParamSpecialList = $scope.currentParamSpecialList;
+        var checkRes = reportSvc.checkPSRequiredFieldsOnSave($scope.currentReportType, $scope.currentObject, $scope.currentSign, "run");
+        $scope.messageForUser = checkRes.message;
+        return checkRes.flag;
         
-            //one date - for future
-//        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
-        
-            //start date
-            //if the paramset use a date interval
-        if ($scope.currentSign==null){
-//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
-//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
-//            {
-//                $scope.messageForUser += "- Не задано начало периода"+"\n";
-//            };
-            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
-            var startDate = new Date(startDateMillisec);
-            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
-            var endDate = new Date(endDateMillisec); 
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
-            {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
-                result= false;
-            };
-
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
-            {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
-                result= false;
-            };
-            
-            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
-            {
-                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
-                result= false;
-            };
-        }
-
-                    //Count of objects
-        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && $scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
-        {
-            $scope.messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
-            result= false;
-        };
-        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && !$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
-        {
-            $scope.messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
-            result= false;
-        };
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length<=0))
-        {
-            $scope.messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
-            result= false;
-        };
-        
-        if (!$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length>1) &&  $scope.currentReportType.reportMetaParamCommon.oneContObjectRequired)
-        {
-            $scope.messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
-            result= false;
-        };
-        
-        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
-        {
-            $scope.currentObject.outputFileZipped =  true;
-        };
-        //check special properties
-        var specListFlag = true;
-        $scope.currentParamSpecialList.forEach(function(element, index, array){
-            if (element.paramSpecialRequired && !(element.textValue 
-                                                 || element.numericValue 
-                                                 || element.oneDateValue 
-                                                 || element.startDateValue
-                                                 || element.endDateValue
-                                                 || element.directoryValue)
-               )
-            {
-                if (specListFlag){$scope.messageForUser += "Дополнительные свойства: "+"\n";};
-                $scope.messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
-                result= false;
-                specListFlag = false;
-            }
-        });
-        if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){
-//            $scope.messageForUser = "Внимание!!! \n"+$scope.messageForUser;
-//            $scope.messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
-//            $scope.messageForUser+=" Этот вариант отчета нельзя запустить без уточнения, а также его нельзя использовать в рассылке. Продолжить?";
-//            alert($scope.messageForUser);
-//            $('#messageForUserModal').modal();
-            result= false;
-        };
-        result =result && $scope.checkRequiredFields();  
-//        $scope.currentObject.showParamsBeforeRunReport =!result;
-        if (!result){
-//console.log("1");            
-            $scope.currentObject.showParamsBeforeRunReport = true;
-        };
-//        else{
-//            $scope.currentObject.showParamsBeforeRunReport = false;
+////console.log($scope.currentReportType.reportTypeName);        
+//        if (!$scope.currentReportType.hasOwnProperty('reportMetaParamCommon')){
+//            return true;
 //        };
-        return result;
+//        var result= true;
+//        $scope.messageForUser = "Не все параметры варианта отчета заданы:\n";
+//        //Check common params before save
+//            //file ext
+//        if (angular.isUndefined($scope.currentObject.outputFileType)||($scope.currentObject.outputFileType===null)||($scope.currentObject.outputFileType==="")){
+//            $scope.messageForUser += "Основные свойства: "+"\n";
+//            $scope.messageForUser += "\u2022"+" Не задан тип файла"+"\n";
+//            result= false;
+//        };
+//        
+//            //one date - for future
+////        if ($scope.currentReportType.reportMetaParamCommon.oneDateRequired && something)
+//        
+//            //start date
+//            //if the paramset use a date interval
+//        if ($scope.currentSign==null){
+////            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.paramsetStartDateFormat==null)
+////            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && $scope.psStartDateFormatted=="")    
+////            {
+////                $scope.messageForUser += "- Не задано начало периода"+"\n";
+////            };
+//            var startDateMillisec = mainSvc.strDateToUTC($scope.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+//            var startDate = new Date(startDateMillisec);
+//            var endDateMillisec = mainSvc.strDateToUTC($scope.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+//            var endDate = new Date(endDateMillisec); 
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate($scope.psStartDateFormatted))))    
+//            {
+//                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+//                $scope.messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
+//                result= false;
+//            };
+//
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate($scope.psEndDateFormatted))))    
+//            {
+//                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+//                $scope.messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
+//                result= false;
+//            };
+//            
+//            if ($scope.currentReportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+//            {
+//                if (result){$scope.messageForUser += "Основные свойства: "+"\n";};
+//                $scope.messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
+//                result= false;
+//            };
+//        }
+//
+//                    //Count of objects
+//        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && $scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
+//        {
+//            $scope.messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
+//            result= false;
+//        };
+//        if ($scope.currentReportType.reportMetaParamCommon.oneContObjectRequired && ($scope.selectedObjects.length==0) && !$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired)
+//        {
+//            $scope.messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
+//            result= false;
+//        };
+//        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length<=0))
+//        {
+//            $scope.messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
+//            result= false;
+//        };
+//        
+//        if (!$scope.currentReportType.reportMetaParamCommon.manyContObjectRequired && ($scope.selectedObjects.length>1) &&  $scope.currentReportType.reportMetaParamCommon.oneContObjectRequired)
+//        {
+//            $scope.messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
+//            result= false;
+//        };
+//        
+//        if ($scope.currentReportType.reportMetaParamCommon.manyContObjectsZipOnly && ($scope.selectedObjects.length>1))
+//        {
+//            $scope.currentObject.outputFileZipped =  true;
+//        };
+//        //check special properties
+//        var specListFlag = true;
+//        $scope.currentParamSpecialList.forEach(function(element, index, array){
+//            if (element.paramSpecialRequired && !(element.textValue 
+//                                                 || element.numericValue 
+//                                                 || element.oneDateValue 
+//                                                 || element.startDateValue
+//                                                 || element.endDateValue
+//                                                 || element.directoryValue)
+//               )
+//            {
+//                if (specListFlag){$scope.messageForUser += "Дополнительные свойства: "+"\n";};
+//                $scope.messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
+//                result= false;
+//                specListFlag = false;
+//            }
+//        });
+//        if($scope.messageForUser!="Не все параметры варианта отчета заданы:\n"){
+////            $scope.messageForUser = "Внимание!!! \n"+$scope.messageForUser;
+////            $scope.messageForUser += "\n Этот вариант отчета нельзя запустить без уточнения или использовать в рассылке, не задав обязательных параметров. Продолжить?";
+////            $scope.messageForUser+=" Этот вариант отчета нельзя запустить без уточнения, а также его нельзя использовать в рассылке. Продолжить?";
+////            alert($scope.messageForUser);
+////            $('#messageForUserModal').modal();
+//            result= false;
+//        };
+//        result =result && $scope.checkRequiredFields();  
+////        $scope.currentObject.showParamsBeforeRunReport =!result;
+//        if (!result){
+////console.log("1");            
+//            $scope.currentObject.showParamsBeforeRunReport = true;
+//        };
+////        else{
+////            $scope.currentObject.showParamsBeforeRunReport = false;
+////        };
+//        return result;
     };
     
         //universal check fields before save
-    $scope.checkPSRequiredFieldsOnSave = function(reportType, reportParamset){        
-        if (!reportType.hasOwnProperty('reportMetaParamCommon')){
-            return true;
-        };
-        var result= true;
-        var messageForUser = "Не все параметры варианта отчета заданы:\n";
-        //Check common params before save
-            //file ext
-        if (angular.isUndefined(reportParamset.outputFileType)||(reportParamset.outputFileType===null)||(reportParamset.outputFileType==="")){
-            messageForUser += "Основные свойства: "+"\n";
-            messageForUser += "\u2022"+" Не задан тип файла"+"\n";
-            result= false;
-        };
-            //start date
-            //if the paramset use a date interval
-        if ($scope.currentSign==null){
-            var startDateMillisec = mainSvc.strDateToUTC(reportParamset.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
-            var startDate = new Date(startDateMillisec);
-            var endDateMillisec = mainSvc.strDateToUTC(reportParamset.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
-            var endDate = new Date(endDateMillisec); 
-            if (reportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate(reportParamset.psStartDateFormatted))))    
-            {
-                if (result){messageForUser += "Основные свойства: "+"\n";};
-                messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
-                result= false;
-            };
-
-            if (reportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate(reportParamset.psEndDateFormatted))))    
-            {
-                if (result){messageForUser += "Основные свойства: "+"\n";};
-                messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
-                result= false;
-            };
-            
-            if (reportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
-            {
-                if (result){messageForUser += "Основные свойства: "+"\n";};
-                messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
-                result= false;
-            };
-        }
-
-                    //Count of objects
-        if (reportType.reportMetaParamCommon.oneContObjectRequired && (reportParamset.selectedObjects.length==0) && reportType.reportMetaParamCommon.manyContObjectRequired)
-        {
-            messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
-            result= false;
-        };
-        if (reportType.reportMetaParamCommon.oneContObjectRequired && (reportParamset.selectedObjects.length==0) && !reportType.reportMetaParamCommon.manyContObjectRequired)
-        {
-            messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
-            result= false;
-        };
-        if (reportType.reportMetaParamCommon.manyContObjectRequired && (reportParamset.selectedObjects.length<=0))
-        {
-            messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
-            result= false;
-        };
-        
-        if (!reportType.reportMetaParamCommon.manyContObjectRequired && (reportParamset.selectedObjects.length>1) &&  reportType.reportMetaParamCommon.oneContObjectRequired)
-        {
-            messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
-            result= false;
-        };
-        
-        if (reportType.reportMetaParamCommon.manyContObjectsZipOnly && (reportParamset.selectedObjects.length>1))
-        {
-            reportParamset.outputFileZipped =  true;
-        };
-        //check special properties
-        var specListFlag = true;
-        reportParamset.currentParamSpecialList.forEach(function(element, index, array){
-            if (element.paramSpecialRequired && !(element.textValue 
-                                                 || element.numericValue 
-                                                 || element.oneDateValue 
-                                                 || element.startDateValue
-                                                 || element.endDateValue
-                                                 || element.directoryValue)
-               )
-            {
-                if (specListFlag){messageForUser += "Дополнительные свойства: "+"\n";};
-                messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
-                result= false;
-                specListFlag = false;
-            }
-        });
-        if(messageForUser!="Не все параметры варианта отчета заданы:\n"){
-            result= false;
-        };
-        result =result && $scope.checkPSRequiredFields(reportParamset);  
-        if (!result){          
-            reportParamset.showParamsBeforeRunReport = true;
-        };
-//        reportParamset.messageForUser = messageForUser;
-        return {"flag":result,
-                "message": messageForUser};
-    };
-    
-    $scope.createReport = function(type, paramset){
-        //check report
-//        $scope.editParamSet(type, paramset, true);
-//        var flag = $scope.checkRequiredFieldsOnSave();
-//        if (flag===false){
-//           // activateMainPropertiesTab();
-//            $scope.showMessageForUserModalExFlag = true;
-//            $('#messageForUserModal').modal();
-//            return false;
+//    $scope.checkPSRequiredFieldsOnSave = function(reportType, reportParamset){        
+//        if (!reportType.hasOwnProperty('reportMetaParamCommon')){
+//            return true;
 //        };
-        //????
+//        var result= true;
+//        var messageForUser = "Не все параметры варианта отчета заданы:\n";
+//        //Check common params before save
+//            //file ext
+//        if (angular.isUndefined(reportParamset.outputFileType)||(reportParamset.outputFileType===null)||(reportParamset.outputFileType==="")){
+//            messageForUser += "Основные свойства: "+"\n";
+//            messageForUser += "\u2022"+" Не задан тип файла"+"\n";
+//            result= false;
+//        };
+//            //start date
+//            //if the paramset use a date interval
+//        if ($scope.currentSign==null){
+//            var startDateMillisec = mainSvc.strDateToUTC(reportParamset.psStartDateFormatted, $scope.ctrlSettings.dateFormat);
+//            var startDate = new Date(startDateMillisec);
+//            var endDateMillisec = mainSvc.strDateToUTC(reportParamset.psEndDateFormatted, $scope.ctrlSettings.dateFormat);
+//            var endDate = new Date(endDateMillisec); 
+//            if (reportType.reportMetaParamCommon.startDateRequired && (isNaN(startDate.getTime())||(!mainSvc.checkStrForDate(reportParamset.psStartDateFormatted))))    
+//            {
+//                if (result){messageForUser += "Основные свойства: "+"\n";};
+//                messageForUser += "\u2022"+" Некорректно задано начало периода"+"\n";
+//                result= false;
+//            };
+//
+//            if (reportType.reportMetaParamCommon.startDateRequired && (isNaN(endDate.getTime())||(!mainSvc.checkStrForDate(reportParamset.psEndDateFormatted))))    
+//            {
+//                if (result){messageForUser += "Основные свойства: "+"\n";};
+//                messageForUser += "\u2022"+" Некорректно задан конец периода"+"\n";
+//                result= false;
+//            };
+//            
+//            if (reportType.reportMetaParamCommon.startDateRequired && !isNaN(endDate.getTime())&& !isNaN(startDate.getTime())&&(startDateMillisec>endDateMillisec))    
+//            {
+//                if (result){messageForUser += "Основные свойства: "+"\n";};
+//                messageForUser += "\u2022"+" Некорректно заданы границы периода"+"\n";
+//                result= false;
+//            };
+//        }
+//
+//                    //Count of objects
+//        if (reportType.reportMetaParamCommon.oneContObjectRequired && (reportParamset.selectedObjects.length==0) && reportType.reportMetaParamCommon.manyContObjectRequired)
+//        {
+//            messageForUser += "\u2022"+" Должен быть выбран хотя бы один объект"+"\n";
+//            result= false;
+//        };
+//        if (reportType.reportMetaParamCommon.oneContObjectRequired && (reportParamset.selectedObjects.length==0) && !reportType.reportMetaParamCommon.manyContObjectRequired)
+//        {
+//            messageForUser += "\u2022"+" Необходимо выбрать один объект"+"\n";
+//            result= false;
+//        };
+//        if (reportType.reportMetaParamCommon.manyContObjectRequired && (reportParamset.selectedObjects.length<=0))
+//        {
+//            messageForUser += "\u2022"+" Необходимо выбрать несколько объектов"+"\n";
+//            result= false;
+//        };
+//        
+//        if (!reportType.reportMetaParamCommon.manyContObjectRequired && (reportParamset.selectedObjects.length>1) &&  reportType.reportMetaParamCommon.oneContObjectRequired)
+//        {
+//            messageForUser += "\u2022"+" Нельзя выбрать более одного объекта"+"\n";
+//            result= false;
+//        };
+//        
+//        if (reportType.reportMetaParamCommon.manyContObjectsZipOnly && (reportParamset.selectedObjects.length>1))
+//        {
+//            reportParamset.outputFileZipped =  true;
+//        };
+//        //check special properties
+//        var specListFlag = true;
+//        reportParamset.currentParamSpecialList.forEach(function(element, index, array){
+//            if (element.paramSpecialRequired && !(element.textValue 
+//                                                 || element.numericValue 
+//                                                 || element.oneDateValue 
+//                                                 || element.startDateValue
+//                                                 || element.endDateValue
+//                                                 || element.directoryValue)
+//               )
+//            {
+//                if (specListFlag){messageForUser += "Дополнительные свойства: "+"\n";};
+//                messageForUser += "\u2022"+" Не задан параметр \""+element.paramSpecialCaption+"\" \n";
+//                result= false;
+//                specListFlag = false;
+//            }
+//        });
+//        if(messageForUser!="Не все параметры варианта отчета заданы:\n"){
+//            result= false;
+//        };
+//        result =result && $scope.checkPSRequiredFields(reportParamset);  
+//        if (!result){          
+//            reportParamset.showParamsBeforeRunReport = true;
+//        };
+////        reportParamset.messageForUser = messageForUser;
+//        return {"flag":result,
+//                "message": messageForUser};
+//    };
+    
+    $scope.createReport = function(type, paramset, isContext){
         //run report
-        var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/download";
+        var url = "../api/reportService" + type.suffix + "/" + paramset.id;
+        if (!mainSvc.checkUndefinedNull(isContext) && (isContext == true) && !mainSvc.checkUndefinedNull(objectSvc.getCurrentObject())){
+            url += "/context" + "/" + objectSvc.getCurrentObject().id; 
+        }else{
+            url += "/download";
+        };
         $http.get(url, {responseType: 'arraybuffer'})
             .then(function(response) {        
                 var fileName = response.headers()['content-disposition'];           
                 fileName = fileName.substr(fileName.indexOf('=') + 2, fileName.length - fileName.indexOf('=') - 3);
                 var file = new Blob([response.data], { type: response.headers()['content-type'] });          
-            //fix for linux
-//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-//                    fileName += ".xlsx";
-//                };
-            //fix for zip archives
-//                if (file.type.indexOf('application/zip') > -1){
-//                    fileName += ".zip";
-//                };
                 if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
                     fileName += ".xlsx";
                 }else 
@@ -1017,27 +1017,18 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 } else
                 if (file.type.indexOf('text/html') > -1){
                     fileName += ".html";
-                };
-//console.log(fileName);  
-//console.log(response.headers()['content-type']);              
-//console.log(file);
-//console.log(file.type);            
-//return;              
+                };              
                 saveAs(file, fileName);
-            }, errorCallback /*function(e){
-                notificationFactory.errorInfo(e.statusText,e);
-                console.log(e);
-            }*/)
-            .catch(errorCallback /*function(e){
-                notificationFactory.errorInfo(e.statusText,e.data.description);
-                console.log(e);
-            }*/);    
+                $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
+            }, errorCallback)
+            .catch(errorCallback);    
     };
     
-    $scope.previewReport = function(type, paramset){
-        $scope.selectedItem(type, paramset);
+    $scope.previewReport = function(type, paramset, isContext){
+        $scope.selectedReport(type, paramset);
         if (paramset.checkFlag){
-            var url = "../api/reportService" + type.suffix + "/" + paramset.id + "/preview";
+            var url = "../api/reportService" + type.suffix + "/" + paramset.id;
+            (!mainSvc.checkUndefinedNull(isContext) && isContext == true) ? url += "/contextPreview/" + objectSvc.getCurrentObject().id : url += "/preview";
             var prevWin = window.open("", "_blank");
             prevWin.document.write($scope.ctrlSettings.htmlLoading);      
             prevWin.document.location.assign(url);            
@@ -1050,12 +1041,13 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     //Формируем отчет с заданными параметрами
     $scope.createReportWithParams = function(type // тип отчета
                                             , paramset //вариант отчета
+                                            , selectedObjects // массив объектов, для которых строится отчет
                                             , previewFlag //флаг - формировать отчет или сделать предпросмотр
                                             , previewWin //ссылка на превью окно
                                             ){
         var tmpParamset = angular.copy(paramset);//делаем копию варианта отчета
         //формируем массив ИД объектов, для которых формируется отчет.          
-        var objectIds = $scope.selectedObjects.map(function(element){          
+        var objectIds = selectedObjects.map(function(element){          
             var result = element.id;
             return result;
         });      
@@ -1110,9 +1102,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 window.open(url, 'PreviewWin');//открываем сформированный файл в новой вкладке браузера
                 //previewWin = window.URL.createObjectURL(file);
             }else{  
-//                if ((navigator.userAgent.search(/Linux/) > 1) && (file.type == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8")){
-//                    fileName += ".xlsx";
-//                };
                 //create file extension
                 if ((file.type.indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") > -1)){
                     fileName += ".xlsx";
@@ -1125,21 +1114,12 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
                 } else
                 if (file.type.indexOf('text/html') > -1){
                     fileName += ".html";
-                };
-//console.log(fileName);  
-//console.log(response.headers()['content-type']);              
-//console.log(file);                    
+                };                   
                 saveAs(file, fileName);//если нужен отчет, то сохраняем файл на диск клиента
             };
-        }, errorCallback/*function(e){
-            notificationFactory.errorInfo(e.statusText,e);
-            console.log(e);
-        }*/)
-        .catch(errorCallback/*function(e){
-            //если при запросе произошла ошибка, то выводим ее на экран во всплывающем окне
-            notificationFactory.errorInfo(e.statusText,e);
-            console.log(e);
-        }*/);
+            $scope.ctrlSettings.openModes.create.isContext = false;//reset context flag
+        }, errorCallback)
+        .catch(errorCallback);
     };
 
         //work with tabs
@@ -1158,4 +1138,74 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.selectedCategory = function(cat){
         $scope.curCategory = angular.copy(cat);
     };
+    
+    // *************************************************************************************
+    // Отчеты для контекстного меню объект
+    //**************************************************************************************
+    
+    $scope.data = {};
+    //получить доступные варианты отчетов
+    $scope.getContextReports = function(){
+        reportSvc.loadReportsContextLaunch().then(successGetContextReports, errorCallback);
+    };
+    //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
+    var successGetContextReports = function(resp){
+        var reports = angular.copy(resp.data);
+        if (reports.length > $scope.ctrlSettings.reportCountList){
+            $scope.data.reportEntities = angular.copy($scope.categories);
+            $scope.data.reportEntities.forEach(function(elem){elem.reports = []});
+            reports.forEach(function(rep){
+                for (var categoryCounter = 0; categoryCounter < $scope.data.reportEntities.length; categoryCounter++){
+                    if (rep.reportTemplate.reportType.reportCategory.localeCompare($scope.data.reportEntities[categoryCounter].name) == 0){
+                        $scope.data.reportEntities[categoryCounter].reports.push(rep);
+                        break;
+                    };
+                };
+            });
+        }else{
+            $scope.data.reportEntities = reports;
+        };
+            // perform reports as common reports
+        var tmp = reports;
+        tmp.forEach(function(el){
+            var currentSign = el.reportPeriod.sign;
+            if ((currentSign == null) || (typeof currentSign == 'undefined')){           
+                var paramsetStartDateFormat = (new Date(el.paramsetStartDate));
+                el.psStartDateFormatted = (el.paramsetStartDate != null) ? moment([paramsetStartDateFormat.getUTCFullYear(), paramsetStartDateFormat.getUTCMonth(), paramsetStartDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+                var paramsetEndDateFormat = (new Date(el.paramsetEndDate));
+                el.psEndDateFormatted = (el.paramsetEndDate != null) ? moment([paramsetEndDateFormat.getUTCFullYear(), paramsetEndDateFormat.getUTCMonth(), paramsetEndDateFormat.getUTCDate()]).format($scope.ctrlSettings.dateFormat) : "";
+            }
+        //settings for activate tab "Main options", when edit window opened.
+            $scope.set_of_objects_flag = false;
+            $scope.showAvailableObjects_flag = false;
+            $scope.getSelectedObjectsByParamset(el.reportTemplate.reportType, el, true);
+        });
+//console.log($scope.data.reportEntities);        
+    };
+    $scope.getContextReports();
+    $scope.createContextReport = function(paramset){
+        if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+            return "Entity is category";//exit function
+        };
+        //run report
+        $scope.ctrlSettings.openModes.create.isContext = true;//set context flag
+        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);                
+        $scope.editParamSet(paramset.reportTemplate.reportType, paramset, $scope.ctrlSettings.openModes.create, true)
+    };    
+    
+    $scope.previewContextReport = function(paramset){
+console.log(paramset);        
+        if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
+            return "Entity is category";//exit function
+        };
+        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT'){
+            notificationFactory.errorInfo("Внимание!", "Предварительный просмотр для коммерческих отчетов невозможен.");
+            return "Preview for the commercial reports is not available.";
+        };
+        //run preview report        
+        paramset.reportTemplate.reportType.reportMetaParamSpecialList_flag = (paramset.reportTemplate.reportType.reportMetaParamSpecialList.length > 0 ? true : false);
+        $scope.selectedObjects = [objectSvc.getCurrentObject()];
+        $scope.previewReport(paramset.reportTemplate.reportType, paramset, true)
+    };
+    // ************************************************************* контекстные отчеты ****************
 }]);

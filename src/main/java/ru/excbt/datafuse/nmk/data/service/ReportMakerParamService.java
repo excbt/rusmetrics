@@ -1,9 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -131,15 +133,15 @@ public class ReportMakerParamService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds,
 			boolean previewMode) {
-		checkNotNull(reportParamset);
 
-		if (contObjectIds != null && contObjectIds.length > 0) {
-			return new ReportMakerParam(reportParamset, contObjectIds);
-		}
+		checkNotNull(reportParamset);
+		checkArgument(!reportParamset.isNew());
 
 		List<Long> resultContObjectIdList = Collections.emptyList();
 
-		if (contObjectIds == null && reportParamset.getId() != null) {
+		if (contObjectIds != null && contObjectIds.length > 0) {
+			resultContObjectIdList = Arrays.asList(contObjectIds);
+		} else if (contObjectIds == null && reportParamset.getId() != null) {
 			resultContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
 		}
 

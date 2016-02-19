@@ -1,8 +1,8 @@
 'use strict';
 angular.module('portalNMC')
 .controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
-console.log('Run Client management controller.');
-    
+//console.log('Run Client management controller.');
+    $rootScope.ctxId = "management_rma_clients_page";
     $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
     $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
     

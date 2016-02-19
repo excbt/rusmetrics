@@ -1,7 +1,8 @@
 'use strict';
 angular.module('portalNMC')
-.controller('MngmtDatasourcesCtrl', ['$scope','$http', 'mainSvc', 'notificationFactory', function($scope, $http, mainSvc, notificationFactory){
-console.log('Run data sources management controller.');
+.controller('MngmtDatasourcesCtrl', ['$rootScope', '$scope','$http', 'mainSvc', 'notificationFactory', function($rootScope, $scope, $http, mainSvc, notificationFactory){
+//console.log('Run data sources management controller.');
+    $rootScope.ctxId = "management_rma_data_sources_page";
     //ctrl variables
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.subscrUrl = "../api/rma";

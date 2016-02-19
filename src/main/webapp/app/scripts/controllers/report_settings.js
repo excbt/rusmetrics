@@ -1,8 +1,8 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'mainSvc', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory, mainSvc){
-    
+app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudGridDataFactory', 'notificationFactory', 'mainSvc', 'reportSvc', function($scope, $rootScope, $resource,crudGridDataFactory, notificationFactory, mainSvc, reportSvc){
+    $rootScope.ctxId = "report_settings_page";
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY"; //date format
@@ -24,28 +24,39 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     
     $scope.extraProps={"idColumnName":"id", "defaultOrderBy" : "name", "deleteConfirmationProp":"name"};    
     
+    $scope.categories = reportSvc.getReportCategories();
+    
     $scope.isSystemuser = function(){
         $scope.userInfo = $rootScope.userInfo;
         return $scope.userInfo._system;
     };
     
     $scope.reportTypes = [];
+
+    $scope.$on('reportSvc:reportTypesIsLoaded', function(){
+        //report types
+        $scope.reportTypes = reportSvc.getReportTypes();
+        $scope.objects = $scope.reportTypes;
+        $scope.getActive();
+    });
+    
     $scope.getReportTypes = function(){
         var table = "../api/reportSettings/reportType";
         crudGridDataFactory(table).query(function(data){
             $scope.reportTypes = data;
             var newObjects = [];
             var newObject = {};
-            for (var i = 0; i<data.length; i++){
+            for (var i = 0; i < data.length; i++){
                 if (!data[i]._enabled){
                     continue;
                 };
-                if ((!$scope.isSystemuser()&&data[i].isDevMode)){
+                if ((!$scope.isSystemuser() && data[i].isDevMode)){
                     continue;
                 };
                 newObject = {};
                 newObject.reportType = data[i].keyname;
                 newObject.reportTypeName = data[i].caption;
+                newObject.reportCategory = data[i].reportCategory;
                 newObject.suffix = data[i].suffix;
                 
                 newObjects.push(newObject);
@@ -55,7 +66,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
             $scope.getActive();
         });
     };
-    $scope.getReportTypes();    
+//    $scope.getReportTypes();    
 
     $scope.oldColumns = [
         {"name":"name", "header":"Название шаблона", "class":"col-md-5"}
@@ -114,7 +125,7 @@ app.controller('ReportSettingsCtrl',['$scope', '$rootScope', '$resource', 'crudG
     $scope.getActive = function(){
         if (($scope.objects == []) || (typeof $scope.objects[0].suffix == 'undefined')){return;};
         for (var i=0; i<$scope.objects.length; i++){
-            $scope.getTemplates($scope.crudTableName+$scope.objects[i].suffix, $scope.objects[i]);
+            $scope.getTemplates($scope.crudTableName + $scope.objects[i].suffix, $scope.objects[i]);
         };
     };
     
@@ -409,6 +420,14 @@ console.log(curObject);
 
     $scope.isROfield = function(){
         return ($scope.isReadonly());
+    };
+    
+    // ctrl init
+    if (reportSvc.getReportTypesIsLoaded()){
+        //report types
+        $scope.reportTypes = reportSvc.getReportTypes();
+        $scope.objects = $scope.reportTypes;
+        $scope.getActive();
     };
     
 }]);

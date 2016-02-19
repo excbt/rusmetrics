@@ -1,6 +1,7 @@
 angular.module('portalNMC')
 .controller('ElectricityCtrl', function($scope, mainSvc, indicatorSvc, $location, $cookies, $rootScope, $timeout){
-console.log("run ElectricityCtrl"); 
+//console.log("run ElectricityCtrl"); 
+    $rootScope.ctxId = "indicators_page";
     //params for current page width
     $scope.oldMinWidth = null;//save default width 
     $scope.curMinWidth = "1572px";//set width for data table
