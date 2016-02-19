@@ -184,7 +184,7 @@
                                        >
                                         Отчеты
                                     </a>
-                                    <ul class="dropdown-menu">
+                                    <ul ng-if="data.reportEntities && data.reportEntities.length > 0" class="dropdown-menu">
                                         <li class="menu-item dropdown" 
                                             ng-repeat="reportEntity in data.reportEntities" 
                                             ng-class="{'dropdown-submenu': reportEntity.reports}">
