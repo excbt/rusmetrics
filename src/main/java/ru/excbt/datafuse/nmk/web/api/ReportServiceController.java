@@ -478,4 +478,33 @@ public class ReportServiceController extends WebApiController {
 
 	}
 
+	/**
+	 * 
+	 * @param reportUrlName
+	 * @param reportParamsetId
+	 * @param contObjectId
+	 * @return
+	 * @throws IOException
+	 */
+	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/contextPreview/{contObjectId}",
+			method = RequestMethod.GET)
+	public ResponseEntity<?> doDowndloadAnyReportContextPreview(@PathVariable("reportUrlName") String reportUrlName,
+			@PathVariable("reportParamsetId") long reportParamsetId, @PathVariable("contObjectId") long contObjectId)
+					throws IOException {
+
+		ReportTypeKey reportTypeKey = ReportTypeKey.findByUrlName(reportUrlName);
+		if (reportTypeKey == null) {
+			return responseBadRequest(ApiResult.validationError("Report of type %s is not supported", reportUrlName));
+		}
+
+		ReportMaker reportMaker = anyReportMaker(reportTypeKey);
+
+		Long[] contObjectIds = new Long[] { contObjectId };
+
+		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId, contObjectIds,
+				true);
+
+		return processDowndloadAnyReport(reportMakerParam, reportMaker);
+	}
+
 }
