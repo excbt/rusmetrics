@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
@@ -171,6 +172,8 @@ public class SubscrUserController extends SubscrApiController {
 			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
+		Subscriber subcriber = subscriberService.findOne(rSubscriberId);
+
 		subscrUser.setSubscriberId(rSubscriberId);
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
@@ -182,7 +185,7 @@ public class SubscrUserController extends SubscrApiController {
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
-				if (currentSubscriberService.isRma()) {
+				if (Boolean.TRUE.equals(subcriber.getIsRma())) {
 					subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrRmaAdminRoles());
 				}
 			} else {
