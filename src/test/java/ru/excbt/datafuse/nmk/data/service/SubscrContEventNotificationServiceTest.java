@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,6 +52,9 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testFindAll() {
 		Page<?> result = subscrContEventNotifiicationService.selectAll(currentSubscriberService.getSubscriberId(), true,
@@ -58,6 +62,9 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		assertNotNull(result);
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testFindByDates() {
 
@@ -73,13 +80,18 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
 				.map(cet -> cet.getId()).collect(Collectors.toList());
 
+		List<String> contEventTypeCategoryList = Arrays.asList("LEAK_WARNING");
+
 		Page<?> result = subscrContEventNotifiicationService.selectByConditions(
-				currentSubscriberService.getSubscriberId(), fromDate, toDate, contObjectList, contEventTypeIdList, null,
-				request);
+				currentSubscriberService.getSubscriberId(), fromDate, toDate, contObjectList, contEventTypeIdList,
+				contEventTypeCategoryList, null, request);
 
 		assertNotNull(result);
 	}
 
+	/**
+	 * 
+	 */
 	@Test
 	public void testUpdateIsNew() {
 

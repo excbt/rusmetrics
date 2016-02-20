@@ -36,8 +36,8 @@ import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
@@ -130,6 +130,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		}
 
+		// TODO query upgrade
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectByConditions(
 				getCurrentSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew,
 				pageRequest);

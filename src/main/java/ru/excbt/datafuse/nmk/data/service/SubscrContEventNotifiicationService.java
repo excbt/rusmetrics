@@ -15,10 +15,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.ContEventType_;
 import ru.excbt.datafuse.nmk.data.model.ContEvent_;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
@@ -200,6 +197,59 @@ public class SubscrContEventNotifiicationService {
 
 	/**
 	 * 
+	 * @param specs
+	 * @return
+	 */
+	private <T> Specifications<T> andFilterBuild(List<Specification<T>> specList) {
+		if (specList == null) {
+			return null;
+		}
+		Specifications<T> result = null;
+		for (Specification<T> i : specList) {
+			if (i == null) {
+				continue;
+			}
+			result = result == null ? Specifications.where(i) : result.and(i);
+		}
+
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param subscriberId
+	 * @param fromDate
+	 * @param toDate
+	 * @param contObjectList
+	 * @param contEventTypeList
+	 * @param contEventTypeCategoryList
+	 * @param isNew
+	 * @param pageable
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Page<SubscrContEventNotification> selectByConditions(Long subscriberId, final Date fromDate,
+			final Date toDate, final List<Long> contObjectList, final List<Long> contEventTypeList,
+			final List<String> contEventTypeCategoryList, final Boolean isNew, final Pageable pageable) {
+
+		checkNotNull(subscriberId);
+
+		Pageable pageRequest = setupPageRequest(pageable);
+
+		List<Specification<SubscrContEventNotification>> andFilter = Arrays.asList( //
+				specSubscriberId(subscriberId), specContEventDate(fromDate, toDate), // 
+				specIsNew(isNew), // 
+				specContObjectId(contObjectList), //
+				specContEventTypeId(contEventTypeList), //
+				specContEventTypeCategory(contEventTypeCategoryList));
+
+		Specifications<SubscrContEventNotification> specs = andFilterBuild(andFilter);
+
+		return subscrContEventNotificationRepository.findAll(specs, pageRequest);
+	}
+
+	/**
+	 * 
 	 * @param subscriberId
 	 * @param datePeriod
 	 * @param contObjectList
@@ -341,20 +391,11 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	public static Specification<SubscrContEventNotification> specIsNew(final Boolean isNew) {
-
-		return new Specification<SubscrContEventNotification>() {
-
-			@Override
-			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-
-				if (isNew == null) {
-					return null;
-				}
-
-				return cb.equal(root.<Boolean> get(SubscrContEventNotification_.isNew), Boolean.TRUE);
+		return (root, query, cb) -> {
+			if (isNew == null) {
+				return null;
 			}
-
+			return cb.equal(root.<Boolean> get(SubscrContEventNotification_.isNew), Boolean.TRUE);
 		};
 
 	}
@@ -365,22 +406,12 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	public static Specification<SubscrContEventNotification> specSubscriberId(final Long subscriberId) {
-
-		return new Specification<SubscrContEventNotification>() {
-
-			@Override
-			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-
-				if (subscriberId == null) {
-					return null;
-				}
-
-				return cb.equal(root.<Long> get(SubscrContEventNotification_.subscriberId), subscriberId);
+		return (root, query, cb) -> {
+			if (subscriberId == null) {
+				return null;
 			}
-
+			return cb.equal(root.get(SubscrContEventNotification_.subscriberId), subscriberId);
 		};
-
 	}
 
 	/**
@@ -389,21 +420,13 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	public static Specification<SubscrContEventNotification> specContEventDate(final Date fromDate, final Date toDate) {
-		return new Specification<SubscrContEventNotification>() {
-
-			@Override
-			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-
-				if (fromDate == null || toDate == null) {
-					return null;
-				}
-
-				return cb.and(
-						cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), fromDate),
-						cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), toDate));
+		return (root, query, cb) -> {
+			if (fromDate == null || toDate == null) {
+				return null;
 			}
-
+			return cb.and(
+					cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), fromDate),
+					cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), toDate));
 		};
 	}
 
@@ -413,18 +436,11 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	public static Specification<SubscrContEventNotification> specContObjectId(final List<Long> contObjectIdList) {
-		return new Specification<SubscrContEventNotification>() {
-
-			@Override
-			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-				if (contObjectIdList == null || contObjectIdList.size() == 0) {
-					return null;
-				}
-
-				return root.get(SubscrContEventNotification_.contObjectId).in(contObjectIdList);
+		return (root, query, cb) -> {
+			if (contObjectIdList == null || contObjectIdList.size() == 0) {
+				return null;
 			}
-
+			return root.get(SubscrContEventNotification_.contObjectId).in(contObjectIdList);
 		};
 	}
 
@@ -434,22 +450,34 @@ public class SubscrContEventNotifiicationService {
 	 * @return
 	 */
 	public static Specification<SubscrContEventNotification> specContEventTypeId(final List<Long> contEventTypeIdList) {
-		return new Specification<SubscrContEventNotification>() {
-
-			@Override
-			public Predicate toPredicate(Root<SubscrContEventNotification> root, CriteriaQuery<?> query,
-					CriteriaBuilder cb) {
-
-				if (contEventTypeIdList == null || contEventTypeIdList.size() == 0) {
-					return null;
-				}
-
-				return root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-						.in(contEventTypeIdList);
+		return (root, query, cb) -> {
+			if (contEventTypeIdList == null || contEventTypeIdList.size() == 0) {
+				return null;
 			}
+			//return root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+			//		.in(contEventTypeIdList);
+			return root.get(SubscrContEventNotification_.contEventTypeId).in(contEventTypeIdList);
+		};
+	}
+
+	/**
+	 * 
+	 * @param contEventCategoryList
+	 * @return
+	 */
+	public static Specification<SubscrContEventNotification> specContEventTypeCategory(
+			final List<String> contEventCategoryList) {
+		return (root, query, cb) -> {
+			if (contEventCategoryList == null || contEventCategoryList.size() == 0) {
+				return null;
+			}
+			return cb.or(
+					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+							.get(ContEventType_.contEventCategory).in(contEventCategoryList),
+					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+							.get(ContEventType_.contEventCategory).isNull());
 
 		};
-
 	}
 
 	/**
