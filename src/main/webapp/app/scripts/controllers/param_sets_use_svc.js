@@ -155,12 +155,18 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $scope.getTemplates();       
     };
     
-    $scope.checkAndSaveParamset = function(object){
+    $scope.checkAndSaveParamset = function(paramsets, object){
 //console.log($scope.currentParamSpecialList);        
-//return;
+//return;        
         if (!object.name || object.name == ''){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
             return "Add / edit paramset: no name";
+        };
+        for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
+            if (object.name.localeCompare(paramsets[psCounter].name)){
+                notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
+                return "Add / edit paramset: name is not unique.";
+            };
         };
         var flag = $scope.checkRequiredFieldsOnSave();
         if (flag === false){
