@@ -40,6 +40,7 @@ public class DBColumnTools extends JpaSupportTest {
 		m.put("integer", "Integer");
 		m.put("numeric", "BigDecimal");
 		m.put("boolean", "Boolean");
+		m.put("timestamp without time zone", "Date");
 		DB_TYPE_MAP = Collections.unmodifiableMap(m);
 	}
 
@@ -183,6 +184,24 @@ public class DBColumnTools extends JpaSupportTest {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append(NEW_LINE);
+		sb.append(NEW_LINE);
+		sb.append("import java.util.Date;");
+		sb.append(NEW_LINE);
+		sb.append(NEW_LINE);
+		sb.append("import javax.persistence.Column;");
+		sb.append(NEW_LINE);
+		sb.append("import javax.persistence.Entity;");
+		sb.append(NEW_LINE);
+		sb.append("import javax.persistence.Table;");
+		sb.append(NEW_LINE);
+		sb.append("import javax.persistence.Version;");
+		sb.append(NEW_LINE);
+		sb.append(NEW_LINE);
+		sb.append("import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;");
+		sb.append(NEW_LINE);
+		sb.append(NEW_LINE);
+
+		sb.append(NEW_LINE);
 		sb.append("@Entity");
 		sb.append(NEW_LINE);
 		sb.append(String.format("@Table(name = \"%s\")", tableName));
@@ -234,6 +253,34 @@ public class DBColumnTools extends JpaSupportTest {
 		return sb.toString();
 	}
 
+	private String objDeepCopyBuilder(String srcObjName, String destObjName, List<EntityColumn> entityColumns) {
+		StringBuilder sb = new StringBuilder();
+
+		entityColumns.forEach(i -> {
+
+			if (SKIP_COLUMNS.contains(i.columnName)) {
+				return;
+			}
+
+			String propName = parseDBName(i.columnName, true);
+
+			sb.append(destObjName);
+			sb.append('.');
+			sb.append("set");
+			sb.append(propName);
+			sb.append('(');
+			sb.append(srcObjName);
+			sb.append('.');
+			sb.append("get");
+			sb.append(propName);
+			sb.append("()");
+			sb.append(");");
+			sb.append(NEW_LINE);
+		});
+
+		return sb.toString();
+	}
+
 	/**
 	 * 
 	 * @throws Exception
@@ -244,7 +291,7 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "device_metadata";
+		String tableName = "cont_event_category";
 
 		List<EntityColumn> entityColumns = getTableEntityProp("public", tableName);
 		assertTrue(entityColumns.size() > 0);
@@ -252,6 +299,23 @@ public class DBColumnTools extends JpaSupportTest {
 		String classDef = classDefBuilder(tableName, entityColumns);
 
 		System.err.println(classDef);
+
+	}
+
+	@Test
+	public void testDeepCopyColumns() throws Exception {
+		String colName = "prop_name";
+		String propName = parseDBName(colName);
+		logger.info("prop: {}, column: {}", propName, colName);
+
+		String tableName = "device_metadata";
+
+		List<EntityColumn> entityColumns = getTableEntityProp("public", tableName);
+		assertTrue(entityColumns.size() > 0);
+
+		String deepCopy = objDeepCopyBuilder("src", "dst", entityColumns);
+
+		System.err.println(deepCopy);
 
 	}
 
