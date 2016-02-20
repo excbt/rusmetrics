@@ -221,4 +221,9 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		_testGetJson(url);
 	}
 
+	@Test
+	public void testContEventCategories() throws Exception {
+		String url = apiSubscrUrl("/contEvent/categories");
+		_testGetJson(url);
+	}
 }

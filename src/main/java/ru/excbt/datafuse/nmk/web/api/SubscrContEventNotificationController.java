@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -33,6 +35,7 @@ import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
@@ -72,6 +75,9 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 	@Autowired
 	private ContEventTypeService contEventTypeService;
+
+	@Autowired
+	private ContEventService contEventService;
 
 	/**
 	 * 
@@ -463,4 +469,15 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		return ResponseEntity.ok(monitorColor);
 	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/categories", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContEventCategory() {
+		List<ContEventCategory> xList = contEventService.selectContEventCategoryList();
+		return responseOK(ObjectFilters.deletedFilter(xList));
+	}
+
 }
