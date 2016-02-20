@@ -66,6 +66,21 @@ public class SubscrRoleService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrRole> subscrRmaAdminRoles() {
+		List<SubscrRole> allRoles = findAll();
+		return allRoles.stream()
+				.filter(i -> SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN.equals(i.getRoleName())
+						|| SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN.equals(i.getRoleName())
+						|| SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN.equals(i.getRoleName())
+						|| SecuredRoles.ROLE_RMA_ZPOINT_ADMIN.equals(i.getRoleName()))
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrRole> subscrReadonlyRoles() {
 		List<SubscrRole> allRoles = findAll();
 		return allRoles.stream().filter(i -> SecuredRoles.ROLE_SUBSCR_READONLY.equals(i.getRoleName()))

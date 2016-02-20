@@ -22,8 +22,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
@@ -182,6 +182,9 @@ public class SubscrUserController extends SubscrApiController {
 		} else {
 			if (Boolean.TRUE.equals(isAdmin)) {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrAdminRoles());
+				if (currentSubscriberService.isRma()) {
+					subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrRmaAdminRoles());
+				}
 			} else {
 				subscrUser.getSubscrRoles().addAll(subscrRoleService.subscrUserRoles());
 			}
