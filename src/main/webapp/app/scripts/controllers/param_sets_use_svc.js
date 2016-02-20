@@ -162,10 +162,12 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
             return "Add / edit paramset: no name";
         };
-        for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
-            if (object.name.localeCompare(paramsets[psCounter].name)){
-                notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
-                return "Add / edit paramset: name is not unique.";
+        if (!mainSvc.checkUndefinedNull(paramsets) && angular.isArray(paramsets)){
+            for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
+                if (object.name.localeCompare(paramsets[psCounter].name)){
+                    notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
+                    return "Add / edit paramset: name is not unique.";
+                };
             };
         };
         var flag = $scope.checkRequiredFieldsOnSave();
