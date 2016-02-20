@@ -37,7 +37,8 @@ import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
@@ -62,7 +63,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
 	@Autowired
-	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
+	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
@@ -103,16 +104,19 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/paged", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationsPaged(@RequestParam(value = "fromDate", required = false) String fromDateStr,
+	public ResponseEntity<?> notificationsGetPaged(
+			@RequestParam(value = "fromDate", required = false) String fromDateStr,
 			@RequestParam(value = "toDate", required = false) String toDateStr,
 			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
 			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
+			@RequestParam(value = "contEventCategories", required = false) String[] contEventCategories,
 			@RequestParam(value = "isNew", required = false) Boolean isNew,
 			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
-		List<Long> contObjectList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
+		List<Long> contObjectIdList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
 		List<Long> contEventTypeList = contEventTypeIds == null ? null : Arrays.asList(contEventTypeIds);
+		List<String> contEventCategoryList = contEventCategories == null ? null : Arrays.asList(contEventCategories);
 
 		final List<Long> contEventTypeIdPairList = contEventTypeList == null ? null
 				: contEventTypeService.selectContEventTypesPaired(contEventTypeList);
@@ -126,7 +130,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		Pageable pageRequest = SubscrContEventNotifiicationService.setupPageRequestSort(pageable, sortDesc);
+		Pageable pageRequest = SubscrContEventNotificationService.setupPageRequestSort(pageable, sortDesc);
 
 		LocalDatePeriod requestDatePeriod = LocalDatePeriod.emptyPeriod();
 
@@ -136,10 +140,14 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		}
 
+		SearchConditions searchConditions = new SearchConditions(getCurrentSubscriberId(), requestDatePeriod, isNew);
+		searchConditions.initContObjectIds(contObjectIdList);
+		searchConditions.initContEventTypes(contEventTypeIdPairList);
+		searchConditions.initContEventCategories(contEventCategoryList);
+
 		// TODO query upgrade
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService.selectByConditions(
-				getCurrentSubscriberId(), requestDatePeriod, contObjectList, contEventTypeIdPairList, isNew,
-				pageRequest);
+		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
+				.selectNotificationByConditions(searchConditions, pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<SubscrContEventNotification>(resultPage));
 
@@ -151,7 +159,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> notificationOne(@PathVariable("id") Long id) {
+	public ResponseEntity<?> notificationGetOne(@PathVariable("id") Long id) {
 
 		checkNotNull(id);
 
@@ -457,8 +465,12 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
 			if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isValidEq()) {
-				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService.selectByConditions(
-						getCurrentSubscriberId(), datePeriodParser.getLocalDatePeriod().buildEndOfDay(), PAGE_LIMIT_1);
+
+				SearchConditions searchConditions = new SearchConditions(getCurrentSubscriberId(),
+						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+
+				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
+						.selectNotificationByConditions(searchConditions, PAGE_LIMIT_1);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.YELLOW);

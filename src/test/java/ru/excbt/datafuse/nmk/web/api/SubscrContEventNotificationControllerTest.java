@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotifiicationService;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
@@ -42,7 +43,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	private ContEventTypeService contEventTypeService;
 
 	@Autowired
-	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
+	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
 	@Autowired
 	private SubscrContObjectService subscrContObjectService;
@@ -52,7 +53,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	 * @throws Exception
 	 */
 	@Test
-	public void testNotifiicationsAll() throws Exception {
+	public void testNotifiicationsGetAll() throws Exception {
 		_testGetJson("/api/subscr/contEvent/notifications/all");
 	}
 
@@ -61,7 +62,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	 * @throws Exception
 	 */
 	@Test
-	public void testNotifiicationsPaged() throws Exception {
+	public void testNotifiicationsGetPaged() throws Exception {
 
 		List<Long> contObjectList = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
@@ -69,16 +70,19 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
 				.map(cet -> cet.getId()).collect(Collectors.toList());
 
-		ResultActions resultActionsAll = mockMvc.perform(get("/api/subscr/contEvent/notifications/paged")
-				.param("fromDate", "2015-06-01").param("toDate", "2015-06-30")
-				.param("contObjectIds", listToString(contObjectList))
-				.param("contEventTypeIds", listToString(contEventTypeIdList)).param("page", "0").param("size", "100")
-				.param("sortDesc", "false").with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
+		List<String> contEventTypeCategoryList = Arrays.asList("LEAK_WARNING");
 
-		resultActionsAll.andDo(MockMvcResultHandlers.print());
+		RequestExtraInitializer params = (b) -> {
+			b.param("fromDate", "2015-06-01").param("toDate", "2015-06-30");
+			b.param("contObjectIds", listToString(contObjectList));
+			b.param("contEventTypeIds", listToString(contEventTypeIdList));
+			b.param("page", "0").param("size", "100");
+			b.param("sortDesc", "false");
+			b.param("contEventCategories", listToString(contEventTypeCategoryList));
+		};
 
-		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		_testGetJson("/api/subscr/contEvent/notifications/paged", params);
+
 	}
 
 	/**
@@ -89,7 +93,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 	public void testNotificationRevisionIsNew() throws Exception {
 
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
-				SubscrContEventNotifiicationService.AVAILABLE_SORT_FIELDS[0]);
+				SubscrContEventNotificationService.AVAILABLE_SORT_FIELDS[0]);
 
 		Page<SubscrContEventNotification> canidate = subscrContEventNotifiicationService
 				.selectAll(currentSubscriberService.getSubscriberId(), true, request);

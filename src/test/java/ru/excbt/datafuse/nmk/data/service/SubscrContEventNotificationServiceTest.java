@@ -5,11 +5,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
+import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentUserService;
 
@@ -32,7 +32,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationServiceTest.class);
 
 	@Autowired
-	private SubscrContEventNotifiicationService subscrContEventNotifiicationService;
+	private SubscrContEventNotificationService subscrContEventNotifiicationService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -68,11 +68,8 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	@Test
 	public void testFindByDates() {
 
-		Date fromDate = DateTime.now().minusDays(10).toDate();
-		Date toDate = DateTime.now().toDate();
-
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
-				SubscrContEventNotifiicationService.AVAILABLE_SORT_FIELDS[0]);
+				SubscrContEventNotificationService.AVAILABLE_SORT_FIELDS[0]);
 
 		List<Long> contObjectList = subscrContObjectService
 				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
@@ -82,9 +79,15 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 		List<String> contEventTypeCategoryList = Arrays.asList("LEAK_WARNING");
 
-		Page<?> result = subscrContEventNotifiicationService.selectByConditions(
-				currentSubscriberService.getSubscriberId(), fromDate, toDate, contObjectList, contEventTypeIdList,
-				contEventTypeCategoryList, null, request);
+		LocalDatePeriod period = LocalDatePeriod.builder().dateFrom(LocalDateTime.now().minusDays(10))
+				.dateTo(LocalDateTime.now()).build();
+
+		SearchConditions searchConditions = new SearchConditions(currentSubscriberService.getSubscriberId(), period);
+		searchConditions.initContObjectIds(contObjectList);
+		searchConditions.initContEventTypes(contEventTypeIdList);
+		searchConditions.initContEventCategories(contEventTypeCategoryList);
+
+		Page<?> result = subscrContEventNotifiicationService.selectNotificationByConditions(searchConditions, request);
 
 		assertNotNull(result);
 	}
@@ -96,7 +99,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	public void testUpdateIsNew() {
 
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
-				SubscrContEventNotifiicationService.AVAILABLE_SORT_FIELDS[0]);
+				SubscrContEventNotificationService.AVAILABLE_SORT_FIELDS[0]);
 
 		Page<SubscrContEventNotification> canidate = subscrContEventNotifiicationService
 				.selectAll(currentSubscriberService.getSubscriberId(), true, request);
