@@ -156,6 +156,8 @@ public class SubscrContEventNotificationService {
 		private final List<Long> contObjectIdList = new ArrayList<>();
 		private final List<Long> contEventTypeList = new ArrayList<>();
 		private final List<String> contEventCategoryList = new ArrayList<>();
+		private final List<String> contEventDeviationList = new ArrayList<>();
+		private final List<String> contEventDeviationValueList = new ArrayList<>();
 
 		public SearchConditions(long subscriberId, LocalDatePeriod period) {
 			this.subscriberId = subscriberId;
@@ -187,6 +189,20 @@ public class SubscrContEventNotificationService {
 			if (contEventTypeList != null) {
 				this.contEventTypeList.clear();
 				this.contEventTypeList.addAll(contEventTypeList);
+			}
+		}
+
+		public void initContEventDeviations(List<String> contEventDeviationList) {
+			if (contEventDeviationList != null) {
+				this.contEventDeviationList.clear();
+				this.contEventDeviationList.addAll(contEventDeviationList);
+			}
+		}
+
+		public void initContEventDeviationValues(List<String> contEventDeviationValueList) {
+			if (contEventDeviationValueList != null) {
+				this.contEventDeviationValueList.clear();
+				this.contEventDeviationValueList.addAll(contEventDeviationValueList);
 			}
 		}
 
