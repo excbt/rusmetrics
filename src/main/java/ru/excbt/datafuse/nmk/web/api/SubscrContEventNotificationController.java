@@ -25,8 +25,6 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviation;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviationValue;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
@@ -499,40 +497,6 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 	public ResponseEntity<?> getContEventCategory() {
 		List<ContEventCategory> xList = contEventService.selectContEventCategoryList();
 		return responseOK(ObjectFilters.deletedFilter(xList));
-	}
-
-	/**
-	 * 
-	 * @param category
-	 * @return
-	 */
-	@RequestMapping(value = "/categories/{category}/deviations", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContEventCategoryDeviation(@PathVariable("category") String category) {
-		List<ContEventCategoryDeviation> resultList = contEventService.selectContEventCategoryDeviations(category);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
-	}
-
-	/**
-	 * 
-	 * @param category
-	 * @return
-	 */
-	@RequestMapping(value = "/categories/{category}/deviations/{deviationKeyname}/values", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContEventCategoryDeviationValue(@PathVariable("category") String category,
-			@PathVariable("deviationKeyname") String deviationKeyname) {
-
-		ContEventCategoryDeviation categoryDeviation = contEventService
-				.findContEventCategoryDeviaiton(deviationKeyname);
-
-		if (categoryDeviation == null || !categoryDeviation.getContEventCategoryKeyname().equals(category)) {
-			return responseBadRequest();
-		}
-
-		List<ContEventCategoryDeviationValue> resultList = contEventService
-				.selectContEventCategoryDeviationValue(deviationKeyname);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**

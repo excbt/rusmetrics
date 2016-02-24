@@ -20,8 +20,6 @@ import org.springframework.data.domain.Sort.Direction;
 
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviation;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviationValue;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
@@ -183,25 +181,4 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 
 	}
 
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void contEventCategoryDeviation() throws Exception {
-		List<ContEventCategoryDeviation> deviationList = contEventService
-				.selectContEventCategoryDeviations("RESOURCE_QUALITY");
-		assertFalse(deviationList.isEmpty());
-	}
-
-	/**
-	 * 
-	 * @throws Exception
-	 */
-	@Test
-	public void contEventCategoryDeviationValue() throws Exception {
-		List<ContEventCategoryDeviationValue> deviationList = contEventService
-				.selectContEventCategoryDeviationValue("RQ_HOT_WATER_TEMP");
-		assertFalse(deviationList.isEmpty());
-	}
 }

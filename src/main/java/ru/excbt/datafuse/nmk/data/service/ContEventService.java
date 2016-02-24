@@ -18,13 +18,9 @@ import com.google.common.collect.Lists;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviation;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviationValue;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryDeviationRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryDeviationValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventDeviationRepository;
 
@@ -52,12 +48,6 @@ public class ContEventService {
 
 	@Autowired
 	private ContEventCategoryRepository contEventCategoryRepository;
-
-	@Autowired
-	private ContEventCategoryDeviationRepository contEventCategoryDeviationRepository;
-
-	@Autowired
-	private ContEventCategoryDeviationValueRepository contEventCategoryDeviationValueRepository;
 
 	@Autowired
 	private ContEventDeviationRepository contEventDeviationRepository;
@@ -204,36 +194,6 @@ public class ContEventService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContEventCategory> selectContEventCategoryList() {
 		return contEventCategoryRepository.selectCategoryList();
-	}
-
-	/**
-	 * 
-	 * @param category
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContEventCategoryDeviation> selectContEventCategoryDeviations(String category) {
-		return contEventCategoryDeviationRepository.selectContEventCategoryDeviation(category);
-	}
-
-	/**
-	 * 
-	 * @param deviationKeyname
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContEventCategoryDeviationValue> selectContEventCategoryDeviationValue(String deviationKeyname) {
-		return contEventCategoryDeviationValueRepository.selectContEventCategoryDeviationValue(deviationKeyname);
-	}
-
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContEventCategoryDeviation findContEventCategoryDeviaiton(String deviationName) {
-		return contEventCategoryDeviationRepository.findOne(deviationName);
 	}
 
 	/**
