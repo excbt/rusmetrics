@@ -13,16 +13,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviationValue;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryDeviationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryDeviationValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventDeviationRepository;
 
 /**
  * Сервис для работы с событиями ContEvent у ContObject
@@ -54,6 +58,9 @@ public class ContEventService {
 
 	@Autowired
 	private ContEventCategoryDeviationValueRepository contEventCategoryDeviationValueRepository;
+
+	@Autowired
+	private ContEventDeviationRepository contEventDeviationRepository;
 
 	/**
 	 * 
@@ -227,6 +234,15 @@ public class ContEventService {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContEventCategoryDeviation findContEventCategoryDeviaiton(String deviationName) {
 		return contEventCategoryDeviationRepository.findOne(deviationName);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContEventDeviation> findContEventDeviation() {
+		return Lists.newArrayList(contEventDeviationRepository.selectContEventDeviation());
 	}
 
 }

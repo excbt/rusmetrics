@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategoryDeviationValue;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -531,6 +532,16 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 
 		List<ContEventCategoryDeviationValue> resultList = contEventService
 				.selectContEventCategoryDeviationValue(deviationKeyname);
+		return responseOK(ObjectFilters.deletedFilter(resultList));
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@RequestMapping(value = "/deviations", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	public ResponseEntity<?> getContEventDeviation() {
+		List<ContEventDeviation> resultList = contEventService.findContEventDeviation();
 		return responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
