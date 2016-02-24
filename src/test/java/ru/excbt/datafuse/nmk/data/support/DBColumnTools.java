@@ -291,9 +291,9 @@ public class DBColumnTools extends JpaSupportTest {
 		String propName = parseDBName(colName);
 		logger.info("prop: {}, column: {}", propName, colName);
 
-		String tableName = "cont_event_category";
+		String tableName = "device_object_pke_type";
 
-		List<EntityColumn> entityColumns = getTableEntityProp("public", tableName);
+		List<EntityColumn> entityColumns = getTableEntityProp("portal", tableName);
 		assertTrue(entityColumns.size() > 0);
 
 		String classDef = classDefBuilder(tableName, entityColumns);

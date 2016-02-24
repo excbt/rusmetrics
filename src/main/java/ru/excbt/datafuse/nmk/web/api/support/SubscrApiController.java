@@ -8,8 +8,10 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
@@ -158,6 +160,29 @@ public class SubscrApiController extends WebApiController {
 	 */
 	protected boolean isSystemUser() {
 		return currentUserService.isSystem();
+	}
+
+	/**
+	 * 
+	 * @param datePeriodParser
+	 * @return
+	 */
+	protected ResponseEntity<?> checkLocalDatePeriodParser(LocalDatePeriodParser datePeriodParser) {
+		if (!datePeriodParser.isOk()) {
+			return ResponseEntity.badRequest()
+					.body(String.format("Invalid parameters fromDateStr:%s and toDateStr:%s",
+							datePeriodParser.getParserArguments().dateFromStr,
+							datePeriodParser.getParserArguments().dateToStr));
+		}
+
+		if (datePeriodParser.isOk() && datePeriodParser.getLocalDatePeriod().isInvalidEq()) {
+			return responseBadRequest(
+					ApiResult.validationError("Invalid parameters fromDateStr:%s is greater than toDateStr:%s",
+							datePeriodParser.getParserArguments().dateFromStr,
+							datePeriodParser.getParserArguments().dateToStr));
+		}
+
+		return null;
 	}
 
 }
