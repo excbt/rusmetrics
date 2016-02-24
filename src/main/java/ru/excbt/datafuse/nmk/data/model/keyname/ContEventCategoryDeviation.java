@@ -3,13 +3,20 @@ package ru.excbt.datafuse.nmk.data.model.keyname;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_category_deviation")
-public class ContEventCategoryDeviation extends AbstractKeynameEntity {
+@JsonInclude(Include.NON_NULL)
+public class ContEventCategoryDeviation extends AbstractKeynameEntity implements DeletableObject {
 
 	/**
 	 * 
@@ -22,17 +29,28 @@ public class ContEventCategoryDeviation extends AbstractKeynameEntity {
 	@Column(name = "deviation_description")
 	private String deviationDescription;
 
+	@JsonIgnore
 	@Column(name = "deviation_comment")
 	private String deviationComment;
 
 	@Column(name = "cont_event_category")
-	private String contEventCategory;
+	private String contEventCategoryKeyname;
+
+	@Column(name = "deviation_order")
+	private Integer deviationOrder;
 
 	@Column(name = "value_unit")
 	private String valueUnit;
 
 	@Column(name = "value_unit_caption")
 	private String valueUnitCaption;
+
+	@JsonIgnore
+	@Version
+	private int version;
+
+	@JsonIgnore
+	private int deleted;
 
 	public String getCaption() {
 		return caption;
@@ -58,12 +76,20 @@ public class ContEventCategoryDeviation extends AbstractKeynameEntity {
 		this.deviationComment = deviationComment;
 	}
 
-	public String getContEventCategory() {
-		return contEventCategory;
+	public String getContEventCategoryKeyname() {
+		return contEventCategoryKeyname;
 	}
 
-	public void setContEventCategory(String contEventCategory) {
-		this.contEventCategory = contEventCategory;
+	public void setContEventCategoryKeyname(String contEventCategoryKeyname) {
+		this.contEventCategoryKeyname = contEventCategoryKeyname;
+	}
+
+	public Integer getDeviationOrder() {
+		return deviationOrder;
+	}
+
+	public void setDeviationOrder(Integer deviationOrder) {
+		this.deviationOrder = deviationOrder;
 	}
 
 	public String getValueUnit() {
@@ -80,6 +106,16 @@ public class ContEventCategoryDeviation extends AbstractKeynameEntity {
 
 	public void setValueUnitCaption(String valueUnitCaption) {
 		this.valueUnitCaption = valueUnitCaption;
+	}
+
+	@Override
+	public int getDeleted() {
+		return deleted;
+	}
+
+	@Override
+	public void setDeleted(int deleted) {
+		this.deleted = deleted;
 	}
 
 }

@@ -3,14 +3,18 @@ package ru.excbt.datafuse.nmk.data.model.keyname;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
 @Entity
 @Table(name = "cont_event_category")
+@JsonInclude(Include.NON_NULL)
 public class ContEventCategory extends AbstractKeynameEntity implements DeletableObject {
 
 	/**
@@ -33,6 +37,9 @@ public class ContEventCategory extends AbstractKeynameEntity implements Deletabl
 
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Version
+	private int version;
 
 	@Column(name = "category_order")
 	private int categoryOrder;
@@ -85,6 +92,14 @@ public class ContEventCategory extends AbstractKeynameEntity implements Deletabl
 
 	public void setCategoryOrder(int categoryOrder) {
 		this.categoryOrder = categoryOrder;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }

@@ -230,4 +230,16 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		String url = apiSubscrUrl("/contEvent/categories");
 		_testGetJson(url);
 	}
+
+	@Test
+	public void testContEventCategoryDeviation() throws Exception {
+		String url = apiSubscrUrl("/contEvent/categories/RESOURCE_QUALITY/deviations");
+		_testGetJson(url);
+	}
+
+	@Test
+	public void testContEventCategoryDeviationValue() throws Exception {
+		String url = apiSubscrUrl("/contEvent/categories/RESOURCE_QUALITY/deviations/RQ_HOT_WATER_TEMP/values");
+		_testGetJson(url);
+	}
 }
