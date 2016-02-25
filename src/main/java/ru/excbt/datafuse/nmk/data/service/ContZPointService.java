@@ -486,4 +486,24 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		return serviceTypes;
 	}
 
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<DeviceObject> selectDeviceObjects(long contZPointId) {
+		return contZPointRepository.selectDeviceObjects(contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectDeviceObjectIds(long contZPointId) {
+		return contZPointRepository.selectDeviceObjectIds(contZPointId);
+	}
+
 }

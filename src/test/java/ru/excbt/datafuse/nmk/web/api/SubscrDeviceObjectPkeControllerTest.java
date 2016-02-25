@@ -43,4 +43,23 @@ public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {
 		_testGetJson(url, params);
 	}
 
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testContZPointPkeWarn() throws Exception {
+		long contZPointId = 447697474;
+		String url = String.format("/api/subscr/deviceObjects/pke/byContZPoint/%d/warn", contZPointId);
+		List<String> pkeTypes = Arrays.asList("FREQUENCY_BELOW_NORMAL");
+		logger.info("URL: {}", url);
+
+		RequestExtraInitializer params = (b) -> {
+			b.param("beginDate", "2015-11-26").param("endDate", "2015-11-26");
+			b.param("pkeTypeKeynames", listToString(pkeTypes));
+		};
+
+		_testGetJson(url, params);
+	}
+
 }
