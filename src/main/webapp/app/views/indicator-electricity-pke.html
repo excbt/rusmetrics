@@ -1,0 +1,57 @@
+<div id="el_zpoint_indicator_pke_page" ng-controller="ElectricityPkeCtrl">
+    <div class="container-fluid">
+        <div class="row">   
+            <div class="col-xs-12 col-md-12 noPadding marginBottom10 marginTop5">
+                <div class="col-xs-4 col-md-4 noPadding">
+                    <div class="col-xs-4 col-md-4 paddingTop5">
+                        <label class="nmc-form-label pull-right" >
+                            Задайте период
+                        </label>
+                    </div>    
+                    <div class="col-xs-8 col-md-8">
+                            <div class="input-group">
+                                <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                                <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                    type="text" ng-model="indicatorPkeDates" options="dateRangeOptsPkeRu"/>
+                            </div>
+                    </div>
+                </div>
+                <div class="col-xs-3 col-md-3 noPadding">
+                    <div class="col-xs-3 col-md-3 paddingTop5">            
+                            <label class="nmc-form-label">
+                                 </label>
+                        
+                    </div>
+                    <div class="col-xs-8 col-md-8">
+                        <div class="btn-group" ng-init="visibleText='Типы'">
+                          <button type="button" 
+                                  class="btn btn-default btn-xs dropdown-toggle nmc-button-notice-toggle" 
+                                  data-toggle="dropdown" 
+                                  aria-haspopup="true" 
+                                  aria-expanded="false"
+                                  >
+                            {{visibleText}} <span class="caret"></span>
+                          </button>   
+                          <ul class="dropdown-menu">                            
+                            <li ng-repeat="pkeType in pkeTypes">
+                               <input type="checkbox" ng-attr-id={{"idPkeType"+pkeType.name}} ng-attr-name={{"idPkeType"+pkeType.name}} ng-attr-value={{pkeType.name}} ng-model="pkeType.selected"/>
+                               <label ng-attr-for={{"idPkeType"+pkeType.name}}>
+                                  {{pkeType.caption}}
+                               </label>
+                            </li>                             
+                          </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+                    <p title="Обновить ПКЭ" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="refreshData()"></p>
+                </div>
+                <div class="col-xs-2 col-md-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="data.length">
+                </div>
+
+            </div>    
+        </div>
+    </div>
+</div>

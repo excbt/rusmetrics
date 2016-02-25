@@ -912,7 +912,7 @@ tr.nmc-inactive-price > td{
 /*@media (min-width: 1390px){*/
 @media (min-width: 992px){
   .nmc-div-page-legend{
-      min-width: 348px;
+/*      min-width: 348px;*/
       float: right;
 /*      background-color: red;*/
   }
@@ -1425,6 +1425,11 @@ tr.nmc-inactive-price > td{
     overflow-y: auto;
     max-height: 520px;
 }
+
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices{
+    overflow-y: auto;
+    max-height: 250px;
+}
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
     padding-top: 150px;
@@ -1445,6 +1450,20 @@ tr.nmc-inactive-price > td{
 }
 
 .nmc-select-objects-window > .modal-dialog > .modal-content{
+    margin: 0 0 0 -100px;
+}
+
+    /* Разметка модального с фильтрами на странице Уведомления*/
+/*.excbt_selectObjectWindow > .modal-backdrop {*/
+.nmc-select-filters-window > .modal-backdrop{   
+    background-color: inherit;
+}
+
+.nmc-select-filters-window > .modal-dialog {
+    margin-top: 200px;
+}
+
+.nmc-select-filters-window > .modal-dialog > .modal-content{
     margin: 0 0 0 -100px;
 }
 

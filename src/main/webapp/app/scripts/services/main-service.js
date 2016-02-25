@@ -115,16 +115,20 @@ angular.module('portalNMC')
     dateRangeMonitorOptsRu.endDate = moment().endOf('day');
     dateRangeMonitorOptsRu.maxDate = moment().endOf('day');
     
-    var getDateRangeOptions = function(param){
+    var getDateRangeOptions = function(param, settings){
         var result = null;
         switch (param){
-            case "ru": result=dateRangeOptsRu;break;
-            case "monitor-ru": result=dateRangeMonitorOptsRu;break;
-            case "indicator-ru": 
-//console.log($cookies.fromDate);                
+            case "ru": result = dateRangeOptsRu; break;
+            case "monitor-ru": result = dateRangeMonitorOptsRu; break;
+            case "indicator-ru":                 
                 result = angular.copy(dateRangeMonitorOptsRu);
-                result.startDate = (angular.isDefined($cookies.fromDate)&&($cookies.fromDate!=null))?moment($cookies.fromDate).startOf('day'):moment($rootScope.reportStart).startOf('day');
-                result.endDate = (angular.isDefined($cookies.toDate)&&($cookies.toDate!=null))?moment($cookies.toDate).startOf('day'): moment($rootScope.reportEnd).startOf('day');
+                result.startDate = (angular.isDefined($cookies.fromDate) && ($cookies.fromDate != null)) ? moment($cookies.fromDate).startOf('day') : moment($rootScope.reportStart).startOf('day');
+                result.endDate = (angular.isDefined($cookies.toDate) && ($cookies.toDate != null)) ? moment($cookies.toDate).startOf('day'): moment($rootScope.reportEnd).startOf('day');
+                if (!checkUndefinedNull(settings)){
+                    if (!checkUndefinedNull(settings.minDate)){
+                        result.minDate = settings.minDate;
+                    };
+                };
                 break;
         };
         return result;
