@@ -10,10 +10,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
-import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 
-public interface DeviceObjectPkeWarnRepository extends PagingAndSortingRepository<DeviceObjectPkeWarn, Long>,
-		JpaSpecificationExecutor<SubscrContEventNotification> {
+public interface DeviceObjectPkeWarnRepository
+		extends PagingAndSortingRepository<DeviceObjectPkeWarn, Long>, JpaSpecificationExecutor<DeviceObjectPkeWarn> {
 
 	/**
 	 * 

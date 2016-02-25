@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
 import ru.excbt.datafuse.nmk.data.model.keyname.DeviceObjectPkeType;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService;
+import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService.PkeWarnSearchConditions;
 import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
 
 @Controller
@@ -29,15 +30,16 @@ public class SubscrDeviceObjectPkeController extends SubscrApiController {
 	/**
 	 * 
 	 * @param deviceObjectId
-	 * @param fromDateStr
-	 * @param toDateStr
+	 * @param beginDateStr
+	 * @param endDateStr
 	 * @return
 	 */
 	@RequestMapping(value = "/{deviceObjectId}/warn", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDeviceObjectPkeWarn(@PathVariable("deviceObjectId") Long deviceObjectId,
-			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
+			@RequestParam("beginDate") String beginDateStr, @RequestParam("endDate") String endDateStr,
+			@RequestParam(value = "pkeTypeKeynames", required = false) String[] pkeTypeKeynames) {
 
-		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(beginDateStr, endDateStr);
 
 		checkNotNull(datePeriodParser);
 
@@ -46,8 +48,11 @@ public class SubscrDeviceObjectPkeController extends SubscrApiController {
 			return checkPeriod;
 		}
 
-		List<DeviceObjectPkeWarn> resultList = deviceObjectPkeService.selectDeviceObjectPkeWarn(deviceObjectId,
-				datePeriodParser.getLocalDatePeriod());
+		PkeWarnSearchConditions searchConditions = new PkeWarnSearchConditions(deviceObjectId,
+				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
+		searchConditions.initPkeTypeKeynames(pkeTypeKeynames);
+
+		List<DeviceObjectPkeWarn> resultList = deviceObjectPkeService.selectDeviceObjectPkeWarn(searchConditions);
 
 		return responseOK(resultList);
 	}

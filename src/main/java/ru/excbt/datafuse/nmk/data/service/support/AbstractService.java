@@ -2,10 +2,14 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
@@ -59,6 +63,26 @@ public abstract class AbstractService {
 	protected Organization findOrganization(Long organizationId) {
 		return checkNotNull(organizationService.findOne(organizationId),
 				String.format("Organization (id=%d) is not found", organizationId));
+	}
+
+	/**
+	 * 
+	 * @param specs
+	 * @return
+	 */
+	protected <T> Specifications<T> specsAndFilterBuild(List<Specification<T>> specList) {
+		if (specList == null) {
+			return null;
+		}
+		Specifications<T> result = null;
+		for (Specification<T> i : specList) {
+			if (i == null) {
+				continue;
+			}
+			result = result == null ? Specifications.where(i) : result.and(i);
+		}
+
+		return result;
 	}
 
 }
