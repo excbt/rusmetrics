@@ -828,10 +828,14 @@ angular.module('portalNMC')
                     };
                     var textDetails = "Начальное значение = "+ $scope.summary.firstData[columnName]+" ";
 //                    textDetails+="(Дата = "+ (new Date($scope.summary.firstData['dataDate'])).toLocaleString()+");<br><br>";
-                    textDetails+="(Дата = "+ $scope.summary.firstData['dataDateString']+");<br><br>";
-                    textDetails+= "Конечное значение = "+ $scope.summary.lastData[columnName]+" ";
+                    var timeSuffix = "";
+                    if ($scope.summary.firstData['dataDateString'].length == 10) { timeSuffix = " 00:00"};
+                    textDetails += "(Дата = " + $scope.summary.firstData['dataDateString'] + timeSuffix + ");<br><br>";
+                    textDetails += "Конечное значение = " + $scope.summary.lastData[columnName] + " ";
 //                    textDetails+="(Дата = "+ (new Date($scope.summary.lastData['dataDate'])).toLocaleString()+");";
-                    textDetails+="(Дата = "+ $scope.summary.lastData['dataDateString']+");";
+                    timeSuffix = "";
+                    if ($scope.summary.lastData['dataDateString'].length == 10) { timeSuffix = " 00:00"};
+                    textDetails += "(Дата = " + $scope.summary.lastData['dataDateString'] + timeSuffix + ");";
                     var titleDetails = "Детальная информация";
                     var elDOM = "#diffBtn"+columnName;
                     var targetDOM = "#total"+columnName;                 
