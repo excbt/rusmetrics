@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
@@ -108,6 +111,17 @@ public class ContZPointServiceTest extends JpaSupportTest {
 	@Ignore
 	public void testDelTemp() throws Exception {
 		contZPointService.deleteOnePermanent(66183371L);
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetDeviceObjectIds() throws Exception {
+		List<Long> deviceObjects = contZPointService.selectDeviceObjectIds(159919982);
+		assertFalse(deviceObjects.isEmpty());
+		logger.info("deviceObjectId:{}", deviceObjects.get(0));
 	}
 
 }

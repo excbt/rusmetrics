@@ -15,6 +15,7 @@ import org.joda.time.LocalDateTime;
 public class DateFormatUtils {
 
 	public static final String DATE_FORMAT_STR_FULL = "dd-MM-yyyy HH:mm";
+	public static final String DATE_FORMAT_STR_FULL_SEC = "dd-MM-yyyy HH:mm:ss";
 	public static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
 
 	private DateFormatUtils() {
