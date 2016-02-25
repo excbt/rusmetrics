@@ -464,7 +464,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initRso(ContZPoint contZPoint) {
-		Organization organization = organizationService.findOne(contZPoint.getRsoId());
+		Organization organization = organizationService.selectOrganization(contZPoint.getRsoId());
 		if (organization == null) {
 			throw new PersistenceException(
 					String.format("RSO organization (id=%d) is not found", contZPoint.getRsoId()));

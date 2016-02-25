@@ -74,7 +74,7 @@ public class ContManagementService implements SecuredRoles {
 			throw new PersistenceException(String.format("ContObject(id=%d) not found", contObjectId));
 		}
 
-		Organization org = organizationService.findOne(organizationId);
+		Organization org = organizationService.selectOrganization(organizationId);
 		if (org == null) {
 			throw new PersistenceException(String.format("Organiztion(id=%d) not found", organizationId));
 		}
@@ -97,7 +97,7 @@ public class ContManagementService implements SecuredRoles {
 		checkNotNull(organizationId);
 		checkNotNull(beginDate);
 
-		Organization org = organizationService.findOne(organizationId);
+		Organization org = organizationService.selectOrganization(organizationId);
 		if (org == null) {
 			throw new PersistenceException(String.format("Organiztion(id=%d) not found", organizationId));
 		}

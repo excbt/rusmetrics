@@ -18,14 +18,14 @@ public class OrganizationServiceTest extends JpaSupportTest {
 	@Test
 	public void testOrg() {
 		assertNotNull(organizationService);
-		Organization org = organizationService.findOne(TestConstants.ORGANIZATION_TEST);
+		Organization org = organizationService.selectOrganization(TestConstants.ORGANIZATION_TEST);
 		assertNotNull(org);
 	}
 
 	@Test
 	public void testOrgIzh() {
 		assertNotNull(organizationService);
-		Organization org = organizationService.findOne(TestConstants.ORGANIZATION_TEST_IZH);
+		Organization org = organizationService.selectOrganization(TestConstants.ORGANIZATION_TEST_IZH);
 		assertNotNull(org);
 	}
 
