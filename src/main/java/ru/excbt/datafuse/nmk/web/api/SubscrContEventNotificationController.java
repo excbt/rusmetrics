@@ -112,7 +112,6 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 			@RequestParam(value = "contEventTypeIds", required = false) Long[] contEventTypeIds,
 			@RequestParam(value = "contEventCategories", required = false) String[] contEventCategories,
 			@RequestParam(value = "contEventDeviations", required = false) String[] contEventDeviations,
-			@RequestParam(value = "contEventDeviationValues", required = false) String[] contEventDeviationValues,
 			@RequestParam(value = "isNew", required = false) Boolean isNew,
 			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
 			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
@@ -147,11 +146,7 @@ public class SubscrContEventNotificationController extends SubscrApiController {
 		searchConditions.initContObjectIds(contObjectIdList);
 		searchConditions.initContEventTypes(contEventTypeIdPairList);
 		searchConditions.initContEventCategories(contEventCategoryList);
-		searchConditions
-				.initContEventDeviations(contEventDeviations != null ? Arrays.asList(contEventDeviations) : null);
-		searchConditions.initContEventDeviationValues(
-				contEventDeviationValues != null ? Arrays.asList(contEventDeviationValues) : null);
-
+		searchConditions.initContEventDeviations(contEventDeviations);
 		// TODO query upgrade
 		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
 				.selectNotificationByConditions(searchConditions, pageRequest);
