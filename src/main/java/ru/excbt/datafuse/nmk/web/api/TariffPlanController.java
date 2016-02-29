@@ -143,7 +143,7 @@ public class TariffPlanController extends SubscrApiController {
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationService.findOne(rsoOrganizationId);
+			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
 				return ResponseEntity.badRequest().body(ApiResult.validationError("Invalid rsoOrganizationId"));
 			}
@@ -206,7 +206,7 @@ public class TariffPlanController extends SubscrApiController {
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationService.findOne(rsoOrganizationId);
+			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
 			if (rso == null) {
 				return ResponseEntity.badRequest().body("Invalid rsoOrganizationId");
 			}

@@ -157,7 +157,6 @@ public class SubscrContEventNotificationService {
 		private final List<Long> contEventTypeList = new ArrayList<>();
 		private final List<String> contEventCategoryList = new ArrayList<>();
 		private final List<String> contEventDeviationList = new ArrayList<>();
-		private final List<String> contEventDeviationValueList = new ArrayList<>();
 
 		public SearchConditions(long subscriberId, LocalDatePeriod period) {
 			this.subscriberId = subscriberId;
@@ -172,37 +171,37 @@ public class SubscrContEventNotificationService {
 		}
 
 		public void initContObjectIds(List<Long> contObjectIdList) {
+			this.contObjectIdList.clear();
 			if (contObjectIdList != null) {
-				this.contObjectIdList.clear();
 				this.contObjectIdList.addAll(contObjectIdList);
 			}
 		}
 
 		public void initContEventCategories(List<String> contEventCategoryList) {
+			this.contEventCategoryList.clear();
 			if (contEventCategoryList != null) {
-				this.contEventCategoryList.clear();
 				this.contEventCategoryList.addAll(contEventCategoryList);
 			}
 		}
 
 		public void initContEventTypes(List<Long> contEventTypeList) {
+			this.contEventTypeList.clear();
 			if (contEventTypeList != null) {
-				this.contEventTypeList.clear();
 				this.contEventTypeList.addAll(contEventTypeList);
 			}
 		}
 
 		public void initContEventDeviations(List<String> contEventDeviationList) {
+			this.contEventDeviationList.clear();
 			if (contEventDeviationList != null) {
-				this.contEventDeviationList.clear();
 				this.contEventDeviationList.addAll(contEventDeviationList);
 			}
 		}
 
-		public void initContEventDeviationValues(List<String> contEventDeviationValueList) {
-			if (contEventDeviationValueList != null) {
-				this.contEventDeviationValueList.clear();
-				this.contEventDeviationValueList.addAll(contEventDeviationValueList);
+		public void initContEventDeviations(String[] contEventDeviationList) {
+			this.contEventDeviationList.clear();
+			if (contEventDeviationList != null) {
+				this.contEventDeviationList.addAll(Arrays.asList(contEventDeviationList));
 			}
 		}
 
@@ -237,33 +236,6 @@ public class SubscrContEventNotificationService {
 
 		return resultPage;
 
-	}
-
-	/**
-	 * 
-	 * @param subscriberId
-	 * @param fromDate
-	 * @param toDate
-	 * @param contObjectList
-	 * @param contObjectTypeList
-	 * @param isNew
-	 * @param pageable
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectByConditions(Long subscriberId, final Date fromDate,
-			final Date toDate, final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
-			final Pageable pageable) {
-
-		checkNotNull(subscriberId);
-
-		Pageable pageRequest = setupPageRequest(pageable);
-
-		Specifications<SubscrContEventNotification> specs = Specifications.where(specSubscriberId(subscriberId))
-				.and(specContEventDate(fromDate, toDate)).and(specIsNew(isNew)).and(specContObjectId(contObjectList))
-				.and(specContEventTypeId(contEventTypeList));
-
-		return subscrContEventNotificationRepository.findAll(specs, pageRequest);
 	}
 
 	/**
@@ -306,11 +278,14 @@ public class SubscrContEventNotificationService {
 				specIsNew(searchConditions.isNew), // 
 				specContObjectId(searchConditions.contObjectIdList), //
 				specContEventTypeId(searchConditions.contEventTypeList), //
-				specContEventTypeCategory(searchConditions.contEventCategoryList));
+				specContEventCategory(searchConditions.contEventCategoryList), //
+				specContEventDevation(searchConditions.contEventDeviationList));
 
 		Specifications<SubscrContEventNotification> specs = andFilterBuild(andFilter);
 
-		return subscrContEventNotificationRepository.findAll(specs, pageRequest);
+		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
+
+		return result;
 
 	}
 
@@ -511,7 +486,7 @@ public class SubscrContEventNotificationService {
 	 * @param contEventCategoryList
 	 * @return
 	 */
-	private static Specification<SubscrContEventNotification> specContEventTypeCategory(
+	private static Specification<SubscrContEventNotification> specContEventCategory(
 			final List<String> contEventCategoryList) {
 		return (root, query, cb) -> {
 			if (contEventCategoryList == null || contEventCategoryList.size() == 0) {
@@ -522,7 +497,20 @@ public class SubscrContEventNotificationService {
 							.get(ContEventType_.contEventCategory).in(contEventCategoryList),
 					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
 							.get(ContEventType_.contEventCategory).isNull());
+		};
+	}
 
+	private static Specification<SubscrContEventNotification> specContEventDevation(
+			final List<String> contEventDeviationList) {
+		return (root, query, cb) -> {
+			if (contEventDeviationList == null || contEventDeviationList.size() == 0) {
+				return null;
+			}
+			return cb.or(
+					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
+							.in(contEventDeviationList),
+					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
+							.isNull());
 		};
 	}
 

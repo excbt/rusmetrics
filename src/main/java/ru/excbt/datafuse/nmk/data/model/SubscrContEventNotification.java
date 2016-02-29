@@ -16,8 +16,6 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
@@ -32,7 +30,6 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(name = "subscr_cont_event_notification")
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(Include.NON_NULL)
 @DynamicUpdate
 public class SubscrContEventNotification extends AbstractAuditableModel {
 
@@ -91,6 +88,12 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	@Column(name = "revision_subscr_user_id")
 	private Long revisionSubscrUserId;
+
+	@Column(name = "cont_event_category")
+	private String contEventCategoryKeyname;
+
+	@Column(name = "cont_event_deviation")
+	private String contEventDeviationKeyname;
 
 	public Subscriber getSubscriber() {
 		return subscriber;
@@ -202,6 +205,22 @@ public class SubscrContEventNotification extends AbstractAuditableModel {
 
 	public void setRevisionTimeTZ(Date revisionTimeTZ) {
 		this.revisionTimeTZ = revisionTimeTZ;
+	}
+
+	public String getContEventCategoryKeyname() {
+		return contEventCategoryKeyname;
+	}
+
+	public void setContEventCategoryKeyname(String contEventCategoryKeyname) {
+		this.contEventCategoryKeyname = contEventCategoryKeyname;
+	}
+
+	public String getContEventDeviationKeyname() {
+		return contEventDeviationKeyname;
+	}
+
+	public void setContEventDeviationKeyname(String contEventDeviationKeyname) {
+		this.contEventDeviationKeyname = contEventDeviationKeyname;
 	}
 
 }
