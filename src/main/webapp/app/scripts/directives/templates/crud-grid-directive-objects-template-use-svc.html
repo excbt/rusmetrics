@@ -175,7 +175,7 @@
                                         Свойства объекта                                        
                                     </a>
                                 </li>
-                                <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                <li ng-if="data.reportEntities && data.reportEntities.length > 0" class="menu-item dropdown dropdown-submenu" role="presentation">
                                     <a href="" 
                                        class="" 
                                        data-toggle="dropdown" 
@@ -184,7 +184,7 @@
                                        >
                                         Отчеты
                                     </a>
-                                    <ul ng-if="data.reportEntities && data.reportEntities.length > 0" class="dropdown-menu">
+                                    <ul class="dropdown-menu">
                                         <li class="menu-item dropdown" 
                                             ng-repeat="reportEntity in data.reportEntities" 
                                             ng-class="{'dropdown-submenu': reportEntity.reports}">
@@ -194,8 +194,14 @@
                                                data-toggle="dropdown" 
                                                aria-haspopup="true" 
                                                aria-expanded="false"                                               
-                                               >                    
-                                                <span title="Предварительный просмотр отчета" ng-click="previewContextReport(reportEntity)">
+                                               >
+                                                <i title="Сформировать отчет" ng-if="!reportEntity.reports"
+                                                    class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
+                                                    ng-click="createContextReport(reportEntity)"
+                                                    ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
+                                                </i>
+                                                <span title="Предварительный просмотр отчета" 
+                                                      ng-click="previewContextReport(reportEntity)">
                                                     {{reportEntity.caption || reportEntity.name || 'Без названия'}}
                                                 </span>
                                                 <i title="Сформировать отчет" ng-if="!reportEntity.reports"
@@ -204,25 +210,52 @@
                                                     ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
                                                 </i>
                                             </a>
-                                            <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" class="dropdown-menu">
+                                            <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" 
+                                                class="dropdown-menu">
                                                 <li ng-repeat="report in reportEntity.reports">
                                                     <a
                                                        class="paddingRight30"
-                                                       > 
-                                                        <span title="Предварительный просмотр отчета" ng-click="previewContextReport(report)">
-                                                            {{report.name || 'Без названия'}}
-                                                        </span>
-                                                        <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
+                                                       >
+                                                        <i title="Сформировать отчет" 
+                                                           class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
                                                            ng-click="createContextReport(report)"
                                                            ng-class="{'nmc-button-in-table-run-green':report.checkFlag, 'nmc-button-in-table-run-red':!report.checkFlag}"
                                                            >
                                                         </i>
+                                                        <span title="Предварительный просмотр отчета" 
+                                                              ng-click="previewContextReport(report)">
+                                                            {{report.name || 'Без названия'}}
+                                                        </span>
+                                                        
                                                     </a>
                                                 </li>                                                
                                             </ul>
                                         </li>                                        
                                     </ul>                                    
                                 </li>
+                                  
+<!--
+                                            <li ng-repeat="report in data.reportEntities">
+                                                    <a
+                                                       class="paddingRight30"
+                                                       >
+                                                                                                                <i title="Сформировать отчет" 
+                                                           class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
+                                                           ng-click="createContextReport(report)"
+                                                           ng-class="{'nmc-button-in-table-run-green':report.checkFlag, 'nmc-button-in-table-run-red':!report.checkFlag}"
+                                                           style=""
+                                                           >
+                                                        </i>
+                                                        <span title="Предварительный просмотр отчета" 
+                                                              ng-click="previewContextReport(report)"
+                                                              >
+                                                            {{report.name || 'Без названия'}}
+                                                        </span>
+
+                                                    </a>
+                                                </li>
+-->
+                                  
                               </ul>
                             </div>
                             <i title="Показать/Скрыть точки учета" 

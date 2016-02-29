@@ -64,11 +64,6 @@ console.log("Objects directive.");
                 
                         //html- с индикатором загрузки страницы
                 $scope.objectCtrlSettings.htmlLoading = mainSvc.getHtmlLoading();
-                //report context launch setting
-                $scope.objectCtrlSettings.reportCountList = 6;//border report count: if the reports is more than this border that view two-level menu, else - one-level 
-
-//                $scope.objectCtrlSettings.loadingPermissions = mainSvc.getLoadingServicePermissionFlag();
-//                $scope.objectCtrlSettings.mapAccess = mainSvc.checkContext($scope.objectCtrlSettings.mapCtxId);
                 
                 var setVisibles = function(){
                     var tmp = mainSvc.getContextIds();

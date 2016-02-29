@@ -525,6 +525,12 @@ body{
 .nmc-pagination{
     margin: 0;
 }
+
+/* Элемент списка - Выбрать / Отменить все (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-li-select-all{
+    background: #337ab7; 
+    color: white;
+}
 /***********
  * Таблицы
  ***********/
@@ -811,6 +817,12 @@ tr.nmc-inactive-price > td{
 /* label поля ввода */
 .nmc-form-label {
 }
+/* метка для элемента выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-label-dropdown{
+    padding: 3px 20px;
+    white-space: nowrap;
+    font-weight: normal
+}
  
 /* поле поиска */
 .nmc-search-form {
@@ -982,6 +994,13 @@ tr.nmc-inactive-price > td{
 /* чекбокс */
 .nmc-checkbox-form {
 }
+
+/* Чекбокс выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-checkbox-dropdown{
+    position: absolute; 
+    margin-top: 8px !important;
+}
+
 /* Недоступный чекбокс*/
 .nmc-checkbox-notallowed{
     cursor: default !important;
