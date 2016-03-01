@@ -30,8 +30,6 @@
     width: 550px !important;/* Увеличиваем ширину всплывающего окна, чтобы влезло наше содержимое*/
 }
 
-
-
 body{
 /*    min-width: 1200px !important;*/
 }
@@ -382,6 +380,16 @@ body{
 .nmc-main-menu-item-icon {
     margin-right: 10px;
 }
+
+
+/*   Выпадающее меню - аля контекстное меню у объектов, приборов и т.п.*/
+.nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus{
+    background-color: #D2D2D2 !important; 
+/*
+    background-color: #646263 !important; background color
+    color: #FFFFFF !important;
+*/
+}
     
 .submenu{
     margin-left: 20px;
@@ -530,6 +538,10 @@ body{
 .nmc-li-select-all{
     background: #337ab7; 
     color: white;
+}
+
+.nmc-li-select-all > label{
+    cursor: pointer;
 }
 /***********
  * Таблицы

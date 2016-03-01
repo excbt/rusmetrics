@@ -165,7 +165,7 @@
                                  ng-click="selectedObjectBy(object)" 
                                  style="font-size: .9em;">
                                 </i>
-                              <ul class="dropdown-menu">
+                              <ul class="dropdown-menu nmc-dropdown-menu">
                                 <li class="menu-item" role="presentation">
                                     <a href=""
                                        class=""
@@ -184,7 +184,7 @@
                                        >
                                         Отчеты
                                     </a>
-                                    <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu nmc-dropdown-menu">
                                         <li class="menu-item dropdown" 
                                             ng-repeat="reportEntity in data.reportEntities" 
                                             ng-class="{'dropdown-submenu': reportEntity.reports}">
@@ -204,14 +204,16 @@
                                                       ng-click="previewContextReport(reportEntity)">
                                                     {{reportEntity.caption || reportEntity.name || 'Без названия'}}
                                                 </span>
+<!--
                                                 <i title="Сформировать отчет" ng-if="!reportEntity.reports"
                                                     class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
                                                     ng-click="createContextReport(reportEntity)"
                                                     ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
                                                 </i>
+-->
                                             </a>
                                             <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" 
-                                                class="dropdown-menu">
+                                                class="dropdown-menu nmc-dropdown-menu">
                                                 <li ng-repeat="report in reportEntity.reports">
                                                     <a
                                                        class="paddingRight30"

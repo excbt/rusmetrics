@@ -58,7 +58,7 @@ console.log("Run routeProviderConfig");
             }]
         }
       })
-      .when('/notices/list', {
+      .when('/notices/list2', {
         templateUrl: 'views/notice_s8_inline.html',
         controller: 'NoticeCtrl',
         resolve:{
@@ -76,7 +76,7 @@ console.log("Run routeProviderConfig");
             }]
         }
       })
-      .when('/notices/list2', {
+      .when('/notices/list', {
         templateUrl: 'views/notice_s8_collapse.html',
         controller: 'NoticeCtrl2',
         resolve:{
