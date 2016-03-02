@@ -164,7 +164,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         };
         if (!mainSvc.checkUndefinedNull(paramsets) && angular.isArray(paramsets)){
             for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
-                if (object.name.localeCompare(paramsets[psCounter].name)){
+                if ((object.id != paramsets[psCounter].id) && (object.name.localeCompare(paramsets[psCounter].name) == 0)){
                     notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
                     return "Add / edit paramset: name is not unique.";
                 };
