@@ -2,7 +2,7 @@
 
 var app = angular.module('portalNMC');
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc){
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter){
 //console.log("Load NoticeCtrl."); 
     $rootScope.ctxId = "notice_page";
     //ctrl settings
@@ -24,12 +24,15 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //    Math.round($('#div-main-area').width()*8.333/100)= 130 = 20*x; => x= 130/20
     //Math.round($('#div-main-area').width()*8.333/100/6.5) //dynamic coef
     $scope.TEXT_CAPTION_LENGTH = 20*4-5; //length of message visible part. Koef 4 for class 'col-md-4', for class 'col-md-3' koef = 3 and etc.
-    $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part 
+    $scope.TYPE_CAPTION_LENGTH = 20*3-5; //length of type visible part     
     $scope.objectsUrl= "../api/subscr/contObjects";
     $scope.groupUrl = "../api/contGroup";
     $scope.crudTableName= "../api/subscr/contEvent/notifications";
     $scope.noticeTypesUrl= "../api/contEvent/types";
     $scope.zpointListUrl = $scope.objectsUrl+"/zpoints";//"../api/subscr/contObjects/zpoints";
+    
+    $scope.noticeCategoriesUrl = "../api/subscr/contEvent/categories";//url к котегориям уведомлений
+    $scope.noticeDeviationsUrl = "../api/subscr/contEvent/deviations";//url к отклонениям
     //the path template of notice icon
     $scope.imgPathTmpl = "images/notice-state-";
     
@@ -58,6 +61,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.states.tempUndefinedCriticalTypes_flag = false;
     
     $scope.allSelected = false;
+    
+    
+    $scope.messages.defaultFilterCaption = "Все";
+    $scope.selectedObjects_list = {};//object for object caption params
+    $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+    $scope.selectedNoticeTypes_list = {};//object for type caption params
+    $scope.selectedNoticeTypes_list.caption = $scope.messages.defaultFilterCaption;
+    $scope.selectedNoticeCategories_list = {};//object for category caption params
+    $scope.selectedNoticeCategories_list.caption = $scope.messages.defaultFilterCaption;
+    $scope.selectedNoticeDeviations_list = {};//object for deviation caption params
+    $scope.selectedNoticeDeviations_list.caption = $scope.messages.defaultFilterCaption;
     
     $scope.zpointList = null; //subscriber zpoint list
     
@@ -111,6 +125,9 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.currentObject = {};
     $scope.selectedObjects = [];
     
+    $scope.selectedNoticeCategories = [];
+    $scope.selectedNoticeDeviations = [];
+    
     $scope.notices = [];
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
@@ -119,15 +136,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     //Controller initialization
     //use to redirect from the Monitor page
-    $scope.initCtrl = function(){
+    $scope.initCtrl = function(){        
 //console.log("initCtrl"); 
 //console.log(loca);         
 //console.log($scope.objects);        
 //for(var k in $cookies){        
 //    console.log("$cookies["+k+"]="+$cookies[k]); 
 //};
+        $scope.categoriesInWindow = angular.copy($scope.noticeCategories);           
+        $scope.deviationsInWindow = angular.copy($scope.noticeDeviations);           
 //        if ((angular.isDefined($cookies))&&($cookies.hasOwnProperty('monitorFlag'))&&($cookies.monitorFlag)){
-        if ((angular.isDefined(loca))&&(loca.hasOwnProperty('monitorFlag'))&&(loca.monitorFlag==="true")){    
+        if ((angular.isDefined(loca)) && (loca.hasOwnProperty('monitorFlag')) && (loca.monitorFlag === "true")){    
 //            loca.monitorFlag = false;
 //            $rootScope.reportStart=$rootScope.monitor.fromDate;
 //            $rootScope.reportEnd=$rootScope.monitor.toDate;
@@ -142,13 +161,13 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log("curIndex = "+curIndex);            
             if (curIndex>-1){//object is need - else is absurd
                 //object
-                $scope.objectsInWindow[curIndex].selected=true;
+                $scope.objectsInWindow[curIndex].selected = true;
                 performObjectsFilter();               
                 //new / revision               
-                $scope.isNew = loca.isNew==="null"?null:Boolean(loca.isNew); 
+                $scope.isNew = loca.isNew === "null" ? null : Boolean(loca.isNew); 
 //console.log($scope.isNew);                
-                if ($scope.isNew===true){
-                    $scope.visibleText='Только новые';
+                if ($scope.isNew === true){
+                    $scope.visibleText = 'Только новые';
                 };
                 //types
                 var tmpTypesArr = [Number(loca.typeId)];
@@ -176,18 +195,20 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         };
     };
     
-    var getNotices = function(table, startDate, endDate, objectArray, eventTypeArray, isNew){
-//console.log("Run GetNotices");              
-        if (isNew==null){
-            return $resource(table, {},
-                         {'get':{method:'GET', params:{fromDate: startDate, toDate: endDate, contEventTypeIds: eventTypeArray, contObjectIds: objectArray}}
-            });
-        }else{
-            return $resource(table, {},
-                         {'get':{method:'GET', params:{fromDate: startDate, toDate: endDate, contEventTypeIds: eventTypeArray, contObjectIds: objectArray, isNew: isNew}}
-            });
-        };
-    }; 
+    var getNotices = function(table, startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew){ 
+        var params = {
+            fromDate: startDate, 
+            toDate: endDate, 
+            contEventTypeIds: eventTypeArray,
+            contEventCategories: categoriesArray,
+            contEventDeviations: deviationsArray,
+            contObjectIds: objectArray
+        }; 
+        if (!mainSvc.checkUndefinedNull(isNew)){
+            params.isNew = isNew;
+        };        
+        return $resource(table, {}, {'get':{method:'GET', params:params}});
+    };
     
     $scope.pagination = {
         current: 1
@@ -305,7 +326,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.ctrlSettings.loading = true;
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
-        var url =  $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
+        var url = $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
 //console.log(loca);        
         if ((angular.isDefined(loca))){
@@ -323,21 +344,27 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log($scope.selectedNoticeTypes);  
 //console.log($scope.isNew);    
 //console.log("88888888888888888888 the end ***********************");        
-        getNotices(url, $scope.startDate, $scope.endDate, $scope.selectedObjects, $scope.selectedNoticeTypes, $scope.isNew).get(function(data){                  
+        getNotices(url, 
+                   $scope.startDate, 
+                   $scope.endDate, 
+                   $scope.selectedObjects, 
+                   $scope.selectedNoticeTypes, 
+                   $scope.selectedNoticeCategories,
+                   $scope.selectedNoticeDeviations,
+                   $scope.isNew)
+            .get(function(data){          
                         var result = [];
                         $scope.data= data;
-//console.log($scope.data);             
                         var oneNotice = {};
                         $scope.totalNotices = data.totalElements;
                         var tmp = dataParse(data.objects);
                         $scope.notices = tmp;
-                        $scope.ctrlSettings.loading = false;
-//console.log($scope.notices);            
+                        $scope.ctrlSettings.loading = false;            
                     },
-                                                                                                                                function(e){
-            console.log(e);
-        }
-                                                                                                                               );
+                function(e){
+                    console.log(e);
+                }
+        );
     };
     
     $scope.dateFormat = function(millisec){
@@ -356,7 +383,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
-//console.log($scope.objects);        
+//console.log($scope.objects); 
+//        $scope.isShowObjects = !$scope.isShowObjects;        
         if ($scope.ctrlSettings.showGroupsFlag == false){
             $scope.objectsInWindow = angular.copy($scope.objects);
         }else{
@@ -372,13 +400,13 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             //иначе
 //            $scope.states.applyObjects_flag = false;// сбрасываем флаг, чтобы отследить нажатие кнопки "Применить" 
 //        };
-        $('#selectObjectsModal').modal('show');
+//        $('#selectObjectsModal').modal('show');
     };
     
-    $scope.selectGroupsClick = function(){
-        $scope.objectsInWindow = angular.copy($scope.groups);
-        $('#selectObjectsModal').modal('show');
-    };
+//    $scope.selectGroupsClick = function(){
+//        $scope.objectsInWindow = angular.copy($scope.groups);
+//        $('#selectObjectsModal').modal('show');
+//    };
     
     $scope.selectNoticeTypesClick = function(){
         //create the copy of category states
@@ -396,14 +424,23 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             //иначе
 //            $scope.states.applyTypes_flag = false;// сбрасываем флаг, чтобы отследить нажатие кнопки "Применить" 
 //        };
-        $('#selectNoticeTypesModal').modal('show');
+//        $('#selectNoticeTypesModal').modal('show');
+    };
+    
+    $scope.selectNoticeCategoriesClick = function(){
+        //Create the copy of categories
+        $scope.categoriesInWindow = angular.copy($scope.noticeCategories);
+    };
+    
+    $scope.selectedNoticeDeviationsClick = function(){
+        //Create the copy of deviations
+        $scope.deviationsInWindow = angular.copy($scope.noticeDeviations);
     };
     
     function performObjectsFilter(){
-console.log("performObjectsFilter");
-        $scope.selectedObjects_list = "";
+        $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedObjects = [];
-        $('#selectObjectsModal').modal('hide');
+//        $('#selectObjectsModal').modal('hide');
         $scope.objects = $scope.objectsInWindow;
 
         $scope.objects.map(function(el){
@@ -413,9 +450,9 @@ console.log("performObjectsFilter");
           }
         });
         if ($scope.selectedObjects.length == 0){
-            $scope.selectedObjects_list = "Нет";
+            $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         }else{
-            $scope.selectedObjects_list = $scope.selectedObjects.length;
+            $scope.selectedObjects_list.caption = $scope.selectedObjects.length;
         };
     };
     
@@ -465,7 +502,7 @@ console.log("performObjectsFilter");
     };
     
     function performGroupsFilter(){
-        $scope.selectedObjects_list = "";
+        $scope.selectedObjects_list.caption = "";
         $scope.selectedGroups = [];
         $scope.selectedObjects = [];
         $('#selectObjectsModal').modal('hide');
@@ -491,13 +528,13 @@ console.log("performObjectsFilter");
           };
         });
         if ($scope.selectedGroups.length == 0){
-            $scope.selectedObjects_list = "Нет";
+            $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         }else{
-            $scope.selectedObjects_list = $scope.selectedGroups.length;
+            $scope.selectedObjects_list.caption = $scope.selectedGroups.length;
         };
     };
       
-    $scope.selectObjects = function(){
+    $scope.selectObjects = function(){      
         if ($scope.ctrlSettings.showGroupsFlag != true){
              performObjectsFilter();
     //        $scope.states.applyObjects_flag = true;
@@ -516,20 +553,20 @@ console.log("performObjectsFilter");
         $scope.states.noCriticalTypes_flag = $scope.states.tempNoCriticalTypes_flag;
         $scope.states.undefinedCriticalTypes_flag = $scope.states.tempUndefinedCriticalTypes_flag;
         
-        $scope.selectedNoticeTypes_list = "";
+        $scope.selectedNoticeTypes_list.caption = "";
         $scope.selectedNoticeTypes = [];
-        $('#selectNoticeTypesModal').modal('hide');
+//        $('#selectNoticeTypesModal').modal('hide');
         $scope.noticeTypes.map(function(el){
           if(el.selected){
-              $scope.selectedNoticeTypes_list+=el.fullName+"; ";
+//              $scope.selectedNoticeTypes_list+=el.fullName+"; ";
               $scope.selectedNoticeTypes.push(el.id);
           }
         });
-        $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
+//        $scope.selectedNoticeTypes_list.caption = $scope.selectedNoticeTypes.length;
         if ($scope.selectedNoticeTypes.length == 0){
-            $scope.selectedNoticeTypes_list = "Нет";
+            $scope.selectedNoticeTypes_list.caption = $scope.messages.defaultFilterCaption;
         }else{
-            $scope.selectedNoticeTypes_list = $scope.selectedNoticeTypes.length;
+            $scope.selectedNoticeTypes_list.caption = $scope.selectedNoticeTypes.length;
         };
     };
     
@@ -540,12 +577,53 @@ console.log("performObjectsFilter");
         $scope.getResultsPage(1);
 
     };
+    
+    function performNoticeCategoriesFilter(){
+        $scope.noticeCategories = $scope.categoriesInWindow;        
+        $scope.selectedNoticeCategories_list.caption = "";
+        $scope.selectedNoticeCategories = [];        
+        $scope.noticeCategories.map(function(el){
+          if(el.selected){
+              $scope.selectedNoticeCategories.push(el.keyname);
+          }
+        });
+        if ($scope.selectedNoticeCategories.length == 0){
+            $scope.selectedNoticeCategories_list.caption = $scope.messages.defaultFilterCaption;
+        }else{
+            $scope.selectedNoticeCategories_list.caption = $scope.selectedNoticeCategories.length;
+        };
+    };
+    
+    $scope.selectNoticeCategories = function(){
+        performNoticeCategoriesFilter();
+        $scope.getResultsPage(1);
+    };
+    
+    function performNoticeDeviationFilter(){      
+        $scope.noticeDeviations = $scope.deviationsInWindow;
+        $scope.selectedNoticeDeviations_list.caption = "";
+        $scope.selectedNoticeDeviations = [];        
+        $scope.noticeDeviations.map(function(el){
+          if(el.selected){
+              $scope.selectedNoticeDeviations.push(el.keyname);
+          }
+        });
+        if ($scope.selectedNoticeDeviations.length == 0){
+            $scope.selectedNoticeDeviations_list.caption = $scope.messages.defaultFilterCaption;
+        }else{
+            $scope.selectedNoticeDeviations_list.caption = $scope.selectedNoticeDeviations.length;
+        };
+    };
+    
+    $scope.selectNoticeDeviations = function(){    
+        performNoticeDeviationFilter();
+        $scope.getResultsPage(1);
+    };
       
-      $scope.selectedItem = function (item) {
+    $scope.selectedItem = function (item) {
           var curObject = angular.copy(item);
           $scope.currentObject = curObject;
-  
-      };
+    };
     
     $scope.showNoticeDetail = function(object){
         $scope.selectedItem(object);
@@ -595,6 +673,28 @@ console.log("performObjectsFilter");
         });
     };
     
+    $scope.getNoticeDeviations = function(url){
+        $http.get(url)
+            .success(function(data){
+                $scope.noticeDeviations = data;
+                $scope.$broadcast('notices:getNoticeTypes');
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+    
+    $scope.getNoticeCategories = function(url){
+        $http.get(url)
+            .success(function(data){
+                $scope.noticeCategories = data; 
+                $scope.getNoticeDeviations($scope.noticeDeviationsUrl);
+            })
+            .error(function(e){
+                console.log(e);
+            });
+    };
+    
     $scope.getNoticeTypes = function(url){
        $http.get(url)
             .success(function(data){
@@ -613,8 +713,9 @@ console.log("performObjectsFilter");
         .success(function(data){
             $scope.zpointList = data;
 //console.log("geted zpoint list.");            
-//console.log(data);            
-            $scope.$broadcast('notices:getNoticeTypes');
+//console.log(data);
+            $scope.getNoticeCategories($scope.noticeCategoriesUrl);
+            
         })
         .error(function(e){
             console.log(e);
@@ -708,6 +809,14 @@ console.log("performObjectsFilter");
                 };
             });
         };      
+    };
+        
+    $scope.selectAllElements = function(elements, filter, flag, label){     
+        var filteredElements = $filter('filter')(elements, filter);       
+        filteredElements.forEach(function(elem){
+            elem.selected = flag;
+        });
+        (flag) ? label.caption = filteredElements.length : label.caption = $scope.messages.defaultFilterCaption;        
     };
     
 //control revision / new notices (Просмотренные/новые увеодомления)
@@ -807,40 +916,55 @@ console.log("performObjectsFilter");
     };
 
     //Clear all filters
-    $scope.clearAllFilters = function(){
-console.log("Clear all filters.");        
+    $scope.clearAllFilters = function(){      
         $scope.clearObjectFilter();
         $scope.clearTypeFilter();
+        $scope.clearCategoryFilter();
+        $scope.clearDeviationFilter();
         $scope.isNew = null;
         $scope.getResultsPage(1);
     };
     
-    $scope.clearObjectFilter = function(){  
-console.log("Clear Object filters.");                
+    $scope.clearObjectFilter = function(){               
         $scope.objects.forEach(function(el){
             el.selected = false;
         });
         $scope.groups.forEach(function(el){
             el.selected = false;
         });
-        $scope.selectedObjects_list = 'Нет';
+        $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedObjects = [];
         $scope.selectedGroups = [];
-//        $scope.getResultsPage(1);
+        $scope.isSelectedAllObjects = false;
     };
     
-    $scope.clearTypeFilter = function(){
-console.log("Clear Type filters.");         
+    $scope.clearTypeFilter = function(){       
         $scope.states.criticalTypes_flag = false;
         $scope.states.noCriticalTypes_flag = false;
         $scope.states.undefinedCriticalTypes_flag = false;
         $scope.noticeTypes.forEach(function(el){
             el.selected = false;
         });
-        $scope.selectedNoticeTypes_list = 'Нет';
+        $scope.selectedNoticeTypes_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedNoticeTypes = [];
-
-//        $scope.getResultsPage(1);
+    };
+    
+    $scope.clearCategoryFilter = function(){
+        $scope.noticeCategories.forEach(function(el){
+            el.selected = false;
+        });
+        $scope.selectedNoticeCategories_list.caption = $scope.messages.defaultFilterCaption;
+        $scope.selectedNoticeCategories = [];
+        $scope.isSelectedAllCategories = false;
+    };
+    
+    $scope.clearDeviationFilter = function(){
+        $scope.noticeDeviations.forEach(function(el){
+            el.selected = false;
+        });
+        $scope.selectedNoticeDeviations_list.caption = $scope.messages.defaultFilterCaption;
+        $scope.selectedNoticeDeviations = [];
+        $scope.isSelectedAllDeviations = false;
     };
     
     //control visibles

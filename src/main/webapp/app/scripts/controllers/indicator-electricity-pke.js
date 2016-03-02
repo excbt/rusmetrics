@@ -1,10 +1,15 @@
 angular.module('portalNMC')
 .controller('ElectricityPkeCtrl', function($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $filter, notificationFactory, $window, $timeout){
-console.log("Run ElectricityPkeCtrl.");
+//console.log("Run ElectricityPkeCtrl.");
     $scope.electroKind = "Pke";
     
     $scope.pkeTypes = [];
     $scope.pkeData = [];
+        
+    $scope.defaultFilterCaption = "Все";
+    $scope.selectedPkeTypes_list = {
+        caption: $scope.defaultFilterCaption
+    };
     
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.loading = true;
@@ -125,13 +130,27 @@ console.log("Run ElectricityPkeCtrl.");
             if (elem.selected == true){
                 selectedTypes.push(elem);
             };
-        });      
+        });
+        if (selectedTypes.length == 0){
+            $scope.selectedPkeTypes_list.caption = $scope.defaultFilterCaption;
+        }else{
+            $scope.selectedPkeTypes_list.caption = selectedTypes.length;
+        };
         getPke(selectedTypes);
     };
     
     $scope.selectAllTypes = function(){
         var filteredTypes = $filter('filter')($scope.pkeTypes, $scope.pkeTypesFilter);       
         filteredTypes.forEach(function(elem){
+            elem.selected = $scope.isSelectedAllTypes;
+        });
+        $scope.getDataWithSelectedTypes();
+    };
+    
+    $scope.clearPkeTypeFilter = function(){
+        $scope.pkeTypesFilter = "";
+        $scope.isSelectedAllTypes = false;
+        $scope.pkeTypes.forEach(function(elem){
             elem.selected = $scope.isSelectedAllTypes;
         });
         $scope.getDataWithSelectedTypes();

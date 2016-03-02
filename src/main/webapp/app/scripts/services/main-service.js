@@ -3,7 +3,7 @@
 angular.module('portalNMC')
 .service('mainSvc', function($cookies, $http, $rootScope, $log, objectSvc, monitorSvc){
     var EMPTY_OBJECT = {};
-    $log.debug("Run main service. main service: row: 5");
+//    $log.debug("Run main service. main service: row: 5");
     //set services settings
     var mainSvcSettings = {};
     mainSvcSettings.subscrUrl = "../api/subscr";
@@ -159,7 +159,7 @@ angular.module('portalNMC')
     $http.get(userInfoUrl)
             .success(function(data, satus, headers, config){
                 $rootScope.userInfo = angular.copy(data);
-console.log($rootScope.userInfo);
+//console.log($rootScope.userInfo);
                 if (!checkUndefinedNull($rootScope.userInfo.subscriber)){
 //console.log($rootScope.userInfo.subscriber);                    
                     var mapSettings = {};

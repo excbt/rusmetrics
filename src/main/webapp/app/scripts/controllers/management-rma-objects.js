@@ -938,6 +938,21 @@ console.log($scope.currentObject);
                         return;
                     };
                     
+                                          //close all opened objects zpoints
+                    $scope.objectsOnPage.forEach(function(obj){
+                        if (obj.showGroupDetailsFlag == true){
+                            var trObj = document.getElementById("obj" + obj.id);
+                            if (!mainSvc.checkUndefinedNull(trObj)){                                    
+                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
+                                trObjZp.innerHTML = "";
+                                var btnDetail = document.getElementById("btnDetail" + obj.id);
+                                btnDetail.classList.remove("glyphicon-chevron-down");
+                                btnDetail.classList.add("glyphicon-chevron-right");
+                            };
+                        };
+                        obj.showGroupDetailsFlag = false;
+                    });
+                    
                     if (angular.isUndefined(searchString) || (searchString === '')){                      
                         var tempArr = [];
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;

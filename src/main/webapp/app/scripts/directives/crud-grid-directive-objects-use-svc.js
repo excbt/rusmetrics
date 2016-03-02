@@ -20,7 +20,7 @@ angular.module('portalNMC')
         controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc',
             function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc) {
                 
-console.log("Objects directive.");
+//console.log("Objects directive.");
                 
                     //messages for user
                 $scope.messages = {};
@@ -1045,7 +1045,7 @@ console.log("Objects directive.");
                 
                 var successZpointSummerCallback = function (e) {
                     notificationFactory.success();
-                    var tableWinter = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
+                    var tableWinter = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(tableWinter).update({ id: $scope.zpointSettings.winter.id }, $scope.zpointSettings.winter, successZpointWinterCallback, errorCallback);           
                 };
                 
@@ -1058,37 +1058,50 @@ console.log("Objects directive.");
                 
                 //Update the common zpoint setiing - for example, Name
                 $scope.updateZpointCommonSettings = function(){
-//console.log($scope.zpointSettings);                    
-                    var url = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id;
+                    var url = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id;
                     $http({
                         url: url,
                         method: 'PUT',
                         data: $scope.zpointSettings
                     })
                         .then(successCallbackOnZpointUpdate, errorCallback);
-//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
                 };
                 
                 //Update the zpoint settings, which set the mode for Summer or Winter season
                 $scope.updateZpointModeSettings = function(){                   
-                    var tableSummer = $scope.crudTableName+"/"+$scope.currentObject.id+"/zpoints/"+$scope.zpointSettings.id+"/settingMode";
+                    var tableSummer = $scope.crudTableName + "/" + $scope.currentObject.id + "/zpoints/" + $scope.zpointSettings.id + "/settingMode";
                     crudGridDataFactory(tableSummer).update({ id: $scope.zpointSettings.summer.id }, $scope.zpointSettings.summer, successZpointSummerCallback, errorCallback);
                 };
                 
                 // search objects
                 $scope.searchObjects = function(searchString){
-                    if (($scope.objects.length<=0)){
+                    if (($scope.objects.length <= 0)){
                         return;
                     };
                     
-                    if (angular.isUndefined(searchString) || (searchString==='')){                      
+                        //close all opened objects zpoints
+                    $scope.objectsOnPage.forEach(function(obj){
+                        if (obj.showGroupDetailsFlag == true){
+                            var trObj = document.getElementById("obj" + obj.id);
+                            if (!mainSvc.checkUndefinedNull(trObj)){                                    
+                                var trObjZp = trObj.getElementsByClassName("nmc-tr-zpoint")[0];                                                 
+                                trObjZp.innerHTML = "";
+                                var btnDetail = document.getElementById("btnDetail" + obj.id);
+                                btnDetail.classList.remove("glyphicon-chevron-down");
+                                btnDetail.classList.add("glyphicon-chevron-right");
+                            };
+                        };
+                        obj.showGroupDetailsFlag = false;
+                    });
+                    
+                    if (angular.isUndefined(searchString) || (searchString === '')){
+                        //
                         var tempArr = [];
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objectCtrlSettings.objectsPerScroll;
                         tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
                         $scope.objectsOnPage = tempArr;
-                    }else{
-                        var tempArr = [];
-                        
+                    }else{                        
+                        var tempArr = [];                        
                         $scope.objects.forEach(function(elem){
                             if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1){
                                 tempArr.push(elem);
@@ -1105,7 +1118,6 @@ console.log("Objects directive.");
                 
                 //keydown listener for ctrl+end
                 window.onkeydown = function(e){
-//console.log(e);                    
                     if (e.keyCode == 38){                        
                         var elem = document.getElementById("divWithObjectListTable");
                         elem.scrollTop = elem.scrollTop - 20;                        

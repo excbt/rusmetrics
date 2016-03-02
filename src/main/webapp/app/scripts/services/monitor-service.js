@@ -1,11 +1,11 @@
 'use strict';
 angular.module('portalNMC')
     .service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', function($rootScope, $http, $interval, $cookies, $location, objectSvc){
-console.log("Monitor service. Run Monitor service.");        
+//console.log("Monitor service. Run Monitor service.");        
                 //url to data
         var notificationsUrl = "../api/subscr/contEvent/notifications"; 
-        var objectUrl = notificationsUrl+"/contObject";
-        var cityWithObjectsUrl = objectUrl+"/cityStatusCollapse";
+        var objectUrl = notificationsUrl + "/contObject";
+        var cityWithObjectsUrl = objectUrl + "/cityStatusCollapse";
         
         var objectsMonitorSvc = [];
         var citiesMonitorSvc = [];
@@ -29,7 +29,7 @@ console.log("Monitor service. Run Monitor service.");
         var setMonitorSettings = function(monitorSettings){
 //            monitorSvcSettings = monitorSettings;
             for (var key in monitorSettings){
-                monitorSvcSettings[key]=monitorSettings[key];
+                monitorSvcSettings[key] = monitorSettings[key];
             };
         };
         
@@ -46,7 +46,7 @@ console.log("Monitor service. Run Monitor service.");
         };
         
         function getObjectsFromCities(cities){
-            if (angular.isUndefined(cities)||(cities == null)|| !angular.isArray(cities)){
+            if (angular.isUndefined(cities) || (cities == null) || !angular.isArray(cities)){
                 return false;
             };
             var resultObjectArray = [];
@@ -60,9 +60,9 @@ console.log("Monitor service. Run Monitor service.");
         
                     //get cities with objects function
         var getCitiesAndObjects = function(url, monitorSvcSettings){ 
-console.log("MonitorSvc. Get cities and objects");    
+//console.log("MonitorSvc. Get cities and objects");    
             monitorSvcSettings.loadingFlag = true;
-            var targetUrl = url+"/?fromDate="+monitorSvcSettings.fromDate+"&toDate="+monitorSvcSettings.toDate+"&noGreenColor="+monitorSvcSettings.noGreenObjectsFlag;
+            var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
 //console.log(targetUrl);  
 
             $http.get(targetUrl)
@@ -106,9 +106,9 @@ console.log("MonitorSvc. Get cities and objects");
         
             //get objects function
         var getObjects = function(url, monitorSvcSettings){ 
-console.log("MonitorSvc. Get objects");    
+//console.log("MonitorSvc. Get objects");    
             monitorSvcSettings.loadingFlag = true;
-            var targetUrl = url+"/statusCollapse?fromDate="+monitorSvcSettings.fromDate+"&toDate="+monitorSvcSettings.toDate+"&noGreenColor="+monitorSvcSettings.noGreenObjectsFlag;
+            var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
 //console.log(targetUrl);  
 
             $http.get(targetUrl)
@@ -159,14 +159,14 @@ console.log("MonitorSvc. Get objects");
     //        if (obj == null){
     //            return;
     //        };
-            var url = objectUrl+"/"+obj.contObject.id+"/monitorEvents";//+"?fromDate="+$rootScope.monitorStart+"&toDate="+$rootScope.monitorEnd;
+            var url = objectUrl + "/" + obj.contObject.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
             $http.get(url)
                 .success(function(data){
     //console.log("success");
 //console.log(data);                
                 //if data is not array - exit
-                    if (!data.hasOwnProperty('length')||(data.length == 0)){
-                        if (obj.statusColor==="YELLOW"){
+                    if (!data.hasOwnProperty('length') || (data.length == 0)){
+                        if (obj.statusColor === "YELLOW"){
                             obj.monitorEvents = "На объекте нет нештатных ситуаций";
                             $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
                         };
@@ -181,11 +181,11 @@ console.log("MonitorSvc. Get objects");
                         var tmpEvent = "";
                         var contEventTime = new Date(element.contEventTime);
                         var pstyle = "";
-                        if(element.contEventLevelColorKey==="RED"){
+                        if(element.contEventLevelColorKey === "RED"){
                             pstyle = "color: red;";
                         };
-                        tmpEvent ="<p style='"+pstyle+"'>"+ contEventTime.toLocaleString()+", "+element.contEventType.name+"</p>";
-                        tmpMessage+=tmpEvent;
+                        tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+                        tmpMessage += tmpEvent;
                     });
     //                tmpTypes.sort(function(a, b){
     //                    if (a.typeEventCount > b.typeEventCount){
@@ -197,14 +197,14 @@ console.log("MonitorSvc. Get objects");
     //                    return 0;
     //                });
 //console.log(tmpMessage);     
-                    if (obj.statusColor==="YELLOW"){
+                    if (obj.statusColor === "YELLOW"){
                         obj.monitorEvents = "На объекте нет нештатных ситуаций";
-                    }else if ((obj.statusColor==="RED")||(obj.statusColor==="ORANGE")){
+                    }else if ((obj.statusColor === "RED") || (obj.statusColor === "ORANGE")){
                         obj.monitorEvents = tmpMessage;
                         obj.monitorEventsForMap = data;
                     };
 //console.log(obj);                
-                    $rootScope.$broadcast('monitorObjects:getObjectEvents',{"obj":obj});
+                    $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
                     //Display message
     //                var imgObj = document.getElementById("imgObj"+obj.contObject.id);
     //                imgObj.title = obj.monitorEvents;
@@ -238,31 +238,31 @@ console.log("MonitorSvc. Get objects");
 
         //watch for the change of the refresh period
         $rootScope.$on('monitor:periodChanged', function () {
-console.log("MonitorSvc monitorSvcSettings.refreshPeriod watch");
+//console.log("MonitorSvc monitorSvcSettings.refreshPeriod watch");
             stopRefreshing();
             //set new interval
             interval = $interval(function(){
                 var time = (new Date()).toLocaleString();
-console.log(time);
+//console.log(time);
                 monitorSvcSettings.loadingFlag = true;
                 getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
-            },Number(monitorSvcSettings.refreshPeriod)*1000);
+            }, Number(monitorSvcSettings.refreshPeriod) * 1000);
 
         }, false);
         
             //Вызвываем с заданным периодом обновление монитора
         interval = $interval(function(){
             var time = (new Date()).toLocaleString();
-    console.log(time);
+//    console.log(time);
     //console.log(Number($scope.monitorSvcSettings.refreshPeriod));
             monitorSvcSettings.loadingFlag = true;
 //            getObjects(objectUrl, monitorSvcSettings);
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
-        },Number(monitorSvcSettings.refreshPeriod)*1000);
+        },Number(monitorSvcSettings.refreshPeriod) * 1000);
         
         
         $rootScope.$on('monitor:updateObjectsRequest',function(){
-console.log("MonitorSvc. monitor:updateObjectsRequest");            
+//console.log("MonitorSvc. monitor:updateObjectsRequest");            
 //            getObjects(objectUrl, monitorSvcSettings);
             getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
         });

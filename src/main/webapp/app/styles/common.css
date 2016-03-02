@@ -385,10 +385,23 @@ body{
 /*   Выпадающее меню - аля контекстное меню у объектов, приборов и т.п.*/
 .nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus{
     background-color: #D2D2D2 !important; 
-/*
-    background-color: #646263 !important; background color
-    color: #FFFFFF !important;
-*/
+}
+
+/* Выпадающее меню "Действие над уведомлениями"*/
+.nmc-dropdown-toggle-notices{
+    height: 15px; 
+    font-size: 8px; 
+    width: 15px; 
+    padding-left: 2px; 
+    margin-bottom: 6px;
+}
+
+.nmc-dropdown-toggle-filter{
+    
+}
+
+.nmc-dropdown-toggle-filter:hover{
+    background-color: #fff;
 }
     
 .submenu{
@@ -879,6 +892,7 @@ tr.nmc-inactive-price > td{
     padding: 5px;
     border-left-width: 0px;
     float: none !important;
+    border-radius: 0;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -888,6 +902,25 @@ tr.nmc-inactive-price > td{
     border-right-width: 0px;
     height: 25px;
 }
+
+/* Фильтры */
+.nmc-filter-form {
+    font-size: 12px;
+    height: 26px;
+    padding: 5px;
+/*    border-width: 0px;*/
+    float: none !important;
+/*    border-radius: 0;*/
+}
+
+    /* Приписка перед интервалом дат - изначально там буква "с"*/
+.nmc-filter-form-addon{
+    background-color: white;
+    padding: 0px 6px;
+    border-width: 0px;
+    height: 25px;
+}
+
 /* Страница Уведомления - строка с фильтрами*/
     /* Стиль для дива, содержащего фильтр по интервалу дат*/
 .nmc-div-filter-date-interval{
@@ -980,7 +1013,8 @@ tr.nmc-inactive-price > td{
     font-size: 12px;
     height: 25px;
     padding: 0;
-    background-color: #fff;
+/*    background-color: #fff;*/
+    background-color: #f9dd72;
 }
 
 /*  текст перед контролом input*/
@@ -1271,6 +1305,24 @@ tr.nmc-inactive-price > td{
 .nmc-button-in-table-question{
 /*    color: red;*/
     width: 24px;
+}
+
+/* Кнопка "Очистить фильтр" на странице уведомлений*/
+.nmc-button-clear-filter{
+/*    background-color: #f9dd72;*/
+}
+
+.nmc-img-clear-filter{
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.nmc-button-clear-filter-full{
+    height: 19px;
+    width: 19px;
+    background-color: #f9dd72;
+    background-image: url('../images/clear-filter.png');
+    background-repeat: no-repeat;
 }
 
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/

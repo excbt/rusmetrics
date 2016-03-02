@@ -1,5 +1,5 @@
 angular.module('portalNMC')
-.service('indicatorSvc',function(){
+.service('indicatorSvc', function(){
     var contObjectId = null;
     var contZpointId = null;
     var contObjectName = null;
