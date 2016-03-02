@@ -171,7 +171,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     $scope.getParamsets = function(table, type){
         crudGridDataFactory(table).query(function (data) {
             type.paramsetsCount = data.length;
-            type.checkedParamsets = 0;
+            type.checkedParamsetsCount = 0;
             var tmp = angular.copy(data);
             tmp.forEach(function(el){
                 var currentSign = el.reportPeriod.sign;
@@ -439,7 +439,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             var tmpCheck = reportSvc.checkPSRequiredFieldsOnSave(type, paramset, $scope.currentSign, "run"); //$scope.checkPSRequiredFieldsOnSave(type, paramset);
             paramset.checkFlag = tmpCheck.flag;
             paramset.messageForUser = tmpCheck.message;
-            type.checkedParamsets += 1;
+            type.checkedParamsetsCount += 1;
         });
     };
     

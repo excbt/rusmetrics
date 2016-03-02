@@ -1013,8 +1013,9 @@ tr.nmc-inactive-price > td{
     font-size: 12px;
     height: 25px;
     padding: 0;
-/*    background-color: #fff;*/
-    background-color: #f9dd72;
+    background-color: #fff;
+    border-radius: 4px !important;
+/*    background-color: #f9dd72;*/
 }
 
 /*  текст перед контролом input*/

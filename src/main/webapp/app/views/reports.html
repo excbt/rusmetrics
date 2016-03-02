@@ -40,7 +40,10 @@
 <div class="nmc-report-main-div_close">
     <table id="datatabl" class="table  table-condensed noMarginBottom nmc-table-container">
                 <!--  Постороение таблицы с данными  -->
-                    <tr ng-repeat="object in curCategory.reportTypes | resourceCategoryFilter: currentResourceCategory" ng-click="" ng-dblclick="">
+                    <tr ng-repeat="object in curCategory.reportTypes | resourceCategoryFilter: currentResourceCategory" 
+                        ng-click="" 
+                        ng-dblclick=""
+                        ng-show="object.paramsetsCount && object.paramsetsCount == object.checkedParamsetsCount">
 <!--                        <td style="padding:0;">-->
                             <td>
                             <table class="crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
