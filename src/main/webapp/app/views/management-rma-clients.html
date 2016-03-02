@@ -29,7 +29,7 @@
             <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 {{column.caption}}
                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>
@@ -44,7 +44,7 @@
             <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 {{column.caption}}
                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>

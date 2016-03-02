@@ -170,7 +170,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
         //console.log($scope.psEndDateFormatted);
                 }
             //settings for activate tab "Main options", when edit window opened.
-                $scope.set_of_objects_flag=false;
+                $scope.set_of_objects_flag = false;
                 $scope.showAvailableObjects_flag = false;
         //        $('#main_properties_tab').addClass("active");
         //        $('#set_of_objects_tab').removeClass("active");

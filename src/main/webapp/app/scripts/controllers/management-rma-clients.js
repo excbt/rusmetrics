@@ -3,7 +3,7 @@ angular.module('portalNMC')
 .controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http','objectSvc', 'notificationFactory', 'crudGridDataFactory', 'mainSvc', function($rootScope, $scope, $http, objectSvc, notificationFactory, crudGridDataFactory, mainSvc){
 //console.log('Run Client management controller.');
     $rootScope.ctxId = "management_rma_clients_page";
-    $scope.extraProps = {"idColumnName":"id", "defaultOrderBy" : "fullName", "nameColumnName":"fullName"};//angular.fromJson($attrs.exprops);
+    $scope.extraProps = {"idColumnName" : "id", "defaultOrderBy" : "subscriberName", "nameColumnName" : "subscriberName"}; 
     $scope.orderBy = { field: $scope.extraProps["defaultOrderBy"], asc: true};
     
     //controller settings
@@ -101,6 +101,11 @@ angular.module('portalNMC')
     $scope.addClient = function(){
         $scope.data.currentClient = {};
         $('#showClientOptionModal').modal();
+    };
+    
+    $scope.setOrderBy = function(field){      
+        var asc = $scope.orderBy.field === field ? !$scope.orderBy.asc : true;
+        $scope.orderBy = { field: field, asc: asc };
     };
     
     // get timezones
