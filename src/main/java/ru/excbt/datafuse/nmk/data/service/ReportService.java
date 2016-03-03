@@ -455,6 +455,10 @@ public class ReportService {
 			result = ReportType.RPT_HW_QUALITY;
 			break;
 		}
+		case COMMERCE_REPORT_M_V: {
+			result = ReportType.RPT_COMMERCE_M_V;
+			break;
+		}
 		default: {
 			break;
 		}
