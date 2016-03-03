@@ -62,6 +62,15 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     $scope.allSelected = false;
     
+    $scope.states.isSelectedAllObjects = true;
+    $scope.states.isSelectedAllCategories = true;
+    $scope.states.isSelectedAllDeviations = true;
+    $scope.states.isSelectedAllTypes = true;
+    
+    $scope.states.isSelectedAllObjectsInWindow = true;
+    $scope.states.isSelectedAllCategoriesInWindow = true;
+    $scope.states.isSelectedAllDeviationsInWindow = true;
+    $scope.states.isSelectedAllTypesInWindow = true;
     
     $scope.messages.defaultFilterCaption = "Все";
     $scope.selectedObjects_list = {};//object for object caption params
@@ -384,7 +393,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
 //console.log($scope.objects); 
-//        $scope.isShowObjects = !$scope.isShowObjects;        
+//        $scope.isShowObjects = !$scope.isShowObjects;  
+        $scope.states.isSelectedAllObjectsInWindow = angular.copy($scope.states.isSelectedAllObjects);
         if ($scope.ctrlSettings.showGroupsFlag == false){
             $scope.objectsInWindow = angular.copy($scope.objects);
         }else{
@@ -430,6 +440,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.selectNoticeCategoriesClick = function(){
         //Create the copy of categories
         $scope.categoriesInWindow = angular.copy($scope.noticeCategories);
+        $scope.states.isSelectedAllCategoriesInWindow = angular.copy($scope.states.isSelectedAllCategories);
     };
     
     $scope.selectedNoticeDeviationsClick = function(){
@@ -451,8 +462,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         if ($scope.selectedObjects.length == 0){
             $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllObjects = true;
         }else{
             $scope.selectedObjects_list.caption = $scope.selectedObjects.length;
+            $scope.states.isSelectedAllObjects = false;
         };
     };
     
@@ -505,7 +518,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.selectedObjects_list.caption = "";
         $scope.selectedGroups = [];
         $scope.selectedObjects = [];
-        $('#selectObjectsModal').modal('hide');
+//        $('#selectObjectsModal').modal('hide');
         $scope.groups = $scope.objectsInWindow;
         
         var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.groups);   
@@ -529,8 +542,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         if ($scope.selectedGroups.length == 0){
             $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllObjects = true;
         }else{
             $scope.selectedObjects_list.caption = $scope.selectedGroups.length;
+            $scope.states.isSelectedAllObjects = false;
         };
     };
       
@@ -810,13 +825,36 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             });
         };      
     };
+    
+//    $scope.selectAllElements = function(elements, filter, flag, label){     
+//        var filteredElements = $filter('filter')(elements, filter);       
+//        filteredElements.forEach(function(elem){
+//            elem.selected = false;
+//        });
+//        (flag) ? label.caption = $scope.messages.defaultFilterCaption : label.caption = $scope.messages.defaultFilterCaption;        
+//    };
         
-    $scope.selectAllElements = function(elements, filter, flag, label){     
-        var filteredElements = $filter('filter')(elements, filter);       
-        filteredElements.forEach(function(elem){
-            elem.selected = flag;
+    $scope.selectAllElements = function(elements){           
+        elements.forEach(function(elem){
+            elem.selected = false;
         });
-        (flag) ? label.caption = filteredElements.length : label.caption = $scope.messages.defaultFilterCaption;        
+    };
+    
+    
+    $scope.selectElement = function(flagName){
+        $scope.states[flagName] = false;        
+        return false;
+    };
+    
+    $scope.isFilterApplyDisabled = function(checkElements, checkFlag){
+        if (checkFlag == true){
+            return false;
+        };
+        return !checkElements.some(function(elem){
+            if (elem.selected == true){
+                return true;
+            };
+        });
     };
     
 //control revision / new notices (Просмотренные/новые увеодомления)
@@ -935,7 +973,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedObjects = [];
         $scope.selectedGroups = [];
-        $scope.isSelectedAllObjects = false;
+        $scope.states.isSelectedAllObjects = true;
     };
     
     $scope.clearTypeFilter = function(){       
@@ -955,7 +993,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         $scope.selectedNoticeCategories_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedNoticeCategories = [];
-        $scope.isSelectedAllCategories = false;
+        $scope.states.isSelectedAllCategories = true;
     };
     
     $scope.clearDeviationFilter = function(){
