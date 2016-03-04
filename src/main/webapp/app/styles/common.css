@@ -388,9 +388,15 @@ body{
 }
 
 /*  Выпадающее меню фильтров*/
+.nmc-dropdown-menu-filter{
+    min-width: 280px;
+    max-width: 600px;
+}
+/*
 .nmc-dropdown-menu-filter > li{
     min-width: 250px;
 }
+*/
 
 /* Выпадающее меню "Действие над уведомлениями"*/
 .nmc-dropdown-toggle-notices{
@@ -849,9 +855,10 @@ tr.nmc-inactive-price > td{
 }
 /* метка для элемента выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
 .nmc-label-dropdown{
-    padding: 3px 20px;
+    padding: 0px 20px;
     white-space: nowrap;
-    font-weight: normal
+    font-weight: normal;
+    margin: 0;
 }
  
 /* поле поиска */
@@ -1005,6 +1012,10 @@ tr.nmc-inactive-price > td{
   }
 }
 */
+/*  Группа элементов для фильтра*/
+.nmc-input-group-filter{
+/*    position: absolute;*/
+}
 
 /* ввод строки */
 .nmc-text-input-form {
@@ -1017,8 +1028,8 @@ tr.nmc-inactive-price > td{
     font-size: 12px;
     height: 25px;
     padding: 5px;
-    width: 66% !important;
-    margin-right: 1.5em;
+/*    width: 66% !important;*/
+/*    margin-right: 1.5em;*/
 }
 
 /*  кнопка позади контрола input*/
@@ -1058,7 +1069,7 @@ tr.nmc-inactive-price > td{
 /* Чекбокс выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
 .nmc-checkbox-dropdown{
     position: absolute; 
-    margin-top: 8px !important;
+    margin-top: 4px !important;
 }
 
 /* Недоступный чекбокс*/
@@ -1529,7 +1540,7 @@ tr.nmc-inactive-price > td{
 
 .nmc-object-filter-in-notices, .nmc-types-filter-in-notices{
     overflow-y: auto;
-    max-height: 250px;
+    max-height: 520px;
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
@@ -1742,16 +1753,19 @@ tr.nmc-inactive-price > td{
     border-right: 1px solid black;
 }
 
-.nmc-vdivide{
-  background: #e0e0e0;
-  width: 1px;
-  content: "";
-  display:block;
-  position: absolute;
-  top:5px;
-  bottom: 200px;
-  right: 55px;
-  min-height: 25px;
+.nmc-vdivide {
+    /* background: #e0e0e0; */
+    /* width: 5px; */
+    /* content: ""; */
+/*    display: inline;*/
+    /* position: absolute; */
+    /* top: 5px; */
+    /* bottom: 200px; */
+    /* right: 55px; */
+    /* min-height: 25px; */
+    height: 25px;
+/*    margin: 0 9px;*/
+    border-left: 1px solid #e0e0e0;
 }
 
 .nmc-textfield{

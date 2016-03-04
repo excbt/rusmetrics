@@ -630,12 +630,6 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
               
     }, false);
     
-    
-    $scope.isSystemuser = function(){
-        $scope.userInfo = $rootScope.userInfo;
-        return $scope.userInfo._system;
-    };
-    
     $scope.isDisabled = function(){
 //console.log($scope.currentObject.common || !$scope.currentObject._active);        
 //        return $scope.currentObject.common || !$scope.currentObject._active;

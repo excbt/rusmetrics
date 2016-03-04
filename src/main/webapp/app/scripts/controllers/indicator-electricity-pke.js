@@ -5,6 +5,10 @@ angular.module('portalNMC')
     
     $scope.pkeTypes = [];
     $scope.pkeData = [];
+    
+    $scope.states = {};
+    $scope.states.isSelectedAllPkeTypes = true;    
+    $scope.states.isSelectedAllPkeTypesInWindow = true;
         
     $scope.defaultFilterCaption = "Все";
     $scope.selectedPkeTypes_list = {
@@ -85,6 +89,7 @@ angular.module('portalNMC')
         $http.get(pkeTypesUrl)
         .then(function(resp){
             $scope.pkeTypes = angular.copy(resp.data); 
+            $scope.pkeTypesInWindow = angular.copy(resp.data);
             getPke();            
         },
              errorCallback);
@@ -117,7 +122,10 @@ angular.module('portalNMC')
                     };
                 });
             });
-            $scope.ctrlSettings.loading = false; 
+            $scope.ctrlSettings.loading = false;
+            $timeout(function(){
+                $scope.setScoreStyles();
+            }, 10);
         },
              errorCallback);
     };
@@ -125,6 +133,11 @@ angular.module('portalNMC')
     getPkeTypes();
     
     $scope.getDataWithSelectedTypes = function(){
+        if (!angular.isArray($scope.pkeTypesInWindow)){
+            getPke();
+        };
+        $scope.pkeTypes = angular.copy($scope.pkeTypesInWindow);
+        $scope.states.isSelectedAllPkeTypes = angular.copy($scope.states.isSelectedAllPkeTypesInWindow);
         var selectedTypes = [];
         $scope.pkeTypes.forEach(function(elem){
             if (elem.selected == true){
@@ -139,6 +152,12 @@ angular.module('portalNMC')
         getPke(selectedTypes);
     };
     
+    $scope.selectPkeTypesClick = function(){
+        //Create the copy of categories
+        $scope.pkeTypesInWindow = angular.copy($scope.pkeTypes);
+        $scope.states.isSelectedAllPkeTypesInWindow = angular.copy($scope.states.isSelectedAllPkeTypes);
+    };
+    
     $scope.selectAllTypes = function(){
         var filteredTypes = $filter('filter')($scope.pkeTypes, $scope.pkeTypesFilter);       
         filteredTypes.forEach(function(elem){
@@ -147,16 +166,45 @@ angular.module('portalNMC')
         $scope.getDataWithSelectedTypes();
     };
     
+    $scope.selectAllElements = function(elements){           
+        elements.forEach(function(elem){
+            elem.selected = false;
+        });
+    };
+        
+    $scope.selectElement = function(flagName){
+        $scope.states[flagName] = false;        
+        return false;
+    };
+    
+    $scope.isFilterApplyDisabled = function(checkElements, checkFlag){
+        if (!angular.isArray(checkElements) || mainSvc.checkUndefinedNull(checkFlag)){
+            return false;
+        };
+        if (checkFlag == true){
+            return false;
+        };
+        return !checkElements.some(function(elem){
+            if (elem.selected == true){
+                return true;
+            };
+        });
+    };
+    
     $scope.clearPkeTypeFilter = function(){
         $scope.pkeTypesFilter = "";
         $scope.isSelectedAllTypes = false;
-        $scope.pkeTypes.forEach(function(elem){
-            elem.selected = $scope.isSelectedAllTypes;
+        $scope.pkeTypesInWindow.forEach(function(elem){
+            elem.selected = false;
         });
+        $scope.states.isSelectedAllPkeTypesInWindow = true;
         $scope.getDataWithSelectedTypes();
     };
     
     $scope.$watch('indicatorPkeDates', function(newDates, oldDates){
+//console.log(newDates);
+//console.log(oldDates);        
+//        if (newDates.startDate == oldDates)
         $scope.getDataWithSelectedTypes();
     });
     
@@ -196,4 +244,10 @@ angular.module('portalNMC')
     $timeout(function(){
         $scope.setScoreStyles();
     }, 500);
+    
+    //controller initialization
+    $scope.initCtrl = function(){
+        $scope.pkeTypesInWindow = angular.copy($scope.pkeTypes);
+    };
+    $scope.initCtrl();
 });

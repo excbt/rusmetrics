@@ -84,50 +84,84 @@
                             <div class="input-group nmc-input-data">
                                 <span class="input-group-addon nmc-filter-form-addon" 
                                       id="leftAddon" 
-                                      ng-click="selectNoticeTypesClick()">Типы:
+                                      >Типы:
                                 </span>
                                 <div class="btn-group">
                                     <button 
                                             data-toggle="dropdown" 
                                             class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"                                            
                                             data-placeholder="false"
-                                            ng-class="{'paddingLeft20': selectedPkeTypes_list.caption != defaultFilterCaption}"> 
+                                            ng-class="{'paddingLeft20': selectedPkeTypes_list.caption != defaultFilterCaption}"
+                                            ng-click="selectPkeTypesClick()"> 
                                         {{selectedPkeTypes_list.caption}}
+                                        <i ng-if="selectedPkeTypes_list.caption != defaultFilterCaption" 
+                                           class="fa fa-angle-double-down fa-lg">
+                                        </i>
+<!--
                                         <img ng-if="selectedPkeTypes_list.caption != defaultFilterCaption" height="22" width="22" 
                                              src="images/plain-flat-double-chevron-down-arrow.png"
                                              style="margin-top: -4px"/>
+-->
                                     </button>
-                                    <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu noclose">
+                                    <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu nmc-dropdown-menu-filter noclose">
                                         <li class="paddingLeft5 marginBottom5">
-                                          <input class="form-control nmc-text-input-form" 
-                                                 type="text" 
-                                                 ng-model="pkeTypesFilter"
-                                                 style="float: none;"/>
+                                            <div class="row">
+                                                <div class="col-xs-8 col-md-8">
+                                                    <div class="input-group nmc-input-group-filter">
+                                                      <span class="input-group-addon nmc-search-form-addon" 
+                                                            id="pkeTypesFilter-addon">
+                                                          <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                                          </i>
+                                                      </span>
+                                                      <input class="form-control nmc-text-input-notice-filter-form" 
+                                                             type="text"
+                                                             aria-describedly="pkeTypesFilter-addon"
+                                                             ng-model="pkeTypesFilter"
+                                                         />
+                                                    </div>                              
+                                                </div>
+                                                <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                                <div class="col-xs-2 col-md-2">
+                                                  <p title="Применить фильтр" 
+                                                    type="submit" 
+                                                    class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                                    ng-click="getDataWithSelectedTypes();"
+                                                    value="Ок" 
+                                                    style=""
+                                                    ng-disabled="isFilterApplyDisabled(pkeTypesInWindow, states.isSelectedAllPkeTypesInWindow)">
+                                                        OK
+                                                        <i class="glyphicon glyphicon-filter">
+                                                        </i>
+                                                  </p>
+                                                </div>
+                                            </div>
                                         </li>
+                                        <li role="separator" class="divider"></li>
                                         <li class="paddingLeft5 nmc-li-select-all"                                   
                                              >
                                             <input type="checkbox" 
                                                   ng-attr-id={{"idTypesAll"}} 
                                                   ng-attr-name={{"nameTypesAll"}} 
                                                   ng-attr-value={{"allTypes"}} 
-                                                  ng-model="isSelectedAllTypes"
+                                                  ng-model="states.isSelectedAllPkeTypesInWindow"
                                                   class="nmc-checkbox-dropdown"
-                                                   ng-click="selectAllTypes()"
+                                                   ng-click="selectAllElements(pkeTypesInWindow)"
                                                   />
                                            <label ng-attr-for={{"idTypesAll"}}
                                                   class="nmc-label-dropdown"
                                                   >
-                                              Выбрать / Отменить все
+                                              Выбрать все
                                            </label>
                                         </li>
-                                        <li class="paddingLeft5" ng-repeat="pkeType in pkeTypes | filter: pkeTypesFilter">
+                                        <li role="separator" class="divider"></li>
+                                        <li class="paddingLeft5" ng-repeat="pkeType in pkeTypesInWindow | filter: pkeTypesFilter">
                                             <input type="checkbox" 
                                                    ng-attr-id={{"idPkeType"+pkeType.keyname}} 
                                                    ng-attr-name={{"namePkeType"+type.keyname}} 
                                                    ng-attr-value={{pkeType.keyname}} 
                                                    ng-model="pkeType.selected"
                                                    class="nmc-checkbox-dropdown"
-                                                   ng-click="getDataWithSelectedTypes()"
+                                                   ng-click="selectElement('isSelectedAllPkeTypesInWindow')"
                                                    />
                                            <label ng-attr-for={{"idPkeType"+pkeType.keyname}}
                                                   class="nmc-label-dropdown">

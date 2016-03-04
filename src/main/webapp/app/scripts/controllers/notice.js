@@ -2,6 +2,26 @@
 
 var app = angular.module('portalNMC');
 
+app.filter('filterByCategories', function(){
+    return function(items, props){
+        if (!angular.isArray(props) || (props.length == 0)){
+            return items;
+        };
+        var filteredTypesByCategories = [];
+        items.forEach(function(type){
+            var isTypeInCategory = props.some(function(category){
+                if (type.contEventCategoryKeyname == category.keyname){
+                    return true;
+                };
+            });
+            if (isTypeInCategory == true){
+                filteredTypesByCategories.push(type);
+            };
+        });
+        return filteredTypesByCategories;
+    };
+});
+
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter){
 //console.log("Load NoticeCtrl."); 
     $rootScope.ctxId = "notice_page";
@@ -138,10 +158,16 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     $scope.selectedNoticeDeviations = [];
     
     $scope.notices = [];
+    $scope.noticesPromise = null;
+    $scope.currentNotices = null;
     $scope.totalNotices = 0;
     $scope.noticesPerPage = 25; // this should match however many results your API puts on one page
     
     $scope.groups = [];
+    
+    $scope.isSystemuser = function(){       
+        return mainSvc.isSystemuser();
+    };
     
     //Controller initialization
     //use to redirect from the Monitor page
@@ -216,7 +242,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         if (!mainSvc.checkUndefinedNull(isNew)){
             params.isNew = isNew;
         };        
-        return $resource(table, {}, {'get':{method:'GET', params:params}});
+        return $resource(table, {}, {'get': {method:'GET', params:params, cancellable: true}});
     };
     
     $scope.pagination = {
@@ -249,6 +275,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             oneNotice = {};
             oneNotice.id = el.id;
             var noticeCaption = el.contEvent.contEventType.caption || el.contEvent.contEventType.name;
+            oneNotice.contEventCategoryKeyname = el.contEventCategoryKeyname;
             oneNotice.noticeType = noticeCaption;//el.contEvent.contEventType.caption;
             oneNotice.isBaseEvent = el.contEvent.contEventType.isBaseEvent;
             oneNotice.noticeMessage = el.contEvent.message;//+" ("+el.contEvent.id+")";  
@@ -352,16 +379,23 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log($scope.selectedObjects); 
 //console.log($scope.selectedNoticeTypes);  
 //console.log($scope.isNew);    
-//console.log("88888888888888888888 the end ***********************");        
-        getNotices(url, 
+//console.log("88888888888888888888 the end ***********************");
+        
+//        if (($scope.noticesPromise != null) && ($scope.currentNotices != null)){ 
+//console.log($scope.noticesPromise);            
+//console.log($scope.currentNotices);                        
+//            $scope.noticesPromise.cancelRequest($scope.currentNotices);
+//        };
+        $scope.noticesPromise = getNotices(url, 
                    $scope.startDate, 
                    $scope.endDate, 
                    $scope.selectedObjects, 
                    $scope.selectedNoticeTypes, 
                    $scope.selectedNoticeCategories,
                    $scope.selectedNoticeDeviations,
-                   $scope.isNew)
-            .get(function(data){          
+                   $scope.isNew);
+        
+        $scope.currentNotices = $scope.noticesPromise.get(function(data){          
                         var result = [];
                         $scope.data= data;
                         var oneNotice = {};
@@ -423,8 +457,18 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.states.tempCriticalTypes_flag = angular.copy($scope.states.criticalTypes_flag);
         $scope.states.tempNoCriticalTypes_flag = angular.copy($scope.states.noCriticalTypes_flag);
         $scope.states.tempUndefinedCriticalTypes_flag = angular.copy($scope.states.undefinedCriticalTypes_flag);
+        
+        //apply category filter
+        var categories = angular.copy($scope.noticeCategories);
+        $scope.selectedCategories = [];        
+        $scope.noticeCategories.forEach(function(cat){
+            if (cat.selected == true){
+                $scope.selectedCategories.push(cat);
+            };
+        });
         //Create the copy of types
-        $scope.typesInWindow = angular.copy($scope.noticeTypes);
+        $scope.typesInWindow = angular.copy($scope.noticeTypes);        
+        $scope.states.isSelectedAllTypesInWindow = angular.copy($scope.states.isSelectedAllTypes);
         //аналогично функции $scope.selectObjectsClick
 //        if (!$scope.states.applyTypes_flag){
 //            $scope.noticeTypes.forEach(function(el){
@@ -443,16 +487,17 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.states.isSelectedAllCategoriesInWindow = angular.copy($scope.states.isSelectedAllCategories);
     };
     
-    $scope.selectedNoticeDeviationsClick = function(){
+    $scope.selectNoticeDeviationsClick = function(){
         //Create the copy of deviations
         $scope.deviationsInWindow = angular.copy($scope.noticeDeviations);
+        $scope.states.isSelectedAllDeviationsInWindow = angular.copy($scope.states.isSelectedAllDeviations);
     };
     
     function performObjectsFilter(){
         $scope.selectedObjects_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedObjects = [];
 //        $('#selectObjectsModal').modal('hide');
-        $scope.objects = $scope.objectsInWindow;
+        $scope.objects = angular.copy($scope.objectsInWindow);
 
         $scope.objects.map(function(el){
           if(el.selected){
@@ -519,7 +564,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.selectedGroups = [];
         $scope.selectedObjects = [];
 //        $('#selectObjectsModal').modal('hide');
-        $scope.groups = $scope.objectsInWindow;
+        $scope.groups = angular.copy($scope.objectsInWindow);
         
         var totalGroupObjects = $scope.joinObjectsFromSelectedGroups($scope.groups);   
 //console.log(totalGroupObjects);            
@@ -562,7 +607,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     function performNoticeTypesFilter(){
-        $scope.noticeTypes = $scope.typesInWindow;
+        $scope.noticeTypes = angular.copy($scope.typesInWindow);
 
         $scope.states.criticalTypes_flag = $scope.states.tempCriticalTypes_flag;
         $scope.states.noCriticalTypes_flag = $scope.states.tempNoCriticalTypes_flag;
@@ -580,8 +625,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //        $scope.selectedNoticeTypes_list.caption = $scope.selectedNoticeTypes.length;
         if ($scope.selectedNoticeTypes.length == 0){
             $scope.selectedNoticeTypes_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllTypes = true;
         }else{
             $scope.selectedNoticeTypes_list.caption = $scope.selectedNoticeTypes.length;
+            $scope.states.isSelectedAllTypes = false;
         };
     };
     
@@ -594,7 +641,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     function performNoticeCategoriesFilter(){
-        $scope.noticeCategories = $scope.categoriesInWindow;        
+        $scope.noticeCategories = angular.copy($scope.categoriesInWindow);        
         $scope.selectedNoticeCategories_list.caption = "";
         $scope.selectedNoticeCategories = [];        
         $scope.noticeCategories.map(function(el){
@@ -604,8 +651,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         if ($scope.selectedNoticeCategories.length == 0){
             $scope.selectedNoticeCategories_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllCategories = true;
         }else{
             $scope.selectedNoticeCategories_list.caption = $scope.selectedNoticeCategories.length;
+            $scope.states.isSelectedAllCategories = false;
         };
     };
     
@@ -615,7 +664,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     function performNoticeDeviationFilter(){      
-        $scope.noticeDeviations = $scope.deviationsInWindow;
+        $scope.noticeDeviations = angular.copy($scope.deviationsInWindow);
         $scope.selectedNoticeDeviations_list.caption = "";
         $scope.selectedNoticeDeviations = [];        
         $scope.noticeDeviations.map(function(el){
@@ -625,8 +674,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         if ($scope.selectedNoticeDeviations.length == 0){
             $scope.selectedNoticeDeviations_list.caption = $scope.messages.defaultFilterCaption;
+            $scope.states.isSelectedAllDeviations = true;
         }else{
             $scope.selectedNoticeDeviations_list.caption = $scope.selectedNoticeDeviations.length;
+            $scope.states.isSelectedAllDeviations = false;
         };
     };
     
@@ -985,6 +1036,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         $scope.selectedNoticeTypes_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedNoticeTypes = [];
+        $scope.states.isSelectedAllTypes = true;
     };
     
     $scope.clearCategoryFilter = function(){
@@ -1002,7 +1054,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         });
         $scope.selectedNoticeDeviations_list.caption = $scope.messages.defaultFilterCaption;
         $scope.selectedNoticeDeviations = [];
-        $scope.isSelectedAllDeviations = false;
+        $scope.states.isSelectedAllDeviations = true;
     };
     
     //control visibles
