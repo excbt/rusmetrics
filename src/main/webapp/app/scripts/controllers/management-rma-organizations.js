@@ -23,16 +23,6 @@ angular.module('portalNMC')
             "type": "name"
         },
         {
-            "name": "organizationDecription",
-            "caption": "Описание",
-            "class": "col-xs-3 col-md-3"
-        },
-        {
-            "name": "organizationFullAddress",
-            "caption": "Полный адрес",
-            "class": "col-xs-2 col-md-2"
-        },
-        {
             "name": "flagRso",
             "caption": "РСО",
             "class": "col-xs-1 col-md-1",
@@ -43,7 +33,18 @@ angular.module('portalNMC')
             "caption": "УК",
             "class": "col-xs-1 col-md-1",
             "type": "checkbox"
+        },
+        {
+            "name": "organizationDecription",
+            "caption": "Описание",
+            "class": "col-xs-3 col-md-3"
+        },
+        {
+            "name": "organizationFullAddress",
+            "caption": "Полный адрес",
+            "class": "col-xs-2 col-md-2"
         }
+
     ];
     //data
     $scope.data={};

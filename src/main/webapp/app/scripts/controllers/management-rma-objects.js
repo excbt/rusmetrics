@@ -498,10 +498,7 @@ angular.module('portalNMC')
                 $scope.selectedObject = function(objId){
                     objectSvc.getRmaObject(objId)
                     .then(function(resp){
-                        $scope.currentObject = resp.data;
-                    
-                    // $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
-console.log($scope.currentObject);                    
+                        $scope.currentObject = resp.data;                    
                         if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)){
                                 $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                         };
