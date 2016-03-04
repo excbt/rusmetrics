@@ -68,12 +68,28 @@ angular.module('portalNMC')
         });
     };
     
+    var sortOrganizationsByName = function(orgArr){
+        if (!angular.isArray(orgArr)){
+            return "Param is not array.";
+        };
+        orgArr.sort(function(a, b){
+            if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
+                return 1;
+            };
+            if (a.organizationName.toUpperCase() < b.organizationName.toUpperCase()){
+                return -1;
+            };
+            return 0;
+        });
+    };
+    
     //get organizations
     var getOrganizations = function(){
         var targetUrl = $scope.ctrlSettings.orgUrl
         $http.get(targetUrl)
         .then(function(response){
             $scope.data.organizations =  response.data;
+            sortOrganizationsByName($scope.data.organizations);
 //console.log($scope.data.organizations);
             getClients();
         },
