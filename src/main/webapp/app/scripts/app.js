@@ -230,6 +230,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-price.html',
         controller: 'MngmtPriceCtrl'
       })
+      .when('/management/organizations', {
+        templateUrl: 'views/management-rma-organizations.html',
+        controller: 'MngmtOrganizationsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
