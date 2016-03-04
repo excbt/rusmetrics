@@ -66,12 +66,14 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Column(name = "keyname")
 	private String keyname;
 
-	@Column(name = "is_dev_mode")
+	@Column(name = "is_dev_mode", insertable = false, updatable = false)
 	private Boolean isDevMode;
 
-	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+	@Column(name = "organization_description")
+	private String organizationDecription;
 
 	public String getExCode() {
 		return exCode;
@@ -171,5 +173,13 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	@Override
 	public void setDeleted(int deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getOrganizationDecription() {
+		return organizationDecription;
+	}
+
+	public void setOrganizationDecription(String organizationDecription) {
+		this.organizationDecription = organizationDecription;
 	}
 }

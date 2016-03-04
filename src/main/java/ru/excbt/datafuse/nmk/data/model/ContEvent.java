@@ -73,6 +73,9 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 	@Version
 	private int version;
 
+	@Column(name = "cont_event_deviation")
+	private String contEventDeviationKeyname;
+
 	public ContObject getContObject() {
 		return contObject;
 	}
@@ -143,6 +146,10 @@ public class ContEvent extends AbstractPersistableEntity<Long> {
 
 	public void setContZPointId(Long contZPointId) {
 		this.contZPointId = contZPointId;
+	}
+
+	public String getContEventDeviationKeyname() {
+		return contEventDeviationKeyname;
 	}
 
 }

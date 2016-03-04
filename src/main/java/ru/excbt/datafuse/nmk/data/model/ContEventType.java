@@ -56,8 +56,11 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements De
 	@Column(name = "cont_event_level")
 	private Integer contEventLevel;
 
-	@Column(name = "cont_event_category")
+	@Column(name = "cont_event_category", insertable = false, updatable = false)
 	private String contEventCategory;
+
+	@Column(name = "cont_event_category")
+	private String contEventCategoryKeyname;
 
 	@Column(name = "reverse_id")
 	private Long reverseId;
@@ -219,6 +222,14 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements De
 
 	public void setSmsMessageTemplate(String smsMessageTemplate) {
 		this.smsMessageTemplate = smsMessageTemplate;
+	}
+
+	public String getContEventCategoryKeyname() {
+		return contEventCategoryKeyname;
+	}
+
+	public void setContEventCategoryKeyname(String contEventCategoryKeyname) {
+		this.contEventCategoryKeyname = contEventCategoryKeyname;
 	}
 
 }

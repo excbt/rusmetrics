@@ -104,6 +104,29 @@ public class AbstractControllerTest {
 	/**
 	 * 
 	 * @param url
+	 * @param requestExtraInitializer
+	 * @throws Exception
+	 */
+	protected void _testGetJson(String url, RequestExtraInitializer params) throws Exception {
+
+		RequestExtraInitializer requestExtraInitializer = (builder) -> {
+			builder.accept(MediaType.APPLICATION_JSON);
+			params.doInit(builder);
+		};
+
+		ResultActionsTester resultActionsTester = (resultActions) -> {
+			resultActions.andDo(MockMvcResultHandlers.print());
+
+			resultActions.andExpect(status().isOk())
+					.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+		};
+
+		_testGet(url, requestExtraInitializer, resultActionsTester);
+	}
+
+	/**
+	 * 
+	 * @param url
 	 * @throws Exception
 	 */
 	protected void _testGetSuccessful(String url) throws Exception {
@@ -204,7 +227,7 @@ public class AbstractControllerTest {
 	 * @param a
 	 * @return
 	 */
-	protected static String listToString(List<Long> a) {
+	protected static String listToString(List<?> a) {
 		if (a == null)
 			return "null";
 		int iMax = a.size() - 1;
