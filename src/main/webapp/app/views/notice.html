@@ -349,109 +349,7 @@
                         </i>
                     </span>    
                 </div>
-            </div> 
-            <div class="col-xs-2 col-md-2" >
-        <!--        <label class="nmc-form-label">Отклонения:</label>-->
-                <div class="input-group nmc-input-data">
-                    <span class="input-group-addon nmc-filter-form-addon" 
-                          id="leftAddon" 
-                          ng-click="selectNoticeDeviationsClick()">Отклонения:
-                    </span>
-                    <div class="btn-group">
-                        <button  
-                                data-toggle="dropdown" 
-                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
-                                ng-click="selectNoticeDeviationsClick()"
-                                data-placeholder="false"
-                                ng-class="{'paddingLeft20': selectedNoticeDeviations_list.caption != messages.defaultFilterCaption}"> 
-                            {{selectedNoticeDeviations_list.caption}}
-                            <i ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" 
-                               class="fa fa-angle-double-down fa-lg"></i>
-<!--
-                            <img ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" height="22" width="22" 
-                                 src="images/plain-flat-double-chevron-down-arrow.png"
-                                 style="margin-top: -4px"/>
--->
-                        </button>
-                        <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu nmc-dropdown-menu-filter noclose">
-                            <li class="paddingLeft5 marginBottom5">
-                              <div class="row">
-                                <div class="col-xs-8 col-md-8">
-                                  <div class="input-group nmc-input-group-filter">
-                                      <span class="input-group-addon nmc-search-form-addon" 
-                                            id="deviationFilter-addon">
-                                          <i class="glyphicon glyphicon-search nmc-searh-form-button">
-                                          </i>
-                                      </span>
-                                      <input class="form-control nmc-text-input-notice-filter-form" 
-                                             type="text" 
-                                             ng-model="deviationFilter"
-                                             aria-describedly="deviationFilter-addon"
-                                             />
-                                    </div>
-                                </div>
-                                <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
-                                <div class="col-xs-2 col-md-2">
-                                    <p title="Применить фильтр" 
-                                            type="submit" 
-                                            class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
-                                            ng-click="selectNoticeDeviations()"
-                                            value="Ок" 
-                                            style=""
-                                            ng-disabled="isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)">
-                                        OK
-                                        <i class="glyphicon glyphicon-filter">
-                                        </i>
-                                    </p>
-                                 </div>
-                              </div>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li class="paddingLeft5 nmc-li-select-all"                                  
-                                 >
-                                <input type="checkbox" 
-                                      ng-attr-id={{"idDeviationsAll"}} 
-                                      ng-attr-name={{"nameDeviationsAll"}} 
-                                      ng-attr-value={{"allDeviations"}} 
-                                      ng-model="states.isSelectedAllDeviationsInWindow"
-                                      class="nmc-checkbox-dropdown"
-                                    ng-click="selectAllElements(deviationsInWindow)"
-                                      />
-                               <label ng-attr-for={{"idDeviationsAll"}}
-                                      class="nmc-label-dropdown"
-                                      >
-                                  Выбрать все
-                               </label>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li class="paddingLeft5" ng-repeat="deviation in deviationsInWindow | filter: deviationFilter">
-                                <input type="checkbox" 
-                                       ng-attr-id={{"idDeviation"+deviation.keyname}} 
-                                       ng-attr-name={{"nameDeviation"+deviation.keyname}} 
-                                       ng-attr-value={{deviation.keyname}} 
-                                       ng-model="deviation.selected"
-                                       class="nmc-checkbox-dropdown"
-                                       ng-click="selectElement('isSelectedAllDeviationsInWindow')"/>
-                               <label ng-attr-for={{"idDeviation"+deviation.keyname}}
-                                      class="nmc-label-dropdown">
-                                  {{deviation.caption || deviation.keyname}}
-                               </label>
-                            </li>
-                        </ul>
-                    </div>
-                    <span class="input-group-addon nmc-input-form-suffix" 
-                          id="rightAddon">
-                        <i title="Очистить фильтр" 
-                           class="btn btn-xs nmc-button-clear-filter" 
-                           ng-click="clearDeviationFilter();getResultsPage(1)"
-                           ng-disabled="selectedNoticeDeviations_list.caption == messages.defaultFilterCaption">
-                            <img height="19" width="19" 
-                                 src="images/clear-filter.png"
-                                 class="nmc-img-clear-filter"/>
-                        </i>
-                    </span>    
-                </div>
-            </div> 
+            </div>
             <div class="col-xs-2 col-md-2" >
         <!--        <label class="nmc-form-label">Типы:</label>-->
                 <div class="input-group nmc-input-data">
@@ -555,6 +453,109 @@
                     </span>    
                 </div>
             </div> 
+            <div class="col-xs-2 col-md-2" >
+        <!--        <label class="nmc-form-label">Отклонения:</label>-->
+                <div class="input-group nmc-input-data">
+                    <span class="input-group-addon nmc-filter-form-addon" 
+                          id="leftAddon" 
+                          ng-click="selectNoticeDeviationsClick()">Отклонения:
+                    </span>
+                    <div class="btn-group">
+                        <button  
+                                data-toggle="dropdown" 
+                                class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
+                                ng-click="selectNoticeDeviationsClick()"
+                                data-placeholder="false"
+                                ng-class="{'paddingLeft20': selectedNoticeDeviations_list.caption != messages.defaultFilterCaption}"> 
+                            {{selectedNoticeDeviations_list.caption}}
+                            <i ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" 
+                               class="fa fa-angle-double-down fa-lg"></i>
+<!--
+                            <img ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" height="22" width="22" 
+                                 src="images/plain-flat-double-chevron-down-arrow.png"
+                                 style="margin-top: -4px"/>
+-->
+                        </button>
+                        <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu nmc-dropdown-menu-filter noclose">
+                            <li class="paddingLeft5 marginBottom5">
+                              <div class="row">
+                                <div class="col-xs-8 col-md-8">
+                                  <div class="input-group nmc-input-group-filter">
+                                      <span class="input-group-addon nmc-search-form-addon" 
+                                            id="deviationFilter-addon">
+                                          <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                          </i>
+                                      </span>
+                                      <input class="form-control nmc-text-input-notice-filter-form" 
+                                             type="text" 
+                                             ng-model="deviationFilter"
+                                             aria-describedly="deviationFilter-addon"
+                                             />
+                                    </div>
+                                </div>
+                                <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                <div class="col-xs-2 col-md-2">
+                                    <p title="Применить фильтр" 
+                                            type="submit" 
+                                            class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                            ng-click="selectNoticeDeviations()"
+                                            value="Ок" 
+                                            style=""
+                                            ng-disabled="isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)">
+                                        OK
+                                        <i class="glyphicon glyphicon-filter">
+                                        </i>
+                                    </p>
+                                 </div>
+                              </div>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5 nmc-li-select-all"                                  
+                                 >
+                                <input type="checkbox" 
+                                      ng-attr-id={{"idDeviationsAll"}} 
+                                      ng-attr-name={{"nameDeviationsAll"}} 
+                                      ng-attr-value={{"allDeviations"}} 
+                                      ng-model="states.isSelectedAllDeviationsInWindow"
+                                      class="nmc-checkbox-dropdown"
+                                    ng-click="selectAllElements(deviationsInWindow)"
+                                      />
+                               <label ng-attr-for={{"idDeviationsAll"}}
+                                      class="nmc-label-dropdown"
+                                      >
+                                  Выбрать все
+                               </label>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li class="paddingLeft5" ng-repeat="deviation in deviationsInWindow | filter: deviationFilter">
+                                <input type="checkbox" 
+                                       ng-attr-id={{"idDeviation"+deviation.keyname}} 
+                                       ng-attr-name={{"nameDeviation"+deviation.keyname}} 
+                                       ng-attr-value={{deviation.keyname}} 
+                                       ng-model="deviation.selected"
+                                       class="nmc-checkbox-dropdown"
+                                       ng-click="selectElement('isSelectedAllDeviationsInWindow')"/>
+                               <label ng-attr-for={{"idDeviation"+deviation.keyname}}
+                                      class="nmc-label-dropdown">
+                                  {{deviation.caption || deviation.keyname}}
+                               </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <span class="input-group-addon nmc-input-form-suffix" 
+                          id="rightAddon">
+                        <i title="Очистить фильтр" 
+                           class="btn btn-xs nmc-button-clear-filter" 
+                           ng-click="clearDeviationFilter();getResultsPage(1)"
+                           ng-disabled="selectedNoticeDeviations_list.caption == messages.defaultFilterCaption">
+                            <img height="19" width="19" 
+                                 src="images/clear-filter.png"
+                                 class="nmc-img-clear-filter"/>
+                        </i>
+                    </span>    
+                </div>
+            </div> 
+
   </div>
 </div>    
    
