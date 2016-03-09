@@ -113,7 +113,8 @@
             <div class="col-xs-2 col-md-2" >
         <!--        <label class="nmc-form-label">объекты:</label>-->
                 <div class="input-group nmc-input-data">
-                    <div class="btn-group">
+<!--                    <div class="btn-group">
+
                       <button type="button" class="btn btn-default btn-xs dropdown-toggle" 
                               data-toggle="dropdown" 
                               aria-haspopup="true" 
@@ -136,6 +137,8 @@
                           </li>
                       </ul>
                     </div>
+-->
+<!--
                     <span ng-show="!ctrlSettings.showGroupsFlag" 
                           class="input-group-addon nmc-filter-form-addon" 
                           id="leftAddon" 
@@ -148,6 +151,21 @@
                           ng-click="selectObjectsClick()">
                         Группы:
                     </span>
+-->
+                    <div style="display: table-cell;">
+                        <input id="object-toggle-view" 
+                               ng-model="ctrlSettings.showGroupsFlag" 
+                               data-toggle="toggle"
+                               data-on="Группы" 
+                               data-off="Объекты" 
+                               data-size="mini"
+                               data-width="80"
+                               data-height="26"
+                               type="checkbox" 
+                               class="" 
+                               style=""
+                               />
+                    </div>
                     <div class="btn-group">
                         <button 
                                 data-toggle="dropdown" 

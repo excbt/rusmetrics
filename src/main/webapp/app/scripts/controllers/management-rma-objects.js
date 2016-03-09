@@ -130,6 +130,8 @@ angular.module('portalNMC')
                     objectSvc.getCmOrganizations()
                     .then(function(response){
                         $scope.data.cmOrganizations = response.data;
+                        //sort cm by organizationName
+                        mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                     });
                 };
                 getCmOrganizations();

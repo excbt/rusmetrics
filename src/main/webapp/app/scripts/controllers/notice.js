@@ -1088,6 +1088,22 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     }, 500);
     
     
+    //set setting for history toggle
+    $(document).ready(function(){
+        $('#object-toggle-view').bootstrapToggle({
+            on: "Группы",
+            off: "Объекты"
+        });
+        $('#object-toggle-view').change(function(){
+            $scope.ctrlSettings.showGroupsFlag = Boolean($(this).prop('checked'));
+            $scope.clearObjectFilter();
+            $scope.selectObjectsClick();
+            $scope.selectObjects();
+            $scope.$apply();
+        });
+    });
+    
+    
     //chart
     $scope.runChart = function(){
         var data = [];//, series = Math.floor(Math.random() * 6) + 3;

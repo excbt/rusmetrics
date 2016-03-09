@@ -125,7 +125,7 @@
                                     <textarea class="form-control nmc-textarea-form" 
                                               id="inputDescription" 
                                               placeholder="" 
-                                              ng-model="data.currentOrganization.organizationDecription">
+                                              ng-model="data.currentOrganization.organizationDescription">
                                     </textarea>
                                 </td>
                             </tr>
@@ -142,10 +142,10 @@
                             </tr>
                             <tr>
                                 <td class="col-sm-3">
-                                   <input ng-disabled="data.currentOrganization.flagCm" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagRso">РСО
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagRso">РСО
                                 </td>
                                 <td class="col-sm-9">
-                                   <input ng-disabled="data.currentOrganization.flagRso" type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagCm">УК
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentOrganization.flagCm">УК
                                 </td>
                             </tr>
                             <tr ng-if="isSystemuser()">
