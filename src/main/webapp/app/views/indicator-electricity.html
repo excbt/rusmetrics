@@ -27,7 +27,11 @@
                 <li id="specifications_2nd_menu_item" role="presentation" class="">
                     <a id="specificationsTab" class="nmc-main-tab-button" href="" aria-controls="specifications" data-target="#specifications" role="tab" data-toggle="tab" ng-click="initTech()">Технические характеристики
                     </a>
-                </li>        
+                </li>
+                <li id="pke_2nd_menu_item" role="presentation" class="">
+                    <a id="pkeTab" class="nmc-main-tab-button" href="" aria-controls="pke" data-target="#pke" role="tab" data-toggle="tab" ng-click="initPke()">ПКЭ
+                    </a>
+                </li>  
             </ul>
 
             <div class="tab-content">
@@ -39,6 +43,9 @@
               </div>
               <div role="tabpanel" class="tab-pane fade" id="specifications">
                   <div ng-include src="'../app/views/indicator-electricity-specifications.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="pke">
+                  <div ng-include src="'../app/views/indicator-electricity-pke.html'"></div>
               </div>
             </div>
         </div>

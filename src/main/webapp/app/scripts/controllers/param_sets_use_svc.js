@@ -148,23 +148,19 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         var curObject = angular.copy(item);
 		$scope.currentObject = curObject;
         $scope.activeStartDateFormat = (curObject.activeStartDate == null) ? null : new Date(curObject.activeStartDate);
-        var activeStartDate = new Date(curObject.activeStartDate);
-//console.log(curObject);        
-        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);
-        
+        var activeStartDate = new Date(curObject.activeStartDate);       
+        $scope.activeStartDateFormatted = (curObject.activeStartDate == null) ? "" : moment([activeStartDate.getUTCFullYear(), activeStartDate.getUTCMonth(), activeStartDate.getUTCDate()]).format($scope.ctrlSettings.dateFormat);        
         $scope.getTemplates();       
     };
     
-    $scope.checkAndSaveParamset = function(paramsets, object){
-//console.log($scope.currentParamSpecialList);        
-//return;        
+    $scope.checkAndSaveParamset = function(paramsets, object){       
         if (!object.name || object.name == ''){
             notificationFactory.errorInfo("Ошибка", "Не задано наименование варианта отчета. Заполните поле 'Наименование'.");
             return "Add / edit paramset: no name";
         };
         if (!mainSvc.checkUndefinedNull(paramsets) && angular.isArray(paramsets)){
             for (var psCounter = 0; psCounter < paramsets.length; psCounter++){
-                if (object.name.localeCompare(paramsets[psCounter].name)){
+                if ((object.id != paramsets[psCounter].id) && (object.name.localeCompare(paramsets[psCounter].name) == 0)){                   
                     notificationFactory.errorInfo("Ошибка", "Вариант отчета должен иметь уникальное наименование . Изменить поле 'Наименование'.");
                     return "Add / edit paramset: name is not unique.";
                 };

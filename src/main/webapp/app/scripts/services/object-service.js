@@ -2,10 +2,12 @@
 angular.module('portalNMC')
 .service('objectSvc', ['crudGridDataFactory', '$http', '$cookies', '$interval', '$rootScope',
              function(crudGridDataFactory, $http, $cookies, $interval, $rootScope){
-console.log("Object Service. Run."); 
+//console.log("Object Service. Run."); 
                  
-        var svcObjects = [{fullName:"Ошибка. Объекты не были загружены."
-        }];
+        var svcObjects = [
+            {fullName: "Ошибка. Объекты не были загружены."
+            }
+        ];
         var loading = true;
         var urlApi = '../api';
         var urlSubscr = urlApi + '/subscr';
@@ -343,21 +345,21 @@ console.log("Object Service. Run.");
             //send to server
                 //create param string
             var params = {};
-            if (angular.isDefined(device.subscrDataSourceAddr)&&(device.subscrDataSourceAddr!=null)){
+            if (angular.isDefined(device.subscrDataSourceAddr) && (device.subscrDataSourceAddr != null)){
                 params.subscrDataSourceAddr = device.subscrDataSourceAddr;
             };
-            if (angular.isDefined(device.dataSourceTable)&&(device.dataSourceTable!=null)){
-                params.dataSourceTable=device.dataSourceTable;
+            if (angular.isDefined(device.dataSourceTable) && (device.dataSourceTable != null)){
+                params.dataSourceTable = device.dataSourceTable;
             };
-            if (angular.isDefined(device.dataSourceTable1h)&&(device.dataSourceTable1h!=null)){
+            if (angular.isDefined(device.dataSourceTable1h) && (device.dataSourceTable1h != null)){
                 params.dataSourceTable1h = device.dataSourceTable1h;
             };
-            if (angular.isDefined(device.dataSourceTable24h)&&(device.dataSourceTable24h!=null)){
+            if (angular.isDefined(device.dataSourceTable24h) && (device.dataSourceTable24h != null)){
                 params.dataSourceTable24h = device.dataSourceTable24h;
             };
-            var targetUrl = getRmaObjectsUrl() + "/"+device.contObjectId+"/deviceObjects";
-            if (angular.isDefined(device.id)&&(device.id != null)){
-                targetUrl = targetUrl+"/"+device.id;
+            var targetUrl = getRmaObjectsUrl() + "/" + device.contObjectId + "/deviceObjects";
+            if (angular.isDefined(device.id) && (device.id != null)){
+                targetUrl = targetUrl + "/" + device.id;
             };
                 //add url params
             params.subscrDataSourceId=device.subscrDataSourceId;

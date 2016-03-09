@@ -30,8 +30,6 @@
     width: 550px !important;/* Увеличиваем ширину всплывающего окна, чтобы влезло наше содержимое*/
 }
 
-
-
 body{
 /*    min-width: 1200px !important;*/
 }
@@ -382,6 +380,40 @@ body{
 .nmc-main-menu-item-icon {
     margin-right: 10px;
 }
+
+
+/*   Выпадающее меню - аля контекстное меню у объектов, приборов и т.п.*/
+.nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus{
+    background-color: #D2D2D2 !important; 
+}
+
+/*  Выпадающее меню фильтров*/
+.nmc-dropdown-menu-filter{
+    min-width: 280px;
+    max-width: 600px;
+}
+/*
+.nmc-dropdown-menu-filter > li{
+    min-width: 250px;
+}
+*/
+
+/* Выпадающее меню "Действие над уведомлениями"*/
+.nmc-dropdown-toggle-notices{
+    height: 15px; 
+    font-size: 8px; 
+    width: 15px; 
+    padding-left: 2px; 
+    margin-bottom: 6px;
+}
+
+.nmc-dropdown-toggle-filter{
+    
+}
+
+.nmc-dropdown-toggle-filter:hover{
+    background-color: #fff;
+}
     
 .submenu{
     margin-left: 20px;
@@ -524,6 +556,16 @@ body{
 
 .nmc-pagination{
     margin: 0;
+}
+
+/* Элемент списка - Выбрать / Отменить все (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-li-select-all{
+    background: #337ab7; 
+    color: white;
+}
+
+.nmc-li-select-all > label{
+    cursor: pointer;
 }
 /***********
  * Таблицы
@@ -811,6 +853,13 @@ tr.nmc-inactive-price > td{
 /* label поля ввода */
 .nmc-form-label {
 }
+/* метка для элемента выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-label-dropdown{
+    padding: 0px 20px;
+    white-space: nowrap;
+    font-weight: normal;
+    margin: 0;
+}
  
 /* поле поиска */
 .nmc-search-form {
@@ -855,6 +904,7 @@ tr.nmc-inactive-price > td{
     padding: 5px;
     border-left-width: 0px;
     float: none !important;
+    border-radius: 0;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -864,6 +914,25 @@ tr.nmc-inactive-price > td{
     border-right-width: 0px;
     height: 25px;
 }
+
+/* Фильтры */
+.nmc-filter-form {
+    font-size: 12px;
+    height: 26px;
+    padding: 5px;
+/*    border-width: 0px;*/
+    float: none !important;
+/*    border-radius: 0;*/
+}
+
+    /* Приписка перед интервалом дат - изначально там буква "с"*/
+.nmc-filter-form-addon{
+    background-color: white;
+    padding: 0px 6px;
+    border-width: 0px;
+    height: 25px;
+}
+
 /* Страница Уведомления - строка с фильтрами*/
     /* Стиль для дива, содержащего фильтр по интервалу дат*/
 .nmc-div-filter-date-interval{
@@ -912,7 +981,7 @@ tr.nmc-inactive-price > td{
 /*@media (min-width: 1390px){*/
 @media (min-width: 992px){
   .nmc-div-page-legend{
-      min-width: 348px;
+/*      min-width: 348px;*/
       float: right;
 /*      background-color: red;*/
   }
@@ -943,6 +1012,10 @@ tr.nmc-inactive-price > td{
   }
 }
 */
+/*  Группа элементов для фильтра*/
+.nmc-input-group-filter{
+/*    position: absolute;*/
+}
 
 /* ввод строки */
 .nmc-text-input-form {
@@ -951,12 +1024,22 @@ tr.nmc-inactive-price > td{
     padding: 5px;
 }
 
+.nmc-text-input-notice-filter-form {
+    font-size: 12px;
+    height: 25px;
+    padding: 5px;
+/*    width: 66% !important;*/
+/*    margin-right: 1.5em;*/
+}
+
 /*  кнопка позади контрола input*/
 .nmc-input-form-suffix {
     font-size: 12px;
     height: 25px;
     padding: 0;
     background-color: #fff;
+    border-radius: 4px !important;
+/*    background-color: #f9dd72;*/
 }
 
 /*  текст перед контролом input*/
@@ -982,6 +1065,13 @@ tr.nmc-inactive-price > td{
 /* чекбокс */
 .nmc-checkbox-form {
 }
+
+/* Чекбокс выпадающего списка (примеры, ПКЭ - типы пкэ, Уведомления - фильтр по объектам, типам уведомлений)*/
+.nmc-checkbox-dropdown{
+    position: absolute; 
+    margin-top: 4px !important;
+}
+
 /* Недоступный чекбокс*/
 .nmc-checkbox-notallowed{
     cursor: default !important;
@@ -1242,6 +1332,28 @@ tr.nmc-inactive-price > td{
     width: 24px;
 }
 
+/* Кнопка "Очистить фильтр" на странице уведомлений*/
+.nmc-button-clear-filter{
+/*    background-color: #f9dd72;*/
+}
+
+.nmc-button-clear-filter.disabled, .nmc-button-clear-filter[disabled]{
+    opacity: 0.4 !important;
+}
+
+.nmc-img-clear-filter{
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.nmc-button-clear-filter-full{
+    height: 19px;
+    width: 19px;
+    background-color: #f9dd72;
+    background-image: url('../images/clear-filter.png');
+    background-repeat: no-repeat;
+}
+
 /* панель для кнопок в столбце таблице - для 1-2 кнопок*/
 .nmc-btn-toolbar-in-table{
     padding-left:5px !important;
@@ -1425,6 +1537,11 @@ tr.nmc-inactive-price > td{
     overflow-y: auto;
     max-height: 520px;
 }
+
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices{
+    overflow-y: auto;
+    max-height: 520px;
+}
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
     padding-top: 150px;
@@ -1445,6 +1562,20 @@ tr.nmc-inactive-price > td{
 }
 
 .nmc-select-objects-window > .modal-dialog > .modal-content{
+    margin: 0 0 0 -100px;
+}
+
+    /* Разметка модального с фильтрами на странице Уведомления*/
+/*.excbt_selectObjectWindow > .modal-backdrop {*/
+.nmc-select-filters-window > .modal-backdrop{   
+    background-color: inherit;
+}
+
+.nmc-select-filters-window > .modal-dialog {
+    margin-top: 200px;
+}
+
+.nmc-select-filters-window > .modal-dialog > .modal-content{
     margin: 0 0 0 -100px;
 }
 
@@ -1620,6 +1751,21 @@ tr.nmc-inactive-price > td{
     /*Вертикальная линия в кнопках на странице Объекты*/
 .nmc-line-right{
     border-right: 1px solid black;
+}
+
+.nmc-vdivide {
+    /* background: #e0e0e0; */
+    /* width: 5px; */
+    /* content: ""; */
+/*    display: inline;*/
+    /* position: absolute; */
+    /* top: 5px; */
+    /* bottom: 200px; */
+    /* right: 55px; */
+    /* min-height: 25px; */
+    height: 25px;
+/*    margin: 0 9px;*/
+    border-left: 1px solid #e0e0e0;
 }
 
 .nmc-textfield{

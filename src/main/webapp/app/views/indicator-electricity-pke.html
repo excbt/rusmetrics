@@ -1,0 +1,265 @@
+<div id="el_zpoint_indicator_pke_page" 
+     ng-controller="ElectricityPkeCtrl">
+        <div class="container">
+            <div class="row">   
+                <div class="col-xs-12 col-md-12 noPadding marginBottom10 marginTop5">
+                    <div class="col-xs-4 col-md-4 noPadding">
+                        <div class="col-xs-4 col-md-4 paddingTop5">
+                            <label class="nmc-form-label pull-right" >
+                                Задайте период
+                            </label>
+                        </div>    
+                        <div class="col-xs-8 col-md-8">
+                                <div class="input-group">
+                                    <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                                    <input date-range-picker 
+                                           class="form-control date-picker nmc-date-interval-form"
+                                        type="text" 
+                                           ng-model="indicatorPkeDates" 
+                                           options="dateRangeOptsPkeRu"/>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 col-md-3 noPadding">
+                        <div class="col-xs-3 col-md-3 paddingTop5">            
+                                <label class="nmc-form-label">
+                                     </label>
+
+                        </div>
+                        <div class="col-xs-8 col-md-8">
+<!--
+                            <div id="typesMenu1" class="btn-group" ng-init="visibleText='Типы'">
+                              <button id="typesMenu"
+                                      type="button" 
+                                      class="btn btn-default btn-xs dropdown-toggle nmc-button-notice-toggle" 
+                                      data-toggle="dropdown" 
+                                      aria-haspopup="true" 
+                                      aria-expanded="false"
+                                      >
+                                {{visibleText}} <span class="caret"></span>
+                              </button>
+                              <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu noclose">
+                                 <li class="paddingLeft5 marginBottom5">
+                                      <input class="form-control nmc-text-input-form" 
+                                             type="text" 
+                                             ng-model="pkeTypesFilter"/>
+                                 </li>
+                                 <li class="paddingLeft5 nmc-li-select-all" 
+                                     ng-click="selectAllTypes()" 
+                                     >
+                                    <input type="checkbox" 
+                                          ng-attr-id={{"idPkeTypeAll"}} 
+                                          ng-attr-name={{"idPkeTypeAll"}} 
+                                          ng-attr-value={{"allTypes"}} 
+                                          ng-model="isSelectedAllTypes"
+                                          class="nmc-checkbox-dropdown"
+                                          />
+                                       <label ng-attr-for={{"idPkeTypeAll"}}
+                                              class="nmc-label-dropdown"
+                                              >
+                                          Выбрать / Отменить все
+                                       </label>
+                                    </li>
+                                <li class="paddingLeft5" 
+                                    ng-repeat="pkeType in pkeTypes | filter:pkeTypesFilter" 
+                                    ng-click="getDataWithSelectedTypes()">
+                                   <input type="checkbox" 
+                                          ng-attr-id={{"idPkeType"+pkeType.keyname}} 
+                                          ng-attr-name={{"idPkeType"+pkeType.keyname}} 
+                                          ng-attr-value={{pkeType.keyname}} 
+                                          ng-model="pkeType.selected"
+                                          class="nmc-checkbox-dropdown"
+                                          />
+                                   <label ng-attr-for={{"idPkeType"+pkeType.keyname}}
+                                          class="nmc-label-dropdown"
+                                          >
+                                      {{pkeType.caption}}
+                                   </label>                                    
+                                </li>                             
+                              </ul>
+                            </div>
+-->
+                            
+                            
+                            <div class="input-group nmc-input-data">
+                                <span class="input-group-addon nmc-filter-form-addon" 
+                                      id="leftAddon" 
+                                      >Типы:
+                                </span>
+                                <div class="btn-group">
+                                    <button 
+                                            data-toggle="dropdown" 
+                                            class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"                                            
+                                            data-placeholder="false"
+                                            ng-class="{'paddingLeft20': selectedPkeTypes_list.caption != defaultFilterCaption}"
+                                            ng-click="selectPkeTypesClick()"> 
+                                        {{selectedPkeTypes_list.caption}}
+                                        <i ng-if="selectedPkeTypes_list.caption != defaultFilterCaption" 
+                                           class="fa fa-angle-double-down fa-lg">
+                                        </i>
+<!--
+                                        <img ng-if="selectedPkeTypes_list.caption != defaultFilterCaption" height="22" width="22" 
+                                             src="images/plain-flat-double-chevron-down-arrow.png"
+                                             style="margin-top: -4px"/>
+-->
+                                    </button>
+                                    <ul class="nmc-object-filter-in-notices nmc-modal-panel-with-table dropdown-menu nmc-dropdown-menu-filter noclose">
+                                        <li class="paddingLeft5 marginBottom5">
+                                            <div class="row">
+                                                <div class="col-xs-8 col-md-8">
+                                                    <div class="input-group nmc-input-group-filter">
+                                                      <span class="input-group-addon nmc-search-form-addon" 
+                                                            id="pkeTypesFilter-addon">
+                                                          <i class="glyphicon glyphicon-search nmc-searh-form-button">
+                                                          </i>
+                                                      </span>
+                                                      <input class="form-control nmc-text-input-notice-filter-form" 
+                                                             type="text"
+                                                             aria-describedly="pkeTypesFilter-addon"
+                                                             ng-model="pkeTypesFilter"
+                                                         />
+                                                    </div>                              
+                                                </div>
+                                                <div class="col-xs-1 col-md-1 nmc-vdivide"></div>
+                                                <div class="col-xs-2 col-md-2">
+                                                  <p title="Применить фильтр" 
+                                                    type="submit" 
+                                                    class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                                    ng-click="getDataWithSelectedTypes();"
+                                                    value="Ок" 
+                                                    style=""
+                                                    ng-disabled="isFilterApplyDisabled(pkeTypesInWindow, states.isSelectedAllPkeTypesInWindow)">
+                                                        OK
+                                                        <i class="glyphicon glyphicon-filter">
+                                                        </i>
+                                                  </p>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li role="separator" class="divider"></li>
+                                        <li class="paddingLeft5 nmc-li-select-all"                                   
+                                             >
+                                            <input type="checkbox" 
+                                                  ng-attr-id={{"idTypesAll"}} 
+                                                  ng-attr-name={{"nameTypesAll"}} 
+                                                  ng-attr-value={{"allTypes"}} 
+                                                  ng-model="states.isSelectedAllPkeTypesInWindow"
+                                                  class="nmc-checkbox-dropdown"
+                                                   ng-click="selectAllElements(pkeTypesInWindow)"
+                                                  />
+                                           <label ng-attr-for={{"idTypesAll"}}
+                                                  class="nmc-label-dropdown"
+                                                  >
+                                              Выбрать все
+                                           </label>
+                                        </li>
+                                        <li role="separator" class="divider"></li>
+                                        <li class="paddingLeft5" ng-repeat="pkeType in pkeTypesInWindow | filter: pkeTypesFilter">
+                                            <input type="checkbox" 
+                                                   ng-attr-id={{"idPkeType"+pkeType.keyname}} 
+                                                   ng-attr-name={{"namePkeType"+type.keyname}} 
+                                                   ng-attr-value={{pkeType.keyname}} 
+                                                   ng-model="pkeType.selected"
+                                                   class="nmc-checkbox-dropdown"
+                                                   ng-click="selectElement('isSelectedAllPkeTypesInWindow')"
+                                                   />
+                                           <label ng-attr-for={{"idPkeType"+pkeType.keyname}}
+                                                  class="nmc-label-dropdown">
+                                              {{pkeType.caption || pkeType.keyname}}
+                                           </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <span class="input-group-addon nmc-input-form-suffix" 
+                                      id="rightAddon">
+                                    <i title="Очистить фильтр" 
+                                       class="btn btn-xs nmc-button-clear-filter" 
+                                       ng-click="clearPkeTypeFilter();"
+                                       ng-disabled="selectedPkeTypes_list.caption == defaultFilterCaption">
+                                        <img height="19" width="19" 
+                                             src="images/clear-filter.png"
+                                             class="nmc-img-clear-filter"/>
+                                    </i>
+                                </span>    
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+                        <p title="Обновить ПКЭ" 
+                           class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                           ng-click="getDataWithSelectedTypes()">
+                        </p>
+                    </div>
+                    <div class="col-xs-2 col-md-2">
+                            <label class="nmc-form-label">Всего:</label>
+                             <input type="text" 
+                                    disabled 
+                                    class="form-control nmc-view-allcount nmc-inactive-form" 
+                                    ng-model="pkeData.length">
+                    </div>
+
+                </div>    
+            </div>
+            <div class="row nmc-hide"                
+                 ng-show="(pkeData.length == 0) && !ctrlSettings.loading">
+                <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
+            </div>
+            <div class="row" ng-show="pkeData.length > 0">        
+               <!--    Непрокручиваямая шапка -->
+            <div class="row">
+                <div class="col-xs-6 col-md-6 noPadding">
+                    <table ng-attr-id={{"pkeTableHeader"+type}} 
+                           class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table noMargin nmc-table-nowrap-data">
+                            <tr class="nmc-main-table-header">                    
+                                <th ng-attr-id={{"pke_head_"+column.fieldName}}
+                                    ng-repeat="column in columns track by $index" 
+                                    ng-class="column.headerClass" 
+                                    ng-click="setOrderBy(column.fieldName)">
+                                    <div>
+                                        {{column.header || column.fieldName}}
+                                        <i class="glyphicon" 
+                                            ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'">
+                                        </i>
+                                    </div>
+                                </th>
+                            </tr>
+                    </table>
+                </div>
+            </div>        
+        <!--        конец Шапки-->
+            <div class="row">
+                <div ng-attr-id={{"divPkeTable"+type}} 
+                     class="col-xs-6 col-md-6 noPadding nmc-el-view-main-div" 
+                     >
+                    <table class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-main-table nmc-table-nowrap-data">
+                        <tr class="nmc-main-table-header nmc-hide">
+                            <th 
+                                ng-repeat="column in columns track by $index" 
+                                ng-class="column.headerClass" 
+                                ng-click="setOrderBy(column.fieldName)">
+                                <div>
+                                    {{column.header || column.fieldName}}
+                                    <i class="glyphicon" 
+                                       ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'">
+                                    </i>
+                                </div>
+                            </th>
+                        </tr>        
+                        <tr ng-repeat="element in pkeData | orderBy: ctrlSettings.orderBy.field : !ctrlSettings.orderBy.asc track by $index">
+                            <td ng-attr-id={{"pke_td_"+column.fieldName}}
+                                ng-repeat = "column in columns track by $index" 
+                                ng-class="column.dataClass">
+                                {{element[column.fieldName]}} <span ng-show="isSystemuser()&&(column.date)">( id = {{element['id']}})</span>
+                            </td>
+
+                        </tr>
+                        <tr class="nmc-hide">
+                            {{onTableLoad()}}
+                        </tr>
+                    </table>
+                </div>
+              </div>
+            </div>
+        </div>
+</div>
