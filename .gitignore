@@ -19,6 +19,7 @@ tmp/
 local.properties
 .settings/
 .loadpath
+.factorypath
 
 .tern-project
 .eclipse-pmd
