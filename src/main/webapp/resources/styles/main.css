@@ -28,12 +28,9 @@
 
 /* Space out content a bit */
 body {
-
-    background: url(../images/title_bg.jpg);
+    background: url(../images/title_bg.jpg) no-repeat;
     background-size: 100%;
-
-  padding-top: 20px;
-  padding-bottom: 20px;
+	padding: 20px 0;
     font-size: 12px;
 }
 
