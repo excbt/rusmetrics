@@ -73,7 +73,7 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	private int deleted;
 
 	@Column(name = "organization_description")
-	private String organizationDecription;
+	private String organizationDescription;
 
 	public String getExCode() {
 		return exCode;
@@ -175,11 +175,11 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 		this.deleted = deleted;
 	}
 
-	public String getOrganizationDecription() {
-		return organizationDecription;
+	public String getOrganizationDescription() {
+		return organizationDescription;
 	}
 
-	public void setOrganizationDecription(String organizationDecription) {
-		this.organizationDecription = organizationDecription;
+	public void setOrganizationDecription(String organizationDescription) {
+		this.organizationDescription = organizationDescription;
 	}
 }
