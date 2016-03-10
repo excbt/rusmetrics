@@ -14,7 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
  *
  */
 public enum ReportTypeKey implements KeynameObject {
-	COMMERCE_REPORT("commerce"), // CONS_REPORT,
+	COMMERCE_REPORT("commerce"), // COMMERCE_M_V,
+	COMMERCE_REPORT_M_V("commerce_m_v"), // COMMERCE_M_V,
 	EVENT_REPORT("event"), //
 	CONS_T1_REPORT("cons_t1"), //
 	CONS_T2_REPORT("cons_t2"), // // deprecated
@@ -59,8 +60,8 @@ public enum ReportTypeKey implements KeynameObject {
 	 * @return
 	 */
 	public static ReportTypeKey findByUrlName(String urlName) {
-		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values())
-				.filter((i) -> i.urlName.equals(urlName)).findFirst();
+		Optional<ReportTypeKey> opt = Stream.of(ReportTypeKey.values()).filter((i) -> i.urlName.equals(urlName))
+				.findFirst();
 
 		return opt.isPresent() ? opt.get() : null;
 	}
