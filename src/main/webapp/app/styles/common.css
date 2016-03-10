@@ -1155,6 +1155,14 @@ tr.nmc-inactive-price > td{
 /* Ок */
 .nmc-ok-button {
     height: 24px;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+.nmc-ok-button-highlight{
+    background-color: blue;
+    border-color: lightblue;
+/*    background: linear-gradient(to bottom, #337ab7, blue);*/
 }
 
 /* Сохранить */
@@ -1189,6 +1197,11 @@ tr.nmc-inactive-price > td{
 .nmc-button-notice-toggle{
     height: 26px;
     width: 125px;
+}
+
+/*  Паддинг для надписи внутри переключателя "Группы / Объекты" на странице Уведомления*/
+.toggle-off.btn-xs, .toggle-on.btn-xs{
+    padding-top: 3px;
 }
 
 /* Кнопка "Обновить" на странице уведомлений*/

@@ -318,6 +318,22 @@ angular.module('portalNMC')
     
     ///////////////// end checkers
     
+    // Sort organizations by organizationName
+    var sortOrganizationsByName = function(orgArr){
+        if (!angular.isArray(orgArr)){
+            return "Param is not array.";
+        };
+        orgArr.sort(function(a, b){
+            if (a.organizationName.toUpperCase() > b.organizationName.toUpperCase()){
+                return 1;
+            };
+            if (a.organizationName.toUpperCase() < b.organizationName.toUpperCase()){
+                return -1;
+            };
+            return 0;
+        });
+    };
+    
     // *************** generation confirm code *****************
     // **************************
 //    var firstNum = Math.round(Math.random()*10);
@@ -459,6 +475,7 @@ angular.module('portalNMC')
         isSystemuser,
         setMonitorMapSettings,
         setObjectMapSettings,
+        sortOrganizationsByName,
         strDateToUTC
     };
 });

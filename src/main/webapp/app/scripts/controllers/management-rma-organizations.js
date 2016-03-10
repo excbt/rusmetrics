@@ -35,7 +35,7 @@ angular.module('portalNMC')
             "type": "checkbox"
         },
         {
-            "name": "organizationDecription",
+            "name": "organizationDescription",
             "caption": "Описание",
             "class": "col-xs-3 col-md-3"
         },

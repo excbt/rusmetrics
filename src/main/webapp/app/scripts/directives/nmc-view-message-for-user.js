@@ -14,7 +14,7 @@ angular.module('portalNMC')
         },
         controller: function($scope){
             $('#messageForUserModal').on('shown.bs.modal', function(){
-                console.log($scope.showOkButton);
+//                console.log($scope.showOkButton);
             });
         }
     }

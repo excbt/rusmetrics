@@ -339,6 +339,20 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
         $http.get(url)
             .success(function(data){
                 obj.specialTypeDirectoryValues = data;
+                //set default directory value
+                if (!mainSvc.checkUndefinedNull(obj.directoryValue)){
+                    return;
+                };
+                obj.directoryValue = null;
+                if (angular.isArray(data) && (data.length > 0)){
+                    data.some(function(elem){
+                        if (elem.isDefault == true){
+                            obj.directoryValue = elem[obj.specialTypeDirectoryValue];
+                            return true;
+                        };
+                    });
+                };
+                
             })
             .error(function(e){
                 console.log(e);
@@ -372,8 +386,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
             result.endDateValue = null;
             result.oneDateValueFormatted = null;
             result.startDateValueFormatted = null;
-            result.endDateValueFormatted = null;
-            result.directoryValue = null;
+            result.endDateValueFormatted = null;            
             return result;
         });
 //        $scope.paramsetStartDateFormat = (new Date());        
