@@ -209,7 +209,7 @@
                                                 value="Ок" 
                                                 style=""
                                                 ng-disabled="isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)"
-                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement}"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)}"
                                            >
                                             OK
                                             <i class="glyphicon glyphicon-filter">
@@ -316,7 +316,7 @@
                                                 value="Ок" 
                                                 style=""
                                                 ng-disabled="isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)"
-                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)}">
                                             OK
                                             <i class="glyphicon glyphicon-filter">
                                             </i>
@@ -420,7 +420,7 @@
                                             value="Ок" 
                                             style=""
                                             ng-disabled="isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)"
-                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)}">
                                         OK
                                         <i class="glyphicon glyphicon-filter">
                                         </i>
@@ -524,7 +524,7 @@
                                             value="Ок" 
                                             style=""
                                             ng-disabled="isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)"
-                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)}">
                                         OK
                                         <i class="glyphicon glyphicon-filter">
                                         </i>

@@ -89,16 +89,19 @@ app
         format : 'DD.MM.YYYY'
     };
     
-    $scope.$watch('navPlayerDates', function (newDates) {
-        if ($location.path()==="/objects/indicators"){
+    $scope.$watch('navPlayerDates', function(newDates, oldDates) {       
+        if (newDates === oldDates){
+            return;
+        };
+        if ($location.path() === "/objects/indicators"){
             return;
         };
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
         $rootScope.reportEnd = moment(newDates.endDate).format('YYYY-MM-DD');
 //!Attention. Эта штуковина может чудить - она меняет url строку.
-        if (($location.path()!="/notices/monitor")&&($location.path()!="/objects/indicators")){
-            $location.search("fromDate",$rootScope.reportStart);
-            $location.search("toDate",$rootScope.reportEnd);
+        if (($location.path() != "/notices/monitor") && ($location.path() != "/objects/indicators")){
+            $location.search("fromDate", $rootScope.reportStart);
+            $location.search("toDate", $rootScope.reportEnd);
         };
 //console.log($location);        
 //console.log("data-range-settings");         

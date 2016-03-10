@@ -23,7 +23,8 @@ app.filter('filterByCategories', function(){
 });
 
 app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter){
-//console.log("Load NoticeCtrl."); 
+//console.log("Load NoticeCtrl.");
+    
     $rootScope.ctxId = "notice_page";
     //ctrl settings
     $scope.ctrlSettings = {};
@@ -362,14 +363,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.ctrlSettings.loading = true;
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
-        var url = $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
+        var url = $scope.crudTableName + "/paged" + "?" + "page=" + (pageNumber-1) + "&" + "size=" + $scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-//console.log(loca);        
-        if ((angular.isDefined(loca))){
+//console.log(loca);         
+        if (angular.isDefined(loca.fromDate) && (angular.isDefined(loca.toDate))){
             $scope.startDate = loca.fromDate;
             $scope.endDate = loca.toDate;  
-        }else{
-            $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
+        }else{            
+            $scope.startDate = $rootScope.reportStart || moment().subtract(6, 'days').format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
 //console.log("****************** Запрос *****************");
@@ -385,7 +386,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log($scope.noticesPromise);            
 //console.log($scope.currentNotices);                        
 //            $scope.noticesPromise.cancelRequest($scope.currentNotices);
-//        };
+//        };       
         $scope.noticesPromise = getNotices(url, 
                    $scope.startDate, 
                    $scope.endDate, 
@@ -713,7 +714,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $('#showNoticeModal').modal();
     };  
     
-    var successCallbackGetObjects = function(response){
+    var successCallbackGetObjects = function(response){        
         $scope.objects = response.data;
         objectSvc.sortObjectsByFullName($scope.objects);
         if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){

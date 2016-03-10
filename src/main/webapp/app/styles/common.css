@@ -1160,9 +1160,14 @@ tr.nmc-inactive-price > td{
 }
 
 .nmc-ok-button-highlight{
+/*
     background-color: blue;
     border-color: lightblue;
+*/
 /*    background: linear-gradient(to bottom, #337ab7, blue);*/
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+    border: none;
 }
 
 /* Сохранить */

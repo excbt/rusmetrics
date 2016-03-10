@@ -38,7 +38,7 @@ angular.module('portalNMC')
     ];
             //get devices
     function sortDevicesByConObjectFullName(array){
-            if (angular.isUndefined(array) || (array == null)|| !angular.isArray(array)){
+            if (angular.isUndefined(array) || (array == null) || !angular.isArray(array)){
                 return false;
             };           
             array.sort(function(a, b){
@@ -75,9 +75,16 @@ angular.module('portalNMC')
                 $scope.data.devices = tmp;
                 $scope.ctrlSettings.loading = false;                
             },
-            function(error){
-                console.log(error.data);
-                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
+            function(e){
+                console.log(e);
+                var errorCode = "-1";
+                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                    errorCode = e.resultCode || e.data.resultCode;
+                };
+                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//                console.log(error.data);
+//                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
             }
         );
     };
@@ -91,9 +98,16 @@ angular.module('portalNMC')
                 $scope.selectedItem(device);
                 $('#sheduleEditorModal').modal();
             },
-            function(error){
-                console.log(error.data);
-                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
+            function(e){
+                console.log(e);
+                var errorCode = "-1";
+                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                    errorCode = e.resultCode || e.data.resultCode;
+                };
+                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//                console.log(error.data);
+//                notificationFactory.errorInfo(error.statusText, error.data.description || error.data);
             }
         );
     };
@@ -132,8 +146,15 @@ angular.module('portalNMC')
                 };
                 $scope.data.deviceModels = response.data;               
             },
-            function(error){
-                notificationFactory.errorInfo(error.statusText, error.description);
+            function(e){
+                console.log(e);
+                var errorCode = "-1";
+                if (!mainSvc.checkUndefinedNull(e) && (!mainSvc.checkUndefinedNull(e.resultCode) || !mainSvc.checkUndefinedNull(e.data) && !mainSvc.checkUndefinedNull(e.data.resultCode))){
+                    errorCode = e.resultCode || e.data.resultCode;
+                };
+                var errorObj = mainSvc.getServerErrorByResultCode(errorCode);
+                notificationFactory.errorInfo(errorObj.caption, errorObj.description);
+//                notificationFactory.errorInfo(error.statusText, error.description);
             }
         );
     };
@@ -385,6 +406,48 @@ angular.module('portalNMC')
         },
         singleDatePicker: true
     };
+    
+    //keydown listener
+    $scope.$on('$destroy', function() {
+        window.onkeydown = undefined;
+    }); 
+    
+    //keydown listener for ctrl+end
+    window.onkeydown = function(e){
+//console.log(e);        
+        if (e.code == "ArrowUp" /*e.keyCode == 38*/){                        
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = elem.scrollTop - 20;                        
+            return;
+        };
+        if (e.code == "ArrowDown" /*e.keyCode == 40*/){
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = elem.scrollTop + 20;                        
+            return;
+        };
+        if (e.code == "PageDown" /*e.keyCode == 34*/){
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = elem.scrollTop + 34*10;                        
+            return;
+        };
+        if (e.code == "PageUp" /*e.keyCode == 33*/){
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = elem.scrollTop - 34*10;
+            return;
+        };
+        if (e.ctrlKey && e.code == "Home" /*e.keyCode == 36*/){
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = 0;
+            return;
+        };
+        if ((e.ctrlKey && e.code == "End" /*e.keyCode == 35*/)){ 
+            var elem = document.getElementById("divWithDeviceTable");
+            elem.scrollTop = elem.scrollHeight;                                            
+
+        };
+    };
+    
+    
     //checkers
     $scope.isSystemuser = function(){
         return mainSvc.isSystemuser();

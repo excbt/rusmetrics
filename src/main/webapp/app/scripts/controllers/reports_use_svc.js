@@ -273,14 +273,14 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };
         //Проверка параметра - ссылочный параметр или нет
     function isParamSpecialTypeDirectory(element){
-        var result=  (element.paramSpecialType.specialTypeDirectoryUrl!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryUrl!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryKey!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryKey!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryCaption!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryCaption!='undefined')
-        && (element.paramSpecialType.specialTypeDirectoryValue!=null)
-                && (typeof element.paramSpecialType.specialTypeDirectoryValue!='undefined');       
+        var result = (element.paramSpecialType.specialTypeDirectoryUrl != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryUrl != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryKey != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryKey != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryCaption != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryCaption != 'undefined')
+        && (element.paramSpecialType.specialTypeDirectoryValue != null)
+                && (typeof element.paramSpecialType.specialTypeDirectoryValue != 'undefined');       
         return result;
     };
     
