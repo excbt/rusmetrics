@@ -1155,6 +1155,14 @@ tr.nmc-inactive-price > td{
 /* Ок */
 .nmc-ok-button {
     height: 24px;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+.nmc-ok-button-highlight{
+    background-color: blue;
+    border-color: lightblue;
+/*    background: linear-gradient(to bottom, #337ab7, blue);*/
 }
 
 /* Сохранить */

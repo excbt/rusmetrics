@@ -426,6 +426,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 
     // Открыть окно выбора объектов
     $scope.selectObjectsClick = function(){
+        $scope.states.isSelectElement = false;
 //console.log($scope.objects); 
 //        $scope.isShowObjects = !$scope.isShowObjects;  
         $scope.states.isSelectedAllObjectsInWindow = angular.copy($scope.states.isSelectedAllObjects);
@@ -453,6 +454,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //    };
     
     $scope.selectNoticeTypesClick = function(){
+        $scope.states.isSelectElement = false;
         //create the copy of category states
         $scope.states.tempCriticalTypes_flag = angular.copy($scope.states.criticalTypes_flag);
         $scope.states.tempNoCriticalTypes_flag = angular.copy($scope.states.noCriticalTypes_flag);
@@ -482,12 +484,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     $scope.selectNoticeCategoriesClick = function(){
+        $scope.states.isSelectElement = false;
         //Create the copy of categories
         $scope.categoriesInWindow = angular.copy($scope.noticeCategories);
         $scope.states.isSelectedAllCategoriesInWindow = angular.copy($scope.states.isSelectedAllCategories);
     };
     
     $scope.selectNoticeDeviationsClick = function(){
+        $scope.states.isSelectElement = false;
         //Create the copy of deviations
         $scope.deviationsInWindow = angular.copy($scope.noticeDeviations);
         $scope.states.isSelectedAllDeviationsInWindow = angular.copy($scope.states.isSelectedAllDeviations);
@@ -593,8 +597,18 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
             $scope.states.isSelectedAllObjects = false;
         };
     };
+    
+    var closeFilter = function(){
+                //close filter list
+        var btnGroup = document.getElementsByClassName("btn-group open");   
+        if (!mainSvc.checkUndefinedNull(btnGroup) && (btnGroup.length != 0)){            
+            btnGroup[0].classList.remove("open");
+        };
+        $scope.states.isSelectElement = false;
+    };
       
-    $scope.selectObjects = function(){      
+    $scope.selectObjects = function(){  
+        closeFilter();        
         if ($scope.ctrlSettings.showGroupsFlag != true){
              performObjectsFilter();
     //        $scope.states.applyObjects_flag = true;
@@ -633,6 +647,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     $scope.selectNoticeTypes = function(){
+        closeFilter();         
         performNoticeTypesFilter();
 //        $scope.states.applyTypes_flag = true;
         //Типы были выбраны и их выбор был подтвержден нажатием кнопки "Применить"
@@ -659,6 +674,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     };
     
     $scope.selectNoticeCategories = function(){
+        closeFilter(); 
         performNoticeCategoriesFilter();
         $scope.getResultsPage(1);
     };
@@ -681,7 +697,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         };
     };
     
-    $scope.selectNoticeDeviations = function(){    
+    $scope.selectNoticeDeviations = function(){
+        closeFilter(); 
         performNoticeDeviationFilter();
         $scope.getResultsPage(1);
     };
@@ -885,7 +902,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //        (flag) ? label.caption = $scope.messages.defaultFilterCaption : label.caption = $scope.messages.defaultFilterCaption;        
 //    };
         
-    $scope.selectAllElements = function(elements){           
+    $scope.selectAllElements = function(elements){ 
+        $scope.states.isSelectElement = true;
         elements.forEach(function(elem){
             elem.selected = false;
         });
@@ -893,6 +911,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     
     $scope.selectElement = function(flagName){
+        $scope.states.isSelectElement = true;
         $scope.states[flagName] = false;        
         return false;
     };
