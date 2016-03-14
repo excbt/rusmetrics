@@ -1121,8 +1121,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     }, 500);
     
     $scope.isDisabledFilters = function(){
-        return false;
-//        return ctrlSettings.loading;        
+//        return false;
+        return $scope.ctrlSettings.loading;        
     };
     
     $rootScope.$on('navPlayerDatesChanged', function(){
