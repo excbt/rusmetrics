@@ -120,7 +120,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 				ReportConstants.Files.CONS_T1_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.CONS_T2_REPORT,
-				ReportConstants.Files.CONS_T2_FILE_COMPILED, isCompiled); // deprecated
+				ReportConstants.Files.CONS_T2_FILE_COMPILED, isCompiled);
 
 		loadReportMasterTemplate(ReportTypeKey.METROLOGICAL_REPORT,
 				ReportConstants.Files.METROLOGICAL_FILE_COMPILED, isCompiled); //
@@ -175,6 +175,10 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 
 		loadReportMasterTemplate(ReportTypeKey.HW_QUALITY_REPORT,
 				ReportConstants.Files.HW_QUALITY_FILE_COMPILED, isCompiled); //
+
+		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT_M_V,
+				ReportConstants.Files.COMM_M_V_FILE_COMPILED, isCompiled);
+
 	}
 
 	/**
@@ -199,6 +203,7 @@ public class ReportMasterTemplateCli extends AbstractDBToolCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.PARTNER_SERVICE_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_READINGS_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_REPORT);
+		updateAnyCommonReportTemplate(ReportTypeKey.COMMERCE_REPORT_M_V);
 
 	}
 

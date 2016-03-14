@@ -17,7 +17,7 @@ public enum ReportTypeKey implements KeynameObject {
 	COMMERCE_REPORT("commerce"), // CONS_REPORT,
 	EVENT_REPORT("event"), //
 	CONS_T1_REPORT("cons_t1"), //
-	CONS_T2_REPORT("cons_t2"), // // deprecated
+	CONS_T2_REPORT("cons_t2"), //
 	METROLOGICAL_REPORT("metrological"), //
 	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
 	CONSUMPTION_REPORT("consumption"), // // deprecated
@@ -31,7 +31,8 @@ public enum ReportTypeKey implements KeynameObject {
 	ABONENT_SERVICE_REPORT("abonent_service"), //
 	RMA_ABONENT_SERVICE_REPORT("rma_abonent_service"), //
 	ELECTRIC_READINGS_REPORT("electric_readings", ReportSystem.PENTAHO), //
-	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO);
+	HW_QUALITY_REPORT("hw_quality", ReportSystem.PENTAHO), //
+	COMMERCE_REPORT_M_V("commerce_m_v"); // COM_REPORT_M_V
 
 	private final String urlName;
 	private final String defaultFileName;
