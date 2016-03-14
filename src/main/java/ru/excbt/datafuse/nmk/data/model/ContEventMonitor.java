@@ -75,6 +75,16 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date lastContEventTime;
 
+	@Column(name = "worse_cont_event_id")
+	private Long worseContEventId;
+
+	@Column(name = "worse_cont_event_time")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date worseContEventTime;
+
+	@Column(name = "is_scalar")
+	private Boolean isScalar;
+
 	public Long getContObjectId() {
 		return contObjectId;
 	}
@@ -153,6 +163,30 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 
 	public void setContEventType(ContEventType contEventType) {
 		this.contEventType = contEventType;
+	}
+
+	public Long getWorseContEventId() {
+		return worseContEventId;
+	}
+
+	public void setWorseContEventId(Long worseContEventId) {
+		this.worseContEventId = worseContEventId;
+	}
+
+	public Date getWorseContEventTime() {
+		return worseContEventTime;
+	}
+
+	public void setWorseContEventTime(Date worseContEventTime) {
+		this.worseContEventTime = worseContEventTime;
+	}
+
+	public Boolean getIsScalar() {
+		return isScalar;
+	}
+
+	public void setIsScalar(Boolean isScalar) {
+		this.isScalar = isScalar;
 	}
 
 }
