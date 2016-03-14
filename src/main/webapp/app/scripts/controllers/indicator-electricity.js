@@ -74,7 +74,7 @@ angular.module('portalNMC')
                 $rootScope.reportEnd = indicatorSvc.getToDate();
         };
         //get date range settings
-        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");
+        $scope.dateRangeOptsRu = mainSvc.getDateRangeOptions("indicator-ru");        
     };
     initCtrl();
     

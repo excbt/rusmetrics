@@ -58,6 +58,24 @@ console.log("Run routeProviderConfig");
             }]
         }
       })
+      .when('/notices/list2', {
+        templateUrl: 'views/notice_s8_inline.html',
+        controller: 'NoticeCtrl',
+        resolve:{
+            permissions: ['mainSvc', function(mainSvc){
+                return mainSvc.getLoadedServicePermission();
+            }]
+        }
+      })
+//      .when('/notices/list1', {
+//        templateUrl: 'views/notice_s8.html',
+//        controller: 'NoticeCtrl1',
+//        resolve:{
+//            permissions: ['mainSvc', function(mainSvc){
+//                return mainSvc.getLoadedServicePermission();
+//            }]
+//        }
+//      })
       .when('/notices/list', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl',
@@ -211,6 +229,10 @@ console.log("Run routeProviderConfig");
       .when('/management/price', {
         templateUrl: 'views/management-rma-price.html',
         controller: 'MngmtPriceCtrl'
+      })
+      .when('/management/organizations', {
+        templateUrl: 'views/management-rma-organizations.html',
+        controller: 'MngmtOrganizationsCtrl'
       })
       .otherwise({
         redirectTo: '/'

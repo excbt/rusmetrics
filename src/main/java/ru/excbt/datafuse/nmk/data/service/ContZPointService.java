@@ -464,7 +464,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initRso(ContZPoint contZPoint) {
-		Organization organization = organizationService.findOne(contZPoint.getRsoId());
+		Organization organization = organizationService.selectOrganization(contZPoint.getRsoId());
 		if (organization == null) {
 			throw new PersistenceException(
 					String.format("RSO organization (id=%d) is not found", contZPoint.getRsoId()));
@@ -484,6 +484,26 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	public List<ContServiceType> selectContServiceTypes() {
 		List<ContServiceType> serviceTypes = contServiceTypeRepository.selectAll();
 		return serviceTypes;
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<DeviceObject> selectDeviceObjects(long contZPointId) {
+		return contZPointRepository.selectDeviceObjects(contZPointId);
+	}
+
+	/**
+	 * 
+	 * @param contZPointId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> selectDeviceObjectIds(long contZPointId) {
+		return contZPointRepository.selectDeviceObjectIds(contZPointId);
 	}
 
 }

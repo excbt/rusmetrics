@@ -684,7 +684,10 @@ angular.module('portalNMC')
             //ровняем таблицу, если появляются полосы прокрутки
             var tableHeader = document.getElementById("indicatorTableHeader");
             var tableDiv = document.getElementById("divIndicatorTable");
-            if (!mainSvc.checkUndefinedNull(tableDiv)){
+            if (!mainSvc.checkUndefinedNull(tableDiv) && !mainSvc.checkUndefinedNull(tableHeader)){
+                if (tableHeader.offsetWidth == 0){
+                    return "Indicators. tableHeader.offsetWidth == 0";
+                };
                 if (tableDiv.offsetWidth > tableDiv.clientWidth){
                     tableDiv.style.width = tableHeader.offsetWidth + 17 + 'px';
                 }else{

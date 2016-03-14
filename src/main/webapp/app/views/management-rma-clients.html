@@ -9,6 +9,15 @@
 <!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
         <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
         <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
+            <a class="nmc-main-tab-button" 
+               href="#/management/organizations/" 
+               aria-controls="organizations" 
+               role="tab" 
+               data-target="#organizations" 
+               data-toggle="tab">Организации
+            </a>
+        </li>
         <li id="clients_edit_2nd_menu_item" role="presentation" class="active" ><a class="nmc-main-tab-button" href="" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
@@ -29,7 +38,7 @@
             <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 {{column.caption}}
                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>
@@ -44,7 +53,7 @@
             <th class="col-md-1 nmc-td-for-buttons">
 
             </th>
-            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class">
+            <th ng-repeat="column in ctrlSettings.clientColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
                 {{column.caption}}
                 <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
             </th>
@@ -285,7 +294,7 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="objectListLabel" class="nmc-h3">
-				Список объектов абонента (всего объектов: {{selectedObjects.length || 0}})
+				Список объектов абонента (всего объектов: {{selectedObjects.length}}) 
 			</h3>
 		</div>
 		<div class="modal-body paddingLeftRight15 nmc-modal-body"> 

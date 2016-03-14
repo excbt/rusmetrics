@@ -149,4 +149,9 @@ public class ReportParamsetControllerTest extends AnyControllerTest {
 		_testGetJson("/api/reportParamset/menu/contextLaunch");
 	}
 
+	@Test
+	public void testReportDirectoryItems() throws Exception {
+		_testGetJson("/api/reportParamset/directoryParamItems/param_directory_mass_volume_switch");
+	}
+
 }

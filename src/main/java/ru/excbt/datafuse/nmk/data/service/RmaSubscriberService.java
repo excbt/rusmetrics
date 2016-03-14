@@ -36,6 +36,9 @@ public class RmaSubscriberService extends SubscriberService {
 	@Autowired
 	private ReportParamsetService reportParamsetService;
 
+	@Autowired
+	private OrganizationService organizationService;
+
 	/**
 	 * 
 	 * @return
@@ -61,7 +64,7 @@ public class RmaSubscriberService extends SubscriberService {
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 		checkArgument(subscriber.getDeleted() == 0);
 
-		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
 		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
@@ -92,7 +95,7 @@ public class RmaSubscriberService extends SubscriberService {
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 
-		subscriber.setOrganization(findOrganization(subscriber.getOrganizationId()));
+		subscriber.setOrganization(organizationService.findOrganization(subscriber.getOrganizationId()));
 
 		TimezoneDef timezoneDef = timezoneDefService.findOne(subscriber.getTimezoneDefKeyname());
 		subscriber.setTimezoneDef(timezoneDef);
