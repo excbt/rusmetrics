@@ -23,25 +23,44 @@
 <!-- 				</div> -->
 <!-- 			</div> -->
 			<div class="row paddingTop10PC" ng-controller="LoginController">
-				<div class="well col-md-offset-4 col-md-4">
-					<h3>НМК Портал</h3>
+				<div class="well col-md-offset-4 col-xs-4 col-md-4">
+					<h1 style="color: #5a646d"><b>Вход в Rusmetrics</b></h1>
 
-					<form role="form" method="post" action="j_spring_security_check">
-						<div>
-							<input name="j_username" id="j_username" type="text"
-								class="form-control" placeholder="имя пользователя"><br />
-							<input name="j_password" id="j_password" type="password"
-								class="form-control" placeholder="пароль"><br /> <input
-								type="hidden" name="${_csrf.parameterName}"
-								value="${_csrf.token}" />
-							<div class="alert alert-error bg-danger"
+					<form role="form" method="post" action="j_spring_security_check" class="form-horizontal">
+						<div class="form-group">
+							
+							<label for="j_username" class="col-xs-3 control-label">Пользователь: </label>
+							
+							<div class="col-xs-9">
+								<input name="j_username" id="j_username" type="text"
+									class="form-control" placeholder="имя пользователя"/>
+							</div>
+						</div>
+						<div class="form-group">							
+							<label for="j_password" class="col-xs-3 control-label">Пароль: </label>
+							<div class="col-xs-9">	
+								<input name="j_password" id="j_password" type="password"
+									class="form-control" placeholder="пароль"><br /> <input
+									type="hidden" name="${_csrf.parameterName}"
+									value="${_csrf.token}" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-12 alert alert-error bg-danger"
 								ng-show="displayLoginError">
 								<p>Неправильное имя пользователя или пароль</p>
 							</div>
-
-							<button type="submit" name="submit"
-								class="btn btn-primary pull-right">Войти</button>
-
+						</div>
+						<div class="form-group">
+							<div class="col-xs-9" style="color: green">
+								Вход для демонстрационного доступа:<br/>
+								Пользователь: demo<br/>
+								Пароль: demodemo<br/>
+							</div>
+							<div class="col-xs-3">
+								<button type="submit" name="submit"
+									class="btn btn-primary pull-right">Войти</button>
+							</div>
 
 						</div>
 					</form>
