@@ -61,7 +61,7 @@ console.log("Run routeProviderConfig");
       .when('/notices/list', {
         templateUrl: 'views/notice.html',
         controller: 'NoticeCtrl',
-       /* reloadOnSearch: false,*/
+        reloadOnSearch: false,
         resolve:{
             permissions: ['mainSvc', function(mainSvc){
                 return mainSvc.getLoadedServicePermission();

@@ -1159,6 +1159,14 @@ tr.nmc-inactive-price > td{
     transition-duration: .5s;
 }
 
+/* Кнопка "Ок" в фильтрах*/
+.nmc-ok-button-in-filter {
+    padding-top: 2px;
+    height: 24px;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
 .nmc-ok-button-highlight{
 /*
     background-color: blue;
@@ -1167,7 +1175,7 @@ tr.nmc-inactive-price > td{
 /*    background: linear-gradient(to bottom, #337ab7, blue);*/
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
-    border: none;
+    border: 1px solid #FF6802;
 }
 
 /* Сохранить */
@@ -1207,6 +1215,24 @@ tr.nmc-inactive-price > td{
 /*  Паддинг для надписи внутри переключателя "Группы / Объекты" на странице Уведомления*/
 .toggle-off.btn-xs, .toggle-on.btn-xs{
     padding-top: 3px;
+}
+
+.toggle-off.btn-xs{
+    padding-left: 0;
+}
+
+.toggle-on.btn-xs{
+    padding-right: 0;
+}
+
+
+/* "Хвостик" для переключателя Группы / Объекты*/
+.toggle-group{
+    left: -20%;
+}
+
+.toggle.off .toggle-group {
+    left: -80%;
 }
 
 /* Кнопка "Обновить" на странице уведомлений*/

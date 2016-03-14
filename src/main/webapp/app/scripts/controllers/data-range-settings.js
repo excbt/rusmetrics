@@ -103,6 +103,8 @@ app
             $location.search("fromDate", $rootScope.reportStart);
             $location.search("toDate", $rootScope.reportEnd);
         };
+        
+        $rootScope.$broadcast('navPlayerDatesChanged');
 //console.log($location);        
 //console.log("data-range-settings");         
 //console.log($rootScope.reportStart); 
