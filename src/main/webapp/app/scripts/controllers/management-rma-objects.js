@@ -970,6 +970,24 @@ angular.module('portalNMC')
 //console.log($scope.objectsOnPage);                    
                 };
                 
+                $scope.changeServiceType = function(zpSettings){
+                    if ($scope.emptyString(zpSettings.customServiceName)){
+                        switch (zpSettings.contServiceTypeKeyname){
+                            case "heat": 
+                                zpSettings.customServiceName = "Система отопления";
+                                break;
+                            default:
+                                $scope.data.serviceTypes.some(function(svType){
+                                    if (svType.keyname == zpSettings.contServiceTypeKeyname){
+                                        zpSettings.customServiceName = svType.caption;
+                                        return true;
+                                    };
+                                });
+                                 
+                        };
+                    };
+                };
+                
                 $scope.$on('$destroy', function() {
                     window.onkeydown = undefined;
                 }); 

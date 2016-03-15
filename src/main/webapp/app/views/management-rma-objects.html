@@ -239,7 +239,10 @@
                                 <td class="nmc-text-align-left ">
 <!--                                    <input class="form-control nmc-text-input-form" type="text" id="inputType"  placeholder="Тип"  size="30" ng-model="zpointSettings.zpointType">-->
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(zpointSettings.contServiceTypeKeyname)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings.contServiceTypeKeyname" ng-options="serviceType.keyname as serviceType.caption for serviceType in data.serviceTypes ">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                ng-model="zpointSettings.contServiceTypeKeyname" 
+                                                ng-options="serviceType.keyname as serviceType.caption for serviceType in data.serviceTypes "
+                                                ng-change="changeServiceType(zpointSettings)">
                                         
                                         </select>
                                     </div>

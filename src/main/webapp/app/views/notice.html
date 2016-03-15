@@ -54,9 +54,11 @@
     </div>
     <div class="col-xs-2 col-md-2" ng-controller="DataRangeSettings" >   
         <div class="input-group">
-            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon">период: с</span>
+            <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon"
+                  ng-disabled="isDisabledFilters()">период: с</span>
             <input date-range-picker class="form-control date-picker nmc-date-interval-form nmc-input-data"
-                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"/>
+                type="text" ng-model="navPlayerDates" options="queryDateOptsRu" aria-describedby="leftAddon"
+                   ng-disabled="isDisabledFilters()"/>
         </div>    
     </div>
     <div class="col-xs-1 col-md-1 noPadding nmc-div-filter-kind">
@@ -66,7 +68,8 @@
                       class="btn btn-default btn-xs dropdown-toggle nmc-button-notice-toggle" 
                       data-toggle="dropdown" 
                       aria-haspopup="true" 
-                      aria-expanded="false">
+                      aria-expanded="false"
+                      ng-disabled="isDisabledFilters()">
                 {{visibleText}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu">
@@ -78,12 +81,14 @@
     <div class="col-xs-1 col-md-1 noPadding nmc-div-filter-remove">
            <button title="Сбросить все фильтры" 
                    class="btn btn-xs btn-primary nmc-button-notice-toggle" 
-                   ng-click="clearAllFilters()">Сброс фильтров</button>
+                   ng-click="clearAllFilters()"
+                   ng-disabled="isDisabledFilters()">Сброс фильтров</button>
     </div>
     <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
         <button title="Обновить" 
                 class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
-                ng-click="getResultsPage(1)">
+                ng-click="getResultsPage(1)"
+                ng-disabled="isDisabledFilters()">
         </button>
     </div>
 
@@ -92,7 +97,8 @@
          <div class="col-xs-7 col-md-7 noPadding">
             <label class="nmc-form-label">Записей на странице:</label>
     <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
-            <select class="form-control nmc-select-form nmc-view-allcount" ng-model="noticesPerPage"    >
+            <select class="form-control nmc-select-form nmc-view-allcount" ng-model="noticesPerPage"    
+                    ng-disabled="isDisabledFilters()">
                         <option>15</option>
                         <option>25</option>
                         <option>50</option>
@@ -154,20 +160,22 @@
 -->
                     <div style="display: table-cell;">
                         <input id="object-toggle-view" 
-                               ng-model="ctrlSettings.showGroupsFlag" 
+                               ng-model="ctrlSettings.showObjectsFlag" 
                                data-toggle="toggle"
-                               data-on="Группы" 
-                               data-off="Объекты" 
+                               data-on="Объекты" 
+                               data-off="Группы" 
                                data-size="mini"
-                               data-width="80"
+                               data-width="100"
                                data-height="26"
                                type="checkbox" 
                                class="" 
                                style=""
+                               checked
+                               ng-disabled="isDisabledFilters()"
                                />
                     </div>
                     <div class="btn-group">
-                        <button 
+                        <button ng-disabled="isDisabledFilters()"
                                 data-toggle="dropdown" 
                                 class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
                                 ng-click="selectObjectsClick()"
@@ -175,7 +183,10 @@
                                 ng-class="{'paddingLeft20': selectedObjects_list.caption != messages.defaultFilterCaption}"> 
                             {{selectedObjects_list.caption}}
                             <i ng-if="selectedObjects_list.caption != messages.defaultFilterCaption" 
-                               class="fa fa-angle-double-down fa-lg">
+                               class="">                                
+                                <strong>...</strong>
+<!--                                glyphicon glyphicon-option-horizontal-->
+<!--                                fa fa-angle-double-down fa-lg-->
                             </i>
 <!--
                             <img ng-if="selectedObjects_list.caption != messages.defaultFilterCaption" height="22" width="22" 
@@ -204,12 +215,12 @@
                                     <div class="col-xs-2 col-md-2">
                                         <p title="Применить фильтр" 
                                                 type="submit" 
-                                                class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
                                                 ng-click="selectObjects();"
                                                 value="Ок" 
                                                 style=""
                                                 ng-disabled="isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)"
-                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement}"
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(objectsInWindow, states.isSelectedAllObjectsInWindow)}"
                                            >
                                             OK
                                             <i class="glyphicon glyphicon-filter">
@@ -272,10 +283,10 @@
                 <div class="input-group nmc-input-data">
                     <span class="input-group-addon nmc-filter-form-addon" 
                           id="leftAddon" 
-                          ng-click="selectNoticeCategoriesClick()">Категории:
+                          >Категории:
                     </span>
                     <div class="btn-group">
-                        <button  
+                        <button ng-disabled="isDisabledFilters()" 
                                 data-toggle="dropdown" 
                                 class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
                                 ng-click="selectNoticeCategoriesClick()"
@@ -283,7 +294,7 @@
                                 ng-class="{'paddingLeft20': selectedNoticeCategories_list.caption != messages.defaultFilterCaption}"> 
                             {{selectedNoticeCategories_list.caption}}
                             <i ng-if="selectedNoticeCategories_list.caption != messages.defaultFilterCaption" 
-                               class="fa fa-angle-double-down fa-lg"></i>
+                               class=""><strong>...</strong></i>
 <!--
                             <img ng-if="selectedNoticeCategories_list.caption != messages.defaultFilterCaption" height="22" width="22" 
                                  src="images/plain-flat-double-chevron-down-arrow.png"
@@ -311,12 +322,12 @@
                                     <div class="col-xs-2 col-md-2">
                                         <p title="Применить фильтр" 
                                                 type="submit" 
-                                                class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                                class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
                                                 ng-click="selectNoticeCategories()"
                                                 value="Ок" 
                                                 style=""
                                                 ng-disabled="isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)"
-                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                           ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(categoriesInWindow, states.isSelectedAllCategoriesInWindow)}">
                                             OK
                                             <i class="glyphicon glyphicon-filter">
                                             </i>
@@ -376,10 +387,10 @@
                 <div class="input-group nmc-input-data">
                     <span class="input-group-addon nmc-filter-form-addon" 
                           id="leftAddon" 
-                          ng-click="selectNoticeTypesClick()">Типы:
+                          >Типы:
                     </span>
                     <div class="btn-group">
-                        <button 
+                        <button ng-disabled="isDisabledFilters()"
                                 data-toggle="dropdown" 
                                 class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
                                 ng-click="selectNoticeTypesClick()"
@@ -387,7 +398,7 @@
                                 ng-class="{'paddingLeft20': selectedNoticeTypes_list.caption != messages.defaultFilterCaption}"> 
                             {{selectedNoticeTypes_list.caption}}
                             <i ng-if="selectedNoticeTypes_list.caption != messages.defaultFilterCaption" 
-                               class="fa fa-angle-double-down fa-lg"></i>
+                               class=""><strong>...</strong></i>
 <!--
                             <img ng-if="selectedNoticeTypes_list.caption != messages.defaultFilterCaption" height="22" width="22" 
                                  src="images/plain-flat-double-chevron-down-arrow.png"
@@ -415,12 +426,12 @@
                                 <div class="col-xs-2 col-md-2">
                                     <p title="Применить фильтр" 
                                             type="submit" 
-                                            class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                            class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
                                             ng-click="selectNoticeTypes()"
                                             value="Ок" 
                                             style=""
                                             ng-disabled="isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)"
-                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(typesInWindow, states.isSelectedAllTypesInWindow)}">
                                         OK
                                         <i class="glyphicon glyphicon-filter">
                                         </i>
@@ -480,10 +491,10 @@
                 <div class="input-group nmc-input-data">
                     <span class="input-group-addon nmc-filter-form-addon" 
                           id="leftAddon" 
-                          ng-click="selectNoticeDeviationsClick()">Отклонения:
+                          >Отклонения:
                     </span>
                     <div class="btn-group">
-                        <button  
+                        <button  ng-disabled="isDisabledFilters()"
                                 data-toggle="dropdown" 
                                 class="btn btn-default nmc-filter-form nmc-input-digital-data dropdown-toggle nmc-dropdown-toggle-filter"
                                 ng-click="selectNoticeDeviationsClick()"
@@ -491,7 +502,7 @@
                                 ng-class="{'paddingLeft20': selectedNoticeDeviations_list.caption != messages.defaultFilterCaption}"> 
                             {{selectedNoticeDeviations_list.caption}}
                             <i ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" 
-                               class="fa fa-angle-double-down fa-lg"></i>
+                               class=""><strong>...</strong></i>
 <!--
                             <img ng-if="selectedNoticeDeviations_list.caption != messages.defaultFilterCaption" height="22" width="22" 
                                  src="images/plain-flat-double-chevron-down-arrow.png"
@@ -519,12 +530,12 @@
                                 <div class="col-xs-2 col-md-2">
                                     <p title="Применить фильтр" 
                                             type="submit" 
-                                            class="btn btn-xs btn-primary nmc-ok-button pull-right marginRight5" 
+                                            class="btn btn-xs btn-primary nmc-ok-button-in-filter pull-right marginRight5" 
                                             ng-click="selectNoticeDeviations()"
                                             value="Ок" 
                                             style=""
                                             ng-disabled="isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)"
-                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement}">
+                                       ng-class="{'nmc-ok-button-highlight': states.isSelectElement&&!isFilterApplyDisabled(deviationsInWindow, states.isSelectedAllDeviationsInWindow)}">
                                         OK
                                         <i class="glyphicon glyphicon-filter">
                                         </i>
@@ -586,7 +597,8 @@
 
 <div >
 <!--    Непрокручиваемая шапка-->
-    <table class="nmc-table-nowrap-data nmc-main-table noMargin" 
+    <table ng-show="!ctrlSettings.loading"
+           class="nmc-table-nowrap-data nmc-main-table noMargin" 
            ng-class="tableDef.tableClass">
         <tr ng-class="tableDef.headerClassTR">
             <th class="nmc-td-for-buttons nmc-notice-th">
@@ -649,8 +661,11 @@
     <div  ng-show="ctrlSettings.loading" class="nmc-loading">
         <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
     </div>
+    <div  ng-show="!ctrlSettings.loading && notices.length == 0" class="nmc-loading">
+        Нет уведомлений. 
+    </div>
     
-    <div class="nmc-notice-table-with-fixed-header" ng-show="!ctrlSettings.loading">
+    <div class="nmc-notice-table-with-fixed-header" ng-show="!ctrlSettings.loading && notices.length > 0">
         <table class="nmc-table-nowrap-data nmc-main-table" ng-class="tableDef.tableClass">
             <tr dir-paginate="notice in notices | filter: noticefilter | itemsPerPage: noticesPerPage" total-items="totalNotices" current-page="pagination.current" ng-dblclick="showNoticeDetail(notice)">
     <!--            ng-class="{'nmc-tr-positive-notice':!notice.isBaseEvent}">-->
@@ -680,112 +695,16 @@
             </tr>
         </table>
     </div>
-    <div class="col-md-9">
+    <div ng-show="!ctrlSettings.loading && notices.length > 0" class="col-md-9">
         <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/public/bower_components/angular-utils-pagination/nmcDirPagination.tpl.html"></dir-pagination-controls>
     </div>
-    <div class="col-md-3 noPadding">
+    <div ng-show="!ctrlSettings.loading && notices.length > 0" class="col-md-3 noPadding">
              <div class="input-group nmc-search-form">
                 <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
                  <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticefilter">
             </div>     
     </div> 
 </div>
-
-<!--Окно выбора объектов-->
-<div id="selectObjectsModal" class="modal nmc-modal-window nmc-select-objects-window" role="dialog"
-	aria-labelledby="selectObjectsLabel" tabindex="-1">
-
-	<div class="modal-dialog nmc-modal-dialog">
-<!--                modal-content">-->
-    <div class="modal-content nmc-modal-narrow-dialog">
-        <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
-          <div class="row">
-            <div class="col-md-9 noPadding paddingLeft10">
-                <div class="input-group marginBottom10 nmc-search-form">
-                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
-                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="objectfilter">
-                </div>
-            </div>
-            <div class="col-md-3">
-                <input title="Применить фильтр" type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-                    ng-click="selectObjects();"
-                    value="Ок" />
-            </div>
-          </div>
-	
-		</div>
-
-		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
-
-            <div class="nmc-object-list-in-notices nmc-modal-panel-with-table">
-                <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
-                    <tr ng-repeat="object in objectsInWindow | filter: objectfilter">
-                        <td><input type="checkbox" ng-model="object.selected" class="nmc-checkbox-form">{{object.contGroupName || object.fullName}}
-                        </td>    
-                    </tr>    
-                </table>
-            </div>    
-		</div>
-
-	</div>
-        </div>
-</div>
-
-<!--Окно выбора типов уведомлений-->
-<div id="selectNoticeTypesModal" class="modal nmc-modal-window nmc-select-objects-window nmc-select-notice-types-window" role="dialog"
-	aria-labelledby="selectNoticeTypesLabel" tabindex="-1">
-
-	<div class="modal-dialog nmc-modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header well nmc-modal-footer noMarginBottom noMarginTop paddingTop5">
-          <div class="row">
-            <div class="col-md-10 noPadding paddingLeft10">
-                <div class="input-group marginBottom10 nmc-search-form">
-                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-searh-form-button"></i></span>
-                     <input type="text"  class="form-control nmc-text-input-form"  ng-model="noticetypefilter">
-                </div>
-            </div>
-            <div class="col-md-2">
-                <input title="Применить фильтр" type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
-                    ng-click="selectNoticeTypes();"
-                    value="Ок" />
-            </div>
-          </div>      
-		</div>
-
-		<div class="modal-body well nmc-modal-body noMarginBottom noMarginTop paddingLeft5">
-            <div class="nmc-object-list nmc-modal-panel-with-table">
-                <table class="table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
-                    <tr>
-                        <td><input type="checkbox" ng-model="states.tempCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllCritical()">Критические
-                        </td>
-                    </tr>
-                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterCritical">
-                        <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
-                        </td>    
-                    </tr>
-                    
-                    <tr>
-                        <td><input type="checkbox" ng-model="states.tempNoCriticalTypes_flag" class="nmc-checkbox-form" ng-click="selectAllNoCritical()">Некритические
-                        </td>
-                    </tr>
-                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterNoCritical">
-                        <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
-                        </td>    
-                    </tr>
-                    <tr ng-repeat="noticeType in typesInWindow |filter: noticetypefilter | filter: noticeFilterUndefinedCritical">
-                        <td><span class="paddingLeft10"><input type="checkbox" ng-model="noticeType.selected" class="nmc-checkbox-form">{{noticeType.name}}</span>
-                        </td>    
-                    </tr>
-
-                </table>
-            </div>    
-		</div>
-
-	</div>
-        </div>
-</div>
-
 
 <!-- Карточка уведомления-->
 <div id="showNoticeModal" class="modal fade nmc-modal-window" role="dialog"

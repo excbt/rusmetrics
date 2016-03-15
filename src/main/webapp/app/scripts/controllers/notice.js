@@ -22,14 +22,15 @@ app.filter('filterByCategories', function(){
     };
 });
 
-app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter){
-//console.log("Load NoticeCtrl."); 
+app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $cookies, $location, crudGridDataFactory, objectSvc, notificationFactory, mainSvc, $filter, $timeout){
+//console.log("Load NoticeCtrl.");
+    
     $rootScope.ctxId = "notice_page";
     //ctrl settings
     $scope.ctrlSettings = {};
     $scope.ctrlSettings.dateFormat = "DD.MM.YYYY HH:mm";
     $scope.ctrlSettings.serverTimeZone = 3;//server time zone at Hours
-    $scope.ctrlSettings.showGroupsFlag=false;
+    $scope.ctrlSettings.showObjectsFlag=true;
     $scope.ctrlSettings.loading = true;
     
     $scope.ctrlSettings.ctxId = "notice_page";
@@ -242,7 +243,12 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         if (!mainSvc.checkUndefinedNull(isNew)){
             params.isNew = isNew;
         };        
-        return $resource(table, {}, {'get': {method:'GET', params:params, cancellable: true}});
+        //return $resource(table, {}, {'get': {method:'GET', params:params, cancellable: true}});
+        return $http({
+            url: table,
+            method: "GET",
+            params: params
+        });
     };
     
     $scope.pagination = {
@@ -269,6 +275,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     //Преобразуем полученные уведомления в формат, который будет отображаться пользователю
     var dataParse = function(arr){
+//console.log(arr);        
         var oneNotice = {};
         var tmp = arr.map(function(el){
 //console.log(el);            
@@ -362,14 +369,14 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $scope.ctrlSettings.loading = true;
         $scope.pagination.current = pageNumber;        
 //old version        var url =  $scope.crudTableName+"/eventsFilterPaged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;        
-        var url = $scope.crudTableName+"/paged"+"?"+"page="+(pageNumber-1)+"&"+"size="+$scope.noticesPerPage;  
+        var url = $scope.crudTableName + "/paged" + "?" + "page=" + (pageNumber-1) + "&" + "size=" + $scope.noticesPerPage;  
 //console.log($rootScope.reportStart); 
-//console.log(loca);        
-        if ((angular.isDefined(loca))){
+//console.log(loca);         
+        if (angular.isDefined(loca.fromDate) && (angular.isDefined(loca.toDate))){
             $scope.startDate = loca.fromDate;
             $scope.endDate = loca.toDate;  
-        }else{
-            $scope.startDate = $rootScope.reportStart || moment().format('YYYY-MM-DD');
+        }else{            
+            $scope.startDate = $rootScope.reportStart || moment().subtract(6, 'days').format('YYYY-MM-DD');
             $scope.endDate = $rootScope.reportEnd || moment().format('YYYY-MM-DD');  
         };
 //console.log("****************** Запрос *****************");
@@ -385,7 +392,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log($scope.noticesPromise);            
 //console.log($scope.currentNotices);                        
 //            $scope.noticesPromise.cancelRequest($scope.currentNotices);
-//        };
+//        };       
         $scope.noticesPromise = getNotices(url, 
                    $scope.startDate, 
                    $scope.endDate, 
@@ -395,9 +402,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
                    $scope.selectedNoticeDeviations,
                    $scope.isNew);
         
-        $scope.currentNotices = $scope.noticesPromise.get(function(data){          
+//        $scope.currentNotices = $scope.noticesPromise.get(function(data){          
+        $scope.currentNotices = $scope.noticesPromise.then(function(resp){              
+                        var data = resp.data;
                         var result = [];
-                        $scope.data= data;
+                        $scope.data = data;
                         var oneNotice = {};
                         $scope.totalNotices = data.totalElements;
                         var tmp = dataParse(data.objects);
@@ -405,7 +414,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
                         $scope.ctrlSettings.loading = false;            
                     },
                 function(e){
-                    console.log(e);
+                    errorCallback(e);
+                    $scope.ctrlSettings.loading = false;
                 }
         );
     };
@@ -430,7 +440,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 //console.log($scope.objects); 
 //        $scope.isShowObjects = !$scope.isShowObjects;  
         $scope.states.isSelectedAllObjectsInWindow = angular.copy($scope.states.isSelectedAllObjects);
-        if ($scope.ctrlSettings.showGroupsFlag == false){
+        if ($scope.ctrlSettings.showObjectsFlag == true){
             $scope.objectsInWindow = angular.copy($scope.objects);
         }else{
             $scope.objectsInWindow = angular.copy($scope.groups);
@@ -609,7 +619,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
       
     $scope.selectObjects = function(){  
         closeFilter();        
-        if ($scope.ctrlSettings.showGroupsFlag != true){
+        if ($scope.ctrlSettings.showObjectsFlag == true){
              performObjectsFilter();
     //        $scope.states.applyObjects_flag = true;
         }else{
@@ -713,7 +723,7 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         $('#showNoticeModal').modal();
     };  
     
-    var successCallbackGetObjects = function(response){
+    var successCallbackGetObjects = function(response){        
         $scope.objects = response.data;
         objectSvc.sortObjectsByFullName($scope.objects);
         if (angular.isDefined($scope.zpointList)&&angular.isArray($scope.zpointList)){
@@ -812,6 +822,10 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
     
     $scope.$on('notices:getZpointList',function(){
         $scope.getZpointList($scope.zpointListUrl);
+    });
+    
+    $scope.$on('notices:selectObjects', function(){        
+        $scope.selectObjects();
     });
     
     //new/all filter
@@ -1106,19 +1120,31 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
         setVisibles($scope.ctrlSettings.ctxId);
     }, 500);
     
+    $scope.isDisabledFilters = function(){
+//        return false;
+        return $scope.ctrlSettings.loading;        
+    };
+    
+    $rootScope.$on('navPlayerDatesChanged', function(){
+//console.log("Notices. Get event 'navPlayerDatesChanged'"); 
+        //watch changes of date interval
+        $scope.getResultsPage(1);
+    });
     
     //set setting for history toggle
     $(document).ready(function(){
-        $('#object-toggle-view').bootstrapToggle({
-            on: "Группы",
-            off: "Объекты"
-        });
+        $('#object-toggle-view').bootstrapToggle();
         $('#object-toggle-view').change(function(){
-            $scope.ctrlSettings.showGroupsFlag = Boolean($(this).prop('checked'));
-            $scope.clearObjectFilter();
+            $scope.ctrlSettings.showObjectsFlag = Boolean($(this).prop('checked'));
+            $scope.$apply();                        
             $scope.selectObjectsClick();
-            $scope.selectObjects();
-            $scope.$apply();
+            //If no change for request - change only filter caption and filter object list
+            if ($scope.selectedObjects_list.caption == $scope.messages.defaultFilterCaption){
+                return "Object / group filter. No changes";
+            };
+            $scope.clearObjectFilter();
+            $scope.$broadcast('notices:selectObjects');
+//            $scope.selectObjects();            
         });
     });
     
