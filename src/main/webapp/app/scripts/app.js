@@ -217,6 +217,10 @@ console.log("Run routeProviderConfig");
         templateUrl: 'views/management-rma-organizations.html',
         controller: 'MngmtOrganizationsCtrl'
       })
+      .when('/management/temp-sch', {
+        templateUrl: 'views/management-rma-temp-sch.html',
+        controller: 'TempSchCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

@@ -9,7 +9,7 @@
 <link rel="stylesheet"
 	href="bower_components/bootstrap/dist/css/bootstrap.css" />
 <link rel="stylesheet" href="resources/styles/main.css" media="screen">
-<title>НМК</title>
+<title>Rusmetrics</title>
 
 </head>
 <body class="excbt_login_body">
