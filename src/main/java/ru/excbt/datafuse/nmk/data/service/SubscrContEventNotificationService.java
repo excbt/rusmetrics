@@ -506,11 +506,8 @@ public class SubscrContEventNotificationService {
 			if (contEventDeviationList == null || contEventDeviationList.size() == 0) {
 				return null;
 			}
-			return cb.or(
-					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
-							.in(contEventDeviationList),
-					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
-							.isNull());
+			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
+					.in(contEventDeviationList));
 		};
 	}
 
