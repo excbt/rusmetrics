@@ -492,11 +492,8 @@ public class SubscrContEventNotificationService {
 			if (contEventCategoryList == null || contEventCategoryList.size() == 0) {
 				return null;
 			}
-			return cb.or(
-					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-							.get(ContEventType_.contEventCategory).in(contEventCategoryList),
-					root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-							.get(ContEventType_.contEventCategory).isNull());
+			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
+					.get(ContEventType_.contEventCategory).in(contEventCategoryList));
 		};
 	}
 
