@@ -84,7 +84,7 @@
                                             <i title="Сформировать отчет" class="btn btn-xs glyphicon glyphicon-play nmc-button-in-table-run" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.create)" ng-class="{'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
                                             <i title="Отредактировать параметры и сформировать отчет" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editParamSet(object, oldObject, ctrlSettings.openModes.edit)" data-target="#main_properties" data-toggle="tab"></i>                                                                
 
-                                            <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table-run" ng-click="previewReport(object, oldObject)" ng-disabled="(object.reportType=='COMMERCE_REPORT')" ng-class="{'nmc-button-in-table-run-disabled': object.reportType=='COMMERCE_REPORT', 'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
+                                            <i title="Предварительный просмотр" class="btn btn-xs glyphicon glyphicon-eye-open nmc-button-in-table-run" ng-click="previewReport(object, oldObject)" ng-disabled="(object.reportType=='COMMERCE_REPORT' || object.reportType=='COMMERCE_REPORT_M_V')" ng-class="{'nmc-button-in-table-run-disabled': object.reportType=='COMMERCE_REPORT' || object.reportType=='COMMERCE_REPORT_M_V', 'nmc-button-in-table-run-green':oldObject.checkFlag, 'nmc-button-in-table-run-red':!oldObject.checkFlag}"></i>
 
                                          </td>
                                          <td>

@@ -533,7 +533,7 @@
                             </div>
                         </div>
                         <div class="col-md-3">
-							<button ng-disabled="currentReportType.reportType=='COMMERCE_REPORT'" 
+							<button ng-disabled="currentReportType.reportType=='COMMERCE_REPORT' || currentReportType.reportType=='COMMERCE_REPORT_M_V'" 
                                     class="btn btn-default btn-block btn-xs nmc-save-button" 
                                     ng-click="checkAndRunParamset(currentReportType, currentObject, true)">
                                 Предпросмотр
