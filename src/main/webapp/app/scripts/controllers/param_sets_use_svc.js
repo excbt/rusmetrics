@@ -379,6 +379,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 $scope.getDirectory(".." + result.specialTypeDirectoryUrl, result);
             };
             result.textValue = null;
+            result.boolValue = null;
             result.numericValue = null;
             result.oneDateValue = null;
             
@@ -455,6 +456,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 //Ищем значение этого параметра в массиве параметров варианта отчета
                 if (paramsetObj.paramSpecialList.length == 0){
                     result.textValue = null;
+                    result.boolValue = null;
                     result.numericValue = null;
                     result.oneDateValue = null;
                     result.startDateValue = null;
@@ -477,6 +479,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 if (elementIndex != -1){
                     result.id = paramsetObj.paramSpecialList[elementIndex].id || null;
                     result.textValue = paramsetObj.paramSpecialList[elementIndex].textValue || null;
+                    result.boolValue = paramsetObj.paramSpecialList[elementIndex].boolValue || null;
                     result.numericValue = paramsetObj.paramSpecialList[elementIndex].numericValue || null;
                     result.oneDateValue = paramsetObj.paramSpecialList[elementIndex].oneDateValue || null;
                     result.startDateValue = paramsetObj.paramSpecialList[elementIndex].startDateValue || null;
@@ -489,6 +492,7 @@ app.controller('ParamSetsCtrl',['$scope', '$rootScope', '$resource', '$http', 'c
                 }else{
                     result.id = null;
                     result.textValue = null;
+                    result.boolValue = null;
                     result.numericValue = null;
                     result.oneDateValue = null;
                     result.startDateValue = null;

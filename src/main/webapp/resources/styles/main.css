@@ -115,3 +115,10 @@ body {
 	
 	padding-top: 10%;
 }
+
+.nmc-hide{
+	display: none;
+}
+.nmc-show{
+	display: block;
+}

@@ -22,8 +22,10 @@
         <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
         <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+<!--
         <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Темп. графики</a></li>
     </ul>
+-->
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
@@ -260,7 +262,9 @@
 <!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputDevice" size="70" ng-model="zpointSettings.zpointModel">-->
                                     
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings._activeDeviceObjectId)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings._activeDeviceObjectId" ng-options="device.id as device.number for device in currentObject.devices">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                ng-model="zpointSettings._activeDeviceObjectId" 
+                                                ng-options="device.id as device.number for device in currentObject.devices">
                                         </select>
                                     </div>
                                 </td>
@@ -273,17 +277,54 @@
 <!--                                	<input class="form-control nmc-text-input-form" type="text" id="inputType" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">-->
                                     
                                     <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(zpointSettings.rsoId)}">
-                                        <select class="form-control nmc-input-data nmc-select-form" ng-model="zpointSettings.rsoId" ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                ng-model="zpointSettings.rsoId" 
+                                                ng-options="rso.id as rso.organizationName for rso in data.rsoOrganizations">
                                         </select>
                                     </div>
                                 </td>
                             </tr>
+<!--
+                            <tr>
+                                <td class="col-sm-3">
+                                	<label for="inputTempSch">Температурный график</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom">
+-->
+<!--
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                ng-model="zpointSettings.tempSch" 
+                                                ng-options="sch.id as sch.name for sch in data.tempSchedules">
+                                        </select>
+-->
+<!--
+                                        <ui-select class="nmc-ui-select-form" 
+                                                   ng-model="zpointSettings.tempSch" 
+                                                   theme="bootstrap" 
+                                                   ng-disabled="disabled">
+                                            <ui-select-match placeholder="">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices group-by="'organizationName'" repeat="rso in data.rsoOrganizations | propsFilter: {organizationName: $select.search, organizationDescription: $select.search}">
+                                              <div ng-bind-html="rso.organizationName | highlight: $select.search"></div>
+                                              <small>
+                                                описание: <span ng-bind-html="rso.organizationDescription | highlight: $select.search"></span>
+                                              </small>
+                                            </ui-select-choices>
+                                          </ui-select>
+                                    </div>
+                                </td>
+                            </tr>
+-->
                             <tr>
                                 <td class="col-sm-3">
                                     <label for="inputTSNumber">Номер теплосистемы</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputTSNumber"  ng-model="zpointSettings.tsNumber" data-inputmask="'mask': '9[9]', 'greedy':false"/>
+                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text" 
+                                           id="inputTSNumber"  
+                                           ng-model="zpointSettings.tsNumber" 
+                                           data-inputmask="'mask': '9[9]', 'greedy':false"/>
                                 </td>
                             </tr>
                             <tr>
@@ -291,12 +332,17 @@
                                     <label for="inputTSNumber">Номер точки учета*</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" type="text" id="inputEXCode" ng-model="zpointSettings.exCode"/>
+                                	<input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text" 
+                                           id="inputEXCode" 
+                                           ng-model="zpointSettings.exCode"/>
                                 </td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="zpointSettings.isDroolsDisable"> Не обрабатывать события
+                                   <input type="checkbox" 
+                                          class="nmc-checkbox-form" 
+                                          ng-model="zpointSettings.isDroolsDisable"> Не обрабатывать события
                                 </td>
                             </tr>
                             <tr>

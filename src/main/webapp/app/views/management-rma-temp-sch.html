@@ -71,18 +71,68 @@
             </th>
         </tr>
 </table>
+<div class="nmc-data-sources-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-md-1 nmc-td-for-buttons">
 
+            </th>
+            <th ng-repeat="column in ctrlSettings.tempSchColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                {{column.caption}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
 
+        <tr ng-repeat="schedule in data.tempSchedules | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-button">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Свойства" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(schedule)" data-target="#showTempSchModal" data-toggle="modal"></i>
+                        
+                    </div>
+                </div>
+            </td>
+            <td ng-repeat="column in ctrlSettings.tempSchColumns" ng-class="column.class">
+                <div ng-switch on="column.type">
+                    <span ng-switch-when="name" ng-class="">{{schedule[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{schedule['id']}})</span>
+                    </span>
+                    <span ng-switch-when="checkbox" ng-class="">
+                        <input type="checkbox" ng-model="schedule[column.name]" disabled/>
+                    </span>
+                    <span ng-switch-default >
+                        {{schedule[column.name]}}
+                    </span>
+                </div>
+            </td>
 
+            <td class="col-md-1">
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-right">                   
+                        <i title="Удалить" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(schedule)" data-target="#showTempSchModal" data-toggle="modal"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
 
-
-<!--Show organization options-->
-<div id="showTempSchModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showOrganizationOptionLabel" tabindex="-1">
+<!--Show schedule options-->
+<div id="showTempSchModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog"
+	aria-labelledby="showTempSchLabel" 
+     tabindex="-1">
 	<div class="modal-dialog  modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="showOrganizationOptionLabel" class="nmc-h3">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close"><span aria-hidden="true">&times;</span>
+            </button>
+			<h3 id="showTempSchLabel" 
+                class="nmc-h3">
 				Температурный график
 			</h3>
 		</div>
@@ -95,18 +145,32 @@
                                 <td class="col-sm-3"><label for="inputName">Температура</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}"
-                                         style="display: table-cell;">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Макс. темп."  ng-model="data.currentOrganization.organizationName"/>
-                                    </div>
-                                    <div style="display: table-cell;">
-                                        /
-                                    </div>
-                                    <div class="form-group noMarginBottom" 
-                                         ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}"
-                                         style="display: table-cell;">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Мин. темп."  ng-model="data.currentOrganization.organizationName"/>
+                                    <div class="nmc-input-tmax-tmin">
+                                        <div class="form-group noMarginBottom" 
+                                             ng-class="{'has-error':!(data.currentTempSch.tMax>'')}"
+                                             >
+                                            <input class="form-control nmc-text-input-form" 
+                                                   type="text" 
+                                                   id="inputTmax" 
+                                                   placeholder="Макс. темп." 
+                                                   ng-model="data.currentTempSch.tMax"
+                                                   data-inputmask="'alias': 'numeric'"
+                                                   ng-blur="inputTempBlur(data.currentTempSch)"/>
+                                        </div>
+                                        <div class="nmc-tmax-tmin-divider">
+                                            /
+                                        </div>
+                                        <div class="form-group noMarginBottom" 
+                                             ng-class="{'has-error':!(data.currentTempSch.tMin>'')}"
+                                             >
+                                            <input class="form-control nmc-text-input-form" 
+                                                   type="text" 
+                                                   id="inputTmin" 
+                                                   placeholder="Мин. темп." 
+                                                   ng-model="data.currentTempSch.tMin"
+                                                   data-inputmask="'alias': 'numeric'"
+                                                   ng-blur="inputTempBlur(data.currentTempSch)"/>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -114,8 +178,8 @@
                                 <td class="col-sm-3"><label for="inputName">Наименование</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentOrganization.organizationName"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.name>'')}">
+                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder=""  ng-model="data.currentTempSch.name"/>
                                     </div>
                                 </td>
                             </tr>
@@ -123,8 +187,9 @@
                                 <td class="col-sm-3"><label for="inputName">Населенный пункт</label>
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentOrganization.organizationName"/>
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentTempSch.place>'')}">
+                                        <select class="form-control nmc-text-input-form" type="text" id="inputPlace" placeholder=""  ng-model="data.currentTempSch.place">
+                                        </select>
                                     </div>
                                 </td>
                             </tr>
@@ -133,7 +198,8 @@
                                 </td>
                                 <td colspan="2" class="col-sm-9 nmc-text-align-left">
                                     <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="data.currentOrganization.organizationName"/>
+                                        <select class="form-control nmc-text-input-form" type="text" id="inputRso" placeholder=""  ng-model="data.currentTempSch.rso">
+                                        </select>
                                     </div>
                                 </td>
                             </tr>
@@ -144,7 +210,9 @@
                                 </td>
 -->
                                 <td colspan="3" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form">Наличие корректирующего насоса
+                                    <input type="checkbox" class="nmc-checkbox-form"
+                                           ng-model="data.currentTempSch.isAdjusmentPump">
+                                    <label>Наличие корректирующего насоса</label>
                                 </td>                                
                             </tr>
                             <tr >
@@ -154,38 +222,114 @@
                                 </td>
 -->
                                 <td colspan="3" class="col-sm-12">
-                                   <input type="checkbox" class="nmc-checkbox-form">Наличие эливатора
+                                    <input type="checkbox" class="nmc-checkbox-form"
+                                           ng-model="data.currentTempSch.isElevator">
+                                    <label>Наличие элеватора</label>
                                 </td>                                
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
-                                    Tокр
+                                <td class="col-sm-3"><label for="inputName">График:</label>
                                 </td>
-                                <td class="col-sm-4">
-                                    Tвход
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <p class="btn btn-default btn-xs pull-right"
+                                       ng-click="data.currentTempSch.schedules = []">
+                                        Очистить
+                                    </p>
+                                    <p class="btn btn-default btn-primary btn-xs marginRight5 pull-right"
+                                       ng-click="addSchedule(data.currentTempSch)">
+                                        Добавить
+                                    </p>
+                                    <p class="btn btn-default btn-xs marginRight5 pull-right"
+                                       ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
+                                        Отсортировать по Токр
+                                    </p>
                                 </td>
-                                <td class="col-sm-4">
-                                    Тобр
-                                </td>
-                                
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" id="inputName" placeholder="Токр"  ng-model="data.currentOrganization.organizationName"/>
+                                <td colspan="3" class="col-sm-12">
+                                  <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-child-table">
+                                       <tr>
+                                        <th class="col-sm-3 nmc-button-sort" ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
+                                            <strong>Т<sub>окр</sub></strong>
+                                            <i title="Отсортировать график" 
+                                            class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
+                                            ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
+                                            </i>
+                                        </th>
+                                        <th class="col-sm-4">
+                                            <strong>Т<sub>вход</sub></strong>
+                                        </th>
+                                        <th class="col-sm-4">
+                                            <strong>Т<sub>обр</sub></strong>
+                                        </th>
+                                        <th class="col-sm-1">
+
+                                        </th>
+
+                                     </tr>
+                                 </table>
+                                    <div class="nmc-temp-sch-schedules-modal">
+                                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-child-table">
+                                            <tr class="nmc-hide">
+                                                <th class="col-sm-3 nmc-button-sort" ng-click="sortSchedulesByTEnv(data.currentTempSch.schedules)">
+                                                    <strong>Т<sub>окр</sub></strong>
+                                                    <i title="Отсортировать график" 
+                                                    class="btn btn-default btn-xs glyphicon glyphicon-sort-by-alphabet-alt"
+                                                    ng-class="{'nmc-ok-button-highlight':!ctrlSettings.isTempSchSort}">
+                                                    </i>
+                                                </th>
+                                                <th class="col-sm-4">
+                                                    <strong>Т<sub>вход</sub></strong>
+                                                </th>
+                                                <th class="col-sm-4">
+                                                    <strong>Т<sub>обр</sub></strong>
+                                                </th>
+                                                <th class="col-sm-1">
+
+                                                </th>
+
+                                            </tr>
+                                            <tr ng-repeat="schedule in data.currentTempSch.schedules" ng-init="initSchedule($index)">
+                                                <td class="col-sm-3 noPaddingI">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tEnv>'')}">
+                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                                               type="text" 
+                                                               ng-attr-id={{"inputTEnv"+$index}}
+                                                               placeholder=""  
+                                                               ng-model="schedule.tEnv" 
+                                                               data-inputmask="'alias': 'numeric'"
+                                                               />
+                                                    </div>
+                                                </td>
+                                                <td class="col-sm-4 noPaddingI">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tIn>'')}">
+                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                                               type="text" 
+                                                               ng-attr-id={{"inputTIn"+$index}} 
+                                                               placeholder=""  
+                                                               ng-model="schedule.tIn"
+                                                               data-inputmask="'alias': 'numeric'"/>
+                                                    </div>
+                                                </td>
+                                                <td class="col-sm-4 noPaddingI">
+                                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(schedule.tOut>'')}">
+                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                                               type="text" 
+                                                               ng-attr-id={{"inputTOut"+$index}}
+                                                               placeholder=""  
+                                                               ng-model="schedule.tOut"
+                                                               data-inputmask="'alias': 'numeric'"/>
+                                                    </div>
+                                                </td>
+                                                <td class="col-sm-1 noPaddingI">
+                                                    <i class="btn btn-xs nmc-remove-button"
+                                                       ng-click="deleteSchedule($index, data.currentTempSch.schedules)">
+                                                    </i>
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
-                                </td>
-                                <td class="col-sm-4">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" id="inputName" placeholder="Твход"  ng-model="data.currentOrganization.organizationName"/>
-                                    </div>
-                                </td>
-                                <td class="col-sm-4">
-                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentOrganization.organizationName>'')}">
-                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" type="text" id="inputName" placeholder="Тобр"  ng-model="data.currentOrganization.organizationName"/>
-                                    </div>
-                                </td>
-                                
+                                </td>    
                             </tr>
                         </table>
                     </div>    

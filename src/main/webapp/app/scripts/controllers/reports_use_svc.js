@@ -294,15 +294,16 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             result.paramSpecialTypeKeyname = element.paramSpecialType.keyname;
             if (isParamSpecialTypeDirectory(element))
             {
-                result.specialTypeDirectoryUrl =element.paramSpecialType.specialTypeDirectoryUrl;
-                result.specialTypeDirectoryKey =element.paramSpecialType.specialTypeDirectoryKey;
+                result.specialTypeDirectoryUrl = element.paramSpecialType.specialTypeDirectoryUrl;
+                result.specialTypeDirectoryKey = element.paramSpecialType.specialTypeDirectoryKey;
                 result.specialTypeDirectoryCaption = element.paramSpecialType.specialTypeDirectoryCaption;
-                result.specialTypeDirectoryValue =element.paramSpecialType.specialTypeDirectoryValue;
+                result.specialTypeDirectoryValue = element.paramSpecialType.specialTypeDirectoryValue;
                 $scope.getDirectory(".."+result.specialTypeDirectoryUrl, result);                
             };
             //Ищем значение этого параметра в массиве параметров варианта отчета
-            if (reportParamset.paramSpecialList.length==0){
+            if (reportParamset.paramSpecialList.length == 0){
                 result.textValue = null;
+                result.boolValue = null;
                 result.numericValue = null;
                 result.oneDateValue = null;
                 result.startDateValue = null;
@@ -325,6 +326,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             if (elementIndex!=-1){
                 result.id = reportParamset.paramSpecialList[elementIndex].id || null;
                 result.textValue = reportParamset.paramSpecialList[elementIndex].textValue || null;
+                result.boolValue = reportParamset.paramSpecialList[elementIndex].boolValue || null;
                 result.numericValue = reportParamset.paramSpecialList[elementIndex].numericValue || null;
                 result.oneDateValue = reportParamset.paramSpecialList[elementIndex].oneDateValue || null;
                 result.startDateValue = reportParamset.paramSpecialList[elementIndex].startDateValue || null;
@@ -337,6 +339,7 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
             }else{
                 result.id = null;
                 result.textValue = null;
+                result.boolValue = null;
                 result.numericValue = null;
                 result.oneDateValue = null;
                 result.startDateValue = null;
