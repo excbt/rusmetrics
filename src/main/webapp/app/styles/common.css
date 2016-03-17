@@ -391,6 +391,7 @@ body{
 .nmc-dropdown-menu-filter{
     min-width: 280px;
     max-width: 600px;
+    width: 350px;
 }
 /*
 .nmc-dropdown-menu-filter > li{
@@ -1610,9 +1611,10 @@ tr.nmc-inactive-price > td{
     max-height: 520px;
 }
 
-.nmc-object-filter-in-notices, .nmc-types-filter-in-notices{
+.nmc-object-filter-in-notices, .nmc-types-filter-in-notices, .nmc-filter-list-items{
     overflow-y: auto;
     max-height: 520px;
+    top: 400%;
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {

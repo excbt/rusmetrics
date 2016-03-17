@@ -321,14 +321,16 @@
                                                                data-inputmask="'alias': 'numeric'"/>
                                                     </div>
                                                 </td>
-                                                <td class="col-sm-3 nmc-td-for-buttons noPaddingI">
-                                                    <i ng-if="$index == (data.currentTempSch.schedules.length - 1)" 
-                                                       class="btn btn-xs glyphicon glyphicon-plus"
+                                                <td class="col-sm-2 noPaddingI">
+                                                    <p ng-if="$index == (data.currentTempSch.schedules.length - 1)" 
+                                                       class="btn btn-default btn-primary btn-xs"
                                                        ng-click="addSchedule(data.currentTempSch)">
-                                                        
-                                                    </i>
-                                                    <i class="btn btn-xs nmc-remove-button"
-                                                       ng-class="{'pull-right':$index != (data.currentTempSch.schedules.length - 1)}"
+                                                        Добавить
+                                                    </p>
+                                                </td>
+                                                <td class="col-sm-1 noPaddingI">
+                                                    <i ng-if="data.currentTempSch.schedules.length > 1" 
+                                                       class="btn btn-xs nmc-remove-button"                                                     
                                                        ng-click="deleteSchedule($index, data.currentTempSch.schedules)">
                                                     </i>
                                                 </td>

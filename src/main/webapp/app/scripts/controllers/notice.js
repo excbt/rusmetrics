@@ -315,8 +315,8 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
 
             oneNotice.noticeDate = $scope.dateFormat(el.contEvent.eventTime);
             oneNotice.contEventLevelColor = el.contEventLevelColor;
-            oneNotice.imgpath = $scope.imgPathTmpl+el.contEventLevelColor.toLowerCase()+".png";
-            oneNotice.imgclass = el.contEventLevelColor==="GREEN"?"":"nmc-img-critical-indicator";
+            oneNotice.imgpath = $scope.imgPathTmpl + el.contEventLevelColor.toLowerCase() + ".png";
+            oneNotice.imgclass = el.contEventLevelColor === "GREEN" ? "" : "nmc-img-critical-indicator";
             oneNotice.isNew = el.isNew;
             
             switch (el.contEvent.contServiceType)
@@ -342,11 +342,11 @@ app.controller('NoticeCtrl', function($scope, $http, $resource, $rootScope, $coo
                 case null :// oneNotice.noticeZpoint = ""; 
                     oneNotice.imgSTPath = "null";
                     break;
-                default: oneNotice.noticeZpoint  = ""+el.contServiceType+"";
-                    oneNotice.imgSTPath = ""+el.contServiceType+"";
+                default: oneNotice.noticeZpoint = "" + el.contServiceType + "";
+                    oneNotice.imgSTPath = "" + el.contServiceType + "";
              };
-            if (oneNotice.zpoint!=null){
-                oneNotice.noticeZpoint = oneNotice.zpoint.contServiceType.caption;
+            if (oneNotice.zpoint != null){
+                oneNotice.noticeZpoint = oneNotice.zpoint.customServiceName || oneNotice.zpoint.contServiceType.caption;
             };
 //console.log(oneNotice);            
             return oneNotice;
