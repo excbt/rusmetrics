@@ -1191,11 +1191,11 @@ app.controller('ReportsCtrl',['$scope', '$rootScope', '$http', 'crudGridDataFact
     };    
     
     $scope.previewContextReport = function(paramset){
-console.log(paramset);        
+//console.log(paramset);        
         if (!mainSvc.checkUndefinedNull(paramset.reports)){//If parametr "paramset" is not paramset, but it is category
             return "Entity is category";//exit function
         };
-        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT'){
+        if (paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT' || paramset.reportTemplate.reportType.keyname == 'COMMERCE_REPORT_M_V'){
             notificationFactory.errorInfo("Внимание!", "Предварительный просмотр для коммерческих отчетов невозможен.");
             return "Preview for the commercial reports is not available.";
         };
