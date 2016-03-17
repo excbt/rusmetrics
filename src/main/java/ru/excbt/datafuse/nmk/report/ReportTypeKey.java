@@ -18,7 +18,7 @@ public enum ReportTypeKey implements KeynameObject {
 	COMMERCE_REPORT_M_V("commerce_m_v"), // COMMERCE_M_V,
 	EVENT_REPORT("event"), //
 	CONS_T1_REPORT("cons_t1"), //
-	CONS_T2_REPORT("cons_t2"), // // deprecated
+	CONS_T2_REPORT("cons_t2"), //
 	METROLOGICAL_REPORT("metrological"), //
 	CONSUMPTION_ETALON_REPORT("consumption_etalon"), //
 	CONSUMPTION_REPORT("consumption"), // // deprecated
