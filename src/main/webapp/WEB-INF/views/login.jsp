@@ -9,7 +9,7 @@
 <link rel="stylesheet"
 	href="bower_components/bootstrap/dist/css/bootstrap.css" />
 <link rel="stylesheet" href="resources/styles/main.css" media="screen">
-<title>НМК</title>
+<title>Rusmetrics</title>
 
 </head>
 <body class="excbt_login_body">
@@ -46,8 +46,8 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-xs-12 alert alert-error bg-danger"
-								ng-show="displayLoginError">
+							<div class="col-xs-12 alert alert-error bg-danger nmc-hide"
+								ng-class="{'nmc-hide':!displayLoginError, 'nmc-show':displayLoginError}">
 								<p>Неправильное имя пользователя или пароль</p>
 							</div>
 						</div>

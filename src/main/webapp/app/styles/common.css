@@ -883,6 +883,13 @@ tr.nmc-inactive-price > td{
     padding: 3px;
 }
 
+/* выпадающий список при использовании ui-select*/
+.nmc-ui-select-form > .ui-select-match > span{
+    font-size: 12px;
+    height: 26px;
+    padding: 3px;
+}
+
 /* выпадающий список на странице с прайсами*/
 .nmc-select-form-for-price {
     font-size: 12px;
@@ -905,6 +912,16 @@ tr.nmc-inactive-price > td{
     border-left-width: 0px;
     float: none !important;
     border-radius: 0;
+}
+
+/* Ввод значений через "/" - например ввод Тмакс / Тмин для температурных графиков*/
+.nmc-input-tmax-tmin > .form-group{
+    display: table-cell;
+}
+
+.nmc-input-tmax-tmin > .nmc-tmax-tmin-divider{
+    display: table-cell;
+    padding: 0 5px;
 }
 
     /* Приписка перед интервалом дат - изначально там буква "с"*/
@@ -1575,6 +1592,12 @@ tr.nmc-inactive-price > td{
     height: 520px;
 }
 
+/* Настройки таблицы температурного графика в модальном окне*/
+.nmc-temp-sch-schedules-modal{
+    overflow-y: auto;
+    max-height: 250px;
+}
+
     /*  Настройки списка фильтрации объектов/групп объектов на странице "Уведомления"  */
     /* Настройка списка мета свойств у прибора*/
 .nmc-object-list-in-notices, .nmc-metadata-list-in-devices{
@@ -1919,6 +1942,10 @@ tr.nmc-inactive-price > td{
 
 .noPadding {
     padding : 0;
+}
+
+.noPaddingI {
+    padding : 0 !important;
 }
 
 .noPaddingBottom {
